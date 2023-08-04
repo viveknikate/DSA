@@ -1,0 +1,1951 @@
+	01/08/2023
+Lecture-1
+     -Understand the problem
+     -check given data
+     -search approach (make flowchart)
+     -start programming
+
+     -Flowchart:
+          Diagrammatic representation of an approach
+          Components:
+               1.Terminator: start/end
+               2.Parallelogram block   : represent IO/OP 
+               3.Rectangular block: represent process
+               4.Diamond: decision making (condition)
+          e.g., Sum of 2 num:
+	-Pseudocode:	Generic way of representing look of code.
+	-Flowchart for Simple Interest
+		SI = (P*R*T)/100
+
+	-Two colons (::) are used in C++ as a scope resolution operator
+
+	-Flowchart for average of 3 num
+		avg = (a+b+c)/3;
+
+	-Greater between 2 num:
+		a>b? print(a greater) : print(b greater);
+
+	-Odd or even num:
+		(num %2 ==0) ? print(even):print(odd)
+
+	-num is +ve or -ve or zero?
+		If(num >0) print(+ve)
+		else if (num<0) print(-ve)
+		else print(zero)
+		
+	-Valid triangle or not?
+		Angles A, B & C
+		A+B > C
+		B+C > A
+		C+A > B
+
+	-Loops:
+		-Print 1 to 5 nums.
+
+		-print even nums from given range (copy paste program directly on compiler to check)
+
+			#include <iostream>
+			using namespace std;
+			int main() {
+				// Write C++ code here
+				cout << "Range..!"<<"\n";
+				int s=1,e=10,i;
+				for(i=s; i<=e; i++){	
+					cout<<i<<"\t";
+				}
+				cout<<"\neven nums.."<<"\n";
+				for(i=s;i<e;i++){
+					if(i%2==0){
+						cout<<i<<endl;
+					}else{
+						continue;
+					}
+				}
+				cout<<"\nend";
+				return 0;
+			}
+
+		-Sum of 1 to N nums:
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				// Write C++ code here
+				cout<<"Enter n::";
+				int n;
+				cin>>n;
+				int sum = 0;
+				
+				// sum = n*(n+1)/2;
+				//or
+				for(int i=1;i<=n;i++){
+					sum = sum +i;
+				}
+				cout<<"The sum of first "<<n<<" numbers ::"<<sum;
+				cout<<"\nend";
+
+				return 0;
+			}
+
+		-Factorial:
+			#include <iostream>			//using namespace std not used here.
+			int main() {
+				std::cout<<"Enter n::";
+				int n,fact=1;
+				std::cin>>n;
+				
+				for(int i=1;i<=n;i++){
+					fact = fact * i;
+				}
+				std::cout<<"The factorial of "<<n<<" is ::"<<fact;
+				std::cout<<"\nend";
+
+				return 0;
+			}
+
+		-Prime num:
+			#include <iostream>
+			int main() {
+				// Write C++ code here
+				std::cout<<"Enter n to check prime or not::";
+				int n;
+				std::cin>>n;
+				bool flag = true;
+				
+				if(n == 1){
+					std::cout<<"1 is neither prime nor composite";
+					return 0;
+				}
+				
+				for(int i=2;i<n;i++){
+					if(n % i ==0){
+						flag = false;
+						break;
+					}else{
+						flag = true;
+					}
+				}
+				
+				if(flag){
+					std::cout<<n<<" is Prime num.";
+				}else{
+					std::cout<<n<<" is not Prime num.";
+				}
+				
+				std::cout<<"\nend";
+				return 0;
+			}
+		
+	-Compiler: convert High Level Language to Binary Language (machine understandable)
+---------------------------------------------------------------------------------------------------------
+	02/08/2023
+Lecture-2:
+	Compiler:
+		-convert program to machine understandable Language ( Binary ).
+		-checks the error & let you know.
+	
+	IDE: Integrated Development Environment
+	
+	-Program always start from main function.
+	eg.
+		#include <iostream>
+		int main() {
+			std::cout << "Hello world!"<<endl;
+			return 0;
+		}
+
+		//if you used this statement no need to mention std in program
+		using namespace std;
+		#include <iostream>
+		int main() {
+			cout << "Hello world!";
+			return 0;
+		}
+
+		where,
+			std 			- is a namespace.
+			cout 		- is function for printing
+			<< 			- is outputing a output.
+			endl  or '\n' 	- end line/ new line.
+			; 			- represent end line.
+		
+	
+	-Datatype & Variables:
+		1 Byte is 8 bit.
+		4bit is 1 nibble.
+		int-
+			size is 4 byte(32bit) generally (sometimes 2 bytes also, depends on compiler).
+			Stores whole numbers, without decimals
+			eg.
+				int a = 20;
+
+			min size -2³²
+			max size 2³²-1
+		
+		char-
+			size is 1 byte
+			Stores a single character/letter/number, or ASCII values
+			eg.
+				char ch = 'a';		//valid
+
+				char ch = 'ab';	//invalid
+			
+			Alternatively, you can use ASCII values to display certain characters:
+			eg.
+				char a = 65, b = 66, c = 67;
+				cout << a;		//A
+				cout << b;		//B
+				cout << c;		//C
+
+			-ASCII values:	ASCII - 'American Standard Code for Information Interchange'
+				32 		is value of space.
+				48 to 57 	is for 	0 to 9.
+				65 to 90 	is for 	A to Z.
+				97 to 122 is for 	a to z.
+
+		boolean-
+			1 byte	
+			Stores true or false values
+			you can keep any value for this boolean if it is non-zero(+ve) or -ve  then its considered as true (1).
+				if it is zero then its considered as false(0).
+			eg.
+				bool a = true;
+
+				bool b = 1,c =true, d = false;
+				cout <<b<<endl;         //1
+				cout <<c<<endl;         //1
+				cout <<d<<endl;         //0
+	
+		float-
+			4 bytes	
+			Stores fractional numbers, containing one or more decimals. Sufficient for storing 6-7 decimal digits.
+			eg.
+				float f1 = 35e3;
+				double d1 = 12E4;
+				float ff = 35.453f;				//f to represent its is a floating point num.
+				double dd = 12.78909d;			//d to represent its is a double
+				cout << f1 << "\n";				// 35000
+				cout << d1;					// 120000
+		
+		double-
+			8 bytes	
+			Stores fractional numbers, containing one or more decimals. Sufficient for storing 15 decimal digits.
+		
+		NOTE:
+			float vs. double
+			The precision of a floating point value indicates how many digits the value can have after the decimal point. 
+			The precision of float is only six or seven decimal digits, while double variables have a precision of about 15 digits. 
+			Therefore it is safer to use double for most calculations.
+		
+		string-
+			32 byte.
+			string type is used to store a sequence of characters (text).
+			This is not a built-in type, but it behaves like one in its most basic usage. 
+			String values must be surrounded by double quotes:
+			eg.
+				#include <string>				//including this header file is not mandatory.
+				string str  = "Vivek";
+				cout << str;
+			
+		Variable Naming Convention:
+			int abc1 = 1;			//valid
+			int _abc = 21;			//valid
+			int 1abc = -10; 		//invalid because the first character letter/underscore not number
+
+		sizeof:
+			eg.
+				#include <iostream>
+
+				int main() {
+					bool c  = -12;
+					int i   = 10;
+					char ch = 'A';
+					float f =  11.12; 
+					double d   = 12.1245d;
+					std::string str = "Vivek ";
+					
+					std::cout<<"The size of "<<c<<" Boolean :: "<<sizeof(c)<<" Byte\n";
+					std::cout<<"The size of "<<i<<" integer :: "<<sizeof(i)<<" Byte\n";
+					std::cout<<"The size of "<<ch<<" char :: "<<sizeof(ch)<<" Byte\n";
+					std::cout<<"The size of "<<f<<" float :: "<<sizeof(f)<<" Byte\n";
+					std::cout<<"The size of "<<d<<" double :: "<<sizeof(d)<<" Byte\n";
+					std::cout<<"The size of "<<str<<" string :: "<<sizeof(str)<<" Byte\n";
+					
+					return 0;
+				}
+
+				//output
+					The size of 1 Boolean :: 1 Byte
+					The size of 10 integer :: 4 Byte
+					The size of A char :: 1 Byte
+					The size of 11.12 float :: 4 Byte
+					The size of 12.1245 double :: 8 Byte
+					The size of Vivek  string :: 32 Byte
+
+		storing process:
+			int is 4 bytes ie. 32 bits.
+				4 blocks of bits are made
+				eg.
+					[-------- -------- -------- --------] this how integer converted to binary & store data in bits format.
+
+		TypeCasting:
+			when you assign a value of one primitive data type to another type.
+			eg.
+				int a = 'a';
+				cout<<a;
+
+				char ch = 98;
+				cout<<ch;
+
+				-int is 4 byte & char is 1 byte, if we try to store big integer to char
+				 warning will be thrown & last 1 byte of data will be store in char.
+				 eg.
+				 	char ch = 123456		//binary of 123456 = 11110001001000000
+					cout<< ch;			//@
+
+					but char is of size 1 byte ie. 8 bits, so last 8 bit of binary 123456 will extracted ie.01000000 
+						& rest all bits will be lost
+					& if we print the ch then output will be @.
+					coz this binary 01000000 is 64 in decimal.
+					& 64 is mapped with @ char.
+			
+			eg.
+				include <iostream>
+
+				int main() {
+					float f = 45.99f;
+					int b = f;
+					
+					float f1 = b;
+					
+					std::string str = "1234";
+					// int a = int(str);       // this won't work
+					int a = stoi(str);       //to convert string to int
+					
+					std::cout<<a<<std::endl;		//1234
+					std::cout<<a+6<<std::endl;	//1240
+					
+					std::cout<<f<<"\n";		//45.99
+					std::cout<<b+2<<"\n";	//47
+					std::cout<<f1<<"\n";	//45
+					
+					return 0;
+				}
+
+				#include <iostream>
+				int main() {
+					std::string str = "450";
+					int a;
+					std::cout<<str<<std::endl;
+					std::cout<<a<<std::endl;
+					std::cout<<stoi(str)+10;			string to integer stoi().
+					return 0;
+				}
+
+		How -ve num stored:
+			if first bit is 1, then num is -ve.
+			if first bit is 0, then num is +ve.
+			eg.
+				want to store -8.
+				step 1:	
+					ignore negative sing(-ve)
+					8
+				step 2:
+					convert 8 to binary format
+					1000
+					stored as
+						[-------- -------- -------- ----1000] rest all are zero only like,
+						[00000000 00000000 00000000 00001000]
+
+				step 3:
+					-Take 2's (two's) complement & store.
+					 for taking 2's complement first take 1's complement
+					 
+					 step 1: 
+					 	1's complement change 0 to 1 & viceversa.
+						[11111111 11111111 11111111 11110111]
+
+					 step 2:
+					 	add 1 in 1's complement.
+						[11111111 11111111 11111111 11110111]
+						+							1
+						______________________________________
+						[11111111 11111111 11111111 11111000]		
+							--here in the answer first bit is 1, so it denotes its -ve num.
+							--this is 2s complement of 8
+
+		For +ve num only:
+			unsigned int a = 122;
+			range:
+				0 to 2³²-1;
+
+			if you try to store -ve num then it will generate huge num becoz 
+			of most significant bit (first bit) is 1 to represent it is a -ve but,
+			you said its +ve by mentioning usigned so compiler treat it as positive & generates huge num.
+		
+		Operator:
+			Arithmetic:-
+				+,-,*,/,%
+
+				int/ int  = int		//if we divide int by int the answer will be integer
+				float / int = float		//if we divide float by int the answer will be floating point num.
+				double / int = double		//if we divide double by int the answer will be double.
+
+			Relational:-
+				= assignment operator
+				== is equal to equal to (double equals to)
+				< is less than
+				> is greater than
+				<= is less than equal to
+				>= is greater than equal to
+				!= is not equal to
+			
+			Logical:-
+				&& AND operation takes two boolean values and returns True if both are True else False.
+				|| OR any one conditions should true for that statement to execute.
+				! NOT reverse value.
+				eg.
+					ignores the sign.
+					int a = 0;
+						std::cout << !a;		//1
+					int b = 1;
+						std::cout << !b;		//0
+					int c = 10;
+						std::cout << !c;		//0
+					int d = -10;
+						std::cout << !d;		//0
+					int e = -0;
+						std::cout << !e;		//1
+
+			Ternary Operator:
+				syntax:
+					(condition) ? [if true execute this] : [if false execute this]	
+				eg.
+					#include <iostream>
+					using namespace std;
+
+					int main() {
+						int a = 100;
+						
+						//ternary operator
+						(a>20) ? cout<< a << " Greater Than 20" : cout<< a << "Less than 20";
+
+						return 0;
+					}
+
+			Bitwise:-
+				& and
+				| or
+				^ xor
+				~ complement of bits in binary representation
+				<< left shift
+				>> right shift
+---------------------------------------------------------------------------------------------------------
+	03/08/2023
+Lecture-3:
+	Conditionals, Loops, Patterns
+	1) if Statement
+		if(condition){
+			//code block executed when condition evaluates as TRUE
+		}
+
+	2) if-else Statement
+		if(condition){ 
+			//This code block will be executed only if 'condition' is evaluated as TRUE
+		}
+		else{   
+			//this block gets executed when if block evaluates to FALSE
+		}
+		
+	3) else-if Statement
+		if (cond_A) { 
+			//first conditional expression
+			/* statements */
+		}
+		else if (cond_B) {
+			//second condtional expression
+			/* other statements*/
+		}
+		else if (cond_C) {
+			//third condtional expression
+			/* other statements*/
+		}
+		else {
+			/* last statement for default case */
+		}
+		//else is last default block not mandatory to write.
+	
+	4) Nested If statements / Nested If-else:
+		if-statement inside another if statement
+
+		if(cond){
+			//if true
+		}else{
+			if(nestedCond){ 
+				// nested condition code here
+			} else{
+
+			}
+		}
+	
+	5) Switch Case Statement
+			Why we use switch case instead of if-else?
+				Editing in switch statement is easier as compared to the 'if-else' statement. 
+				If we remove any of the cases from the switch, then it will not interrupt the execution of other cases. 
+				Therefore, we can say that the switch statement is easy to modify and maintain.
+
+				-If we have multiple choices then the
+				switch statement is the best option as
+				the speed of the execution will be much
+				higher than 'if-else'
+
+				-Break keyword
+			eg.
+				#include <iostream>
+				using namespace std;
+
+				int main() {
+					char oper;
+					float num1, num2;
+					cout << "Enter an operator (+, -, *, /): ";
+					cin >> oper;
+					cout << "Enter two numbers: " << endl;
+					cin >> num1 >> num2;
+
+					switch (oper) {
+						case '+':
+							cout << num1 << " + " << num2 << " = " << num1 + num2;
+							break;
+						case '-':
+							cout << num1 << " - " << num2 << " = " << num1 - num2;
+							break;
+						case '*':
+							cout << num1 << " * " << num2 << " = " << num1 * num2;
+							break;
+						case '/':
+							cout << num1 << " / " << num2 << " = " << num1 / num2;
+							break;
+						default:
+							// operator is doesn't match any case constant (+, -, *, /)
+							cout << "Error! The operator is not correct";
+							break;
+					}
+					return 0;
+				}
+
+	6) While Loop:
+	 eg
+	 	//WAP TO PRINT THE N NUMS:
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				int i=1;
+				// while(i<11)
+				//     cout << i++ <<"\t";
+				//or
+				
+				while(i<11){
+					cout << i << end;
+					i++;                //i = i + 1
+				}
+				return 0;
+			}
+
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				int i=1,n;
+				cout << "enter n :: ";
+				cin>>n;
+				while(i<=n)
+					cout << i++ <<"\t";
+				//or
+				
+				//while(i<=n){
+				//	cout << i << "\t";
+				//	i++;                //i = i + 1
+				//}
+				return 0;
+			}
+
+		//WAP sum of first n num
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				int n,i=1,sum=0;
+				cout << "enter n:: ";
+				cin>>n;
+
+				//shorthand
+				while(i<=n)
+					sum += i++;
+				
+				// or
+				// while(i<=n){
+				//     sum = sum + i;       //sum = sum + i
+				//     i++;            //i = i +1;
+				// }
+
+				cout<< "The sum of "<<n<<" is "<<sum;
+				
+				return 0;
+			}
+
+		//WAP sum of even num
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				// sum of even num
+				int n,i=2;
+				cout << "Enter n:: ";
+				cin>>n;
+				
+				int sum =0;
+				while(i<=n){
+					if(i % 2 == 0)
+						sum = sum + i;
+					i++;
+				}
+				
+				// or shorhand
+				// while(i <= n){
+				//     if(i % 2 == 0)
+				//         sum += i;
+				//     i++;
+				// }
+					
+				cout << "Sum of even till "<< n << " is :: "<< sum;
+				
+				return 0;
+			}
+
+		//WAP to check entered num is prime or not?
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				//WAP num is prime or not.
+				int n,i=2,flag=0;
+				cout << "enter num :: ";
+				cin>>n;
+				
+				while(i <= n/2){
+					if(n % i == 0){
+						flag = 1;
+						break;
+					}
+					i++;
+				}
+				
+				if(flag)
+					cout << n << " is not prime";
+				else
+					cout << n << " is Prime Num";
+				
+				return 0;
+			}
+		
+		//WAP to print:
+			* * * * * * * *
+			* * * * * * * *
+			* * * * * * * *
+			* * * * * * * *
+			* * * * * * * *
+			->
+				#include <iostream>
+				int main() {
+					int i=1,j=1;
+					while(i++ <6){              //shorthands
+						while(j++ < 8){         //shorthands for increment
+							std::cout << "* ";
+							// j++              
+						}
+						j=1;
+						// i++;     
+						std::cout<<"\n";
+					}
+					return 0;
+				}
+		
+		//WAP to take rows & column from user.
+			#include <iostream>
+			int main() {
+				int i=1,j=1,n;
+				
+				std::cout<<"Enter rows column :: ";
+				std::cin>>n;
+				
+				while(i++ <n){              //shorthands
+					while(j++ < n){         //shorthands for increment
+						std::cout << "* ";
+						// j++              
+					}
+					j=1;
+					// i++;     
+					std::cout<<"\n";
+				}
+
+				return 0;
+			}
+		
+		//WAP to print this Patterns with custom rows:
+		 if rows are 5,
+			1 1 1 1 1 
+			2 2 2 2 2 
+			3 3 3 3 3 
+			4 4 4 4 4 
+			5 5 5 5 5
+		     ->
+			#include <iostream>
+			int main() {
+			
+				int z,p,rows;
+				std::cout << "Enter num of rows you want :: ";
+				std::cin >> rows;
+				for(z=1; z<=rows; z++){
+					for(p=1; p<=rows; p++)
+						std::cout << z << " ";
+					std::cout<<std::endl;
+				}
+				return 0;
+			}
+			//output:
+				Enter num of rows you want :: 8
+					1 1 1 1 1 1 1 1 
+					2 2 2 2 2 2 2 2 
+					3 3 3 3 3 3 3 3 
+					4 4 4 4 4 4 4 4 
+					5 5 5 5 5 5 5 5 
+					6 6 6 6 6 6 6 6 
+					7 7 7 7 7 7 7 7 
+					8 8 8 8 8 8 8 8
+
+	eg.
+		1).WAP to check num is +ve, -ve or zero?
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				cout<<"Enter value for A::";
+				int a;
+				cin>>a;
+				if(a>0){
+					cout<<"A is +ve "<<a;
+				}else if(a<0){
+					cout<<"A is -ve "<<a;
+				}else{
+					cout<<"A is Zero "<<a;
+				}
+				return 0;
+			}
+			--here cin function takes the input, cin function don't read tabs, space & new line char.
+
+		2).WAP for Greater num
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				cout << "Enter values of A & B::";
+				int a,b;
+				cin >> a >> b;						//taking input at same time.
+				
+				cout << "A :: " << a << " B :: " << b << endl;
+				if(a>b)
+					cout << "A is Greater than B";
+				else if(b > a)
+					cout << "B is Greater than A";
+				else
+					cout << "A is equals to B";
+				return 0;
+			}
+
+			--if there is one statement in if block then no need to put the { } curly braces
+
+		3). WAP to check char is lowercase or uppercase or digit?
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				char ch;
+				cout<< "Enter char :: ";
+				cin>>ch;
+				
+				if(ch >= 'a' && ch<='z')
+					cout << "Char is Lowercase "<<ch;
+				else if(ch >= 'A' && ch <= 'Z')
+					cout << "Char is Uppercase "<<ch;
+				else if(ch >= '0' && ch <= '9')
+					cout << "Char is Digit "<<ch;
+				else
+					cout << "Char is something Strange "<<ch;
+				return 0;
+			}
+
+		-to take space, new line as input use cin.get() function.
+			int a= cin.get();
+			cout<<"A :: "<<a;
+---------------------------------------------------------------------------------------------------------
+	03/08/2023
+Lecture-4:
+	if 'return 0' is not there at the end still program works.
+	Patterns solving
+	1)	1 2 3 4 5
+		1 2 3 4 5
+		1 2 3 4 5
+		1 2 3 4 5
+		1 2 3 4 5
+		->
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				
+				int n,a=1,b=1;
+				
+				cout << "Enter n:: ";
+				cin>>n;
+				
+				while(a++ <= n){            			//shorthand checking as well as incrementing king as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementingking as well as incrementing
+					while(b <= n){          			//for be also you can increment while checking
+						cout << b++ << " ";         	//shorthand (printing as well as incrementing)
+						// b++;
+					}
+					b=1;
+					// a++; 
+					cout<<"\n";
+				}
+
+				return 0;
+			}
+
+	2)
+		n = 5
+			5 4 3 2 1
+			5 4 3 2 1
+			5 4 3 2 1
+			5 4 3 2 1
+			5 4 3 2 1
+		->
+			#include <iostream>
+			using namespace std;		
+
+			int main() {
+			
+				int n,a=1,b=1;
+				
+				cout << "Enter n:: ";
+				cin>>n;
+				
+				while(a++ <= n) {          //shorthand
+					while(b <= n){    
+						cout << n - b +1<< " ";
+						b++;
+					}
+					b=1;
+					// a++;
+					cout<<"\n";
+				}
+				return 0;
+			}
+
+	3)
+		1	2	3 	4	 5
+		6	7 	8 	9	 10
+		11	12 	13 	14	 15
+		16 	17 	18	19	 20
+		21 	22 	23	24	 25
+		->
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				
+				int n,a=1,b=1,counter=1;
+
+				cout << "Enter n:: ";
+				cin>>n;
+				
+				while(a++ <= n){          //shorthand
+					while(b++ <= n){    //shorthand
+						cout<<counter++<<"\t";
+						// b++;
+					}
+					b=1;
+					// a++;
+					cout<<"\n";
+				}
+				return 0;
+			}
+	
+	4) Start pattern for custom rows:
+		Enter rows:: 5
+			* 
+			* * 
+			* * * 
+			* * * * 
+			* * * * * 
+		->
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+			
+				int n,a=1,b=1;
+				cout << "Enter rows:: ";
+				cin>>n;
+				
+				while(a <= n){
+					while(b++ <= a){      //shorthand 
+						cout<< "* ";
+						// b++;
+					}
+					cout<<"\n";
+					b=1;
+					a++;
+				}
+
+				return 0;
+			}
+	
+	5)
+		take rows from user:
+		 Enter rows:: 5
+			1 
+			1 2 
+			1 2 3 
+			1 2 3 4 
+			1 2 3 4 5 
+		->
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				int n,a=1,b=1;
+				
+				cout << "Enter rows:: ";
+				cin>>n;
+				
+				while(a <= n){
+					while(b <= a){      
+						cout<< b++ <<" ";     //shorthand 
+						// b++;
+					}
+					cout<<"\n";
+					b=1;
+					a++;
+				}
+			return 0;
+			}
+	
+	6)
+		take rows from user:
+		 Enter rows:: 5
+			1 
+			2 2 
+			3 3 3
+			4 4 4 4
+			5 5 5 5 5
+		 ->
+		 	#include <iostream>
+			using namespace std;
+
+			int main() {
+				
+				int n,a=1,b=1;
+				
+				cout << "Enter rows:: ";
+				cin>>n;
+				
+				while(a <= n){
+					while(b++ <= a){            //shorthand
+						cout<< a <<" ";     
+						// b++;
+					}
+					cout<<"\n";
+					b=1;
+					a++;
+				}
+
+				return 0;
+			} 
+
+	7)
+		Take rows input from user..
+			Enter rows:5
+				1	
+				2	3	
+				4	5	6	
+				7	8	9	10	
+				11	12	13	14	15	
+			->
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1,counter=1;
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){        //shorthand
+						while(b++ <= a){                    //shorthand
+							cout << counter++ << "\t";      //shorthand
+							// counter++;
+							// b++;
+						}
+						b=1;
+						a++;
+						cout << "\n";
+					}
+					
+					
+					return 0;
+				}
+
+	8)
+		Take user input for rows
+			Enter rows:5
+			1	
+			2	3	
+			3	4	5	
+			4	5	6	7	
+			5	6	7	8	9
+		->
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int n,a=1,b=1,temp;
+				
+				cout << "Enter rows:";
+				cin>>n;
+				
+				while(a <= n){
+					temp = a;						//need to try without using extra var.
+					while(b <= a){
+						cout << temp++ << "\t";
+						b++;
+					}
+					cout << "\n";
+					a++;
+					b=1;      //important step
+				}
+				return 0;
+			}
+
+			//or without using temp.
+			#include <iostream>
+			using namespace std;
+			int main() {
+					int n,a=1,b=1;
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){
+						while(b <= a){
+							cout << a + b - 1 << "\t";
+							b++;
+						}
+						cout << "\n";
+						a++;
+						b=1;      //important step
+					}
+					return 0;
+			}
+	
+	9)
+		Take user input for rows
+			Enter rows:5
+			1
+			2 1
+			3 2 1
+			4 3 2 1
+			5 4 3 2 1
+			->
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1,temp;
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){
+						temp = a;
+						while(b <= a){
+							cout << temp-- << "\t";
+							b++;
+						}
+						a++;
+						b=1;
+						cout << "\n";
+					}
+					
+					return 0;
+				}
+			
+			//or without using that extra temp variable
+
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1;
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){
+						// temp = a;
+						while(b <= a){
+							cout << a - b + 1 << "\t";
+							b++;
+						}
+						a++;
+						b=1;
+						cout << "\n";
+					}
+					
+					return 0;
+				}
+
+	10)
+		Take user input for rows
+			enter rows:3
+				A A A
+				B B B
+				C C C
+			->	
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1;
+					char ch = 'A';
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a++ <= n){						//shorhand
+						while(b++ <= n){					//shorhand
+							cout << ch <<" ";
+							//b++;
+						}
+						ch++;
+						//a++;
+						b=1;
+						cout<< "\n";
+					}
+
+					//for above while loop short code.
+					// 	while(a++ <= n){
+					// 	    while(b++ <= n)1
+					// 	        cout << ch <<" ";
+					// 	    ch++;b=1;
+					// 	    cout<< "\n";
+					// 	}
+
+
+					return 0;
+				}
+			
+			//without using that extra char ch variable.
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int n,a=1,b=1;
+				
+				cout << "Enter rows:";
+				cin>>n;
+				
+				//using char function to convert the int to char.
+				
+				while(a <= n){
+					while(b++ <= n)
+						cout << char('A' + a - 1) <<" ";
+
+					b=1;
+					a++;
+					cout<< "\n";
+				}
+				return 0;
+			}
+	
+	11)
+		Take user input for rows
+			enter rows: 3
+				A B C
+				A B C
+				A B C
+			->
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int n,a=1,b=1;
+				char ch = 'A';
+				
+				cout << "Enter rows:";
+				cin>>n;
+				
+				while(a <= n){
+					while(b <= n){
+						cout << ch << " ";
+						b++;
+					}
+					ch++;
+					a++;
+					b=1;
+					cout << "\n";
+				}
+				
+				return 0;
+			}
+
+			//or without using that extra ch
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1;
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){
+						while(b <= n){
+							
+							cout << char(64 + a) << " ";					//ASCII value of A is 65 so we purposefully added 64 before it.
+							
+							//or
+							//cout << char('A' + a - 1) << " ";
+
+							b++;
+						}
+						a++;
+						b=1;
+						cout << "\n";
+					}
+					
+					return 0;
+				}
+		
+	12)
+		Take user input for rows
+			Enter rows:5
+			A B C D E 
+			F G H I J 
+			K L M N O 
+			P Q R S T 
+			U V W X Y 
+			->
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1;
+					char ch = 'A';
+
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){
+						while(b <= n){
+						cout << ch++ << " ";			//shorhand for ch.
+							b++;
+							//ch++;
+						}
+						a++;
+						b=1;
+						cout << endl;
+					}
+					return 0;
+				}
+
+	14)
+		Take user input for rows
+		Enter rows:5
+			A B C D E 
+			B C D E F 
+			C D E F G 
+			D E F G H 
+			E F G H I 
+		->
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int n,a=1,b=1;
+				char ch = 'A';
+
+				cout << "Enter rows:";
+				cin>>n;
+				
+				while(a <= n){
+					while(b <= n){
+					cout << ch++  << " ";
+						b++;
+						// ch++;
+					}
+					ch = 'A' + a;
+					a++;
+					b=1;
+					cout << endl;
+				}
+				return 0;
+			}
+
+			//or without using that extra char ch.
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1;
+
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){
+						while(b <= n){
+							cout << char('A' + b - 1 + a - 1) << " ";			//to match the above pattern so we did adjustment.
+
+							//or using ASCII value to print A , for first iteration (63 + 1 + 1 = 65) which is A.
+							//cout << char(63 + b + a) << " ";
+							b++;
+						}
+						a++;
+						b=1;
+						cout << endl;
+					}
+					return 0;
+				}
+
+	15)
+		Take user input for rows
+		  enter rows: 3
+		  	A
+			B B
+			C C C
+			->
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1;
+					char ch = 'A';
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){
+						while(b <= a){
+						cout << ch << " ";
+						b++;
+						}
+						ch++;
+						a++;
+						b=1;
+						cout << endl;
+					}
+					return 0;
+				}
+
+			//without using ch char.
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1;
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){
+						while(b <= a){
+							cout << char('A' + a - 1) << " ";
+
+							//or
+							//cout << char(64 + a) << " ";
+
+							b++;
+						}
+						a++;
+						b=1;
+						cout << endl;
+					}
+					return 0;
+				}
+
+	16)
+		Take user input for rows
+			Enter rows:5
+				A 
+				B C 
+				D E F 
+				G H I J 
+				K L M N O 
+			->
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1;
+					char ch = 'A';
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){
+						while(b++ <= a)				//shorhand for b first checking then incrementing.
+							cout << ch++ << " ";
+						a++;
+						b=1;
+						cout << endl;
+					}
+					return 0;
+				}
+
+	17)
+		Take user input for rows
+			Enter rows:5
+				A 
+				B C 
+				C D E 
+				D E F G 
+				E F G H I
+			->
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1;
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){
+						while(b <= a){
+							// cout << char('A' - 1 + b + a -1) << " ";
+							// or
+							cout << char(63 + b + a ) << " ";
+							
+							b++;
+						}
+						a++;
+						b=1;
+						cout << endl;
+					}
+					return 0;
+				}
+
+	18)
+		Take user input for rows
+			Enter rows:5
+				E 
+				D D 
+				C C C 
+				B B B B 
+				A A A A A 
+			->
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1;
+					char ch = 'A';
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					
+					while(a <= n){
+						while(b <= a){
+							cout << char(ch + n - a)<< " ";
+
+							//or without using that char ch.
+							//cout << char('A' + n - a)<< " ";
+
+							b++;
+						}
+						a++;
+						b=1;
+						cout << "\n";
+					}	
+					return 0;
+				}
+
+	19)
+		Take user input for rows
+			Enter rows:5
+				E 
+				D E 
+				C D E 
+				B C D E 
+				A B C D E 
+			->
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n,a=1,b=1;
+					
+					cout << "Enter rows:";
+					cin>>n;
+					
+					while(a <= n){
+						while(b <= a){
+							cout << char('A' + n - a + b -1) << " ";
+							b++;
+						}
+						a++;
+						b=1;
+						
+						cout << "\n";
+					}
+					
+					return 0;
+				}
+
+				//or short
+					#include <iostream>
+					using namespace std;
+					int main() {
+						int n,a=1,b=1;
+						
+						cout << "Enter rows:";
+						cin>>n;
+						
+						while(a <= n){
+							while(b <= a)
+								cout << char(64 + n - a + b++) << " ";
+							a++;b=1;
+							cout << "\n";
+						}
+						return 0;
+					}
+
+	20)
+		Take user input for rows
+			Enter rows: 5
+			     *
+			    **
+			   ***
+			  ****
+			 *****
+			->
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int n,a=1,b=1,c,temp;
+			
+				cout << "Enter rows: ";
+				cin >>n;
+				c=n;
+				
+				while(a <= n){  
+					temp = c--;                 //shorthand for c
+					while(temp >= 1){
+						cout << " ";
+						temp--;
+					}
+					// c--;
+					while(b <= a){
+						cout << "*";
+						b++;
+					}
+					b=1;
+					a++;
+					cout << "\n";
+				}
+				return 0;
+			}
+
+			//or
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int n,a=1,b=1,space;
+			
+				cout << "Enter rows: ";
+				cin >>n;
+			
+				while(a <= n){
+					space = n - a;
+					while(space){
+						cout << " ";
+						space--;
+					}
+					// c--;
+					while(b <= a){
+						cout << "*";
+						b++;
+					}
+					b=1;
+					a++;
+					cout << "\n";
+				}
+				return 0;			
+			}
+
+	21)
+			Take user input for rows
+				Enter rows: 5
+					XXXXX
+					XXXX
+					XXX
+					XX
+					X
+				->
+					#include <iostream>
+					using namespace std;
+					int main() {
+						int n,a=1,b=1;
+						
+						cout << "Enter rows: ";
+						cin >>n;
+						b=n;
+						
+						while(a <= n){
+							while(b--){         //b shorthand
+								cout << "X";
+								// b--;
+							}
+							b=n-a++;        //a shorthand
+							// a++;
+							cout << endl;
+						}
+						return 0;
+					}
+
+	22)Take user input for rows
+		Enter rows: 5
+			* * * * * 
+			  * * * * 
+			    * * * 
+			      * * 
+			        * 
+		->
+		#include <iostream>
+		using namespace std;
+		int main() {
+			int n,a=1,b, space;
+			
+			cout << "Enter rows: ";
+			cin >>n;
+
+			b = n;
+			
+			while(a <= n){
+				space = a - 1;
+				while(space--){         //space shorthand
+					cout << "  ";
+					// space--;
+				}
+				while(b--){             //b shorthand
+					cout << "* ";
+					// b--;
+				}
+				
+				b= n - a;
+				a++;
+				cout << "\n";
+			}
+			return 0;
+		}
+
+	23)Take user input for rows
+		Enter rows: 5
+			1 1 1 1 1 
+			  2 2 2 2 
+			    3 3 3 
+			      4 4 
+			        5 
+		->
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int n,a=1,b, space;
+				cout << "Enter rows: ";
+				cin >>n;
+				b = n;
+				
+				while(a <= n){
+					space = a - 1;
+					while(space--){         //space shorthand
+						cout << "  ";
+						// space--;
+					}
+					while(b--){             //b shorthand
+						cout << a <<" ";
+						// b--;
+					}
+					
+					b= n - a;
+					a++;
+					cout << "\n";
+				}	
+				return 0;
+			}
+
+	24)Take user input for rows
+		Enter rows:5
+						1
+					2	2
+				3	3	3
+			4   	4	4	4
+		5  	5	5	5	5
+	 ->
+	 	#include <iostream>
+		using namespace std;
+
+		int main()
+		{
+			int n,i=1,j=1,space;
+			
+			cout << "Enter rows: ";
+			cin >> n;
+			
+			space = n-1;
+			
+			while(i <= n){
+				while(space--){                 //shorthand for space 
+					cout << "  ";
+					// space--;
+				}
+				
+				while(j++ <= i){                //shorthand for j
+					cout << i << " ";
+					// j++;
+				}
+				i++;
+				j = 1;
+				
+				space = n - i;          //important step.
+				
+				cout << "\n";
+			}
+
+			return 0;
+		}
+
+	25)Take user input for rows
+	 Enter rows:4
+		1 2 3 4
+		  2 3 4
+		    3 4
+		      4
+	 ->
+	 	#include <iostream>
+		using namespace std;
+
+		int main()
+		{
+			int n,i=1,j=1,space;
+			
+			cout << "Enter rows: ";
+			cin >> n;
+			
+			while(i <= n){
+				
+				//spacing
+				space = 1;
+				while(space < i){
+					cout << "  ";
+					space++;
+				}
+				
+				//printing num
+				while(j <= n){
+					cout << j << " " ;
+					j++;
+				}
+				cout << "\n";
+				i++;
+				j=i;            //important step
+			}
+			return 0;
+		}
+
+	26)Take user input for rows
+	    Enter rows:4
+					1
+				2	3
+			4	5	6
+		7	8	9	10
+	   ->
+	   	#include <iostream>
+		using namespace std;
+
+		int main()
+		{
+			int n,i=1,j=1,counter=1,space;
+			
+			cout << "Enter rows: ";
+			cin >> n;
+			
+			while(i <= n){	
+				//spacing
+				space = n - i;
+				while(space--){		//shorhand for space
+					cout << "\t";
+				}
+				
+				while(j <= i){
+					cout << counter++ << "\t";
+					j++;
+				}
+				i++;
+				cout << "\n";
+				j=1;
+			}	
+			return 0;
+		}
+
+	27)Take user input for rows
+		Enter rows:4
+
+						1
+					1	2	1
+				1	2	3	2	1
+			1	2	3	4	3	2	1
+		->
+			#include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				int n, i=1, j=1, k=1, space;
+				cout << "Enter rows: ";
+				cin >> n;
+				space = n;
+				
+				while(i <= n){
+					
+					//for space
+					while(space--) {
+						cout << "  ";
+					}
+					
+					space = n - i;
+					
+					while(j <= i){
+						cout << j << " ";
+						j++;
+					}
+					
+					while(k < i){
+						cout << i - k << " ";
+						k++;
+					}
+					
+					cout<<endl;
+					k=1;
+					j=1;
+					i++;
+				}				
+				return 0;
+			}
+
+	28)Take user input for rows
+		Enter rows:5
+		1	2	3	4	5	5	4	3	2	1
+		1	2	3	4	*	*	4	3	2	1
+		1	2	3	*	*	*	*	3	2	1
+		1	2	*	*	*	*	*	*	2	1
+		1	*	*	*	*	*	*	*	*	1
+		->
+			#include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				int n, i=1, j=1, space=1;
+				
+				cout << "Enter rows: ";
+				cin >> n;
+				
+				while(i <= n){
+					
+					//start looping
+					while(j <= n-i+1){              //important step
+						cout << j  << " "; 
+						j++;
+					}
+					
+					//spacing
+					while(space < i){
+						cout << "* * ";
+						space++;
+					}
+					
+					//reverse loop
+					while(--j){
+						cout << j << " ";
+					}
+					
+					//resetting the values
+					j=1;
+					space=1;
+					
+					cout << endl;
+					i++;
+				}
+				return 0;
+			}
+			//output
+				Enter rows: 5
+					1 2 3 4 5 5 4 3 2 1 
+					1 2 3 4 * * 4 3 2 1 
+					1 2 3 * * * * 3 2 1 
+					1 2 * * * * * * 2 1 
+					1 * * * * * * * * 1 
+
+	29) pyramid start pattern:
+		Enter rows: 5
+ 			    * 
+ 			   * * 
+ 			  * * * 
+ 			 * * * * 
+ 			* * * * *
+		->
+
+			#include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				int n, i=1, j=1, space;
+				cout << "Enter rows: ";
+				cin >> n;
+				space = n;
+				
+				while(i <= n){
+					
+					//for space
+					while(space--){
+						cout << " ";
+					}
+					
+					space = n - i;
+					
+					while(j <= i){
+						cout << "* ";
+						j++;
+					}
+					cout<<endl;
+					j=1;
+					i++;
+				}
+				return 0;
+			}
+---------------------------------------------------------------------------------------------------------
+	04/08/2023
+Lecture-5:
+	
+---------------------------------------------------------------------------------------------------------
+Lecture-6:
+---------------------------------------------------------------------------------------------------------
+Lecture-7:
+---------------------------------------------------------------------------------------------------------
+Lecture-8:
+---------------------------------------------------------------------------------------------------------
+Lecture-9:
+---------------------------------------------------------------------------------------------------------
+Lecture-10:
+---------------------------------------------------------------------------------------------------------
+Lecture-11:
+---------------------------------------------------------------------------------------------------------
+Lecture-12:
+---------------------------------------------------------------------------------------------------------
+
+
