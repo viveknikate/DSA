@@ -179,8 +179,8 @@ Lecture-2:
 			eg.
 				int a = 20;
 
-			min size -2³²
-			max size 2³²-1
+			min size -2³¹
+			max size 2³¹-1
 		
 		char-
 			size is 1 byte
@@ -354,7 +354,7 @@ Lecture-2:
 					convert 8 to binary format
 					1000
 					stored as
-						[-------- -------- -------- ----1000] rest all are zero only like,
+						[-------- -------- -------- ----1000] rest all are zero only like below,
 						[00000000 00000000 00000000 00001000]
 
 				step 3:
@@ -373,6 +373,18 @@ Lecture-2:
 						[11111111 11111111 11111111 11111000]		
 							--here in the answer first bit is 1, so it denotes its -ve num.
 							--this is 2s complement of 8
+				
+				step 4:
+					-To print that -ve num then take 2's complement of above output:
+						[11111111 11111111 11111111 11111000]		
+					
+					-1's complement
+						[00000000 00000000 00000000 00000111]
+						+							1
+						_____________________________________
+						[00000000 00000000 00000000 00001000]
+					
+					now print above as its 8, but -ve.
 
 		For +ve num only:
 			unsigned int a = 122;
@@ -384,6 +396,21 @@ Lecture-2:
 			you said its +ve by mentioning usigned so compiler treat it as positive & generates huge num.
 		
 		Operator:
+			Unary:
+				increment (++)
+				decrement (--)
+				eg.
+					postIncrement/postDecrement means the value will get incremented or decremented after using.
+					old value gets used then value gets updated
+						a++;		//postIncrement
+						a--;		//postDecrement
+					
+					
+					preIncrement/ preDecrement means the value will get incremented or decremented before using.
+					value gets incresed or decresed first then it will gets used.
+						++a;		//pretIncrement
+						--a;		//pretDecrement
+					
 			Arithmetic:-
 				+,-,*,/,%
 
@@ -391,8 +418,8 @@ Lecture-2:
 				float / int = float		//if we divide float by int the answer will be floating point num.
 				double / int = double		//if we divide double by int the answer will be double.
 
-			Relational:-
-				= assignment operator
+			Relational:- 
+				To Check
 				== is equal to equal to (double equals to)
 				< is less than
 				> is greater than
@@ -400,6 +427,16 @@ Lecture-2:
 				>= is greater than equal to
 				!= is not equal to
 			
+			Assignment operator:
+				=, +=, *=, -=, /=, %= etc
+				eg.
+					a = 10;
+					a = a + 10;		-->		a += 10;
+					a = a * 10;		-->		a *= 10;
+					a = a - 10;		-->		a -= 10;
+					a = a / 10;		-->		a /= 10;
+					a = a % 10;		-->		a %= 10;
+
 			Logical:-
 				&& AND operation takes two boolean values and returns True if both are True else False.
 				|| OR any one conditions should true for that statement to execute.
@@ -534,6 +571,29 @@ Lecture-3:
 				}
 
 	6) While Loop:
+		while loop require just a num inside as condition it may be -ve or +ve, it will work, 
+		except the 0, if zero cames then loop breaks.
+		eg.
+			while(1)		//works
+			while(100)	//works
+			while(-23)	//works
+			while(5)		//works
+
+			while(0)		//stops this will breaks the loop.
+			eg.
+				#include <iostream>
+				using namespace std;
+
+				int main()
+				{
+					int i=1, b=-5;
+					while(b++){
+						std::cout << "say hii" << i++ << std::endl;
+						//b++;
+					}
+					return 0;
+				}
+
 	 eg
 	 	//WAP TO PRINT THE N NUMS:
 			#include <iostream>
@@ -1931,10 +1991,682 @@ Lecture-4:
 ---------------------------------------------------------------------------------------------------------
 	04/08/2023
 Lecture-5:
+	Bitwise Operators, For Loops, Operator Precedence & Variable Scoping
+	-Bitwise Operator
+		This operator will work on BIT level.
+			1). AND (&)
+			2). OR (|)
+			3). NOT (~)
+			4). XOR (^)
+		
+		Let’s look at the truth table of the bitwise operators
+			  Operator	Description				Example
+				&		Bitwise AND	 			a & b
+				|		Bitwise OR	 			a | b
+				^		Bitwise XOR	 			a ^ b
+				~		Bitwise NOT (Complement)		  ~a
+				<<		Bitwise Left Shift			a << n
+				>>		Bitwise Right Shift			a >> n
+
+
+		Table:
+			+-------+-------+-------+--------+-------+-------+--------+--------+
+			|   a   |   b   | a & b | (a | b)| a ^ b |   ~a  | a << 1 | a >> 1 |
+			+-------+-------+-------+--------+-------+-------+--------+--------+
+			|   0   |   0   |   0   |   0    |   0   |   1   |   0    |   0    |
+			|   0   |   1   |   0   |   1    |   1   |   1   |   0    |   0    |
+			|   1   |   0   |   0   |   1    |   1   |   0   |   2    |   0    |
+			|   1   |   1   |   1   |   1    |   0   |   0   |   2    |   0    |
+			+-------+-------+-------+--------+-------+-------+--------+--------+
+
+
+		eg.
+			#include <iostream>
+			#include <bitset>
+			using namespace std;
+
+			int main() {
+				// Bitwise AND (&)
+				int a = 12;  // 1100 in binary
+				int b = 25;  // 11001 in binary
+				int result_and = a & b;
+				cout << "Bitwise AND: " << result_and << " (" << bitset<8>(result_and) << ")" << endl;  // Output: 8 (00001000)
+
+				// Bitwise OR (|)
+				int result_or = a | b;
+				cout << "Bitwise OR: " << result_or << " (" << bitset<8>(result_or) << ")" << endl;  // Output: 29 (00011101)
+
+				// Bitwise XOR (^)
+				int result_xor = a ^ b;
+				cout << "Bitwise XOR: " << result_xor << " (" << bitset<8>(result_xor) << ")" << endl;  // Output: 21 (00010101)
+
+				// Bitwise NOT (~)
+				int result_not = ~a;
+				cout << "Bitwise NOT: " << result_not << " (" << bitset<8>(result_not) << ")" << endl;  // Output: -13 (11110011)
+
+				// Bitwise Left Shift (<<)
+				int n_left = 2;
+				int result_left = a << n_left;
+				cout << "Bitwise Left Shift: " << result_left << " (" << bitset<8>(result_left) << ")" << endl;  // Output: 48 (00110000)
+
+				// Bitwise Right Shift (>>)
+				int n_right = 2;
+				int result_right = a >> n_right;
+				cout << "Bitwise Right Shift: " << result_right << " (" << bitset<8>(result_right) << ")" << endl;  // Output: 3 (00000011)
+
+				return 0;
+			}
+		
+			Practice:
+				#include <iostream>
+				using namespace std;
+
+				int main()
+				{
+					int a=4,b=6;
+					
+					cout<<"A&B "<< (a&b) << endl;           //4
+					cout << "A|B "<< (a|b) << endl;         //6
+					cout << "A^B "<< (a^b) << endl;         //2
+					cout << "~A "<< (~a) << endl;           //-5
+					
+					//~a --> 32 bit
+						// 4 ==> [-------- -------- -------- -----100] all bits are zero 
+						// ~a ==> [11111111 11111111 11111111 11111011]    reverse of above 
+						
+						// from first bit you can say that it's -ve num.
+						//     so before to print take its 2's complement
+						//     1's complement [-------- -------- -------- -----100] adding + 1 in it.
+						//     ==> [-------- -------- -------- -----101]
+							//this above binary in decimal is 5 so ans is -5.
+					return 0;
+				}
+		
+		-Left shift:
+			syntax.
+				var << num;
+			eg.
+				5 << 1		ie.		101 after shifting 1 bit to left 1010, so 1010 is 10.
+				3 << 2         ie. 		011 after shifting 2 bit to left 1100 so its 12.
+
+		-NOTE: here you can see when we use left shift it will get multiplied by 2 in most cases.
+				but BE CAREFULL SOMETIME IT WILL GENERATE AN -VE NUM ALSO, WHEN NUM IS TOO LARGE,
+				SO, ITS NOT LIKE THAT WHEN WE DO LEFT SHIFT THEN IT'LL GET MULTIPLIED BY 2.
+			
+		-Right Shift:
+			syntax.
+				var >> num;
+			eg.
+				15 >> 1;			ie. right shift by 1 bit.
+				
+				5 >> 2;			ie. right shift by 2 bit,
+								101 >> 2 -->	001 its 1.
+
+				5/2 = 2 ------- pass 1
+				2/2 = 1 ------- pass 2	
+				so 5 >> 2 => 1
+		
+		NOTE: 
+			either it is a left shift(<<) or right shift(>>) to any +VE NUM, 
+			then num of bits padded with zero(0). (means zero will get added after shifting).
+
+			else if the num is -ve then padding will depends on compiler
+		
+		eg.
+			int a=1,b=2;
+
+			if(a-- >0 && ++b > 2)				//it will check for b also cause && require all condition must be true
+				cout<<"if";
+			else
+				cout<<"else";
+			
+			cout<<endl<<a<<" "<<b;		//0 3 
+		
+			//OR
+			int a=1,b=2;
+			if(a-- >0 || ++b > 2)				//it will check for a only, cause one condition needs to be true,
+				cout<<"if";					//so if first condition is true then control don't go for next condition & 
+			else								//b won't get incremented also. check output
+				cout<<"else";
+			
+			cout<<endl<<a<<" "<<b;		//0 2
+		
+	-For Loop:
+		flow:
+			once we visit initialization part, 
+			then for next all iteration we just check the condition & updation value.
+
+		for(initialize; condition; increment/ decrement){
+			//statement
+		}
+		//or
+		for(;;){
+				
+		}
+		eg.
+			for(int i=1; i<=5; i++){
+				cout << i;
+			}
+			//or
+
+			int i = 1;
+			for(;;){
+				if(i<=n){
+					cout << i++ ;
+				}else{
+					break;
+				}
+			}
+
+			//multiple
+			for(int a=0, b=1; a>=0, b>=1; a--, b--)
+				cout<<a<<" "<<b<<endl;
+
+			for(int a=0, b=1; a>=0 && b>=1; a--, b--)
+				cout<<a<<" "<<b<<endl;
+		
+		1). WAP Sum of n
+			#include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				int n, sum=0;
+				cout << "enter n ";
+				cin>>n;
+				for(int i =1; i<=n; i++)
+					sum += i;
+					
+				std::cout <<"The sum of "<<n<<" num is "<<sum << std::endl;
+				
+				return 0;
+			}
+		
+		2). WAP for Fibonacci series
+			#include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				int n,prev=0, cur=1,temp;
+				cout << "enter n ";
+				cin>>n;
+				
+				for(int i =1; i<=n; i++){
+					
+					cout << prev << " ";
+					
+					temp = cur + prev;
+					prev = cur;
+					cur = temp;
+					
+				}
+					
+				return 0;
+			}
+		
+		3). check entered num is Prime num or not?
+			#include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				int n;
+				cout << "Enter num : ";
+				cin >> n;
+				
+				bool PRM = true;
+				
+				for(int i=2; i < n/2; i++)
+					if(n % i == 0){
+						PRM = false;
+						break;
+					}
+				
+				if(PRM)
+					cout << n << " is prime num.";
+				else
+					cout << n << " is not prime num.";
+				
+				cout << endl << "END";
+				return 0;
+			}
+		
+		4). Print all prime nums between given range
+			#include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				int startNum, endNum;
+				
+				std::cout << "Enter Range to print all Prime nums in-between : " << std::endl;
+				
+				std::cout << "Enter Starting num :: ";
+				std::cin >> startNum;
+				
+				std::cout << "Enter Ending num :: ";
+				std::cin >> endNum;
+				
+				std::cout << "Prime nums in-between given range :: " << std::endl;
+					
+				for(int i = startNum; i <= endNum; i++){
+					
+					bool PRM = true;
+					
+					if( i == 1){
+						std::cout << "1 neither prime nor composite" << std::endl;
+						continue;
+					}
+					
+					for(int j=2; j <= i/2; j++)
+						if(i % j == 0){
+							PRM = false;
+							break;
+						}
+					
+					if(PRM)
+						std::cout << i << " is Prime num." << std::endl;
+					else{
+						// std::cout << i << " is not Prime num." << std::endl;
+						continue;
+					}
+				}
+				
+				cout << endl << "END";
+				return 0;
+			}
+
+		5). 
+
+	-Variable & Scope:
+		-You can't create same variable within single block.
+		eg.
+			#include <iostream>
+			int main()
+			{    
+				int a =10;
+				std::cout << a << std::endl;                //10
+				
+				if(true){
+					std::cout <<"inside if before creating "<< a << std::endl;          //10
+					int a = 89, b = 77;
+					std::cout <<"inside if after creating "<< a << std::endl;           //89
+					std::cout << "b = "<< b << std::endl;
+				}
+				
+				// std::cout << "b" <<b<< std::endl;                       //you cant access b outside if block
+				std::cout << "Outside if : "<< a << std::endl;          //10
+				
+				int i=1;
+				for(int i= 5;i<=5;i++)
+					std::cout << "HII" << std::endl;
+					
+				//below code works fine.
+				if(1){
+					int b;
+					
+					if(1){
+						int b;
+						
+						if(1){
+							int b;
+							
+							if(1){
+								int b;
+							}
+						}
+					}
+				}
+				std::cout << std::endl << "END";
+				return 0;
+			}
+
+	-Operator Precedence:
+		BODMAS
+			-Brackets
+			-Orders (Exponents and Roots): 
+				Evaluate exponents and roots next. This includes calculations involving powers (^) and square roots (√).
+			D - Division
+			M - Multiplication
+			A - Addition
+			S - Subtraction
+		
+	-Practice:
+		1].WAP print the difference of product & sum of given num.
+		
+			#include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				int num;
+				cout << "Enter num ";
+				cin >> num;
+				
+				int sum =0 , prod=1;
+				
+				while(num > 0){
+					int temp = num % 10;
+					
+					sum = sum + temp;
+					prod = prod * temp;
+					
+					num = num / 10;
+				}
+				
+				std::cout << "SUM "<< sum << std::endl;
+				std::cout << "Product "<< prod << std::endl;
+				std::cout << "Product - SUM "<< prod-sum << std::endl;
+				
+				cout << "END";
+				return 0;
+			}
+
+		2]. WAP to count  Number of 1 Bits in given num:
+			#include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				int count =0,n=123;
+				while(n > 0){
+					if(n & 1){
+						c++;
+					}
+					n >>= 1;
+				}
+				cout << "no.of 1 bit " <<count;
+			}
+		
+		3]. Reverse integer
+
+			int reverse(int n) {
+				int rev = 0;
+				while(n){
+					if( rev > INT_MAX/10 || rev < INT_MIN/10)   return 0;		//if crossing the limit then return 0.
+					rev = (rev * 10) +  n % 10;
+					n /= 10;
+				}
+				return rev;
+			}
+
+			#include <iostream>
+				using namespace std;
+				int main()
+				{
+					int rev = 0, n;
+					
+					cin>>n; //123
+
+						while(n > 0){
+							int lastDigit = (n % 10);
+							rev = rev * 10 + lastDigit;
+							n /= 10;
+						}
+						cout << rev;
+					return 0;
+				}
+
+			int reverse(int x) {
+				int rev = 0, n = abs(x);				//abs() it convert num -ve to +ve, & +ve is +ve only. 
+
+				while(n > 0){
+					rev += (n % 10);
+					
+					if(n > 10){
+						rev *= 10;
+					}
+					
+					n /= 10;
+				}
+				if(x <0 )
+					return -rev;
 	
+				return rev;
+			}
+
+			//using do-while loop.
+			#include <iostream>
+				using namespace std;
+
+				int main()
+				{
+					int n;
+					std::cout << "enter n:" << std::endl;
+					cin>> n;
+					int rev =0;
+					
+					do{
+						rev = (n % 10) + rev * 10;
+					}while(n /=10);
+					
+					cout<<"The Reverse "<< rev;
+					return 0;
+				}
+
+		4]. Complement of base 10 integer
+
+		5]. Number complement 
+		6]. Binary to decimal conversion.
+		7]. Decimal to binary
+		8]. Square root of n
+		9]. Power of n, pow(a,b);
+	
+		10]. WAP to find entered num is even or odd.
+			#include <iostream>
+			using namespace std;
+				int main()
+				{
+					//check num is Even or odd..
+					int num;
+					cout << "Enter num :";
+					cin >> num;
+					
+					if( num % 2 == 0)
+						cout << num << " is Even." <<endl;
+					else
+						cout << num << " is Odd." <<endl;
+
+					//or
+					//(num % 2 == 0)? std::cout << num << " is Even" : cout << num << " is odd";
+
+
+					return 0;
+				}
+
+			//or without using modulo operator,
+				cout << (num & 1 == 1); 
+				-This part is attempting to check whether the least significant bit (LSB) of num is 1. 
+				However, the code is not written correctly for this purpose.
+				The issue lies in operator precedence. 
+				The equality operator (==) has higher precedence than the bitwise AND operator (&). 
+				So, the expression is evaluated like this:
+					(num & (1 == 1))
+				
+				To fix this issue add parentheses,
+					cout << ((num & 1) == 1);
+				#include <iostream>
+				using namespace std;
+
+				int main()
+				{
+					//check num is Even or odd..
+					int num;
+					cout << "Enter num :";
+					cin >> num;
+					
+					((num & 1) == 1) ? printf("%d is Odd num",num) : printf("%d is Even num.",num);
+
+					//or
+					//((num & 1) == 0) ? printf("%d is Even num.",num) : printf("%d is Odd num",num) ;
+	
+					return 0;
+				}
+
+			//or
+				first division then multiply, it because of rounding in integer,
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int num;
+					std::cout << "Enter num: ";
+					std::cin >> num;
+
+					if((num / 2) * 2 == num)
+						cout << "even"<<std::endl;
+					else
+						cout << "Odd"<<std::endl;
+						
+					std::cout << "End" ;
+					return 0;
+				}
 ---------------------------------------------------------------------------------------------------------
+	05/08/23
 Lecture-6:
+	Binary & Decimal Num System
+		1) Decimal to Binary
+			-divide by 2.
+			-Store remainder
+			-repeat above 2 step until n != 0.
+			-at last reverse the answer
+			eg.
+				5 -> 101
+				7 -> 111
+			->
+				#include <iostream>
+				#include <math.h>
+				using namespace std;
+
+				int main()
+				{
+					int num, i=0;
+					std::cout << "Enter num :" << std::endl;
+					cin>>num;
+					
+					int binaryForm = 0;
+					cout << "Binary of " << num << " is ";
+					
+					while(num){
+						int bit = num & 1;
+						
+						binaryForm = (bit * pow(10,i++)) + binaryForm;
+						
+						num >>= 1;          //num = num >> 1;
+					}
+					std::cout << binaryForm <<std::endl;	
+					return 0;
+				}
+			
+			eg. to keep same sequence of num.
+				#include <iostream>
+				#include <math.h>
+				using namespace std;
+
+				int main()
+				{
+					int a = 203,b=0,last,i=0;
+					
+					std::cout << a << std::endl;
+					
+					while(a){
+						last = a % 10;
+						b = b + last* pow(10,i++);
+						a /=10;
+					}
+
+					cout<<b;
+					return 0;
+				}
+
+			//Homework -ve num to binary
+				->
+
+		2) Binary to Decimal
+			-multiply by 2's power to that numbers binary bit
+			-if that bit is 1, then consider 2's power else ignore
+			-last add all 2's power
+
+				1 -> 1011
+
+				=(2⁰ * 1) + (2¹ * 1) + (2² * 0) + (2³ * 1)
+				=1+2+0+8
+				=11.
+			->
+				#include <iostream>
+				#include <math.h>
+				using namespace std;
+
+				int main()
+				{
+					int num,i=0;
+					std::cout << "Enter num in binary : " << std::endl;
+					cin>>num;            //1010
+					
+					int deci=0;
+
+					//using while loop
+					while(num){
+						
+						if(num % 10 == 1)					//if(num%10)
+							deci = pow(2,i) + deci;
+						i++; 
+						num /= 10;
+					}
+					
+					//or using do-while loop
+					//do{
+					//	if(num % 10 == 1)				//if(num%10)
+					//		deci = pow(2,i) + deci;
+					//	i++;
+					//}while(num /=10);
+
+					cout << "The Decimal num is :: "<<deci;
+					return 0;
+				}
+		
+		#Bitset:
+			#include <bitset>
+			#include <iostream>
+
+			int main() {
+				std::bitset<5> bits; // Creates a bitset with 5 bits, initialized to all zeros
+				
+				bits[2] = 1; // Set the third bit to 1
+				std::cout << "Bitset value: " << bits << std::endl; // Output: 00100
+				
+				return 0;
+			}
+
+		eg.
+			#include <bitset>
+			std::bitset<8> bits; // Creates a bitset with 8 bits, initialized to all zeros
+			std::bitset<8> anotherBits("10101010"); // Initializes the bitset with the given binary string
+
+			std::bitset<32> thirtyTwoBits;   // Creates a bitset with 32 bits
+			std::bitset<64> sixtyFourBits;   // Creates a bitset with 64 bits
+			std::bitset<128> oneTwentyEightBits; // Creates a bitset with 128 bits
+		eg.
+			it's okay to define a std::bitset<8> and initialize it with a binary string that has fewer than 8 characters. 
+			The missing bits will be implicitly set to 0. In your example, std::bitset<8> anotherBits("101"), 
+			since the binary string "101" has only 3 characters, the remaining 5 bits will be set to 0, 
+			resulting in a bitset equivalent to "00000101".
+
+			#include <bitset>
+			#include <iostream>
+
+			int main() {
+				std::bitset<8> anotherBits("101"); // Initializes the bitset with "101"
+
+				std::cout << "Bitset value: " << anotherBits << std::endl; // Output: 00000101
+				
+				return 0;
+			}
+				In this example, the std::bitset<8> is initialized with the binary string "101", 
+				which fills the lower three bits. The remaining bits are automatically set to 0, 
+				resulting in the bitset value "00000101".
 ---------------------------------------------------------------------------------------------------------
+	06/08/23
 Lecture-7:
 ---------------------------------------------------------------------------------------------------------
 Lecture-8:
@@ -1947,5 +2679,3 @@ Lecture-11:
 ---------------------------------------------------------------------------------------------------------
 Lecture-12:
 ---------------------------------------------------------------------------------------------------------
-
-
