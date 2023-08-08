@@ -536,7 +536,17 @@ Lecture-3:
 				the speed of the execution will be much
 				higher than 'if-else'
 
-				-Break keyword
+				-Break keyword:
+					The break in C++ is a loop control statement that is used to terminate the loop. 
+					As soon as the break statement is encountered from within a loop, 
+					the loop iterations stop there and control returns from the loop immediately to the first statement after the loop.
+				
+				-Continue:
+					C++ continue statement is a loop control statement that forces the 
+					program control to execute the next iteration of the loop. As a result, 
+					the code inside the loop following the continue statement will be 
+					skipped and the next iteration of the loop will begin.
+
 			eg.
 				#include <iostream>
 				using namespace std;
@@ -569,6 +579,8 @@ Lecture-3:
 					}
 					return 0;
 				}
+			
+
 
 	6) While Loop:
 		while loop require just a num inside as condition it may be -ve or +ve, it will work, 
@@ -2444,16 +2456,8 @@ Lecture-5:
 					cout<<"The Reverse "<< rev;
 					return 0;
 				}
-
-		4]. Complement of base 10 integer
-
-		5]. Number complement 
-		6]. Binary to decimal conversion.
-		7]. Decimal to binary
-		8]. Square root of n
-		9]. Power of n, pow(a,b);
 	
-		10]. WAP to find entered num is even or odd.
+		4]. WAP to find entered num is even or odd.
 			#include <iostream>
 			using namespace std;
 				int main()
@@ -2659,7 +2663,12 @@ Lecture-6:
 				std::bitset<8> anotherBits("101"); // Initializes the bitset with "101"
 
 				std::cout << "Bitset value: " << anotherBits << std::endl; // Output: 00000101
-				
+
+				//printing any binary num
+					int n;
+					cin>>n;
+					std::cout << "n "<< bitset<8>(n) << std::endl;
+   				
 				return 0;
 			}
 				In this example, the std::bitset<8> is initialized with the binary string "101", 
@@ -2668,14 +2677,1186 @@ Lecture-6:
 ---------------------------------------------------------------------------------------------------------
 	06/08/23
 Lecture-7:
+	LeetCode Problem Solving Session
+	eg.
+		max/min int printing:
+			#include<climits>				
+				cout<<INT_MIN;				//minimum value of int stored in INT_MIN
+				cout<<INT_MAX;				//maximum value of int stored in INT_MAX
+
+	Practice:
+		1]. Complement of base 10 integer
+			5 -> 101
+			complement -> 010
+			which is 2 in decimal
+
+			7 -> 111
+			complement -> 000
+			which is 0 in decimal
+
+			#include <iostream>
+				#include<bitset>
+				using namespace std;
+
+				int main()
+				{
+					
+					int n;
+					cin>>n;
+					
+					if(!n){                                 //if(n == 0)
+						cout << "new num "<< !n;            //cout << "new num "<< 1;
+						return 0;
+					}
+					
+					int temp = n, mask=0;
+					
+					while(temp){
+						mask <<= 1;              //mask = mask << 1;
+						mask |= 1;               //mask = mask | 1;
+						temp >>=1;               //temp =  temp >> 1;
+					}
+					
+					n = (~n) & mask;
+					
+					cout << "new num "<<n;
+					
+					return 0;
+				}
+
+			LeetCode:
+				int bitwiseComplement(int n) {
+
+					if(!n){
+						return !n;
+					}
+
+					int temp = n,mask=0;
+
+					while(temp){
+						mask <<=1;
+						mask |= 1;
+						temp >>= 1;
+					}
+
+					n = (~n) & mask;
+					return n;
+				}
+
+		2]. Given num is representation of power of 2.	(hint if no.of setbits = 1 then that num is power of 2)
+			#include <iostream>
+				#include <math.h>
+				using namespace std;
+
+				int main()
+				{
+					int n,i=0;
+					cin>>n;
+					
+					while(n >=1){
+						int temp = pow(2,i++);
+						if(n == temp){
+							std::cout << "TRUE" << std::endl;
+							return 0;
+						}
+						
+						if(temp > n)
+						{
+							cout <<"FALSE";
+							return 0;
+						}
+					}
+					cout << "FALSE";
+					return 0;
+				}
+
+			LeetCode:
+				bool isPowerOfTwo(int n) {
+					int temp=1;					
+					while(n>=1){
+						if(n == temp)
+							return true;
+						
+						if(temp > n)
+							return false;
+
+						temp = temp * 2;
+					}
+					return false;
+				}	
+
+				//or
+				if(n==0) return false;
+				while(n%2==0) n/=2;
+				return n==1;	
 ---------------------------------------------------------------------------------------------------------
+	07/08/23
 Lecture-8:
+	Switch case & functions:
+		syntax.
+			switch(condition){
+				case value_1 :
+					//statement block ;
+					break;
+					
+				case value_2:
+					//statement block ;
+					break;
+
+				case value_3:
+					//statement block;
+					break;
+
+				default:
+					//statement block ;
+			}
+			--here for above case no need to use break after default, coz default is at the last of switch case,
+				so it will automatically go out of switch case and continue with next line.
+
+			--in place of condition in switch case [switch(condition)], you can keep integer or character value,
+				but not float / string value.
+				you can keep expression also, like	
+				switch(a+b*10)		which generates an constant value.
+				
+			
+			--default case is not mandatory, if its there in code then GOOD, if its not then NO WORRIES.
+			--default case is better to keep at last,
+		->		
+			Include break after default: 
+				If you want the switch statement to exit immediately after the default case is executed, 
+				you should include a break statement. This prevents the program from continuing to execute 
+				code in other case blocks that come after the default case.
+				switch(condition){
+					case value_1 :
+						//statement block ;
+						break;
+						
+					case value_2:
+						//statement block ;
+						break;
+
+					default:
+						//statement block ;
+						break;
+					
+					case value_3:
+						//statement block;
+						break;
+				}
+
+				--if the code is like this above then better to keep the break after default, if you don't 
+					write break; after default, then it'll continues to executes the next cases which are after default.
+
+				Nested switch:
+					switch(condition){
+						case value_1 :
+							//statement block ;
+							break;
+							
+						case value_2:
+							switch(condition){
+									case value_1 :
+										//statement block ;
+										break;
+										
+									case value_2:
+										//statement block ;
+										break;
+
+									default:
+										//statement block ;
+										break;
+									
+									case value_3:
+										//statement block;
+										break;
+								}
+							break;
+
+						default:
+							//statement block ;
+							break;
+						
+						case value_3:
+							//statement block;
+							break;
+					}
+		
+		eg.
+			#include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				int num = 1;
+				char ch = '1';
+				switch(ch){
+					case '2':
+						std::cout << "2nd Character" << std::endl;
+						break;
+						
+					case '3':
+						std::cout << "3rd Character" << std::endl;
+						break;
+						
+					case '1':
+						switch(num){
+							case 1:
+								std::cout << "1st Character Nested switch" << std::endl;
+								break;
+						}
+						break;
+						
+					default:
+						std::cout << "Default case" << std::endl;
+				}
+				return 0;
+			}
+			//output : 1st Character Nested switch
+
+		-Function exit(0)
+			--used to come out from infinite loop if we got stuck, without using break. 
+			--The most common convention is to use exit(0) to indicate successful execution.
+			--and exit(1) (or any non-zero value) to indicate an error or abnormal termination.
+
+			#include <iostream>
+			#include <stdlib.h>
+			using namespace std;
+
+			int main()
+			{
+				int num = 1;
+				
+				while(1){
+					std::cout << num << std::endl;
+					if(num > 10)
+						exit(0);
+					num++;
+				}
+			return 0;
+			}
+		
+		Practice:
+			#include <iostream>
+				using namespace std;
+
+				int main()
+				{
+					int a,b;
+					char Op;
+					
+					std::cout << "Enter A :: ";
+					std::cin >> a;
+					std::cout << "Enter B :: ";
+					cin>>b;
+					
+					cout<<"Enter Operation want to perform: ";
+					cin>>Op;
+					
+					switch(Op){
+						case '+':
+							{
+								std::cout << "Addition: " <<a+b << std::endl;				//you can use Brackets for cases also.
+								break;
+							}
+							
+						case '*':
+							{
+								std::cout <<  "Multiplication: " << a*b << std::endl;
+							}
+							break;
+						
+						case '-':
+							std::cout <<  "Subtraction: " <<  a-b << std::endl;
+							break;
+						
+						case '/':
+							std::cout <<   "Division: " << a/b << std::endl;
+							break;
+						
+						case '%':
+							std::cout <<  "Remainder: " <<  a%b << std::endl;
+							break;
+						default:
+							cout << "Not Matching Operation.\n";
+					}
+					
+					std::cout << "END" << std::endl;
+					return 0;
+				}
+
+			#include <iostream>
+				using namespace std;
+
+				int main()
+				{
+					int num;
+					std::cout << "Enter Num : " << std::endl;
+					cin >>num;
+					
+					switch(1){
+						
+					}
+					int temp = num;
+					//1234      =12
+					
+					std::cout << "you need "<< num/ 100 << " 100 notes" << std::endl;        //12
+					num -= (num/100) * 100;                     //1234-1200 = 34
+					
+					std::cout << "you need "<< num / 50 << " 50 notes" << std::endl;         //0
+					num -= (num/50) * 50;                                               //34
+					
+					std::cout << "you need "<<num/20 << " 20 notes" << std::endl;        //1
+					num -= (num/20) * 20;                                           //34-20 =14
+					
+					std::cout << "you need "<< num/10 << " 10 notes" << std::endl;       //1
+					num -= (num/10) * 10;                                       //14-10=4
+					
+					std::cout << "you need "<< num/1 << " 1 coins" << std::endl;       //4
+					num = num;
+
+					std::cout << "For "<<temp<<" Amout." << std::endl;
+					
+					std::cout << "END" << std::endl;
+					return 0;
+				}	
+
+		Functions:
+			A function is a block of code that performs a specific task.
+			Suppose we need to create a program to create a circle and color it. We can create two functions to solve this problem:
+
+				a function to draw the circle
+				a function to color the circle
+			Dividing a complex problem into smaller chunks makes our program easy to understand and reusable.
+
+			There are two types of function:
+				Standard Library Functions: Predefined in C++
+				User-defined Function: Created by users 
+			
+			syntax to declare a function is:
+
+				returnType functionName (parameter1, parameter2,...) {
+					// function body   
+				}
+
+				Here's an example of a function declaration.
+				
+				// function declaration
+				void greet() {
+					cout << "Hello World";
+				}
+
+				Here,
+					the name of the function is greet()
+					the return type of the function is void
+					the empty parentheses mean it doesn't have any parameters
+					the function body is written inside {}
+				
+				Calling a Function
+					In the above program, we have declared a function named greet(). 
+					To use the greet() function, we need to call it.
+					Here's how we can call the above greet() function.
+						greet();
+			eg.
+				Power of n, pow(a,b);
+					#include <iostream>
+					using namespace std;
+
+					int power(int, int);            //function declaration,because after main function
+											//we are giving the function definition
+					int main()
+					{
+						int a,b;
+						std::cout << "Enter a, b :: " << std::endl;
+						std::cin >> a>>b;
+						
+						int ans = power(a,b);
+						
+						cout<<"Power "<<ans;
+						
+						return 0;
+					}
+
+						int power(int a, int b){
+
+							if(a == 0)                  //if(!a)
+								return 0;       
+							
+							int t=a;
+							while(--b){
+								a = a * t;
+							}
+							return a;
+						}
+
+				Even Odd function:
+					#include <iostream>
+					using namespace std;
+
+					bool isEven(int);        //function declaration
+
+					int main()
+					{
+						int a;
+						std::cout << "Enter a ";
+						cin >> a;
+						
+						// (a&1)?cout<<"Odd":cout<<"Even";      
+						//or
+						
+						isEven(a)?cout<<" Even": cout<< " Odd";         //using function
+						
+						return 0;
+					}
+
+						bool isEven(int num){
+							if(num % 2 ==0)
+								return 1;
+							return 0;
+						}
+
+				nCr= n!/(r!* (n-r)!)
+					#include <iostream>
+					using namespace std;
+
+					int fact(int);
+					int nCr(int, int); 	          //function declaration  its not required if 
+											//we defined function before main function
+											//but here we are giving the function definition after main function.
+					int main()
+					{
+						int n,r;
+						cout<<"Enter n & r :: ";
+						cin>>n>>r;
+						
+						cout<<n<<"C"<<r<<" = "<< nCr(n,r);
+						return 0;
+					}
+
+						int nCr(int a, int b){
+						
+						int NMR = fact(a);                  //numerator
+						
+						int DNMR = fact(b) * fact(a-b);                     //denominator
+						
+						return NMR/DNMR;
+					}
+
+					int fact(int num){
+					
+						if(num == 0)
+							return 1;
+						int t = num;
+						
+						for(int i=1; i<t; i++)
+							num *= i;                               //num = num * i;
+
+						return num;
+					}
+
+				Printcouting:
+					//void function returns nothing, 
+
+					#include <iostream>
+					using namespace std;
+
+					// void printCouting(int);             //function declaration no need here coz 
+												//we defined the function with its definition here.
+
+					void printCouting(int c){
+					for(int i=1;i<=c;i++)
+						std::cout << i << std::endl;
+					}
+
+					int main()
+					{
+						int n;
+						cin>>n;
+						
+						printCouting(n);
+						
+						std::cout << "END" << std::endl;
+						return 0;
+					}
+
+				isPrime:
+					#include <iostream>
+					using namespace std;
+
+					bool isPrime(int num){
+						for(int i=2; i<= num/2; i++)
+							if(num % i == 0)
+								return 1;
+						
+						return 0;
+					}
+
+					int main()
+					{
+						
+						int n;
+						cin>>n;
+						
+						isPrime(n)? cout<<"NO "<<n<<" is NOT Prime num" :cout<<"Yes "<<n<<" is Prime num"; 
+
+						return 0;
+					}
+
+				NOTE:
+					You can use return in void returnType function without specifying any number;
+					eg.
+						This is OK.
+						void isPrime(int num){
+								for(int i=2; i<= num; i++)
+									cout<<i;							
+								return ;
+							}
+						
+						This is not OK.
+							void isPrime(int num){
+								for(int i=2; i<= num; i++)
+									cout<<i;
+								
+								return 0;						//here return 0, void doesn't return anything will generate error.
+							}
+
+			function calling stack:
+				FILO	: First in Last out
+			
+			-Parameter/ argument:
+				Formal Parameter:
+					-A variable and its type as they appear in the prototype of the function or method.
+					-Formal parameters are declared in the function signature and 
+					 act as placeholders for values that the function will receive.
+					 eg.
+					 	void displayNumber(int num); // Formal parameter: "int num"
+
+				Actual Parameter: 
+					-The variable or expression corresponding to a formal parameter that appears in 
+					 the function or method call in the calling environment.
+					-Actual parameters (arguments) are the specific values that are 
+					 provided to the function when it is called, corresponding to the formal parameters
+					eg.
+						displayNumber(42); // Actual parameter: "42"
+
+			-Pass by Value/ call by value:
+				#include <iostream>
+				using namespace std;
+				void func(int n){						//formal parameter
+					n++;
+					std::cout << "Inside func: "<< n << std::endl;
+				}
+
+				int main()
+				{
+					int n = 90;
+					std::cout << "Before func: "<< n << std::endl;			//90
+					func(n);											//91			//Actual parameter
+					std::cout << "After func: "<< n << std::endl;			//90
+					return 0;
+				}
+
+			-Pass by reference/ call by reference:
+				#include <iostream>
+				using namespace std;
+
+				void func(int &n){
+					n++;
+					std::cout << "Inside func: "<< n << std::endl;
+				}
+
+				int main()
+				{
+					int n = 90;
+					std::cout << "Before func: "<< n << std::endl;			//90
+
+					//pass by reference- sending memory 
+					func(n);											//91
+					
+					std::cout << "After func: "<< n << std::endl;			//91
+					return 0;
+				}
+
+			Homework:
+				1)ArithmeticProgression  = 3 * n +  7 make function of it.
+
+				2)Total no.of set bits (1) from given 2 numbers.
+					eg.
+						2 -> 10 			->1
+						3 -> 11			->2
+						Total set bits : 1+2 = 3 
+				
+				3)Fibonacci series nth term function:
+					input: n = 5;			// 0 1 1 2 3 5 8 13
+					output: 3			//5th num of that series.
+
+			Local variable: 
+				A variable declared within a function or a block of code is called a local variable. 
+				Local variables are frequently used to temporarily store data in a defined 
+				scope where they can be accessed and manipulated. They are stored in the memory stack, 
+				Once the function or block of code in which the local variable is declared finishes executing. 
+				The variable is automatically removed from the memory.
+
+		2]. Number complement
+
+			#include <iostream>
+			#include <bitset>
+			using namespace std;
+			int main()
+			{
+				int n;
+				std::cout << "Enter num : " << std::endl;
+				cin>>n;
+				
+				cout<<"Binary of "<<n<<" "<<bitset<32>(n)<<endl;
+				std::cout << "Complement of above binary "<< bitset<32>(~n) << std::endl;
+				
+				return 0;
+			}
+			
+		3]. Square root of n
 ---------------------------------------------------------------------------------------------------------
 Lecture-9:
+	Introduction to Arrays
+		-Array is a collection of variables of the same type.
+		-Arrays are used to store multiple values of same Datatype in a single variable, 
+		 instead of declaring separate variables for each value.
+		-To declare an array, define the variable type, specify the name of the array 
+		 followed by square brackets and specify the number of elements it should store
+
+		-All arrays consist of contiguous memory locations. 
+		 The lowest address corresponds to the first element and the highest address to the last element.
+
+		-Array elements/ value we can access by INDEX.
+		-Array start from 0.
+		-defaultly they contain garbage value inside it.
+		-use index num to access value of array on that location.
+		
+		-size of array = n, then till (n-1) index we can access.
+
+		-Array declaration:
+			 int a[10] ={1,2,3};         //ok
+    
+			int b[3] = {1,2,3};         //ok
+			
+			int c[] = {1,2,3,4,5,6,7};      //ok
+			
+			// int d[2] = {1,2,3,4,5,6,7};     //not ok
+			
+			// int e[];            //not ok
+
+			// int f[10];              //not ok
+			// f[10] = {1,2,2};
+			// f[] = {1,2,4,3};
+
+			int g[15];				//ok
+	
+		-declararing array with random/ Garbage value:
+			int a[10];
+			for(int i=0;i<10;i++)
+				cout<<i<<" "<<a[i]<<"\n";
+
+		-Initializing all array element with 0.
+			int a[10] ={0};		
+			for(int i=0;i<10;i++)
+				cout<<i<<" "<<a[i]<<"\n";
+
+			-When you try to initialize some elements of array, they will get your specified value, 
+				& rest all element of array elements become zero.
+
+			--here in above case first element is initialized with 0, & rest all become will initialized with zero. 
+		
+		-Initializing all array element with 1 WON'T WORK ❌, only with 0 it will work.
+			int a[10] ={5};		
+			for(int i=0;i<10;i++)
+				cout<<i<<" "<<a[i]<<"\n";
+
+			In the above example, only the first element will be initialized to 5. All others are initialized to 0.
+
+		--Here in below
+			example you can see that if you try to initialize any position's value in array,
+			then that position will get specified mentioned value, rest all by default initialized with zero.
+
+			#include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				int a[10] = {2,8};
+				a[9]=90;
+				a[5]=60;
+				
+				for(int i=0;i<10;i++)
+					std::cout << i <<" "<<a[i]<< "\t";					
+					
+				return 0;
+			}
+				//2       8       0       0       0       60      0       0       0       90
+			
+		-To initialize array element with some default value,
+			int a[10];
+			for(int i=0;i<10;i++)
+				a[i] = 4;
+			
+			for(int i=0; i<10;i++)
+				std::cout << i << " " << a[i] << std::endl;
+			
+			//or using fill_n method
+			std::fill_n(arrayName, arraySize, defaultValue);
+
+			std::fill_n(a,10,90);
+
+		string cars[4];
+		eg.
+		 int a[] = {1,2,3};
+		 std::cout << sizeof(a) << std::endl;			//each int size is 4 so here, 12.
+
+		 int b[] = {1,2,3,4};
+		 std::cout << sizeof(b) << std::endl;			//each int size is 4 so here, 16.
+
+		 //to print memory address of variable stored use &.
+		 	int b=90;
+			cout<< "memory location of B :: "<<b<<" "<<&b;
+
+		for array just print the variable name it will give the memory address
+			int a[] = {1,2,3};
+			cout<< "memory location of Array a :: "<<a<<" "<<&a<<endl;			//this both a & (&a) will print the same thing.
+		
+		-Index accessing:
+			int a[5] ={1,2,3,4,5};
+				//100 , 104, 108, 112, 116			--memory address.
+			
+			-variable a will store the base address.
+			-Suppose 100, first element's address, the next will be 104, next 108 coz size of int is 4 byte.
+
+			a[0];			//base address	100, output value will be 1
+			a[3];			//(base address + indexNum * sizeOfDatatype) =100 + 3*4 = 112, value will be 4.
+        
+	   	----External Link---------
+			https://www.tutorialspoint.com/cplusplus/cpp_arrays.htm	
+		-------------
+
+		-If we try to access the index which is greater than size of array,
+			then you will get an GARBAGE value.
+		
+		-Finding array length
+			we can find the length using sizeof operator,
+			-first find the sizeof whole array
+			-then divide it by sizeof Datatype of that array.
+			eg.
+				int a[10];
+				sizeof (a); //output : 40
+				sizeof(int);	//output:4
+				sizeof (a)/sizeof(int); //output : 10
+
+			BUT,here in below case we initialized just 2 element then it should show the 
+				length is 2 but according to that above method it will print length as whole 
+				array size. drawback.
+				eg.
+					int b[10]={1,5};			//length:2
+					int len = sizeof(b)/sizeof(int);		//len: 10 		(not expected this.)
+
+		-Advance for loop in c++:
+			int b[10] = {90};
+
+			for(int j: b){
+				cout<<j<<"\t";
+			}
+
+			for(int i: b)
+				cout<<i<<"\t";
+		
+		-BAD Practice:
+			int size;
+			cin>>size;
+
+			int arr[size];				//never do this.
+				//instead of doing like this directly mention constant as size of array thats better,
+			int arr[10000];			//this is ok than above
+
+		-Practice:
+			1.Array:
+				#include <iostream>
+				using namespace std;
+				void printArray(int[], int);        //function declaration says that takes input parameter first as array, 2nd is integer
+
+				int main()
+				{
+					//creating array & initializing
+					int arr[10]= {1,2,3,4,5,6,7,8,9,10};
+					
+					//printing it,
+					for(int i=0;i<10;i++)
+						std::cout << arr[i] << "\t";
+						
+					std::cout << std::endl;     //or
+					
+					//printing using function
+					printArray(arr, 10);
+					
+					std::cout << std::endl;
+					
+					//using advance loop,
+					for(int j: arr)
+						cout << j << "\t";
+					
+					return 0;
+				}
+
+				void printArray(int v[],int size){
+					for(int i=0;i<size;i++)
+						std::cout << v[i] << "\t";
+				}
+
+			2.Min/Max Array:
+				#include <iostream>
+				#include <climits>
+				using namespace std;
+
+				void getMax(int n[], int len){
+					int maxi = INT_MIN;
+					
+					for(int a=0; a<len; a++){
+						
+						// if(maxi < n[a]){
+						//     maxi = n[a];
+						// }
+						
+						maxi = max(maxi, n[a]);     //it will compare these 2 values we passed then 
+												// decides which one is maximum & stores maximum value.
+					}
+					cout<<"MAX : "<<maxi;
+				}
+
+				void getMin(int k[], int L){
+					int mini = INT_MAX;
+					
+					for(int a=0; a<L; a++){
+						
+						// if(mini > k[a]){
+						//     mini = k[a];
+						// }
+						
+						//or using built in fuction
+						mini = min(mini,k[a]);       //it will compare these 2 values we passed then 
+												// decides which is min & stores minimum value
+					}
+					
+					cout<<"Min : "<<mini;
+				}
+
+				int main(){
+					int array[100];
+					
+					int size;
+					std::cout << "Enter size of array : (should be <100)" << std::endl;
+					cin>>size;
+					
+					std::cout << "Enter "<<size<<" elements in array :" << std::endl;
+					
+					//taking array elements
+					for(int i=0; i<size; i++)
+						cin>>array[i];
+						
+					//printing array
+					for(int o=0; o<size; o++)
+						cout<<array[o]<<" ";
+					
+					std::cout << std::endl;
+					getMax(array,size);
+					
+					std::cout << std::endl;
+					getMin(array,size);
+					
+					return 0;
+				}
+
+		-Passing array to function:
+			--here passing array to function means passing memory address of that array to function,
+			  so as we learnt name of array holds the base/ starting memory address of array.
+			  eg.
+			  	int ar[10];		//here ar holds the memory address, so if we pass ar to fuction
+								//then we passing memory address of array, not copy of array.
+			
+			--so if you update the array inside any other function also, this will affect 
+			  the original array.
+			eg.
+				#include <iostream>
+				using namespace std;
+
+				void UpdateArr(int z[], int len){
+				
+					z[5] = 500;			//updating value at 6th location.
+					
+					std::cout << "Inside Update function array: " << std::endl;
+					for(int i=0;i<10;i++)
+						cout<<z[i]<<"\t";
+						
+					cout<<"\n";
+				}
+
+				int main(){
+					int arr[100] = {1,2,3,4,5,6,7,8,9,10};
+					
+					std::cout << "Inside main function array: " << std::endl;
+					for(int i=0;i<10;i++)
+						cout<<arr[i]<<"\t";
+						
+					std::cout  << std::endl;
+					UpdateArr(arr, 10);
+					
+					std::cout << "Back to main function again Now Array : " << std::endl;
+					for(int i=0;i<10;i++)
+						cout<<arr[i]<<"\t";
+						
+					return 0;
+				}
+				//output:
+					Inside main function array: 
+					1       2       3       4       5       6       7       8       9       10
+					Inside Update function array: 
+					1       2       3       4       5       500     7       8       9       10
+					Back to main function again Now Array : 
+					1       2       3       4       5       500     7       8       9       10
+
+				Sum of array elements:
+					#include <iostream>
+					using namespace std;
+
+					int SUM(int z[], int len){	
+						int sum =0; 
+						
+						for(int i=0;i<10;i++)
+							sum += z[i];
+							
+						return sum;
+					}
+
+					int main()
+					{
+						int arr[100] = {1,2,3,4,5,6,7,8,9,-10};
+						
+						int sum = SUM(arr,10);
+						std::cout << "Sum of Array elements :: "<< sum << std::endl;	//Sum of Array elements :: 35
+						
+						return 0;
+					}
+
+				Reverse Array:
+					#include <iostream>
+					using namespace std;
+
+					int main()
+					{
+						int arr[10]= {1,2,3,4,5,6,7,8,9,10};
+						
+						//Array
+						for(int q: arr)
+							std::cout << q << "\t";                 //use this advance loop if your are using whole size of array.
+							
+						std::cout << std::endl;
+						
+						//printing array in reverse way. means not reversing actual array.
+						for(int i=9; i>=0; i--)
+							cout<< arr[i]<<"\t";
+						
+						//for this you should know the length of array
+						//array reversed.
+						int len = 10;
+						for(int i=0; i<len/2; i++){
+							
+							int temp = arr[i];
+							arr[i] = arr[(len-1)-i];
+							arr[(len-1)-i] = temp;
+						}
+						
+						//printing original array
+						std::cout << std::endl;
+						for(int i: arr){
+							cout<<i<<"\t";
+						}
+						return 0;
+					}
+
+					//or
+						#include<iostream>
+						using namespace std;
+
+						void reverse(int arr[], int n) {
+
+							int start = 0;
+							int end = n-1;
+
+							while(start<=end) {
+								swap(arr[start], arr[end]);
+								start++;
+								end--;
+							}
+						}
+
+						void printArray(int arr[], int n) {
+							
+							for(int i=0; i<n; i++) {
+								cout << arr[i] << " ";
+							}
+							cout << endl;
+						}
+
+						int main() {
+
+							int arr[6] = {1,4,0,5,-2,15};
+							int brr[5] = {2,6,3,9,4};
+
+							reverse(arr, 6);
+							reverse(brr, 5);
+
+							printArray(arr, 6);
+							printArray(brr, 5);
+
+							return 0;
+						}
+
+				Linear search:
+					#include <iostream>
+					using namespace std;
+
+					int main()
+					{
+						int arr[10]= {1,2,3,4,5,6,7,8,9,10};
+						int key;
+						
+						std::cout << "enter key: " << std::endl;
+						cin>>key;
+						
+						for(int i=0;i<10;i++){
+							if(arr[i] == key){
+								std::cout << "Key Found, at "<< i << std::endl;
+								break;
+							}
+							
+							if(i==9)
+								std::cout << "Key Not Found." << std::endl;             //array traversed till last but didn't found key
+						}
+							
+						return 0;
+					}
 ---------------------------------------------------------------------------------------------------------
 Lecture-10:
+	alternate swap
+		i/p-> {1,2,3,4,5,6};
+		o/p-> {2,1,4,3,6,5};
+
+	-find unique element in array
+	-find duplicate element in array
+	-array intersection (common element from 2 array).
+	-Pair sum
+	-Triplet sum
+	-sort 0's & 1's.
 ---------------------------------------------------------------------------------------------------------
 Lecture-11:
 ---------------------------------------------------------------------------------------------------------
 Lecture-12:
+---------------------------------------------------------------------------------------------------------
+#miscellaneous
+
+	//Curly braces related..
+
+		#include <iostream>
+		using namespace std;
+
+		int main()
+		{
+			if(0)
+				if(0)
+					std::cout << "nested if" << std::endl;
+			else
+				cout<<"nested else";
+			else
+				cout<<"outside if main IF got FALSE";
+					
+			return 0;
+		}
+	
+	//Label
+		if() can accept any non-zero or -ve value considered as true 
+		if 0 then false.
+		#include <iostream>
+		using namespace std;
+
+		int main()
+		{
+		
+			if(2)					//if(-2)			this is also true.
+				goto L2;
+
+			L1: 
+			
+			std::cout << "Lable 1st" << std::endl;
+			
+			
+			std::cout << "Lable 1st" << std::endl;
+			
+			
+			std::cout << "Lable 1st" << std::endl;
+			
+			
+			std::cout << "Lable 1st" << std::endl;
+			
+			L2:
+				
+			std::cout << "Lable 2nd" << std::endl;
+			
+			
+			std::cout << "Lable 2nd" << std::endl;
+			
+			
+			std::cout << "Lable 2nd" << std::endl;
+			
+			
+			std::cout << "Lable 2nd" << std::endl;
+			
+			
+			std::cout << "Lable 2nd" << std::endl;
+			
+			L3:
+			return 0;
+		}
+
+	//Factorial:
+		//fact program
+		//position of increment decrement operator matters a LOTTTTTTTTT.
+		#include <iostream>
+
+		using namespace std;
+
+		int main()
+		{
+			int n,t;
+			cin>>n;
+			t=n-1;
+			
+			while(t)
+				n *= t--;
+			
+			std::cout <<endl<< n << std::endl;
+			return 0;
+		}
+
+	//SWAP function:
+		#include <iostream>
+		using namespace std;
+
+		int main()
+		{
+			int a = 10;
+			int b = 20;
+			cout << "Value of a before: " << a << endl;
+			cout << "Value of b before: " << b << endl;
+
+			// swap values of the variables
+			swap(a, b);
+			cout << "Value of a now: " << a << endl;
+			cout << "Value of b now: " << b << endl;
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
