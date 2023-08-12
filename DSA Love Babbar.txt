@@ -1,3 +1,5 @@
+-When you start reading/ revising notes, read problem statement properly & think logical,
+ if you don't understand the program, prefer try to resolve the problem by yourself.
 	01/08/2023
 Lecture-1
      -Understand the problem
@@ -2769,6 +2771,30 @@ Lecture-7:
 					cout << "FALSE";
 					return 0;
 				}
+				//or
+					int main()
+					{
+						int a;
+						
+						std::cout << "Enter num " << std::endl;
+						cin>>a;
+						
+						for(int i=0; ;i++){
+							int temp = pow(2,i);
+							if(temp == a){
+								std::cout << "Yes power of 2" << std::endl;
+								break;
+							}
+							
+							if(temp > a){
+								std::cout << "No it's not power of 2" << std::endl;
+								break;
+							}
+						}
+						
+						std::cout << "END" << std::endl;
+						return 0;
+					}
 
 			LeetCode:
 				bool isPowerOfTwo(int n) {
@@ -3279,16 +3305,92 @@ Lecture-8:
 
 			Homework:
 				1)ArithmeticProgression  = 3 * n +  7 make function of it.
+					->
+						#include <iostream>
+						using namespace std;
+
+						int main()
+						{
+							int n;
+							std::cout << "enter n: " << std::endl;
+							cin>>n;
+							
+							std::cout << "The Arithmetic Progression for "<< n << " is "<< (3*n)+7;
+							return 0;
+						}
 
 				2)Total no.of set bits (1) from given 2 numbers.
 					eg.
 						2 -> 10 			->1
 						3 -> 11			->2
-						Total set bits : 1+2 = 3 
+						Total set bits : 1+2 = 3
+					->
+						#include <iostream>
+						#include <bitset>
+						using namespace std;
+
+						int setBitCouter(int z){
+							int counter=0;
+							
+							while(z != 0){
+								if(z&1)
+									counter++;
+								z >>=1;
+							}
+							return counter;
+						}
+
+						int main()
+						{
+							int a,b;
+							std::cout << "enter a: ";
+							cin>>a;
+							
+							std::cout << "enter b: ";
+							cin>>b;
+							
+							std::cout << "Binary if a :: "<< bitset<32>(a) << std::endl;
+							std::cout << "Binary if b :: "<< bitset<32>(b) << std::endl;
+							
+							//couting the no.of setbits, for a
+							int sbA = setBitCouter(a);
+							
+							//for b
+							int sbB = setBitCouter(b);
+							
+							std::cout << "The no.of setbits in "<<a<< " & "<<b<<" is "<< sbA+sbB << std::endl;
+							
+							return 0;
+						}
 				
 				3)Fibonacci series nth term function:
 					input: n = 5;			// 0 1 1 2 3 5 8 13
 					output: 3			//5th num of that series.
+					->
+						#include <iostream>
+						using namespace std;
+
+						int main()
+						{
+							int prev= 0, curr= 1;
+							
+							int n;
+							cout<<"Enter n:";
+							cin>>n;
+							
+							int i=0;
+							
+							for(;i<n-1; i++){
+								// cout<<prev<<" ";            
+								
+								int next = prev + curr;
+								prev = curr;          
+								curr = next;          
+							}
+							
+							std::cout << "The "<< i+1 <<" number term is "<< prev << std::endl;
+							return 0;
+						}
 
 			Local variable: 
 				A variable declared within a function or a block of code is called a local variable. 
@@ -3316,6 +3418,7 @@ Lecture-8:
 			
 		3]. Square root of n
 ---------------------------------------------------------------------------------------------------------
+	08/08/23
 Lecture-9:
 	Introduction to Arrays
 		-Array is a collection of variables of the same type.
@@ -3741,21 +3844,968 @@ Lecture-9:
 						return 0;
 					}
 ---------------------------------------------------------------------------------------------------------
+	09/08/23
 Lecture-10:
-	alternate swap
+	Alternate swap
 		i/p-> {1,2,3,4,5,6};
 		o/p-> {2,1,4,3,6,5};
+		->
+			#include <iostream>
+			using namespace std;
+
+			void swapAlternate(int ar[], int size){
+    
+				for(int i=0; i<size; i +=2){
+					// if((i+1)<size){
+					//     int temp = ar[i];
+					//     ar[i] = ar[i+1];
+					//     ar[i+1] = temp;
+					// }
+					
+					// or
+					
+					if((i+1)<size)
+						swap(ar[i],ar[i+1]);
+				}
+			}
+
+
+			int main()
+			{
+				int a[100];
+				
+				int size;
+				std::cout << "Enter size of array:" << std::endl;
+				cin>>size;
+				
+				cout<<"Enter "<< size << "elements in array: ";
+				
+				//inputing array elements
+				for(int i=0;i<size;i++)
+					cin>>a[i];
+				
+				//printing array.
+				for(int i=0; i<size; i++)
+					cout<<a[i]<<"\t";
+					
+				
+				for(int i=0; i<size; i +=2){
+					// if((i+1)<size){
+					//     int temp = a[i];
+					//     a[i] = a[i+1];
+					//     a[i+1] = temp;
+					// }
+					
+					// or
+					
+					if((i+1)<size)
+						swap(a[i],a[i+1]);
+				}
+
+				//or using function
+				//swapAlternate(a, size);
+				
+				cout<<"\n";
+				
+				for(int i=0; i<size; i++)
+					cout<<a[i]<<"\t";
+
+				return 0;
+			}
 
 	-find unique element in array
+		(hint: XOR with same num will give output 0) a ^ a =0
+		eg.
+			5 ^ 5 = 0
+		(XOR with zero & any other num will ouput the same num ) 0 ^ a = a
+		eg.
+			0 ^ 5 = 5
+			0 ^ 23 = 23.
+		->
+			int findUnique(int arr, int size){
+				int ans = 0;
+				for(int i=0;i<size;i++)
+					ans = ans ^ arr[i];
+
+				return ans;
+			}
+	
+	-check the occurence of elements are unique or not?
+		bool uniqueOccurrences(vector<int>& arr) {
+			vector<int> ans;
+
+			int counter=1;
+			
+			for(int i=0;i<arr.size(); i++){
+				int temp = arr[i];
+				if(arr[i] == -2000)
+					continue;
+				for(int j=i+1; j<arr.size();j++){
+					if(temp == arr[j]){
+						arr[j] = -2000;
+						counter++;
+					}
+				}
+				ans.push_back(counter);
+				counter=1;
+			}
+
+			for(int i=0; i<ans.size(); i++){
+				int temp = ans[i];
+				for(int j=i+1; j<ans.size(); j++){
+					if(temp == ans[j])
+						return false;
+				}
+			}
+			return true;
+		}
+
 	-find duplicate element in array
-	-array intersection (common element from 2 array).
+		Vector- It's dyanamic kind of thing.
+
+		//not optimized
+			int n = arr.size();
+			for(int o=0;o<n;o++){
+				int t = arr[o];
+
+				if(o<n-1)
+					for(int i=o+1; i<n; i++)
+						if(t == arr[i])
+							return t;
+			}
+		
+		//optimized
+			int findDuplicate(vector<int> &arr) 
+			{
+				// Write your code here
+				int ans =0;
+
+				//first we initialized the ans to 0 coz xor 0 with any other num will
+				//give ans as that num only.
+
+				//then we run for loop 0 to till length of array some answer will come,
+				//again we will run loop from 1 to length-1 of array means to skip any one value.
+				//then the answer will be duplicate value.
+
+				for(int a=0; a<arr.size(); a++)
+					ans = ans ^ arr[a];
+				
+				//we are doing xor with a directly coz there is only one duplicate element
+				//& array contain the element from 1 & n-1 at least once
+				for(int a=1; a< arr.size(); a++)
+					ans = ans ^ a;
+
+				return ans;
+			}
+
+	-find all duplicates num in array.
+		//dyamica array in c++
+			#include <iostream>
+			#include <vector>
+			int main() {
+				// Write C++ code here
+				//dynamic array
+				
+				std::vector<int> arr = {1,2,3};
+				
+				for(int i=0;i<arr.size(); i++)
+					std::cout<<arr[i]<<" ";
+					
+				arr.push_back(100);
+				
+				std::cout<<"\n";
+				
+				arr.push_back(200);			//inserting num in array.
+				
+				for(int i=0;i<arr.size(); i++)
+					std::cout<<arr[i]<<" ";
+				
+				return 0;
+			}
+
+		//brute force-> TIME LIMIT EXCEEDED
+			vector<int> findDuplicates(vector<int>& nums) {
+
+				vector<int> dual;
+				for(int a=0; a< nums.size(); a++)
+				{
+					int temp = nums[a];
+					for(int b =a+1; b< nums.size(); b++){
+						if(temp == nums[b]){
+							dual.push_back(nums[b]);
+							break;
+						}
+					}
+				}
+				return dual;
+			}
+
+		//optimized
+			vector<int> findDuplicates(vector<int>& nums) {
+
+				vector<int> dual;
+				sort(nums.begin(), nums.end());
+
+				for(int a=1; a< nums.size(); a++)
+				{
+					if(nums[a-1] == nums[a]){
+						dual.push_back(nums[a]);
+					}
+				}
+				return dual;
+			}
+
+			vector<int> findDuplicates(vector<int>& nums) {
+
+				vector<int> dual;			//dynamic array.
+				set<int> st;				//set which contains any element once only.
+
+				for(int a=0; a< nums.size(); a++)
+				{
+					if(st.count(nums[a])){				//count method return 1 if that element present in set, else 0.
+						dual.push_back(nums[a]);
+					}else{	
+						st.insert(nums[a]);				//insert method will insert that element/value into set.
+					}
+				}
+				return dual;
+			}
+
+	-Sorting array:
+		#include <iostream>
+		#include <set>
+		#include<algorithm> //mandatory for sort functionality
+		using namespace std;
+
+		int main() {
+			// Write C++ code here
+			int nums[] = {5,4,3,2,1};
+			
+			int len = sizeof(nums)/sizeof(nums[0]);     //calculating the length of array. 
+												//this works if complete array which length is specified is filled completely, like a[100], then all 100 elements should be present.
+												//or they if left length of array empty, like int arr[] = {1,2,3};
+			
+			for(int i=0;i<len; i++)
+					cout<<" "<<nums[i];
+					
+			cout<<"\n";
+			
+			sort(nums, nums+len);			//from base(starting) address to till last
+			
+			//sort(starting array_memory_address, end array_memory_address);
+			
+			for(int i=0;i<len; i++)
+				cout<<" "<<nums[i];
+			return 0;
+		}
+	
+	-Set:
+		-set by default store element in ascending order,
+		-set store unique elements. not duplicate.
+		-Datatype: Set can take any data type depending on the values, e.g. int, char, float, etc.
+		eg.
+			std::set <data_type> set_name;
+
+			set<int> val; // defining an empty set
+			set<int> val = {6, 10, 5, 1}; // defining a set with values
+
+			//to check element present in set or not use count method with parameter in it.
+			val.count(5);			//if that value present in set it returns 1
+			val.count(12);			//if that value absent in set it returns 0
+		Pratical:
+			#include <iostream>
+			#include <set>
+			using namespace std;
+			int main() {
+				std::set<int> a;
+				a.insert(10);
+				a.insert(9);
+				a.insert(7);
+				
+				a.insert(9);        //these 2 values won't get added.
+				a.insert(7);
+				
+				a.insert(90);
+				a.insert(70);
+				
+				
+				a.insert(23);
+				a.insert(34);            //inserting into set.
+
+
+				cout<<*a.begin()<<"\t";     //reutrn first element of set.
+				
+				cout<<*a.end()<<"\t";       //return the last element index, Length of set
+
+				//length of set:
+				cout<<"\n the length of set A is :: "<<a.size();
+
+				//printing set
+				for (int str : a) {
+					cout << str << ' ';
+				}
+				
+				cout<<"\n";
+				cout<<"is 12 present in set A :: "<<a.count(12);			//0 means not present
+				cout<<"is 10 present in set A :: "<<a.count(10);			//1 means present
+				
+				std::cout << '\n';
+
+				return 0;
+			}
+		
+			//printing char set,
+			--need to define the iterator on it which is character (char) type.
+				set<char> set1;
+				set<char> :: iterator MY;
+				for(MY = set1.begin(); MY != set1.end(); MY++){
+					cout<< *MY;
+				}
+
+	-Array intersection (common element from 2 array).
+		Intersection Of Two Sorted Arrays
+		Constraints:
+			1 <= T <= 100
+			1 <= N, M <= 10^4
+			0 <= A[i] <= 10^5
+			0 <= B[i] <= 10^5
+			Time Limit: 1 sec
+		
+		Sample Input 1 :
+			2				T		test cases
+			6 4				N M
+			1 2 2 2 3 4		A	array 
+			2 2 3 3			B	array
+
+			3 2				N M  lengths
+			1 2 3			array A
+			3 4  			array B
+		Sample Output 1 :
+			2 2 3		
+			3   
+		Explanation For Sample Input 1 :
+			For the first test case, the common elements are 2 2 3 in both the arrays, so we print it.
+			For the second test case, only 3 is common so we print 3.
+		->
+			//Time Limit EXCEEDED (TLE)
+				#include <bits/stdc++.h> 
+				vector<int> findArrayIntersection(vector<int> &arr1, int n, vector<int> &arr2, int m)
+				{
+					// Write your code here.
+					vector<int> common;
+
+					for(int i=0; i<n; i++){
+						int temp = arr1[i];
+
+						for(int j=0; j<m; j++){
+							if(temp == arr2[j]){
+								common.push_back(temp);
+								arr2[j] = -1;
+								break;
+							}
+						}
+					}
+					return common;
+				}
+			
+			//optimized:
+				#include <bits/stdc++.h> 
+				vector<int> findArrayIntersection(vector<int> &arr1, int n, vector<int> &arr2, int m)
+				{
+					// Write your code here.
+					vector<int> common;
+					int i=0,j=0;
+					
+					while(i<n && j<m){
+						if(arr1[i] == arr2[j]){
+							common.push_back(arr1[i]);
+							i++;j++;
+						}else if(arr1[i]< arr2[j]){
+							i++;
+						}else{
+							j++;
+						}
+					}
+					return common;
+				}
+
 	-Pair sum
-	-Triplet sum
-	-sort 0's & 1's.
+		-https://www.codingninjas.com/studio/problems/pair-sum_697295
+		Sample Input 1:
+		5
+		1 2 3 4 5
+		Sample Output 1:
+		1 4
+		2 3
+
+		Explaination For Sample Output 1:
+		Here, 1 + 4 = 5
+			2 + 3 = 5
+		Hence the output will be, (1,4) , (2,3).
+		
+		Sample Input 2:
+		0
+		2 -3 3 3 -2
+		Sample Output 2:
+		-3 3
+		-3 3
+		-2 2
+
+		#include <bits/stdc++.h>
+		vector<vector<int>> pairSum(vector<int> &arr, int s){
+			vector< vector<int> > ans;
+
+			for(int i=0; i<arr.size(); i++){
+				for(int j=i+1; j<arr.size(); j++){
+					if(arr[i]+arr[j] == s){
+						vector<int> temp;
+						temp.push_back(min(arr[i], arr[j]));            
+						temp.push_back(max(arr[i], arr[j]));
+						ans.push_back(temp);
+					}
+				}
+			}
+			sort(ans.begin(), ans.end());
+			return ans;
+		}
+		
+	-Triplet sum:
+		#include <bits/stdc++.h> 
+		vector<vector<int>> findTriplets(vector<int>arr, int n, int K) {  
+			sort(arr.begin(),arr.end());
+				vector<vector<int>>ans;
+			set<vector<int>> s;
+			for(int i=0;i<n;i++){
+				int sum = K - arr[i];
+				int j = i+1;
+				int k = n-1;
+				while(j<k){
+						if(arr[j]+arr[k] == sum){
+							vector<int> temp;
+							temp.push_back(arr[i]);
+							temp.push_back(arr[j]);
+							temp.push_back(arr[k]);
+							sort(temp.begin(),temp.end());
+							s.insert(temp);
+							j++;
+						}
+					else if(arr[j]+arr[k]<sum){
+						j++;
+					}
+					else{
+						k--;
+					}
+				}
+			}
+			for(auto val: s){
+				ans.push_back(val);
+			}
+			return ans;
+		}
+
+	-sort 0's & 1's:
+		#include <iostream>
+		using namespace std;
+
+		void printArr(int a[], int n){
+			for(int i=0;i<n; i++){
+				cout<<a[i] << "\t";
+			}
+			cout<<"\n";
+		}
+
+		int main() {
+			int arr[] = {1,1,1,1,1,0,0,0,0,0};
+			int len = 10;
+			printArr(arr, len);
+						
+			int i=0, j = len-1;
+			while(i <= j ){
+				if(arr[i] > arr[j]){
+					swap(arr[i],arr[j]);
+					i++;j--;
+				}else if(arr[i] < arr[j]){
+					i++;
+				}else if(arr[i] ==  arr[j]){
+					j--;
+				}
+			}
+			
+			printArr(arr, len);
+			return 0;
+		}
+
+	-sort 0's, 1's & 2's:
+		remain..
 ---------------------------------------------------------------------------------------------------------
+	10/08/23
 Lecture-11:
+	Time & Space Complexity, How to avoid Time Limit Exceeded [TLE]
+		Time Complexity:
+			-It is the amount of time taken by an algorithm to run, as function of length of input.
+			-the computational complexity that describes the amount of computer time it takes to run an algorithm. or
+			-The Time Complexity of an algorithm/code is not equal to the actual time required to execute a particular code, 
+			 but the number of times a statement executes.
+
+			-we use time/space complexity for making better programs.
+			-using these terms, we can decide algorithm is fast or slow.
+			-It represented in 3 forms,
+				1). Big O - Upper bound, (at max this much time program will take). worst case scenario
+				2). Theta θ - Average, average case scenario.
+				3). Omega Ω - Lower bound (at minimum, this much amount of time program will take) best case scenario.
+			
+			-Time:
+				1) Constant time O(1).
+				2) Linear time O(n).
+				3) Logarithmic time O(log n).
+				4) Quadratic time O(n²).		(nested loops)
+				5) Cubic time O(n³).		(nested nested loops)
+
+				chart: 
+						O(N!)			--maximum time takes.
+						O(2ⁿ)
+					↑	O(n³)
+					↑	O(n²)
+					↑	O(n log(n))
+					↑	O(n)
+					↑	O(log(n))
+					↑	O(1)			--minimum time takes.
+			eg.
+				-ignore constant, choose highest degree in equation.
+					f(n) = 2n² + 3n 
+					->
+						O(n²)
+					f(n) = 4n⁴ + 3n³
+					->
+						O(n⁴)
+					
+					f(n) = n² + log(n)
+					-> O(n²).
+
+					f(n) = 120043
+					->
+						O(1).
+					
+					f(n) = 5n³ + 3n² + 5
+					->
+						O(n³)
+					
+					f(n) = n³ / 300
+					->
+						O(n³)
+					
+					f(n) = 5n² + log(n)
+					->
+						O(n²)
+					
+					f(n) = n/4
+					->
+						O(n)				(Linear Time complexity)
+					
+					f(n) = (n+4)/4
+					->
+						O(n)				(Linear Time complexity)
+
+				-Take this function to find its time complexity:
+					void printArr(int a[], int n){
+						for(int i=0;i<n; i++){
+							cout<<a[i] << "\t";
+						}
+						cout<<"\n";
+					}
+					->
+						here the length of array is n, so time depends length of array,
+						so 
+						Time Complexity will be O(n).
+				
+				-for calculating time complexity, if 2 for loops are there which are nested then their last
+				value will be multiplied with eachother,
+					for(i=0;i<n;i++)
+						for(j=0;j<n;j++)
+							//statements
+					->
+						time complexity: n*n  = O(n²);
+					
+				-if 2 for loops are there which are next to each other then we add their last value;
+					for(int i=0;i<n; i++) ->	O(n)
+						//statements
+					
+					for(j=0;j<m;j++)		-> O(m)
+						//statements
+					
+					Time Complexity = O(n+m)
+
+				-for this?
+					for(i=0;i<n;i++)
+						for(j=0;j<n;j++)
+							//statements		// O(n²)
+					
+					for(j=0;j<n;j++)			// O(n)
+						//statements
+					
+					= O(n²) + O(n)
+					Time Complexity = O(n²)
+				
+				-for this?
+					for(i=0;i<n;i++)			//this loop will run till (n-1)	ie.	O(n)
+						for(j=n;j>i;j--)		//suppose i=0 then, this loop will run n to 0, ie. O(n)
+							//statements		
+					
+					Time Complexity = O(n²)
+
+		Space Complexity:
+			-The total amount of memory space used by an algorithm/program, including the space of input values for execution.
+			-The space complexity of an algorithm or a computer program is the amount of memory space required to solve an instance 
+			 of the computational problem as a function of characteristics of the input. 
+			 It is the memory required by an algorithm until it executes completely.
+			-This includes the memory space used by its inputs, called input space, and any other (auxiliary) memory it uses during execution, 
+			 which is called auxiliary space.
+
+			-Similar to time complexity, space complexity is often expressed asymptotically in big O notation, such as O(n), O(n long(n)), 
+			eg.
+				-if we mention the array size then its fixed space complexity O(1).
+				-if we declare any variable, it will take fixed space, so space Complexity O(1).
 ---------------------------------------------------------------------------------------------------------
+	12/08/23
 Lecture-12:
+	Binary Search:
+		Binary search is applied only in list/ array where the data is sorted, 
+		 either in increasing or in decreasing order, called monotonic function.
+		Steps for Binary Search :
+		1. Find middle element of the given array.
+			If the value found at mid index is equal to key, return true else,
+		2. if key >  mid,
+			then go left side of the array by start = mid+1 to end is same.
+		3. if Key <  mid,
+			then go right side of the array from start is same & end = mid -1
+		3. If key not found after searching whole array, return false.
+
+		--here in case of binary search the Time Complexity is O(log(n)), where n is length of array.
+		--because for every next iteration the array size is getting half,
+		  for first len/2
+		  for 2nd len/4
+		  for 3rd len/8, like len/2¹, len/2², len/2³,... len/2ⁿ
+		  len/2ⁿ = 1
+		  len = 2ⁿ
+		  n = log₂(len) 
+
+		Pratical:
+			#include <iostream>
+			using namespace std;
+
+			void printArr(int a[],int size){
+				for(int i=0;i<size;i++){
+					cout<<a[i]<<" ";
+				}
+				
+				std::cout << std::endl;
+			}
+
+			int BinarySearch(int b[], int len, int key){
+			
+				int start = 0, end = len-1;
+				
+				//int mid = (start+end)/2;
+				
+				int mid = start + (end - start)/2;
+    
+				//sometimes array length is too large that start & end index is of (2³¹ - 1) & (2³¹ - 1) 
+				//then their addition will be out of range of integer
+				
+				// so to avoid this issue we can use this formula,			
+
+				while(start <= end){
+					
+					if(b[mid] == key)
+						return mid;
+					else if(key > b[mid])
+						start = mid+1;
+					else
+						end = mid-1;
+						
+					mid = start + (end - start)/2;
+				}
+				return -1;
+			}
+
+			int main()
+			{
+				int Even[] = {2,4,6,8,12,14,16,22,28,30};
+				int Odd[] = {1,3,5,9,13,17,41,43,59,55,69};
+				
+				cout<<"Even array: ";
+				printArr(Even,10);
+				
+				
+				cout<<"Odd array: ";
+				printArr(Odd,11);
+				
+				int element;
+				std::cout << "Enter element you want to find in Even array: " << std::endl;
+				cin>>element;
+				
+				std::cout << element << " is at " << BinarySearch(Even, 10, element) << " Index." << std::endl;
+				
+				std::cout << "Enter element you want to find in Odd array: " << std::endl;
+				cin>>element;
+				std::cout << element << " is at " << BinarySearch(Odd, 11, element) << " Index." << std::endl;
+				
+				std::cout << "--END--" << std::endl;
+			}
+---------------------------------------------------------------------------------------------------------
+	12/08/23
+Lecture-13:
+	Questions on BinarySearch
+	#Pair in C++ Standard Template Library (STL)
+		-Pair is used to combine together two values that may be of different data types. 
+		-Pair provides a way to store two heterogeneous objects as a single unit. 
+		-It is basically used if we want to store tuples. 
+		-The pair container is a simple container defined in <utility> header consisting of two data elements or objects. 
+
+		-The first element is referenced as ‘first’ and the second element as ‘second’ and the order is fixed (first, second).
+		-Pair can be assigned, copied, and compared. 
+		-The array of objects allocated in a map or hash_map is of type ‘pair’ by default in which all the ‘first’ elements are unique keys associated with their ‘second’ value objects.
+		-To access the elements, we use variable name followed by dot operator followed by the keyword first or second.
+		Syntax: 
+			pair <data_type1, data_type2> Pair_name
+			eg.
+				#include <iostream>
+				#include <utility>
+				using namespace std;
+				int main()
+				{
+					// defining a pair
+					pair<int, char> PAIR1;
+
+					// first part of the pair
+					PAIR1.first = 100;
+
+					// second part of the pair
+					PAIR1.second = 'G';
+
+					cout << PAIR1.first << " ";
+					cout << PAIR1.second << endl;
+
+					// defining a pair
+					pair<string, double> PAIR2("GeeksForGeeks", 1.23);
+					
+					cout << PAIR2.first << " ";
+					cout << PAIR2.second << endl;
+
+					return 0;
+				}
+				ouput:	100 G
+
+				Initializing a Pair: We can also initialize a pair. 
+					Syntax:
+						pair <data_type1, data_type2> Pair_name (value1, value2) ;
+					
+					Different ways to initialize pair:  
+
+						pair  g1;         //default
+						pair  g2(1, 'a');  //initialized,  different data type
+						pair  g3(1, 10);   //initialized,  same data type
+						pair  g4(g3);    //copy of g3
+						
+						Another way to initialize a pair is by using the make_pair() function. 
+							g2 = make_pair(1, 'a');
+
+						Another valid syntax to declare pair is:
+							g2 = {1, 'a'};
+
+				Note: If not initialized, the first value of the pair gets automatically initialized. 
+				
+					#include <iostream>
+					#include <utility>
+					using namespace std;
+					int main()
+					{
+						pair<int, double> PAIR1;
+						pair<string, char> PAIR2;
+						
+						// it is initialised to 0
+						cout << PAIR1.first;
+						
+						// it is initialised to 0
+						cout << PAIR1.second;
+						
+						cout << " ";
+						
+						// it prints nothing i.e NULL
+						cout << PAIR2.first;
+							
+						// it prints nothing i.e NULL
+						cout << PAIR2.second;
+						
+						return 0;
+					}
+				-for more example Visit GFG pair
+					1)swap
+					2)make_pair
+					3)tie
+
+	1)Find the First & Last occurence of element in array:
+		//Linear search method
+			#include <bits/stdc++.h> 
+			pair<int, int> firstAndLastPosition(vector<int>& arr, int n, int k)
+			{
+				pair<int, int> ans;
+				int i;
+				int len = arr.size();
+
+				for(i=0; i< len;i++){
+					if(k == arr[i]){
+						ans.first = i;
+						break;
+					}
+				}
+				
+				if(i == len)
+					ans.first = -1;
+				
+
+				for(i=len-1; i>-1; i--)
+				{
+					if(k == arr[i]){
+						ans.second = i;
+						break;
+					}
+				}
+
+				if(i == -1)
+					ans.second = -1;
+
+				return ans;
+			}
+
+		//Binary search method
+			#include <bits/stdc++.h> 
+			int firstOcc(vector<int>& arr, int n, int k){
+				int s=0,e=n-1,i=-1;
+				int mid = (s+e)/2;
+				while(s<=e){
+					if(k == arr[mid]){
+						i = mid;
+						e = mid -1;
+					}else if(k > arr[mid]){
+						s = mid +1;
+					}else{
+						e = mid -1;
+					}
+					mid = (s+e)/2;
+				}
+				return i;
+			}
+
+			int lastOcc(vector<int>& arr, int n, int k){
+				int s=0,e=n-1,i=-1;
+				int mid = (s+e)/2;
+				while(s<=e){
+					if(k == arr[mid]){
+						i = mid;
+						s = mid + 1;
+					}else if(k > arr[mid]){
+						s = mid +1;
+					}else{
+						e = mid -1;
+					}
+					mid = (s+e)/2;
+				}
+				return i;
+			}
+
+			pair<int, int> firstAndLastPosition(vector<int>& arr, int n, int k)
+			{
+				pair<int, int> ans;
+				ans.first = firstOcc(arr, n, k);
+				ans.second = lastOcc(arr, n, k);
+				return ans;
+			}
+
+	example:To find the total no.of occurence of key in sorted array
+		find the first/start index & last/end index, then 
+		no.of occurence = (last - first)+1;
+		eg.
+			1 2 3 4 4 4 4 4 5 6 7
+			--here 4's first index is 3 & last index is 7
+			 so 7-3+1 = 5
+			-no.of occurence of 4 is 5 times.
+		
+	2)Peak Index in Mountain Array:
+		https://leetcode.com/problems/peak-index-in-a-mountain-array/
+		//Linear or Brute force  algorithm			//TC- O(n)
+			int peakIndexInMountainArray(vector<int>& arr) {
+				int temp = arr[0], ans=0;
+				for(int i=1; i< arr.size(); i++){
+					if(temp < arr[i]){
+						ans = i;
+						temp = arr[i];
+					}   
+				}
+				return ans;
+			}
+		
+		//using Binary Search algorithm
+			int peakIndexInMountainArray(vector<int>& arr) {
+				int s=0, e= arr.size()-1;
+				int mid = (s+e)/2;
+				
+				while(s < e){
+					if(arr[mid] < arr[mid+1]){
+						s = mid +1;
+					}else{
+						e = mid;
+					}
+					mid = (s+e)/2;
+				}
+				return e;
+			}
+
+	3)Find Pivot Index: HW
+		https://leetcode.com/problems/find-pivot-index/description/
+		int pivotIndex(vector<int>& nums) {
+			int left=0,right=0;
+			int i=0;
+			for(;i<nums.size(); i++){
+
+				//for rightSide
+				for(int j=i+1; j<nums.size(); j++){
+					right += nums[j]; 
+				}
+
+				//for leftSide
+				for(int k=0; k<i; k++){
+					left += nums[k];
+				}
+
+				if(left == right)
+				{
+					break;
+				}
+				right=0; left=0;
+			}
+
+			if(i == nums.size())
+					return -1;
+			return i;
+		}
+---------------------------------------------------------------------------------------------------------
+	13/08/23
+Lecture-14:
+	Binary Search Interview Questions | Problem set-2
+		
+---------------------------------------------------------------------------------------------------------
+Lecture-15:
+---------------------------------------------------------------------------------------------------------
+Lecture-16:
+---------------------------------------------------------------------------------------------------------
+Lecture-17:
+---------------------------------------------------------------------------------------------------------
+Lecture-18:
+---------------------------------------------------------------------------------------------------------
+Lecture-19:
+---------------------------------------------------------------------------------------------------------
+Lecture-20:
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 
@@ -3770,8 +4820,8 @@ Lecture-12:
 				if(0)
 					std::cout << "nested if" << std::endl;
 			else
-				cout<<"nested else";
-			else
+				cout<<"nested else";					//if this else block is not present then outside else block got attached to inner if block
+			else										//works like putting curly braces around if-else block.
 				cout<<"outside if main IF got FALSE";
 					
 			return 0;
@@ -3854,9 +4904,66 @@ Lecture-12:
 			cout << "Value of b before: " << b << endl;
 
 			// swap values of the variables
-			swap(a, b);
+			swap(a, b);			//takes 2 values.
+
+			//or
+			a = a + b;	//a^b		//10+20=30
+			b = a - b;	//a^b		//30-20=10
+			a = a - b;	//a^b		//30-10=20
+
 			cout << "Value of a now: " << a << endl;
 			cout << "Value of b now: " << b << endl;
 			return 0;
 		}
+
+	//while loop:
+		#include <iostream>
+		using namespace std;
+
+		int main()
+		{
+			int i=0,j=0;
+			
+			while(i<5 && j<10){
+				
+				std::cout << i<<" "<<j << std::endl;			// and Operator is there so both condition must be true.
+				i++;j++;									//output will be 0 to 4,
+			}
+			return 0;
+		}
+
+		//or if we used || or (,) then 0 - 9 will be printed.
+		#include <iostream>
+		using namespace std;
+
+		int main()
+		{
+			int i=0,j=0;
+			while(i<5 , j<10){          //while(i<5 || j<10)
+				std::cout << i<<" "<<j << std::endl;
+				i++;j++;
+			}
+
+			return 0;
+		}
+
+	//Remain 
+		//Line 4237 Triplet sum didn't understand❌ (come back here later.).
+		-Check TLE again (Time Limit Exceeded). https://www.geeksforgeeks.org/overcome-time-limit-exceedtle/
+
+	//Self Solved:
+		1. Two Sum
+			vector<int> twoSum(vector<int>& nums, int target) {
+				vector<int> ans;
+				
+				for(int i=0;i<nums.size(); i++){
+					for(int j=i+1; j<nums.size(); j++){
+						if(nums[i]+nums[j] == target){
+							ans.push_back(i);
+							ans.push_back(j);
+						}
+					}
+				}
+				return ans;
+			}
 ---------------------------------------------------------------------------------------------------------
