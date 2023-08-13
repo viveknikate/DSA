@@ -4133,7 +4133,7 @@ Lecture-10:
 				a.insert(34);            //inserting into set.
 
 
-				cout<<*a.begin()<<"\t";     //reutrn first element of set.
+				cout<<*a.begin()<<"\t";     //return first element of set.
 				
 				cout<<*a.end()<<"\t";       //return the last element index, Length of set
 
@@ -4762,38 +4762,272 @@ Lecture-13:
 			}
 
 	3)Find Pivot Index: HW
-		https://leetcode.com/problems/find-pivot-index/description/
-		int pivotIndex(vector<int>& nums) {
-			int left=0,right=0;
-			int i=0;
-			for(;i<nums.size(); i++){
+		-Left side summation & right side summation must be same then return the index of that element.
+		//Linear search method:
+			https://leetcode.com/problems/find-pivot-index/description/
+			int pivotIndex(vector<int>& nums) {
+				int left=0,right=0;
+				int i=0;
+				for(;i<nums.size(); i++){
 
-				//for rightSide
-				for(int j=i+1; j<nums.size(); j++){
-					right += nums[j]; 
+					//for rightSide
+					for(int j=i+1; j<nums.size(); j++){
+						right += nums[j]; 
+					}
+
+					//for leftSide
+					for(int k=0; k<i; k++){
+						left += nums[k];
+					}
+
+					if(left == right)
+					{
+						break;
+					}
+					right=0; left=0;
 				}
 
-				//for leftSide
-				for(int k=0; k<i; k++){
-					left += nums[k];
-				}
-
-				if(left == right)
-				{
-					break;
-				}
-				right=0; left=0;
+				if(i == nums.size())
+						return -1;
+				return i;
 			}
 
-			if(i == nums.size())
-					return -1;
-			return i;
-		}
 ---------------------------------------------------------------------------------------------------------
 	13/08/23
 Lecture-14:
 	Binary Search Interview Questions | Problem set-2
-		
+		Find the pivot in sorted & rotated array,
+		eg.
+			sorted array : [1,2,3,4,5,6,7,8,9];	
+			rotated array by 3 in right direction : [7,8,9,1,2,3,4,5,6];
+		-finding pivot in it,
+			-> The minimum value in array is a pivot element.
+		Pratical:
+			#include <iostream>
+			using namespace std;
+
+			void printArr(int a[], int L){
+				for(int i=0;i<L;i++){
+					cout<<a[i]<<" ";
+				}
+				std::cout << std::endl;
+			}
+
+			int main()
+			{
+				int arr[] = {4,5,6,7,8,9,10,1,2,3};
+				int len = 10;
+
+				std::cout << "The array is : " << std::endl;
+				printArr(arr, len);
+
+				int s=0, e=len-1;
+				int mid = (s+e)/2;
+
+				while(s < e){
+					if(arr[mid] >= arr[0]){
+						s = mid + 1;
+					}else{
+						e = mid;
+					}
+					mid = (s+e)/2;
+				}
+
+				cout<<"The pivot Element is at location/index :"<<s<<" or at "<<e;
+				return 0;
+			}
+
+		1). Search K In Rotated Sorted Array
+
+			//Linear way O(n) time complexity,
+				int search(vector<int>& arr, int n, int k)
+				{
+					// Write your code here.
+					// Return the position of K in ARR else return -1.
+					int i=0;
+					for(;i<arr.size();i++){
+						if(k == arr[i]){
+							return i;
+						}
+					}
+
+					if(i == arr.size())
+						return -1;
+				}
+
+			//Using Binary search O(log(n)) Time complexity,
+				int BinarySearch(vector<int>& arr, int start, int n, int key){
+					int s = start, e= n-1;
+					int mid= (s+e)/2;
+					
+					while(s <= e){
+						if(arr[mid] == key){
+							return mid;
+						}else if(key > arr[mid]){
+							s = mid + 1;
+						}else{
+							e = mid -1;
+						}
+						mid = (s+e)/2;
+					}
+					return -1;
+				}
+
+				int pivotFind(vector<int>& arr, int len){
+					
+					int s=0, e = len-1;
+					int mid = (s+e)/2;
+
+					while(s < e){
+						if(arr[mid] > arr[0] ){
+							s = mid +1;
+						}else{
+							e =mid;
+						}
+						mid = (s+e)/2;
+					}
+					return s;
+				}
+
+				int search(vector<int>& arr, int n, int k){
+					// Return the position of K in ARR else return -1
+					int pivot = pivotFind(arr, n);
+					
+					if(arr[0] <= k && k <= arr[pivot-1]){
+						//first line from start to till pivot
+						return BinarySearch(arr, 0, pivot, k);        
+					}else{
+						// second line from pivot to till end.
+						return  BinarySearch(arr, pivot, n, k);
+					}				
+				}
+
+		2). Square Root of a number
+			//Linear Search, not optimized
+				int floorSqrt(int n){
+					for(int i=1;i<=n/2;i++){
+						if(n == pow(i,2)){
+							return i;
+						}else if((n < pow(i,2)) && (n > pow(i-1,2))){
+							return i-1;
+						}else{
+							continue;
+						}
+					}
+				}
+
+			//using BinarySearch optimized
+				int floorSqrt(int n){
+					int s=0, e = n;
+					long long int mid = (s+e)/2;
+					long long int sqr;
+					long long int ans;
+
+					while(s <= e){
+						sqr = mid * mid;
+						if(sqr == n){
+							ans = mid;
+							break;
+						}else if(sqr > n){
+							e = mid -1;
+						}else{
+							ans = mid;
+							s = mid +1;
+						}
+						mid = (s+e)/2;
+					}
+					return ans;
+				}
+
+		3). Sqrt(x):
+			//Linear search not optimized
+				int mySqrt(int n) {
+					int i=0;
+					for(;i<=n;i++){
+
+						if(n == pow(i,2)){
+							break;
+						}else if((n < pow(i,2)) && (n > pow(i-1,2))){
+							return i-1;
+						}else{
+							continue;
+						}
+					}
+					return i;
+				}
+			
+			//using BinarySearch 
+				int mySqrt(int n) {
+					int s=0, e =n;
+					long long int mid = (s+e)/2;			//used long long int to avoid int overflow exception.
+					long long int ans;
+					long long int sqr;
+
+					while(s <= e){
+						sqr = mid * mid;
+						if(n == sqr){
+							ans = mid;
+							break;
+						}else if(sqr > n){
+							e = mid-1;
+						}else{
+							ans = mid;
+							s=mid+1;
+						}
+						mid = (s+e)/2;
+					}
+					return ans;  
+				}
+
+		4). Square Root with decimal precision:
+			#include <iostream>
+			using namespace std;
+			long long int SQRTn(int n){
+				int s=0, e =n;
+				long long int mid = (s+e)/2;			//used long long int to avoid int overflow exception.
+				long long int ans;
+				long long int sqr;
+
+				while(s <= e){
+					sqr = mid * mid;
+					if(n == sqr){
+						ans = mid;
+						break;
+					}else if(sqr > n){
+						e = mid-1;
+					}else{
+						ans = mid;
+						s=mid+1;
+					}
+					mid = (s+e)/2;			//or mid = s + (e-s)/2;
+				}
+				return ans;
+			}
+
+			double morePrecision(int n, int uptoDecimal, int sqrtNum){
+
+				double factor=1;
+				double ans= sqrtNum;
+
+				for(int i=0; i< uptoDecimal; i++){
+					factor = factor/10;
+
+					for(double j=sqrtNum; j*j < n; j = j + factor){
+						ans = j;
+					}
+				}
+				return ans;
+			}
+
+			int main(){
+				int n;
+				cout<<"Enter n";
+				cin>>n;
+
+				int sqrt1 = SQRTn(n);
+				cout<<"answer is upto 4 decimal precision ::"<< morePrecision(n, 4, sqrt1);
+				return 0;	
+			}
 ---------------------------------------------------------------------------------------------------------
 Lecture-15:
 ---------------------------------------------------------------------------------------------------------
