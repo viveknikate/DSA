@@ -1,5 +1,6 @@
 -When you start reading/ revising notes, read problem statement properly & think logical,
  if you don't understand the program, prefer try to resolve the problem by yourself.
+-Google it if you don't understand the question.
 	01/08/2023
 Lecture-1
      -Understand the problem
@@ -458,7 +459,7 @@ Lecture-2:
 
 			Ternary Operator:
 				syntax:
-					(condition) ? [if true execute this] : [if false execute this]	
+					(condition) ? ([if true execute this]) : ([if false execute this])
 				eg.
 					#include <iostream>
 					using namespace std;
@@ -471,6 +472,103 @@ Lecture-2:
 
 						return 0;
 					}
+				
+				-for single statement don't use ( ) in ternary operator direct mention your statement.
+				-for multiple statement to print or do operation use ( ).
+				eg.
+					printing twice,
+						#include <iostream>
+						using namespace std;
+
+						int main()
+						{
+							int n =91;
+							(n % 2 == 0) ? (cout<<"Hello Even World ", cout<<"Hello 2nd World ") : (cout<<"Hello Odd World", cout<<"Hello 3rd World");
+
+							//or above there is just one condition so no need to use braces near condition also, like
+							n % 2 == 0 ? (cout<<"Hello Even World ", cout<<"Hello 2nd World ") : (cout<<"Hello Odd World", cout<<"Hello 3rd World");
+
+							//if more than one condition is there in ternary operator, use braces ( ), for best practices
+							//if you don't use still it works
+
+							//first even condition is true but 2nd 400 is not less than 50, its false 
+							//but && requires both condition must be true so complete equation is false,
+							//ouput odd world.
+							n =400;
+							(n % 2==0 && n< 50 == 1) ? (cout<<"Hello Even World ", cout<<"Hello 2nd World ") : (cout<<"Hello Odd World", cout<<"Hello 3rd World");
+							
+
+							//ouput for below is even n<50 which is false means 0, & 0 == 0 so n= 400 is even & 0 == 0 both condition are true so even world will printed.
+							(n % 2==0 && n< 50 == 0) ? (cout<<"Hello Even World ", cout<<"Hello 2nd World ") : (cout<<"Hello Odd World", cout<<"Hello 3rd World");
+
+							//or even world will run
+							//first condition is true, 2nd is false
+							n=400;
+							(n % 2==0 || n< 50) ? (cout<<"Hello Even World ", cout<<"Hello 2nd World ") : (cout<<"Hello Odd World", cout<<"Hello 3rd World");
+  
+							//without braces
+							//works fine and (,) comma is behaves like && operator,
+							n % 2==0 && n< 50 ? (cout<<"Hello Even World ", cout<<"Hello 2nd World ") : (cout<<"Hello Odd World", cout<<"Hello 3rd World");
+							n % 2==0 , n< 50 ? (cout<<"Hello Even World ", cout<<"Hello 2nd World ") : (cout<<"Hello Odd World", cout<<"Hello 3rd World");
+
+							return 0;
+						}
+
+					initializing int inside ternary operator:
+						#include <iostream>
+						using namespace std;
+
+						int main() {
+							int n = 42; // Replace with your desired value of n
+
+							//syntax to initialize,
+							(condition)? ([] {//initialization,//statement, //code})(): ([] {//initialization,//statement, //code})()
+
+							//integer initialized
+							n % 2 == 0 && n < 50 ? ([]{ int v = 80; cout << "Hello Even World " << v << " Hello 2nd World "; })() : ([]{ cout << "Hello Odd World"; cout << " Hello 3rd World"; })();
+
+							//string initialized
+							n%2 ? ([]{ string v = "Vivek"; cout << "Hello Even World " << v << " Hello 2nd World ";})() :([]{ cout << "Hello Odd World"; cout << " Hello 3rd World"; })();
+
+							return 0;
+						}
+
+					ternary operator:
+						#include <iostream>
+						using namespace std;
+
+						int main() {
+							int n = 42; // Replace with your desired value of n
+
+							n % 2 == 0 && n < 50 ? ([]{
+								int v = 80;
+								string evenMessage = "Hello Even World " + to_string(v);
+								string secondMessage = "Hello 2nd World";
+								cout << evenMessage << " " << secondMessage;
+							})() : ([]{
+								string oddMessage = "Hello Odd World";
+								string thirdMessage = "Hello 3rd World";
+								cout << oddMessage << " " << thirdMessage;
+							})();
+
+							return 0;
+						}
+
+					string ternary:
+						#include <iostream>
+						using namespace std;
+
+						int main()
+						{
+							string finalgrade = []() {
+								int grade = 100;
+								return (grade < 60) ? "fail" : "pass";
+							}();
+
+							std::cout << finalgrade << std::endl;
+
+							return 0;
+						}
 
 			Bitwise:-
 				& and
@@ -3745,6 +3843,16 @@ Lecture-9:
 						return 0;
 					}
 
+					//in reverse order
+						int sumElement(int arr[],int n){
+							int s=0;
+							//Your code here
+							while(n)
+								s += arr[--n];
+							return s;
+						}
+
+
 				Reverse Array:
 					#include <iostream>
 					using namespace std;
@@ -4044,7 +4152,7 @@ Lecture-10:
 			vector<int> findDuplicates(vector<int>& nums) {
 
 				vector<int> dual;
-				sort(nums.begin(), nums.end());
+				sort(nums.begin(), nums.end());			//built in function to sort array.
 
 				for(int a=1; a< nums.size(); a++)
 				{
@@ -4791,7 +4899,6 @@ Lecture-13:
 						return -1;
 				return i;
 			}
-
 ---------------------------------------------------------------------------------------------------------
 	13/08/23
 Lecture-14:
@@ -5029,15 +5136,1185 @@ Lecture-14:
 				return 0;	
 			}
 ---------------------------------------------------------------------------------------------------------
+	14/08/23
 Lecture-15:
+	Book Allocation Problem || Aggressive Cows Problem || Binary Search Advanced Problems
+		1). Book Allocation:
+			HW- https://www.codingninjas.com/studio/problems/allocate-books_1090540
+		2). Painter partition
+			HW.
+		3). Aggressive cows
+
+	COME BACK TO THIS LECTURE AGAIN.
 ---------------------------------------------------------------------------------------------------------
-Lecture-16:
+	15/08/23
+Lecture-16: Selection Sort
+	void selectionSort(vector<int>& arr, int n){   
+		for(int i=0; i<n-1;i++){
+			int minIndex = i;
+			for(int j=i+1; j<n;j++){
+				if(arr[j] < arr[minIndex])
+					minIndex = j;
+			}
+			swap(arr[minIndex],arr[i]);
+		}
+	}
+
+	//or
+	void selectionSort(vector<int>& arr, int n){   
+		for(int i=0; i<n-1; i++){
+			for(int j=i+1;j<n;j++){
+				if(arr[i] > arr[j])
+					swap(arr[i],arr[j]);
+			}
+		}
+	}
+
+	//or
+	#include <bits/stdc++.h> 
+	void selectionSort(vector<int>& arr, int n){
+		int i,j;
+		for(i=0;i<n-1;i++)
+			for(j=i+1; j<n; j++)
+				if(arr[i]> arr[j])
+					swap(arr[i], arr[j]);
+	}
+
+		-for Selection Sort program,
+			Space complexity:	O(1).
+			Time complexity: O(n²);		
+		
+		-Use case:
+			if given array/vector size is small then we can go for Selection sort.
+		
+		HW
+			-Flowchart : 
+			-Stable & unstable algorithm
+
+	Practice:
+		#include <iostream>
+		using namespace std;
+		void printArray(int [], int);		//or void printArray(int anyName[], int)	or if you don't give name to array still its fine, its just function declaration.
+
+		int main()
+		{
+			int arr[] = {55,44,33,32,11,22,57,90,87,76,65,1};
+			//1,11,22,32,33,44,55,57,65,76,87,90
+			
+			int len = 12;
+			
+			printf("Before Sorting :: \n");
+			printArray(arr, len);
+			
+			int minValueIndex = arr[0];
+			
+			//sorting array,
+			for(int i=0; i<len-1; i++){
+				for(int j=i+1; j < len; j++)
+					if(arr[minValueIndex] > arr[j])
+						minValueIndex = j;
+				
+				//after getting the minimum value's index swap it, 
+				swap(arr[i],arr[minValueIndex]);
+			}
+			printf("\nAfter Sorting :: \n");
+			printArray(arr, len);
+
+			return 0;
+		}
+
+		void printArray(int brr[], int len){
+			for(int i=0;i<len;i++)
+				printf("%d ",brr[i]);
+		}
 ---------------------------------------------------------------------------------------------------------
-Lecture-17:
+	15/08/23
+Lecture-17: BUBBLE SORT
+	-Bubble Sort is the simplest sorting algorithm that works by repeatedly swapping the adjacent elements if they are in the wrong order. 
+	-This algorithm is not suitable for large data sets as its average and worst-case time complexity is quite high.
+	Bubble Sort Algorithm
+		In this algorithm,
+		-traverse from left and compare adjacent elements and the higher one is placed at right side. 
+		-In this way, the LARGEST element is moved to the rightmost end at first, at the end of array. 
+		-This process is then continued to find the second largest and place it and so on until the data is sorted.
+		
+		Advantages of Bubble Sort:
+			-Bubble sort is easy to understand and implement.
+			-It does not require any additional memory space.
+			-It is a stable sorting algorithm, 
+			 meaning that elements with the same key value maintain their relative order in the sorted output.
+
+		Disadvantages of Bubble Sort:
+			-Bubble sort has a time complexity of O(n²) which makes it very slow for large data sets.
+			-Bubble sort is a comparison-based sorting algorithm, 
+			 which means that it requires a comparison operator to determine the relative order of elements in the input data set. 
+			 It can limit the efficiency of the algorithm in certain cases.
+
+	QnA:
+		-In Bubble Sort, after each pass, the largest element among the unsorted elements "bubbles up" to which position?
+		-> Last
+
+		-main drawback of the Bubble Sort algorithm?
+		->It has a high time complexity. ie. O(n²).
+
+		-space complexity:
+			O(1), haven't created a dynamic variable so no space complexity.
+
+		-true regarding Bubble Sort?
+		->It is an in-place sorting algorithm.
+		Bubble sort performs the swapping of adjacent pairs without the use of any major data structure. 
+		Hence Bubble sort algorithm is an in-place algorithm.
+
+		-Bubble Sort is an example of a sorting algorithm that:
+		->Swaps adjacent elements directly
+
+		-Bubble Sort is an example of a ______ sorting algorithm.
+		->Comparison - based
+
+		-worst-case time complexity of the Bubble sort Algorithm?
+		->O(n²)
+
+		-What is the maximum number of comparisons that can take place when a bubble sort algorithm is implemented?, 
+		suppose there are n elements in the array.
+		->	(n*(n-1))/2
+
+		-The number of swappings needed to sort the numbers 8, 22, 7, 9, 31, 5, 13 in ascending order, using bubble sort is,
+		->10
+
+		-Assume that we use Bubble Sort to sort n distinct elements in ascending order. When does the best case of Bubble Sort occur?
+		->When elements are sorted in ascending order
+		the time complexity of bubble sort in the BEST-CASE scenario is O(n).
+
+	eg.
+		#include <bits/stdc++.h> 
+		void bubbleSort(vector<int>& arr, int n){
+			for(int i=0;i<n-1; i++)
+				for(int j=0; j<n-1;j++)				//here covering the last element looping from start to till end.
+					if(arr[j]> arr[j+1])
+						swap(arr[j],arr[j+1]);
+		}
+
+		//or neglecting the last element as it is already sorted,
+			#include <bits/stdc++.h> 
+			void bubbleSort(vector<int>& arr, int n){
+				for(int i=1;i<n; i++)					
+					for(int j=0; j<n-i;j++)				//here ignoring the last element from start to till n-1.
+						if(arr[j]> arr[j+1])
+							swap(arr [j],arr[j+1]);
+			}
+		
+		//optimizing more.., 
+		 in a random round there is no any swapping done, then we can consider that it's sorted.
+			#include <bits/stdc++.h> 
+			void bubbleSort(vector<int>& arr, int n){
+				for(int i=1;i<n; i++){
+					bool isSwappingOn = false;
+
+					for(int j=0; j<n-i;j++)
+						if(arr[j] > arr[j+1]){
+							swap(arr [j],arr[j+1]);
+							//swapping on..
+							isSwappingOn = true;
+						}
+					if(isSwappingOn == false)
+						break;        
+				}
+			}
+		
+	HW:
+		stable or unstable bubble sort?
+		in-place sort
 ---------------------------------------------------------------------------------------------------------
-Lecture-18:
+	16/08/23	
+Lecture-18: INSERTION SORT
+	Insertion sort is a simple sorting algorithm that works similar to the way you sort playing cards in your hands. 
+	The array is virtually split into a sorted and an unsorted part. 
+	Values from the unsorted part are picked and placed at their correct position in the sorted part.
+
+	-shifting of element done here.
+	-https://www.geeksforgeeks.org/insertion-sort/
+
+	-code:
+		#include <bits/stdc++.h> 
+		void insertionSort(int n, vector<int> &arr){
+			for(int i=1; i<n; i++){
+				int temp = arr[i],j;
+				for(j=i-1; j>=0; j--){
+					if(temp< arr[j]){
+						//shifting
+						arr[j+1] = arr[j]; 
+					}else{
+						break;
+					}
+				}
+				arr[j+1] = temp;
+			}
+		}
+
+	Characteristics of Insertion Sort
+		-This algorithm is one of the simplest algorithms with a simple implementation
+		-Basically, Insertion sort is efficient for small data values
+		-Insertion sort is adaptive in nature, i.e. it is appropriate for data sets that are already partially sorted.
+
+	-insertion sort is a STABLE sorting algorithm.
+	-insertion sort is a ADAPTABLE sorting algorithm.
+	-Insertion sort is used when number of elements is small. It can also be useful when the input array is almost sorted, 
+	 and only a few elements are misplaced in a complete big array.
+	
+	Time complexity:
+		O(n²)
+		-Best-Case : O(n);
+		-Worst-case: O(n²)
+	space complexity:
+		O(1)
 ---------------------------------------------------------------------------------------------------------
-Lecture-19:
+	17/08/23
+Lecture-19: C++ STL (Standard Template Library)
+	-Algorithm
+	-Containers
+
+	1) STD::array in C++:
+		The array is a collection of homogeneous objects and this array container is defined for constant size arrays or (static size). 
+		This container wraps around fixed-size arrays and the information of its size are not lost when declared to a pointer. 
+		In order to utilize arrays, we need to include the array header:
+			#include <array>
+
+			Syntax:
+				array<object_type, arr_size> arr_name;
+
+			a)[] Operator : This is similar to the normal array, we use it to access the element store at index ‘i’ .
+				Ex:
+					#include <iostream>
+					#include <array>
+					using namespace std;
+					
+					int main() {
+						array <char , 3> arr={'G','f','G'};
+						cout<<arr[0] <<" "<<arr[2];			//G G
+						return 0;
+					}
+			
+			b) front( ) and back( ) function: 
+				-These methods are used to access the first and the last element of the array directly.
+					#include <iostream>
+					#include <array>
+					using namespace std;
+					
+					int main() {
+						array <int , 3> arr={'G','f','G'};  // ASCII val of 'G' =71
+						cout<<arr.front() <<" "<<arr.back();
+						return 0;
+					}
+				
+			c) swap( ) function: 
+				-This swap function is used to swap the content of the two arrays.
+					Ex: 
+					#include <iostream>
+					#include <array>
+					using namespace std;
+				
+					int main() {
+						array <int , 3> arr={'G','f','G'};  // ASCII val of 'G' =71
+						array <int , 3> arr1={'M','M','P'}; // ASCII val of 'M' = 77 and 'P' = 80
+						arr.swap(arr1);  // now arr = {M,M,P}
+						cout<<arr.front() <<" "<<arr.back();
+						return 0;
+					}
+				eg.
+					#include <iostream>
+					#include<array>
+					using namespace std;
+
+					int main()
+					{
+						//double or single braces works fine.
+						array<int, 5> a {1,2,3,4};
+						array<int, 5> b {{10,20,30,40,150}};
+						array<int, 5> c {1,2,3,4,5};
+						
+						cout<<"A:\n";
+						for(auto i: a)
+							std::cout << i << "\t";
+							
+						std::cout << "\nB : " << std::endl;
+						for(auto i: b)
+							std::cout << i << "\t";
+							
+						a.swap(b);
+						std::cout << "\nAfter swapping: Array A:  " << std::endl;
+						for(auto i: a)
+							std::cout << i << "\t";
+							
+						std::cout << "\nAfter swapping: Array B:  " << std::endl;
+						for(auto i: b)
+							std::cout << i << "\t";
+					}
+
+			d)empty(): to check array is empty or not
+				first need to cout boolalpha then after print the boolean value, if you print boolean values 
+				before cout boolalpha then it will printed like 0,1.
+				eg.
+					bool x = arr.empty(); // false ( not empty)
+					cout<<boolalpha;		//or cout<<boolalpha<<(x);				
+					bool y = 1;
+					cout<<y;
+					cout<<"\n"<<x;
+
+				-boolalpha is a manipulator used in C++ for the std::cout stream (the standard output stream) 
+				to display boolean values as their corresponding textual representations "true" or "false," 
+				rather than as integer values 1 or 0.
+			
+			e) at() function: 
+				This function is used to access the element stored at a specific location, 
+				if we try to access the element which is out of bounds of the array size then it throws an exception. 
+				Ex: 
+					#include <iostream>
+					#include <array>
+					using namespace std;
+
+					int main() {
+						array <int , 3> arr={'G','f','G'};  // ASCII val of 'G' =71
+						array <int , 3> arr1={'M','M','P'}; // ASCII val of 'M' = 77 and 'P' = 80
+						cout<< arr.at(2) <<" " << arr1.at(2);
+						//cout<< arr.at(3); // exception{Abort signal from abort(3) (SIGABRT)}
+						return 0;
+					}
+					Output
+						71 80
+
+			f) fill( ) function: 
+				This is specially used to initialize or fill all the indexes of the array with a similar value.
+				Ex:
+					#include <iostream>
+					#include <array>
+					using namespace std;
+					
+					int main() {
+						array <int , 5> arr;
+						arr.fill(1);
+						for(int i: arr)
+							cout<<arr[i]<<" ";
+						return 0;
+					}
+						Output
+						1 1 1 1 1 
+
+			g) size( ) or max_size( ) and sizeof( ) function: 
+				Both size( ) or max_size( ) are used to get the maximum number of indexes in the array 
+				while sizeof( ) is used to get the total size of array in bytes.
+
+				#include <iostream>
+				#include <array>
+				using namespace std;				
+				int main() {
+					array <int , 10> arr;   
+					cout<<arr.size()<<'\n'; // total num of indexes
+					cout<<arr.max_size()<<'\n'; // total num of indexes
+					cout<<sizeof(arr); // total size of array
+					return 0;
+				}
+				Output
+					10
+					10
+					40
+
+		eg.
+			#include <iostream>
+			#include <array>
+			using namespace std;
+
+			int main()
+			{
+				int arr[] = {1,2,3};            //static array
+							
+				array<int, 4> a = {1,2,3,4};        //this is also static array
+				
+				std::cout << "Size : "<< a.size() << std::endl;     //to get the length of array    //Size : 4
+				
+				//printing the array element
+				for(int i: a){
+					cout<<i<<"\t";              //1       2       3       4
+				}
+				std::cout << std::endl;
+				
+				for(int it=0; it<a.size(); it++)
+					cout<<a[it]<<" ";               //1       2       3       4
+					
+				//First last element of array
+				std::cout << "\n\n First element of array A :: "<< a.front() << endl;           //  First element of array A :: 1
+				std::cout << " Last element of array A :: "<< a.back()<<endl;                   //   Last element of array A :: 4
+				
+				//random index of array
+				std::cout << "\n3rd index : "<< a[3] << std::endl;                  // 3rd index : 4
+				std::cout << "2nd index : "<< a.at(2) << std::endl;                 // 2nd index : 3
+				
+				//checking the array is empty or not?
+				cout<<"Array A is empty : "<<a.empty();                         // array is not empty so, Array A is empty : 0
+				
+				return 0;
+			}
+
+		eg.
+			#include <iostream>
+			#include<array>
+
+			//for sorting algorithm need to include,
+			#include <algorithm>
+			using namespace std;
+
+			int main()
+			{
+				//double or single braces works fine.
+				array<int, 5> a {1,2,3,4};
+				array<int, 5> b {{1,2,3,4,15}};
+				array<int, 5> c {1,2,3,4,5};
+				
+				//printing array
+				for(auto i: a){
+					std::cout << i <<" ";
+				}
+				std::cout << std::endl;
+				
+				for(auto i: b){
+					printf("%d ",i);
+				}
+				
+				
+				//sort
+				std::cout << std::endl;
+				array<int, 5> d = {5,4,3,2,1};          //equal sign with single braces.
+						
+				for(auto i: d)
+					cout<<i<<" ";
+					
+				std::cout  << std::endl;
+				
+				//after sorting
+				sort(d.begin(), d.end());
+				
+				
+				//if you just try to print the begin() function on array it will print the memory location of that array
+				//so to print the element at that address Use asterisk.
+				
+				cout<<"Beging memory address: "<<d.begin()<<"\n";
+				cout<<"starting element: "<<*d.begin()<<"\n";
+				
+				cout<<"End: "<<*d.end()<<"\n";
+				
+				for(auto i: d)
+					cout<<i<<" ";
+					
+				array<int, 3> e = {{}};         //equal sign with double braces.
+				
+				
+				//by default array e gets initialized with 0.
+				cout<<"\n";
+				for(int o: e){
+					cout<<o<<" ";
+				}
+				
+				
+				//initializing array e with default specific element with 97,
+				cout<<"\n";
+				e.fill(97);
+				for(auto i: e)
+					cout<<i<<" ";
+					
+				//initializing string array
+				cout<<"\n";
+				array<string, 5> strings {"Vivek","Nikate","a","b"};
+				
+				for(string s: strings)
+					cout<<s<<"\t";
+					
+				//printing string array
+				cout<<"\n";
+				for(auto s: strings)
+					cout<<s<<"\t";
+
+				return 0;
+			}
+
+	2) Vector:
+		-It's a dynamic array.
+		-Vectors are the same as dynamic arrays with the ability to resize itself automatically when an element is inserted or deleted, 
+		 with their storage being handled automatically by the container. Vector elements are placed in contiguous storage 
+		 so that they can be accessed and traversed using iterators. 
+		 In vectors, data is inserted at the end. Inserting at the end takes differential time, 
+		 as sometimes the array may need to be extended. Removing the last element takes only constant 
+		 time because no resizing happens. Inserting and erasing at the beginning or in the middle is linear in time.
+		 
+					vector::push_back() 								|	vector::pop_back()
+				It is used to add a new element at the end of the vector. 		|	It is used to remove a new element at the end of the vector.
+				Its parameter is the value we want to add in the end of vector. 	|	It does not take any parameters.
+				It does not have any return type.							|	It does not have any return value.
+				Its complexity is constant.								|	Its complexity is constant.
+				`container.push_back(element);							| 	container.pop_back();
+			Container-    Vector, Deque, List, etc. 						| 	Vector, Deque, List, etc..
+			Effects  -    Increases container size by 1 						|	 Decreases container size by 1.
+
+
+		-std::vector in C++, It is defined inside the <vector> header file.
+
+		Reverse Vector:
+			#include <iostream>
+			#include<vector>
+			// this algorithm header file is for reverse method,
+			#include <algorithm>
+			using namespace std;
+
+			int main()
+			{
+				vector<int> v {10,9,8,7,6,5,4,3,2,1};
+				std::cout << "Size "<< v.size() << std::endl;       //Size 10
+				
+				for(auto i: v)
+					cout<<i<<" ";                               // 10 9 8 7 6 5 4 3 2 1 
+					
+				reverse(v.begin(), v.end());
+				
+				cout<<"\n After reversing: ";
+				for(auto i: v)
+					cout<<i<<" ";                               // After reversing: 1 2 3 4 5 6 7 8 9 10 
+
+				return 0;
+			}
+
+		Practice:
+			#include <iostream>
+			#include<vector>
+			using namespace std;
+
+			int main()
+			{
+				vector<int> v;
+				
+				//Capacity- means how many elements it can contain.
+				//Size- means how many elements it is containing/ contained now.
+				
+				std::cout << "Capacity- "<<v.capacity() << std::endl;
+				std::cout << "Size- "<<v.size() << std::endl;
+				
+				v.push_back(1);
+				v.push_back(2);
+				v.push_back(3);
+				v.push_back(4);
+				v.push_back(5);
+				v.push_back(48);
+				v.push_back(45);
+				
+				v.push_back(18);
+				v.push_back(345);
+				
+				std::cout << "Capacity- "<<v.capacity() << std::endl;           //capacity gets double everytime if size is greater than capacity value.
+					std::cout << "Size- "<<v.size() << std::endl;                   //9
+				
+				for(auto i: v)
+					cout<<i<<" ";
+					
+				std::cout << "\nAfter Popping last element : " << std::endl;
+				v.pop_back();
+				
+				for(auto i: v)
+					cout<<i<<" ";
+					
+				v.clear();
+				
+				std::cout  << std::endl;
+				std::cout << "Capacity- "<<v.capacity() << std::endl;           //after clearing also capacity is same.
+				std::cout << "Size- "<<v.size() << std::endl;                   //size reduce back to 0.
+				return 0;
+			}
+
+		-vector initialization:
+			#include <iostream>
+			#include <vector>
+			using namespace std;
+
+			int main()
+			{
+				vector<int> a;      //size=0
+				std::cout << a.size() << std::endl;
+				
+				vector<int> b(5);   //size=5, but all element are by default initialized to 0.
+				std::cout << b.size() << std::endl;
+				
+				for(auto i:b)
+					cout<<i<<" ";
+					
+				//vector with initializing default value,
+				//vector<DataType> VectorName(size, defaultValue);
+				vector<int> c(10, 580);     //10 element having all value 580.
+				
+				cout<<"\n";
+				for(int i: c)
+					cout<<i<<" ";
+					
+				//copying vector from another
+				vector<int> d(c);        //copying vector c to d.
+				
+				cout<<"\n vector D: ";
+				for(int i: d)
+					cout<<i<<" ";
+				
+				//inserting value to specific index,
+				cout<<"\n";
+				
+				d.insert(d.begin(),34);     //at start
+				d.insert(d.begin()+4,23);     //at 4th index
+				
+				cout<<"\n vector D After insertion: ";
+				for(int i: d)
+					cout<<i<<" ";
+					
+					//inserting specific no.of same element to vector  
+					cout<<"\n vector e :";
+				vector<int> e(5,4);
+				for(int i: e)
+					cout<<i<<" ";
+				
+				std::cout<<"\nAfter insertion 99 in vector e: " << std::endl;
+				//vector_name.insert(position, size (no.of times to be inserted), val (defaultValue) )
+				e.insert(e.begin()+2, 5, 99);              //inserting 780, 5 times after 2nd index.
+				
+				for(int i: e)
+					cout<<i<<" ";
+
+				return 0;
+			}
+
+		eg.
+			#include <iostream>
+			#include <vector>
+
+			using namespace std;
+
+			int main()
+			{
+				vector<int> g1;
+
+				for (int i = 1; i <= 5; i++)
+					g1.push_back(i);						//inserting element into the vector.
+
+				cout << "Output of begin and end: ";
+				for (auto i = g1.begin(); i != g1.end(); ++i)
+					cout << *i << " ";						//Output of begin and end: 1 2 3 4 5 
+
+				cout << "\nOutput of cbegin and cend: ";
+				for (auto i = g1.cbegin(); i != g1.cend(); ++i)
+					cout << *i << " ";						//Output of cbegin and cend: 1 2 3 4 5 
+
+				cout << "\nOutput of rbegin and rend: ";
+				for (auto ir = g1.rbegin(); ir != g1.rend(); ++ir)
+					cout << *ir << " ";						//Output of rbegin and rend: 5 4 3 2 1 
+
+				cout << "\nOutput of crbegin and crend : ";
+				for (auto ir = g1.crbegin(); ir != g1.crend(); ++ir)
+					cout << *ir << " ";						//Output of crbegin and crend : 5 4 3 2 1
+
+				return 0;
+			}
+
+		eg.
+			#include <bits/stdc++.h>
+			using namespace std;
+
+			int main()
+			{
+				vector<int> g1;
+
+				for (int i = 1; i <= 10; i++)
+					g1.push_back(i * 10);
+
+				cout << "\nReference operator [g] : g1[2] = " << g1[2];			//Reference operator [g] : g1[2] = 30
+
+				cout << "\nat : g1.at(4) = " << g1.at(4);                   //element at 4th index (means 0-based indexing so 5th)
+				//at : g1.at(4) = 50
+
+				cout << "\nfront() : g1.front() = " << g1.front();          //first element
+				//front() : g1.front() = 10
+
+				cout << "\nback() : g1.back() = " << g1.back();             //last element
+				//back() : g1.back() = 100
+
+				// pointer to the first element
+				int* pos = g1.data();           //storing the base address of vector g1 here.
+
+				cout << "\nThe first element is " << *pos;          //accessing first/base element
+				//The first element is 10
+				
+				cout << "\nThe 9th element is " << *(pos+8);
+				//The 9th element is 90
+
+				return 0;
+			}
+
+		eg.
+			#include <bits/stdc++.h>
+			#include <vector>
+			using namespace std;
+
+			int main()
+			{
+				// Assign vector
+				vector<int> v;
+
+				// fill the vector with 10 five times
+				v.assign(5, 10);
+
+				cout << "The vector elements are: ";
+				for (int i = 0; i < v.size(); i++)
+					cout << v[i] << " ";
+
+				// inserts 15 to the last position
+				v.push_back(15);
+				int n = v.size();
+				cout << "\nThe last element is: " << v[n - 1];
+
+				// removes last element
+				v.pop_back();
+
+				// prints the vector
+				cout << "\nThe vector elements are: ";
+				for (int i = 0; i < v.size(); i++)
+					cout << v[i] << " ";
+
+				// inserts 5 at the beginning
+				v.insert(v.begin(), 5);
+
+				cout << "\nThe first element is: " << v[0];
+
+				// removes the first element
+				v.erase(v.begin());
+
+				cout << "\nThe first element is: " << v[0];
+
+				// inserts at the beginning
+				v.emplace(v.begin(), 5);
+				cout << "\nThe first element is: " << v[0];
+
+				// Inserts 20 at the end
+				v.emplace_back(20);
+				n = v.size();
+				cout << "\nThe last element is: " << v[n - 1];
+
+				// erases the vector
+				v.clear();
+				cout << "\nVector size after clear(): " << v.size();
+
+				// two vector to perform swap
+				vector<int> v1, v2;
+				v1.push_back(1);
+				v1.push_back(2);
+				v2.push_back(3);
+				v2.push_back(4);
+
+				cout << "\n\nVector 1: ";
+				for (int i = 0; i < v1.size(); i++)
+					cout << v1[i] << " ";
+
+				cout << "\nVector 2: ";
+				for (int i = 0; i < v2.size(); i++)
+					cout << v2[i] << " ";
+
+				// Swaps v1 and v2
+				v1.swap(v2);
+
+				cout << "\nAfter Swap \nVector 1: ";
+				for (int i = 0; i < v1.size(); i++)
+					cout << v1[i] << " ";
+
+				cout << "\nVector 2: ";
+				for (int i = 0; i < v2.size(); i++)
+					cout << v2[i] << " ";
+			}
+			Output:
+				The vector elements are: 10 10 10 10 10 
+				The last element is: 15
+				The vector elements are: 10 10 10 10 10 
+				The first element is: 5
+				The first element is: 10
+				The first element is: 5
+				The last element is: 20
+				Vector size after erase(): 0
+
+				Vector 1: 1 2 
+				Vector 2: 3 4 
+				After Swap 
+				Vector 1: 3 4 
+				Vector 2: 1 2
+		
+		-Erase method:
+			#include <bits/stdc++.h>
+			using namespace std;
+
+			int main()
+			{
+					// Assign vector
+				vector<int> v;
+				
+				// fill the vector with 10 five times
+				v.push_back(10);
+				v.push_back(20);
+				v.push_back(30);
+				v.push_back(40);
+				v.push_back(50);
+				
+				for(auto i: v)
+					std::cout << i << " ";
+				
+				v.erase(v.begin()+3);       //removing 4th element 40.
+				
+				std::cout << std::endl;
+					for(auto i: v)
+					std::cout << i << " ";
+					
+					v.erase(v.begin());     //removing first element
+				
+				std::cout << std::endl;
+					for(auto i: v)
+					std::cout << i << " ";
+				
+				return 0;
+			}
+
+		Time Complexity of Vector:
+			-The time complexity for doing various operations on vectors is-
+				Random access – constant O(1)
+				Insertion or removal of elements at the end – constant O(1)
+				Insertion or removal of elements – linear in the distance to the end of the vector O(N)
+				Knowing the size – constant O(1)
+				Resizing the vector- Linear O(N)
+
+	3) Deque:
+		-Doubly ended queue
+		-Means you can perform insertion/Deletion (push/ pop) operation from both ends, front & back.
+		-Its implementation is bit complex, it uses static array not on contiguous location
+		-It is DYNAMIC.
+		-Random Access of element is possible
+		-The deque::max_size() is a built-in function in C++ STL,
+		 which returns the maximum number of elements that a deque container can hold.
+			Syntax:
+				deque_name.max_size()
+
+			Parameters: The function does not accept any parameters.
+			Return Value: The function returns the maximum number of elements that a deque container can hold.
+			eg.
+				int main(){
+					deque<int> dq;
+					
+					cout << "The max-size of deque: " << dq.max_size();			//The max-size of deque: 4611686018427387903	
+					return 0;
+				}
+			
+		eg.
+			#include <iostream>
+			#include<deque>
+			using namespace std;
+
+			int main()
+			{
+				deque<int> d;
+				
+				//inserting at ending,
+				d.push_back(1);
+				d.push_back(2);
+				d.push_back(3);
+				d.push_back(4);
+				d.push_back(5);
+				
+				d.push_front(100);
+				d.push_front(200);
+				d.push_front(300);
+				d.push_front(400);
+				d.push_front(500);
+				
+				for(auto i: d)
+					std::cout << i << " ";          //500 400 300 200 100 1 2 3 4 5 
+
+				//Removing element from start       //500
+				d.pop_front();
+				
+				//Removing element from back        //5
+				d.pop_back();
+				
+				cout<<"\nAfter removal : \n ";
+				for(auto i: d)
+					std::cout << i << " ";                  // 400 300 200 100 1 2 3 4 
+					
+				//accessing first index element
+				cout<<"\nFirst index element : "<<d[1];     //First index element : 300
+				
+				//using at()
+				cout<<"\n4th index element : "<<d.at(4);    //4th index element : 1
+					
+				//start element
+				std::cout << "\n Start element : "<< d.front() << std::endl;            //Start element : 400
+				
+				//end element
+				
+				std::cout << "End element : "<< d.back() << std::endl;                  //End element : 4
+				
+				std::cout << "deque empty? : "<<boolalpha<< d.empty() << std::endl;     //0 or false, its not empty.
+				
+				std::cout << "Deque Size : "<< d.size() << std::endl;                   //Deque Size : 8
+				
+				std::cout << "Capacity : "<< d.max_size() << std::endl;                 //Capacity : 2305843009213693951
+				
+				//Deleting range of elements from 3 to 5, 3rd & 4th only not 5th.
+				d.erase(d.begin()+3, d.begin()+5);              //100 1
+				
+				cout<<"\nDeleted few elements: ";
+				for(auto i: d)
+					std::cout << i << " ";                  // Deleted few elements: 400 300 200 2 3 4 
+				
+				//Deleting all elements
+				d.clear();
+				std::cout << "\nDeque Size : "<< d.size() << std::endl;                   //Deque Size : 0
+
+				return 0;
+			}
+
+	4) List:
+		-Lists are sequence containers that allow non-contiguous memory allocation. 
+		-As compared to the vector, the list has slow traversal, but once a position has been found, 
+		 insertion and deletion are quick (constant time). 
+		-Normally, when we say a List, we talk about a doubly linked list. For implementing a singly linked list, 
+		 we use a forward_list.
+
+		-std::list is the class of the List container. 
+		-It is the part of C++ Standard Template Library (STL) and is defined inside <list> header file.
+		-Random access is not possible.
+		Points to Remember about List Container:-
+			-It is generally implemented using a dynamic doubly linked list with traversal in both directions.
+			-Faster insert and delete operation as compared to arrays and vectors.
+			-It provides only sequential access. Random Access to any middle element is not possible
+			-It is defined as a template so it is able to hold any data type.
+			-It operates as an unsorted list would, which implies that by default, the list’s order is not preserved. However, there are techniques for sorting.
+
+		Syntax:
+			std::list <data-type> name_of_list;
+			eg.
+				list<int> L;
+		
+		eg.
+			#include <iostream>
+			#include <list>
+			using namespace std;
+
+			int main()
+			{
+				list<int> L;
+				
+				std::cout << "\nThe size of List :: "<< L.size() << std::endl;          //The size of List :: 0
+
+				
+				L.push_back(90);            //insertion at back
+				L.push_back(100);
+				
+				L.push_front(910);          //insertion at front side
+				L.push_front(800);
+				
+				for(auto i:L)
+					cout<<i<<" ";           //800 910 90 100 
+					
+				std::cout << "\nThe size of List :: "<< L.size() << std::endl;      //The size of List :: 4
+				
+				std::cout << "\nThe max size of List :: "<< L.max_size();           //The max size of List :: 384307168202282325
+				
+				//deleting start element      //800
+				//you can't delete random element coz list doesn't provide random access to element.
+				
+				L.erase(L.begin());
+				cout<<"\n start element removed : ";            // start element removed : 910 90 100 
+				for(auto i:L)
+					cout<<i<<" ";
+					
+				//copy
+				list<int> n(L);
+				cout<<"\n copied list : ";
+				for(auto i:L)
+					cout<<i<<" ";                       //copied list : 910 90 100 
+					
+				//list with default value 0
+				
+				//list<DataType> list_name(size)
+				list<int> a(5);         
+				
+				cout<<"\n List A: ";
+				for(int i:a)
+					cout<<i<<" ";           // List A: 0 0 0 0 0 
+					
+				//list<DataType> list_name(size, DefaultValue);
+				
+				list<int> b(7, 31);         
+				
+				cout<<"\n List B: ";
+				for(int i:b)
+					cout<<i<<" ";           //  List B: 31 31 31 31 31 31 31 
+				
+				L.clear();      //deleting all list element,
+				cout << "\n The size of List AFTER CLEARING :: "<< L.size();            // The size of List AFTER CLEARING :: 0
+
+				return 0;
+			}
+
+	5) Stack:
+		-LIFO (Last In First Out).
+		-new element is added at one end (top) and an element is removed from that end only.
+		-Operations:
+			push(), pop(), top(), size(), empty() all are having Time complexity of O(1)
+		
+		eg.
+			#include <iostream>
+			#include <stack>
+			using namespace std;
+
+			int main(){
+				stack<string> stsr;
+				std::cout << "Size of Stack :: "<< stsr.size() << std::endl;        //Size of Stack :: 0
+				
+				stsr.push("Vivek");
+				stsr.push("Mahesh");
+				stsr.push("Saraswait");
+				stsr.push("Rohini");
+				stsr.push("Computer");
+				
+				std::cout << "TOP element of stack : "<< stsr.top() << std::endl;					//TOP element of stack : Computer
+				std::cout << "Size of Stack :: "<< stsr.size() << std::endl;        					//Size of Stack :: 5
+
+				stsr.pop();
+				
+				std::cout << "TOP element of stack : "<< stsr.top() << std::endl;								//TOP element of stack : Rohini
+				
+				std::cout << "Stack empty? :: "<< stsr.empty() << " " << boolalpha <<stsr.empty() << std::endl;		//Stack empty? :: 0 false
+				return 0;
+			}
+
+	6) Queue:
+		-operate in a first in first out (FIFO) type of arrangement. 
+		-Elements are inserted at the back (end) and are deleted from the front.
+		-operations:
+			push(), pop(), front(), back(), emplace(), size(), empty() all are have Time complexity of O(1).
+
+		eg.
+			#include <iostream>
+			#include <queue>
+			using namespace std;
+
+			int main(){
+				queue<string> sq;
+				
+				std::cout << "Size of Queue before insertion : "<< sq.size() << std::endl;
+				
+				sq.push("First");
+				sq.push("Second");
+				sq.push("Third");
+				sq.push("Forth");
+				
+				std::cout << "Size of Queue After insertion : "<< sq.size() << std::endl;
+				
+				std::cout << "start element of Queue : "<< sq.front() << std::endl;
+				
+				std::cout << "Last element of Queue : "<< sq.back() << std::endl;
+				
+				sq.pop();
+				
+				std::cout << "start element After poping : "<< sq.front() << std::endl;
+				
+				std::cout << "Queue empty? : "<< boolalpha <<sq.empty() << std::endl;
+				return 0;
+			}
+
+			//ouput:
+				Size of Queue before insertion : 0
+				Size of Queue After insertion : 4
+				start element of Queue : First
+				Last element of Queue : Forth
+				start element After poping : Second
+				Queue empty? : false
+
+		emplace operation used to insert element in queue:{
+			queue<char> myqueue;
+			myqueue.emplace('k');
+			myqueue.emplace('j');
+			myqueue.emplace('y');
+			myqueue.emplace('r');
+			myqueue.emplace('y');
+			myqueue.emplace('u');
+			
+			// queue becomes k, j, y, r, y, u
+			
+			while (!myqueue.empty())
+			{
+				cout << ' ' << myqueue.front();
+				myqueue.pop();
+			}
+			return 0;
+		}
+
+	7) Priority Queue:
+		https://www.geeksforgeeks.org/priority-queue-in-cpp-stl/
+		Time complexity:
+			push(), pop() on priority queue is of O(logN).
+			top(), size() & empty() are constant time operations O(1).
+		eg.
+			#include <iostream>
+			#include <queue>
+			using namespace std;
+
+			int main(){
+				priority_queue<int> pq;     //by default it creates max-heap(decreasing order).
+				
+				std::cout << "Size : "<< pq.size() << std::endl;        //Size : 0
+
+				pq.push(1);
+				pq.push(3);
+				pq.push(5);
+				pq.push(2);
+				pq.push(4);
+				
+				std::cout << "First element : "<< pq.top() << std::endl;        //First element : 5
+				int pqSize = pq.size();
+				
+				std::cout << "Size : "<< pqSize << std::endl;           //Size : 5
+
+				for(int i=0;i<pqSize;i++){
+					cout<<pq.top()<<" ";            //5 4 3 2 1 
+					pq.pop();
+				}
+				
+				//min heap increasing order
+				priority_queue<int, vector<int>, greater<int>> min;
+				
+				min.push(100);
+				min.push(200);
+				min.push(400);
+				min.push(300);
+				min.push(500);
+				
+				
+				cout<<"\nMin priority_queue is empty ? "<< min.empty(); //Min priority_queue is empty ? 0
+				int minSize= min.size();
+				
+				cout<<"\n Min elements : ";
+				
+				for(int i=0;i<minSize;i++){
+					cout<<min.top()<<" ";                   //Min elements : 100 200 300 400 500 
+					min.pop();
+				}
+				
+				cout<<"\nMin priority_queue is empty ? "<< min.empty();     //Min priority_queue is empty ? 1
+				return 0;
+			}
+
+	8) Set:
+		
+	
+	9) Map:
+	
+	10) STL Algorithm:
+
 ---------------------------------------------------------------------------------------------------------
 Lecture-20:
 ---------------------------------------------------------------------------------------------------------
@@ -5200,4 +6477,198 @@ Lecture-20:
 				}
 				return ans;
 			}
+
+		2. Coding Ninja Content:
+			Container with Maximum Water:
+				#include <bits/stdc++.h> 
+				int maxAreaContainer(vector<int> &arr) {
+					int n = arr.size();
+					int area, mainMax=0;
+
+					for(int i=0; i<n-1;i++){
+						for(int j=i+1; j<n; j++){
+							area = min(arr[i], arr[j]) * (j-i);
+
+							if(mainMax < area)
+								mainMax = area;
+						}    
+					}
+						return mainMax;
+				}
+
+				//optimized:
+					#include <bits/stdc++.h> 
+					int maxAreaContainer(vector<int> &arr) {
+						int n = arr.size();
+						int left = 0;
+						int right = n - 1;
+						int mainMax = 0;
+
+						while (left < right) {
+							int width = right - left;
+							int height = min(arr[left], arr[right]);
+							int area = width * height;
+
+							mainMax = max(mainMax, area);
+
+							if (arr[left] < arr[right]) {
+								left++;
+							} else {
+								right--;
+							}
+						}
+						return mainMax;
+					}
+
+		3. Subarray with given sum
+			vector<int> subarraySum(vector<int>arr, int n, long long s)
+			{
+				
+				int start = 0;
+				long long sum = 0;
+				vector<int> v;
+			
+				if (s == 0) // Handle the case where target sum is 0
+				{
+					v.push_back(-1);
+					return v;
+				}
+				
+				for (int i = 0; i < n; i++)
+				{
+					sum += arr[i];
+			
+					while (sum > s && start <= i)
+					{
+						sum -= arr[start];
+						start++;
+					}
+			
+					if (sum == s)
+					{
+						v.push_back(start + 1);
+						v.push_back(i + 1);
+						return v;
+					}
+				}
+				v.push_back(-1); // If no subarray found
+				return v;
+			}
+
+			//or
+				vector<int> subarraySum(vector<int>arr, int n, long long s)
+				{
+					// Your code here
+					vector<int> res;
+					bool bl = false;
+					for (int i = 0; i < n; i++) {
+						int currentSum = arr[i];
+					
+						if (currentSum == s) {
+							res.push_back(i+1);
+							res.push_back(i+1);
+							bl=true;
+							break;
+						}
+						else {
+							// Try all subarrays starting with 'i'
+							for (int j = i + 1; j < n; j++) {
+								currentSum += arr[j];
+					
+								if (currentSum == s) {
+									res.push_back(i+1);
+									res.push_back(j+1);
+									bl=true;
+									break;
+								}
+							}
+							if(bl) break;
+						}
+					}
+					if(bl) return res;
+						return {-1};
+				}
+
+		4. Smaller and Larger:
+			vector<int> getMoreAndLess(int arr[], int n, int x) {
+				int GreaterCount=0, LessCount=0;
+				
+				for(int i=0;i<n; i++){
+					if(arr[i]>= x)
+						GreaterCount++;
+					
+					if(arr[i]<=x)
+						LessCount++;
+				}
+				
+				vector<int> v;
+				v.push_back(LessCount);
+				v.push_back(GreaterCount);
+				return v;
+			}
+		
+		-Refere few programs from here also...
+			https://auth.geeksforgeeks.org/user/viveknikate/practice
+---------------------------------------------------------------------------------------------------------
+POTD:-[Problem of the Day]
+	1). Minimum Difference in an Array	
+		#include <bits/stdc++.h> 
+		int minDiff(int n, vector < int > arr) {
+			sort(arr.begin(), arr.end());
+			// int minDiffHold = abs(arr[0] - arr[1]);      //or you can assign INT_MAX here also
+
+			int minDiffHold =INT_MAX; 
+			for (int i = 0; i < n - 1; i++) {
+				if (arr[i] == arr[i + 1])
+				return 0;
+
+				int value = abs(arr[i] - arr[i + 1]);
+
+				// assigning minimum value to mindiffhold variable.
+				minDiffHold = min(value, minDiffHold);
+			}
+			return minDiffHold;
+		}
+
+	2)Reverse Coding:
+		#include <bits/stdc++.h> 
+		vector<vector<int>> ninjaCity(vector<vector<int>> &mat){
+			int row = mat.size();
+			int column = mat[0].size();
+			
+			vector<vector<int>> v;
+
+			for (int i = 0; i < row; i++) {
+
+				vector<int> second;
+				for (int j = column - 1; j >= 0; j--){
+					int value = mat[i][j];
+					second.push_back(value);
+				}
+				v.push_back(second);
+			}
+
+			return v;
+		}
+
+		//or
+		#include <bits/stdc++.h> 
+		vector<vector<int>> ninjaCity(vector<vector<int>> &mat){
+			int i=0,n = mat.size();
+
+			while(i<n){
+				reverse(mat[i].begin(), mat[i].end());
+				i++;
+			}
+			return mat;
+		}
+
+	3)Planet Division:
+		vector<int> planetDivision(int n) {
+			vector<int> v;
+			(n % 2 == 0)?(v.push_back(n/2), v.push_back(n/2)):(v.push_back((n/2)+1), v.push_back(n/2));
+			return v;
+		}
+
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
