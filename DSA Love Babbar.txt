@@ -4720,6 +4720,27 @@ Lecture-13:
 
 						Another valid syntax to declare pair is:
 							g2 = {1, 'a'};
+							pair<int, int> p1 {a,b};		
+							pair<int, int> p1 = {a,b};
+							eg.
+								#include <iostream>
+								using namespace std;
+
+								int main(){
+									int a = 10,b =20;
+
+									pair<int, int> p1 {a,b};
+									pair<char, string> p2('A',"First Alphabet");
+									
+									std::cout << p1.first<<" ";                     //10 20
+									std::cout << p1.second << std::endl;
+									
+									std::cout << p2.first <<" ";                    //A First Alphabet
+									std::cout << p2.second << std::endl;
+									
+									
+									return 0;
+								}
 
 				Note: If not initialized, the first value of the pair gets automatically initialized. 
 				
@@ -6309,17 +6330,285 @@ Lecture-19: C++ STL (Standard Template Library)
 			}
 
 	8) Set:
-		
-	
-	9) Map:
-	
-	10) STL Algorithm:
+		-Stores unique elements
+		-The values are stored in a specific sorted order i.e. either ascending or descending.
+		-By default, the std::set is sorted in ascending order.
+		-The std::set class is the part of C++ Standard Template Library (STL) and it is defined inside the <set> header file.
+		-Syntax:
+			std::set <data_type> set_name;
 
+		-we have the option to change the sorting order by using the following syntax.
+		-Syntax:
+			std::set <data_type, greater<data_type>> set_name;
+
+		-Datatype: Set can take any data type depending on the values, e.g. int, char, float, etc.
+
+			set<int> val; // defining an empty set
+			set<int> val = {6, 10, 5, 1}; // defining a set with values
+		
+		Properties-
+			Storing order – The set stores the elements in sorted order.
+			Values Characteristics – All the elements in a set have unique values.
+			Values Nature – The value of the element cannot be modified once it is added to the set, 
+						though it is possible to remove and then add the modified value of that element. Thus, the values are immutable.
+			Search Technique – Sets follow the Binary search tree implementation.
+			Arranging order – The values in a set are unindexed.
+		Note: To store the elements in an unsorted(random) order,  unordered_set() can be used.
+		-set is little slower than unordered_set.
+
+		•The time complexities for doing various operations on sets are:
+			-Insertion of Elements – O(log N)
+			-Deletion of Elements – O(log N)
+			-insert(), find(), erase(), count() -> O(long N)
+			-size(), begin(), empty(), end() -> O(1).
+		eg.
+			#include <iostream>
+			#include <set>
+			using namespace std;
+			int main(){
+				std::set<char> a;
+				a.insert('A');
+				a.insert('B');
+				a.insert('E');
+				a.insert('D');
+				a.insert('C');
+				
+				//repeated element will not be inserted again in set.
+				a.insert('B');
+				a.insert('A');
+				
+				
+				//sorted increasing order,
+				for (auto& str : a) {           //& sign used
+					std::cout << str << ' ';
+				}
+				
+				std::cout << '\n';
+				for (auto str : a) {                //& not used still fine
+					std::cout << str << ' ';
+				}
+				
+				std::cout << '\n';
+				for (char str : a) {                //dataType char used.
+					std::cout << str << ' ';
+				}
+				
+				set<int> inSt;
+				inSt.insert(100);
+				
+				inSt.insert(1);
+				inSt.insert(1);
+				
+				inSt.insert(2);
+				
+				inSt.insert(5);
+				inSt.insert(5);
+				
+				inSt.insert(4);
+				inSt.insert(200);
+				
+				cout<<"\n";
+				for(int i: inSt)
+				cout<<i<<" ";
+				
+				//Decreasing order set
+				set<int, greater<int>> descSet;
+				
+				descSet.insert(0);
+				descSet.insert(1);
+				
+				descSet.insert(3);
+				descSet.insert(3);
+				
+				descSet.insert(4);
+				
+				
+				descSet.insert(200);
+				descSet.insert(200);
+				descSet.insert(300);
+				
+				descSet.insert(400);
+				
+				descSet.insert(2);
+				descSet.insert(2);
+				
+				//descSet 
+				cout<<"\n";
+				for(int i: descSet)
+				cout<<i<<" ";
+				
+				//erasing
+				set<int>::iterator IT = descSet.begin();
+				IT++;
+				IT++;
+				
+				descSet.erase(IT);
+				cout<<"\n Erased 2nd element:";
+				for(int i: descSet)
+				cout<<i<<" ";
+				
+				//deleting 300 from set, directly passing element which want to delete.
+				descSet.erase(300);
+				cout<<"\n 300 erased: ";
+				for(int i: descSet)
+				cout<<i<<" ";
+				
+				cout<<"\n400 is present in descSet ? "<<descSet.count(400);
+				cout<<"\n300 is present in descSet ? "<<descSet.count(300);
+				
+				cout<<"\ndescSet empty? "<<descSet.empty();
+
+				cout<<"\ndescSet max_size? "<<descSet.max_size();
+				cout<<"\ndescSet size? "<<descSet.size();
+				
+				descSet.clear();
+				cout<<"\ndescSet empty? "<<descSet.empty();
+				
+				return 0;
+			}
+			//ouput:
+				A B C D E 
+				A B C D E 
+				A B C D E 
+				1 2 4 5 100 200 
+				400 300 200 4 3 2 1 0 
+				Erased 2nd element:400 300 4 3 2 1 0 
+				300 erased: 400 4 3 2 1 0 
+				400 is present in descSet ? 1
+				300 is present in descSet ? 0
+				descSet empty? 0
+				descSet max_size? 230584300921369395
+				descSet size? 6
+				descSet empty? 1
+
+	9) Map:
+		-Stores data in form of key-value pair
+		-all keys are unique, one key points to one value only.
+		-same keys will not points to different value,
+		-value of keys might be same.
+		-keys stored in sorted order.
+		-Time Complexity:
+			insert(), erase(), find(), count() is O(log N).
+		eg.
+
+			#include <iostream>
+			#include <map>
+			using namespace std;
+
+			int main(){
+				map<int, string> m;
+				std::cout << " Before, map size : "<< m.size() << std::endl;
+				std::cout << "map size : "<< m.max_size() << std::endl;
+				std::cout << "map empty? : "<< m.empty() << std::endl;
+				
+				m[4] = "Vivek";
+				m[70] = "Seven";
+				m[80] = "EIGHT";
+				m[3] = "Rohini";
+				m[2] = "Nikate";
+				m[1] = "Aai";
+				m[50] = "papa";
+				
+				m.insert({-10,"Minus num"});
+				m.insert({-11, "minus 11"});
+
+				for(auto i: m)
+					cout<<i.first<<" "<<i.second<<"\n";
+
+				std::cout << "After, map size : "<< m.size() << std::endl;
+				std::cout << "map size : "<< m.max_size() << std::endl;
+				std::cout << "map empty? : "<< m.empty() << std::endl;
+
+				//key present
+				std::cout << "4 key present? "<< m.count(4) << std::endl;
+				std::cout << "40 key present? "<< m.count(40) << std::endl;
+
+				//erase
+				m.erase(2); //key 2 removed
+				m.erase(-11); //key 2 removed
+				
+				for(auto i: m)
+					cout<<i.first<<" "<<i.second<<"\n";
+				
+				cout<<"\n";
+				//print all element after key 4.
+				auto it = m.find(4);
+				for(auto i=it; i != m.end(); i++)
+					cout<<(*i).first<<" "<<(*i).second<<"\n";
+				
+				return 0;
+			}
+
+	10) STL Algorithm:
+		sort() works on introsort, its combination of quick sort, heap sort & insertion sort.
+		eg.
+			#include <algorithm>
+			#include <vector>
+			using namespace std;
+
+			int main()
+			{
+				vector<int> v={11,55,44,33,22,23,78,90,45,67,879,675};
+				
+				std::cout << "Vector size : "<< v.size() << std::endl;
+				
+				//find 22 (not working properly)
+				std::cout << "22 present? "<< binary_search(v.begin(), v.end(), 55) << std::endl;
+				std::cout << "upper_bound : "<< upper_bound(v.begin(), v.end(),90)-v.begin() << std::endl;
+				std::cout << "lower_bound : "<< lower_bound(v.begin(), v.end(),90)-v.begin() << std::endl;
+				
+
+				int a=90, b=40;
+				std::cout << "MAX of A & B : "<< max(a,b) << std::endl;
+				std::cout << "min of A B"<< min(a,b) << std::endl;
+
+				printf("A: %d, B: %d", a,b);
+				swap(a,b);
+				printf("\nA: %d, B: %d", a,b);
+				
+				string str = "asdfghjkl";
+				std::cout << "String : "<< str << std::endl;
+				
+				reverse(str.begin(),str.end());
+				std::cout << "Reverse String : "<< str << std::endl;
+
+				std::cout  << std::endl;
+				//rotate
+				for(auto i:v)
+					cout<<i<<" ";
+				
+				rotate(v.begin(), v.begin()+3, v.end());
+				
+				std::cout  << std::endl;
+				for(auto i:v)
+					cout<<i<<" ";
+					
+				//sorted
+				sort(v.begin(), v.end());
+				std::cout << std::endl << "Sorted: ";
+				for(auto i:v)
+					cout<<i<<" ";
+				return 0;
+			}
+			//ouput:
+				Vector size : 12
+				22 present? 0
+				upper_bound : 10
+				lower_bound : 10
+				MAX of A & B : 90
+				min of A B40
+				A: 90, B: 40
+				A: 40, B: 90String : asdfghjkl
+				Reverse String : lkjhgfdsa
+
+				11 55 44 33 22 23 78 90 45 67 879 675 
+				33 22 23 78 90 45 67 879 675 11 55 44 
+				Sorted: 11 22 23 33 44 45 55 67 78 90 675 879
 ---------------------------------------------------------------------------------------------------------
 Lecture-20:
+	LeetCode Practice:
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
-
 	//Curly braces related..
 
 		#include <iostream>
@@ -6609,9 +6898,21 @@ Lecture-20:
 		
 		-Refere few programs from here also...
 			https://auth.geeksforgeeks.org/user/viveknikate/practice
+
+	//Char extraction & string addition:
+		int main () {
+			string firstName = "John ";
+			char lastName =firstName[0];
+			char n = 'f';
+			string s;
+			s+= n;
+			s+= lastName;
+			cout << s;
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
-	1). Minimum Difference in an Array	
+	1) Minimum Difference in an Array	
 		#include <bits/stdc++.h> 
 		int minDiff(int n, vector < int > arr) {
 			sort(arr.begin(), arr.end());
@@ -6630,7 +6931,7 @@ POTD:-[Problem of the Day]
 			return minDiffHold;
 		}
 
-	2)Reverse Coding:
+	2) Reverse Coding:
 		#include <bits/stdc++.h> 
 		vector<vector<int>> ninjaCity(vector<vector<int>> &mat){
 			int row = mat.size();
@@ -6663,12 +6964,427 @@ POTD:-[Problem of the Day]
 			return mat;
 		}
 
-	3)Planet Division:
+	3) Planet Division:
 		vector<int> planetDivision(int n) {
 			vector<int> v;
 			(n % 2 == 0)?(v.push_back(n/2), v.push_back(n/2)):(v.push_back((n/2)+1), v.push_back(n/2));
 			return v;
 		}
 
+	4) Missing number in array:
+		class Solution{
+			public:
+			int missingNumber(vector<int>& array, int n) {
+				//(TLE)
+				// for(int i=1;i<=n;i++){
+				//     int j;
+				//     for(j=0;j<n;j++){
+				//         if(array[j] == i)
+				//             break;
+				//     }
+				//         if(j == n)
+				//             return i;
+				// }
+				
+				/or (TLE)
+				// int counter = 1, i=0;
+				// while(i<n){
+				//     if(array[i++] == counter){
+				//         i=0;
+				//         counter++;
+				//     }
+				// }
+				// return counter; 
+				
+				//or (optimized)
+				sort(array.begin(), array.end());
+				for(int i=0;i<n;i++){
+					if(array[i] != i+1)
+						return i+1;
+				}
+			}
+		};
+
+	5) Count Odd Even
+		void countOddEven(int arr[], int sizeof_array)
+		{
+			int odd=0, even=0;
+			for(int i=0; i<sizeof_array;i++){
+				(arr[i] % 2)? odd++ : even++;
+			}
+			cout<<odd<<" "<<even<<"\n";
+		}
+
+	6) Pattern 11
+		void printTriangle(int n) {
+			int bit = 0;
+			for(int i=0;i<n; i++){
+				int tempBit = bit;
+				for(int j=0; j<=i; j++){
+					(tempBit)?(tempBit =0):(tempBit = 1);
+					cout<<tempBit<<" ";
+				}
+				if(bit == 0)
+					bit =1;
+				else
+					bit = 0;
+				printf("\n");
+			}
+		}
+		//output
+			Input: 5
+			Output:
+				1 
+				0 1 
+				1 0 1
+				0 1 0 1 
+				1 0 1 0 1
+
+	7) Boring Factorial:
+		Input:
+			3
+			2 5			(2!) % 5 =2
+			5 11			(5!) % 11 =10
+			21 71		(21!) % 71 =6
+
+		Output:
+			2
+			10
+			6
+		#include <iostream>
+		using namespace std;
+
+		int main(){	
+			int fact=1;
+			int n=23,p=29;
+			
+				if(n >= p)
+					return 0;
+
+				for(int i=1;i<=n; i++){
+					fact = (fact * i) % p; 
+				cout<< fact<<"\t";
+				}
+			return 0;
+		}
+
+	8) Class Test:
+		Sample Input 1 :
+			2
+			3
+			1
+			3 4 4
+			4
+			3
+			1 1 2 2 
+		Sample Output 1 :
+		4
+		1
+		Explanation Of Sample Input 1 :
+		For test case 1 we have, 
+
+		To get a Rank 1, Ninja must have scored maximum marks in the class.
+		Hence, Ninja scored 4 marks.
+		For test case 2 we have,
+		Students with marks = 2 will achieve ranks 1 and 2 respectively.
+		Students with marks = 1 will achieve ranks 3 and 4 respectively.
+		So, Ninja scored 1 mark.
+		Sample Input 2 :
+			test cases : 3
+			i.	2
+				1
+				20 9 
+
+			ii.	2
+				1
+				9 17 
+
+			iii.	7
+				2
+				9 6 0 2 20 10 5 
+		Sample Output 2 :
+			20
+			17
+			10
+
+		#include <bits/stdc++.h> 
+		int classTest(int n, vector<int> &a, int k) {
+			sort(a.begin(), a.end());
+			reverse(a.begin(), a.end());
+
+			int mark=a[0], temp =1;
+			for(int i=0;i<n;i++){
+				if(temp == k){
+						mark = a[i];
+					}
+				temp++;
+			}
+			return mark;
+		}
+
+	9) Find the lone set bit & return its index.
+		#include <iostream>
+		#include <bitset>
+		using namespace std;
+
+		int main(){
+			int N = 136;
+			cout<<"binary form 136 "<<bitset<32>(N);
+			std::cout << std::endl;
+			if(N == 0){
+				cout<<-1;
+				return 0;
+			}
+
+			int count=0;
+			if(N&1){
+				cout<<-1;
+				return 0;
+			}else{
+				int setBit =0;
+				while(N>0){
+					if(setBit == 1 && N >0){
+						cout<<-1;
+						return 0;
+					}
+					
+					if(N & 1)
+						setBit++;       //111010
+					
+					count++;
+					N>>=1;
+				}
+			}
+			cout<<count;
+			return 0;
+		}
+	
+	10) String Count:
+		Sample Input 1:-
+			2
+			4 
+			##**    
+			3
+			***
+			Sample Output 1:-
+			1
+			0
+			Explanation Of Sample Input 1:-
+			First test case:- 
+			We have three substrings of size 2 for the string 'S', which are "##", "#*" and "**".
+			Only one of them is good(#* or *#) . So, the total number of good substrings of 'S' is 1.
+
+			Second test case:-
+			There is no good substring in 'S', so the answer is 0.
+			Sample Input 2:-
+			2
+			4
+			#*#*
+			2
+			*#
+			Sample Output 2:-
+				3
+				1
+
+			int stringCount(int n, string &s) {
+				int ttl=0;
+				int len = s.length();
+				
+				for(int i=0; i<len; i++){
+					
+					char first = s[i];
+					char sec = s[i+1];
+					string str = "";
+					str += first;
+					str += sec;
+					
+					if(str == "#*" || str == "*#")
+						ttl++;
+				}
+
+				return ttl;
+			}
+
+	11) Sequence Query:
+		Sample Input 1:
+			start value, diff, target
+			1 2 7
+		Sample Output 1 :
+			1
+		Explanation For Sample Input 1:
+		The sequence here is 1, 3, 5, 7, .... As 7 is present in the sequence, the output is 1.
+
+		Sample Input 2:
+		5 0 3
+		Sample Output 2 :
+		0
+		Explanation For Sample Input 2:
+		The sequence here is 5, 5, 5, .... As 3 is not present in the sequence, the output is 0.
+
+		int checkSequence(int a, int d, int x) {
+			// Write your code here.
+			if(a == x || (d==1 && a<x))
+				return 1;
+			
+			if((a > x && d>0) || (a < x && d<0))
+				return 0;
+
+			int counter=0;
+
+			for(int start=a; ;start+=d)
+			{
+
+				a += d;
+				if(a == x)
+					return 1;
+
+				counter++;
+				if(counter>30)
+					return 0;
+			}
+		}
+
+	12) min & max:
+		without using conditional operator, ternary operator
+		eg.
+			pair<int,int> ans= {a,b};
+			for(int i=b;i<a;i++) {
+				ans = {b,a};
+				break;
+			}
+			return ans;		//returning minimum, maximum.
+
+		eg.
+			#include <bits/stdc++.h> 
+			pair < int , int > findMinMax(int a , int b){
+				pair<int,int>pr;
+
+				int max = (a>=b)*a+(b>a)*b;
+				int min = (a<=b)*a+(b<a)*b;
+
+				pr.first = min;
+				pr.second = max;
+
+				return pr;
+			}
+
+		eg.
+			#include <bits/stdc++.h> 
+			pair < int , int > findMinMax(int a , int b){
+				int mini = min(a,b);
+				int maxi = max(a,b);
+				
+				pair<int,int> pr;
+				// pr.first = mini;
+				// pr.second = maxi;
+				//or
+
+				pr = {mini, maxi};
+				return pr;
+			}
+
+	13) Fibonacci series nums addition within given range:❌
+		#include <bits/stdc++.h> 
+		int fiboSum(int n , int m){
+			int sum = 0;
+			if(n<2) sum = 1;
+
+			int a = 0, b = 1, mod = 1e9+7;
+
+			for(int i=2;i<=m;i++){
+				int c = (a+b)%mod;
+				a = b;
+				b = c;
+				if(i>=n && i<=m)sum = (sum+c)%mod;
+			}
+
+			return sum;
+		}
+
+		#include <bits/stdc++.h> 
+		long long int fiboSum(int n , int m){
+			long long int prev =0, cur =1, fib=0;
+			long long int sum=0;
+			
+			for(int i=0; i<=m; i++){
+				
+				// if(i>=n)
+				// 	sum += prev;
+
+
+				sum += prev;
+
+				if(i<n)
+					sum -= prev;
+					
+				fib = cur + prev;		 
+				prev = cur;
+				cur = fib;				 
+			}
+			return sum;	
+		}
+
+	14) Water Glass
+		Sample Input 1:
+		2
+		2 2 2 3
+		1 1 1 3
+		Sample Output 1:
+		normal
+		cold
+		##### Explanation Of Sample Input 1:
+
+		For test case 1:
+		The arrangement of glasses looks like,
+		W W N N C C W W N N C C …………..
+		Here the 3rd glass is N means it contains normal water.
+
+		Hence, the answer for this case is "normal".
+
+
+		For test case 2:
+		The arrangement of glasses looks like,
+		W N C W N C …………..
+		Here the 3rd glass is C means it contains cold water.
+
+		Hence, the answer for this case is "cold".
+		Sample Input 2:
+		2
+		5 6 8 15
+		9 3 3 12
+		Sample Output 2:
+		cold
+		normal
+
+		string waterGlass(long long x, long long y, long long z, long long n){
+			// Write your code here.
+			long long i,wrm, nrm, cld;
+			vector<int> v;
+
+			back:
+			for(wrm=0; wrm<x; wrm++)
+				v.push_back(1);
+
+			for(nrm=0;nrm<y;nrm++)
+				v.push_back(2);
+			
+			for(cld=0; cld<z;cld++)
+				v.push_back(3);
+			
+			if(v.size() < n)
+				goto back;
+
+
+			// for(i=0;i<n;i++){
+			// 	if(v[i] == )
+			// }
+			if(v[n-1] == 1){
+				return "warm";
+			}else if (v[n-1] == 2){
+				return "normal";
+			}else{
+				return "cold";
+			}
+		}
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
