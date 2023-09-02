@@ -3460,7 +3460,17 @@ Lecture-8:
 							
 							return 0;
 						}
-				
+
+					#include <iostream>
+					using namespace std;
+					int main(){
+						int n=3;
+						int ans = __builtin_popcount(n);
+						std::cout << ans << std::endl;
+						return 0;   
+					}
+
+
 				3)Fibonacci series nth term function:
 					input: n = 5;			// 0 1 1 2 3 5 8 13
 					output: 3			//5th num of that series.
@@ -3514,7 +3524,7 @@ Lecture-8:
 				return 0;
 			}
 			
-		3]. Square root of n
+		3]. Square root of n ❌
 ---------------------------------------------------------------------------------------------------------
 	08/08/23
 Lecture-9:
@@ -4444,7 +4454,7 @@ Lecture-10:
 		}
 
 	-sort 0's, 1's & 2's:
-		remain..
+		remain.. ❌
 ---------------------------------------------------------------------------------------------------------
 	10/08/23
 Lecture-11:
@@ -5166,7 +5176,7 @@ Lecture-15:
 			HW.
 		3). Aggressive cows
 
-	COME BACK TO THIS LECTURE AGAIN.
+	COME BACK TO THIS LECTURE AGAIN. ❌
 ---------------------------------------------------------------------------------------------------------
 	15/08/23
 Lecture-16: Selection Sort
@@ -5700,6 +5710,30 @@ Lecture-19: C++ STL (Standard Template Library)
 
 				return 0;
 			}
+
+			//Initialize an array with consecutive numbers using std::iota
+
+				#include <iostream>
+				#include <vector>
+				#include<numeric>               //for iota 
+				#include<algorithm>             //for reversing
+				using namespace std;
+				int main(){
+					vector<int> v(10);
+					
+					iota(v.begin(), v.end(), 9);        // from 9 to 18
+					
+					for(int i=0; i<v.size(); i++)
+						cout<<v[i]<<" ";                //9 10 11 12 13 14 15 16 17 18
+						
+					reverse(v.begin()+5,v.end());       //reverse after 5th index
+					
+					cout<<"\n";
+					for(int i=0; i<v.size(); i++)
+						cout<<v[i]<<" ";                //9 10 11 12 13 18 17 16 15 14
+					
+					return 0;
+				}
 
 		Practice:
 			#include <iostream>
@@ -6605,8 +6639,249 @@ Lecture-19: C++ STL (Standard Template Library)
 				33 22 23 78 90 45 67 879 675 11 55 44 
 				Sorted: 11 22 23 33 44 45 55 67 78 90 675 879
 ---------------------------------------------------------------------------------------------------------
+	27/08/23
 Lecture-20:
 	LeetCode Practice:
+		1) Reverse Vector:
+			-reverse(startIndex, endIndex);
+			-reverse function defined in the algorithm header file.
+			using built in function:
+				#include <iostream>
+				#include <vector>
+				#include <algorithm>
+				using namespace std;
+
+				int main(){
+					vector<int> v {33,55,66,22,11,32};
+					
+					cout<<"Before : ";
+					for(int i=0;i<v.size();i++)
+						cout<<v[i]<<" ";
+						
+					std::cout  << std::endl;
+					reverse(v.begin(), v.end());
+					
+					cout<<"After: ";
+					for(int i=0;i<v.size();i++)
+						cout<<v[i]<<" ";
+
+					return 0;
+				}
+
+			Without using builtint function:
+				#include <iostream>
+				#include <vector>
+				#include <algorithm>
+				using namespace std;
+
+				vector<int> REVERSE(vector<int> a){
+					int start=0, end = a.size()-1;
+					
+					while(start <= end){
+						swap(a[start], a[end]);
+						start++;
+						end--;
+					}
+					
+					return a;
+				}
+
+				int main(){
+					vector<int> v {33,55,66,22,11,32};
+					
+					cout<<"Before : ";
+					for(int i=0;i<v.size();i++)
+						cout<<v[i]<<" ";
+						
+					
+					vector<int> ans= REVERSE(v);
+					
+					cout<<"\nAfter: ";
+					for(int i=0;i<ans.size();i++)
+						cout<<ans[i]<<" ";
+
+					return 0;
+				}
+			
+		2) Reverse The Array:
+			-Reversing array from given position
+			eg.
+				Sample Input 1:
+				2
+				6 3
+				1 2 3 4 5 6
+				5 2
+				10 9 8 7 6
+				Sample Output 1:
+				1 2 3 4 6 5
+				10 9 8 6 7
+				Explanation 1:
+				For the first test case, 
+				Considering 0-based indexing we have M = 3 so the 
+				subarray[M+1 … N-1] has to be reversed.
+				Therefore the required output will be {1, 2, 3, 4, 6, 5}.
+
+				For the second test case, 
+				Considering 0-based indexing we have M = 2 so the 
+				subarray[M+1 … N-1] has to be reversed.
+				Therefore the required output will be {10, 9, 8, 6, 7}.
+				Sample Input 2:
+				2
+				7 3
+				1 4 5 6 6 7 7 
+				9 3
+				10 4 5 2 3 6 1 3 6
+				Sample Output 2:
+				1 4 5 6 7 7 6
+				10 4 5 2 6 3 1 6 3 
+
+			#include <bits/stdc++.h> 
+			void reverseArray(vector<int> &arr , int m){
+				return reverse(arr.begin()+m+1,arr.end());
+			}
+
+			//or
+			#include <bits/stdc++.h> 
+			void reverseArray(vector<int> &arr , int m){
+				int start = m+1, end = arr.size()-1;
+				while (start <= end) {
+					swap(arr[start], arr[end]);
+					start++;
+					end--;
+				}
+			}
+		
+		3) Merge Sorted Array:
+			void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+				vector<int> nm;
+				int i=0,j=0;
+				while(i<m && j<n){
+					if(nums1[i] < nums2[j]){
+						nm.push_back(nums1[i++]);
+					}else{
+						nm.push_back(nums2[j++]);
+					}
+				}
+
+				while(i < m)
+					nm.push_back(nums1[i++]);
+
+				while(j < n)
+					nm.push_back(nums2[j++]);
+				
+				//nums1.clear();
+				nums1 = nm;
+			}
+		
+			#Program:
+				#include<iostream>
+				#include<vector>
+				using namespace std;
+
+				void merge(int arr1[], int n, int arr2[], int m, int arr3[]) {
+					int i = 0, j = 0;
+					int k = 0;
+					while( i<n && j<m) {
+						if(arr1[i] < arr2[j]){
+							arr3[k++] = arr1[i++];
+						}
+						else{
+							arr3[k++] = arr2[j++];
+						}
+					}
+
+					//copy first array k element ko
+					while(i<n) {
+						arr3[k++] = arr1[i++];
+					}
+
+					//copy kardo second array k remaining element ko
+					while(j<m) {
+						arr2[k++] = arr2[j++];
+					}
+				}
+
+				void print(int ans[], int n) {
+					for(int i=0; i<n; i++) {
+						cout<< ans[i] <<" ";
+					}
+					cout << endl;
+				}
+
+				int main(){
+					int arr1[5] = {1,3,5,7,9};
+					int arr2[3] = {2,4,6};
+
+					int arr3[8] = {0};
+
+					merge(arr1, 5, arr2, 3, arr3);
+					print(arr3, 8);
+					return 0;
+				}
+
+		4) Move Zeroes:
+			Given an integer array nums, move all 0's 
+			to the end of it while maintaining the relative order of the non-zero elements.
+			Note that you must do this in-place without making a copy of the array.
+				Example 1:
+
+				Input: nums = [0,1,0,3,12]
+				Output: [1,3,12,0,0]
+				Example 2:
+
+				Input: nums = [0]
+				Output: [0]
+			->
+				void moveZeroes(vector<int>& nums) {
+					int len = nums.size();
+					int cnt =0;
+					vector<int> temp;
+					for(int i=0;i<len;i++){
+						if(nums[i] == 0)
+							cnt++;
+						else
+							temp.push_back(nums[i]);
+					}
+					for(int i=0; i<cnt; i++)
+						temp.push_back(0);
+					
+					nums = temp;
+				}
+
+				//or
+					int i=0;
+					for(int j=0;j<nums.size(); j++)
+						if(nums[j] != 0)
+							swap(nums[i++], nums[j]);
+		
+		5) Subarray or not?
+			#include <iostream>
+			#include <vector>
+			using namespace std;
+
+			int main (){
+				vector<int> array = {1,2,3,4,5,6,7,8,9};
+				vector<int> sequence = {2,3,4};
+				
+				int temp = 0;
+				for (int i = 0; i < sequence.size ();){
+					int h = temp;
+					for (h; h < array.size (); h++)
+						if (sequence[i] == array[h]){
+							i++;
+							temp = h;
+							break;
+						}
+					if (h == array.size ()){
+						std::cout << "not a subarray" << std::endl;
+						return 0;
+					}
+				}
+				cout<<"Its a subarray";
+				return 0;
+			}
+
+		
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Curly braces related..
@@ -6910,6 +7185,85 @@ Lecture-20:
 			cout << s;
 			return 0;
 		}
+
+	//CHAR_BIT:
+		-This C++ program will output the value of the `CHAR_BIT` constant, 
+		 which represents the number of bits in a `char` data type on the particular platform and compiler being used.
+		-In most systems, a `char` data type is 8 bits (1 byte), but it's not guaranteed to be the same on all platforms. 
+		 The `CHAR_BIT` constant is defined in the `<climits>` header in C++ and specifies 
+		 the number of bits in the smallest addressable unit of the machine's memory.
+		-So, when you run this program, it will likely output `8`, indicating that a `char` consists of 8 bits on your platform.
+		eg.
+			#include <iostream>
+			#include <climits>
+			using namespace std;
+			int main(){
+				cout<<CHAR_BIT<<"\n";
+				cout<<CHAR_BIT * sizeof(int)<<"\n";
+				return 0;
+			}
+			//ouput:
+				8
+				32
+
+	//String initialization:
+		#include <iostream>
+		using namespace std;
+
+		int main(){
+			string s(10, 'V');
+			std::cout << s << std::endl;
+			return 0;
+		}
+
+	//String length calculate:
+		-use size() or length function.
+		#include <iostream>
+		using namespace std;
+
+		int main(){
+			string s ="Vivek";
+			std::cout << s.size() << std::endl;         //11
+			std::cout << s.length() << std::endl;       //11
+
+			return 0;
+		}
+
+	//Max of integer:
+		int max_of_four(int a, int b, int c, int d){
+			return max(max(a,b),max(c,d));
+		}
+
+	//String assinging value at specific index:
+		#include <iostream>
+		using namespace std;
+		int main(){
+			string a,b;
+			cin>>a;
+			cin>>b;
+			
+			cout<<a.length()<<" "<<b.length()<<endl;
+			cout<<(a+b)<<endl;
+
+			swap(a[0],b[0]);
+			cout<<a<<" "<<b<<endl;
+			
+			a[0]='Z';
+			b[2]='Q';
+			
+			cout<<a<<" "<<b;
+			return 0;
+		}
+		//ouput:
+			Vivek 
+			Rohini
+			5 6
+			VivekRohini
+			Rivek Vohini
+			Zivek VoQini
+
+	//Local variables are stored in an area called a stack. Global variables, static variables, and program instructions 
+	 are stored in the permanent storage area. The memory space between these two regions is known as a heap.
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array	
@@ -7283,6 +7637,12 @@ POTD:-[Problem of the Day]
 				return pr;
 			}
 
+		eg.
+			#include <bits/stdc++.h>
+			pair < int , int > findMinMax(int a , int b){
+				return {min(a,b),max(a,b)};
+			}
+	
 	13) Fibonacci series nums addition within given range:❌
 		#include <bits/stdc++.h> 
 		int fiboSum(int n , int m){
@@ -7386,5 +7746,660 @@ POTD:-[Problem of the Day]
 				return "cold";
 			}
 		}
+
+	15) Toggle K bits:
+		Sample Input 1:
+			2
+			21 3
+			40 4
+			Sample Output 1:
+			18
+			39
+			Explanation For Sample Input 1:
+			In example 1, the binary representation of 21 is '10101'. After toggling rightmost 3 bits, it becomes ‘10010’ which is equal to 18.
+			In example 2, the binary representation of 40 is ‘101000’. After toggling rightmost 4 bits, it becomes ‘100111’ which is equal to 39.
+			Sample Input 2:
+			2 
+			20 2
+			85 5
+			Sample Output 2:
+			23
+			74
+			Explanation For Sample Input 2:
+			In example 1, the binary representation of 20 is '10100'. After toggling rightmost 2 bits, it becomes ‘10111’ which is equal to 23.
+			In example 2, the binary representation of 85 is ‘1010101’. After toggling rightmost 5 bits, it becomes ‘1001010’ which is equal to 74.
+
+		#include <bits/stdc++.h> 
+		using namespace std;
+		int toggleKBits(int n, int k) {
+
+			vector<int> v;
+			for(int i=0;i<k;i++){
+				int bit = n&1;
+				n >>= 1;
+				v.push_back(bit);
+			}
+
+			for(int i=0;i<v.size();i++)
+				if(v[i] == 1){
+					v[i] = 0;
+				}else{
+					v[i] = 1;
+				}
+
+			for(int i=0; i<k; i++){
+				n <<= 1;
+				n = n | v[v.size()-i-1];
+			}
+			return n;
+		}
+
+		//or
+			#include <bits/stdc++.h>
+				int toggleKBits(int n, int k) {
+					return n^((1<<k)-1);
+				}
+
+	16) Unlucky Number:
+		Num consist of 1 or 3 or 1 & 3 only. not other number;
+			Sample Input 1
+				1
+				Sample Output 1
+				1
+				Sample Input 2
+				2
+				Sample Output 2
+				3
+				Sample Input 3
+				5
+				Sample Output 3
+				31
+			eg.
+				1, 3, 11, 13, 31, 33, 111, 113, 131, 133, 311, 313, 331, 333.
+			#include<bits/stdc++.h>
+			using namespace std;
+
+			int main() {
+			//Write your code here
+			int n;
+			cin>>n;
+
+			vector<int> v;
+			int IStore=0, checker;
+
+				for(int j=1;j<2000000;j++){
+					IStore = j;
+					checker = j;
+					while(checker>0){
+						int temp = checker % 10;
+
+						if(temp == 1 || temp ==3){
+							checker /= 10;
+							continue;
+						}else{
+							break;
+						}
+					}
+
+					if(checker == 0)
+						v.push_back(IStore);
+				}
+				cout<<v[n-1];
+				return 0;
+			} 
+
+	17) Digit Count In Range:
+		Sample Input 1:
+			2
+			3
+			1 15
+			2
+			2 12
+			Sample Output 1:
+			2
+			2
+			Explanation Of Sample Input 1:
+			In the first test case, 
+			Number of occurrences of 3 in range [1, 13] = 2 (3, 13). Return 2
+
+
+			In the second test case, 
+			Number of occurrences of 2 in range [2, 12] = 2 (2, 12). Return 2
+			Sample Input 2:
+			2
+			1 
+			1 15
+			3
+			3 33
+		
+		Sample Output 2:
+			8
+			8
+			Explanation Of Sample Input 1:
+			In the first test case, 
+			Number of occurrences of 1 in range [1, 15] = 8 (1, 10, 11, 12, 13, 14, 15). Return 8
+
+			In the second test case, 
+			Number of occurrences of 3 in range [3, 33] = 8 (3, 13, 23, 30, 31, 32, 33). Return 8
+
+		#include <bits/stdc++.h> 
+		long long int digitCount(int K, long long int A, long long int B){
+			long long int counter = 0,i,JStorer;
+			while(A<=B){
+				JStorer = A;
+				while(JStorer>0){
+					int temp = JStorer % 10;
+					if(temp == K)
+						counter++;
+					JStorer/=10;
+				}
+				A++;
+			}
+			return counter;	
+		}
+
+	18) Minimum Difference Of Subarrays:
+		int minimumDifference(int n, vector<int> arr){
+			//Declaring totalSum to store the sum of all elements of arr.
+			int totalSum = 0;
+			for (int idx = 0; idx < n; idx++)
+				totalSum += arr[idx];
+
+			// currentSum stores the sum of first subarray.
+			int currentSum = 0, minDiff = INT_MAX;
+
+			for (int idx = 0; idx < n - 1; idx++){
+
+				// updating the sum of the current subarray.
+				currentSum += arr[idx];
+
+				// Updating the mininmum difference.
+				minDiff = min(minDiff, abs(currentSum - (totalSum - currentSum)));
+			}
+			return minDiff;
+		}
+
+	19) Ninja And The Triangle:
+		#include <bits/stdc++.h> 
+		int ninjaAndTriangle(int n) {
+			int Istorer, sum=0, i;
+			for(i=1; i<n; i++)
+				if((sum+i) <= n){
+					sum += i;
+					Istorer = i;
+				}
+				else
+					break;
+			
+			return Istorer;
+		}
+		//or
+		#include <bits/stdc++.h> 
+		int ninjaAndTriangle(int n) {
+		    int k = (int)(sqrt(2*n));
+			while(k*(k+1)/2 > n)
+				k--;
+			return k;
+		}
+
+		//or
+			#include <bits/stdc++.h> 
+			int ninjaAndTriangle(int n) {
+				int d = 1 + 8 * n;
+				int x = (1 + sqrt(d))/2;
+				return x-1;
+			}
+
+	20) Amazing Strings
+		Sample Input 1:
+			2
+			HI HEY EIHYH
+			ALL GOOD ADOLLG
+			Sample Output 1:
+			YES
+			NO
+			Explanation For Sample Input 1:
+			In the first test case, the string ‘THIRD’ has all the characters present in the strings ‘FIRST’ and ‘SECOND’. So, we will return “YES”.
+
+			In the second test case, the strings ‘FIRST’ and ‘SECOND’ combined has 1 A, 2 L, 1 G, 2 O and 1 D. While the string ‘THIRD’ has 1 A, 2 L, 1 G, 1 O and 1 D and So, it has one character less than the combined ‘FIRST’ and ‘SECOND’. Thus, we will return “NO”.
+			Sample Input 1:
+			2
+			CODING NINJA NINCODINGJA
+			YES NO NEEOOYS
+			Sample Output 1:
+			YES
+			NO
+			Explanation For Sample Input 1:
+			In the first test case, the string ‘THIRD’ has all the characters present in the strings ‘FIRST’ and ‘SECOND’. So, we will return “YES”.
+
+			In the second test case, the strings ‘FIRST’ and ‘SECOND’ combined have 1 N, 1 Y, 1 E, 1 S and 1 O. While the string ‘THIRD’ has 1 N, 1 Y, 2 E, 1 S and 2 O and So, it has one character more than ‘FIRST’ and ‘SECOND’. Thus, we will return “NO”.
+
+		string amazingStrings(string first, string second,string third) {
+			int len = third.size();
+			int firLen = first.size();
+			int secLen = second.size(),i=0;
+
+			if((firLen + secLen) != len)
+				return "NO";
+
+			while(i<firLen){
+				char tempCh = first[i];
+				int j=0;
+				while(j <len){
+					if(third[j] == tempCh){
+						third[j] = '0';
+						break;
+					}
+					j++;
+				}
+				if(j ==  len)
+					return "NO";
+				i++;
+			}
+			i=0;
+			while(i<secLen){
+				char tempCh = second[i];
+				int j=0;
+				while(j <len){
+					if(third[j] == tempCh){
+						third[j] = '0';
+						break;
+					}
+					j++;
+				}
+				if(j ==  len)
+					return "NO";
+				i++;
+			}
+
+			return "YES";
+		}
+
+		//or
+		#include <algorithm>
+		string amazingStrings(string first, string second,string third) {
+			int len = third.size();
+			int firLen = first.size();
+			int secLen = second.size();
+			int i=0;
+
+			if((firLen + secLen) != len)
+				return "NO";
+			
+			string full = first + second;
+			sort(full.begin(), full.end());
+
+			sort(third.begin(), third.end());
+			
+			if(full == third)
+				return "YES";
+			else
+				return "NO";
+		}
+
+		//optimized:
+			string amazingStrings(string first, string second,string third) {
+				// Write your code here.
+				if((first.length() + second.length()) == third.length())
+					return "YES";
+				else
+					return "NO";
+			}
+
+	#Weekend Problem:
+		21) Chocolate Removal Challenge:
+			Explaination:
+				You are given an array 'A' of size 'N'. Each element 'A[i]' represents the number of chocolates in the 'i-th' pile. 
+				In a single move, you are allowed to perform the following operation: 
+				If a pile contains more than 23 chocolates, you can take out all the chocolates leaving only 23 in the pile.
+
+				Input: A = [25, 24, 29, 15]
+				Output: 9
+
+				First pile: Contains 25 chocolates, remove 2 to leave 23. Chocolates removed = 2.
+				Second pile: Contains 24 chocolates, remove 1 to leave 23. Chocolates removed = 1.
+				Third pile: Contains 29 chocolates, remove 6 to leave 23. Choclates removed = 6
+				Fourth pile: Contains 15 chocolates, no chocolates removed as the pile already has less than or equal to 23 chocolates.
+				Total chocolates removed = 2 + 1 + 6 = 9.
+
+			Sample Input 1:
+				2
+				4
+				25 24 10 15
+				3
+				30 20 40
+				Sample Output 1 :
+				3
+				24
+				Explanation For Sample Input 1:
+				For test case 1:
+				We remove 2 chocolates from the first pile and 1 from the second pile. Hence the total chocolates removed = 2 + 1 = 3.
+
+				For test case 2:
+				We remove 7 chocolates from the first pile, none from the second pile and 17 from the third pile. Hence the total chocolates removed = 7 + 17 = 24.
+				Sample Input 2:
+				2
+				5
+				100 200 300 400 500
+				1
+				23
+				Sample Output 2 :
+				1385
+				0
+
+			long long totalChocolates(int n, vector<int> a) {
+				long long sum =0;
+				for(int i=0;i<n;i++){
+					if(a[i]> 23)
+						sum += (a[i]-23);
+				}
+				return sum;
+			}
+
+		22) Odd Product:
+			Ninja loves the odd numbers. He gives you an array 'A' of size 'N'. Help Ninja to find numbers of pairs '(L, R)' 
+			such that products of array elements in the range 'L' to 'R' have an odd number of divisors.
+			eg.
+				'N' = 2
+				'A' = [1, 4]
+
+				There are total three possible pairs of '(L, R)':
+				L = 1, R = 1, 'product = 1', divisors = [1]
+				L = 1, R = 2, 'product = 1*4 = 4', divisors = [1, 2, 4]
+				L = 2, R = 2 , 'product = 4', divisors = [1, 2 , 4]
+
+				All three pairs have an odd number of divisors, so the answer is '3'.
+
+			eg.
+				Sample Input 1:
+					2
+					4
+					1 2 4 2
+					2
+					1 2
+					Sample Output 1:
+					4
+					1
+					Explanation Of Sample Input 1:
+					For test case 1:
+					There are total '10' possible pairs of '(L, R)':
+
+					L = 1, R = 1, 'product = 1', divisors = [1]
+					L = 1, R = 2, 'product = 1*2', divisors = [1, 2]
+					L = 1, R = 3, 'product = 1*2*4 = 8', divisors = [1, 2, 4, 8]
+					L = 1, R = 4, 'product = 1*2*4*2 = 16', divisors = [1, 2, 4, 8, 16]
+					L = 2, R = 2, 'product = 2', divisors = [1, 2]
+					L = 2, R = 3, 'product = 2*4 = 8', divisors = [1, 2, 4, 8]
+					L = 2, R = 4, 'product = 2*4*2 = 16', divisors = [1, 2, 4, 8]
+					L = 3, R = 3, 'product = 4', divisors = [1, 2, 4]
+					L = 3, R = 4, 'product = 4*2 = 8', divisors = [1, 2, 4, 8]
+					L = 4, R = 4, 'product = 2', divisors = [1, 2]
+
+					We can see that only '4' pairs have an odd number of divisors, so the answer is '4'.
+
+					For test case 2:
+					There are total three possible pairs of '(L, R)':
+					L = 1, R = 1, 'product = 1', divisors = [1]
+					L = 1, R = 2, 'product = 1*2 = 2', divisors = [1, 2]
+					L = 2, R = 2 , 'product = 2', divisors = [1, 2]
+
+					Only one pair has an odd number of divisors, so the answer is '1'.
+					Sample Input 2:
+					2
+					4
+					4 4 4 4
+					5
+					4 2 8 10 16
+					Sample Output 2:
+					10
+					4
+			
+			long long oddProducts(int n, vector<int> &a){
+				int counter=0;
+				long long MainCounter=0;
+				for(int b=0; b<n; b++){
+
+					int prod=1,j;
+					for(int c=b; c<n; c++){
+						prod *= a[c];
+
+						j=1;
+						while(j<=prod){
+							if(prod % j == 0)
+								counter++;
+							j++;
+						}
+
+						if(counter&1)
+							MainCounter++;
+						
+						counter=0;
+					}
+				}
+				return  MainCounter;
+			}
+
+	23) Strobogrammatic Number ll:
+		-Given a length ‘N’, you need to find all the strobogrammatic numbers of length ‘N’.
+		-A strobogrammatic number is a number that looks the same when rotated by 180.
+		-In other words, a number that on rotating right side up and upside down appears the same is a strobogrammatic number.
+		-‘986’ is a strobogrammatic number because on rotating ‘986’ by 180 degrees, ‘986’ will be obtained.
+		-If N = 2, all the strobogrammatic numbers of length = 2 are “11”, “88”, “69”, “96”.
+		-Sample Input 1:
+			2
+			3
+			1
+			Sample Output 1:
+			101 111 181 609 619 689 808 818 888 906 916 986 
+			0 1 8 
+			Explanation For Sample Input 1:
+			Test Case 1: All the possible Strobogrammatic numbers of length = 3 are “101”, “111”, “181”, “609”, “619”, “689”, “808”, “818”, “906”, “916”, “986”.
+
+			Test Case 2: Strobogrammatic numbers of length = 1 are “0”, “1”, and “8”.
+			Sample Input 2:
+			2
+			4
+			2
+			Sample Output 2:
+			1001 1111 1691 1881 1961 6009 6119 6699 6889 6969 8008 8118 8698 8888 8968 9006 9116 9696 9886 9966 
+			11 69 88 96 
+			Explanation For Sample Input 2:
+			Test Case 1: All the possible Strobogrammatic numbers of length = 4 are printed.
+
+			Test Case 2: All the possible Strobogrammatic numbers of length = 2 are printed.
+
+		#include <bits/stdc++.h> 
+		bool checker(string st){
+
+			int temp = stoi(st);
+			int rev = 0;
+			while(temp>0){
+				rev = (temp % 10) + rev * 10; 
+				temp /=10;
+			}
+
+			string tempStr = to_string(rev);
+			int index=0;
+			while(tempStr[index] != '\0'){
+				if(tempStr[index] == '6')
+					tempStr[index] = '9';
+				else if(tempStr[index] == '9')
+					tempStr[index] = '6';
+				index++;
+			}
+
+			if(st == tempStr)
+				return true;
+			return false;
+		}
+
+		vector<string> findStrobogrammatic(int n){
+			vector<string> s;
+			if(n == 1)
+				return {"0","1","8"};
+			
+			if(n == 2)
+				return {"11","69","88","96"};
+
+			int Digit = 1;
+			Digit = pow(10,n-1);
+
+			for(int i = Digit; i<(Digit*10); i++){
+				int temp = i;
+				while(temp > 0){
+					int singleBit = temp % 10;
+					if(singleBit == 0 || singleBit == 1 || singleBit == 6 || singleBit == 8 || singleBit == 9)
+						temp /=10;
+					else
+						break;
+				}
+				if(temp == 0)
+					s.push_back(to_string(i));
+			}
+
+			vector<string> Upgraded;
+
+			for(int i=0; i<s.size(); i++){
+				string tempStr = s[i];
+				
+				if(checker(tempStr))
+					Upgraded.push_back(tempStr);
+			}
+			return Upgraded;
+		}
+
+		//optimized:
+			vector < string > findStrobogrammaticHelper(int n, int len) {
+				// If len = 0, return empty string.
+				if (len == 0) {
+					return vector < string > ({ "" });
+				}
+
+				if(len == 1){
+					return vector < string > ({"0", "1", "8" });
+				}
+
+				// Recursively call for len = len - 2.
+				vector < string > prev = findStrobogrammaticHelper(n, len - 2);
+
+				// Initialize vector of strings to store resulting strings.
+				vector < string > res;
+
+				// Iterate through all strings in "prev".
+				for (int i = 0; i < prev.size(); i++) {
+
+					// Add digits around string prev[i].
+					if (len != n) {
+						res.push_back("0" + prev[i] + "0");
+					}
+
+					res.push_back("1" + prev[i] + "1");
+					res.push_back("6" + prev[i] + "9");
+					res.push_back("8" + prev[i] + "8");
+					res.push_back("9" + prev[i] + "6");
+				}
+				return res;
+			}
+
+			vector < string > findStrobogrammatic(int n) {
+				// Recursive function to find all strobogrammatic numbers.
+				vector < string > ans = findStrobogrammaticHelper(n, n);
+				return ans;
+			}
+
+	24) Set Matrix Ones
+		#include <bits/stdc++.h> 
+		void setMatrixOnes(vector<vector<int>> &MAT, int n, int m){
+			vector<vector<int>> ans(n, vector<int>(m,0));
+			for(int i=0;i<n; i++){
+				for(int j=0;j<m;j++){
+					if(MAT[i][j] == 1){
+						for(int b=0;b<m;b++)
+							ans[i][b] =1;                
+						for(int a =0;a<n;a++)
+							ans[a][j] = 1;
+					}
+				}
+			}
+			MAT = ans;
+		}
+
+		//optimized:
+			#include <bits/stdc++.h> 
+			void setMatrixOnes(vector<vector<int>> &MAT, int n, int m){
+				vector<pair<int, int>> ones;
+				vector<bool> rowHasOne(n, false);
+				vector<bool> colHasOne(m, false);
+
+				for (int i = 0; i < n; i++)
+					for (int j = 0; j < m; j++)
+						if (MAT[i][j] == 1) {
+							rowHasOne[i] = true;
+							colHasOne[j] = true;
+						}
+				for (int i = 0; i < n; i++)
+					for (int j = 0; j < m; j++)
+						if (rowHasOne[i] || colHasOne[j]) 
+							MAT[i][j] = 1;
+			}
 ---------------------------------------------------------------------------------------------------------
+	#include <iostream>
+	#include <algorithm>
+	using namespace std;
+	int main(){
+		string s = "Hello World";
+		
+		std::cout << s << std::endl;
+
+		std::cout << char(tolower('A')) << std::endl;
+		
+		//string upper to lower case
+		transform(s.begin(), s.end(), s.begin(), ::tolower);
+		// transform(s2.begin(), s2.end(), s2.begin(), ::tolower);
+
+		std::cout << s << std::endl;
+		
+		transform(s.begin(), s.end(), s.begin(), ::toupper);
+		
+		std::cout << s << std::endl;
+		
+		return 0;
+	}
+
+	#include <iostream>
+	#include <algorithm>
+	using namespace std;
+
+	int main(){
+		string s1 = "VIVEK", s2="nikate", s3 = "third", s4 = "this is first letter capital sentence.";
+		
+		transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
+		std::cout << s1 << std::endl;
+		
+		transform(s2.begin(), s2.end(), s2.begin(), ::toupper);
+		std::cout << s2 << std::endl;
+		
+		s3[0] = toupper(s3[0]);
+		std::cout << s3 << std::endl;
+		
+		int i=0;
+		while(s4[i] != '\0'){
+			if(i==0) s4[i] = toupper(s4[i]);
+			if(isblank(s4[i])) s4[i+1] = toupper(s4[i+1]);
+			i++;
+		}
+		
+		std::cout << s4 << std::endl;	
+		return 0;
+	}
+---------------------------------------------------------------------------------------------------------
+calender:
+	today 2nd sept 2023 (saturday)
+	what is day on 30th may 2023?
+	->
+		how many days between dates = may +june + july +august+ sept
+						 1 + 30d + 31d + 31d + 2  = 95
+						 =95/7 -> 4 remainder,
+						 4 days back from today (fri, thurs, wed, tuesday)
+						 => Tuesday is on 30th of may.
 ---------------------------------------------------------------------------------------------------------
