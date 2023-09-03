@@ -19,6 +19,20 @@ Lecture-1
 	-Pseudocode:	Generic way of representing look of code.
 	-Flowchart for Simple Interest
 		SI = (P*R*T)/100
+		eg.
+			Calculate Simple Interest
+				#include <bits/stdc++.h> 
+				#include <iostream>
+				using namespace std;
+
+				int main(){
+					float pr,time, RI;
+					cin>>pr>>RI>>time;
+					float ans;
+					ans =(int) (pr*time*RI)/100;
+					cout<<ans;
+					return 0;
+				}
 
 	-Two colons (::) are used in C++ as a scope resolution operator
 
@@ -27,6 +41,18 @@ Lecture-1
 
 	-Greater between 2 num:
 		a>b? print(a greater) : print(b greater);
+
+		//Largest of 3 numbers
+			#include <bits/stdc++.h> 
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				int a,b,c;
+				cin>>a>>b>>c;
+				cout<<max(a,max(b,c));
+				return 0;
+			}
 
 	-Odd or even num:
 		(num %2 ==0) ? print(even):print(odd)
@@ -105,6 +131,31 @@ Lecture-1
 
 				return 0;
 			}
+
+				//or
+					#include <iostream>
+					using namespace std;
+
+					int main() {
+						int n;
+						cin>>n;
+						int fact=1;
+						if (n == 0) {
+							cout << 1;
+							return 0;
+						}else if (n<0){
+							cout<<"Error";
+							return 0;
+						}else{
+							while(n>0){
+								fact = fact * n;
+								n--;
+							}
+						}
+
+						cout<<fact;
+						return 0;
+					}
 
 		-Prime num:
 			#include <iostream>
@@ -795,6 +846,21 @@ Lecture-3:
 				return 0;
 			}
 
+			//or
+				#include <iostream>
+				using namespace std;
+
+				int main() {
+					int sum=0;
+					int n;
+					cin>>n;
+
+					for(int i=2;i<=n;i+=2)
+						sum +=i;
+					cout<<sum;
+					return 0;
+				}							
+			
 		//WAP to check entered num is prime or not?
 			#include <iostream>
 			using namespace std;
@@ -3211,6 +3277,21 @@ Lecture-8:
 								a = a * t;
 							}
 							return a;
+						}
+					
+					//or
+						Find power of a number
+						#include <bits/stdc++.h> 
+						#include <iostream>
+						using namespace std;
+
+						int main() {
+							int n,x;
+							cin>>x>>n;
+							int ans = pow(x,n);
+							int mod = 1e9+7;
+							cout<< ans % mod;
+							return 0;
 						}
 
 				Even Odd function:
@@ -6880,8 +6961,69 @@ Lecture-20:
 				cout<<"Its a subarray";
 				return 0;
 			}
+---------------------------------------------------------------------------------------------------------
+	3/09/23
+Lecture-21
+	Solving LeetCode/CodeStudio Questions [Arrays]
+		1) 
+		3) Sum Of Two Arrays:
+			Sample Input 1:
+				2
+				4 1 
+				1 2 3 4
+				6
+				3 2
+				1 2 3
+				9 9    
+				Sample Output 1:
+				1 2 4 0
+				2 2 2
+				Explanation For Sample Input 1:
+				For the first test case, the integer represented by the first array is 1234 and the second array is 6, so the sum is 1234 + 6 =  1240.
 
-		
+				For the second test case, the integer represented by the first array is 123 and the second array is 99, so the sum is 123 + 99 = 222.
+				Sample Input 2:
+				2
+				3 3 
+				4 5 1
+				3 4 5
+				2 2
+				1 1
+				1 2
+				Sample Output 2:
+				7 9 6
+				2 3
+
+
+			#include <bits/stdc++.h> 
+			int convertor(vector<int> , int);
+			vector<int> findArraySum(vector<int>&a, int n, vector<int>&b, int m) {
+
+				int n1 = convertor(a, n);
+				int n2 = convertor(b, m);
+
+				int sum = n1 + n2;
+
+				vector<int> sample;
+
+				while(sum){
+					int temp = sum % 10;
+					sample.push_back(temp);
+					sum /=10;
+				}
+
+				reverse(sample.begin(), sample.end());
+				return sample;	
+			}
+
+			int convertor(vector<int> a, int len){
+				int num =0;
+				//array to num
+				for(int i=0;i<len;i++)
+					num = num * 10 + a[i];
+
+				return num;
+			}
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Curly braces related..
@@ -8342,6 +8484,321 @@ POTD:-[Problem of the Day]
 						if (rowHasOne[i] || colHasOne[j]) 
 							MAT[i][j] = 1;
 			}
+
+	25) Count Distinct Element in Every K Size Window
+		you are given an array ‘ARR’ of size ‘N’ and an integer ‘K’. Your task is to find the total
+		number of distinct elements present in every ‘K’ sized window of the array. A ‘K’ sized
+		window can also be viewed as a series of continuous ‘K’ elements present in the
+		sequence.
+		Note:
+			1. The size of ‘ARR’ will always be greater than or equal to the ‘K’.
+			2. Here window refers to a subarray of ‘ARR’. Hence ‘K’ sized window means a subarray of size ‘K’.
+			3. You are not required to print the output explicitly. It has already been taken care of. Just
+			 implement the function and return an array of the count of all distinct elements in the ‘K’ size window.
+		eg.
+			consider ARR = [ 1, 2, 1, 3, 4, 2,3 ] and K = 3.
+
+			As per the given input, we have a sequence of numbers of length 7, and we need to find the number of
+			distinct elements present in all the windows of size 3.
+			Window-1 has three elements { 1,2, 1 } and only two elements { 1,2 } are distinct because 1 is repeating two times.
+			Window-2 has three elements { 2,1, 3 } and all three elements are distinct { 2, 1, 3 }.
+			Window-3 has three elements { 1,3, 4 } and all three elements are distinct { 1, 3, 4 }.
+			Window-4 has three elements { 3,4, 2 } and all three elements are distinct { 3, 4, 2 }.
+			Window-5 has three elements { 4,2, 3 } and all three elements are
+
+			Hence, the count of distinct elements in all K sized windows is { 2, 3, 3, 3, 3 }.
+		eg.
+			Sample Input 1:
+				2
+				7 4
+				1 2 1 3 4 2 3
+				5 3
+				1 1 2 1 3
+				Sample Output 1:
+				3 4 4 3
+				2 2 3
+				Explanation Of Sample Input 1:
+				Test Case 1:
+
+				Window-1 has four elements { 1, 2, 1, 3 } and only three elements { 1, 2, 3 } are distinct because 1 is repeating two times.
+				Window-2 has four elements { 2, 1, 3, 4 } and all four elements { 2, 1, 3, 4 } are distinct.
+				Window-3 has four element { 1, 3, 4, 2 } and all four elements { 1, 3, 4, 2 } are distinct. 
+				Window-4 has four element { 3, 4, 2, 3 } and only three elements { 3, 4, 2 } are distinct because 3 is repeating two times.
+
+				Hence, the count of distinct elements in all windows is { 3, 4, 4, 3}.
+
+				Test case 2: 
+
+				Window-1 has three elements { 1, 1, 2 } and only two elements { 1, 2 } are distinct because 1 is repeating two times.
+				Window-2 has three elements { 1, 2, 1 } and only two elements { 2, 1 } are distinct.
+				Window-3 has three elements { 2, 1, 3 } and all three elements { 2, 1, 3 } are distinct.
+
+				Hence, the count of distinct elements in all windows is { 2, 2, 3 }.
+				Sample Input 2:
+				2
+				4 1
+				2 3 1 2
+				5 2
+				2 2 3 2 1
+				Sample Output 2:
+				1 1 1 1
+				1 2 2 2
+
+		#include <bits/stdc++.h> 
+		vector<int> countDistinctElements(vector<int> &arr, int k) {
+			vector<int> DistinctCount;
+			int len = arr.size();
+			int Lind =k-1;
+			int i=0,j;
+			int windowHolder = k;
+			while(Lind < len){
+				set<int> temp;
+				j = i;
+				while(windowHolder){
+					temp.insert(arr[j++]);
+					windowHolder--;
+				}
+				i++;
+				windowHolder = k;
+				DistinctCount.push_back(temp.size());
+				temp.clear();
+				Lind += 1;
+			}
+			return DistinctCount;
+		}
+
+		//optimized:
+			#include <bits/stdc++.h> 
+			vector<int> countDistinctElements(vector<int> &arr, int k) {
+				std::vector<int> distinctCount;
+				int len = arr.size();
+				
+				if (k <= 0 || k > len) {
+					return distinctCount;  // Handle invalid input.
+				}
+				
+				std::unordered_map<int, int> elementCount;
+				int distinct = 0;
+				
+				// Calculate distinct elements in the first window.
+				for (int i = 0; i < k; ++i) {
+					if (elementCount[arr[i]] == 0) {
+						distinct++;
+					}
+					elementCount[arr[i]]++;
+				}
+				
+				distinctCount.push_back(distinct);
+				
+				// Slide the window and update distinct count.
+				for (int i = k; i < len; ++i) {
+					int leftElement = arr[i - k];
+					int rightElement = arr[i];
+					
+					// Remove the leftmost element from the window.
+					if (elementCount[leftElement] == 1) {
+						distinct--;
+					}
+					elementCount[leftElement]--;
+					
+					// Add the rightmost element to the window.
+					if (elementCount[rightElement] == 0) {
+						distinct++;
+					}
+					elementCount[rightElement]++;
+					
+					distinctCount.push_back(distinct);
+				}
+				return distinctCount;	
+			}
+
+	26) Tweaked Array:
+		Sample Input 1 :
+			2
+			3
+			1 4 1
+			3
+			5 2 -5
+			Sample Output 1 :
+			5 2 5
+			-3 0 7
+			Explanation Of Sample Input 1 :
+			For test 1:
+			TotalSum = 1 + 4 + 1 = 6
+			Tweaked array = {6 - 1,  6 - 4,  6 - 1} = {5, 2, 5}
+
+			For test 2:
+			TotalSum = 5 + 2 + (-5) = 2
+			Tweaked array = {2 - 5,  2 - 2,  2 - (-5)} = {-3, 0, 7}
+			Sample Input 2 :
+			2
+			2
+			1 2
+			3
+			-1 -2 -4
+			Sample Output 2 :
+			2 1
+			-6 -5 - 3
+
+		#include <bits/stdc++.h> 
+		vector<int> tweakTheArray(vector<int> arr, int n){
+			int sum=0;
+			for(int i=0; i<arr.size(); i++){
+				sum += arr[i];
+			}
+
+			for(int i=0;i<arr.size();i++)
+				arr[i] = sum - arr[i];
+
+			return arr;
+		}
+
+	27) Lucky String:
+		You are given a string 'S' of length 'N' consisting of lowercase latin letters. If
+		there is a letter occurring consecutively three times (at least three times), the
+		string becomes unlucky for you. Your task is to erase some characters
+		from the string such that it becomes lucky for you. A string which is not unlucky, is considered as lucky.
+		Output the minimum number of removals (of characters) required to make the given
+		string lucky.
+		Sample Input 1 :
+			2
+			7
+			abcccca
+			5
+			cbazz
+			Sample Output 1 :
+			2
+			0
+			Explanation For Sample Input 1 :
+			For test case 1:
+			If a substring "cc" is deleted from any position, the remaining string becomes lucky. Hence a minimum removal of 2 characters is required. 
+
+			For test case 2:
+			Given string is already lucky. No removal is required.
+			Sample Input 2 :
+			3
+			5
+			bbbbb
+			2
+			xy
+			9
+			abcccbaaa
+			Sample Output 2 :
+			3
+			0
+			2
+
+		#include <bits/stdc++.h> 
+		int makeLucky(string s, int n){
+			int i=0,cnt=0;
+			while(i<s.length()-1){
+				if(s[i] == s[i+1])
+					if(s[i+1] == s[i+2])
+						cnt++;
+				i++;
+			}
+			return cnt;
+		}
+
+	28) Minimize Bill:
+		Sample Input 1 :
+			2
+			5
+			-2 0 5 2 -1
+			4
+			5 8 7 9
+			Sample Output 1 :
+			-6
+			11
+			Explanation For Sample Input 1 :
+			For test case 1:
+			The optimal way is to make change at A[2]. Minimum sum of array (after change) becomes -2+0+(-5)+2-1 = -6.
+
+			For test case 2:
+			Make change at A[3]. Minimum sum becomes 5+8+7+(-9) = 11.
+			Sample Input 2 :
+			3
+			4
+			3 -1 0 2
+			2
+			0 -1
+			5
+			5 5 5 5 5
+			Sample Output 2 :
+			-2
+			-1
+			15
+
+		#include <bits/stdc++.h> 
+		long long totalBill(int n, vector<int>& a){
+			int mxValInd=0;
+
+			for(int i=0;i<a.size();i++)
+				if(a[mxValInd] < a[i])
+					mxValInd = i;
+			
+			a[mxValInd] = -1 * (a[mxValInd]);
+
+			int sum=0;
+			for(int i=0;i<a.size(); i++)
+				sum += a[i];
+			return sum;
+		}
+
+	29) Encode The String:
+		Sample Input 1 :
+		2
+		3
+		dog
+		4
+		cazz
+		Sample Output 1 :
+		cpf
+		bbyy
+		Explanation Of Sample Input 1 :
+		For the first test case :
+
+		Character ‘d’ gets changed to ‘c’.
+		Character ‘o’ gets changed to ‘p’.
+		Character ‘g’ gets changed to ‘f’.
+
+		Encoded string = “cpf”.
+
+
+		For the second test case :
+
+		Character ‘c’ gets changed to ‘b’.
+		Character ‘a’ gets changed to ‘b’.
+		Character ‘z’ gets changed to ‘y’.
+		Sample Input 2 :
+		2
+		4
+		gjmf
+		3
+		abc
+		Sample Output 2 :
+		file
+		bab
+
+		#include <bits/stdc++.h> 
+		string encodeString(string &s, int n) {
+			for(int i=0;i<s.length();i++){
+				if(s[i] == 'a'){
+					s[i] = 'b';
+				}else if(s[i] == 'e'){
+					s[i] = 'f';
+				}else if(s[i] == 'i'){
+					s[i] = 'j';
+				}else if(s[i] == 'o'){
+					s[i] = 'p';
+				}else if(s[i] == 'u'){
+					s[i] = 'v';
+				}else{
+					s[i] = s[i] - 1;
+				}     
+			}
+			return s;
+		}
 ---------------------------------------------------------------------------------------------------------
 	#include <iostream>
 	#include <algorithm>
@@ -8392,6 +8849,18 @@ POTD:-[Problem of the Day]
 		std::cout << s4 << std::endl;	
 		return 0;
 	}
+
+
+	Char Array:
+
+		#include <iostream>
+
+		int main(){
+			char str[] = "sadf";
+			std::cout << str[0] << std::endl;
+			std::cout << str << std::endl;
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
 calender:
 	today 2nd sept 2023 (saturday)
@@ -8402,4 +8871,4 @@ calender:
 						 =95/7 -> 4 remainder,
 						 4 days back from today (fri, thurs, wed, tuesday)
 						 => Tuesday is on 30th of may.
----------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------	
