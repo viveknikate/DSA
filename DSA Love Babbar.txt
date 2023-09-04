@@ -7406,6 +7406,22 @@ Lecture-21
 
 	//Local variables are stored in an area called a stack. Global variables, static variables, and program instructions 
 	 are stored in the permanent storage area. The memory space between these two regions is known as a heap.
+
+	#modulus operator:
+		-when you take mod operation on any num with x, then output
+		 will be inbetween 0 to (x-1);
+		 eg.
+		 	with 5: output will be 0 to 4.	|	with 10: output will be 0 to 9.
+			1 % 5 = 1						|		1 % 10 = 1
+			2 % 5 = 2						|		2 % 10 = 2
+			3 % 5 = 3						|		3 % 10 = 3
+			4 % 5 = 4						|		4 % 10 = 4
+			5 % 5 = 0						|		5 % 10 = 5
+			6 % 5 = 1						|		6 % 10 = 6
+			7 % 5 = 2						|		7 % 10 = 7
+			8 % 5 = 3						|		8 % 10 = 8
+			9 % 5 = 4						|		9 % 10 = 9
+			10 % 5 = 0					|		10 % 10 = 0
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array	
@@ -8799,6 +8815,44 @@ POTD:-[Problem of the Day]
 			}
 			return s;
 		}
+
+	30) Next Greater Element
+		#include <bits/stdc++.h> 
+		vector<int> nextGreater(vector<int> &arr, int n) {
+			for(int i=0;i<n;i++){
+				if(i == (n-1)){
+					arr[i] = -1;
+					return arr;
+				}
+				int j=i+1;
+				for(j; j<n;j++){
+					if(arr[i] < arr[j]){
+						arr[i] = arr[j];
+						break;
+					}
+				}
+				if(j==n)
+					arr[i] = -1;
+			}
+		}
+		
+		//optimized
+		#include <bits/stdc++.h> 
+		vector<int> nextGreater(vector<int> &arr, int n) {
+			vector<int> res(n, -1);
+			stack<int> st;
+
+			for(int i=0;i<n;i++){
+				while(!st.empty() && arr[i] > arr[st.top()]){
+					res[st.top()] = arr[i];
+					st.pop();
+				}
+				st.push(i);
+			}
+			return res;
+		}
+
+	
 ---------------------------------------------------------------------------------------------------------
 	#include <iostream>
 	#include <algorithm>
