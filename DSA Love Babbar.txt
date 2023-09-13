@@ -6965,7 +6965,52 @@ Lecture-20:
 	3/09/23
 Lecture-21
 	Solving LeetCode/CodeStudio Questions [Arrays]
-		1) 
+		1) Rotate Array
+			Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
+				Example 1:
+
+				Input: nums = [1,2,3,4,5,6,7], k = 3
+				Output: [5,6,7,1,2,3,4]
+				Explanation:
+				rotate 1 steps to the right: [7,1,2,3,4,5,6]
+				rotate 2 steps to the right: [6,7,1,2,3,4,5]
+				rotate 3 steps to the right: [5,6,7,1,2,3,4]
+				Example 2:
+
+				Input: nums = [-1,-100,3,99], k = 2
+				Output: [3,99,-1,-100]
+				Explanation: 
+				rotate 1 steps to the right: [99,-1,-100,3]
+				rotate 2 steps to the right: [3,99,-1,-100]
+
+			class Solution {
+				public:
+				void rotate(vector<int>& nums, int k) {
+					int n = nums.size();
+					vector<int> temp(n);
+
+					for(int i=0;i<n;i++)
+						temp[(i+k)%n] = nums[i];
+
+					nums = temp;
+				}
+			};
+		
+		2) Check if Array Is Sorted and Rotated:
+			https://leetcode.com/problems/check-if-array-is-sorted-and-rotated/
+			class Solution {
+			public:
+				bool check(vector<int>& nums) {
+					int cnt=0;
+					for(int i=1;i<nums.size();i++)
+						if(nums[i-1] > nums[i])
+							cnt++; 
+					if(nums[nums.size()-1] > nums[0])
+						cnt++;
+					return cnt<=1;
+				}	
+			};
+
 		3) Sum Of Two Arrays:
 			Sample Input 1:
 				2
@@ -6993,7 +7038,6 @@ Lecture-21
 				Sample Output 2:
 				7 9 6
 				2 3
-
 
 			#include <bits/stdc++.h> 
 			int convertor(vector<int> , int);
@@ -7024,6 +7068,60 @@ Lecture-21
 
 				return num;
 			}
+
+			#include <bits/stdc++.h> 
+			vector<int> findArraySum(vector<int>& a, int n, std::vector<int>& b, int m) {
+				vector<int> v;
+				int i = n - 1;
+				int j = m - 1;
+				int carry = 0;
+
+				while (i >= 0 && j >= 0) {
+						
+					int sum = a[i--] + b[j--] + carry;
+
+					carry = sum / 10;
+					sum = sum % 10;
+
+					v.insert(v.begin(), sum);
+				}
+
+					//first array len is greater than second
+				while (i >= 0) {
+					int sum = a[i--] + carry;
+
+					carry = sum / 10;
+					sum = sum % 10;
+
+					v.insert(v.begin(), sum);
+				}
+
+					//second array len is greater than first
+				while (j >= 0) {
+					int sum = b[j--] + carry;
+
+					carry = sum / 10;
+					sum = sum % 10;
+
+					v.insert(v.begin(), sum);
+				}
+
+					//carry is remain to add
+				while (carry != 0) {
+					int sum = carry;
+
+					carry = sum / 10;
+					sum = sum % 10;
+
+					v.insert(v.begin(), sum);
+				}
+				return v;
+			}
+---------------------------------------------------------------------------------------------------------
+	14/09/23
+Lecture-22
+	All about Char Arrays, Strings & solving LeetCode Questions
+
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Curly braces related..
@@ -8763,38 +8861,38 @@ POTD:-[Problem of the Day]
 
 	29) Encode The String:
 		Sample Input 1 :
-		2
-		3
-		dog
-		4
-		cazz
-		Sample Output 1 :
-		cpf
-		bbyy
-		Explanation Of Sample Input 1 :
-		For the first test case :
+			2
+			3
+			dog
+			4
+			cazz
+			Sample Output 1 :
+			cpf
+			bbyy
+			Explanation Of Sample Input 1 :
+			For the first test case :
 
-		Character ‘d’ gets changed to ‘c’.
-		Character ‘o’ gets changed to ‘p’.
-		Character ‘g’ gets changed to ‘f’.
+			Character ‘d’ gets changed to ‘c’.
+			Character ‘o’ gets changed to ‘p’.
+			Character ‘g’ gets changed to ‘f’.
 
-		Encoded string = “cpf”.
+			Encoded string = “cpf”.
 
 
-		For the second test case :
+			For the second test case :
 
-		Character ‘c’ gets changed to ‘b’.
-		Character ‘a’ gets changed to ‘b’.
-		Character ‘z’ gets changed to ‘y’.
-		Sample Input 2 :
-		2
-		4
-		gjmf
-		3
-		abc
-		Sample Output 2 :
-		file
-		bab
+			Character ‘c’ gets changed to ‘b’.
+			Character ‘a’ gets changed to ‘b’.
+			Character ‘z’ gets changed to ‘y’.
+			Sample Input 2 :
+			2
+			4
+			gjmf
+			3
+			abc
+			Sample Output 2 :
+			file
+			bab
 
 		#include <bits/stdc++.h> 
 		string encodeString(string &s, int n) {
@@ -8852,6 +8950,533 @@ POTD:-[Problem of the Day]
 			return res;
 		}
 
+	31) Implement Deque:
+		-https://www.codingninjas.com/studio/problems/deque_1170059
+		#include <bits/stdc++.h>
+		#include<queue>
+		using namespace std;
+		class Deque
+		{
+			public:
+				// Initialize your data structure.
+				int size;
+				deque<int> d;
+				Deque(int n){
+					// Write your code here.
+					size = n;
+				}
+
+				// Pushes 'X' in the front of the deque. Returns true if it gets pushed into the deque, and false otherwise.
+				bool pushFront(int x){
+					// Write your code here.
+					if(d.size() < size){
+						d.push_front(x);
+						return true;
+					}
+					return false;
+				}
+
+				// Pushes 'X' in the back of the deque. Returns true if it gets pushed into the deque, and false otherwise.
+				bool pushRear(int x){
+					// Write your code here.
+					if(d.size() < size){
+						d.push_back(x);
+						return true;
+					}
+					return false;
+				}
+
+				// Pops an element from the front of the deque. Returns -1 if the deque is empty, otherwise returns the popped element.
+				int popFront(){
+					// Write your code here.
+					if(!d.empty()){
+						int temp = d.front();
+						d.pop_front();
+						return temp;
+					}
+					return -1;
+				}
+
+				// Pops an element from the back of the deque. Returns -1 if the deque is empty, otherwise returns the popped element.
+				int popRear(){
+					// Write your code here.
+					if(!d.empty()){
+						int temp = d.back();
+						d.pop_back();
+						return temp;
+					}
+					return -1;
+				}
+
+				// Returns the first element of the deque. If the deque is empty, it returns -1.
+				int getFront(){
+					// Write your code here.
+					if(!d.empty()){
+						return d.front();
+					}
+					return -1;
+				}
+
+				// Returns the last element of the deque. If the deque is empty, it returns -1.
+				int getRear(){
+					// Write your code here.
+					if(!d.empty()){
+						return d.back();
+					}
+					return -1;
+				}
+
+				// Returns true if the deque is empty. Otherwise returns false.
+				bool isEmpty(){
+					// Write your code here.
+					if(d.empty())
+						return true;
+					
+					return false;
+				}
+
+				// Returns true if the deque is full. Otherwise returns false.
+				bool isFull(){
+					// Write your code here.
+					if(d.size() == size)
+						return true;
+					return false;
+				}
+		};
+	
+	32) Direction Game:
+		Ninja is currently facing North. An instructor gives him 'N' instructions in the
+		form of a binary string 'S'. If 'S[ i ]' is '0', then Ninja will turn clockwise by ‘90’
+		degrees. Otherwise, Ninja will turn counterclockwise by ‘90’ degrees.
+		Ninja is lazy and doesn't feel like doing all 'N' instructions. So, he decides to just face
+		the final direction. Find the final direction of Ninja, which will be one of the
+		following: 'NORTH', 'SOUTH', 'EAST', or 'WEST
+		Sample Input 1:
+			2
+			4
+			1111
+			4
+			1101
+			Sample Output 1:
+			NORTH
+			SOUTH
+			Explanation Of Sample Input 1:
+			For test case 1:
+			Ninja’s direction will change in the following order:
+			North → West → South  → East → Noth
+			So, the answer is 'NORTH'.
+
+			For test case 2:
+			Ninja’s direction will change in the following order:
+			North → West → South → West → South
+			So, the answer is 'SOUTH'.
+			Sample Input 2:
+			2
+			8
+			10011101
+			7
+			0101011
+			Sample Output 2:
+			SOUTH
+			WEST
+
+		string directionGame(int n, string &s){
+			vector<string> dire = {"NORTH","WEST","SOUTH","EAST"};
+			int index=0;
+			for(int i=0;i<n;i++){
+				if(s[i] == '1')
+					index = (index+1)%4;
+				else
+					index = (index+3)%4;
+			}
+			return dire[index];
+		}
+
+	33) Apple Harvest:
+		Sample Input 1:
+			2
+			20 15 5
+			7 4 6
+			Sample Output 1 :
+			25
+			18
+			Explanation For Sample Input 1:
+			For test case 1:
+			The tree produces 20 apples daily. The basket can hold up to 15 apples. So, every day 5 apples are wasted. Over 5 days, 25 apples are wasted.
+
+			For test case 2:
+			The tree produces 7 apples daily. The basket can hold up to 4 apples. So, every day 3 apples are wasted. Over 6 days, 18 apples are wasted.
+			Sample Input 2:
+			2
+			50 25 10
+			12 5 7
+			Sample Output 2 :
+			250
+			49
+
+		long long wastedApples(int n, int m, int x) {
+			return static_cast<long long>(max(0,(n-m)))*x;
+		}
+
+	34) Ninja wants Holiday:
+		Ninja is a corporate employee, and like
+			other corporate employees, he also wants
+			to visit his home on long holidays. He
+			wants to spend at least 'K' consecutive
+			days at his home.
+			You are given an array 'A' of length 'N'
+			denoting the list of holidays. Ninja can
+			only take leave on holidays.
+			You have to find if it's possible for Ninja to
+			spend at least 'K' consecutive days at his
+			home.
+			Example:
+			'N' = 4
+			'K' = 3
+			'A' = [1, 3, 4, 5]
+			Ninja can take leave on '1',
+			'3', '4', and '5'. Therefore,
+			he can take leave consecutively
+			for at most 3 days, which are
+			from '3' to '5'.
+			Thus, minimum requirement of 'K= 3' is satisfied in this case. Hence, the final output will be 'YES'.
+
+		Sample Input 1:
+			2
+			5 3
+			1 3 7 5 8
+			4 2
+			2 4 8 3
+			Sample Output 1:
+			NO
+			YES
+			Explanation Of Sample Input 1:
+			For test case 1:
+			Holidays cannot be taken for three days in a row.
+			Hence, the answer for this case is "NO".
+
+			For test case 2:
+			Ninja can take holidays on days '2' and '3', thus satisfying requirement of holiday on two consecutive days.
+			Hence, the answer for this case is "YES".
+			Sample Input 2:
+			2
+			5 3
+			2 3 5 8 7
+			4 2
+			4 5 2 3
+			Sample Output 2:
+			NO
+			YES
+
+
+		#include <iostream>
+		#include<vector>
+		#include<algorithm>
+		using namespace std;
+
+		string ninjaWantsHoliday(int n, int k, vector<int> &a) {
+			sort(a.begin(), a.end());
+			int cnt=1;
+			for(int i=0;i<n; i++){      //1 4 5 8 10
+				if(a[i]+1 == a[i+1]){
+					cnt++;
+					if(cnt == k)
+						return "YES";
+				}else{
+					cnt=1;
+					continue;
+				}
+			}
+			return "NO";
+		}
+		int main(){
+			int n=5, k=2;
+
+			vector<int>a {5, 10, 1 ,8, 4};
+			string s = ninjaWantsHoliday(n,k,a);
+			std::cout << s << std::endl;
+			return 0;
+		}
+
+	35) Vaccination Drive:
+			The Indian government recently launched the world's largest vaccination drive for
+			COVID-19. Dr Ritesh has been appointed as a nodal officer for vaccinating a
+			locality. There are ‘N’ houses numbers from 1 to ‘N’ in that locality. Dr Ritesh will
+			visit each house one by one and vaccinate all the people in the house. He
+			has already covered ‘K’ number of houses. Since ‘N’ is a very large number,
+			‘L’ bits are required to represent the number. You are supposed to help Dr
+			Ritesh and find the maximum possible number of houses that are yet to be
+			covered under the vaccination drive
+			(Hint 2's power)
+		Sample Input 1 :
+			2
+			3 5
+			5 3
+			Sample output 1 :
+			29
+			3
+			Explanation of Sample output 1 :
+			For the first test case, since the number of bits required is 5, the maximum possible value for ‘N’ is 32. So the maximum possible number of remaining houses are 32 - 3 = 29.
+
+			For the second test case, since the number of bits required is 3, the maximum possible value for ‘N’ is 8. So the maximum possible number of remaining houses are 8 - 3 = 5.
+			Sample Input 2 :
+			2
+			1 1
+			2 3
+			Sample output 2 :
+			1
+			6
+		#include <bits/stdc++.h> 
+		int getMaximumHouses(int k, int l){
+			return (pow(2,l))-k;
+		}
+
+	36) Factorial of Larger nums:
+		void multiply(vector<int> &result, int x) {
+			int carry = 0;
+			for (int i = 0; i < result.size(); i++) {
+				int product = result[i] * x + carry;
+				result[i] = product % 10;
+				carry = product / 10;
+			}
+			
+			while (carry) {
+				result.push_back(carry % 10);
+				carry /= 10;
+			}
+		}
+
+		void factorial(int n){
+			vector<int> result;
+			result.push_back(1); // Initialize the result as 1
+			
+			for (int i = 2; i <= n; i++) {
+				multiply(result, i);
+			}
+			
+			// Print the result in reverse order
+			for (int i = result.size() - 1; i >= 0; i--) {
+				cout << result[i];
+			}
+			cout << endl;   
+		}
+
+	37) Print all Divisors of a number
+		Given an integer 'N', return all the divisors of 'N' in ascending order.
+		For Example:
+		'N' = 5.
+		The divisors of 5 are 1, 5.
+		Sample Input 1 :
+			10
+			Sample Output 1 :
+			1 2 5 10
+			Explanation Of Sample Input 1:
+			The divisors of 10 are 1,2,5,10.
+			Sample Input 1 :
+			6
+			Sample Output 1 :
+			1 2 3 6
+
+		vector<int> printDivisors(int n) {
+			vector<int> ans;
+			for(int i=1;i<=n/2;i++)
+				if(n % i == 0)
+					ans.push_back(i);
+
+			ans.push_back(n);
+			return ans;
+		}
+	
+	38) Rotate array
+		Given an array 'arr' with 'n' elements, the task is to rotate the array to the left by 'k' steps, where 'k' is non-negative
+		'arr '= [1,2,3,4,5]
+			'k' = 1 rotated array = [2,3,4,5,1] 
+			'k' = 2 rotated array = [3,4,5,1,2]
+			'k' = 3 rotated array = [4,5,1,2,3] and so on.
+
+		Sample Input 1:
+			8
+			7 5 2 11 2 43 1 1
+			2
+			Sample Output 1:
+			2 11 2 43 1 1 7 5
+			Explanation Of Sample Input 1:
+			Rotate 1 steps to the left: 5 2 11 2 43 1 1 7
+			Rotate 2 steps to the left: 2 11 2 43 1 1 7 5
+			Sample Input 2:
+			4
+			5 6 7 8
+			3
+			Sample Output 2:
+			8 5 6 7
+			Explanation Of Sample Input 2:
+			Rotate 1 steps to the left: 6 7 8 5
+			Rotate 2 steps to the left: 7 8 5 6
+			Rotate 2 steps to the left: 8 5 6 7
+
+		vector<int> rotateArray(vector<int>arr, int k) {
+			vector<int> ans;
+			for(int i=k;i<arr.size();i++)
+				ans.push_back(arr[i]);
+			
+			for(int i=0;i<k;i++)
+				ans.push_back(arr[i]);
+			
+			return ans;
+		}
+
+	39) Generate Binary Numbers:
+		Sample Input 1:
+			2
+			2
+			6
+			Sample Output 1:
+			1 10
+			1 10 11 100 101 110
+			Explanation 1:
+			For the first test case when N = 2. 
+			We need all the binary numbers from 1 to 2:
+			1 -> 1
+			2 -> 10
+			Thus, the output is 1, 10.
+
+			For the second test case when N = 6
+			We need all the binary numbers from 1 to 6:
+			1 -> 1
+			2 -> 10
+			3 -> 11
+			4 -> 100
+			5 -> 101
+			6 -> 110
+			Thus, the output is 1, 10, 11, 100, 101, 110.
+			Sample Input 2:
+			2
+			8
+			4
+			Sample Output 2:
+			1 10 11 100 101 110 111 1000
+			1 10 11 100
+
+		#include <bits/stdc++.h>
+		string binConvert(int); 
+		vector<string> generateBinaryNumbers(int n){
+			vector<string> ans;
+			for(int i=1;i<=n;i++){
+				string s = binConvert(i);
+				ans.push_back(s);
+			}
+			return ans;
+		}
+
+		string binConvert(int n){
+			string temp;
+			while(n>0){
+				int t = n % 2;
+				temp += to_string(t);
+				n/=2;
+			}
+			reverse(temp.begin(), temp.end());
+			return temp;
+		}
+
+	40) Sum Of Zeroes
+		#include <bits/stdc++.h> 
+		int coverageOfMatrix(vector<vector<int>> &matrix) {
+		int rows = matrix.size();
+		int cols = matrix[0].size();
+		int coverage = 0;
+
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (matrix[i][j] == 0) {
+					int adjacent = 0;
+
+					// Check top neighbor
+					if (i > 0 && matrix[i - 1][j] == 1) {
+						adjacent += 1;
+					}
+
+					// Check bottom neighbor
+					if (i < rows - 1 && matrix[i + 1][j] == 1) {
+						adjacent += 1;
+					}
+
+					// Check left neighbor
+					if (j > 0 && matrix[i][j - 1] == 1) {
+						adjacent += 1;
+					}
+
+					// Check right neighbor
+					if (j < cols - 1 && matrix[i][j + 1] == 1) {
+						adjacent += 1;
+					}
+
+					coverage += adjacent;
+				}
+			}
+		}
+		return coverage;
+		}
+
+	41) Add One To Number
+		Sample Input 1
+			3
+			3
+			1 2 3
+			2
+			9 9
+			1
+			4
+			Sample Output 1
+			1 2 4
+			1 0 0
+			5
+			Explanation For Sample Input 1
+			In the 1st test case, the number is 123 after adding 1 number becomes 124, hence the output will be {1,2,4}.
+
+			In the 2nd test case, the number is 99 after adding 1 number becomes 100, hence the output will be {1,0,0}.
+
+			In the 3rd test case, the number is 4 after adding 1 number becomes 5, hence the output will be {5}.
+			Sample Input 2
+			3
+			4
+			2 4 6 8 
+			1
+			0
+			2
+			0 2
+			Sample Output 2
+			2 4 6 9
+			1
+			3
+
+		#include <bits/stdc++.h> 
+		vector<int> addOneToNumber(vector<int> arr){
+			int n = arr.size();
+			
+			// Add 1 to the least significant digit (rightmost)
+			arr[n - 1] += 1;
+			
+			// Handle carry
+			int carry = 0;
+			for (int i = n - 1; i >= 0; i--) {
+				int sum = arr[i] + carry;
+				arr[i] = sum % 10;  // Update the current digit
+				carry = sum / 10;   // Calculate the carry for the next digit
+			}
+			
+			// If there is still a carry after processing all digits, insert it at the beginning
+			if (carry > 0) {
+				arr.insert(arr.begin(), carry);
+			}
+			//removing leadig zeros
+			while(!arr.empty() && arr[0]==0){
+				arr.erase(arr.begin());
+			}
+			return arr;
+		}
+
+	42) 
 	
 ---------------------------------------------------------------------------------------------------------
 	#include <iostream>
