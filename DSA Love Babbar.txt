@@ -628,6 +628,18 @@ Lecture-2:
 				~ complement of bits in binary representation
 				<< left shift
 				>> right shift
+			
+			//Converting num to string & counting digit in it.
+				#include <iostream>
+				using namespace std;
+				int main(){
+					int i=1234,j=12,k=9686854;
+					cout<<"no.of digit in i: "<<(to_string(i).length())<<endl;            //4
+					cout<<"no.of digit in j: "<<to_string(j).size()<<endl;                //2
+					cout<<"no.of digit in k: "<<to_string(k).size()<<endl;                //7
+					
+					return 0;
+				}
 ---------------------------------------------------------------------------------------------------------
 	03/08/2023
 Lecture-3:
@@ -6934,6 +6946,15 @@ Lecture-20:
 					for(int j=0;j<nums.size(); j++)
 						if(nums[j] != 0)
 							swap(nums[i++], nums[j]);
+				
+				//or
+					nt cnt=0;
+					for(int i=0;i<nums.size();i++)
+						if(nums[i] != 0)
+							nums[cnt++] = nums[i];
+					
+					while(cnt<nums.size())
+						nums[cnt++] = 0;
 		
 		5) Subarray or not?
 			#include <iostream>
@@ -7121,7 +7142,1346 @@ Lecture-21
 	14/09/23
 Lecture-22
 	All about Char Arrays, Strings & solving LeetCode Questions
+		-String: 1D (one-dimensional char array.)
+		 '\0' - end of string, present at the end of string (null character).
+		 #include <iostream>
+		 using namespace std;
+		 int main(){
+			char name[10];
+		 	std::cout << "Enter name : " << std::endl;
+		 	
+		 	cin>>name;      //cin stop taking input after getting space, new line or tab.
+		 	std::cout << name << std::endl;
+		 	
+		 	// Enter name : 
+			// Vivek Nikate
+			// Vivek
+			return 0;
+		}
 
+		-if null character found then compiler consider it as the end of string.
+			eg.
+			#include <iostream>
+			using namespace std;
+			int main(){
+				char name[15];
+				std::cout << "Enter name : " << std::endl;
+				
+				cin>>name;      //cin stop taking input after getting space, new line or tab.
+				name[3] = '\0';	//after 3rd index compiler consider it as end of string.
+				std::cout << name << std::endl;
+				
+				// Enter name : 
+				// VivekNikate
+				// Viv
+				
+				return 0;
+			}
+
+		// WAP to find the Length of string
+			#include <iostream>
+			using namespace std;
+			int main(){
+				char name[15];
+				std::cout << "Enter name : " << std::endl;
+				
+				cin>>name;
+				int len=0;
+
+				while(name[len++] != '\0');	
+				std::cout << "The Length of string is :: "<< len-1 << std::endl;
+				return 0;
+			}
+			Enter name : 
+			Vivek
+			The Length of string is :: 5
+		
+		//String
+			#include <iostream>
+			using namespace std;
+			int main(){
+			
+				// string s;        //for printf statement string won't work.
+				char s[100];
+				std::cout << "Enter name: " << std::endl;
+				cin>>s;
+				
+				printf("Your name : %s ",s);
+				cout<<"your name: "<<s;
+				return 0;
+			}
+
+		- WAP Reverse a string:
+			#include <iostream>
+			#include<algorithm>
+			using namespace std;
+			int main(){
+				
+				string s;
+				std::cout << "Enter name: " << std::endl;
+				cin>>s;
+				string temp = s;
+				std::cout << "Your name : " <<s<< std::endl;
+				
+				reverse(s.begin(), s.end());
+				//or
+				cout<<"reverse : "<<s<<endl;
+				
+				s = temp;
+				cout<<"Length of string is :: "<< s.size()<<endl;             //Length using size() function
+				cout<<"Length of string is :: "<< s.length()<<endl;           //Length using length() function
+				
+				//or custom calculating length of string
+				int i=0;
+				while(s[i++] != '\0');
+				cout<<"Length of string is :: "<< i-1<<endl;
+				
+				int start =0;
+				int len = i-2;
+				while(start <= len){
+					swap(s[start++],s[len--]);
+				}
+				
+				cout<<"Reverse string custom :"<< s <<endl;
+				return 0;
+			}		
+
+		- Reverse String
+			https://leetcode.com/problems/reverse-string/description/
+			class Solution {
+			public:
+				void reverseString(vector<char>& s) {
+					// reverse(s.begin(), s.end());
+					int start=0,end=s.size()-1;
+					while(start<end)
+						swap(s[start++],s[end--]);
+				}
+			};
+
+		- Check If The String Is A Palindrome
+			#include <bits/stdc++.h> 
+			bool checkPalindrome(string s){
+				string ans;
+				for(int i=0;i<s.length();i++){
+					if(('a' <= s[i] && s[i] <= 'z') || 
+						('A'<=s[i] && s[i] <='Z') || ('0'<=s[i] && s[i] <='9'))
+						ans += s[i];
+
+
+					//or for above if condition,
+						//after converting to lowercase
+						//if((isalpha(s[i])) || isdigit(s[i]))	 //to check isalphabate or not and isdigit or not.
+						//	ans += s[i];
+				}
+
+				//or to check is Alphabet or number,
+				//for(int i=0;i<s.length();i++){
+				//     if(isalnum(s[i]))
+				//         ans += s[i];
+				// }
+
+				transform(ans.begin(), ans.end(), ans.begin(), ::tolower);
+				string temp = ans;
+				reverse(temp.begin(), temp.end());
+				if(ans == temp)
+					return 1;
+				return 0;
+			}
+
+			//converting Uppercase char to lower
+				char toLowerCase(char ch) {
+					if(ch >='a' && ch <='z')
+						return ch;
+					else
+						char temp = ch - 'A' + 'a';
+					return temp;
+				}
+
+			//upper to lower or viceversa,
+				#include <iostream>
+				using namespace std;
+				int main(){
+					char ch1 = 'u', ch2='v', ch3='D';
+					std::cout << char(ch1-32) << std::endl;             //U
+					std::cout << char(ch2-32) << std::endl;             //V
+					std::cout << char(ch3+32) << std::endl;             //d
+					
+					return 0;
+				}
+
+				//or
+					#include <iostream>
+					using namespace std;
+					char TOLOWER(char);
+					char TOUPPER(char);
+					int main(){
+						char ch1 = 'A', ch2 = 'b';
+						
+						cout<<TOLOWER(ch1)<<endl;
+						cout<<TOUPPER(ch2)<<endl;
+						return 0;
+					}
+
+					char TOLOWER(char ch){
+						return ch - 'A' + 'a';
+					}
+
+					char TOUPPER(char ch){
+						return ch - 'a' + 'A';
+					}
+
+			//Palindrome:
+				#include<string>
+				#include<iostream>
+				#include<vector>
+				using namespace std;
+				class Solution {
+					private:
+					bool valid(char ch) {
+						if( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')) {
+							return 1;
+						}
+						
+						return 0;
+					}
+					
+					char toLowerCase(char ch) {
+						if( (ch >='a' && ch <='z') || (ch >='0' && ch <='9') )
+							return ch;
+						else{
+							char temp = ch - 'A' + 'a';
+							return temp;
+						}
+					}
+
+					bool checkPalindrome(string a) {
+						int s = 0;
+						int e = a.length()-1;
+
+						while(s<=e) {
+							if(a[s] != a[e])
+							{
+								return 0;       
+							}
+							else{
+								s++;
+								e--;
+							}
+						}
+						return 1;
+					}
+					public:
+					bool isPalindrome(string s) {
+						
+						//faltu character hatado
+						string temp = "";
+						
+						for(int j=0; j<s.length(); j++) {   
+							if(valid(s[j])) {
+								temp.push_back(s[j]);
+							}
+						}
+						
+						//lowercase me kardo
+						for(int j=0; j<temp.length(); j++) { 
+							temp[j] = toLowerCase(temp[j]);
+						}
+						
+						//check palindrome
+						return checkPalindrome(temp);	
+					}
+				};
+
+			//without using extra space or temp string:
+				#include <bits/stdc++.h> 
+				bool checkPalindrome(string s){
+					transform(s.begin(), s.end(), s.begin(), ::tolower);
+
+					int i=0, j = s.size()-1;
+					while(i<j){
+						if(!isalnum(s[i])){
+							i++;
+							continue;
+						}
+						if (!isalnum(s[j])) {
+							j--;
+							continue;
+						}
+						if (s[i] != s[j])
+							return false;
+						i++;
+						j--;
+					}
+					return true;
+				}
+
+			//or
+				#include <bits/stdc++.h> 
+				bool checkPalindrome(string s){
+					transform(s.begin(), s.end(), s.begin(), ::tolower);
+
+					int i=0, j = s.size()-1;
+					while(i<j){
+						if (isalnum(s[i])) {
+							if(isalnum(s[j])){
+								if(s[i] == s[j]){
+									i++;j--;
+									continue;    
+								}else{
+									return false;
+								}
+							}else{
+								j--;
+							}
+						}else{
+							i++;
+						}
+					}
+					return true;
+				}
+
+		- simple Palindrome checker:
+			#include <iostream>
+			using namespace std;
+			int main(){
+				string s;
+				cout<<"Enter string to check Palindrome or not?"<<endl;
+				cin>>s;
+				
+				int i=0;
+				for(i;i<s.length()/2;i++)
+					if(s[i] != s[s.length()-1-i]){
+						cout<<"Not Palindrome";
+						break;
+					}
+					
+				if(i == s.length()/2)
+					cout<<"Palindrome";
+				return 0;
+			}
+
+		- Valid Palindrome
+			https://leetcode.com/problems/valid-palindrome/description/
+			 class Solution {
+				public:
+				bool isPalindrome(string s) {		
+					transform(s.begin(), s.end(), s.begin(), ::tolower);
+					string ans;
+
+					for(int i=0;i<s.length() ; i++){
+						if((s[i] >= 'a' && s[i] <= 'z') || (s[i]>='0' && s[i] <='9'))
+							ans += s[i];
+					}
+					s = ans;
+					reverse(ans.begin(), ans.end());
+					return (ans == s)? true:false;
+				}
+			};
+
+			//or
+				class Solution {
+					public:
+					bool isPalindrome(string s) {
+						transform(s.begin(), s.end(), s.begin(), ::tolower);
+						int i=0,j=s.length()-1;
+						while(i<j){
+							if(!isalnum(s[i])){
+								i++;
+								continue;
+							}
+							if(!isalnum(s[j])){
+								j--;
+								continue;
+							}
+							if(s[i] != s[j])
+								return false;
+							i++;j--;
+						}
+						return true;
+					}
+				};
+
+		//String Operations:
+			#include <iostream>
+			using namespace std;
+
+			int main(){
+			
+				string s = "Hello World";
+				cout<<s<<endl;
+				
+				s.pop_back();
+				cout<<s<<endl;                      //removing element from last.
+				
+				s.push_back('V');                   //adding element at last or s = s + 'V';
+				cout<<s<<endl;
+				
+				cout<<s.front()<<endl;              //first element of string
+				cout<<s.back()<<endl;               //last element of string
+				
+				cout<<s.at(4)<<endl;                //char at 4th index (0-based index)
+				
+				cout<<"String length is :: "<<s.length()<<endl;
+
+				s.erase(2,3);
+				cout<<s<<endl;                  //from index 2nd remove 3 char here llo got removed.
+
+				cout<<"String length After erasing :: "<<s.length()<<endl;
+				return 0;
+			}
+
+		// upper/lower case char conversion
+			#include <iostream>
+			#include <algorithm>
+			using namespace std;
+			int main(){
+				string s = "Hello World";
+				
+				std::cout << s << std::endl;
+
+				std::cout << char(tolower('A')) << std::endl;
+				
+				//string upper to lower case
+				transform(s.begin(), s.end(), s.begin(), ::tolower);
+				// transform(s2.begin(), s2.end(), s2.begin(), ::tolower);
+				std::cout << s << std::endl;
+				
+				transform(s.begin(), s.end(), s.begin(), ::toupper);
+				std::cout << s << std::endl;
+				
+				return 0;
+			}
+
+		//convert string to uppercase or lowercase
+			#include <iostream>
+			#include <algorithm>
+			using namespace std;
+
+			int main(){
+				string s1 = "VIVEK", s2="nikate", s3 = "third", s4 = "this is first letter capital sentence.";
+				
+				transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
+				std::cout << s1 << std::endl;
+				
+				transform(s2.begin(), s2.end(), s2.begin(), ::toupper);
+				std::cout << s2 << std::endl;
+				
+				s3[0] = toupper(s3[0]);
+				std::cout << s3 << std::endl;
+				
+				int i=0;
+				while(s4[i] != '\0'){
+					if(i==0) s4[i] = toupper(s4[i]);
+					if(isblank(s4[i])) s4[i+1] = toupper(s4[i+1]);
+					i++;
+				}
+
+				std::cout << s4 << std::endl;	
+				return 0;
+			}
+
+		Char Array:
+			#include <iostream>
+			int main(){
+				char str[] = "sadf\0tyuio";
+				std::cout << str[0] << std::endl;
+				std::cout << str << std::endl;
+				
+				char ch[] = {'v','i','\0','v','e','k'};
+				cout<<ch;
+				return 0;
+			}
+
+			differences (string & char array):
+				-String refers to a sequence of characters represented as a single data type. 
+				-Character Array is a sequential collection of data type char.
+
+			  Characteristic					String					Char array
+				Data type						Class				 	 Array
+				Size							Dynamically allocated		 Fixed size
+				Null terminator				Automatically appended		 Not automatically appended
+				Memory management				Automatic					 Manual
+				Operations					Supported					 Not supported
+				Speed						Slower					 Faster
+				Safety						Safer					 Less safe
+
+		// Reverse sentence:
+			Sample Input 1 :
+				Welcome to Coding Ninjas
+				Sample Output 1:
+				Ninjas Coding to Welcome
+				Explanation For Sample Input 1:
+				You need to reduce multiple spaces between two words to a single space in the reversed string and observe how the multiple spaces, leading and trailing spaces have been removed.
+			Sample Input 2 :
+				I am a star
+				Sample Output 2:
+				star a am I
+				Explanation For Sample Input 2:
+				Your reversed string should not contain leading or trailing spaces.
+
+			string reverseString(string &str){
+				vector<string> ans;
+				int i=0;
+
+				while(i<str.length()){
+					if(str[i] == ' '){
+						i++;
+						continue;
+					}
+
+					string temp;
+					while(str[i] != ' ' && str[i] !='\0'){
+						temp += str[i];
+
+						i++;
+					}
+					ans.push_back(temp);
+				}
+
+				i=ans.size()-1;
+				str = "";
+				while(i>=0){
+					str += ans[i];
+					if( i!=0)
+						str += ' ';
+					i--;
+				}
+				return str;	
+			}
+
+		// Reverse Words in a String III
+			Given a string s, reverse the order of characters in each word within a sentence while still preserving whitespace and initial word order.
+				Example 1:
+
+				Input: s = "Let's take LeetCode contest"
+				Output: "s'teL ekat edoCteeL tsetnoc"
+				Example 2:
+
+				Input: s = "God Ding"
+				Output: "doG gniD"
+			https://leetcode.com/problems/reverse-words-in-a-string-iii/description/
+			class Solution {
+			public:
+				string reverseWords(string s) {
+					string temp;
+					vector<string> holder;
+
+					int i=0;
+					while(i<s.length()){
+						if(s[i] == ' '){
+							i++;
+							continue;
+						}
+
+						while(s[i] != ' ' && s[i] != '\0'){
+							temp += s[i];
+							i++;
+						}
+						holder.push_back(temp);
+						temp="";
+						i++;
+					}
+
+					s="";
+					
+					for(int a=0;a<holder.size();a++){
+						string st =  holder[a];
+						reverse(st.begin(), st.end());
+						s += st;
+						if(a != holder.size()-1)
+							s += " ";               // s = s + ' ' or s = s + " ";
+					}
+					return s;
+				}
+			};
+
+		// Print first n Fibonacci Numbers
+			Given a number N, find the first N Fibonacci numbers. The first two number of the series are 1 and 1.
+				Example 1:
+
+				Input:
+				N = 5
+				Output: 1 1 2 3 5
+				Example 2:
+
+				Input:
+				N = 7
+				Output: 1 1 2 3 5 8 13
+				Your Task:
+				Your task is to complete printFibb() which takes single argument N and returns a list of first N Fibonacci numbers.
+
+				Expected Time Complexity: O(N).
+				Expected Auxiliary Space: O(N).
+				Note: This space is used to store and return the answer for printing purpose.
+
+				Constraints:
+				1<= N <=84
+
+			class Solution{
+				public:
+				//Function to return list containing first n fibonacci numbers.
+				vector<long long> printFibb(int n){
+					long long prev=1, curr =1;
+					vector<long long> ans;
+					ans.push_back(curr);
+					
+					if(n == 1)
+						return ans;
+						
+					ans.push_back(prev);
+					if(n ==2)
+						return ans;
+					
+					for(int i=2;i<n;i++){
+						long long fib = curr + prev;
+						prev = curr;
+						curr = fib;
+						ans.push_back(fib);
+					}
+					return ans;
+				}
+			};
+
+		// Nth Fibonacci Number:
+			class Solution {
+				public:
+				int nthFibonacci(int n){
+					int cur=1,prev=0;
+					int mod = 1e9+7;
+					if(n == 0)
+						return prev;
+					else if(n==1)
+						return cur;
+					else
+						for(int i=2;i<=n;i++){
+							int fib = (cur +prev) % mod;
+							prev = cur;
+							cur = fib;
+						}
+
+					return cur;
+				}
+			};
+
+		// Maximum Occuring Character
+			Given a string str of lowercase alphabets. The task is to find the maximum occurring character in the string str. 
+			 If more than one character occurs the maximum number of time then print the lexicographically smaller character.
+				Example 1:
+
+				Input:
+				str = testsample
+				Output: e
+				Explanation: e is the character which
+				is having the highest frequency.
+				Example 2:
+
+				Input:
+				str = output
+				Output: t
+				Explanation:  t and u are the characters
+				with the same frequency, but t is
+				lexicographically smaller.
+				Your Task:
+				The task is to complete the function getMaxOccuringChar() which returns the character which is most occurring.
+
+				Expected Time Complexity: O(N).
+				Expected Auxiliary Space: O(Number of distinct characters).
+				Note: N = |s|
+
+				Constraints:
+				1 ≤ |s| ≤ 100
+			class Solution{
+				public:
+				//Function to find the maximum occurring character in a string.
+				char getMaxOccuringChar(string str){
+					int cnt=1,prev=cnt;
+					char mainCh = str[0];
+					for(int i=0;i<str.length();i++){
+						for(int j=0;j<str.length();j++){
+							if(str[i] == str[j])
+								cnt++;
+						}
+						
+						if(cnt> prev || (cnt >= prev && str[i] < mainCh)){
+							mainCh = str[i];
+							prev=cnt;
+						}
+						cnt=1;
+					}
+					
+					return mainCh;
+				}
+			};
+
+			//or
+				class Solution{
+					public:
+					//Function to find the maximum occurring character in a string.
+					char getMaxOccuringChar(string str){
+						int arr[26] = {0};
+						for(int i=0; i<str.length();i++){
+							int num;
+							//between lowercase     
+							if(str[i]>='a' && str[i]<='z'){
+								num = str[i] - 'a';
+							}else{      //between uppercase
+								num = str[i] - 'A';
+							}
+							arr[num]++;
+						}
+						
+						int mx=arr[0], index=0;
+						for(int i=0;i<26;i++){
+							if(mx<arr[i]){
+								mx = arr[i];
+								index = i;
+							}
+						}
+						return char('a'+index);
+					}
+				};
+
+		// WAP to take string as input
+			#include <iostream>
+			using namespace std;
+			int main(){
+				
+				string s;
+				std::cout << "Enter name: (stop taking input when we hit enter) " << std::endl;
+				getline(cin, s);                //getline function works for string datatype only.
+				cout<<s<<endl;
+				
+				
+				// for character datatype use cin.getline(char_array_name, max_size) function,
+				char str[100];
+				std::cout << "Enter name again:" << std::endl;
+				cin.getline(str, 50);
+				std::cout << str << std::endl;
+				
+				//ending string with some particular delimiter
+				//$
+				//when user enter $ it stop taking input
+				//whatever comes after $ it will not consider it.
+				std::cout << "Enter name : delimiter" << std::endl;
+				cin.getline(str,100, '$');
+				std::cout << str << std::endl;
+				
+				
+				std::cout << "Enter name: delimit by * " << std::endl;
+				getline(cin, s, '*');                //getline function works for string datatype only.
+				cout<<s<<endl;
+				
+				//delimiter by [
+				std::cout << "Enter name: delimiter [ : " << std::endl;
+				cin.getline(str, 100, '[');
+				std::cout << str << std::endl;
+				
+				s="";
+				//delimiter with string, stop taking input when you encounter ^.
+				std::cout << "Enter name for string delimiter :" << std::endl;
+				getline(cin,s,'^');
+				std::cout << s << std::endl;
+				return 0;
+			}
+
+		// char array Operation:
+			#include <iostream>
+			#include<cstring>
+			using namespace std;
+
+			int main(){
+				char s1[] ="Vivek_Mahesh_Nikate";
+				char s2[] ="Nikate";
+				char s3[] ="Vivek";
+					
+				std::cout << strlen(s1) << std::endl;           //strlen function works with char array only.
+				
+				std::cout << strcmp(s2,s1) << std::endl;        //s1-s2 first string is smaller so -ve answer
+				std::cout << strcmp(s1,s2) << std::endl;        //s2-s1 first string is larger so +ve answer
+				
+				//if both are equal then 0
+				std::cout << strcmp(s3,s1) << std::endl;
+				
+				std::cout << s1 << std::endl;
+				
+				//after copying s1 is:
+				strcpy(s1,"New_String");        //strcpy(source, destination), strcpy(place_to_take_new_value, new_value),
+				std::cout << s1 << std::endl;
+				
+				char s4[] = "Cat ";
+				char s5[] = "Meow ";
+				std::cout << s4 << std::endl;
+				std::cout << s5 << std::endl;
+				strcat(s4,s5);      // s4 = s4 + s5;
+				
+				std::cout << s4 << std::endl;
+				return 0;
+			}
+
+		// string insertion:
+			#include <iostream>
+			using namespace std;
+
+			int main(){
+				string s="Hello World";
+				string s1("Vivek Nikate");	//we can define string like this also.
+
+				cout<<s<<endl;				//Hello World
+				
+				s.insert(3," Vivek ");          //after 2nd index insert new string or after 3 char insert this new string
+				std::cout << s << std::endl;     //Hel Vivek lo World
+
+				s.insert(1,"Nikate");           //after one character insert new string.
+				std::cout << s << std::endl;	  //HNikateel Vivek lo World
+					
+				return 0;
+			}
+
+		// Replace Spaces with @40:
+			Sample Input 1:
+				2
+				Coding Ninjas Is A Coding Platform
+				Hello World
+				Sample Output 1:
+				Coding@40Ninjas@40Is@40A@40Coding@40Platform
+				Hello@40World
+				Explanation Of Sample Output 1:
+				In test case 1, After replacing the spaces with “@40” string is: 
+
+				Coding@40Ninjas@40Is@40A@40Coding@40Platform
+
+				In test case 2, After replacing the spaces with “@40” string is: 
+
+				Hello@40World
+				Sample Input 2:
+				3
+				Hello
+				I love coding
+				Coding Ninjas India
+				Sample Output 2:
+				Hello
+				I@40love@40coding
+				Coding@40Ninjas@40India    
+				Explanation For Sample Output 2:
+				In test case 1, After replacing the spaces with “@40” string is: 
+
+				Hello
+
+				In test case 2, After replacing the spaces with “@40” string is: 
+
+				I@40love@40coding
+
+				In test case 3, After replacing the spaces with “@40” string is: 
+
+				Coding@40Ninjas@40India
+			#include <bits/stdc++.h> 
+			string replaceSpaces(string &str){
+				string temp;
+				for(int i=0;i<str.length();i++){
+					if(str[i] == ' '){
+						temp += "@40";
+					}else{
+						temp += str[i];
+					}
+				}
+				return temp;
+			}
+
+			//or without using extra space/ temp string.
+				#include <iostream>
+				using namespace std;
+
+				int main(){
+					string str= "H M M N";
+					std::cout << str << std::endl;
+					
+					int len = str.length(), spaceCount=0;
+						for(int i=0;i<len;i++)
+							if(str[i] == ' ')
+								spaceCount++;
+						
+						if(!spaceCount){
+						std::cout << str << std::endl;
+							return 0;
+					}
+
+						len -= spaceCount;
+						len += (spaceCount*3);
+						str.resize(len);
+
+						for(int i=0;i<len;i++){
+							if(str[i] == ' '){
+								str.replace(i, 1,"@40");
+								i +=2;
+							}
+						}
+						
+						std::cout << str << std::endl;
+					return 0;
+				}
+
+		clear():
+			The clear() function is used to remove all the elements of the vector container, thus making it size 0.
+			Parameters: No parameters are passed.
+			Result: All the elements of the vector are removed (or destroyed).
+
+		erase():
+			erase() function is used to remove elements from a container from the specified position or range.
+
+			#include <iostream>
+			using namespace std;
+
+			int main(){
+				string s;
+				s=  "Hello World";
+				std::cout << s << std::endl;                //Hello World
+				
+				s.erase(3,4);                       //after 3 chars remove 4 characters
+				std::cout << s << std::endl;        //Helorld
+				
+				//except first 5 characters remove all
+				s = "Hello World";
+				s.erase(5);
+				std::cout << s << std::endl;    //Hello
+				
+				//just remove 4th character         if we mention iterator then it remove only one character at that iterator index.
+				s = "Hello World";
+				s.erase(s.begin()+4); 
+				std::cout << s << std::endl;        //Hell World
+				
+				//remove 4 characters from last
+				s = "Hello World";
+				s.erase(s.end()-4,s.end());             //s.erase(startIndex, endIndex);
+				std::cout << s << std::endl;            //Hello W
+				
+				//remove last char from string
+				s = "Hello World";
+				s.pop_back();
+				std::cout << s << std::endl;            //Hello Worl
+				
+				//remove last char from string using erase
+				s = "Hello World";
+				s.erase(s.end()-1);
+				std::cout << s << std::endl;            //Hello Worl
+				
+				//remove 2nd last char from string using erase
+				s = "Hello World";
+				s.erase(s.end()-2);
+				std::cout << s << std::endl;            //Hello Word
+				
+				//delete complete string
+				s = "Hello World";
+				s.erase();
+				std::cout <<"String is ::" <<s << std::endl;            //Hello Worl
+				
+				//or
+				s = "Hello World";
+				s.clear();
+				std::cout<<"Clear string :: " << s << std::endl;            //Hello Worl
+				
+				//append 4 char to end of string
+				s = "Hello World";
+				string w = s.substr(1,4);           //substr(startIndex, no.of char)
+				s += " "  + w;
+				std::cout << s  << std::endl;            //Hello World ello
+				
+				return 0;
+			}
+
+			//string operations:
+				Example-1:
+					#include <iostream>
+					using namespace std;
+
+					int main(){
+						string s1 = "Vivek Mahesh Nikate";
+						string s2 = "Learning is Hobby";
+						
+						cout<<"one is not present in s1 :: "<<boolalpha<<(s1.find("one") == string::npos)<<endl;
+						
+						//string::npos means sub string is not found. if s1.find("--") == string::npos, means substring does not exist.
+						cout<<string::npos<<endl;
+						
+						if(s1.find("Vivek") != string::npos){
+							std::cout << "SubString found" << std::endl;
+						}else{
+							std::cout << "SubString Not found" << std::endl;
+						}
+						
+						//find() method returns the index of starting character of substring, & its case sensitive if not found 
+						//it return value of string::npos & if(str.find() == string::npos) then you can say that substring not found.
+						
+						std::cout <<"learning is present in s2 :: " <<(s2.find("learning") != string::npos) << std::endl;
+						
+						std::cout <<"Hobby is present?  "<<(s2.find("Hobby") != string::npos) << std::endl;
+						
+						string s3 = "Learning @#@#@&@#@#@@#@#@@#@#@ pro@#@#@blem@#@#@ solving is @#@#@a most impor@#@#@tant skill @#@#@found in the @#@#@interview";
+						
+						//removing garbase from string,
+						std::cout << s3 << std::endl;
+						
+						string part = "@#@#@";
+						
+						while(s3.find(part) != string::npos){
+							if(s3.find(part) != string::npos)
+								s3.erase(s3.find(part), part.length());
+						}
+						
+						std::cout << s3 << std::endl;
+						return 0;
+					}
+
+					/*
+						output:
+						one is not present in s1 :: true
+						18446744073709551615
+						SubString found
+						learning is present in s2 :: false
+						Hobby is present?  true
+						Learning @#@#@&@#@#@@#@#@@#@#@ pro@#@#@blem@#@#@ solving is @#@#@a most impor@#@#@tant skill @#@#@found in the @#@#@interview
+						Learning & problem solving is a most important skill found in the interview
+					*/
+
+				Example-2:
+					#include <iostream>
+					using namespace std;
+
+					int main(){
+					
+						string s= "Hello_World";
+						
+						std::cout << s << std::endl;                    //Hello_World
+						std::cout << s.substr(0,2) << std::endl;        //He    2 character
+						std::cout << s.substr(6,2) << std::endl;        //wo    2 character
+						std::cout << s.substr(s.length()-1) << std::endl;     //extracting last char    d
+						std::cout << s.substr(4,1) << std::endl;            //o, 1 character extracting
+						
+						//extracting complete string except first 2 character,
+						//or from 2nd index taking all character 
+						std::cout << s.substr(2) << std::endl;                  //llo_World
+						
+						// removing l
+						std::cout << s << std::endl;
+						s.erase(s.begin()+2);
+						std::cout << s << std::endl;
+						
+						//searching substr 'Hell',
+						s = "Hello_World";
+						string sub = "Hell";
+						
+						std::cout << "is string contain "<<sub<<"? " <<( (s.find(sub) != string::npos) ? "Yes":"no")<< std::endl;
+						
+						if(s.find(sub) != string::npos)
+							s.erase(s.find(sub),sub.length());
+							
+						std::cout << "New string after removing : "<< s << std::endl;
+						return 0;
+					}
+
+					/*
+						ouput
+						Hello_World
+						He
+						Wo
+						d
+						o
+						llo_World
+						Hello_World
+						Helo_World
+						is string contain Hell? Yes
+						New string after removing : o_World
+					*/
+
+		// Remove All Occurrences of a Substring
+			https://leetcode.com/problems/remove-all-occurrences-of-a-substring/description/
+			Given two strings s and part, perform the following operation on 
+			 s until all occurrences of the substring part are removed:
+				Find the leftmost occurrence of the substring part and remove it from s.
+				Return s after removing all occurrences of part.
+
+				A substring is a contiguous sequence of characters in a string.
+				Example 1:
+					Input: s = "daabcbaabcbc", part = "abc"
+					Output: "dab"
+					Explanation: The following operations are done:
+					- s = "daabcbaabcbc", remove "abc" starting at index 2, so s = "dabaabcbc".
+					- s = "dabaabcbc", remove "abc" starting at index 4, so s = "dababc".
+					- s = "dababc", remove "abc" starting at index 3, so s = "dab".
+					Now s has no occurrences of "abc".
+				Example 2:
+					Input: s = "axxxxyyyyb", part = "xy"
+					Output: "ab"
+					Explanation: The following operations are done:
+					- s = "axxxxyyyyb", remove "xy" starting at index 4 so s = "axxxyyyb".
+					- s = "axxxyyyb", remove "xy" starting at index 3 so s = "axxyyb".
+					- s = "axxyyb", remove "xy" starting at index 2 so s = "axyb".
+					- s = "axyb", remove "xy" starting at index 1 so s = "ab".
+					Now s has no occurrences of "xy".
+			class Solution {
+				public:
+				string removeOccurrences(string s, string part) {
+					while(s.length() != 0 && (s.find(part) < s.length())){
+						s.erase(s.find(part), part.length());
+					}
+					return s;
+				}
+			};
+
+			//or
+				class Solution {
+					public:
+					string removeOccurrences(string s, string part) {
+						// Find the starting index of the 'part' substring in 's'
+						int pos = s.find(part);
+
+						// Continue looping until 'part' is found in 's'
+						while (pos != string::npos) {
+							// Remove 'part' from 's' starting at the found position
+							s.erase(pos, part.length());
+
+							// Search for the next occurrence of 'part' in the modified 's'
+							pos = s.find(part);
+						}
+
+						// Return the modified 's' after removing all occurrences of 'part'
+						return s;
+					}
+				};
+
+			//or
+				class Solution {
+					public:
+					string removeOccurrences(string s, string part){
+
+						while(s.find(part) != string::npos){
+							s.erase(s.find(part), part.length());
+						}
+						return s;
+					}
+				};
+
+		// Permutation in String
+			Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise.
+				In other words, return true if one of s1's permutations is the substring of s2.
+				Example 1:
+					Input: s1 = "ab", s2 = "eidbaooo"
+					Output: true
+					Explanation: s2 contains one permutation of s1 ("ba").
+
+				Example 2:
+					Input: s1 = "ab", s2 = "eidboaoo"
+					Output: false
+				Constraints:
+					1 <= s1.length, s2.length <= 104
+					s1 and s2 consist of lowercase English letters.
+			
+			class Solution {
+				public:
+				bool areEqual(int a1[26], int a2[26]){
+					for(int i=0;i<26;i++)
+						if(a1[i] != a2[i])
+							return 0;
+					return 1;
+				}
+
+				bool checkInclusion(string s1, string s2) {
+					int count1[26]={0},count2[26]={0};
+					int i=0;
+					//what are the characters present in s1 mapping them (0-a, 1-b, 2-c) in count1 array & increment their count.
+					while(i<s1.length()){
+						count1[s1[i]-'a']++;
+						i++;
+					}
+					
+					//what are the characters present in s2 mapping them (0-a, 1-b, 2-c) in count2 array & increment their count.
+					//& checking that i should not greater that s2 string length
+					i=0;
+					while(i<s1.length() && i < s2.length()){
+						count2[s2[i]-'a']++;
+						i++;
+					}
+
+					//if both count1 & count2 have same value in them then, you can say that its permutation of string
+					if(areEqual(count1,count2))
+						return 1;
+					
+					//else moving for next s1.length() characters
+					while(i<s2.length()){
+						count2[s2[i]-'a']++;
+						count2[s2[i-s1.length()]-'a']--;
+						if(areEqual(count1,count2))
+							return 1;
+						i++;
+					}
+					return 0;
+				}
+			};
+
+		// Remove All Adjacent Duplicates In String
+			You are given a string s consisting of lowercase English letters. 
+			A duplicate removal consists of choosing two adjacent and equal letters and removing them.
+			We repeatedly make duplicate removals on s until we no longer can.
+
+			Return the final string after all such duplicate removals have been made. It can be proven that the answer is unique.
+			Example 1:
+				Input: s = "abbaca"
+				Output: "ca"
+				Explanation: 
+				For example, in "abbaca" we could remove "bb" since the letters are adjacent and equal, 
+				and this is the only possible move.  The result of this move is that the string is "aaca", 
+				of which only "aa" is possible, so the final string is "ca".
+			Example 2:
+				Input: s = "azxxzy"
+				Output: "ay"
+			Constraints:
+				1 <= s.length <= 105
+				s consists of lowercase English letters.
+			
+			//not optimized:
+				class Solution {
+					public:
+					string removeDuplicates(string s) {
+						int i=1;
+						while(i < s.length()){
+							if(s[i] == s[i-1]){
+								s.erase(i-1,2);
+								i=1;
+							}else{
+								i++;
+							}
+						}
+						return s;
+					}
+				};
+
+			//optimized:
+				class Solution {
+					public:
+					string removeDuplicates(string s) {
+						int i=0;
+						string temp;
+						while(i<s.length()){
+							if( temp.empty() || temp.back() != s[i]){
+								temp.push_back(s[i]);
+							}else{
+								temp.pop_back();
+							}
+							i++;
+						}
+						return temp;
+					}
+				};
+
+		// String Compression ❌(remain)
+			Given an array of characters chars, compress it using the following algorithm:
+
+			Begin with an empty string s. For each group of consecutive repeating characters in chars:
+
+			If the group's length is 1, append the character to s.
+			Otherwise, append the character followed by the group's length.
+			The compressed string s should not be returned separately, but instead, 
+			be stored in the input character array chars. Note that group lengths that 
+			are 10 or longer will be split into multiple characters in chars.
+
+			After you are done modifying the input array, return the new length of the array.
+			You must write an algorithm that uses only constant extra space.
+
+			Example 1:
+				Input: chars = ["a","a","b","b","c","c","c"]
+				Output: Return 6, and the first 6 characters of the input array should be: ["a","2","b","2","c","3"]
+				Explanation: The groups are "aa", "bb", and "ccc". This compresses to "a2b2c3".
+			Example 2:
+				Input: chars = ["a"]
+				Output: Return 1, and the first character of the input array should be: ["a"]
+				Explanation: The only group is "a", which remains uncompressed since it's a single character.
+			Example 3:
+				Input: chars = ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
+				Output: Return 4, and the first 4 characters of the input array should be: ["a","b","1","2"].
+				Explanation: The groups are "a" and "bbbbbbbbbbbb". This compresses to "ab12".
+
+			Constraints:
+				1 <= chars.length <= 2000
+				chars[i] is a lowercase English letter, 
+				uppercase English letter, digit, or symbol.
+
+			//NOT optimized.
+				class Solution {
+					public:
+					int compress(vector<char>& chars) {
+						string s="";
+						for(int i=0;i<chars.size();i++){
+							if(isalpha(chars[i])){
+								char ch = chars[i];
+								s += ch;
+								int cnt=1;
+								for(int j=i+1;j<chars.size();j++){
+									if(ch == chars[j]){
+									chars[j] ='0';
+									cnt++;
+									}
+								}
+								if(cnt !=1)
+									s += to_string(cnt);
+							}else{
+								continue;
+							}
+						}
+						for(int i=0;i<s.length();i++)
+							chars[i] = s[i];
+						return s.length();
+					}
+				};
+
+			//Optimized.. without using extra space 
+				class Solution {
+					public:
+					int compress(vector<char>& chars) {
+						int i=0,ansIndex=0;
+						while(i<chars.size()){
+							int j=i+1;
+							while(j<chars.size() && chars[i] == chars[j])
+								j++;
+						
+							chars[ansIndex++] = chars[i];
+							int count = j-i;
+
+							if(count > 1){
+								string cnt = to_string(count);
+								for(char ch: cnt)
+									chars[ansIndex++] = ch;
+							}
+							i=j;
+						}
+						return ansIndex;
+					}
+				};
+			
+			//Optimized..  using extra space temp string,
+				class Solution {
+					public:
+					int compress(vector<char>& chars) {
+						string s;
+						for(int i=0;i<chars.size();){
+							s += chars[i];
+							int j=i+1;
+							while(j<chars.size() && chars[i] == chars[j]){
+								j++;
+							}
+
+							int count = j-i;
+							// cout<<count<<endl;
+							if(count > 1)
+								s += to_string(count);
+							// cout<<s<<endl;
+							i=j;
+						}
+						
+						for(int i=0;i<s.length();i++){
+							chars[i] = s[i]; 
+						}
+						return s.length();
+					}
+				};
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Curly braces related..
@@ -7147,40 +8507,22 @@ Lecture-22
 		if 0 then false.
 		#include <iostream>
 		using namespace std;
-
-		int main()
-		{
+		int main(){
 		
 			if(2)					//if(-2)			this is also true.
 				goto L2;
 
 			L1: 
-			
 			std::cout << "Lable 1st" << std::endl;
-			
-			
 			std::cout << "Lable 1st" << std::endl;
-			
-			
 			std::cout << "Lable 1st" << std::endl;
-			
-			
 			std::cout << "Lable 1st" << std::endl;
 			
 			L2:
-				
 			std::cout << "Lable 2nd" << std::endl;
-			
-			
 			std::cout << "Lable 2nd" << std::endl;
-			
-			
 			std::cout << "Lable 2nd" << std::endl;
-			
-			
 			std::cout << "Lable 2nd" << std::endl;
-			
-			
 			std::cout << "Lable 2nd" << std::endl;
 			
 			L3:
@@ -7191,11 +8533,8 @@ Lecture-22
 		//fact program
 		//position of increment decrement operator matters a LOTTTTTTTTT.
 		#include <iostream>
-
 		using namespace std;
-
-		int main()
-		{
+		int main(){
 			int n,t;
 			cin>>n;
 			t=n-1;
@@ -7211,8 +8550,7 @@ Lecture-22
 		#include <iostream>
 		using namespace std;
 
-		int main()
-		{
+		int main(){
 			int a = 10;
 			int b = 20;
 			cout << "Value of a before: " << a << endl;
@@ -7235,8 +8573,7 @@ Lecture-22
 		#include <iostream>
 		using namespace std;
 
-		int main()
-		{
+		int main(){
 			int i=0,j=0;
 			
 			while(i<5 && j<10){
@@ -7251,8 +8588,7 @@ Lecture-22
 		#include <iostream>
 		using namespace std;
 
-		int main()
-		{
+		int main(){
 			int i=0,j=0;
 			while(i<5 , j<10){          //while(i<5 || j<10)
 				std::cout << i<<" "<<j << std::endl;
@@ -7268,7 +8604,7 @@ Lecture-22
 
 	//Self Solved:
 		1. Two Sum
-			vector<int> twoSum(vector<int>& nums, int target) {
+			vector<int> twoSum(vector<int>& nums, int target){
 				vector<int> ans;
 				
 				for(int i=0;i<nums.size(); i++){
@@ -7285,7 +8621,7 @@ Lecture-22
 		2. Coding Ninja Content:
 			Container with Maximum Water:
 				#include <bits/stdc++.h> 
-				int maxAreaContainer(vector<int> &arr) {
+				int maxAreaContainer(vector<int> &arr){
 					int n = arr.size();
 					int area, mainMax=0;
 
@@ -7302,7 +8638,7 @@ Lecture-22
 
 				//optimized:
 					#include <bits/stdc++.h> 
-					int maxAreaContainer(vector<int> &arr) {
+					int maxAreaContainer(vector<int> &arr){
 						int n = arr.size();
 						int left = 0;
 						int right = n - 1;
@@ -7325,8 +8661,7 @@ Lecture-22
 					}
 
 		3. Subarray with given sum
-			vector<int> subarraySum(vector<int>arr, int n, long long s)
-			{
+			vector<int> subarraySum(vector<int>arr, int n, long long s){
 				
 				int start = 0;
 				long long sum = 0;
@@ -7360,8 +8695,7 @@ Lecture-22
 			}
 
 			//or
-				vector<int> subarraySum(vector<int>arr, int n, long long s)
-				{
+				vector<int> subarraySum(vector<int>arr, int n, long long s){
 					// Your code here
 					vector<int> res;
 					bool bl = false;
@@ -7415,7 +8749,7 @@ Lecture-22
 			https://auth.geeksforgeeks.org/user/viveknikate/practice
 
 	//Char extraction & string addition:
-		int main () {
+		int main (){
 			string firstName = "John ";
 			char lastName =firstName[0];
 			char n = 'f';
@@ -9476,70 +10810,503 @@ POTD:-[Problem of the Day]
 			return arr;
 		}
 
-	42) 
-	
----------------------------------------------------------------------------------------------------------
-	#include <iostream>
-	#include <algorithm>
-	using namespace std;
-	int main(){
-		string s = "Hello World";
-		
-		std::cout << s << std::endl;
+	42) Find (indexes) All Anagrams in a String:
+		Sample Input 1 :
+			2
+			10 3
+			CBAEBABACD
+			ABC
+			5 2
+			ABADE
+			BA
+			Sample Output 1 :
+			0 6
+			0 1
+			Explanation For Sample Output 1:
+			Test Case 1:
 
-		std::cout << char(tolower('A')) << std::endl;
-		
-		//string upper to lower case
-		transform(s.begin(), s.end(), s.begin(), ::tolower);
-		// transform(s2.begin(), s2.end(), s2.begin(), ::tolower);
+			'STR' is ‘CBAEBABACD’ and ‘PTR’ is ‘ABC’.
 
-		std::cout << s << std::endl;
-		
-		transform(s.begin(), s.end(), s.begin(), ::toupper);
-		
-		std::cout << s << std::endl;
-		
-		return 0;
-	}
+			0-2 in 'STR' index 0,1,2 are ‘CBA’, and it is an anagram with ‘ABC’.
+			1-3 in 'STR' index 1,2,3 are ‘BAE’, and it is not anagram with ‘ABC’.
+			2-4 in 'STR' index 2,3,4 are ‘AEB’, and it is not anagram with ‘ABC’.
+			3-5 in 'STR' index 3,4,5 are ‘EBA’, and it is not anagram with ‘ABC’.
+			4-6 in 'STR' index 4,5,6 are ‘BAB’, and it is not anagram with ‘ABC’.
+			5-7 in 'STR' index 5,6,7 are ‘ABA’, and it is not anagram with ‘ABC’.
+			6-8 in 'STR' index 6,7,8 are ‘BAC’, and it is an anagram with ‘ABC’.
+			7-9 in 'STR' index 7,8,9 are ‘ACD’, and it is not anagram with ‘ABC’.
 
-	#include <iostream>
-	#include <algorithm>
-	using namespace std;
+			Hence, there are only two substrings in the given string 'STR'  that are anagram with given string  ‘PTR’ which are ‘CBA’, and ‘BAC’ and starting indices of respective anagram substrings are 0 and 6.
 
-	int main(){
-		string s1 = "VIVEK", s2="nikate", s3 = "third", s4 = "this is first letter capital sentence.";
-		
-		transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
-		std::cout << s1 << std::endl;
-		
-		transform(s2.begin(), s2.end(), s2.begin(), ::toupper);
-		std::cout << s2 << std::endl;
-		
-		s3[0] = toupper(s3[0]);
-		std::cout << s3 << std::endl;
-		
-		int i=0;
-		while(s4[i] != '\0'){
-			if(i==0) s4[i] = toupper(s4[i]);
-			if(isblank(s4[i])) s4[i+1] = toupper(s4[i+1]);
-			i++;
+
+			Test case 2:
+
+			'STR' is ‘ABADE’ and ‘PTR’ is ‘BA’.
+
+			In the given string ‘ABADE’ the substring of length 2 starting with index 0 is ‘AB’ which is an anagram with the string ‘BA’ and a substring of length 2 starting with index 1 is ‘BA’ which is also an anagram with the string ‘BA’. Because 0 and 1 are starting indices of the substrings, we print 0 and 1.
+			Sample Input 2:
+			2
+			10 4
+			BACDGABCDA
+			ABCD
+			7 1
+			ABABABA
+			A
+			Sample Output 2:
+			0 5 6
+			0 2 4 6
+
+		#include <bits/stdc++.h>
+		vector<int> findAnagramsIndices(string str, string ptr, int n, int m){
+			vector<int> ans;
+			unordered_map<char, int> charCountPtr, charCountWindow;
+
+			// Initialize the character counts for ptr
+			for (char c : ptr) {
+				charCountPtr[c]++;
+			}
+
+			for (int i = 0; i < n; i++) {
+				// Expand the window
+				charCountWindow[str[i]]++;
+
+				// Shrink the window if it's larger than m characters
+				if (i >= m) {
+					char leftChar = str[i - m];
+					if (charCountWindow[leftChar] > 1) {
+						charCountWindow[leftChar]--;
+					} else {
+						charCountWindow.erase(leftChar);
+					}
+				}
+
+				// Check if the current window is an anagram of ptr
+				if (i >= m - 1 && charCountWindow == charCountPtr) {
+					ans.push_back(i - m + 1);
+				}
+			}
+			return ans;
 		}
-		
-		std::cout << s4 << std::endl;	
-		return 0;
-	}
+
+	43) Armstrong Number
+		You are given an integer ‘NUM’ . Your task
+		is to find out whether this number is an
+		Armstrong number or not.
+		A k-digit number ‘NUM’ is an Armstrong
+		number if and only if the k-th power of
+		each digit sums to ‘NUM
+		eg.
+			153 = 1^3 + 5^3 + 3^3.
+			Therefore 153 is an Armstrong number
+		Sample Input 1:
+			1
+			13
+			Sample Output 1:
+			NO
+			Explanation For Sample Input 1:
+			As 1^2 + 3^2 = 10 which is not equal to 13.So we can say it is not an Armstrong number.
+			Sample Input 2:
+			1
+			371
+			Sample Output 2:
+			YES
+
+		#include <bits/stdc++.h> 
+		bool isArmstrong(int num) {
+			string s = to_string(num);
+			int len = s.length();
+			int sum=0;
+			int temp = num;
+			while(num){
+				sum += pow(num%10, len);
+				num /=10;
+			}
+			if(temp == sum)
+				return true;
+			return false;
+		}
+
+	44) Power of 2:
+		Given a non-negative integer N. The task is to check if N is a power of 2. 
+			More formally, check if N can be expressed as 2x for some integer x.
+			Example 1:
+
+			Input: 
+			N = 8
+			Output: 
+			YES
+			Explanation:
+			8 is equal to 2 raised to 3 (23 = 8).
+			Example 2:
+
+			Input: 
+			N = 98
+			Output: 
+			NO
+			Explanation: 
+			98 cannot be obtained by any power of 2.
+			Your Task:Your task is to complete the function isPowerofTwo() which takes n as a parameter and returns true or false by checking if the given number can be represented as a power of two or not.
+
+			Expected Time Complexity:O(log N).
+			Expected Auxiliary Space:O(1).
+
+			Constraints:
+			0 ≤ N ≤1018
+		class Solution{
+			public:
+			// Function to check if given number n is a power of two.
+			bool isPowerofTwo(long long n){
+				long long i;
+				for(i=0; i<=n/2, pow(2,i)<=n; i++){       //n = 1001, loop will go to till 500 if pow(2,i) <=n condition was not there,
+					if(pow(2,i) == n)
+						return true;
+				}
+				return false;
+			}
+		};
+
+	44) Find position of set bit
+		Given a number N having only one ‘1’ and all other ’0’s in its binary representation, 
+			find position of the only set bit. If there are 0 or more than 1 set bit the answer should be -1. 
+			Position of  set bit '1' should be counted starting with 1 from LSB side in binary representation of the number.
+				Example 1:
+
+				Input:
+				N = 2
+				Output:
+				2
+				Explanation:
+				2 is represented as "10" in Binary.
+				As we see there's only one set bit
+				and it's in Position 2 and thus the
+				Output 2.
+				Example 2:
+
+				Input:
+				N = 5
+				Output:
+				-1
+				Explanation:
+				5 is represented as "101" in Binary.
+				As we see there's two set bits
+				and thus the Output -1.
+				Your Task:
+				You don't need to read input or print anything. Your task is to complete the function findPosition() which takes an integer N as input and returns the answer.
+
+				Expected Time Complexity: O(log(N))
+				Expected Auxiliary Space: O(1)
+
+				Constraints:
+				0 <= N <= 108
+		class Solution {
+			public:
+			int findPosition(int N) {
+				if(N==0)
+					return -1;
+				
+				int cnt=0,pos=0;
+				while(N){
+					pos++;
+					if(N&1)
+						cnt++;
+
+					if(cnt>1)
+						return -1;
+					N>>=1;
+				}
+				return pos;
+			}
+		};
+
+	45) Check set bits:
+		Given a number N. You have to check whether every bit in 
+		 the binary representation of the given number is set or not.
+			Example 1:
+				Input:
+				N = 7
+				Output:
+				1
+				Explanation:
+				Binary for 7 is 111 all the
+				bits are set so output is 1
+			Example 2:
+				Input:
+				N = 8
+				Output:
+				0
+				Explanation:
+				Binary for 8 is 1000 all the
+				bits are not set so output is 0.
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function isBitSet() 
+				which takes an integer N as input parameters and returns 1 if 
+				all the bits in N's binary representation is set or return 0 otherwise.
+
+			Expected Time Complexity: O(1)
+			Expected Space Complexity: O(1)
+
+			Constraints:
+				0<=N<=100000
+		class Solution{
+			public:
+			int isBitSet(int N){
+				if(N==0)
+					return 0;
+				
+				while(N){
+					if(!(N&1)){
+						return 0;
+					}
+					N>>=1;
+				}
+				return 1;
+			}
+		};
+
+	46) 	Admission in Ninja Gram
+		Sample Input 1:
+			2
+
+			12
+			toosmallword
+			35
+			TheQuickBrownFoxJumpsOverTheLazyDog
+			
+			Sample Output 1:
+			NO
+			YES
+			Explanation For Sample Input 1:
+			In the first test case, the given string is “toosmallword” which contains 
+			the characters [‘t’,’o’,’s’,’m’,’a’,’l’,’w’,’r’,’d’], which doesn’t contain 
+			all the 26 alphabetic characters. Hence the answer is “NO”.
+
+			In the second test case, the given string is “TheQuickBrownFoxJumpsOverTheLazyDog” 
+			which contains the characters: [‘t’,’h’,’e’,’q’,’u’,’i’,’c’,’k’,’b’,’r’,’o’,’w’,’n’,’f’,’x’,’j’,’m’,’p,’’s’,’v’,’l,’a’,’z’,’y’,’ d’,’g’], 
+			which contains all the 26 alphabetic characters. Hence the answer is “YES”.
+		Sample Input 2:
+
+			2
+			16
+			CodingNinjas
+			10
+			CodeStudio
+			Sample Output 2:
+			NO
+			NO
+			Explanation For Sample Input 2:
+			In the first test case, the given string is “CodingNinjas” which contains the characters 
+			[‘c’,’o’,’d’,’i’,’n’,’g’,’i’,’j’,’a’,’s’], which doesn’t contain all the 26 
+			alphabetic characters. Hence the answer is “NO”.
 
 
-	Char Array:
+			In the first test case, the given string is “CodeStudio” which contains the characters 
+			[‘c’,’o’,’d’,’e’,’s’,’t’,’u’,’i’], which doesn’t contain all the 26 alphabetic characters. 
+			Hence the answer is “NO”.
 
-		#include <iostream>
-
-		int main(){
-			char str[] = "sadf";
-			std::cout << str[0] << std::endl;
-			std::cout << str << std::endl;
+		#include <bits/stdc++.h> 
+		bool ninjaGram(string &str){
+			//to convert string to lower-case,
+			transform(str.begin(),str.end(), str.begin(), ::tolower);
+			
+			char ch = 'a';
+			int i=0;
+			while(i<str.length()){
+				if(str[i] == ch){
+					ch++;
+					i=0;
+				}
+				i++;
+			}
+			if(ch > 'z')
+				return 1;
 			return 0;
 		}
+
+		//or
+		#include <bits/stdc++.h> 
+		bool ninjaGram(string &str){
+			
+			string lowerStr = "";
+			for (int i  = 0; i < str.length(); i++){
+				lowerStr += tolower(str[i]);
+			}
+			
+			int count[26]  = {0};
+			
+			for (int i  = 0 ; i < lowerStr.length(); i++){
+				count[lowerStr[i] - 'a']++;
+			}
+			for (int i = 0 ; i < 26; i++){
+				if(count[i] == 0){
+					return false;
+				}
+			}
+			return true;
+		}
+
+	47) Find All Anagrams in a String
+		https://leetcode.com/problems/find-all-anagrams-in-a-string/description/
+		Given two strings s and p, return an array of all the start 
+		 indices of p's anagrams in s. You may return the answer in any order.
+
+			An Anagram is a word or phrase formed by rearranging the letters of 
+			a different word or phrase, typically using all the original letters exactly once.
+			Example 1:
+				Input: s = "cbaebabacd", p = "abc"
+				Output: [0,6]
+				Explanation:
+				The substring with start index = 0 is "cba", which is an anagram of "abc".
+				The substring with start index = 6 is "bac", which is an anagram of "abc".
+			Example 2:
+				Input: s = "abab", p = "ab"
+				Output: [0,1,2]
+				Explanation:
+				The substring with start index = 0 is "ab", which is an anagram of "ab".
+				The substring with start index = 1 is "ba", which is an anagram of "ab".
+				The substring with start index = 2 is "ab", which is an anagram of "ab".
+			
+			Constraints:
+				1 <= s.length, p.length <= 3 * 104
+				s and p consist of lowercase English letters.
+		class Solution {
+			public:
+			bool areTheyEqual(int a1[26], int a2[26]){
+				for(int i=0;i<26;i++){
+					if(a1[i] != a2[i])
+						return 0;
+				}
+				return 1;
+			}
+
+			vector<int> findAnagrams(string s, string p) {
+				vector<int> ans;
+
+				int count1[26]={0}, count2[26]={0}, i=0;
+				//count1 array is for s
+				//count2 array is for p
+
+				//mapping for p string
+				while(i<p.length()){
+					// int ind = p[i]-'a';
+					count2[p[i]-'a']++;
+					i++;
+				}
+
+				//mapping for s string
+				i=0;
+				while(i<p.length() && i< s.length()){
+					// int ind = s[i] - 'a';
+					count1[s[i] - 'a']++;
+					i++;
+				}
+
+				if(areTheyEqual(count1,count2))
+					ans.push_back(i-p.length());
+
+				while(i<s.length()){
+					// int ind = s[i] - 'a';
+					count1[s[i] - 'a']++;
+					count1[s[i-p.length()]-'a']--;
+
+					i++;
+					if(areTheyEqual(count1,count2))
+						ans.push_back(i-p.length());
+				}
+				return ans;
+			}
+		};
+
+	48) Find first set bit
+		Given an integer N. The task is to return the position of first set bit 
+			found from the right side in the binary representation of the number.
+			Note: If there is no set bit in the integer N, then return 0 from the function.  
+
+			Example 1:
+				Input: 
+				N = 18
+				Output: 
+				2
+				Explanation: 
+				Binary representation of 18 is 010010,the first set bit from the right side is at position 2.
+			Example 2:
+				Input: 
+				N = 12 
+				Output: 
+				3 
+				Explanation: 
+				Binary representation of  12 is 1100, the first set bit from the right side is at position 3.
+			Your Task:
+				The task is to complete the function getFirstSetBit() that 
+				takes an integer n as a parameter and returns the position of first set bit.
+
+			Expected Time Complexity: O(log N).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				0 <= N <= 108
+		class Solution{
+			public:
+			//Function to find position of first set bit in the given number.
+			unsigned int getFirstSetBit(int n){
+				int cnt=0;
+				if(n==0)
+					return cnt;
+				while(n){
+					cnt++;
+					if(n&1){
+						break;
+					}
+					n>>=1;
+				}
+				return cnt;
+			}
+		};
+
+	49) Duplicate In Array
+		Sample Input 1:
+			2
+			5
+			4 2 1 3 1
+			7
+			6 3 1 5 4 3 2
+			Sample Output 1:
+			1
+			3
+			Explanation Of Sample Input 1:
+			For the first test case, 
+			The duplicate integer value present in the array is 1. Hence, the answer is 1 in this case.
+
+			For the second test case,
+			The duplicate integer value present in the array is 3. Hence, the answer is 3 in this case.
+			Sample Input 2:
+			2
+			6 
+			5 1 2 3 4 2  
+			9
+			8 7 2 5 4 7 1 3 6
+			Sample Output 2:
+			2
+			7
+		
+		#include <bits/stdc++.h>
+		int findDuplicate(vector<int> &arr) {
+			// for (int i = 0; i < arr.size(); i++)
+			//     for (int j = i + 1; j < arr.size(); j++)
+			//         if (arr[i] == arr[j])
+			//             return arr[i];
+
+			unordered_set<int> seen;
+
+			for(int i:arr){
+				if(seen.find(i) != seen.end())
+					return i;
+				seen.insert(i);
+			}
+		}
+
+	50) 
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 calender:
 	today 2nd sept 2023 (saturday)
