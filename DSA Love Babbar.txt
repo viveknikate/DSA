@@ -472,6 +472,21 @@ Lecture-2:
 				float / int = float		//if we divide float by int the answer will be floating point num.
 				double / int = double		//if we divide double by int the answer will be double.
 
+				eg.
+					#include <iostream>
+					#include<cmath>
+					using namespace std;
+					int main(){
+						int n=60, sum =101;
+						
+						double d = sum/(double)n;			//getting value in double.		
+						std::cout << d << std::endl;					//1.68333
+						std::cout << round(d) << std::endl;			//2
+						
+						return 0;
+					}
+
+
 			Relational:- 
 				To Check
 				== is equal to equal to (double equals to)
@@ -2720,8 +2735,7 @@ Lecture-6:
 				#include <math.h>
 				using namespace std;
 
-				int main()
-				{
+				int main(){
 					int num, i=0;
 					std::cout << "Enter num :" << std::endl;
 					cin>>num;
@@ -2739,6 +2753,23 @@ Lecture-6:
 					std::cout << binaryForm <<std::endl;	
 					return 0;
 				}
+
+				//or
+					#include <iostream>
+					#include<algorithm>
+					using namespace std;
+					int main(){
+						string s;
+						int n = 8;
+						while(n){
+							s += to_string(n%2);
+							n /= 2;
+						}
+						
+						reverse(s.begin(), s.end());
+						std::cout << s << std::endl;
+						return 0;
+					}
 			
 			eg. to keep same sequence of num.
 				#include <iostream>
@@ -3841,7 +3872,7 @@ Lecture-9:
 						//     mini = k[a];
 						// }
 						
-						//or using built in fuction
+						//or using built in function
 						mini = min(mini,k[a]);       //it will compare these 2 values we passed then 
 												// decides which is min & stores minimum value
 					}
@@ -3879,7 +3910,7 @@ Lecture-9:
 			--here passing array to function means passing memory address of that array to function,
 			  so as we learnt name of array holds the base/ starting memory address of array.
 			  eg.
-			  	int ar[10];		//here ar holds the memory address, so if we pass ar to fuction
+			  	int ar[10];		//here ar holds the memory address, so if we pass ar to function
 								//then we passing memory address of array, not copy of array.
 			
 			--so if you update the array inside any other function also, this will affect 
@@ -6958,28 +6989,56 @@ Lecture-20:
 		
 		5) Subarray or not?
 			#include <iostream>
-			#include <vector>
 			using namespace std;
 
-			int main (){
-				vector<int> array = {1,2,3,4,5,6,7,8,9};
-				vector<int> sequence = {2,3,4};
+			bool isSubArr(int mainArr[], int orSize, int part[], int partSize){
+				if(partSize > orSize)
+					return 0;
 				
-				int temp = 0;
-				for (int i = 0; i < sequence.size ();){
-					int h = temp;
-					for (h; h < array.size (); h++)
-						if (sequence[i] == array[h]){
-							i++;
-							temp = h;
-							break;
+				int k=0,i;
+				for(i=0;i<partSize;){
+					if(part[i] == mainArr[k]){
+						for(int tr = k;;tr++){
+							if((i < partSize) && tr != orSize && part[i] == mainArr[tr]){
+								i++;
+								if(i == partSize)
+								return 1;
+								continue;
+							}else{
+								return 0;
+							}
 						}
-					if (h == array.size ()){
-						std::cout << "not a subarray" << std::endl;
-						return 0;
 					}
+					if(k >= orSize)
+					break;
+					k++;
 				}
-				cout<<"Its a subarray";
+				return 0;
+			}
+
+			int main(){
+				int arr[] = {1,2,3,4,5,6,7,8,9,10}, len=10;
+				
+				int sub[] = {13,14,15};
+				int nSub[] = {6,7,8,9,10,11};
+				int largerSizeArr[] = {1,2,3,4,5,6,7,8,9,10,11};
+				
+				int testArr1[] = {4,5,6,7}, testLen1 = 4;
+				int testArr2[] = {8,9,10}, testLen2 = 3;
+				int testArr3[] = {9,10,11,12}, testLen3 = 4;
+				int testArr4[] = {11,12,15,16,20}, testLen4 = 5;
+
+				isSubArr(arr, len, sub, 3)? std::cout << "Sub is SubArray " << std::endl : std::cout << "Sub is not SubArray" << std::endl;
+				isSubArr(arr, len, nSub, 6)? std::cout << "nSub is SubArray " << std::endl : std::cout << "nSub is not SubArray" << std::endl;
+				isSubArr(arr, len, largerSizeArr, 11)? std::cout << "largerSizeArr is SubArray " << std::endl : std::cout << "largerSizeArr is not SubArray" << std::endl;
+				
+				isSubArr(arr, len, testArr1, testLen1)? std::cout << "testArr1 is SubArray " << std::endl : std::cout << "testArr1 is not SubArray" << std::endl;
+				isSubArr(arr, len, testArr2, testLen2)? std::cout << "testArr2 is SubArray " << std::endl : std::cout << "testArr2 is not SubArray" << std::endl;
+				isSubArr(arr, len, testArr3, testLen3)? std::cout << "testArr3 is SubArray " << std::endl : std::cout << "testArr3 is not SubArray" << std::endl;
+			
+				//not SubArray
+				isSubArr(arr, len, testArr4, testLen4)? std::cout << "testArr4 is SubArray " << std::endl : std::cout << "testArr4 is not SubArray" << std::endl;
+
 				return 0;
 			}
 ---------------------------------------------------------------------------------------------------------
@@ -7695,6 +7754,30 @@ Lecture-22
 				}
 			};
 
+			//or
+				class Solution {
+					public:
+					string reverseWords(string s) {
+						string revSentence;
+						string word;
+						for(int i=0; i<s.length(); i++){
+							if(s[i] == ' '){
+								reverse(word.begin(), word.end());
+								revSentence += word + " ";
+								word = "";
+								continue;
+							}
+							word += s[i];
+						}
+
+						//code to add last word
+						reverse(word.begin(), word.end());
+						revSentence += word;
+
+						return revSentence;
+					}
+				};
+
 		// Print first n Fibonacci Numbers
 			Given a number N, find the first N Fibonacci numbers. The first two number of the series are 1 and 1.
 				Example 1:
@@ -8372,37 +8455,35 @@ Lecture-22
 					}
 				};
 
-		// String Compression ❌(remain)
+		// String Compression
 			Given an array of characters chars, compress it using the following algorithm:
+				Begin with an empty string s. For each group of consecutive repeating characters in chars:
+				If the group's length is 1, append the character to s.
+				Otherwise, append the character followed by the group's length.
+				The compressed string s should not be returned separately, but instead, 
+				be stored in the input character array chars. Note that group lengths that 
+				are 10 or longer will be split into multiple characters in chars.
 
-			Begin with an empty string s. For each group of consecutive repeating characters in chars:
+				After you are done modifying the input array, return the new length of the array.
+				You must write an algorithm that uses only constant extra space.
 
-			If the group's length is 1, append the character to s.
-			Otherwise, append the character followed by the group's length.
-			The compressed string s should not be returned separately, but instead, 
-			be stored in the input character array chars. Note that group lengths that 
-			are 10 or longer will be split into multiple characters in chars.
+				Example 1:
+					Input: chars = ["a","a","b","b","c","c","c"]
+					Output: Return 6, and the first 6 characters of the input array should be: ["a","2","b","2","c","3"]
+					Explanation: The groups are "aa", "bb", and "ccc". This compresses to "a2b2c3".
+				Example 2:
+					Input: chars = ["a"]
+					Output: Return 1, and the first character of the input array should be: ["a"]
+					Explanation: The only group is "a", which remains uncompressed since it's a single character.
+				Example 3:
+					Input: chars = ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
+					Output: Return 4, and the first 4 characters of the input array should be: ["a","b","1","2"].
+					Explanation: The groups are "a" and "bbbbbbbbbbbb". This compresses to "ab12".
 
-			After you are done modifying the input array, return the new length of the array.
-			You must write an algorithm that uses only constant extra space.
-
-			Example 1:
-				Input: chars = ["a","a","b","b","c","c","c"]
-				Output: Return 6, and the first 6 characters of the input array should be: ["a","2","b","2","c","3"]
-				Explanation: The groups are "aa", "bb", and "ccc". This compresses to "a2b2c3".
-			Example 2:
-				Input: chars = ["a"]
-				Output: Return 1, and the first character of the input array should be: ["a"]
-				Explanation: The only group is "a", which remains uncompressed since it's a single character.
-			Example 3:
-				Input: chars = ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
-				Output: Return 4, and the first 4 characters of the input array should be: ["a","b","1","2"].
-				Explanation: The groups are "a" and "bbbbbbbbbbbb". This compresses to "ab12".
-
-			Constraints:
-				1 <= chars.length <= 2000
-				chars[i] is a lowercase English letter, 
-				uppercase English letter, digit, or symbol.
+				Constraints:
+					1 <= chars.length <= 2000
+					chars[i] is a lowercase English letter, 
+					uppercase English letter, digit, or symbol.
 
 			//NOT optimized.
 				class Solution {
@@ -8482,8 +8563,595 @@ Lecture-22
 						return s.length();
 					}
 				};
+
+			//Own code:
+				class Solution {
+					public:
+					int compress(vector<char>& chars) {
+						int cnt=1;
+						string s;
+						chars.push_back('-');
+						for(int i=0; i<chars.size()-1; i++){
+							if(chars[i] == chars[i+1])
+								cnt++;
+							else{
+								s += chars[i];
+								if(cnt >1){ 
+									string cntr= to_string(cnt);
+									for(char k: cntr)
+									s += k;
+								}
+								cnt=1;
+							}
+						}
+
+						for(int i=0;i<s.length();i++){
+							chars[i] = s[i];
+						}
+						return s.length();
+					}
+				};
+
+			//or
+				class Solution {
+					public:
+					int compress(vector<char>& chars) {
+
+						// if(chars.size()==1)
+						//     return 1;
+						int i=0;
+						int cnt=1,ansIndex=0;
+						chars.push_back('^');       //dummy char to handle insertion in chars to execute else part once for last char.
+						while(i < chars.size()-1){
+							if(chars[i] == chars[i+1])
+								cnt++;
+							else{
+								chars[ansIndex++] = chars[i];
+								if(cnt>1)
+									for(char ch: to_string(cnt))
+									chars[ansIndex++] = ch;
+								cnt=1;
+							}
+							i++;
+						}
+						return ansIndex;
+					}
+				};
+						
+			//or
+				class Solution {
+					public:
+					int compress(vector<char>& chars) {
+						string ans;
+						if(chars.size()==1)
+							return 1;
+						int cnt=1;
+						chars.push_back('-');
+						for(int i=0;i<chars.size()-1;i++){
+							if(chars[i]==chars[i+1])
+								cnt++;
+							else{
+								if(cnt==1)
+									ans+=chars[i];
+								else
+									ans+=chars[i]+to_string(cnt),cnt=1;
+							}
+						}
+						chars.clear();
+						for(auto it:ans)                    //for(char it:ans)
+						chars.push_back(it);
+						return chars.size();      
+					}
+				};
+---------------------------------------------------------------------------------------------------------
+	22/09/23
+Lecture-23:
+	Introduction to 2D Arrays in C++ LeetCode Questions
+		//2D Array Implementation:
+			#include <iostream>
+			using namespace std;
+
+			//if you are passing the 2D Array to function need to mention column size, else will get the error
+			void printArr(int[][4]);
+			bool isPresent(int [][4], int);
+			int main(){
+				//2D Array
+				
+				//initialization
+				int arr1[3][4] = {1,2,3,4,5,6,7,8,9,10,11,12};      //3 rows * 4 columns = 12 boxes
+				int arr2[3][4] = {{1,2,3,4},{5,6,7,8},{9,10,11,12}};
+				
+				printArr(arr1);
+				std::cout << std::endl;
+				printArr(arr2);
+				
+				//input from user
+				int arr3[3][4];
+				for(int row=0; row<3; row++)
+					for(int col=0; col<4; col++)
+						cin>>arr3[row][col];
+				
+				std::cout << std::endl;
+				printArr(arr3);
+				
+				int trgt1, trgt2;
+				std::cout << "Enter trgt1 & trgt2 : " << std::endl;
+				cin>>trgt1>>trgt2;
+				
+				//for trgt1
+				if(isPresent(arr1,trgt1))
+					cout<<"\nTarget1 :"<<trgt1<<"  is present";
+				else
+					cout<<"Target1 not present";
+				
+				(isPresent(arr1,trgt2))?  cout<<"\nTarget2 :"<<trgt2<<"  is present" :  cout<<"\nTarget2 "<<trgt2<<" not present";
+				
+				return 0;
+			}
+
+			//if you are passing the 2D Array to function need to mention column size.
+			void printArr(int a[][4]){          
+				//printing 2D Array
+				for(int row=0; row<3; row++){
+					for(int col=0; col<4; col++)
+						cout<<a[row][col]<<"\t";
+					cout<<"\n";
+				}
+			}
+
+			//Linear search function
+			bool isPresent(int a[][4], int n){
+				for(int row=0; row<3; row++)
+					for(int col=0; col<4; col++)
+						if(a[row][col] == n)
+							return 1;
+				return 0;
+			}
+
+		//wap to find sum of row elements
+			#include <iostream>
+			using namespace std;
+			int main(){
+				int arr[3][3] = {{3,3,3},{5,5,5},{10,11,12}};
+
+				int sum=0;
+				for(int i=0;i<3;i++){
+					for(int j=0;j<3;j++)
+						sum += arr[i][j];
+					std::cout << "ROW "<< i+1 << " = " << sum << std::endl;
+					sum=0;
+				}
+				return 0;
+			}
+				//ouput
+					ROW 1 = 9
+					ROW 2 = 15
+					ROW 3 = 33
+
+		//wap to find sum of column elements
+			#include <iostream>
+			using namespace std;
+			int main(){
+				int arr[3][3] = {{3,3,3},{5,5,5},{10,11,12}};
+
+				int sum=0;
+				for(int i=0;i<3;i++){
+					for(int j=0;j<3;j++)
+						sum += arr[j][i];
+					std::cout << "ROW "<< i+1 << " = " << sum << std::endl;
+					sum=0;
+				}
+				return 0;
+			}
+				//ouput
+					ROW 1 = 18
+					ROW 2 = 19
+					ROW 3 = 20
+
+		//wap to find row who has largest sum.
+			#include <iostream>
+			#include<vector>
+			using namespace std;
+			int main(){
+
+				int arr[3][3] = {{30,30,3},{5,5,5},{10,11,12}};
+				
+				vector<int> Lrow;
+				
+				int sum=0;
+				for(int i=0;i<3;i++){
+					for(int j=0;j<3;j++)
+						sum += arr[i][j];
+					std::cout << "ROW "<< i+1 << " = " << sum << std::endl;
+					Lrow.push_back(sum);
+					sum=0;
+				}
+				
+				//finding max sum row
+				int row=0;
+				for(int i=1;i<Lrow.size();i++){
+					if(Lrow[row] < Lrow[i])
+						row=i;
+				}
+				std::cout << "The maximum sum is present in row "<< row+1 << ", The largest sum is :"<< Lrow[row] << std::endl;
+				return 0;
+			}
+
+			//or
+				int largestRowSum(int arr[][3], int row, int col) {
+					int maxi = INT_MIN;
+					int rowIndex = -1;
+
+					for(int row=0; row<3; row++) {
+						int sum = 0;
+						for(int col=0; col<3; col++) {
+							sum += arr[row][col];
+						}
+
+						if(sum > maxi ) {
+							maxi = sum;
+							rowIndex = row;
+						}
+						
+					}
+					cout << "the maximum sum is " << maxi << endl;
+					return rowIndex;
+				}
+
+		//wap to print array element in wave format
+			Sample Input 1:
+				2
+				3 4
+				1 2 3 4
+				5 6 7 8
+				9 10 11 12
+				4 4
+				1 2 4 5
+				3 6 8 10
+				11 12 13 15
+				16 14 9 7
+				Sample Output 1:
+				1 5 9 10 6 2 3 7 11 12 8 4
+				1 3 11 16 14 12 6 2 4 8 13 9 7 15 10 5 
+				Explanation For Sample Input 1:
+				Here, the elements are printed in a form of a wave, first, the 0th column is printed from top to bottom then the 1st column from bottom to top, and so on. Basically, the even column is printed from top to bottom and the odd column in the opposite direction.
+			Sample Input 2:
+				2
+				1 1
+				3
+				1 2
+				6 5
+				Sample Output 2:
+				3
+				6 5 
+
+			//Program:
+				#include <iostream>
+				#include<vector>
+				using namespace std;
+				int main(){
+
+					int arr[3][3] = {{3,3,3},{5,5,5},{10,11,12}};
+					
+					vector<int> ans;
+					
+					int sum=0;
+					for(int i=0;i<3;i++){
+						for(int j=0;j<3;j++)
+							cout<<arr[i][j]<<"\t";
+						cout<<"\n";
+					}
+					
+					int r=0,c=0;
+					
+					while(c<3){
+						while(1){
+							// cout<<arr[r][c]<<"\t";
+							ans.push_back(arr[r][c]);
+							if(c%2==0){
+								r++;
+								if(r>2){
+									r--; 
+									break;
+								}
+							}else{
+								r--;
+								if(r<0){
+									r++;
+									break;
+								}
+							}
+						}
+						c++;
+					}
+					
+					std::cout << std::endl;
+					for(int i: ans)
+						cout<<i<<" ";
+					return 0;
+				}
+
+			//or
+				#include <bits/stdc++.h> 
+				vector<int> wavePrint(vector<vector<int>> arr, int nRows, int mCols){
+					int col=0,row=0;
+					vector<int> ans;
+					while(col<mCols){
+						while(1){
+							ans.push_back(arr[row][col]);
+							if(col%2==0){
+								row++;
+								if(row>=nRows){
+									row--;
+									break;
+								}
+							}else{
+								row--;
+								if(row<0){
+									row++; 
+									break;
+								}
+							}
+						}
+						col++;
+					}
+					return ans;
+				}
+
+			//or
+				#include <bits/stdc++.h> 
+				vector<int> wavePrint(vector<vector<int>> arr, int nRows, int mCols){
+					vector<int> ans;
+					for (int j = 0; j < mCols; j++){
+						if (j % 2 == 0){
+							for (int i = 0; i < nRows; i++){
+								ans.push_back(arr[i][j]);
+							}
+						}else{
+							for (int i = nRows - 1; i >= 0; i--){
+								ans.push_back(arr[i][j]);
+							}
+						}
+					}
+
+					return ans;
+				}
+
+			//shorthand
+				#include <bits/stdc++.h> 
+				vector<int> wavePrint(vector<vector<int>> arr, int nRows, int mCols){
+					vector<int> ans;
+					for (int j = 0; j < mCols; j++)
+						if (j % 2 == 0)
+							for (int i = 0; i < nRows; i++)
+								ans.push_back(arr[i][j]);
+						else
+							for (int i = nRows - 1; i >= 0; i--)
+								ans.push_back(arr[i][j]);
+					return ans;
+				}
+		
+		//WAP to print array element in Spiral order (Spiral Matrix):
+			https://leetcode.com/problems/spiral-matrix/
+			class Solution {
+				public:
+				vector<int> spiralOrder(vector<vector<int>>& matrix) {
+					vector<int> ans;
+
+					//retrived no.of rows & columns
+					int row = matrix.size();
+					int col = matrix[0].size();
+
+					//get to know the indexes
+					int startingRow = 0;
+					int startingCol = 0;
+					int endingRow = row-1;
+					int endingCol = col-1;
+
+					//got to know that how many elements are there.
+					int total = row * col;
+					int cnt=0;
+					//running the loop till we cover the all elements
+					while(cnt<total){
+						
+						//printing starting Row
+						for(int index=startingCol; cnt<total && index<=endingCol; index++){
+							ans.push_back(matrix[startingRow][index]);
+							cnt++;
+						}
+						startingRow++;
+
+						//printing ending Col
+						for(int index=startingRow; cnt<total && index<=endingRow; index++){
+							ans.push_back(matrix[index][endingCol]);
+							cnt++;
+						}
+						endingCol--;
+
+						//printing ending Row
+						for(int index=endingCol; cnt<total && index>=startingCol; index--){
+							ans.push_back(matrix[endingRow][index]);
+							cnt++;
+						}
+						endingRow--;
+
+						//printing starting col
+						for(int index=endingRow; cnt<total && index>=startingRow; index--){
+							ans.push_back(matrix[index][startingCol]);
+							cnt++;
+						}
+						startingCol++;
+					}
+					return ans;
+				}
+			};
+
+			//or
+				class Solution {
+					public:
+					vector<int> spiralOrder(vector<vector<int>>& matrix) {
+						int row = matrix.size();
+						int col = matrix[0].size();
+
+						//creating vector
+						vector<int> ans;
+						
+						//indexes
+						int startingRow = 0;
+						int startingCol = 0;
+						int endingRow = matrix.size();
+						int endingCol = matrix[0].size();
+
+						int totalElements = row * col;
+						int cnt=0;
+
+						while(cnt<totalElements){
+							//traversing starting Row
+							for(int i=startingCol; cnt<totalElements && i<endingCol; i++){
+								ans.push_back(matrix[startingRow][i]);
+								cnt++;
+							}
+							startingRow++;
+
+							//traversing last col
+							for(int i=startingRow; cnt<totalElements && i<endingRow; i++){
+								ans.push_back(matrix[i][endingCol-1]);
+								cnt++;
+							}
+							endingCol--;
+							
+							//traversing last Row
+							for(int i=endingCol-1; cnt<totalElements && i>=startingCol; i--){
+								ans.push_back(matrix[endingRow-1][i]);
+								cnt++;
+							}
+							endingRow--;
+							
+							//traversing starting col
+							for(int i=endingRow-1; cnt<totalElements && i>=startingRow; i--){
+								ans.push_back(matrix[i][startingCol]);
+								cnt++;
+							}
+							startingCol++;
+						}
+						return ans;
+					}
+				};
+		
+		//WAP Rotate Image (array, column to row)
+			https://leetcode.com/problems/rotate-image/
+			//taking extra space by creating 2 vectors ans & temp,
+				class Solution {
+					public:
+					void rotate(vector<vector<int>>& matrix) {
+						vector<vector<int>> ans;
+						vector<int> temp;
+						for(int col=0; col<matrix[0].size(); col++){
+							for(int row=matrix.size()-1; row>=0; row--){
+								temp.push_back(matrix[row][col]);
+							}
+							ans.push_back(temp);
+							temp.clear();
+						}
+						matrix = ans;
+					}
+				};
+			
+			//In-Place (without taking extra space)
+				class Solution {
+					public:
+					void rotate(vector<vector<int>>& matrix) {
+						int row = matrix.size();
+						for(int i=0; i<row;i++){
+							for(int j=0; j<=i;j++){
+								swap(matrix[i][j], matrix[j][i]);
+							}
+						}
+						for(int i=0;i<row;i++){
+							reverse(matrix[i].begin(), matrix[i].end());
+						}
+					}
+				};
+
+		// Search a 2D Matrix:
+			https://leetcode.com/problems/search-a-2d-matrix/description/
+			class Solution {
+				public:
+				bool searchMatrix(vector<vector<int>>& matrix, int target) {
+
+					int row = matrix.size();
+					int col = matrix[0].size();
+
+					int start =0;
+					int end= row*col -1;
+					int total = row*col;
+					int mid = (start+end)/2;
+
+					while(start<=end){
+					int rowIndex = mid / col;
+					int colIndex = mid % col;
+					int value = matrix[rowIndex][colIndex];
+					if(value == target)
+						return 1;
+					else if(value < target)
+						start = mid + 1;
+					else
+						end = mid - 1;
+					mid = (start + end )/2;
+					}
+					return false;
+				}
+			};
+	
+		// Search a 2D Matrix II:
+			https://leetcode.com/problems/search-a-2d-matrix-ii/description/
+			-here remember that, YOU ARE STARTING TO SEARCH THE TARGET VALUE FROM LAST COLUMN & STARTING ROW.
+			class Solution {
+				public:
+				bool searchMatrix(vector<vector<int>>& matrix, int target) {
+					// int row=0,col=0;
+					// for(row;row<matrix.size();row++)
+					//     for(col=0;col<matrix[0].size();col++)
+					//         if(target == matrix[row][col])
+					//             return 1;
+					// return 0;
+					int row = matrix.size();
+					int col = matrix[0].size();
+
+					int rowIndex = 0;
+					int colIndex = col -1;
+
+					while(rowIndex<row && colIndex>=0){
+						int value = matrix[rowIndex][colIndex];
+						if(value == target)
+							return 1;
+						else if(value<target)
+							rowIndex++;
+						else
+							colIndex--;
+					}
+					return 0;
+				}
+			};
+	
+	❌Pending task,
+		10- question leet code one 2D array
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
+	//Ternary Operator
+		#include <iostream>
+		using namespace std;
+		int main(){
+			//both ways work
+			//cout function within ternary operator
+			(1==1)? cout<<"Right 1==1"<<endl : cout<<"Wrong X"<<endl;
+			
+			//ternary operator within cout function
+			std::cout << ((2==20)? "Yes True.. 2==20" :"No Wrong 2!=20") << std::endl;
+			
+			return 0;
+		}
+
 	//Curly braces related..
 
 		#include <iostream>
@@ -8502,6 +9170,23 @@ Lecture-22
 			return 0;
 		}
 	
+	//If-else without using {}
+		#include <iostream>
+		using namespace std;
+		int main() {
+			int n = 91,cnt=80;
+			if (n == 90)
+				cout << "It's 90.. ayyyyye.." <<  endl,
+				cout << "Another sentence" <<  endl;
+			else
+				cout << "Wrong, it's not 90" <<  endl, 
+				cout << "It's the else part without using {} braces" <<  endl, 
+				cnt = 10, 
+				cout << "The count in the else block is " << cnt <<  endl;
+
+			return 0;
+		}
+		
 	//Label
 		if() can accept any non-zero or -ve value considered as true 
 		if 0 then false.
@@ -8599,7 +9284,7 @@ Lecture-22
 		}
 
 	//Remain 
-		//Line 4237 Triplet sum didn't understand❌ (come back here later.).
+		//Line 4499 Triplet sum didn't understand❌ (come back here later.).
 		-Check TLE again (Time Limit Exceeded). https://www.geeksforgeeks.org/overcome-time-limit-exceedtle/
 
 	//Self Solved:
@@ -8854,6 +9539,41 @@ Lecture-22
 			8 % 5 = 3						|		8 % 10 = 8
 			9 % 5 = 4						|		9 % 10 = 9
 			10 % 5 = 0					|		10 % 10 = 0
+
+	//Finding maximum num from vector
+		-using max_element function.
+		-we need to take iterator for this.
+		-max_element function found in algorithm header file sp include algorithm.
+			#include <iostream>
+			#include<vector>
+			#include<algorithm>
+			using namespace std;
+
+			int main(){
+				vector<int> ans = {1,2,3,4,5,6,7,8,9,910};
+				
+				auto maxer = max_element(ans.begin(), ans.end());
+				std::cout << *maxer << std::endl;
+				
+				//max element from 3rd position to 7th position, 0-index based. means between 4 & 8.
+				//both index inclusive 3rd & 7th also, but max_element function exclude the last index that's why we added 1 manually
+				maxer = max_element(ans.begin()+3, ans.begin()+7+1);        
+				std::cout <<*maxer << std::endl;
+
+				//To know the type of particular variable:
+
+				auto maxer = max_element(ans.begin(), ans.end());
+				std::cout << *maxer << std::endl;
+				std::cout << typeid(maxer).name() << std::endl;
+				std::cout << typeid(ans).name() << std::endl;
+				
+				int c;
+				std::cout << typeid(c).name() << std::endl;
+				string s="asdf";
+				std::cout << typeid(s).name() << std::endl;
+
+				return 0;
+			}
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array	
@@ -9897,22 +10617,42 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 
-	24) Set Matrix Ones
-		#include <bits/stdc++.h> 
-		void setMatrixOnes(vector<vector<int>> &MAT, int n, int m){
-			vector<vector<int>> ans(n, vector<int>(m,0));
-			for(int i=0;i<n; i++){
-				for(int j=0;j<m;j++){
-					if(MAT[i][j] == 1){
-						for(int b=0;b<m;b++)
-							ans[i][b] =1;                
-						for(int a =0;a<n;a++)
-							ans[a][j] = 1;
+	24) Set Matrix Ones:
+		//basics to know:
+			#include <iostream>
+			#include<vector>
+			using namespace std;
+
+			int main(){
+				//2d vector with 4; 10 rows 5 columns initialized with 4 (default value).
+				vector<vector<int>> ans (10, vector<int> (5,4));
+				
+				for(int i=0;i<10; i++){
+					for(int j=0;j<5; j++)
+						cout<<ans[i][j]<<"\t";
+					cout<<endl;
+				}
+				
+				std::cout << "End" << std::endl;
+				return 0;
+			}
+
+		//not optimized:	
+			#include <bits/stdc++.h> 
+			void setMatrixOnes(vector<vector<int>> &MAT, int n, int m){
+				vector<vector<int>> ans(n, vector<int>(m,0));
+				for(int i=0;i<n; i++){
+					for(int j=0;j<m;j++){
+						if(MAT[i][j] == 1){
+							for(int b=0;b<m;b++)
+								ans[i][b] =1;                
+							for(int a =0;a<n;a++)
+								ans[a][j] = 1;
+						}
 					}
 				}
+				MAT = ans;
 			}
-			MAT = ans;
-		}
 
 		//optimized:
 			#include <bits/stdc++.h> 
@@ -10809,6 +11549,54 @@ POTD:-[Problem of the Day]
 			}
 			return arr;
 		}
+		
+		//or
+			#include <bits/stdc++.h> 
+
+				// long long ConvertToNum(vector<int> a){
+				//     long long num=0;
+				//     for(int i=0;i<a.size();i++){
+				//         num = num * 10 + a[i];
+				//     }
+				//     return num+1;
+				// }
+
+			vector<int> addOneToNumber(vector<int> arr){
+				// long long n = ConvertToNum(arr);
+				// vector<int> ans;
+				// string s = to_string(n);
+				
+				// for(int i=0;i<s.length();i++)
+				//     ans.push_back(s[i]-48);
+				
+				// return ans;
+
+				for(int i=arr.size()-1; i>=0; i--){
+					if(i == arr.size()-1)
+						arr[i] = arr[i]+1;
+					if(arr[i]>9 && i>0){
+						int l = arr[i] % 10;
+						int s = arr[i] /10;
+						arr[i] = l;
+						arr[i-1] = arr[i-1] + (s);
+					}
+				}
+
+				if(arr[0]> 9){
+					int n = arr[0] % 10;
+					int s = arr[0] / 10;
+					arr[0] = n;
+					arr.insert(arr.begin(),s);
+				}
+
+				//to remove trailing zeros
+				int i=0;
+				while(arr[i] == 0){
+					arr.erase(arr.begin());
+				}
+
+				return arr;
+			}
 
 	42) Find (indexes) All Anagrams in a String:
 		Sample Input 1 :
@@ -11217,6 +12005,76 @@ POTD:-[Problem of the Day]
 			}
 		};
 
+		//own solution found char array used here
+			class Solution {
+				public:
+				bool areSame(char a[], char b[]){
+					for(int i=0;i<26;i++)
+						if(a[i] != b[i])
+							return 0;
+					return 1;
+				}
+				vector<int> findAnagrams(string s, string p) {
+					vector<int> ans;
+					if(s.size()<p.size())
+						return ans;
+					//mapping p's letters
+					char forP[26] ={0};
+					for(int i=0;i<p.length();i++){
+						forP[p[i] - 'a']++;
+					}
+
+					int i=0;
+					while(i<=s.length()-p.length()){
+						string temp = s.substr(i,p.length());
+						//mapping here for temp
+						char forS[26] = {0};
+						for(int l=0; l<temp.length(); l++)
+							forS[temp[l]-'a']++;
+
+						if(areSame(forS,forP))
+							ans.push_back(i);
+						i++;
+					}
+					return ans;
+				}
+			};
+
+		//vector used here.
+			class Solution {
+				public:
+				bool areSame(vector<char> a, vector<char> b){
+					for(int i=0;i<a.size();i++)
+						if(a[i] != b[i])
+							return 0;
+					return 1;
+				}
+				vector<int> findAnagrams(string s, string p) {
+					vector<int> ans;
+					if(s.size()<p.size())
+						return ans;
+					//mapping p's letters
+					vector<char> forP(26,0);
+					for(int i=0;i<p.length();i++){
+						forP[p[i] - 'a']++;
+					}
+
+					int i=0;
+					while(i<=s.length()-p.length()){
+						string temp = s.substr(i,p.length());
+						//mapping here for temp
+						vector<char> forS(26,0);
+						for(int l=0; l<temp.length(); l++)
+							forS[temp[l]-'a']++;
+
+						if(areSame(forS,forP))
+							ans.push_back(i);
+						i++;
+					}
+					return ans;
+				}
+			};
+
 	48) Find first set bit
 		Given an integer N. The task is to return the position of first set bit 
 			found from the right side in the binary representation of the number.
@@ -11305,7 +12163,1161 @@ POTD:-[Problem of the Day]
 			}
 		}
 
-	50) 
+	50) Different Bits Sum Pairwise:
+			Sample Input 1 :
+				2
+				2
+				1 2
+				2
+				6 6
+				Sample Output 1 :
+				4
+				0
+				Explanation For Sample Input 1 :
+				Test Case 1:
+				All the possible pairs in the given array are:-
+				f(1, 1) - as both numbers are same, no. of bit differences is 0
+				f(1, 2) - 1 in binary is (0001) and 2 in binary is (0010). There are 2 bits which are different in both the numbers. Hence, no. of bit differences is 2.
+				f(2, 2) - as both numbers are the same, no, of bit differences is 0
+				f(2, 1) - same as (1, 2), hence no. of bit differences is 2.
+				Summing the above values (0+2+0+2) we get 4. Hence, the output is 4.
+
+				Test Case 2:
+				There is only one possible pair (6,6). As both the numbers are sum, the output is 0.
+			Sample Input 2 :
+				2
+				3 
+				1 3 5
+				4
+				4 6 7 8
+				Sample Output 2 :
+				8
+				26
+
+		//NOT Optimized
+			#include <bits/stdc++.h> 
+			int differentBitsSumPairwise(vector<int> &arr, int n){
+				int sum=0;
+				for(int i=0;i<n;i++){
+					for(int j=0;j<n;j++){
+						
+						if(arr[i] == arr[j]){
+							continue;
+						}else{
+							int cnt=0;
+							int outer = arr[i],inner=arr[j];
+							while(outer !=0 || inner !=0){
+								int LBout = outer&1;
+								int LBinn = inner&1;
+								if(LBout ^ LBinn == 1){
+								cnt++;
+								}
+								outer>>=1;
+								inner>>=1;
+							}
+							sum += cnt;
+						}
+					}
+				}
+				return sum;
+			}
+
+		//Optimized:
+			#include <bits/stdc++.h> 
+			int differentBitsSumPairwise(vector<int> &arr, int n){
+				int sum = 0;
+				// Count the number of set bits at each position
+				for (int i = 0; i < 32; i++) { 
+					// Assuming integers are 32 bits
+					int countOnes = 0;
+					
+					for (int j = 0; j < n; j++) {
+						if ((arr[j] >> i) & 1) {
+							countOnes++;
+						}
+					}
+					
+					int countZeros = n - countOnes;
+					
+					// For each position, add the count of different bits to the sum
+					// Multiply by 2 to count both 0->1 and 1->0 transitions
+					sum += countOnes * countZeros * 2; 
+				}
+				return sum;
+			}
+
+	51) First Unique Character in a String
+		Sample Input 1:
+			2
+			bbabcbcb
+			babaabea
+			Sample Output 1:
+			a
+			e
+
+			Explanation Of Sample Input 1:
+				For the first test case, 
+				the first non-repeating character is ‘a’. As depicted the character 
+				‘b’ repeats at index 1, 3, 5, 7, and character ‘c’ repeats at index 6. Hence we return the character ‘a’ present at index 2.
+				
+				For the second test case, 
+				the character ‘e’ is the first non-repeating character. As depicted the character ‘b’ repeats at 
+				index 2, 5, and character ‘a’ repeats at index 3, 4, and 7. Hence we return the character ‘e’ present at index 6.
+		
+		Sample Input 2:
+			3
+			cbbd
+			bebeeed
+			abcd
+			Sample Output 2:
+			c
+			d
+			a
+
+		#include <bits/stdc++.h> 
+		char findNonRepeating(string str) {
+			int cnt=1;
+			for(int i=0;i<str.length();i++){
+				if(isalpha(str[i])){
+					char ch = str[i];
+					int j=i+1;
+					cnt=1;
+					while(j < str.length()){
+						if(isalpha(str[j]))
+							if(str[i] == str[j]){
+							str[j] = '0';
+							cnt++;
+							}
+						j++;
+					}
+				}
+				if(cnt == 1)
+					return str[i];
+			}
+			return '#';
+		}	
+
+	52) MegaPrime Numbers:
+		Sample Input 1 :
+			2
+			2 15
+			11 24
+			Sample Output 1 :
+			4
+			1
+			Explanation Of Sample Input 1 :
+				Test Case 1:
+					‘Left’ = ‘2’ and ‘Right’ = ‘15’ 
+				All prime numbers from ‘2’ to ‘15’ are 2, 3, 5, 7, 11, 13
+
+					2 is ‘megaprime’ number because its individual digit ‘2’ is prime.
+					3 is ‘megaprime’ number because its individual digit ‘3’ is prime.
+					5 is ‘megaprime’ number because its individual digit ‘5’ is prime.
+					7 is ‘megaprime’ number because its individual digit ‘7’ is prime.
+					11 is not ‘megaprime’ number because its individual digits ‘1’ and ‘1’ both are not prime.
+					13 is not ‘megaprime’ number because its individual digits ‘1’ is not prime.
+					Hence because there are four ‘megaprime’ numbers 2, 3, 5, 7 out of 2, 3, 5, 7, 11, 13, we return four.
+				Test case 2:
+					‘Left’ = 11 and ‘Right’ = 24 
+				All prime numbers from ‘11’ to ‘24’ are 11, 13, 17, 19, 23
+					11 is not a ‘megaprime’ number because its individual digit ‘1’ is not prime.
+					13 is not ‘megaprime’ number because its individual digit ‘1’ is not prime.
+					17 is not ‘megaprime’ number because its individual digit ‘1’ is not prime.
+					19 is not ‘megaprime’ number because its individual digits ‘1’ and ‘9’ both are not prime.
+					23 is ‘megaprime’ number because its individual digits ‘2’ and ‘3’ both are prime.
+
+				Since there is only one ‘megaprime’ number, 23 out of 11 13, 17, 19, 23, we return one.
+		Sample Input 2 :
+			2
+			1 11
+			1 100
+			Sample Output 2 :
+			4
+			8
+		#include <bits/stdc++.h> 
+		bool isPrime(int num){
+			if(num ==1)
+				return 0;
+			else if(num == 2 || num ==3){
+				return 1;
+			}else{
+				int i=2;
+				for(; i<= num/2; i++){
+					if(num % i == 0)
+						return 0;
+				}
+				if(i > (num/2))
+					return 1;
+			}
+			return 0;
+		}
+		int countMegaPrimeNumber(int left, int right) {
+			vector<int> megaPrime;
+			vector<int> primeNums;
+			for(int i=left; i<=right; i++){
+				int num = i, start=2;
+				while(start <= num/2){
+					if(num % start == 0){
+						break;
+					}
+					start++;
+				}
+				if(start > (num/2))
+					primeNums.push_back(num);
+			}
+
+			for(int i=0; i<primeNums.size(); i++){
+				int n = primeNums[i];
+				while(n){
+					int lastDigit = n % 10;
+					if(lastDigit == 0)
+						break;
+					else if(isPrime(lastDigit)){
+						n/=10;
+					}else{
+						break;
+					}
+				}
+
+				if(n == 0)
+					megaPrime.push_back(primeNums[i]);
+			}
+			return megaPrime.size();
+		}
+
+		//or
+
+			#include <iostream>
+			#include <bits/stdc++.h> 
+			using namespace std;
+
+			bool isPrime(int num){
+				if(num ==1)
+					return 0;
+				else if(num == 2 || num ==3){
+					return 1;
+				}else{
+					int i=2;
+					for(; i<= num/2; i++){
+						if(num % i == 0)
+							return 0;
+					}
+					if(i > (num/2))
+						return 1;
+				}
+				return 0;
+			}
+			int countMegaPrimeNumber(int left, int right) {
+				vector<int> megaPrime;
+				vector<int> primeNums;
+				for(int i=left; i<=right; i++){
+					int num = i, start=2;
+					while(start <= num/2){
+						if(num % start == 0){
+							break;
+						}
+						start++;
+					}
+					if(start > (num/2))
+						primeNums.push_back(num);
+				}
+
+				for(int i=0; i<primeNums.size(); i++){
+					int n = primeNums[i];
+					while(n){
+						int lastDigit = n % 10;
+						if(lastDigit == 0)
+							break;
+						else if(isPrime(lastDigit))
+							n/=10;
+						else
+							break;
+					}
+					if(n == 0)
+						megaPrime.push_back(primeNums[i]);
+				}
+				cout<<endl<<"Megaprimes are "<<endl;
+				for(int j=0; j<megaPrime.size(); j++)
+					cout<<megaPrime[j]<<" ";
+				cout<<"\n";
+				return megaPrime.size();
+			}
+
+			int main()
+			{
+				cout<<countMegaPrimeNumber(7,2547)<<endl;
+				return 0;
+			}
+
+	53) (moderate) Predict the Winner:
+		Description:
+			Sample Input 1:
+				2
+				5
+				2
+				4
+				3
+				Sample Output 1:
+					3
+					1
+				Explanation Of Sample Input 1:
+				For the first test case:
+					The game starts with Person 1. He passes the ball to person 2. 
+					The game pauses here. Person 2 passes the ball to person 3 and leaves the game. 
+					Then the game resumes. Person 3 passes the ball to person 4. The game pauses here. 
+					Person 4 passes the ball to person 5 and leaves the game. 
+					Then the game resumes with person 5 having the ball in his hand. 
+					He passes the ball to person 1. The game pauses here. Person 1 passes the ball 
+					to person 3 and leaves the game. Then the game resumes with person 3 having the ball in his hand. 
+					He passes the ball to person 5. The game pauses here. Person 5 passes the ball to person 3 
+					and leaves the game. Now only person 3 remains and the game stops here.
+
+				Hence, the winner of the game will be Person 3 and the answer will be 3.
+				For the second test case:
+					The game starts with Person 1. He passes the ball to person 2. Person 2 passes the ball to Person 3. 
+					The game pauses here. Person 3 passes the ball to Person 4 and leaves the game. Then the game resumes. 
+					Person 4 passes the ball to person 1. Person 1 passes the ball to person 2.The game pauses here. 
+					Person 2 passes the ball to person 4 and leaves the game. Then the game resumes with Person 4 
+					having the ball in his hand. He passes the ball to person 1. Person 1 passes the ball to Person 4. 
+					The game pauses here. Person 4 passes the ball to person 1 and leaves the game. 
+					Now only person 1 remains and the game stops here.
+					Hence, the winner of the game will be Person 1 and the answer will be 1.
+			Sample Input 2:
+				1
+				4
+				1
+				Sample Output 2:
+				4
+		//not optimized
+			#include <bits/stdc++.h> 
+			int predictTheWinner(int n, int k) {
+				vector<int> v;
+				for(int i=1; i<=n; i++)
+					v.push_back(i);
+
+				if(v.size() == 1)
+					return v[0];
+
+				if(k==1)
+					return n;
+
+				int pointer=0;
+				while(v.size() > 1){
+					pointer = (pointer+k-1) % v.size();
+					v.erase(v.begin()+pointer);
+				}
+				return v[0]; 
+			}
+
+		//Optimized
+			#include <bits/stdc++.h> 
+			int predictTheWinner(int n, int k) {
+				if (k == 1) {
+					return n;
+				}
+
+				int winner = 0;
+				for (int i = 2; i <= n; i++) {
+					winner = (winner + k) % i;
+				}
+
+				return winner + 1;
+			}
+
+	54) Ninja And The Nested Ranges:
+		//Not Optimized:
+			Sample Input 1 :
+				2
+				3
+				3 8
+				1 3
+				7 8
+				4
+				4 9
+				9 10
+				4 10
+				2 3
+				Sample Output 1 :
+				1 0 0
+				0 0 1
+				0 0 1 0
+				1 1 0 0
+				Explanation Of Sample Output 1 :
+				Test Case 1 :  
+				For ‘RESULT[ 0 ]’ array:
+				Since the range [3, 8] contains the range [7, 8], the output corresponding to [3, 8] is 1.
+				The range [1, 3] does not contain any of the ranges. Therefore, the output corresponding to [1, 3] is 0.
+				The range [7, 8] does not contain any of the ranges. Therefore, the output corresponding to [7, 8] is 0.
+
+				For ‘RESULT[ 1 ]’ array:
+				The range [3, 8] is not contained by any of the ranges. Therefore, the output corresponding to [3, 8] is 0.
+				The range [1, 3] is not contained by any of the ranges. Therefore, the output corresponding to [1, 3] is 0.
+				Since the range [7, 8] is contained by the range [3, 8], the output corresponding to [7, 8] is 1.
+
+				Test Case 2 :     
+				For ‘RESULT[ 0 ]’ array:
+				The range [4, 9] does not contain any of the ranges. Therefore, the output corresponding to [4, 9] is 0.
+				The range [9, 10] does not contain any of the ranges. Therefore, the output corresponding to [9, 10] is 0.
+				Since the range [4, 10] contains the ranges [4, 9] and [9, 10], the output corresponding to [4, 10] is 1.
+				The range [2, 3] does not contain any of the ranges. Therefore, the output corresponding to [2, 3] is 0.
+
+				For ‘RESULT[ 1 ]’ array:
+				Since the range [4, 9] is contained by the range [4, 10], the output corresponding to [4, 9] is 1.
+				Since the range [9, 10] is contained by the range [4, 10], the output corresponding to [9, 10] is 1.
+				The range [4, 10] is not contained by any of the ranges. Therefore, the output corresponding to [4, 10] is 0.
+				The range [2, 3] is not contained by any of the ranges. Therefore, the output corresponding to [2, 3] is 0.
+				Sample Input 2 :
+				2
+				5
+				5 8
+				8 11
+				5 13
+				13 14
+				3 15
+				4
+				22 91
+				25 40
+				66 85
+				57 83
+				Sample Output 2 :
+				0 0 1 0 1
+				1 1 1 1 0
+				1 0 0 0
+				0 1 1 1
+
+			#include <iostream>
+			#include <bits/stdc++.h> 
+			using namespace std;
+			vector<vector<int>> nestedRangesCheck(vector<vector<int>> &ranges, int n){
+				vector<vector<int>> ans;
+				vector<int> temp;
+
+				int i=0;
+
+				//for first array checking contains or not?
+				while(i<n){
+					int root1 = ranges[i][0];
+					int root2 = ranges[i][1];
+					int inner=0;
+					bool flag = true;
+					while(inner<n){
+						if(inner == i){
+							inner++;
+							continue;
+						}
+						int check1 = ranges[inner][0];
+						int check2 = ranges[inner][1];
+
+						if(root1<= check1 && root2>=check2){
+							temp.push_back(1);
+							flag = false;
+							break;
+						}
+						inner++;
+					}
+					if(flag)
+						temp.push_back(0);
+					i++;
+				}
+				ans.push_back(temp);
+				temp.clear();
+				
+				//for second array checking contained by any of ranges
+				i=0;
+				while(i<n){
+					int root1 = ranges[i][0];
+					int root2 = ranges[i][1];
+					bool flag = true;
+					int inner = 0;
+					while(inner<n){
+						if(inner == i){
+							inner++;
+							continue;
+						}
+						
+						int check1 = ranges[inner][0];
+						int check2 = ranges[inner][1];
+						
+						if(check1<=root1 && check2>=root2){
+							temp.push_back(1);
+							flag = false;
+							break;
+						}
+						inner++;
+					}
+					if(flag)
+						temp.push_back(0);
+					i++;
+				}
+				ans.push_back(temp);
+				return ans;
+				}
+
+			int main(){
+				vector<vector<int>> ans;
+				// int n=4;
+				// vector<vector<int>> temp = {{4,9},{9,10},{4,10},{2,3}};
+				int n=3;
+				vector<vector<int>> temp = {{3,8},{1,3},{7,8}};
+				ans = nestedRangesCheck(temp, n);
+				
+				for(int i=0;i<2;i++){
+					for(int j=0;j<n;j++)
+						cout<<ans[i][j]<<" ";
+					cout<<"\n";
+				}
+				return 0;	
+			}
+
+	55) Count unsorted columns
+		You are given an array ‘STRINGS’ having
+				‘N’ number of strings. The strings are
+				assumed to be arranged such that there
+				is one string in one line.
+				You need to return the number of columns
+				that are not sorted lexicographically.
+				Note:
+				The length of all the string in the array is the same
+		Sample Input 1:
+			2
+			3
+			bccde
+			dehrt
+			gabzy
+			2
+			wr
+			yz
+			Sample Output 1:
+			2
+			0
+			Explanation Of Sample Input 1:
+			Test Case 1: In the given strings -
+			Column 0 - b, d, g is sorted
+			Column 1 - c, e, a is not sorted
+			Column 2 - c, h, b is not sorted
+			Column 3 - d, r, z is sorted
+			Column 4 - e, t, y is sorted.
+
+			Column 1, column 2 is not sorted, so the required answer is ‘2’.
+
+			Test Case 2: Both the columns (‘w’, ‘y’) and (‘r’, ‘z’ ) are sorted. So the answer is ‘0’.
+			Sample Input 2:
+			2
+			4
+			u
+			e 
+			y 
+			b
+			2
+			cterub
+			aybsgn
+			Sample Output 2:
+			1
+			3
+		
+		//checks the strings columns wise, are they sorted or not? 
+		//length of all string in vector are same
+		#include <iostream>
+		#include<vector>
+		using namespace std;
+
+		int main(){
+			int unsortedCnt=0;
+			int col=0;
+			
+			vector<string> strings = {"cterub","aybsgn"};
+			while(col<strings[0].size()){
+				for(int i=0; i< strings.size()-1; i++){
+					string word1 = strings[i];
+					string word2 = strings[i+1];
+					
+					if(word1[col]>word2[col]){
+						unsortedCnt++;
+						break;
+					}
+				}
+				col++;
+			}
+			
+			cout<<unsortedCnt;
+			return 0;
+		}
+
+	56) Wave Array:
+		Example 1:
+			Input:
+			n = 5
+			arr[] = {1,2,3,4,5}
+			Output: 2 1 4 3 5
+			Explanation: Array elements after 
+			sorting it in wave form are 
+			2 1 4 3 5.
+
+		Example 2:
+			Input:
+			n = 6
+			arr[] = {2,4,7,8,9,10}
+			Output: 4 2 8 7 10 9
+			Explanation: Array elements after 
+			sorting it in wave form are 
+			4 2 8 7 10 9.
+		Your Task:
+			The task is to complete the function convertToWave(), which converts the given array to a wave array.
+
+		Expected Time Complexity: O(n).
+		Expected Auxiliary Space: O(1).
+
+		Constraints:
+			1 ≤ n ≤ 106
+			0 ≤ arr[i] ≤107
+		#include <iostream>
+		#include<vector>
+		using namespace std;
+
+		void toWaveForm(vector<int> a){
+			cout<<"Wave form array:\t";
+			for(int i=0;i<a.size()-1; i +=2)
+				swap(a[i],a[i+1]);
+			
+			for(int i:a)
+				cout<<i<<"\t";
+				
+			cout<<"\n";
+		}
+
+		void normalArray(vector<int> a){
+			std::cout << "Normal array :\t\t";
+			for(int i: a)
+				cout<<i<<"\t";
+			cout<<"\n";    
+		}
+
+		int main(){
+			vector<int> a = {1,2,3,4,5,6,7,8,9,10};
+			normalArray(a);
+			
+			toWaveForm(a);
+			
+			vector<int> b = {22,33,44,5,66,77,88,99,12,90,89};
+			normalArray(b);
+			
+			toWaveForm(b);
+			
+			return 0;
+		}
+
+	57) Monotonic Array
+		An array is monotonic if it is either monotone increasing or monotone decreasing.
+			An array nums is monotone increasing if for all i <= j, nums[i] <= nums[j]. 
+			An array nums is monotone decreasing if for all i <= j, nums[i] >= nums[j].
+			Given an integer array nums, return true if the given array is monotonic, or false otherwise.
+			
+			Example 1:
+				Input: nums = [1,2,2,3]
+				Output: true
+
+			Example 2:
+				Input: nums = [6,5,4,4]
+				Output: true
+			Example 3:
+				Input: nums = [1,3,2]
+				Output: false
+			Constraints:
+				1 <= nums.length <= 105
+				-105 <= nums[i] <= 105
+		class Solution {
+			public:
+			bool isMonotonic(vector<int>& nums) {
+				int i=0, n=1;
+				back:
+				if( (i+n)<nums.size() && nums[i] <= nums[i+n]){
+					if(nums[i] == nums[i+n]){
+						n++;
+						goto back;
+					}
+					for(int j=i+1; j<nums.size()-1; j++)
+						if(nums[j] > nums[j+1])
+							return 0;
+				}else{
+					for(int j=i+1; j<nums.size()-1; j++)
+						if(nums[j] < nums[j+1])
+							return 0;
+				}
+				return 1;
+			}
+		};
+
+		//or
+		class Solution {
+			public:
+			bool isMonotonic(vector<int>& nums) {
+				bool increasing = true;
+				bool decreasing = true;
+
+				for (int i = 1; i < nums.size(); ++i) {
+					if (nums[i] > nums[i - 1]) {
+						decreasing = false;
+					}
+					if (nums[i] < nums[i - 1]) {
+						increasing = false;
+					}
+				}
+				return increasing || decreasing;
+			}
+		};
+
+		//or
+		class Solution {
+			public:
+			bool isMonotonic(vector<int>& nums) {
+
+				if(nums.size()==1)
+					return 1;
+				
+				bool increORdecre= false;
+				int i=0;
+				while(i<nums.size()-1){
+					if(nums[i]<= nums[i+1]){
+						increORdecre = true;
+					}
+					else{
+						increORdecre = false;
+						break;
+					}
+					i++;
+				}
+				
+				if(increORdecre)
+					return 1;
+
+				i=0;
+				while(i<nums.size()-1){
+					if(nums[i]>=nums[i+1]){
+						increORdecre = true;
+					}else{
+						increORdecre = false;
+						break;
+					}
+					i++;
+				}
+				return increORdecre;
+			}
+		};
+
+	58) Mirror String :
+		-The String which contains the letter A,H,I,M,O,T,U,V,W,X,Y etc are the same looks in mirror.
+		-& check for string is palindrome or not,
+		Sample Input 1:
+			1
+			ITATI
+			Sample Output 1:
+			YES
+			Explanation Of Sample Input 1:
+			String “ITATI” is the same as its reflection in the mirror.
+			Sample Input 2:
+			2
+			MMMM
+			MZM
+			Sample Output 2:
+			YES
+			NO
+
+		#include <bits/stdc++.h> 
+		bool isPalindrome(string &s){
+			for(int i=0;i<s.length()/2;i++)
+				if(s[i] != s[s.length()-i-1])
+					return 0;
+			return 1;
+		}
+
+		bool isReflectionEqual(string &s){
+			for(int i=0; i<s.length(); i++){
+				if(s[i] == 'A' || s[i] == 'H' || s[i] == 'I' ||
+					s[i] == 'M' || s[i] == 'O' || s[i] == 'T' ||
+					s[i] == 'U' || s[i] == 'V' || s[i] == 'W' || 
+					s[i] == 'X' || s[i] == 'Y'){
+						continue;
+					}
+				else{
+					return false;
+				}
+			}
+
+			bool check = isPalindrome(s);
+			return check;
+		}
+
+	59) Detect Odd:
+		You are given an array of ‘N’ nonnegative integers where all elements
+			appear an even number of times except
+			two, print the two odd occurring
+			elements in increasing order. It may be
+			assumed that the size of the array is atleast two and there will always be
+			exactly two numbers which appear an
+			odd number of times in the given array.
+			EXAMPLE:
+			Input: 'N' = 6, 'NUMS' = [1,
+			1, 2, 3, 4, 4]
+			Output: 2 3
+			Here in the given array we can
+			see that 2 and 3 occur 1 time
+			which is an odd number. Hence,
+			the output will be 2 and 3.
+		Sample Input 1 :
+			2
+			6
+			1 1 2 3 4 4
+			2
+			1 2
+			Sample Output 1 :
+			2 3
+			1 2
+			Explanation Of Sample Input 1 :
+			For the first test case,
+			'N' = 6 and 'NUMS' = [1, 1, 2, 3, 4, 4]
+			Here in the given array we can see that 2 and 3 occur 1 time which is an odd  number. Hence, the output will be 2 and 3.
+
+			For the second test case,
+			'N' = 2 and 'NUMS' = [1, 2]
+			Here in the given array we can see that 1 and 2 occur 1 time which is an odd  number. Hence, the output will be 1 and 2.
+		Sample Input 2 :
+			2
+			4
+			8 2 2 7
+			4
+			3 1 3 5
+			Sample Output 2 :
+			7 8   
+			1 5
+		
+		//not Optimized:
+			#include <bits/stdc++.h> 
+			vector <int> detectOdd(int n, vector <int> nums) {
+				if(nums.size()==2)
+					return nums;
+				
+				vector<int> ans;
+				for(int i=0;i<nums.size(); i++){
+					int cnt=1,j;
+					if(nums[i] == INT_MIN){
+						continue;
+					}
+					
+					for(j=0; j<nums.size(); j++){
+						if(i==j || nums[j] == INT_MIN)
+							continue;
+						else if(nums[i] == nums[j]){
+							nums[i] = INT_MIN;
+							nums[j] = INT_MIN;
+							cnt++;
+							break;
+						}
+					}
+					if(cnt==1)
+						ans.push_back(nums[i]);
+				}
+
+				sort(ans.begin(), ans.end());
+				return ans;
+			}
+		
+		//Optimized:
+			#include <bits/stdc++.h> 
+			vector <int> detectOdd(int n, vector < int > nums) {
+				if(nums.size()==2)
+					return nums;
+				
+				vector<int> ans;
+				unordered_set<int> doublChecker;
+
+				for(int i=0; i<nums.size(); i++){
+					if(doublChecker.count(nums[i]) == 0)
+						doublChecker.insert(nums[i]);
+					else
+						doublChecker.erase(nums[i]);
+				}
+
+				ans.assign(doublChecker.begin(), doublChecker.end());				//assigning unordered_set to vector
+				sort(ans.begin(), ans.end());
+				return ans;
+			}
+		
+	60) Ninja and Range Max
+		Sample Input 1:
+			2
+			6 0 3
+			3 2 2 4 5 2
+			6 4 4
+			2 4 6 8 9 10
+			Sample Output 1:
+			4
+			9
+			Explanation Of Sample Input 1:
+			For test case 1:
+			The maximum element in the range [0, 3] is 4.
+			Hence, the answer for this case is 4.
+
+			For test case 2:
+			The maximum element in the range [4, 4] is 9.
+			Hence, the answer for this case is 9.
+			Sample Input 2:
+			2
+			5 2 3
+			6 6 8 5 1
+			5 3 4
+			2 4 5 3 1
+			Sample Output 2:
+			8
+			3
+
+		int ninjaAndRangeMax(int n, int x, int y, vector<int> &a) {
+			int maxer = a[x];
+			for(int i=x+1; i<=y; i++)
+				maxer = max(maxer, a[i]);
+			return maxer;
+		}
+
+		//more optimized:
+			int ninjaAndRangeMax(int n, int x, int y, vector<int> &a) {
+				auto max_iter = std::max_element(a.begin() + x, a.begin() + y + 1);
+				return *max_iter;
+			}
+
+	61) 132 Pattern:
+		Given an array of n integers nums, a 132 pattern is a subsequence of three 
+		integers nums[i], nums[j] and nums[k] such that i < j < k and nums[i] < nums[k] < nums[j].
+		Return true if there is a 132 pattern in nums, otherwise, return false.
+			Example 1:
+				Input: nums = [1,2,3,4]
+				Output: false
+				Explanation: There is no 132 pattern in the sequence.
+			Example 2:
+				Input: nums = [3,1,4,2]
+				Output: true
+				Explanation: There is a 132 pattern in the sequence: [1, 4, 2].
+			Example 3:
+				Input: nums = [-1,3,2,0]
+				Output: true
+				Explanation: There are three 132 patterns in the sequence: [-1, 3, 2], [-1, 3, 0] and [-1, 2, 0].
+			Constraints:
+				n == nums.length
+				1 <= n <= 2 * 105
+				-109 <= nums[i] <= 109
+		//Not Optimized:
+			class Solution {
+				public:
+				bool find132pattern(vector<int>& nums) {
+					if(nums.size() < 3)
+						return 0;
+
+					//checking that more than 3 different nums present in vector or not?
+					set<int> checking;
+					for(int i: nums)
+						checking.insert(i);
+					
+					if(checking.size()<3)
+						return 0;
+
+					//reducing 2 coz its subarray of 3 elements.
+					int iRange = nums.size()-2;
+					int jRange = nums.size()-1;
+
+					for(int i=0; i< iRange; i++){
+						for(int j=i+1; j< jRange; j++){
+							for(int k=j+1; k<nums.size(); k++){
+								if((nums[i] < nums[k])  && (nums[k] < nums[j]))
+									return 1;
+							}                
+						}
+					}
+					return 0;  
+				}
+			};
+		
+		//optimized:
+			class Solution {
+				public:
+				bool find132pattern(vector<int>& nums) {
+					int n = nums.size();
+					if (n < 3) {
+						return false;
+					}
+
+					vector<int> minSoFar(n);
+					minSoFar[0] = nums[0];
+
+					// Calculate the minimum element so far for each index
+					for (int i = 1; i < n; i++) {
+						minSoFar[i] = min(minSoFar[i - 1], nums[i]);
+					}
+
+					stack<int> s;
+
+					for (int j = n - 1; j >= 0; j--) {
+						// If nums[j] is greater than the minimum element so far, we have a candidate for 'k'
+						if (nums[j] > minSoFar[j]) {
+							// Find the maximum 'i' that is less than nums[j]
+							while (!s.empty() && s.top() <= minSoFar[j]) {
+								s.pop();
+							}
+
+							// If we found a valid 'i', return true
+							if (!s.empty() && s.top() < nums[j]) {
+								return true;
+							}
+							// Push nums[j] onto the stack as a potential 'k'
+							s.push(nums[j]);
+						}
+					}
+					return false; 
+				}
+			};
+
+	62) Maximum Value of F(x) - VI:
+		problem Statement
+			You are provided with a sorted array of integers
+			‘ARR’ having length ‘N’ and a function ‘F(X)’, such
+			that:
+			F(X) = S + G
+			Where:
+			‘X’ = Any integer that belongs to array
+			‘ARR’.
+			‘S’ = Number of integers in ‘ARR’ that
+			are strictly smaller than ‘X’.
+			‘G’ = Number of integers in ‘ARR’ that
+			are strictly greater than ‘X’.
+			For Example:
+			‘ARR’ = {1, 1, 1, 2, 2, 3, 4}
+			Let, ‘X’ = 1
+			F(X) = 0 + 4 = 4 (as ‘0’ numbers of
+			elements are smaller than ‘1’ and ‘4’
+			elements that are ‘2’, ‘2’, ‘3’, and ‘4’
+			are greater than ‘1’.
+			Let ‘X’ = 2
+			F(X) = 3 + 2 = 5 (as ‘3’ numbers
+			(‘1’, ‘1’, and ‘1’) are smaller than ‘2’
+			and ‘2’ numbers that are ‘3’, and ‘4’ are
+			greater than ‘2’.
+			Let ‘X’ = 3
+			F(X) = 5 + 1 = 6 (as ‘5’ numbers
+			(three times ‘1’ and two times ‘2’) are
+			smaller than ‘3’ and ‘1’ number that is
+			‘4’ is greater than ‘3’.
+			Let ‘X’ = 4
+			F(X) = 6 + 0 = 6 (as ‘6’ numbers
+			(three times ‘1’, two times ‘2’, and one
+			time ‘3’) are smaller than ‘4’ and ‘0’
+			numbers are greater than ‘3’.
+			All you have to do is to find the maximum value of
+			‘F(X)’.
+
+		Sample Input 1 :
+			1
+			7
+			1 1 1 2 2 3 4
+			Sample Output 1 :
+			6
+			Explanation For Sample Input 1 :
+			For the first test case, an explanation is given in the description.
+			Sample Input 2 :
+			2
+			5
+			10 20 30 40 40
+			2
+			3 4
+			Sample Output 2 :
+			4
+			1
+		//not optimized:
+			#include <bits/stdc++.h> 
+			int maxFXVI(int n, vector<int> &arr){
+				vector<int> maxer;
+				for(int i=0;i<n; i++){
+					int cnt=0;
+					for(int j=0; j<n; j++){
+						if(i==j)
+							continue;
+						if(arr[i] != arr[j])
+							cnt++;
+					}
+					maxer.push_back(cnt);
+				}
+				auto mxValue = max_element(maxer.begin(), maxer.end());
+				return *mxValue;
+			}
+
+	63) Find the length of last word:
+		https://leetcode.com/problems/length-of-last-word/
+		#include <iostream>
+		#include<algorithm>
+		using namespace std;
+		int main(){
+			// string s = "Vivek Mahesh Nikate";
+			string s = "Hello world";
+			string Lword;
+			
+			for(int i=s.length()-1; i>=0;i--){
+				if(s[i] != ' ')
+					Lword += s[i];
+				else
+					break;
+
+				//or you can use this also instead of above if checking condition
+					//if(isblank(s[i]))
+					//	break;
+					//Lword += s[i];
+			}
+			reverse(Lword.begin(), Lword.end());
+			std::cout << Lword<<" & the length of its is :: "<< Lword.length() << std::endl;
+			return 0;
+		}
+
+		//ignoring the trailing spaces also,
+		class Solution {
+			public:
+			int lengthOfLastWord(string s) {
+				int i=s.length()-1;
+				while(i>=0){
+					if(isblank(s[i]))
+						s.erase(i,1);
+					else 
+						break;
+					i--;
+				}
+					
+				i = s.size()-1;
+				string temp;
+				while(i>=0){
+					if(isblank(s[i]))
+						break;
+					temp += s[i];
+					i--;
+				}
+				return temp.length();
+			}
+		};
+		
+		//or 0ms second
+			class Solution {
+				public:
+				int lengthOfLastWord(string s) {
+					int count=0;
+					for(int i=s.length()-1; i>=0; i--){
+						while(int(s[i])==32){
+							i--;
+						}
+						while(int(s[i])!=32){
+							count++;
+							i--;
+							if(i<0){
+								break;
+							}
+						}
+						break;
+					}
+					return count;
+				}
+			};
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 calender:
@@ -11317,4 +13329,165 @@ calender:
 						 =95/7 -> 4 remainder,
 						 4 days back from today (fri, thurs, wed, tuesday)
 						 => Tuesday is on 30th of may.
----------------------------------------------------------------------------------------------------------	
+--------------------------------------------------------------------------------------------------------
+	#include <bits/stdc++.h>
+		using namespace std;
+		#define setSize 32
+		int main() {
+		bitset<setSize> bset1; // value is 00000000000000000000000000000000
+		bitset<setSize> bset2(20); //value is 00000000000000000000000000010100
+		bitset<setSize> bset3(string("1100")); // value is 00000000000000000000000000001100
+		cout<<"The values of bitsets are :
+		" ;
+		cout<<"bitset 1 : "<<bset1<<endl;
+		cout<<"bitset 2 : "<<bset2<<endl;
+		cout<<"bitset 3 : "<<bset3<<endl;
+		cout << endl;
+		bitset<8> bset4; // value is 00000000
+		bset4[1] = 1;
+		cout<<"value after changing a bit :"<<bset4<<endl;
+		bset4[4] = bset4[1];
+		cout <<"changing value using other method :"<<bset4<<endl;
+		int numberofone = bset4.count();
+		int numberofzero = bset4.size() - numberofone;
+		cout<<"The set"<<bset4<<"has"<<numberofone<<"ones and"<<numberofzero<<"zeros
+		";
+		cout << "bool representation of " << bset4 << " : ";
+		for (int i = 0; i < bset4.size(); i++)
+			cout << bset4.test(i) << " ";
+		cout << endl;
+		if (!bset1.none())
+			cout << "bset1 has some bit set
+		";
+			cout <<".set() method sets all bits, bset4.set() = "<< bset4.set() << endl;
+			cout<<"changing a specific bit(4) to 0 "<<bset4.set(4, 0)<<endl;
+			cout<<"changing a specific bit(4) to 1 "<<bset4.set(4)<<endl;
+			cout<<"Resetting bit at position 2 :"<<bset4.reset(2)<<endl;
+			cout<<"Resetting bits of full bitset : "<<bset4.reset()<<endl;
+			cout<<"Flipping bit at position 2 : "<< bset4.flip(2) << endl;
+			cout<<"Flipping bit of array : "<<bset4.flip() << endl;
+			int num = 100;
+			cout << "
+		Decimal number: " << num << " Binary equivalent: " << bitset<8>(num);
+		return 0;
+		}
+
+	The bitset all() function an inbuilt function of the C++ STL( Standard Template Library).
+		This function returns a Boolean value. The returned value is true if all the bits of the 
+		calling bitset are 1 else it will return false.
+
+		The function does not accept any parameter and returns a Boolean value.
+
+		Syntax
+		Bool bitset_name .all()
+		Sample
+		Bitset = 100101
+		Output
+		false
+		Because all bits of the set need to be true in order to return a true value.
+
+		Example
+		#include <bits/stdc++.h>
+		using namespace std;
+		void printer(bool val){
+		if(val){
+			cout<< "The bitset has all bits set"<< endl;
+		} else{
+			cout << "The bitset does not have all bits set"<< endl;
+		}
+		}
+		int main() {
+		bitset<4> bit1(string("1011"));
+		bitset<6> bit2(string("111111"));
+		cout<<"The bitset is "<<bit1<<endl;
+		printer(bit1.all());
+		cout<<"The bitset is "<<bit2<<endl;
+		printer(bit2.all());
+		return 0;
+		}
+
+	The bitset flip() method is an inbuilt method of C++ STL( Standard Template Library). 
+		It flips the bits of the calling bitset. This method flips all 0’s to 1’s 
+		and all 1’s to 0’s, which means it reverse each and every bit of the calling bitset when no parameter is passed.
+
+		If a parameter is passed the flip method will flip only the nth bit for the integer n passed. 
+		For example, if 5 is passed then the flip method will flip 5th bit of of the calling bitset.
+
+		Syntax
+		bitset_name.flip(int pos)
+		Sample
+
+		Initial bitset: 011001
+		After applying the bits flip function with no parameter: 100110
+
+		After applying the Beta function with 6: 011000
+
+		Example
+		#include <bits/stdc++.h>
+		using namespace std;
+		int main() {
+		bitset<6> bit1(string("100110"));
+		bitset<10> bit2(string("0100001111"));
+		cout << bit1 << " after applying flip() function with nothing passed as parameter returns "
+		<< bit1.flip() << endl;
+		cout << bit2 << " after applying flip() function with 7 passed as parameter returns "
+		<< bit2.flip(7);
+		return 0;
+		}
+
+	#include <iostream>
+		#include<algorithm>
+		#include<bitset>
+
+		using namespace std;
+		int main(){
+		
+		int n=8;
+		string s = bitset<8> (n).to_string('V','S');
+		
+		int num =15;
+		bitset<32> numBit(num);
+		
+		std::cout << s << std::endl;
+		std::cout << "Size of bitset n is :: "<< bitset<8>(n).size() << std::endl;
+		
+		std::cout << "Set bits in numBit "<< numBit.count() << std::endl;
+		std::cout << "no.of zeros in numBit "<< numBit.size() - numBit.count() << std::endl;
+		
+		std::cout << "flipping the bits of numBit \nBefore: "<< numBit << "\nAfter : "<< numBit.flip() << std::endl;
+		std::cout << "Flipping 5th bit of numBit (0-indexed) from last : "<< numBit.flip(5) << std::endl;
+		std::cout <<  bitset<8>(n).flip(2) << std::endl;
+		return 0;
+		}
+
+	#include <iostream>
+	#include<bitset>
+	using namespace std;
+
+	int main()
+	{
+	int arr[] = {1,2,3,4,5,6,7,8,9,10,100000};
+	long long arr2[10];
+	
+	//printing binary for all,
+	for(int i=0;i<11;i++){
+		string s = bitset<32> (arr[i]).to_string();
+		long long j = 0;
+	
+		// Traversing string
+		for (char c : s) {
+			// Checking if the element is number
+			if (c >= '0' && c <= '9') 
+				j = j * 10 + (c - '0');
+		}
+		cout<<j<<endl;
+		arr2[i] = j; 
+		std::cout << s << std::endl;
+	}
+	
+	std::cout << "Second array" << std::endl;
+	for(int i=0;i<11;i++)
+		std::cout << arr2[i] << std::endl;
+	return 0;
+	}
+--------------------------------------------------------------------------------------------------------
