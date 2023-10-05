@@ -9135,7 +9135,206 @@ Lecture-23:
 			};
 	
 	❌Pending task,
-		10- question leet code one 2D array
+		10- question leet code on 2D array
+---------------------------------------------------------------------------------------------------------
+Lecture-24:Basic Maths for DSA || Sieve || Modular Arithmetics || Euclid’s Algorithm
+	// Count Primes
+		TC - O(n * log(log n))
+		https://leetcode.com/problems/count-primes/description/
+		Given an integer n, return the number of prime numbers that are strictly less than n.		
+			Example 1:
+				Input: n = 10
+				Output: 4
+				Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+			Example 2:
+				Input: n = 0
+				Output: 0
+			Example 3:
+				Input: n = 1
+				Output: 0
+
+			Constraints:
+				0 <= n <= 5 * 106
+
+		//NOT optimized:
+			class Solution {
+				public:
+				bool checkPrime(int x)
+				{
+					for(int i=2;i<x;i++)
+					{
+						if(x%i==0) return 0;
+					}
+					return 1;
+				}
+				int countPrimes(int n) {
+					if(n<=1) return 0;
+					else
+					{
+						int count=0;
+						for(int i=2;i<n;i++)
+						{
+							if(checkPrime(i))
+							{
+								count++;
+							}
+						}
+						return count;
+					}
+				}
+			};
+
+		//Optimized:
+			-The Sieve of Eratosthenes is an algorithm used to find all prime numbers less than a number. 
+			The way it works is that, starting from 2, it creates a list of all integers from there until n. 
+			Then, starting with 2 (which is the smallest prime), every multiple of 2 is marked as not a prime
+			class Solution {
+				public:
+				int countPrimes(int n) {
+					
+					int cnt=0;
+					vector<int> prime(n,1);
+					if(n >=0 && n<=2)
+						return cnt;
+
+					prime[2] = 1;								//no need.
+
+					
+					for(int i=2; i<n; i++)
+						if(prime[i] == 1){						// if(primes[i])
+							for(int j=i+i; j<n; j += i)			//for(int j=i*2; j<n; j += i)
+								prime[j] = 0;
+							cnt++;
+						}
+					return cnt;
+				}
+			};
+			
+	❌Segmented sieve:
+		https://www.codingninjas.com/studio/library/segmented-sieve
+
+	//Euclid’s Algorithm:
+		LCM(A,B) * HCF(A,B) = A*B;
+		-computing the Greatest Common Divisor (GCD) of two positive integers
+		
+		#include <iostream>
+		using namespace std;
+		int gcd(int a, int b){
+			if(a==0)
+				return b;
+			
+			if(b==0)
+				return a;
+				
+			while(a!=b){
+				
+				if(a>b){
+					a-=b;
+				}else{
+					b-=a;
+				}
+			}
+			return a;
+		}
+
+		int main(){	
+			int a,b;
+			std::cout << "Enter 2 nums: " << std::endl;
+			cin>>a>>b;
+			
+			int ans = gcd(a,b);
+			
+			std::cout << "The gcd of "<<a<<" "<<b<<" is : "<< ans << std::endl;
+			return 0;
+		}
+
+	//modularExponentiation:
+		-refer this program again in POTD section or search once with this name modularExponentiation.
+		#include <bits/stdc++.h>
+		int modularExponentiation(int x, int n, int m) {
+			long long power=1;
+			long long base = x;
+			if(n==0)
+				return power;
+			int i=1;
+			while(n>0){
+				if(n&1)
+					power = (power%m * base%m) % m;
+
+				base = (base * base)%m ;
+				n/=2;
+			}
+			/*
+				while(n>0){
+					if(n&1)
+						power = (1ll * power * x%m)%m;		
+					n/=2;
+					x = (1ll * x%m * x%m)%m;		//or
+													//x = (1LL * x%m * x%m)%m; //type casting to long
+				}
+			*/
+			return power;
+		}
+
+	//calculating exponents of any number by any number
+		optimized way
+		#include <iostream>
+		using namespace std;
+
+		int main(){
+			
+			//here calculating 2¹⁰. for this method requre 10 iteration
+			int a=2;
+			int ans=1;
+			std::cout << "10th power " << std::endl;
+			for(int i=0; i<10; i++){
+				cout<<"Pass-"<<i+1<<"\n";
+				ans = ans * a;
+			}
+			std::cout << "ANS: "<<ans << std::endl;
+			
+			//for this method require 4 to 5 iterations
+			ans=1;
+			int cnt=1;
+			for(int i=10; i>0;){
+				cout<<"Pass-"<<cnt++<<" ";
+				if(i&1)
+					ans = ans * a;
+				a = a * a;
+				i /=2;
+			}
+			cout<<"ANS:"<<ans;
+			return 0;
+		}
+
+		//or
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+			
+				int ans=1;
+				int n=3, power = 10;
+				int cnt=0;
+				while(power > 0){
+					cout<<"pass "<<++cnt<<"\n";
+					if(power&1)
+						ans = ans * n;
+					
+					a = a * a;
+					power /= 2;
+				}
+				std::cout << ans << std::endl;
+				return 0;
+			}
+	
+	https://codeforces.com/blog/entry/72527
+	https://www.codingninjas.com/studio/library/gcd-euclidean-algorithm
+	pigeon hole principle 4 question
+	catalan number
+	inclusion-exclusion principle.
+	-factorial of num 212!%mod , mod = 1e9+7;
+
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -9539,6 +9738,11 @@ Lecture-23:
 			8 % 5 = 3						|		8 % 10 = 8
 			9 % 5 = 4						|		9 % 10 = 9
 			10 % 5 = 0					|		10 % 10 = 0
+		
+		Properties:
+			◎  (a % m) + (b % m) = (a + b) % m
+			◎  (a % m) - (b % m) = (a - b) % m
+			◎  (a % m) * (b % m) = (a * b) % m
 
 	//Finding maximum num from vector
 		-using max_element function.
@@ -9574,6 +9778,116 @@ Lecture-23:
 
 				return 0;
 			}
+		
+	//Dynamic array Creation:
+		#include<iostream>
+		using namespace std;
+		int main() {
+			int x, n;
+			cout << "Enter the number of items:" << "\n";
+			cin >>n;
+			int *arr = new int(n);
+			cout << "Enter " << n << " items" << endl;
+			for (x = 0; x < n; x++) {
+				cin >> arr[x];
+			}
+			cout << "You entered: ";
+			for (x = 0; x < n; x++) {
+				cout << arr[x] << " ";
+			}
+			return 0;
+		}
+		1. Include the iostream header file into our program to use its functions.
+		2. Include the std namespace in our program in order to use its classes without calling it.
+		3. Call the main() function. The program logic should be added within the body of the function.
+		4. Declare two integer variables x and n.
+		5. Print some text on the console prompting the user to enter the value of variable n.
+		10/4/23, 5:42 PM C++ Dynamic Allocation of Arrays with Example
+		6. Read user input from the keyboard and assigning it to variable n.
+		7. Declare an array to hold a total of n integers and assigning it to pointer variable *arr.
+		8. Print a message prompting the user to enter n number of items.
+		9. Use a for loop to create a loop variable x to iterate over the items entered by the user.
+		10. Read the elements entered by the user and storing them in the array arr.
+		11. End of the body of the for loop.
+		12. Print some text on the console.
+		13. Use a for loop to create a loop variable x to iterate over the items of the array.
+		14. Print out the values contained in the array named arr on the console.
+		15. End of the body of the for loop.
+		16. The program must return value upon successful completion.
+		17. End of the body of the main() function.
+
+		//Another example
+			Dynamically Deleting Arrays:
+				A dynamic array should be deleted from the computer memory once its purpose is fulfilled. 
+				The delete statement can help you accomplish this. 
+				The released memory space can then be used to hold another set of data. 
+				However, even if you do not delete the dynamic array from the computer memory, 
+				it will be deleted automatically once the program terminates.
+
+			Note:
+				To delete a dynamic array from the computer memory, you should use delete[], 
+				instead of delete. The [] instructs the CPU to delete multiple variables rather than one variable. 
+				The use of delete instead of delete[] when dealing with a dynamic array may result in problems. 
+				Examples of such problems include memory leaks, data corruption, crashes, etc.
+
+			#include<iostream>
+			using namespace std;
+			int main() {
+				int x, n;
+				cout << "How many numbers will you type?" << "\n";
+				cin >>n;
+				int *arr = new int(n);
+				cout << "Enter " << n << " numbers" << endl;
+				for (x = 0; x < n; x++) {
+					cin >> arr[x];
+				}
+				cout << "You typed: ";
+				for (x = 0; x < n; x++) {
+					cout << arr[x] << " ";
+				}
+				cout << endl;
+				delete [] arr;
+				return 0;
+			}
+			Summary
+				-Regular arrays have a fixed size. You cannot modify their size once declared.
+				-With these types of arrays, the memory size is determined during compile time.
+				-Dynamic arrays are different. Their sizes can be changed during runtime.
+				-In dynamic arrays, the size is determined during runtime.
+				-Dynamic arrays in C++ are declared using the new keyword.
+				-We use square brackets to specify the number of items to be stored in the dynamic array.
+				-C++ Dynamic Allocation of Arrays with Example
+				-Once done with the array, we can free up the memory using the delete operator.
+				-Use the delete operator with [] to free the memory of all array elements.
+				-A delete without [] frees the memory of only a single element.
+				-There is no built-in mechanism to resize C++ arrays.
+
+	//count the no.of digit in number:
+
+		#include <iostream>
+		#include<cmath>
+		using namespace std;
+
+		int main() {
+			//get no.of digit in n;
+			long n= 123456789;
+			
+			std::cout << n << std::endl;
+			std::cout << "no.of digit : "<< static_cast<int>(log10(n)+1)<< std::endl;
+			
+			std::cout << "no.of digit : "<< (int) log10(n)+1<< std::endl;
+			std::cout << "no.of digit : "<< static_cast<int>(log10(n)+1)<< std::endl;    
+			
+			//static_cast<int> used to convert from double or float to int.
+			// or to count the no.of digit in n, you can use this also...
+			int cnt=0;
+			while(n>0){
+				cnt++;
+				n/=10;
+			}
+			std::cout << "The CNT : "<< cnt << std::endl;
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array	
@@ -9668,6 +9982,24 @@ POTD:-[Problem of the Day]
 				}
 			}
 		};
+
+		//more optimized:
+			class Solution{
+				public:
+				int missingNumber(vector<int>& array, int n) {
+					// sort(array.begin(), array.end());
+					// for(int i=0; i<n; i++){
+					//     if(array[i] != i+1)
+					//         return i+1;
+					// }
+					long long actSum = (n*(n+1))/2;
+					long long SumArr =0;
+					for(int z: array){
+						SumArr += z;
+					}
+					return actSum - SumArr;
+				}
+			};
 
 	5) Count Odd Even
 		void countOddEven(int arr[], int sizeof_array)
@@ -13318,6 +13650,576 @@ POTD:-[Problem of the Day]
 					return count;
 				}
 			};
+
+	64) Column name from a given column number:
+		Given a positive integer, return its corresponding column title as appear in an Excel sheet.
+		Excel columns has a pattern like A, B, C, … ,Z, AA, AB, AC,…. ,AZ, BA, BB, … ZZ, AAA, AAB ….. etc. 
+		In other words, column 1 is named as “A”, column 2 as “B”, column 27 as “AA” and so on.
+
+			Example 1:
+				Input:
+				N = 28
+				Output: AB
+				Explanation: 1 to 26 are A to Z.
+				Then, 27 is AA and 28 = AB.
+
+			Example 2:
+				Input: 
+				N = 13
+				Output: M
+				Explanation: M is the 13th character of
+				alphabet.
+				Your Task:
+			You don't need to read input or print anything. Your task is to complete the function colName() which takes the column number N as input and returns the column name represented as a string.
+			Expected Time Complexity: O(LogN).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 <= N <= 1018
+		class Solution{
+			public:
+			string colName (long long int n){
+				
+				string s;
+			
+				while (n > 0) {
+					int GenNum = (n-1) % 26;  // Subtract 1 to get the correct column name
+					char ch = 'A';
+			
+					for (int i =0; i < GenNum; i++) {
+						ch++;
+					}
+					s += ch;
+					n = (n-1) / 26;  // Subtract 1 here as well
+				}
+				reverse(s.begin(), s.end());
+				return s;
+			}
+		};
+
+	65) Roman Number to Integer:
+		Given a string in roman no format (s)  your task is to convert it to an integer . 
+		Various symbols and their values are given below.
+			I 1
+			V 5
+			X 10
+			L 50
+			C 100
+			D 500
+			M 1000
+
+			Example 1:
+			Input:
+				s = V
+				Output: 5
+			Example 2:
+				Input:
+				s = III 
+				Output: 3
+			Your Task:
+				Complete the function romanToDecimal() which takes a string as input parameter and returns the 
+				equivalent decimal number. 
+
+			Expected Time Complexity: O(|S|), |S| = length of string S.
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1<=roman no range<=3999
+			class Solution {
+				public:
+				int romanToDecimal(string &str) {
+					int i=str.length()-1;
+					int num=0;
+
+					while (i >= 0) {
+						char val = str[i];
+						int temp, prev = 0;
+				
+						if (val == 'I') {
+							temp = 1;
+						} else if (val == 'V') {
+							temp = 5;
+						} else if (val == 'X') {
+							temp = 10;
+						} else if (val == 'L') {
+							temp = 50;
+						} else if (val == 'C') {
+							temp = 100;
+						} else if (val == 'D') {
+							temp = 500;
+						} else if (val == 'M') {
+							temp = 1000;
+						}
+				
+						if (i > 0) {
+							char prevVal = str[i - 1];
+							if (prevVal == 'I') {
+								prev = 1;
+							} else if (prevVal == 'V') {
+								prev = 5;
+							} else if (prevVal == 'X') {
+								prev = 10;
+							} else if (prevVal == 'L') {
+								prev = 50;
+							} else if (prevVal == 'C') {
+								prev = 100;
+							} else if (prevVal == 'D') {
+								prev = 500;
+							} else if (prevVal == 'M') {
+								prev = 1000;
+							}
+						}
+				
+						if (prev > 0 && prev < temp) {
+							temp -= prev;
+							i--; // Skip the previous character
+						}
+				
+						num += temp;
+						i--;
+					}
+					return num;
+				}
+			};
+
+			//or
+				int mapRomanToDecimal(char ch){
+					if(ch == 'I'){
+						return 1;
+					}else if(ch == 'V'){
+						return 5;
+					}else if(ch == 'X'){
+						return 10;
+					}else if(ch == 'L'){
+						return 50;
+					}else if(ch == 'C'){
+						return 100;
+					}else if(ch == 'D'){
+						return 500;
+					}else if(ch == 'M'){
+						return 1000;
+					}
+				}
+
+				int romanToInt(string s) {
+					int i=s.length()-1;
+					int num = 0;
+					while(i>=0){
+						char curVal = s[i];
+						int temp = mapRomanToDecimal(curVal);
+						int prev=0;
+
+						if(i>0){
+							char prevVal = s[i-1];
+							prev = mapRomanToDecimal(prevVal);
+						}
+
+						if(prev< temp){
+							temp -= prev;
+							i--;
+						}
+
+						num += temp;
+						i--;
+
+					}
+					return num;
+				}
+
+	66) Modular Exponentiation :
+		You are given a three integers 'X','N', and 'M'. Your task is to find ('X'^ 'N') % 'M'. A ^ B is defined 
+		as X raised to power N and X % M is the remainder when X is divided by M.
+
+			Constraints :
+			1 <= T <= 100
+			1 <= X, N, M <= 10^9
+			Time limit: 1 sec
+		Sample Input 1 :
+			2 
+			3 1 2
+			4 3 10
+			Sample Output 1 :
+			1
+			4
+			Explanation For Sample Output 1:
+			In test case 1, 
+			X = 3, N = 1, and M = 2 
+			X ^ N = 3 ^ 1 = 3 
+			X ^ N % M = 3 % 2 = 1. 
+			So the answer will be 1.
+
+			In test case 2,
+			X = 4, N = 3, and M = 10 
+			X ^ N = 4 ^ 3 = 64 
+			X ^ N % M = 64 % 10 = 4. 
+			So the answer will be 4.
+			Sample Input 2 :
+			2
+			5 2 10 
+			2 5 4
+		Sample Output 2 :
+			5
+			0
+			Explanation For Sample Output 2:
+			In test case 1, 
+			X = 5, N = 2, and M = 10 
+			X^N = 5^2 = 25 
+			X^N %M = 25 % 10 = 5. 
+			So the answer will be 5.
+
+			In test case 2,
+			X = 2, N = 5, and M = 4 
+			X^N = 2^5 = 32 
+			X^N %M = 32 % 4 = 0. 
+			So the answer will be 0.
+
+			//NOT Optimized:
+				#include <bits/stdc++.h>
+				int modularExponentiation(int x, int n, int m) {
+					long long power=1;
+					
+					for(int i=0; i<n; i++){
+						power = (power * x) % m;
+					}
+					return power;
+				}
+			
+			//Optimized:
+				#include <bits/stdc++.h>
+				int modularExponentiation(int x, int n, int m) {
+					long long power=1;
+
+					if(n==0)
+						return power;
+
+					long long base = x % m;
+					while(n>0){
+						if(n&1)
+							power = (power * base) %m;
+						base = (base*base)%m;
+						n/=2;
+					}
+					return (int)((power+m)%m);
+				}
+			
+			//or
+				#include <bits/stdc++.h>
+				int modularExponentiation(int x, int n, int m) {
+					long long power=1;
+					long long base = x;
+					if(n==0)
+						return power;
+					int i=1;
+					while(n > 0){
+						if(n&1)
+							power = (power % m * base % m) % m;
+
+						base = (base * base) % m ;
+						n /= 2;
+					}
+					return power;
+				}
+
+	67) Largest Element in the Array
+		Given an array ‘arr’ of size ‘n’ find the largest element in the array.
+		Example:
+		Input: 'n' = 5, 'arr' = [1, 2,3, 4, 5]
+		Output: 5
+		Explanation: From the array {1,2, 3, 4, 5}, the largest element is 5.
+
+		Sample Input 1:
+			6
+			4 7 8 6 7 6 
+			Sample Output 1:
+			8
+			Explanation Of Sample Input 1: The answer is 8. From {4 7 8 6 7 6}, 8 is the largest element.
+		Sample Input 2:
+			8
+			5 9 3 4 8 4 3 10 
+			Sample Output 2:
+			10
+			Expected Time Complexity:
+			O(n), Where ‘n’ is the size of an input array ‘arr’.
+			Constraints :
+			1 <= 'n' <= 10^5
+			1 <= 'arr[i]' <= 10^9
+
+			Time Limit: 1 sec
+
+		#include <bits/stdc++.h> 
+		int largestElement(vector<int> &arr, int n) {
+			// auto mxr = max_element(arr.begin(), arr.end());
+			// return *mxr;
+			int mx = arr[0];
+			for(int i=1;i<n;i++)
+				mx = max(mx,arr[i]);
+			return mx;
+		}
+
+	68) Sum Of Even Numbers Till N:
+		Sample Input 1 :
+			2
+			6
+			2
+			Sample Output 1 :
+			12
+			2
+			Explanation For Sample Input 1 :
+			For test case 1 :
+			Sum of all even numbers till 6 will be : 2 + 4 + 6 = 12
+
+			For test case 2 :
+			Sum of all even numbers till 2 will be : 2
+			Sample Input 2 :
+			2
+			4
+			5
+			Sample Output 2 :
+			6
+			6
+			Explanation For Sample Input 2 :
+			For test case 1 :
+			Sum of all even numbers till 4 will be : 2 + 4 = 6
+
+			For test case 2 :
+			Sum of all even numbers till 5 will be : 2 + 4 = 6
+
+		#include <bits/stdc++.h> 
+		long long evenSumTillN(int n) {
+			long long sum =0;
+			for(int i=2; i<=n; i+=2)
+				sum += i;
+			return sum;
+		}
+
+	69) Find Character Case
+		You are given a character ‘CH’ as input, return either 1,
+		0 or -1 according to the following rules:
+		1, if the character is an uppercase alphabet (A - Z).
+		0, if the character is a lowercase alphabet (a - z).
+		-1, if the character is not an alphabet.
+		For Example :
+			If ‘CH’ = ‘a’, then since it is a
+			lowercase letter, your program should return 0
+		Sample Input 1:
+			2
+			A
+			t
+			Sample Output 1:
+			1
+			0
+			Explanation For Sample Input 1:
+			For sample case 1, ‘A’ is an uppercase letter, hence output is 1.
+			For sample case 2, ‘t’ is a lowercase letter, hence output is 0.
+			Sample Input 2:
+			2
+			#
+			P
+			Sample Output 2:
+			-1
+			1
+			Explanation For Sample Input 2:
+			For sample case 1, ‘#’ is not an alphabet, hence output is -1.
+			For sample case 2, ‘P’ is an uppercase letter, hence output is 1.
+
+		#include <bits/stdc++.h> 
+		int findCase(char ch) {
+			if(islower(ch))
+				return 0;
+			else if(isupper(ch))
+				return 1;
+			else
+				return -1;
+		}
+
+	70) Two Repeated Elements:
+		You are given an array of N+2 integer elements. 
+			All elements of the array are in the range 1 to N. 
+			Also, all elements occur once except two numbers which occur twice. 
+			Find the two repeating numbers.
+
+			Note: Return the numbers in their order of appearing twice. 
+			So, if X and Y are the repeating numbers, and X repeats twice before Y 
+			repeating twice, then the order should be (X, Y).
+
+			Example 1:
+				Input:
+				N = 4
+				array[] = {1,2,1,3,4,3}
+				Output: 1 3
+				Explanation: In the given array, 
+				1 and 3 are repeated two times.
+				
+			Example 2:
+				Input:
+				N = 2
+				array[] = {1,2,2,1}
+				Output: 2 1
+				Explanation: In the given array,
+				1 and 2 are repeated two times 
+				and second occurence of 2 comes 
+				before 1. So the output is 2 1.
+
+			Your Task:
+				The task is to complete the function repeatedElements() which takes array arr[] and 
+				an integer N as inputs (the size of the array is N + 2 and elements are in the range[1, N]) 
+				and finds the two repeated element in the array and return them in a list.
+
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(1). 
+
+			Constraints:
+				2 ≤ N ≤ 105
+				1 ≤ array[i] ≤ N
+
+		class Solution {
+			public:
+			//Function to find two repeated elements.
+			vector<int> twoRepeated (int arr[], int n) {
+				
+				vector<int> ans;
+				vector<int> counts(n+2, 0);
+				
+				for(int i=0; i<n+2; i++){
+					counts[arr[i]]++;
+					if(counts[arr[i]] == 2)
+						ans.push_back(arr[i]);
+					
+					if(ans.size()==2)
+						break;
+				}
+				return ans;
+			}
+		};
+
+	71) String Mania
+		Rohit love strings. But he has many strings with him,
+			and he is confused about which one he loves more. So
+			he decided to come up with a scoring system for the
+			strings. The scoring system took two strings as input,
+			let's call them ‘STR1’ and ‘STR2’ of length ‘N’ and
+			length ‘M’ respectively.
+			The system will return ‘1’ if ‘STR1’ is better than ‘STR2’.
+			The system will return ‘0’ if ‘STR1’ is the same as ‘STR2’.
+			The system will return ‘-1’ if ‘STR2’ is better than ‘STR1’.
+			To decide which string is better he followed the below steps.
+			Let’s suppose there exists a index ‘i’ such that ‘0’ <= ‘i’ < ‘min(N,M)’ and for all ‘j<i’, ‘STR1[j]’ is equal to
+			‘STR2[j]’, and ‘STR1[i] != STR2[i]’.
+			Then if ‘STR1[i]>STR2[i]’, ‘STR1’ is better otherwise if
+			‘STR2[i]>STR1[i]’, ‘STR2’ is better,
+			And if there doesn’t exist any such ‘i’ then if ‘N>M’,
+			‘STR1’ is better,
+			And if ‘N<M’, ‘STR2’ is better, and if ‘N’ is equal to ‘M’,
+			both strings are the same.
+			But Rohit has so many strings, so he doesn’t have time
+			to go through all strings, So being his friend can you
+			help him automate this process?.
+
+		Sample Input 1 :
+			2
+			1 3
+			a
+			abc
+			3 3
+			abz
+			abc
+		Sample Output 1 :
+			-1
+			1
+		Explanation Of Sample Input 1 :
+			For the first test case, ‘STR2’ is better than ‘STR1’, 
+			as they are the same until the ‘0th’ index and then string ‘STR1’ ends and 
+			as explained in the statement for ‘M>N’, the answer is ‘-1’.
+
+			Hence, the output will be: -1
+
+		For the second test case, ‘STR1’ is better than ‘STR2’, as they are the same until 
+		the ‘1st’ index and then ‘STR1[2]>STR2[2]’.
+
+		Hence, the output will be: 1
+			Sample Input 2 :
+				3
+				2 3
+				ez
+				ehz
+				5 5
+				acefi
+				acefi
+				3 5
+				ags
+				agtaa
+			Sample Output 2 :
+				1
+				0
+				-1
+		#include <bits/stdc++.h> 
+		int stringMania(int n, int m, string str1, string str2) {
+			if(str1 == str2)
+				return 0;
+			int i=0;
+			while(i<n && i<m){
+				if(str1[i] == str2[i]){
+					i++;
+					continue;
+				}else if(str1[i] > str2[i]){
+					return 1;
+				}else{
+					return -1;
+				}
+				i++;
+			}
+			return -1;
+		}
+
+	72) Count Of 3s:
+		You are given an integer ‘N’. You simply need to find out the number of occurrences of 3 as a digit in the
+			range of numbers from [0, N]. 
+			Note: You need to count occurrences at every place of the number.
+			For Example :
+				You are given N = 13, then the number of occurrences 
+				of 3 in range [0, 13] = 2 (3,13), you need to return 2.
+			Sample Input 1:
+				2
+				13
+				24
+			Sample Output 1:
+				2
+				3
+			Explanation For Sample Input 1:
+			In the first test case, 
+			Number of occurrences of 3 in range [0, 13] = 2 (3, 13). Return 2
+
+			In the second test case, 
+			Number of occurrences of 3 in range [0, 24] = 3 (3, 13, 23). Return 3
+			Sample Input 2:
+				2
+				10
+				33
+			Sample Output 2:
+				1
+				8
+			Explanation For Sample Input 2:
+			In the first test case, 
+			Number of occurrences of 3 in range [0, 10] = 1 (3). Return 1
+
+			In the second test case, 
+			Number of occurrences of 3 in range [0, 33] = 8 (3, 13, 23, 30, 31, 32, 33). Return 8
+
+		#include <bits/stdc++.h> 
+		long long int countOf3(int x) {
+			long long int cnt=0;
+			for(int i=3; i<=x; i++){
+				int curNum = i;
+				while(curNum>0){
+					int lastDigit = curNum%10;
+					if(lastDigit == 3)
+						cnt++;
+					curNum/=10;
+				}
+			}
+			return cnt;
+		}
+POTD-END
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 calender:
