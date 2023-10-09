@@ -3021,7 +3021,31 @@ Lecture-7:
 				//or
 				if(n==0) return false;
 				while(n%2==0) n/=2;
-				return n==1;	
+				return n==1;
+
+			// power finding without using * & pow().
+				#include <iostream>
+				#include<cmath>
+				using namespace std;
+				int main(){
+					
+					int n=-9;
+					int sqr =0;
+					
+					//without using *,/ or pow()
+					if(n<0)
+						n = -n;
+					for(int i=1; i<=n; i++)
+						sqr +=n;
+					std::cout << sqr << std::endl;
+					
+					//using pow()
+					std::cout << pow(n,2) << std::endl;
+					
+					//using *
+					std::cout << n*n << std::endl;
+					return 0;
+				}
 ---------------------------------------------------------------------------------------------------------
 	07/08/23
 Lecture-8:
@@ -7043,8 +7067,7 @@ Lecture-20:
 			}
 ---------------------------------------------------------------------------------------------------------
 	3/09/23
-Lecture-21
-	Solving LeetCode/CodeStudio Questions [Arrays]
+Lecture-21: Solving LeetCode/CodeStudio Questions [Arrays]
 		1) Rotate Array
 			Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
 				Example 1:
@@ -7199,8 +7222,7 @@ Lecture-21
 			}
 ---------------------------------------------------------------------------------------------------------
 	14/09/23
-Lecture-22
-	All about Char Arrays, Strings & solving LeetCode Questions
+Lecture-22: All about Char Arrays, Strings & solving LeetCode Questions
 		-String: 1D (one-dimensional char array.)
 		 '\0' - end of string, present at the end of string (null character).
 		 #include <iostream>
@@ -8645,8 +8667,7 @@ Lecture-22
 				};
 ---------------------------------------------------------------------------------------------------------
 	22/09/23
-Lecture-23:
-	Introduction to 2D Arrays in C++ LeetCode Questions
+Lecture-23: Introduction to 2D Arrays in C++ LeetCode Questions
 		//2D Array Implementation:
 			#include <iostream>
 			using namespace std;
@@ -9135,8 +9156,122 @@ Lecture-23:
 			};
 	
 	❌Pending task,
-		10- question leet code on 2D array
+		10 question leet code on 2D array
+		1) Spiral Matrix II :
+			https://leetcode.com/problems/spiral-matrix-ii/description/
+			-Generating Spiral matrix from given n
+				#include <iostream>
+				#include<vector>
+				using namespace std;
+
+				vector<vector<int>> generateMatrix(int n) {
+
+					vector<vector<int>> valueHolder(n,vector<int>(n,0));
+					int rows,cols;
+					rows = cols = n;
+
+					int totalElements = rows * cols;
+					cout<<totalElements<<endl;
+					int startRow = 0;
+					int startCol = 0;
+					int endCol = cols-1;
+					int endRow = rows-1;
+					int cnt=0;
+
+					while(cnt<totalElements){
+						//traversing start row
+						for(int i=startCol; cnt<totalElements, i<=endCol; i++){
+							valueHolder[startRow][i] = ++cnt;
+						}
+						startRow++;
+
+						//traversing last Col
+						for(int i=startRow; cnt<totalElements, i<=endRow; i++){
+							valueHolder[i][endCol] = ++cnt;
+						}
+						endCol--;
+
+						//traversing last row
+						for(int i=endCol; cnt<totalElements, i>=startCol; i--){
+							valueHolder[endRow][i] = ++cnt;
+						}
+						endRow--;
+
+						//traversing start col
+						for(int i=endRow; cnt<totalElements, i>=startRow; i--){
+							valueHolder[i][startCol] = ++cnt;
+						}
+						startCol++;
+					}
+					return valueHolder;
+				}
+
+				int main() {
+					int n=5;
+					vector<vector<int>> ans = generateMatrix(n);
+					for(int i=0; i<n; i++){
+						for(int j=0; j<n; j++)
+							cout<<ans[i][j]<<"\t";
+						cout<<endl;
+					}
+					return 0;
+				}
+			Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
+				class Solution {
+					public:
+					vector<vector<int>> generateMatrix(int n) {
+						vector<vector<int>> valueHolder(n,vector<int>(n,0));
+						int rows,cols;
+						rows = cols = n;
+					
+						int totalElements = rows * cols;
+						cout<<totalElements<<endl;
+						int startRow = 0;
+						int startCol = 0;
+						int endCol = cols-1;
+						int endRow = rows-1;
+						int cnt=0;
+
+						while(cnt<totalElements){
+							//traversing start row
+							for(int i=startCol; cnt<totalElements, i<=endCol; i++){
+								valueHolder[startRow][i] = ++cnt;
+							}
+							startRow++;
+
+							//traversing last Col
+							for(int i=startRow; cnt<totalElements, i<=endRow; i++){
+								valueHolder[i][endCol] = ++cnt;
+							}
+							endCol--;
+
+							//traversing last row
+							for(int i=endCol; cnt<totalElements, i>=startCol; i--){
+								valueHolder[endRow][i] = ++cnt;
+							}
+							endRow--;
+
+							//traversing start col
+							for(int i=endRow; cnt<totalElements, i>=startRow; i--){
+								valueHolder[i][startCol] = ++cnt;
+							}
+							startCol++;
+						}
+						return valueHolder;
+					}
+				};
+
+		2)
+		3)
+		4)
+		5)
+		6)
+		7)
+		8)
+		9)
+		10)
 ---------------------------------------------------------------------------------------------------------
+	05/10/23
 Lecture-24:Basic Maths for DSA || Sieve || Modular Arithmetics || Euclid’s Algorithm
 	// Count Primes
 		TC - O(n * log(log n))
@@ -9328,13 +9463,343 @@ Lecture-24:Basic Maths for DSA || Sieve || Modular Arithmetics || Euclid’s Alg
 				return 0;
 			}
 	
+	❌
 	https://codeforces.com/blog/entry/72527
 	https://www.codingninjas.com/studio/library/gcd-euclidean-algorithm
 	pigeon hole principle 4 question
 	catalan number
 	inclusion-exclusion principle.
 	-factorial of num 212!%mod , mod = 1e9+7;
+---------------------------------------------------------------------------------------------------------
+	09/10/23
+Lecture 25: Pointers in C++ || Part-1
+	-Symbol Table is an important data structure created and maintained by the compiler in
+	 order to keep track of semantics of variables i.e. it stores information about the scope and
+	 binding information about names, information about instances of various entities such as
+	 variable and function names. classes. obiects. etc.
+	syntax:
+		dataType * pointer_name = &(var_name);
 
+	eg. pointer to double.
+		double d = 90.8978;
+		double * ptr = &d;
+
+	//BAD PRACTICE:
+		-never create pointer like this, just declared, un-initialized.
+		int *p;			//this will point to random location & make random changes to memory.
+	
+	//don't know where to point, initialize with 0.
+		int * p = 0;		//null pointer, pointing to memory location which is not exist.
+		-this will create a segmentation fault.
+
+	#include <iostream>
+	using namespace std;
+
+	int main() {
+
+		int num = 90;           //this num name is mapped to some memory address where 90 is stored. (symbol table)
+		std::cout << num << std::endl;
+
+		//memory address is hexadecimal value contains 0-9 & A-F.
+		//memory address is retrived by using &(ampersand operator).
+		std::cout << "Address of num : " << &num << std::endl;
+		
+		//storing that memory address, we can store the memory address in pointer.
+		//defining different way of declaring pointer.  
+		//1. star is in the middle
+		int * ptr1 = &num;
+		std::cout << ptr1 << std::endl;      //memory location
+		std::cout << *ptr1 << std::endl;     //value at that memory location
+		
+		std::cout << std::endl;
+		int a=1;
+		//2. star is attched to pointer name.
+		int *ptr2 = &a;
+		std::cout << ptr2 << std::endl;      //memory location
+		std::cout << *ptr2 << std::endl;     //value at that memory location, *(asterisk used to retrived the value at that memory location)
+		
+		std::cout << std::endl;
+		int b=23;
+		//3. star is attched to datatype of pointer
+		int* ptr3 = &b;
+		std::cout << ptr3 << std::endl;      //memory location
+		std::cout << *ptr3 << std::endl;     //value at that memory location, *(asterisk used to retrived the value at that memory location)
+			
+		return 0;
+	}
+
+	-Here, in above program num has some address & num is a variable name, mapped to that address.
+	eg.
+		int n=43;
+		int* ptr1 = &n;
+		cout<<*ptr1;		//* act as dereferencing operator
+			-pointer to int
+			-you must create pointer of same datatype as that of variable on right side (n).
+		
+		char ch = 'Z';
+		char* ptr2 = &ch;
+			-pointer to character.
+
+		
+		double d = 4.545;
+		double* ptr3 = &d;
+			-pointer to double.
+	
+	-Pointer is used to store the addresses of variable so the size of pointer for any
+		dataType will be 8.
+
+	-A string in Solidity is length prefixed with its 256-bit (32 byte) length.
+	eg.
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				int n=43;
+				int* ptr1 = &n;
+				cout<<"n="<<*ptr1<<endl;		//* act as dereferencing operator
+				
+				std::cout << "n size : "<< sizeof(n) << std::endl;
+				std::cout << "n pointer size "<< sizeof(ptr1) << std::endl;
+					
+				char ch = 'Z';
+				char* ptr2 = &ch;
+				std::cout << std::endl;
+				std::cout << "ch = "<< *ptr2 << std::endl;
+				std::cout << "ch size "<< sizeof(ch) << std::endl;
+				std::cout << "ch pointer size "<< sizeof(ptr2) << std::endl;
+				
+				double d = 4.545;
+				double* ptr3 = &d;
+				std::cout << std::endl;
+				std::cout << "d = "<< *ptr3 << std::endl;
+				std::cout << "d size "<< sizeof(d) << std::endl;
+				std::cout << "d pointer size "<< sizeof(ptr3) << std::endl;
+				
+				string s = "Vivek Mahesh Nikate";
+				string * str_ptr = &s;
+				std::cout << std::endl;
+				std::cout << "string = "<< *str_ptr << std::endl;
+
+				std::cout << "s size "<< sizeof(s) << std::endl;
+				std::cout << "s pointer size "<< sizeof(ptr2) << std::endl;
+
+				return 0;
+			}
+			//ouput:
+				n=43
+				n size : 4
+				n pointer size 8
+
+				ch = Z
+				ch size 1
+				ch pointer size 8
+
+				d = 4.545
+				d size 8
+				d pointer size 8
+
+				string = Vivek Mahesh Nikate
+				s size 32
+				s pointer size 8
+
+	//pointer declararing, afterwords initializing
+		
+		#include <iostream>
+			using namespace std;
+			int main() {
+				
+				int n=43;
+					int* ptr1 = NULL;          //null pointer  
+					
+				// 	or
+				// 	int* ptr1 = 0;
+					
+					cout<<ptr1<<endl;					//0
+				// 	std::cout << *ptr1 << std::endl;            //segmentation fault
+					
+					ptr1 = &n;          //re-initialized to address of n.
+				std::cout << *ptr1  << std::endl;				//43
+
+				return 0;
+			}
+
+		#include <iostream>
+			int main() {
+				char ch = 'K';
+				char* ptrCH = nullptr; // Use nullptr instead of 0
+				//char* ptrCH = 0
+
+				if (ptrCH == nullptr) {
+					std::cout << "0" << std::endl;			//0
+				} else {
+					std::cout << *ptrCH << std::endl;
+				}
+
+				ptrCH = &ch;
+				std::cout << *ptrCH << std::endl;				//K
+				return 0;
+			}
+
+	//Pointer increment:
+		#include <iostream>
+		using namespace std;
+
+		int main(){
+		
+			int a = 45;
+			
+			int *p = &a;
+			std::cout << "A : "<< a << std::endl;
+			std::cout << "*p : "<< *p << std::endl;
+			std::cout << "Address of a: "<< p << std::endl;
+			std::cout << "Address of a: "<< &a << std::endl;
+			
+			//integer is of 4 bytes so,
+			(*p)++;             //use brackets to increment value at that location,
+			std::cout <<"value : " <<*p << std::endl;
+			
+			p++;                                               // nextAddress = prevAddress + 4
+			//increment pointing Address use above syntax. Here pointer p incremented by 4 bytes coz int is of 4 bytes.
+			std::cout << "Address of ptr : "<< p << std::endl;
+			
+			return 0;
+		}
+		//ouput:
+			A : 45
+			*p : 45
+			Address of a: 0x7fff5dd4ba7c
+			Address of a: 0x7fff5dd4ba7c				(prev Address)
+			value : 46
+			Address of ptr : 0x7fff5dd4ba80			(new Address)
+
+			prevAddress last 2 digit = 7c after incremeting by 1 ie. 4 bytes, last digit c after c ,d, e, f, 0.
+			after 7, there is 8,
+			so new address will be like this 7c+4 => 80 and store in the pointer variable.
+
+	//Operations:
+		#include <iostream>
+		using namespace std;
+		int main() {
+			int num =5;
+			std::cout << num << std::endl;              //5
+			
+			int a = num;
+			std::cout << a << std::endl;                //5
+			a++;
+			std::cout << a << std::endl;                //6          
+			std::cout << num << std::endl;              //a doesn't affect to num, coz its copy.    //5
+			
+			int * p1 = &num;
+			std::cout << "pointer works: " << std::endl;
+			std::cout << "num using pointer : "<< *p1 << std::endl;         //5
+			std::cout << "normal num "<< num << std::endl;                  //5
+			
+			//increment p1, will affect on normal num
+			std::cout << "Address before :" << p1 << std::endl;
+			*p1++;                              //use brackets here else it will change the pointing address
+			std::cout <<"Address After : "<< p1 << std::endl;
+			
+			p1 = &num;
+			std::cout << num << std::endl;
+			std::cout << *p1 << std::endl;
+			
+			(*p1)++;
+			std::cout << *p1 << std::endl;
+			
+			num++;
+			std::cout << num << std::endl;
+			std::cout << *p1 << std::endl;
+			
+			return 0;
+		}
+
+	//Call By Value & Call by Reference:
+
+		#include <iostream>
+		using namespace std;
+
+		void callByValue(int n){
+			n++;
+			std::cout << "inside function : "<< n << std::endl;
+		}
+
+		void callByReference(int &n){
+			n++;
+			std::cout << "Inside ref function : "<< n << std::endl;
+		}
+
+		int main() {
+			int a = 88;
+			
+			//call by value, it makes copy of original variable
+			std::cout << "Before "<<a << std::endl;
+			callByValue(a);
+			std::cout << "After "<<a << std::endl;
+			
+			//call by reference makes changes in (modify) original variable.
+			int *p = &a;
+			std::cout << "Before : "<< a << std::endl;
+			callByReference(*p);
+			std::cout << "After : "<< a << std::endl;
+			
+			return 0;
+		}
+		// output:
+				Before 88
+				inside function : 89
+				After 88
+				Before : 88
+				Inside ref function : 89
+				After : 89
+
+	//Copying a pointer to Another pointer:
+		#include <iostream>
+		using namespace std;
+		int main(){
+			
+			int a = 45;
+			int *p = &a;
+
+			std::cout << "A : "<< a << std::endl;
+			std::cout << "*p : "<< *p << std::endl;
+			std::cout << "Address using &a : "<< &a << std::endl;
+			std::cout << "Address using p : "<< &a << std::endl;
+			
+			// copying pointer
+			int *q = p;
+			std::cout << "*q : "<< *q << std::endl;
+			std::cout << "Address of q " << q << std::endl;
+			return 0;
+		}
+		//ouput:
+			A : 45
+			*p : 45
+			Address using &a : 0x7ffe389b3f14
+			Address using p : 0x7ffe389b3f14
+			*q 45
+			Address of q 0x7ffe389b3f14
+		
+	//Double Pointer: pointer to pointer
+		#include <iostream>
+		using namespace std;
+
+		int main(){
+			int a = 45;
+			
+			int *p = &a;
+			std::cout << "A : "<< a << std::endl;
+			std::cout << "*p : "<< *p << std::endl;
+			std::cout << "Address of a: "<< p << std::endl;
+			std::cout << "Address of a: "<< &a << std::endl;
+			
+			int **ptrTOptr = &p;
+			std::cout << "pointer to pointer : " <<**ptrTOptr << std::endl;
+			std::cout << "Address pointer p:"<< ptrTOptr << std::endl;
+			std::cout << "Address pointer p:"<< &p << std::endl;
+			return 0;
+		}
+
+	//
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -14219,8 +14684,877 @@ POTD:-[Problem of the Day]
 			}
 			return cnt;
 		}
+
+	73) Valid String:
+		There is a town named Chefland where Chef lives.
+			One can only enter the Chefland through visa which is
+			granted by head Chef of the town named Chef
+			Sanjeev Kapoor. Chef Sanjeev is very interested in the
+			validation of string.
+			Hence he devised a test to get into the Chefland. Chef
+			Sanjeev Kapoor considers a string to be valid if all
+			characters of the string appear the same number of
+			times. It is also valid if he can remove just 1 character
+			at 1 index in the string, and the remaining characters
+			will occur the same number of times. Given a string S,
+			determine if it is valid. If so, return YES, otherwise
+			return NO.
+			For example, if S="abc", it is a valid string because
+			frequencies are {a:1, b:1,c:1}. So is S="abcc" because
+			we can remove one c and have 1 of each character in
+			the remaining string. If S="abccc" however, the string
+			is not valid as we can only remove 1 occurrence of c.
+			That would leave character frequencies of {a:1, b:1,c:2}.
+		
+			Input Format:
+				A single string S.
+			Constraints:
+				1 ≤ |S| ≤ 100000
+				Each character s[i] belongs to [a-z]
+			Time limit = 1 sec
+			Output Format:
+				Print YES if string S is valid, otherwise, print NO.
+			
+			Sample Input 1:
+				aabbcd
+			Sample Output 1:
+				NO
+			Sample Input 2:
+				abcdefghhgfedecba
+			Sample Output 2:
+				YES
+				Explanation:
+				For testcase 2:
+				All characters occur twice except for e which occurs 3 times. We can delete one instance of e to have a valid string.
+
+		#include<bits/stdc++.h>
+		using namespace std;
+		int main() {
+			string s;
+			cin>>s;
+			int charCountArr[26] = {0};
+			
+			//counting the characters..
+			for(int i=0; i<s.length(); i++){
+				charCountArr[s[i]-'a']++;
+			}
+
+			//checking count
+			int cnt=0;
+			int num = charCountArr[0];
+
+			for(int i=1; i<26; i++){
+				if(charCountArr[i] == num || charCountArr[i] == 0){
+					continue;
+				}else{
+					cnt++;
+				}
+			}
+
+			if(cnt<=1 || s.length()==1)
+				cout<<"YES";
+			else
+				cout<<"NO";
+			return 0;
+		}
+
+	74) Find the correct password:
+		Mike is an evil plotting genius and has gotten hold of a
+			list of all possible passwords for a certain user
+			account. The first thing he noticed was all the
+			passwords are of odd length. Mike assumes that the
+			correct password is the one which can be found in
+			both the original and reverse order in the list. For
+			example, if the word “tulipan” would be the correct
+			password, the word “napilut” has to also appear in the
+			list. Given that both words are correct passwords,
+			Mike will try to use both, one at a time.
+			Help Mike discover what the correct password is and
+			output its length and central character.
+			Input Format:
+				The first line of input contains the integer N, the number of possible
+				passwords. Each of the following N lines contains a single word S, its length being an odd
+				number. All characters are lowercase letters of the English alphabet.
+			Constraints:
+				1 ≤ N ≤ 100
+				2 < S < 14
+				Time limit = 1 sec
+			Output Format:
+				The first and only line of output must contain the length of the correct password
+				and its central letter. The solution will be unique.
+			
+			Sample Input 1:
+				4
+				las
+				god
+				psala
+				sal 
+			Sample Output 1:
+				3 a
+			Sample Input 2:
+				4
+				kisik
+				ptq
+				tttrp
+				tulipan 
+			Sample Output 2:
+				5 s
+			Explanation:
+				For testcase 1:
+				The required pair of words is “las” and “sal”. Their length is 3 letters and the central character is 'a'.
+
+				For testcase 2:
+				The word “kisik” can be found in both the original and reverse order on the list (the word is a palindrome), so it is a valid correct password. 
+
+		#include<bits/stdc++.h>
+		using namespace std;
+		int main() {
+			int n;
+			cin>>n;
+
+			vector<string> s(n);
+			for(int i=0; i<n; i++){
+				string temp;
+				cin>>temp;
+				s[i] = temp;
+			}
+			int len=0,flg=0;
+			char midL;
+			for(int i=0; i<n; i++){
+				string f1 = s[i];
+				reverse(f1.begin(), f1.end());
+
+				for(int j=0; j<n; j++){
+					if(f1 == s[j]){
+
+						len = f1.length();
+						midL = f1[len/2];
+						flg = 1;
+						break;
+					}
+				}
+				if(flg)
+					break;
+			}
+
+			cout<<len<<" "<<midL;
+			return 0;
+		}
+
+	75) Self Dividing Numbers:
+		A Ninja wants to collect all possible self-dividing numbers from a given range of numbers.
+			A self-dividing number is a number that is divisible by every digit it contains.
+			For Example:
+				128 is a self-dividing number because
+				128 % 1 == 0, 128 % 2 == 0, and 128 % 8 == 0.
+			Given a ‘LOWER’ and ‘UPPER’ number bound, your
+			task is to find all possible self-diving numbers in
+			the range of ‘LOWER’ to ‘UPPER’.
+			Note:
+				A self-dividing number is not allowed to contain the digit zero.
+				You do not need to print anything, it has already been taken care of. Just
+				implement the given function.
+			Sample Input 1:
+				2
+				10 30
+				15 45
+				Sample Output 1:
+				11 12 15 22 24
+				15 22 24 33 36 44
+				Explanation For Sample Input 1:
+				Test Case 1:
+
+				For the first test case, the output [11, 12, 15, 22, 24] is the required list of self-dividing numbers containing only those numbers that have all the digits that can divide the number and do not contain the digit ‘0’ in it.
+
+				Test Case 2:
+
+				For the first test case, The output [15, 22, 24, 33, 36, 44] is the required list of self-dividing numbers containing only those set of numbers that have all the digits which can divide the number and that do not contain the digit ‘0’ in it.
+			Sample Input 2:
+				2
+				1 22
+				100 150
+				Sample Output 2:
+				1 2 3 4 5 6 7 8 9 11 12 15 22
+				111 112 115 122 124 126 128 132 135 144
+
+		#include <bits/stdc++.h> 
+		vector < int > findAllSelfDividingNumbers(int lower, int upper) {
+
+			//vector for storing the ans
+			vector<int> ans;
+
+			for(int i=lower; i<= upper; i++){
+				int currentDigitHolder = i;
+				int currentDigit = i;
+				while(currentDigit>0){
+					int lastDigit = currentDigit % 10;
+					if(lastDigit == 0 || (currentDigitHolder % lastDigit != 0))
+						break;
+					currentDigit /=10;
+				}
+				if(currentDigit == 0)
+					ans.push_back(i);
+			}
+			return ans;
+		}
+
+	76) Rearrange in Zig-Zag Order:
+		https://www.codingninjas.com/studio/problems/zig-zag-array_1698577
+		-just returned the empty vector (GLITCHED QUESTION).
+		#include <bits/stdc++.h> 
+		vector<int> zigZag(vector<int> arr, int n){
+			vector<int> ans;
+			return ans;
+		}
+
+	77) Fourth Largest Element in the Array:
+		You are given an array consisting of 'N' integers. You have to find the fourth
+			largest element present in the array. If there is no such number present in the
+			array, then print the minimum value of an integer which is -2147483648.
+			Follow Up: 
+				Constraints :
+				1 <= N < 10^6
+				-10^6 <= element <= 10^6
+			Time Limit: 1 sec
+			Sample Input 1:
+				5
+				3 5 1 3 1
+				Sample Output 1:
+				1
+				Explanation Of Sample Input 1:
+				5 is the largest element, 3 is the second-largest element, again we have a 3 so it's the third largest and 1 is the fourth-largest, hence the answer 1.
+				Sample Input 2:
+				4
+				9 9 9 9
+				Sample Output 2:
+				9
+		//not optimized:
+			#include <bits/stdc++.h>
+			int getFourthLargest(int arr[], int n){
+				if(n<4)
+					return -2147483648;
+
+				vector<int> ans(n);
+
+				for(int i=0; i<n;i++){
+					ans.push_back(arr[i]);
+				}
+
+				sort(ans.begin(), ans.end());
+				reverse(ans.begin(), ans.end());
+				return ans[3];
+			}
+
+	78) Next Smaller Element / Nearest Smaller Element:
+		https://www.codingninjas.com/studio/problems/next-smaller-element_1112581
+
+		//NOT Optimized:
+			#include <bits/stdc++.h>
+			vector<int> nextSmallerElement(vector<int> &arr, int n){
+				int i=0;
+				vector<int> ans;
+				while(i<n){
+					int currentNum = arr[i];
+					int currentIndex = i+1;
+
+					while(currentIndex < n){
+						if(currentNum > arr[currentIndex]){
+							ans.push_back(arr[currentIndex]);
+							break;
+						}
+						currentIndex++;
+					}
+					if(currentIndex == n)
+						ans.push_back(-1);
+					i++;
+				}
+				return ans;
+			}
+		
+		// Optimized:
+			#include <bits/stdc++.h>
+			vector<int> nextSmallerElement(vector<int> &arr, int n){
+				vector<int> ans(n, -1);  // Initialize the result vector with -1.
+				stack<int> st;  // Create a stack to keep track of indices.
+
+				for (int i = 0; i < n; i++) {
+					while (!st.empty() && arr[i] < arr[st.top()]) {
+						ans[st.top()] = arr[i];  // Update the result for elements in the stack.
+						st.pop();
+					}
+					st.push(i);  // Push the current index onto the stack.
+				}
+				return ans;   
+			}
+
+		#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+
+			int main() {
+				int n;
+				cin>>n;
+				vector<int> holder(n);
+				
+				for(int i=0;i<n;i++){
+					cin>>holder[i];
+				}
+				
+				for(int a: holder)
+					cout<<a<<" ";
+					
+				std::cout << std::endl;
+				
+				vector<int> MainAns(n);
+				
+				for(int i=n-1;i>=0;i--){
+					int currentElement = holder[i];
+					int index = i-1;
+					
+					while(index>=0){
+						if(currentElement > holder[index]){
+							MainAns.push_back(holder[index]);
+							break;
+						}
+						index--;
+					}
+					if(index<0)
+						MainAns.push_back(-1);
+				}
+				
+				std::cout << std::endl;
+				reverse(MainAns.begin(), MainAns.end());
+				for(int i=0; i<n; i++)
+					cout<<MainAns[i]<<" ";
+				
+				return 0;
+			}
+			ouput:
+			5
+			11
+			4
+			24
+			32
+			32
+			11 4 24 32 32 
+
+			-1 -1 4 24 24 
+
+	79) Added Character:
+		You are given a string 'S'. Now one more additional character is introduced in this string, which turns 'S'
+			into new string 'T'. You have to find out this newly added character.
+			Note:
+			1. All the characters in string 'S' and 'T' consist of uppercase English
+			alphabets.
+			2. Length of string 'T' is always 1 more than the length of string 'S'.
+			Constraints:
+				1 <= TEST <= 100
+				1 <= |S|, |T| <= 10^4
+				Where '|S|' and '|T|' denotes the length
+				of he strings 'S' and 'T' respectively.
+			Time Limit: 1 sec.
+
+			Sample Input 1:
+				2
+				APPLE 
+				APPHLE
+				CODE
+				CODER
+				Sample Output 1:
+				H
+				R
+				Explanation For Sample Output 1:
+				In test case 1, As only character which is present in “APPHLE” but didn’t present in “APPLE” is ‘H’.
+
+				In test case 2, As only character which is present in “CODER” but didn’t present in “CODE" is ‘R’.
+				Sample Input 2:
+				2
+				MANGO 
+				MANNGO
+				NINJA
+				NIINJA
+				Sample Output 2:
+				N
+				I
+				Explanation For Sample Output 2:
+				In test case 1, As “MANGO” contains only 1 occurrence of ‘N’ but “MANNGO” contains 2 occurrences of ‘N’.
+
+				In test case 2, As “NINJA” contains only 1 occurrence of ‘I’ but “NIINJA" contains 2 occurrences of ‘I’.
+
+		#include <bits/stdc++.h> 
+		char findAddedCharacter(string &s, string &t) {
+			int i=0;
+			while(i<s.length()){
+				if(s[i] != t[i])
+					return t[i];
+				i++;
+			}
+			if(i==s.length())
+				return t[t.length()-1];
+		}
+	
+	80) Three Pointer:
+		You are given three arrays X, Y and Z of size A,B and C
+			respectively.Also, all three arrays are sorted in nondecreasing order. Find i, j, k such that : 0 <= i < A, 0 <=
+			j < B, 0 <= k < C and max(abs(X[i] - Y[j]), abs(Y[j] - Z[k]), abs(Z[k] - X[i])) is minimized. 
+			Your task is to return the minimum of all the max(abs(X[i] - Y[j]), abs(Y[j] - Z[k]), abs(Z[k] - X[i]))
+			Note:
+				1. All the arrays are sorted in nondecreasing order.
+				2. abs(x) denotes the absolute value of x, i.e. if x<0, the abs function returns (-x)
+					so that the final value of x becomes positive.
+			Constraints:
+				1 <= T <= 100
+				1 <= A,B,C <= 10^4
+				1 <= X[i] <= 10^4
+				1 <= Y[i] <= 10^4
+				1 <= Z[i] <= 10^4
+				Time Limit: 1 sec
+			
+			Sample Input 1:
+				1
+					5
+					1 2 3 4 5
+					5
+					1 3 5 7 9
+					3
+					2 4 6
+					Sample Output 1:
+					1 
+					Explanation For Sample Input 1:
+					For firstestcase :
+					One of the possible answer is choose i = 0, j = 0 and k = 1.
+					Thus it will 1 answer.
+					Sample Input 2:
+					1
+					4
+					1 1 1 1
+					4
+					2 2 2 2
+					5
+					7 7 7 7 7
+					Sample Output 2:
+					6
+
+		//NOT Optimized:
+			#include <bits/stdc++.h> 
+			int threePointer(vector<int>& X, vector<int>& Y, vector<int>& Z){   
+				int i,j,k,currentMax = INT_MAX;
+				for(i=0;i<X.size(); i++){
+					for(j=0; j<Y.size(); j++){
+						for(k=0; k<Z.size();k++){
+							int temp = max(abs(X[i]-Y[j]), max(abs(Y[j]-Z[k]), abs(Z[k]-X[i])));
+							if(temp < currentMax)
+								currentMax=temp;
+						}
+					}
+				}
+				return currentMax;
+			}
+		
+		// Partially Optimized:
+			#include <bits/stdc++.h> 
+			int threePointer(vector<int>& X, vector<int>& Y, vector<int>& Z){	
+				std::sort(X.begin(), X.end());
+				std::sort(Y.begin(), Y.end());
+				std::sort(Z.begin(), Z.end());
+
+				int i = 0, j = 0, k = 0;
+				int currentMax = INT_MAX;
+
+				while (i < X.size() && j < Y.size() && k < Z.size()) {
+					int maxX = X[i], maxY = Y[j], maxZ = Z[k];
+					int minX = X[i], minY = Y[j], minZ = Z[k];
+
+					int temp = std::max({abs(maxX - minY), abs(maxY - maxZ), abs(maxZ - minX)});
+					currentMax = std::min(currentMax, temp);
+
+					// Move the pointer associated with the minimum value
+					if (X[i] <= Y[j] && X[i] <= Z[k]) {
+						i++;
+					} else if (Y[j] <= X[i] && Y[j] <= Z[k]) {
+						j++;
+					} else {
+						k++;
+					}
+				}
+				return currentMax;
+			}
+
+	81) Row Wave Form:
+		Problem Statement
+			You are given a 2D array with dimensions "N*M'. You need to read the array elements
+			row-wise and return a linear array that stores the elements like a wave ie the 1st-
+			row elements are stored from left to right, 2nd-row elements are stored from right to
+			left, and so on.
+			Constraints:
+				1 <= (T' <= 10
+				1 <= 'N', 'M' <= 10^3
+				1 <= 'ARR[i][g] <= 10^5
+			Where ARR[i][j] is the array element in the ith row of the jth column.
+				Time limit: 1 second
+			Sample Input 1:
+				2
+				2 2 
+				1 2
+				0 5
+				2 3
+				5 1 2
+				7 0 1
+			Sample Output 1:
+				1 2 5 0
+				5 1 2 1 0 7
+				Explanation Of Input 1:
+				For test case 1, the array is traversed as:
+				The first row is traversed from left to right. -> [1, 2]
+				The second row is traversed from right to left. -> [5, 0]
+				Therefore the final answer is [1, 2, 5, 0].
+
+				For test case 2, the array is traversed as:
+				First row is traversed from left to right. -> [5, 1, 2]
+				Second row is traversed from right to left. -> [1, 0, 7]
+				Therefore the final answer is [5, 1, 2, 1, 0, 7]
+			Sample Input 2:
+				1
+				3 3
+				0 1 1
+				8 0 9
+				5 4 1
+			Sample Output 2
+				0 1 1 9 0 8 5 4 1
+				Explanation Of Input 1:
+				For test case 1, the array is traversed as:
+				The first row is traversed from left to right. -> [0, 1, 1]
+				The second row is traversed from right to left. -> [9, 0, 8]
+				The third row is traversed from left to right -> [5, 4, 1]
+				Therefore the final answer is [0, 1, 1, 9, 0, 8, 5, 4, 1]
+		#include <bits/stdc++.h> 
+		vector<int> rowWaveForm(vector<vector<int>> &mat) {
+			vector<int> ans;
+			for(int i=0; i<mat.size(); i++){
+				int j;
+				if(i&1){
+					j=mat[0].size()-1;
+					for(;j>=0;j--)
+						ans.push_back(mat[i][j]);
+				}else{            
+					j=0;
+					for(;j<mat[0].size();j++)
+						ans.push_back(mat[i][j]);
+				}
+			}
+			return ans;
+		}
+
+	82) Move Zeroes To End:
+		Problem Statement
+			Given an unsorted array of integers, you have to move the array elements in a way
+			such that all the zeroes are transferred to the end, and all the non-zero elements are
+			moved to the front. The non-zero elements must be ordered in their order of
+			appearance.
+			For example, if the input array is: [0, 1, -2, 3, 4, 0, 5, -27, 9, 0], then the output array
+			must be:
+			[1, -2, 3, 4, 5, -27, 9, 0, 0, 0].
+			Expected Complexity: Try doing it in O(n) time complexity and O(1) space complexity.
+			Here, 'n' is the size of the array.
+			Sample Input 1:
+				2
+				7
+				2 0 4 1 3 0 28
+				5
+				0 0 0 0 1
+			Sample Output 1:
+				2 4 1 3 28 0 0
+				1 0 0 0 0
+			The Explanation For Sample Output 1 :
+				-In the first testcase, All the zeros are moved towards the end of the array, 
+				and the non-zero elements are pushed towards the left, maintaining their order with respect to the original array.
+				-In the second testcase, All zero are moved towards the end, 
+				hence the only non-zero element i.e 1 is in the starting of the array 
+			Sample Input 2:
+				2
+				5
+				0 3 0 2 0
+				4
+				0 0 0 0
+			Sample Output 2:
+				3 2 0 0 0
+				0 0 0 0
+
+		void pushZerosAtEnd(vector<int> &arr) {
+			int cnt=0;
+			vector<int> ans;
+			for(int i=0; i<arr.size() ; i++)
+				if(arr[i] != 0)
+					ans.push_back(arr[i]);
+				else
+					cnt++;
+			
+			for(int i=0; i<cnt; i++)
+				ans.push_back(0);
+			
+			arr = ans;
+		}
+
+		//or in-place optimization:
+			void pushZerosAtEnd(vector<int> &arr) {
+				int nonZeroPos = 0;  // Initialize a pointer to track the position for non-zero elements
+
+				for (int i = 0; i < arr.size(); i++)
+					if (arr[i] != 0) {
+						// Swap the current element with the element at nonZeroPos
+						swap(arr[i], arr[nonZeroPos]);
+						nonZeroPos++;
+					}
+			}
+
+	83) Minimum and Maximum Cost to buy N Candies:
+		Problem Statement
+			Ram went to a specialty candy store in Ninjaland which has 'N' candies with different costs.
+			The Candy shop gives a special offer to its customers. A customer can buy a single candy from
+			the store and get at most 'K' different candies for free. Now, Ram is interested in knowing the
+			maximum and the minimum amount he needs to spend for buying all the candies available in
+			the store.
+			Note: In both cases, Ram must utilize the offer i.e. if 'K' or more candies are available, he must
+			take 'K' candies for every candy purchase. If less than K candies are available, he must take all
+			candies for a candy purchase.
+			For Example
+				For 'N'= 5 and 'K' = 2
+				Let the cost of different candies in the store be: [9 8 2 6 4]
+				For the minimum amount:
+				Ram can buy a candy with cost 2 and take candies with costs 9 and 8 for free.
+				Then, he can buy a candy with cost 4 and take candy with cost 7 for free.
+				Thus, the minimum cost will be 6 i.e. 2 + 4.
+				For the maximum amount:
+				Ram can buy a candy with cost 9 and take candies with costs 2 and 6 for free.
+				Then, he can buy candy at cost 8 and take candy at cost 4 for free.
+				Thus, the minimum cost will be 17 i.e. 9 + 8.
+			Thus, Minimum = 6 and Maximum = 17.
+			Sample Input 1:
+				1
+				4 2
+				3 2 1 4
+				Sample Output 1 :
+				3 7
+				Explanation :
+				For the minimum amount: 
+				Ram can buy candy with cost 1 and take candies with costs 3 and 4 for free. 
+				Then, he can buy candy with cost 2.
+				Thus, the minimum cost will be 3 i.e. 1 + 2. 
+
+				For the maximum amount: 
+				Ram can buy candy with cost 4 and take candies with costs 1 and 2 for free. 
+				Then, he can buy candy with cost 3. 
+				Thus, the minimum cost will be 7 i.e. 4 + 3.
+			Sample Input 2:
+				2
+				5 2
+				9 8 2 6 4
+				3 0
+				1 5 4
+				Sample Output 2 :
+				6 17
+				10 10
+
+		#include <bits/stdc++.h>
+		long long minimumCost(vector<int> &cost, int n, int k){
+			long long sum=0;
+			// if(k==0){
+			//     for(int i=0; i<n;i++)			//we can ignore these lines of code
+			//         sum += cost[i];
+			//     return sum;
+			// }
+
+			sort(cost.begin(), cost.end());
+			int cnt=0, i=0;
+			while(cnt<n){
+				cnt += k+1;
+				sum += cost[i++];
+			}
+			return sum;
+		}
+
+		// Function to calculate maximum cost.
+		long long maximumCost(vector<int> &cost, int n, int k){
+			long long sum=0;
+
+			// if(k==0){
+			//     for(int i=0; i<n;i++)			//we can ignore these lines of code
+			//         sum += cost[i];
+			//     return sum;
+			// }
+
+			sort(cost.begin(), cost.end());  //increasing order sorted
+			reverse(cost.begin(), cost.end());  //decreasing order sorted
+			int cnt=0, i=0;
+			while(cnt<n){
+				cnt += k+1;
+				sum += cost[i++];
+			}
+			return sum;
+		}
+
+	84) Number of Good Indices:
+		Problem statement:
+			You are given an array 'A' of length 'N' consisting of positive integers. 
+			Your task is to tell the number of 'good indices' in the array 'A'.
+			An index 'X' is called a 'good index' if and only if:
+			There are at least 2 indices 'i != X' and 'j != X', such that 'A[X] % A[i] = 0' and 'A[X] % A[j] = 0'.
+			Your task is to return the number of 'good indices'.
+			Example:
+				'N' = 5
+				'A' - [4, 2, 2, 6, 7]
+				Here, index '9' is a good index because its value '4' is divisible by values
+				present at the indices *1' and '2'. Similarly, index '3' is a good index.
+				Therefore, the answer is '2
+			Sample Input 1:
+				2
+				6
+				4 8 6 3 7 1
+				6
+				4 1 10 4 5 9
+				Sample Output 1:
+				2
+				3
+				Explanation Of Sample Input 1:
+				For test case 1:
+				The good indices are '1' and '2' because, for index '1', there are two indices whose value perfectly divides the value present at the index '1', i.e., index '0' and index '5'. Similarly, for index '2', the two indices are '3' and '5'.
+
+				For test case 2:
+				The good indices are '0', '2' and '3'. For index '0', the two indices are '1' and '3', whose value at those indices in the array perfectly divides the array. Similar is the case for index '2' and '3'.
+				Sample Input 2:
+				2
+				6
+				3 10 7 4 2 10
+				6
+				4 5 4 8 1 4
+				Sample Output 2 :
+				2
+				4
+		
+		int numberOfGoodIndices(int n, vector<int>& a) {
+			int MainCNT=0;
+			for(int i=0; i<n; i++){
+				int currentNum= a[i],cnt=0;
+				for(int j=0; j<n; j++){
+					if(i==j)
+						continue;
+					if(currentNum%a[j] == 0)
+						cnt++;
+					if(cnt>=2){
+						MainCNT++;
+						break;
+					}
+				}
+			}
+			return MainCNT;
+		}
+
+	85) Find First and Last Position of Element in Sorted Array:
+		https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
+		Given an array of integers nums sorted in non-decreasing order, 
+		     find the starting and ending position of a given target value.
+			If target is not found in the array, return [-1, -1].
+			You must write an algorithm with O(log n) runtime complexity.
+
+			Example 1:
+				Input: nums = [5,7,7,8,8,10], target = 8
+				Output: [3,4]
+			Example 2:
+				Input: nums = [5,7,7,8,8,10], target = 6
+				Output: [-1,-1]
+			Example 3:
+				Input: nums = [], target = 0
+				Output: [-1,-1]
+			Constraints:
+				0 <= nums.length <= 105
+				-109 <= nums[i] <= 109
+				nums is a non-decreasing array.
+				-109 <= target <= 109
+		//Brute Force Tech, Optimized.
+			class Solution {
+				public:
+				vector<int> searchRange(vector<int>& nums, int target) {
+					vector<int> ans;
+					//traversing from start
+					for(int i=0; i<nums.size(); i++){
+						if(nums[i] == target){
+							ans.push_back(i);
+							break;
+						}
+					}
+				
+					if(ans.size()==0)
+						ans = {-1,-1};
+
+					/* or
+						if(ans.size()==0){
+							ans = {-1,-1};
+							return ans;
+						}
+
+						if(ans.size()==0)
+							return {-1,-1};					
+					*/
+				
+					//traversing from end
+					for(int i=nums.size()-1; i>=0; i--){
+						if(nums[i] == target){
+							ans.push_back(i);
+							break;
+						}
+					}
+					return ans;
+				}
+			};
+		
+		//Binary Search Tech. Optimized
+			class Solution {
+				public:
+				vector<int> searchRange(vector<int>& nums, int target) {
+					int start=0,end=nums.size()-1;
+					int mid = (start+end)/2;
+					int found;
+					while(start<=end){
+						if(nums[mid] == target){
+							found = mid;
+							break;
+						}else if(target<nums[mid]){
+							end = mid-1;
+						}else{
+							start = mid+1;
+						}
+						mid = (start+end)/2;
+					}
+
+					if(start>end)
+						return {-1,-1};
+
+					int left = found, right = found;
+					leftCheck:
+					if(left>0 && nums[left] == nums[left-1]){
+						left--;
+						goto leftCheck;
+					}
+
+					rightCheck:
+					if(right<nums.size()-1 && nums[right] == nums[right+1]){
+						right++;
+						goto rightCheck;
+					}
+					return {left, right};
+				}
+			};
+
+	86) 
+
+	87)
+
+	88)
+
+	89)
+
+	90)
 POTD-END
----------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 calender:
 	today 2nd sept 2023 (saturday)
