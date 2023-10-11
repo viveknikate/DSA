@@ -1,8 +1,9 @@
 -When you start reading/ revising notes, read problem statement properly & think logical,
  if you don't understand the program, prefer try to resolve the problem by yourself.
 -Google it if you don't understand the question.
+-----------------------------------------------------------------------------------------------------------
 	01/08/2023
-Lecture-1
+Lecture-1: Intro to Programming & Flowcharts
      -Understand the problem
      -check given data
      -search approach (make flowchart)
@@ -193,7 +194,7 @@ Lecture-1
 	-Compiler: convert High Level Language to Binary Language (machine understandable)
 ---------------------------------------------------------------------------------------------------------
 	02/08/2023
-Lecture-2:
+Lecture-2: Write Your First Program in C++
 	Compiler:
 		-convert program to machine understandable Language ( Binary ).
 		-checks the error & let you know.
@@ -486,7 +487,6 @@ Lecture-2:
 						return 0;
 					}
 
-
 			Relational:- 
 				To Check
 				== is equal to equal to (double equals to)
@@ -657,8 +657,7 @@ Lecture-2:
 				}
 ---------------------------------------------------------------------------------------------------------
 	03/08/2023
-Lecture-3:
-	Conditionals, Loops, Patterns
+Lecture-3: Conditionals, Loops, Patterns
 	1) if Statement
 		if(condition){
 			//code block executed when condition evaluates as TRUE
@@ -1055,7 +1054,7 @@ Lecture-3:
 			cout<<"A :: "<<a;
 ---------------------------------------------------------------------------------------------------------
 	03/08/2023
-Lecture-4:
+Lecture-4: Solving Pattern Questions (Part-2)
 	if 'return 0' is not there at the end still program works.
 	Patterns solving
 	1)	1 2 3 4 5
@@ -2195,8 +2194,7 @@ Lecture-4:
 			}
 ---------------------------------------------------------------------------------------------------------
 	04/08/2023
-Lecture-5:
-	Bitwise Operators, For Loops, Operator Precedence & Variable Scoping
+Lecture-5: Bitwise Operators, For Loops, Operator Precedence & Variable Scoping
 	-Bitwise Operator
 		This operator will work on BIT level.
 			1). AND (&)
@@ -2720,8 +2718,7 @@ Lecture-5:
 				}
 ---------------------------------------------------------------------------------------------------------
 	05/08/23
-Lecture-6:
-	Binary & Decimal Num System
+Lecture-6: Binary & Decimal Num System
 		1) Decimal to Binary
 			-divide by 2.
 			-Store remainder
@@ -2885,8 +2882,7 @@ Lecture-6:
 				resulting in the bitset value "00000101".
 ---------------------------------------------------------------------------------------------------------
 	06/08/23
-Lecture-7:
-	LeetCode Problem Solving Session
+Lecture-7: LeetCode Problem Solving Session
 	eg.
 		max/min int printing:
 			#include<climits>				
@@ -3048,8 +3044,7 @@ Lecture-7:
 				}
 ---------------------------------------------------------------------------------------------------------
 	07/08/23
-Lecture-8:
-	Switch case & functions:
+Lecture-8: Switch case & functions:
 		syntax.
 			switch(condition){
 				case value_1 :
@@ -3675,7 +3670,7 @@ Lecture-8:
 		3]. Square root of n ❌
 ---------------------------------------------------------------------------------------------------------
 	08/08/23
-Lecture-9:
+Lecture-9:  Introduction to Arrays in C++
 	Introduction to Arrays
 		-Array is a collection of variables of the same type.
 		-Arrays are used to store multiple values of same Datatype in a single variable, 
@@ -4111,7 +4106,7 @@ Lecture-9:
 					}
 ---------------------------------------------------------------------------------------------------------
 	09/08/23
-Lecture-10:
+Lecture-10: Solving LeetCode/CodeStudio Questions [Arrays]
 	Alternate swap
 		i/p-> {1,2,3,4,5,6};
 		o/p-> {2,1,4,3,6,5};
@@ -4605,8 +4600,7 @@ Lecture-10:
 		remain.. ❌
 ---------------------------------------------------------------------------------------------------------
 	10/08/23
-Lecture-11:
-	Time & Space Complexity, How to avoid Time Limit Exceeded [TLE]
+Lecture-11: Time & Space Complexity, How to avoid Time Limit Exceeded [TLE]
 		Time Complexity:
 			-It is the amount of time taken by an algorithm to run, as function of length of input.
 			-the computational complexity that describes the amount of computer time it takes to run an algorithm. or
@@ -4733,8 +4727,7 @@ Lecture-11:
 				-if we declare any variable, it will take fixed space, so space Complexity O(1).
 ---------------------------------------------------------------------------------------------------------
 	12/08/23
-Lecture-12:
-	Binary Search:
+Lecture-12: Binary Search:
 		Binary search is applied only in list/ array where the data is sorted, 
 		 either in increasing or in decreasing order, called monotonic function.
 		Steps for Binary Search :
@@ -4820,8 +4813,7 @@ Lecture-12:
 			}
 ---------------------------------------------------------------------------------------------------------
 	12/08/23
-Lecture-13:
-	Questions on BinarySearch
+Lecture-13: Questions on BinarySearch
 	#Pair in C++ Standard Template Library (STL)
 		-Pair is used to combine together two values that may be of different data types. 
 		-Pair provides a way to store two heterogeneous objects as a single unit. 
@@ -5080,8 +5072,7 @@ Lecture-13:
 			}
 ---------------------------------------------------------------------------------------------------------
 	13/08/23
-Lecture-14:
-	Binary Search Interview Questions | Problem set-2
+Lecture-14: Binary Search Interview Questions | Problem set-2
 		Find the pivot in sorted & rotated array,
 		eg.
 			sorted array : [1,2,3,4,5,6,7,8,9];	
@@ -5316,8 +5307,7 @@ Lecture-14:
 			}
 ---------------------------------------------------------------------------------------------------------
 	14/08/23
-Lecture-15:
-	Book Allocation Problem || Aggressive Cows Problem || Binary Search Advanced Problems
+Lecture-15: Allocation Problem || Aggressive Cows Problem || Binary Search Advanced Problems
 		1). Book Allocation:
 			HW- https://www.codingninjas.com/studio/problems/allocate-books_1090540
 		2). Painter partition
@@ -5832,7 +5822,6 @@ Lecture-19: C++ STL (Standard Template Library)
 			Container-    Vector, Deque, List, etc. 						| 	Vector, Deque, List, etc..
 			Effects  -    Increases container size by 1 						|	 Decreases container size by 1.
 
-
 		-std::vector in C++, It is defined inside the <vector> header file.
 
 		Reverse Vector:
@@ -6188,6 +6177,15 @@ Lecture-19: C++ STL (Standard Template Library)
 				Insertion or removal of elements – linear in the distance to the end of the vector O(N)
 				Knowing the size – constant O(1)
 				Resizing the vector- Linear O(N)
+		
+		◉ NOTE:
+			if you mention the size of vector while declaring it, like vector<int> ans(n); or vector<int> ans(5);
+			then don't use push_back() to insert element at the end,
+			directly use the index where you want to insert the value.
+			like
+				ans[0] = 1;
+				ans[1] = 2;
+				//no			ans.push_back(1);
 
 	3) Deque:
 		-Doubly ended queue
@@ -6788,8 +6786,7 @@ Lecture-19: C++ STL (Standard Template Library)
 				Sorted: 11 22 23 33 44 45 55 67 78 90 675 879
 ---------------------------------------------------------------------------------------------------------
 	27/08/23
-Lecture-20:
-	LeetCode Practice:
+Lecture-20: LeetCode Practice:
 		1) Reverse Vector:
 			-reverse(startIndex, endIndex);
 			-reverse function defined in the algorithm header file.
@@ -9272,7 +9269,7 @@ Lecture-23: Introduction to 2D Arrays in C++ LeetCode Questions
 		10)
 ---------------------------------------------------------------------------------------------------------
 	05/10/23
-Lecture-24:Basic Maths for DSA || Sieve || Modular Arithmetics || Euclid’s Algorithm
+Lecture-24: Basic Maths for DSA || Sieve || Modular Arithmetics || Euclid’s Algorithm
 	// Count Primes
 		TC - O(n * log(log n))
 		https://leetcode.com/problems/count-primes/description/
@@ -9472,13 +9469,27 @@ Lecture-24:Basic Maths for DSA || Sieve || Modular Arithmetics || Euclid’s Alg
 	-factorial of num 212!%mod , mod = 1e9+7;
 ---------------------------------------------------------------------------------------------------------
 	09/10/23
-Lecture 25: Pointers in C++ || Part-1
+Lecture-25: Pointers in C++ || Part-1
 	-Symbol Table is an important data structure created and maintained by the compiler in
 	 order to keep track of semantics of variables i.e. it stores information about the scope and
 	 binding information about names, information about instances of various entities such as
 	 variable and function names. classes. obiects. etc.
 	syntax:
 		dataType * pointer_name = &(var_name);
+
+	-By default the name of array contains the address of the first element of the array.
+		int myArray[5] = {1, 2, 3, 4, 5};
+		int* ptr = myArray;  // This sets ptr to point to the first element of myArray
+		
+		//no need of & sign, if you want you can use like this,
+		int* ptr = &myArray[0];
+
+		//compilation error:
+			int* ptr = &myArray;
+				You will get a compilation error. 
+				This is because myArray is an array, 
+				and when you try to take the address of the entire array using &myArray, 
+				it is not directly convertible to a pointer-to-int (int*) because it's a pointer-to-array.
 
 	eg. pointer to double.
 		double d = 90.8978;
@@ -9524,7 +9535,12 @@ Lecture 25: Pointers in C++ || Part-1
 		int* ptr3 = &b;
 		std::cout << ptr3 << std::endl;      //memory location
 		std::cout << *ptr3 << std::endl;     //value at that memory location, *(asterisk used to retrived the value at that memory location)
-			
+		
+		//4. star is attched to both, datatype & pointer:
+		int*ptr4 = &b;
+		std::cout << ptr3 << std::endl;      //memory location
+		std::cout << *ptr3 << std::endl;     //value at that memory location, *(asterisk used to retrived the value at that memory location)
+
 		return 0;
 	}
 
@@ -9603,7 +9619,12 @@ Lecture 25: Pointers in C++ || Part-1
 				s pointer size 8
 
 	//pointer declararing, afterwords initializing
-		
+		-when you declare the pointer, then on next line initializing that pointer
+		 no need to give * again,
+		 eg.
+			int i=99;
+			int *p;
+			p = &i;
 		#include <iostream>
 			using namespace std;
 			int main() {
@@ -9752,6 +9773,46 @@ Lecture 25: Pointers in C++ || Part-1
 				Inside ref function : 89
 				After : 89
 
+	//Call by Reference:
+		#include <iostream>
+		using namespace std;
+
+		void swapper(int &y, int &z){
+			int t;
+			t = y;
+			y = z;
+			z = t;
+		}
+
+		int main(){
+			int a =20, b = 30;
+			std::cout << "Before : "<<a<<" " <<b << std::endl;
+			int*pa,*pb;
+			pa = &a;
+			pb = &b;
+			
+			swapper(*pa,*pb);
+			std::cout << "After "<<a<<" "<<b<< std::endl;
+			return 0;
+		}
+
+		//or
+			#include <iostream>
+			using namespace std;
+			void fun(int &f, int &s){           //we can use pointer also, else directly accessing the address of variables
+				int t;
+				t = f;
+				f = s;
+				s = t;
+			}
+			int main() {
+				int a=90, b=101;
+				std::cout << a<<"       "<<b << std::endl;
+				fun(a,b);
+				std::cout << a<<"       "<<b << std::endl;
+				return 0;
+			}
+
 	//Copying a pointer to Another pointer:
 		#include <iostream>
 		using namespace std;
@@ -9799,7 +9860,278 @@ Lecture 25: Pointers in C++ || Part-1
 			return 0;
 		}
 
-	//
+	//Types of pointer:
+		Here are the different types of pointers in C++:
+		1) Normal pointers
+			are the most common type of pointer. They are declared using the asterisk (*) operator, 
+			followed by the data type of the pointer's target. For example, int *ptr is a pointer to an integer.
+			
+		2) Void pointers
+			can point to any type of data. They are declared using the void* keyword.
+			
+		3) Null pointers
+			are pointers that do not point to any data. 
+			They are used to indicate that a pointer is not currently pointing to anything. 
+			They are declared using the nullptr keyword.
+
+		4) Dangling pointers
+			are pointers that point to data that has been deallocated. 
+			They can cause undefined behavior if they are dereferenced.
+
+		5) Wild pointers
+			are pointers that point to memory that is not part of a program's memory space. 
+			They can cause undefined behavior if they are dereferenced.
+
+		●It is important to use pointers correctly to avoid undefined behavior. 
+		 Undefined behavior can cause your program to crash, produce unexpected output, 
+		 or behave in other unpredictable ways. 
+		 
+		◉Here are some tips for using pointers correctly:
+		-Always initialize pointers before using them.
+		-Never dereference a null pointer.
+		-Never dereference a dangling pointer.
+		-Never dereference a wild pointer.
+		-Always use the correct type of pointer for the data you are pointing to.
+		By following these tips, you can avoid undefined behavior and keep your programs running smoothly.
+---------------------------------------------------------------------------------------------------------
+	10/10/23
+Lecture-26: Pointers in C++ || Part-2
+	-Intro:
+		int arr[10];
+		-Declaring integer array with name arr with 10 elements.
+		-total size is 40 (sizeof(int)*10)
+		-name of array stores the first elements memory block address.  
+	NOTE:
+		-gives the value.
+		arr[i] = *(arr+i)				//or
+		i[arr] = *(i+arr);
+	eg.
+		#include <iostream>
+		using namespace std;
+
+		int main(){
+			int arr[10] = {45,2,3,4,5};
+			
+			std::cout << "Address first element: " << arr << std::endl;
+			std::cout << "Address first element: " << &arr[0] << std::endl;
+			std::cout << arr[0] << std::endl;
+			
+			//dereference, value at that location.
+			std::cout << "Value at 0th index : " << *arr << std::endl;
+			std::cout << "Value at 4th index : " << *(arr+4) << std::endl;
+			std::cout << "Value at 4th index + 2 : " << *(arr+4) + 2 << std::endl;
+			
+			std::cout << "Index inside: arr[0]" << arr[0] << std::endl;
+			std::cout << "Index outside: 0[arr]" << 0[arr] << std::endl;
+			std::cout << "Index outside: 2[arr] " <<  2[arr] << std::endl;
+
+			return 0;
+		}
+
+	//Array Pointer:
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			int temp[10] = {12,3,4,5,6,7,324};
+			
+			std::cout << "Size of array : "<< sizeof(temp) << std::endl;
+			std::cout << "value at first : "<< *temp << std::endl;
+			std::cout << "Address of first "<< temp << std::endl;
+			std::cout << "Address of first "<< &temp << std::endl;
+			std::cout << "Address of first "<< &temp[0] << std::endl;
+			std::cout << "Address of second "<< &temp[1] << std::endl;
+			
+			std::cout << "Size of pointer : "<< sizeof(&temp) << std::endl;
+			
+			// int *ptr = &temp;           //no need to use & (ampersand) here, directly stores the address.
+			int *ptr = temp;
+			
+			std::cout << "size of first element: which is int "<< sizeof(*ptr) << std::endl;
+			std::cout << "pointer size: "<< sizeof(ptr) << std::endl;
+			std::cout << "pointer address " << &ptr << std::endl;
+			std::cout << "pointer's address size: (its also a pointer only)  "<< sizeof(&ptr) << std::endl;
+			
+			return 0;
+		}
+
+	◉ Symbol table can't be changed.	
+	
+	//Char Array:
+
+		#include <iostream>
+			using namespace std;
+			int main() {
+				int arr[] = {1,2,3,4,5};
+				char ch[] = "Hello World";
+
+				std::cout << arr << std::endl;  //this will print the first element address
+				std::cout << ch << std::endl;   //this will print all content of char array.
+
+				char ch2[] = {'a','b','c','d','e','f','g','h'};
+				std::cout << ch2 << std::endl;
+				
+				
+				char ch3[] = {'2','4','8'};
+				std::cout << ch3 << std::endl;
+
+
+				// ouput: there is no null char at the end so it goes on printing the character in char array
+				//          to avoid this keep reading below...
+				//     0x7ffd483ffa50
+				//     Hello World
+				//     abcdefghHello World
+				//     248abcdefghHello World
+				return 0;
+			}
+
+		#include <iostream>
+		using namespace std;
+		int main() {
+			int arr1[] = {1,2,3,4,5};
+			char ch4[] = "Hello World\0";
+			
+			std::cout << arr1 << std::endl;  //this will print the first element address
+
+			//ATTENTION HERE
+			std::cout << ch4 << std::endl;   //this will print all content of char array.
+
+			char ch5[] = {'a','b','c','d','e','f','g','h','\0'};
+			std::cout << ch5 << std::endl;
+			
+			char ch6[] = {'2','4','8','\0'};
+			std::cout << ch6 << std::endl;
+			return 0;
+		}
+		ouput:
+			0x7ffce665c580
+			Hello World
+			abcdefgh
+			248
+
+	//pointer char:
+		#include <iostream>
+		using namespace std;
+		int main() {
+			int arr[] = {1,2,3,4,5};
+			char ch[] = "Hello World";
+			
+		
+			std::cout << arr << std::endl;  //this will print the first element address
+			std::cout << arr[0] << std::endl;   //first element
+			
+			std::cout << ch << std::endl;   //this will print all content of char array.
+		
+			int*intPtr = arr;
+			std::cout << "Int pointer : " <<intPtr << std::endl;
+			
+			char *ptr = ch;             //pointer will store adress of first character.
+			std::cout << &ch << std::endl;      //prints the address of array.
+			std::cout << ch[0] << std::endl;        //first character
+			std::cout << ptr << std::endl;          //prints all content
+			std::cout << ch << std::endl;
+			
+			char*ptr2 = &ch[0];             //points to first character.
+			std::cout << ptr2 << std::endl;     //start from 0th index
+			
+			char*ptr3 = &ch[2];                 //points to 3rd char, ptr3 contains everything after 3rd char.
+			std::cout << ptr3 << std::endl;     //start from 2nd index
+			
+			char ch2[] = {'g','o','o','d'};
+			std::cout << ch2 << std::endl;              //goodHello World
+			
+			char*ch2PTR = &ch2[2];
+			std::cout << ch2PTR << std::endl;           //odHello World
+			
+			return 0;
+		}
+
+	//char pointer:
+		-When you create a pointer to single character, then use & operator to give the address,
+		-if you are creating a pointer to char array or int array then no need to use & operator (ampersand).
+		#include <iostream>
+		using namespace std;
+		int main() {
+			char ch = 's';
+			
+			char * ptr = &ch;           //pointer prints random things
+			std::cout << ptr << std::endl;          //s?���
+			std::cout << ch << std::endl;           //s
+
+			return 0;
+		}
+
+	//ATTENTION here
+		do's
+		char ch[] = "abcd"; 		//fine
+
+		don't
+		char *chPTR = "abcd";		//works, but risky
+
+	//Function:
+		#include <iostream>
+		using namespace std;
+
+		void update(int *p){
+			(*p)++;
+		}
+
+		int main() {
+			
+			int n = 50;
+			int*ptr = &n;
+			
+			std::cout << "before: " <<n<< std::endl;            //50
+			//passing pointer to function
+			update(ptr);
+			std::cout << "After: " <<n<< std::endl;     //51
+			
+			update(&n);         //passing direct variable address
+
+			std::cout << "After After : "<< n << std::endl;			//52
+			
+			return 0;
+		}
+
+	//Passing Array to Function:
+		-when we passing array to function, actually we are passing pointer to that function or array's first element
+		 address to function.
+		 eg.
+		 	int getSum(int arr[], int size)		//or
+		 	int getSum(int *arr, int size)			
+
+			-both are same, calling above function,
+				int arr[] = {1,2,3,4,5},n=5;
+				getSum(arr, n);
+			
+			//Sum array element
+
+				#include <iostream>	
+				using namespace std;
+
+				// int sum(int *array, int size){          //or
+				int sum (int array[], int size){
+					int s=0;
+					for(int i=0; i<size; i++)
+						s += array[i];
+					return s;
+				}
+
+				int main() {
+					int arr[] = {1,2,3,4,5,6,7,8,9,10};
+					int n=10;
+					
+					//calculate sum from 6 to 10; sendig array partially
+					std::cout<< "Sum is: " << sum(arr+5,5) << std::endl;            //6+7+8+9+10 = 40
+						
+					//calculate sum from 1 to 5;
+					std::cout << "2 to 4 sum : "<< sum(arr+1, 3) << std::endl;  //2+4+5=9
+					
+					std::cout << "Whole SUM: "<< sum(arr,10) << std::endl;      //55
+					return 0;
+				}
+---------------------------------------------------------------------------------------------------------
+Lecture-27: 
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -10243,7 +10575,25 @@ Lecture 25: Pointers in C++ || Part-1
 
 				return 0;
 			}
-		
+
+	//Finding maximum & minimum num from vector:
+		#include <iostream>
+		#include<vector>
+		#include<algorithm>
+		using namespace std;
+
+		int main(){
+			vector<int> v = {1,2,3,-9,5,6,707,8,9,10};
+			
+			auto mx = max_element(v.begin(), v.end());
+			std::cout << *mx << std::endl;              //707
+			
+			auto mn = min_element(v.begin(), v.end());			//endIndex is excluded.
+			std::cout << *mn << std::endl;      //-9
+			
+			return 0;
+		}
+
 	//Dynamic array Creation:
 		#include<iostream>
 		using namespace std;
@@ -10351,6 +10701,84 @@ Lecture 25: Pointers in C++ || Part-1
 				n/=10;
 			}
 			std::cout << "The CNT : "<< cnt << std::endl;
+			return 0;
+		}
+
+	//string erase practice:
+
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+		
+			//erasing last single characters
+			string s = "Hello World";
+			std::cout << s << std::endl;            //Hello World
+			
+			s.erase(s.end()-1);
+			std::cout << s << std::endl;            //Hello Worl
+			
+			s.erase(s.length()-1);
+			std::cout << s << std::endl;            //Hello Wor
+			
+			//erasing starting characters
+			s.erase(s.begin());
+			std::cout << s << std::endl;            //ello Wor
+			
+			// erase 4th character from start
+			s = "Hello World";
+			std::cout << s << std::endl;            //Hello World
+			s.erase(s.begin()+4);
+			std::cout << s << std::endl;            //Hell World
+			
+			//erase all except first character
+			s.erase(1);
+			std::cout << s << std::endl;            //H
+
+				//delete all except first 4  character
+			s = "Hello World";
+			std::cout << s << std::endl;    //Hello World
+			s.erase(4);
+			std::cout << s << std::endl;        //Hell
+			
+			//erase starting 3 character
+			s = "Hello World";
+			s.erase(s.begin(),s.begin()+3);             //Hello World
+			std::cout << s << std::endl;                //lo World
+			
+			//delete everything except last 3 character
+			s = "Hello World";
+			s.erase(s.begin(), s.end()-3);      //Hello World
+			std::cout << s << std::endl;        //rld
+			
+			//delete everything except last 5 character
+			s = "Sveri college of Engineering";
+			std::cout << s << std::endl;            //Sveri college of Engineering
+			s.erase(s.begin(), s.end()-5);          
+			std::cout << s << std::endl;            //ering
+
+			return 0;
+		}
+
+	//Substring:
+
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			
+			string s="Hello World";
+			
+			//extracting last char.
+			std::cout << s << std::endl;            //Hello World
+			cout<<s.substr(s.length()-1)<<endl;     //d     //stringName.substr(starIndex,(optional, how many character you want));
+			
+			//extracting first char using substr method
+			std::cout << s.substr(0,1) << std::endl;        //H  //from startIndex, extract 1 char.
+			
+			//extract all from 2nd index
+			std::cout << s.substr(2) << std::endl;          //llo World
+			
 			return 0;
 		}
 ---------------------------------------------------------------------------------------------------------
@@ -11415,6 +11843,13 @@ POTD:-[Problem of the Day]
 			}
 
 	24) Set Matrix Ones:
+		Note:
+			when you know the vector size like (vector<int> ans), then don't use push_back method to insert 
+			element into it.
+			directly use index to insert 
+			like 
+			at 3rd index you want to insert 4;
+				ans[3] = 4;
 		//basics to know:
 			#include <iostream>
 			#include<vector>
@@ -15545,15 +15980,360 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	86) 
+	86) Minimum Maximum Value
+		Sample Input 2:
+			2
+			2*3+4
+			2*3+1*5*4❌
+			Sample Output 2:
+			10 14
+			26 160
 
-	87)
+	87) Product Array Puzzle:
+		Problem Statement
+			You are given an array of 'N' integers. You need to return another array 'product' such that 'product[i]
+			contains the product of all the arrays except the element at the ith position in the given array.
+			Note
+			As the product of elements can be very large you need to return the answer in mod (10^9+7).
+			Follow Up
+			Try to do this without using the division operator '/', in constant space. The output
+			array does not count as extra space for the purpose of space complexity analysis
+			Detailed explanation ( Input/output format, Notes, Images )
+			Constraints:
+			1 <= T <= 10^2
+			2 <= N<= 10^4
+			1 <= A[i] <= 10^9
+			Where 'T' is the number of test cases, 'N' is the size of the array, 'A[i]' is the size
+			of the array elements.
+			Time Limit: 1 sec
+			Sample Input 1:
+				2
+				5 
+				1 3 3 10 2
+				6 
+				2 4 6 3 1 1
+				Sample Output 1:
+				180 60 60 18 90
+				72 36 24 48 144 144
+				Explanation For Sample Input 1:
+				Test case 1:
+				Product of elements except 1 = 3 * 3 * 10 * 2 = 180       
+				Product of elements except 3 = 1  * 3 * 10 * 2 = 60       
+				Product of elements except 3 = 1 * 3  * 10 * 2 = 60       
+				Product of elements except 10 = 1 * 3 * 3 * 2 = 18       
+				Product of elements except 2 = 1 * 3 * 3 * 10 = 90       
 
-	88)
+				Test case 2:
+				Product of elements except 2 = 4 * 6 * 3 * 1 * 1 = 72   
+				Product of elements except 4 = 2 * 6 * 3 * 1 * 1 = 36   
+				Product of elements except 6 = 2 * 4 * 3 * 1 * 1 = 24   
+				Product of elements except 3 = 2 * 4 * 6 * 1 * 1 = 48  
+				Product of elements except 1 = 2 * 4 * 6 * 1 * 1 = 144   
+				Product of elements except 1 = 2 * 4 * 6 * 3 * 1 = 144  
+				Sample Input 2:
+				2
+				5 
+				1 10 1 2 2
+				6
+				2 12 1 1 20 1 
+				Sample Output 2:
+				40 4 40 20 20
+				240 40 480 480 24 480
+				Explanation For Sample Input 2:
+				Test case 1:
+				Product of elements except 1 = 10 * 1 * 2 * 2 = 40      
+				Product of elements except 10 = 1  * 1 * 2 * 2 = 4      
+				Product of elements except 2 = 1 * 10 * 1 * 2 = 20
+				Product of elements except 2 = 1 * 10 * 1 * 2 = 20       
 
-	89)
+				Test case 2:
+				Product of elements except 2 = 12 * 1 * 1 * 20 * 1 = 240
+				Product of elements except 12 = 2 * 1 * 1 * 20 * 1 = 40 
+				Product of elements except 1 = 2 * 12 * 1 * 20 * 1 = 480   
+				Product of elements except 1 = 2 * 12 * 1 * 20 * 1 = 480
+				Product of elements except 20 = 2 * 12 * 1 * 1 * 1 = 24  
+				Product of elements except 1 = 2 * 12 * 1 * 1* 20 = 480
 
-	90)
+		//NOT Optimized:
+			#include <bits/stdc++.h> 
+			vector <int> productPuzzle(vector <int> & arr, int n) {
+				vector <int> ans;
+				int mod = 1e9+7;
+				for(int i=0; i<n; i++){
+					long long sum = 1;
+					for(int j=0; j<n; j++){
+						if(i==j)
+							continue;
+						sum *= arr[j];
+						sum %= mod;
+					}
+					ans.push_back(sum);
+				}
+				return ans;
+			}
+
+		//Optimized:
+			#include <bits/stdc++.h> 
+			vector <int> productPuzzle(vector <int> & arr, int n) {
+				vector<int> ans(n, 1); // Initialize ans with 1's
+				int mod = 1e9 + 7;
+
+				// Calculate the prefix product from the left
+				long long left_product = 1;
+				for (int i = 0; i < n; i++) {
+					ans[i] = (ans[i] * left_product) % mod;
+					left_product = (left_product * arr[i]) % mod;
+				}
+
+				// Calculate the suffix product from the right
+				long long right_product = 1;
+				for (int i = n - 1; i >= 0; i--) {
+					ans[i] = (ans[i] * right_product) % mod;
+					right_product = (right_product * arr[i]) % mod;
+				}
+				return ans;
+			}
+		
+	88) Swap Adjacent Bit Pairs:
+		Problem Statement
+			You are given an integer 'N'. Your task is to find the number formed after swapping each even bit of 'N' in its binary
+			representation with its adjacent bit on the right, assuming that the least significant bit is an odd bit.
+			For example:
+				Consider the integer N = 45 whose binary representation is 101101. The resulting number formed
+				after swapping each even bit with its adjacent bit to the right will be 30 (011110) in this case.
+				Detailed explanation ( Input/output format, Notes, Images )
+			Input Format :
+				The first line of the input contains an integer, 'T,' denoting the number of test cases.
+				The first and only line of each test case contains the integer 'N'
+				Output Format :
+				For each test case, print the resulting integer formed after swapping each even bit.
+				Print the output of each test case in a new line.
+				Note:
+				You do not need to print anything. It has already been taken care of. Just implement the given function.
+			Constraints:
+				1 <= T <= 10^5
+				1 <= N <= 10^9
+			Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				9
+				2
+				Sample Output 1 :
+				6 
+				1
+				Explanation For Sample Input 1 :
+				For the first test case : 
+				The binary representation of 9 is 1001. Here, we will swap the 2nd bit with the 1st bit and the 4th bit with 3rd bit. The resulting binary number will be 0110. Hence, the answer is 6 in this case.
+
+				For the second test case : 
+				The binary representation of 2 is 10. Here, we will swap the 2nd bit with the 1st bit. The resulting binary number will be 01 or 1. Hence, the answer is 1 in this case.
+				Sample Input 2 :
+				2
+				7
+				10
+				Sample Output 2 :
+				11
+				5
+		#include <bits/stdc++.h> 
+		int swapAdjacentBits(int n){ 
+			
+			//creating empty string
+			string s;
+
+			//converting num to binary representation & storing it in string
+			s = bitset<32>(n).to_string();
+
+			//removing trailing zeros
+			while(1){
+				if(s[0] != '0')
+					break;
+				s.erase(0,1);
+			}
+
+			//its the length is odd then adding extra 0 char at beginning of string
+			if(s.length() % 2 !=0)
+				s.insert(s.begin(),'0');
+
+			// cout<<s<<"\n";
+			//swapping even bits with right
+			for(int i= s.length()-1; i>=0; i-=2){
+				swap(s[i],s[i-1]);
+			}
+			// cout<<s<<"\n";
+
+			//to Binary Conversion,
+			//converting the binary string back to num
+			int cnt=0;
+			int newNum=0;
+			for(int i=s.length()-1; i>=0; i--){
+				// newNum += (s[i]-48)*pow(2,cnt++);
+				//or
+				newNum += (s[i]- '0')*pow(2,cnt++);
+			}
+			return newNum;
+		}
+
+	89) Smallest number divisible by K:
+		Problem Statement
+			Ninja's favorite numbers are the numbers whose all digits are '1' So Let's consider numbers that have only the digit
+			'1'. For example, ('1', '11' '111'...].
+			You are given an integer 'K' Your task is to find the number of digits in the Ninja's smallest favorite number that is
+			divisible by 'K'. If there is no such number that is divisible by 'K', then return -1.
+			Detailed explanation (Input/output format, Notes, Images )
+			Input Format:
+				The first line contains an integer 'T' which denotes the number of test cases or queries to be
+				The first line of each test case contains an integer denoting the value of 'K'.
+			Output Format:
+				For each test case, print a single line containing a single integer denoting the number of digits
+				in the smallest number that is divisible by given 'K' if it exists else print -1°
+				The output of each test case will be printed in a separate line.
+			Note:
+			You do not need to input or print anything, and it has already been taken care of. Just implement
+			the given function.
+			Constraints:
+				142 T/= 5
+				1 <= K <= 10 ^ 5
+			Where 'T' is the total number of test cases, and 'K' is the given integer.
+			Sample Input 1:
+				2
+				1
+				8
+				Sample Output 1:
+				1
+				-1
+				Explanation of Sample Input 1:
+				Test case 1:
+				‘1’ is itself divided by one, that has only 1 digit, hence the answer will be 1.
+
+				Test case 2:
+				There is no number whose all digits are ‘1’ and divisible 8 , so the answer will be -1.
+				Sample Input 2:
+				1
+				11
+				Sample Output 2:
+				2
+				Explanation of Sample Input 2:
+				Test case 1:
+				‘11’ is itself divided by 11 which have 2 digits hence the answer will be 2.
+
+		#include <bits/stdc++.h> 
+		int lengthOfNumber(int k){
+
+			//it will work till 18 digit checks,
+			// long long arr[] = {1,11,111,1111,11111, 111111, 1111111, 11111111, 111111111, 1111111111, 11111111111, 111111111111,
+			// 			 1111111111111, 11111111111111, 111111111111111, 1111111111111111, 11111111111111111, 111111111111111111 };
+			// int digit=0;
+			// for(int i=0;; i++){
+			// 	if(arr[i] % k ==0){
+			// 		return i+1;
+			// 	}
+			// }
+			// return -1;
+
+			unordered_set<int> remainders;
+			int currentRemainder = 1 % k;
+			int num_digit = 1;
+			while(currentRemainder !=0 ){
+				currentRemainder = (currentRemainder*10 +1)%k;
+				num_digit++;
+				if(remainders.find(currentRemainder) != remainders.end())
+					return -1;
+				remainders.insert(currentRemainder);
+			}
+			return num_digit;
+		}
+
+	90) Check If Given Words Are Present In A String:
+		Problem Statement
+			Given a string 'S' and a list 'wordList' that consists of 'N' distinct words. Let 'Wi' denote word at index 'i in 'wordList'.
+			For each word 'Wi' in 'wordList', you need to determine whether it is present in string 'S' or not. Return a boolean
+			array, where a boolean value at index ' represents whether the word 'Wi' is present in the string 'S' or not.
+			Detailed explanation (Input/output format, Notes, Images
+			Constraints:
+				1 < T <= 50
+				1 <= |S| <= 10^3
+				1 <• N <= 10^3
+				1 <= |W| <= 10
+			Where |S|' denotes the length of string and |w| denotes the maximum length of the word present in 'wordList'
+			Time limit: 1 sec
+			Sample Input 1 :
+				2
+				This is a large String
+				4
+				This this is age 
+				ILikeCodingNinjas
+				3
+				Ninja Coding Code
+				Sample Output 1 :
+				True False True False
+				True True False
+				Explanation Of Sample Input 1 :
+				Test case 1:
+
+				Here String ‘S’ is “This is a large String” and ‘wordList’ is [“This”, “this”, “is”, “age”] 
+
+				The word “This” is present from index ‘0’ to index ‘3’ in ‘S’.
+				The word “this” is not present in ‘S’.
+				The word “is” is present from index ‘2’ to index ‘3’’ and from  ‘5’ to index ‘6’  in ‘S’. 
+				The word  “age” is not present in ‘S’.
+				Note:  All words are case sensitive and we consider 0 based indexing in 'S'.
+
+				Test case 2:
+
+				Here String ‘S’ is “ILikeCodingNinjas” and ‘wordList’ is [“Ninja” “Coding” “Code”] 
+
+				The word “Ninja” is present from index ‘11’ to index ‘15’ in ‘S’.
+				The word “Coding” is present from index ‘5’ to index ‘10’ in ‘S’.
+				The word “Code” is not present in  ‘S’. 
+				Sample Input 2 :
+				3
+				This is String
+				2
+				This String
+				Code Infy
+				3
+				C I F
+				coding
+				1
+				CodingNinjas
+				Sample Output 2 :
+				True True 
+				True True False 
+				False 
+				Explanation Of Sample Input 2 :
+				Test case 1:
+				Here String ‘S’ is “This is String” and ‘wordList’ is [“This”, “String” ] 
+
+				The word “This” is present from index ‘0’ to index ‘3’ in ‘S’.
+				The word  “String” is present from index ‘8’ to index ‘13’’ in ‘S’. 
+
+				Test case 2:
+
+				Here String ‘S’ is “Code Infy” and ‘wordList’ is [“C” “I” “F”] 
+
+				The word “C” is present at index ‘0’ ’ in ‘S’.
+				The word “I”  is present at index ‘5’ in ‘S’.
+				The word “F” is not present in  ‘S’. 
+
+				Test case 3:
+
+				Here String ‘S’ is “Coding” and ‘wordList’ is [“ CodingNinjas”] 
+
+				The word “CodingNinjas” is not in ‘S’.
+		#include <bits/stdc++.h> 
+		vector<bool> checkWordsInString(string &s, int n, vector<string> &wordList) {
+			vector<bool> ans(n);
+			for(int i=0; i<n; i++){
+				string sub = wordList[i];
+				if(s.find(sub) != string::npos)
+					ans[i]=1;
+				else
+					ans[i]=0;
+			}
+			return ans;
+		}	
+
+	91)
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 calender:
