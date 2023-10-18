@@ -756,8 +756,6 @@ Lecture-3: Conditionals, Loops, Patterns
 					}
 					return 0;
 				}
-			
-
 
 	6) While Loop:
 		while loop require just a num inside as condition it may be -ve or +ve, it will work, 
@@ -5023,6 +5021,28 @@ Lecture-13: Questions on BinarySearch
 				}
 				return ans;
 			}
+
+			//or
+				class Solution {
+					public:
+					int peakIndexInMountainArray(vector<int>& arr) {
+						for(int i=1; i<arr.size(); i++){
+							if((arr[i-1]<arr[i]) && (arr[i]>arr[i+1]))
+								return i;
+						}
+						return 0;
+
+						//or
+						//int n;
+						//for(int i=1; i<arr.size(); i++){
+						//	if((arr[i-1]<arr[i]) && (arr[i]>arr[i+1])){
+						//		n= i;
+						//		break;
+						//	}
+						//}
+						//return n;
+					}
+				};
 		
 		//using Binary Search algorithm
 			int peakIndexInMountainArray(vector<int>& arr) {
@@ -9091,6 +9111,68 @@ Lecture-23: Introduction to 2D Arrays in C++ LeetCode Questions
 					}
 				};
 
+			//in-place
+				Sample Input 1:
+					2
+					3
+					1  2  3
+					4  5  6
+					7  8  9
+					4
+					1  2  3  4 
+					5  6  7  8 
+					9 10 11 12 
+					13 14 15 16
+					Sample Output 1:
+					3  6  9 
+					2  5  8 
+					1  4  7
+					4  8 12 16 
+					3  7 11 15 
+					2  6 10 14 
+					1  5  9 13
+					Explanation Of Input 1:
+					(i) The array has been rotated by 90 degrees in an anticlockwise direction as the first row is now the first column inverted and so on for second and third rows.
+
+					(ii) The array has been rotated by 90 degrees in an anticlockwise direction as the first row is now first column inverted and so on for second, third and fourth rows.
+					Sample Input 2:
+					2
+					3
+					7  4  1 
+					8  5  2 
+					9  6  3
+					4
+					13  9  5  1 
+					14  10  6  2 
+					15 11 7 3 
+					16 12 8 4
+					Sample Output 2:
+					1  2  3
+					4  5  6
+					7  8  9
+					1  2  3  4 
+					5  6  7  8 
+					9 10 11 12 
+					13 14 15 16
+
+				#include <bits/stdc++.h> 
+				void inplaceRotate(vector<vector<int>> &matrix){
+					int row = matrix.size();
+					for(int i=0; i<row;i++){
+						for(int j=0; j<=i;j++){
+							swap(matrix[i][j], matrix[j][i]);
+						}
+					}
+					for(int i=0;i<row;i++){
+						reverse(matrix[i].begin(), matrix[i].end());
+					};
+					reverse(matrix.begin(), matrix.end());
+					
+					for(int i=0;i<row;i++){
+						reverse(matrix[i].begin(), matrix[i].end());
+					};
+				}
+
 		// Search a 2D Matrix:
 			https://leetcode.com/problems/search-a-2d-matrix/description/
 			class Solution {
@@ -9258,8 +9340,93 @@ Lecture-23: Introduction to 2D Arrays in C++ LeetCode Questions
 					}
 				};
 
-		2)
+		2) Set Matrix Zeroes
+			https://leetcode.com/problems/set-matrix-zeroes/description/
+			Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+			You must do it in place.
+			Example 1:
+				Input: matrix = [[1,1,1],[1,0,1],[1,1,1]]
+				Output: [[1,0,1],[0,0,0],[1,0,1]]
+			Example 2:
+				Input: matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
+				Output: [[0,0,0,0],[0,4,5,0],[0,3,1,0]]
+			Constraints:
+				m == matrix.length
+				n == matrix[0].length
+				1 <= m, n <= 200
+				-231 <= matrix[i][j] <= 231 - 1
+			Follow up:
+				A straightforward solution using O(mn) space is probably a bad idea.
+				A simple improvement uses O(m + n) space, but still not the best solution.
+				Could you devise a constant space solution?
+
+			//In-Place approach:
+				class Solution {
+					public:
+					void setZeroes(vector<vector<int>>& matrix) {
+						//first create bool vector which will store the places of zero present in matrix, default set to 0.
+						vector<vector<bool>> isZero(matrix.size(), vector<bool>(matrix[0].size(), 0));
+
+						//this below code will check that if that position contain zero then in bool vector it make changes to 1
+						for(int i=0; i<matrix.size(); i++){
+							for(int j=0; j<matrix[0].size(); j++){
+								if(matrix[i][j] == 0){
+									isZero[i][j] = 1;
+								}
+							}
+						}
+
+						//here is isZero vector contain 1 then that complete row & column of matrix set to 0.
+						for(int i=0; i<matrix.size(); i++){
+							for(int j=0; j<matrix[0].size(); j++){
+								if(isZero[i][j] == 1){
+									for(int row =0; row<matrix.size(); row++){
+									matrix[row][j] = 0;
+									}
+									
+									for(int col =0; col<matrix[0].size(); col++){
+									matrix[i][col] = 0;
+									}
+								}
+							}
+						}
+					}
+				};
+
+			//creating new vector & assigning it back to old one,
+				class Solution {
+					public:
+					void setZeroes(vector<vector<int>>& matrix) {
+						vector<vector<int>> TEMP(matrix.size(), vector<int>(matrix[0].size(), 0));
+
+						// for(int i=0; i<matrix.size(); i++)
+						//     for(int j=0; j<matrix[0].size(); j++)
+						//         TEMP[i][j] = matrix[i][j];
+						//or instead of above 3 lines of code. you can use below one liner also.
+						//copying one vector to other.
+						TEMP = matrix;
+
+						//or you can use below line also to copy.
+						//TEMP.assign(matrix.begin(), matrix.end());
+
+						for(int i=0; i<matrix.size(); i++){
+							for(int j=0; j<matrix[0].size(); j++){
+								if(matrix[i][j] == 0){
+									for(int row=0; row<matrix.size(); row++){
+										TEMP[row][j] = 0;
+									}
+									for(int col=0; col<matrix[0].size(); col++){
+										TEMP[i][col] = 0;
+									}
+								}
+							}
+						}
+						matrix = TEMP;
+					}
+				};
+
 		3)
+			
 		4)
 		5)
 		6)
@@ -10130,8 +10297,56 @@ Lecture-26: Pointers in C++ || Part-2
 					std::cout << "Whole SUM: "<< sum(arr,10) << std::endl;      //55
 					return 0;
 				}
+
+	//char array practice:
+		#include <iostream>
+		using namespace std;
+		int main() {	
+			char ch2[] = "abcdef";          //by default it considered the last null character so sizeof is 7
+			std::cout << "ch2 "<< ch2 << " " <<sizeof(ch2) << std::endl;            //7
+			
+			char ch[] = {'a','b','c','d','e','f','\0'};
+			std::cout << "ch "<< ch <<" " << sizeof(ch)<< std::endl;            
+			//here in ch if we don't mention last \0 (null) character then sizeof will be 6 else it will be 7 only.
+			
+			std::cout << "ch contents are :: " << std::endl;
+			for(char c : ch)
+				std::cout << c << "\t";
+				
+			cout<<"\nch2 contents are :: "<<endl;
+			for(char c: ch2)
+				std::cout << c << "\t";
+				
+			std::cout << std::endl;
+			char ch3[] = {'a','b','c','d','e','f'};
+			std::cout << "ch3 ="<< sizeof(ch3) << std::endl;         //6 coz \0 not given at the end.
+			
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
-Lecture-27: 
+Lecture-27: Double Pointers in C++
+	1)int*ptr = &i;
+		why syntax is like this?
+		why not
+		pointer ptr = &num;
+	->
+		coz in the first expression int*ptr = &i, we can get to know that this is integer pointer pointing to int
+		value.
+
+		in the 2nd expression "pointer ptr = &num", we just know that its just a pointer pointing to nums address,
+		but we don't know the datatype of that pointer.
+
+	2) integer pointer increment its self by 4 byte after increment operation.
+	   float pointer increment its self by 4 byte after increment operation.
+	   double pointer increment its self by 8 byte after increment operation.
+	   but, if we used the second expression (pointer ptr = &num), if we want to perform
+	   any operation like (ptr = ptr + 1;) if it is int datatype pointer will point to next by 4byte 
+	   if double then will point to next data after 8byte
+	   if float then will point to next data after 4byte, but in 2nd expression pointer ptr = &num; we are not getting 
+	   which type of pointer is this, we don't get to know this pointer where will points next, coz we don't know
+	   the datatype, to it is pointing. that's why we don't use the 2nd (pointer ptr = &num) this expression.
+	
+	eg.
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -10779,6 +10994,369 @@ Lecture-27:
 			//extract all from 2nd index
 			std::cout << s.substr(2) << std::endl;          //llo World
 			
+			return 0;
+		}
+
+	//Array to Vector:
+		//using range in vector:
+			#include <iostream>
+			#include <vector>
+			using namespace std;
+
+			int main() {
+				int arr[] = { 1,3,5,7,9,11,7,8,9,10 };
+
+				vector<int> vec(arr, arr+3);			(3-0 = 3 elements)
+
+				for (int i = 0; i < 3; i++) 
+					cout << vec[i] << " ";                  //1, 3, 5
+
+				
+				// from 4th index to till last 0-based
+				vector<int> vec1(arr+4,arr+10);             //9,11,7,8,9,10      (10-4=6 elements will be there in vec1)
+				std::cout << std::endl;
+				for(int z: vec1)
+					cout<<z<<" ";
+				
+					return 0;
+			}
+
+		//copying array to vector using insert
+			#include <iostream>
+			#include <vector>
+			using namespace std;
+			int main(){
+				
+				int arr[] = {0,9,8,7,6,5,4,3,2,10};
+				
+				//copying array to vector;
+				
+				for(int i=0; i<10; i++)
+					cout<<arr[i]<<" ";
+					
+				std::cout << std::endl;
+				vector<int> copied;
+				
+				//copying
+				copied.insert(copied.begin(), arr, arr+10);         //vectorName.insert(startIndex, arrayStartIndex, arrayEndIndex)
+				
+				for(int z: copied)
+					cout<<z<<" ";
+				
+				return 0;
+			}
+
+		//using assign:
+			#include <iostream>
+			#include <vector>
+			using namespace std;
+
+			int main() {
+				int arr[] = {0,9,8,7,6,5,4,3,2,10};
+				
+				//copying array to vector;
+				
+				for(int i=0; i<10; i++)
+					cout<<arr[i]<<" ";          //0,9,8,7,6,5,4,3,2,10
+					
+				std::cout << std::endl;
+				vector<int> copied;
+				
+				//copying complete array
+				copied.assign(arr,arr+10);          //vectorName.insert(startIndex, arrayStartIndex, arrayEndIndex)
+									
+				for(int z: copied)
+					cout<<z<<" ";               //0,9,8,7,6,5,4,3,2,10
+					
+				copied.clear();
+				
+				//copying 4 elements from 3rd index (0-based)
+				copied.assign(arr+3, arr+7);
+				std::cout << std::endl;
+				
+				for(int z: copied) 
+					cout<<z<<" ";               //7,6,5,4 (last index excluded 7th which is 3.)
+				
+				return 0;
+			}
+
+	//Vector Practice:
+		#include <iostream>
+		#include<vector>
+		using namespace std;
+		int main() {
+			int arr[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+			std::cout << "Main ARR: "<< "\t\t";
+			for(int i: arr){
+				std::cout << i << " ";
+			}
+			std::cout << std::endl;
+			
+			//array to vector using insert method
+			vector<int> vecIns;
+			
+			std::cout << "vecIns : " <<"\t\t";
+			vecIns.insert(vecIns.begin(), arr, arr+10);         //first 10 elements
+			
+			for(int h: vecIns)
+				std::cout << h <<"\t";
+				
+			std::cout << std::endl;
+			std::cout << std::endl;
+			
+			//array to vector using assign method,
+			// 10th to 20th elements            (20-10=10 elements will be there in new vector)
+			vector<int> vecAssign;
+			vecAssign.assign(arr+10, arr+20);
+			std::cout << "vecAssign : "<< "\t\t";
+			for(int h: vecAssign)
+				std::cout << h <<"\t";
+				
+			std::cout  << std::endl;
+			std::cout << "vecAssign Whole array: " <<" ";
+			//assigning whole array to vecAssign,
+			vecAssign.assign(arr, arr+20);
+			for(int h: vecAssign)
+				std::cout << h <<" ";
+				
+			
+			std::cout << std::endl;
+			std::cout << std::endl;
+			
+			//array to vector using range, first 5 elements
+			vector<int> vec1(arr, arr+5);        //(5-0=5 elements)
+			
+			for(int i=0; i<5; i++)
+				cout<<vec1[i]<<" ";
+			
+			//or
+			std::cout << std::endl;
+			for(int z: vec1)
+				cout<<z<<" ";
+				
+			
+			std::cout << std::endl;
+			std::cout << std::endl;
+			//creating vector of specific size & specific value,
+				std::cout << std::endl;
+				vector<int> vec2 (8, 127);          //size=8, default value= 127.
+				for(auto aa: vec2)
+					std::cout << aa << " ";
+					
+				std::cout << std::endl;
+				std::cout << std::endl;
+				
+			//creating 2D char vector with specific size, & default value.
+				vector<vector<char>> vec2D (4, vector<char>(5,'$'));            //2D char vector of 4 rows & 5 cols of default value is $ dollar sign.
+				
+				for(int i=0; i<vec2D.size(); i++){
+					for(int j=0; j<vec2D[0].size(); j++)
+						cout<<vec2D[i][j]<<" ";
+					std::cout << std::endl;
+				}
+			
+			std::cout << std::endl;
+			//create 3D vector of int type with default value 9.
+				//row =3
+				//cols =4
+				//height =2
+				
+				vector<vector<vector<int>>> vec3D (3, vector<vector<int>>(4, vector<int>(2,0)));
+				
+				for(int i=0; i<3; i++){
+					for(int j=0; j<4; j++){
+						for(int k=0; k<2; k++){
+							cout<<vec3D[i][j][k]<<" ";
+						}
+						std::cout << "\t";
+					}
+					std::cout << std::endl;
+				}
+			
+			return 0;
+		}
+		ouput:
+			Main ARR:               1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 
+			vecIns :                1       2       3       4       5       6       7       8       9       10
+
+			vecAssign :             11      12      13      14      15      16      17      18      19      20
+			vecAssign Whole array:  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 
+
+			1 2 3 4 5 
+			1 2 3 4 5 
+
+
+			127 127 127 127 127 127 127 127 
+
+			$ $ $ $ $ 
+			$ $ $ $ $ 
+			$ $ $ $ $ 
+			$ $ $ $ $ 
+
+			0 0     0 0     0 0     0 0 
+			0 0     0 0     0 0     0 0 
+			0 0     0 0     0 0     0 0 
+
+	//Static variables are stored in the memory in
+		Heap
+		Permanent storage area
+		Free memory
+		Stack
+		( Correct Answer
+				#### Local variables are stored in an area called a stack. Global variables, static
+				variables, and program instructions are stored in the permanent storage area. The
+				memory space between these two regions is known as a heap.
+
+	//Repeated num in array
+		Sample Input:
+			2
+			10
+			1 2 3 4 5 5 5 6 7 7
+			15
+			1 1 1 1 1 2 2 2 2 2 3 3 3 3 3
+		Output:
+			1->1
+			2->1
+			3->1
+			4->1
+			5->3
+			6->1
+			7->2
+
+			1->5
+			2->5
+			3->5
+
+		#include <iostream>
+		#include<unordered_map>
+		using namespace std;
+
+		int main() {
+			int arr[] = {1,2,3,4,5,4,4,2,2,2};
+			int n=10;
+			unordered_map<int, int> countRepetition;
+			
+			cout<<"arr: ";
+			for(int i: arr)
+				cout<<i<<" ";
+				
+			std::cout << std::endl;
+			for(int i=0; i<n; i++)
+				countRepetition[arr[i]]++;
+			
+			for(auto itr = countRepetition.begin(); itr != countRepetition.end(); itr++)        //use -> (arrow) operator in traditional for loop.
+				cout<<itr->first<<" repeated\t"<<itr->second<<" times\n";
+			
+			std::cout << std::endl;
+			std::cout << std::endl;
+			
+			//to print the conent of map
+			for(const auto i: countRepetition)            //use . (dot) operator in advance for loop
+				cout<<i.first<<" repeated "<<i.second<<" times\n";
+
+			return 0;
+		}
+
+	//Pointer function practice:
+		#include <iostream>
+		using namespace std;
+
+		//function receives address
+		void function1(int *p){          //storing passed address into pointer p.
+			(*p)++;                     //incrementing the value at that address.
+		}
+
+		//function receives value. make copy of it & as soon as function
+		//ends it delete the new value & in main come back to original value.
+		void function2(int a){
+			a++;
+			std::cout << "inside "<< a << std::endl;
+		}
+
+		//here receiving value's address & modifying the address value,
+		//so updated value will be preserved.
+		void function3(int &a){
+			a++;
+			std::cout << "inside :"<< a << std::endl;
+		}
+
+
+		int main() {
+			// passing pointer to the function
+			int a=90;
+			int*ptr = &a;
+			
+			std::cout << "before ptr: "<< *ptr << std::endl;
+			std::cout << "before A: "<< a << std::endl;
+			function1(ptr);          //passing address indirectly, then function receiver must be pointer only coz we're passing address
+			std::cout << "After ptr: "<< *ptr << std::endl;
+			std::cout << "After A: "<< a << std::endl;
+			std::cout << std::endl;
+			
+			*ptr = 90;
+			std::cout << "before ptr: "<< *ptr << std::endl;
+			std::cout << "before A: "<< a << std::endl;
+			function2(*ptr);          //passing values directly(pointer). 
+									// so function receiver must be either simple datatype variable or address of that variable
+			std::cout << "After ptr: "<< *ptr << std::endl;
+			std::cout << "After A: "<< a << std::endl;
+			std::cout << std::endl;
+			
+			*ptr = 90;
+			std::cout << "before ptr: "<< *ptr << std::endl;
+			std::cout << "before A: "<< a << std::endl;
+			function3(*ptr);          //passing values directly.
+			std::cout << "After ptr: "<< *ptr << std::endl;
+			std::cout << "before A: "<< a << std::endl;
+
+			return 0;
+		}
+		//ouput
+			before ptr: 90
+			before A: 90
+			After ptr: 91
+			After A: 91
+
+			before ptr: 90
+			before A: 90
+			inside 91
+			After ptr: 90
+			After A: 90
+
+			before ptr: 90
+			before A: 90
+			inside :91
+			After ptr: 91
+			before A: 91
+
+	//Array Practice:
+		#include <iostream>
+		using namespace std;
+		int main() {
+			int a[l={5,6,7,8};
+			cout<< * (a + 2) <<  " " << a[1];		//	7 6
+			return 0;
+		}
+
+	//Binary to decimal & decimal to binary:
+		using built-in function
+		#include <iostream>
+		#include<bitset>
+		using namespace std;
+
+		int main() {
+			int num = 21;
+			
+			std::cout << num << std::endl;    
+			//binary to decimal
+			string s = bitset<32>(num).to_string();			//converting bitset output to string.
+			std::cout << s << std::endl;
+			
+			//decimal to binary
+			num = stoi(s,0,2);
+			std::cout << num << std::endl;
+			std::cout << s << std::endl;
+
 			return 0;
 		}
 ---------------------------------------------------------------------------------------------------------
@@ -12220,7 +12798,50 @@ POTD:-[Problem of the Day]
 			return s;
 		}
 
-	30) Next Greater Element
+	30) Next Greater Element:
+		Problem Statement
+			You are given an array 'a' of size 'n'
+			Print the Next Greater Element(NGE) for every element.
+			The Next Greater Element for an element 'x' is the first element on the right side of 'x' in the array, which is
+			greater than 'x'.
+			If no greater elements exist to the right of 'x', consider the next greater element as - 1.
+			For Example:
+			Input: 'a' • [7, 12, 1, 20]
+			Output: NGE = [12, 20, 20, -1]
+			Explanation: For the given array,
+			- The next greater element for 7 is 12.
+			- The next greater element for 12 is 20.
+			- The next greater element for 1 is 20.
+			- There is no greater element for 20 on the right side. So we consider NGE as
+		
+			Sample Input 1:
+				5
+				1 5 3 4 2
+
+
+				Sample Output 1:
+				5 -1 4 -1 -1
+
+
+				Sample Input 2:
+				5
+				5 5 5 5 5
+
+
+				Sample Output 2:
+				-1 -1 -1 -1 -1
+
+
+				Expected Time Complexity :
+				The expected time complexity is O(n).
+
+
+				Constraints :
+				1 <= 'n' <= 10^5
+				1 <= 'a[i]' <= 10^9
+
+				Time Limit: 1 sec
+
 		#include <bits/stdc++.h> 
 		vector<int> nextGreater(vector<int> &arr, int n) {
 			for(int i=0;i<n;i++){
@@ -12781,6 +13402,32 @@ POTD:-[Problem of the Day]
 			}
 			return arr;
 		}
+
+		//optimized:
+			#include <bits/stdc++.h> 
+			vector<int> addOneToNumber(vector<int> arr){
+				int n= arr.size();
+				arr[n-1] += 1;
+
+				int carry=0;
+				for(int i= n-1; i>=0; i--){
+					arr[i] += carry;
+					carry = arr[i] / 10;
+					if(!carry)					//if(carry == 0)
+						break;					//	break;
+					arr[i] = arr[i] % 10;  // Update the current digit
+				}
+
+				if(carry>0)
+				arr.insert(arr.begin(), carry);
+
+				
+				// //removing leading 0 zeros
+				while(!arr.empty() && arr[0] == 0)
+					arr.erase(arr.begin());
+
+				return arr;
+			}
 		
 		//or
 			#include <bits/stdc++.h> 
@@ -13084,7 +13731,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	46) 	Admission in Ninja Gram
+	46) Admission in Ninja Gram
 		Sample Input 1:
 			2
 
@@ -16333,7 +16980,1266 @@ POTD:-[Problem of the Day]
 			return ans;
 		}	
 
-	91)
+	91) Find Peak Element
+		Problem Statement
+			You are given an array 'arr' of length 'n' Find the index(0-based) of a peak element in the array. 
+			If there are multiple peak numbers, return the index of any peak number.
+			Peak element is defined as that element that is greater than both of its neighbors. 
+			If 'arr[i]' is the peak element, 'arr[i -1]' < 'arrfil' and 'arr[i + 1]' < 'arril'
+			Assume 'arr[-1]' and 'arr[n]' as negative infinity.
+			Note:
+				1. There are no 2 adjacent elements having same value (as mentioned in the constraints).
+				2. Do not print anything, just return the index of the peak element (0 - indexed).
+				3. 'True'/'False' will be printed depending on whether your answer is correct or not.
+			Example:
+			Input: 'arr' = [1, 8, 1, 5, 3]
+			Output: 3
+			Explanation: There are two possible answers. Both 8 and 5 are peak elements, so the correct
+			answers are their positions, 1 and 3.
+			Sample Input 1:
+				5
+				1 8 1 5 3
+				Expected Answer:
+					1
+
+				Output On Console:
+					True
+
+				Explanation Of Sample Input 1 :
+				There are two possible answers. Both 8 and 5 are peak elements, so the correct answers are their positions, 1 and 3. Any of these 2 numbers will print 'True'.
+
+				Sample Input 2:
+					3
+					1 2 1 
+
+				Expected Answer:
+					1
+
+				Output On Console:
+					True
+
+				Expected Time Complexity:
+					The expected time complexity is O(log 'n').
+
+
+				Constraints:
+					1 <= 'n' <= 10^5
+					1 <= 'arr[i]' <= 10^5
+					'arr[i]' != 'arr[i + 1]' for all 'i' in range 0 <= 'i' < 'n' - 1
+
+		int findPeakElement(vector<int> &arr) {
+
+			//this not working for edge test case like arr[-1] & arr[n];
+			//  for(int i=1; i<arr.size()-1; i++){
+			//     if((arr[i]> arr[i-1]) && (arr[i]>arr[i+1]))
+			//         return i;
+			// }
+			// return 0;
+			int left = 0;
+			int right = arr.size() - 1;
+
+			while (left < right) {
+				int mid = (left + right) / 2;
+				if (arr[mid] > arr[mid + 1]) {
+					right = mid;
+				} else {
+					left = mid + 1;
+				}
+			}
+
+			return left;
+		}
+
+	92) Container With Most Water:
+		Given a sequence of 'N' space-separated non-negative integers A [1], A [2], A [3]…....A [i].....A[n]. Where each
+		number of the sequence represents the height of the line drawn at point '. Hence on the cartesian plane,
+		each line is drawn from coordinate (I',O) to coordinate ('i', 'A[i]'), here 'i' ranges from 1 to 'N'. Find two lines,
+		which, together with the x-axis forms a container, such that the container contains the most area of water.
+		Note:
+			1. You can not slant the container i.e. the height of the water is equal to the minimum
+			height of the two lines which define the container.
+			2. Do not print anything, you just need to return the area of the container with maximum
+			water
+		
+		Sample Input 1 :
+			2
+			5
+			4 3 2 1 4
+			3
+			1 2 1
+			Sample Output 1 :
+			16
+			2 
+			Explanation Of The Sample Input 1:
+			For the first case: 
+			We can create ‘n(n+1)/2’ different containers using ‘N' containers for example with 1st and 3rd line we can create a container of area = (3-1)*min(4,2)=4.
+
+			All Possible Containers:  
+
+
+			Lines used          Area
+			4,3         area=min(4,3)*1=3
+			4,2         area=min(4,2)*2=4
+			4,1         area=min(4,1)*3=3
+			4,4         area=min(4,4)*4=16
+			3,2         area=min(3,2)*1=2
+			3,1         area=min(3,1)*2=2
+			3,4         area=min(3,4)*3=9
+			2,1         area=min(2,1)*1=1
+			2,4         area=min(2,4)*2=4
+			1,4         area=min(1,4)*1=1
+
+			But among all such containers the one with the maximum area will be formed by 
+			using the first and last line, the area of which is : (5-1)*min(4,4)=16.
+			Hence we return 16.
+
+			For the second case: 
+			We can take the first and third line to get an area of 
+			(3-1)*min(1,1)=2 which is the maximum possible area in this sequence.
+			Sample Input 2 :
+				2
+				5
+				12 4 6 8 1
+				3
+				1 2 3
+				Sample Output 2 :
+				24
+				2
+
+
+		//Not Optimized:
+			int maxArea(vector<int>& height) {
+				int ans=0;
+					for(int i=0; i<height.size(); i++){
+					int dist = 1;
+					for(int j=i+1; j<height.size(); j++){
+						int minn = (min(height[i],height[j]))* dist;
+						ans = max(ans, minn);
+						dist++;
+					}
+				}
+				return ans;
+			}
+
+		//Optimized:
+			int maxArea(vector<int>& height) {
+				int left=0;
+				int right=height.size()-1;
+				int mxArea=0;
+
+				while(left < right){
+					int minH = min(height[left],height[right]);
+					int dist = right-left;
+					
+					int newArea = minH * dist;
+					mxArea = max(mxArea,newArea);
+
+					if(height[left] < height[right]){
+						left++;
+					}else{
+						right--;
+					}
+				}
+				return mxArea;
+			}
+			
+	93) Interesting Alphabets:
+		As a part of its competition, the school will conduct a codeathon, Lock the Code, where it has been given a
+		value, and the participants have to decode it.
+		The participants are given a value denoting the number of rows in the matrix; they need to print the pattern.
+		Example:
+			For N=5, Pattern:
+			E
+			DE
+			CDE
+			BCDE
+			ABCDE
+			Among the participants, Ninja is new to programming and doesn't have much experience; he asks you to
+			solve the problem. Can you help solve this problem?
+		Sample Input 1:
+			2
+			5
+			4
+			Sample Output 1:
+			E
+			DE
+			CDE
+			BCDE
+			ABCDE
+
+			D
+			CD
+			BCD
+			ABCD
+			Explanation For Sample Input 1:
+			In the first test case, value of ‘N’ is 5, so print the ‘N’ rows from 1 to ‘N’ where in each row start from (N - i - 1)the character which goes on till ‘Nth character. Hence the answer is [‘E’,’DE’,’CDE,’ BCDE’,’ABCDE’].
+
+			In the second test case, the value of ‘N’ is 4, so print the ‘N’ rows from 1 to ‘N’ where each row starts from (N - i - 1)the character, which goes on till ‘Nth character. Hence the answer is [‘D’,’CD’,BCD’,’ABCD’].
+			Sample Input 2:
+			2
+			3
+			2
+			Sample Output 2:
+			C
+			BC
+			ABC
+
+			B
+			AB
+
+		#include <bits/stdc++.h> 
+		vector<vector<char>> interestingPattern(int n){
+			vector<vector<char>> ans;
+			vector<char> temp;
+			char ch1 = 'A'+ (n-1);
+			for(int j=n-1; j>=0; j--){
+				char ch = ch1;
+				for(int i=n-1; i>=j; i--){
+					temp.push_back(ch++);
+				}
+				ans.push_back(temp);
+				temp.clear();
+				ch1--;
+			}
+			return ans;
+		}
+
+	94) Isomorphic Strings:
+		Problem Statement
+			You have been given two strings, 'str1'and 'str2'
+			Your task is to return true if the given two strings are isomorphic to each other, else return false.
+			Note :
+			Two strings are isomorphic if a one-to-one mapping is possible for every character of the
+			first string 'str1' to every character of the second string 'str2' while preserving the
+			order of the characters.
+			All occurrences of every character in the first string 'str1' should map to the same
+			character in the second string, 'str2'
+			For Example:
+			If stri = "aab" and str2 = "xxy" then the output will be 1. 'a' maps to 'x' and 'b' maps
+			to 'y'.
+			If stri = "aab" and str2 = "xyz" then the output will be 0. There are two different
+			characters in 'strl', while there are three different characters in 'str2'. so there won't
+			be one to one mapping between 'stri' and 'str2'
+			Sample Input 1 :
+				aab 
+				xxy
+				Sample Output 1 :
+				1
+				Explanation Of Sample Input 1:
+				The character ‘a’ maps to ‘x’ and ‘b’ maps to ‘y’. Hence, the answer is 1 in this case.
+				Sample Input 2 :
+				aab
+				xyz
+				Sample Output 2 :
+				0
+				Constraints :
+				1 <= |str1|, |str2| <= 10^3
+
+				|str1| is the length of the string str1, and |str2| is the length of the string str2.
+				Follow Up:
+				Can you solve this in O(N) time?
+
+		bool areIsomorphic(string &str1, string &str2){
+			
+			if(str1.length() !=  str2.length())
+				return 0;
+
+			vector<int> countStr1(26,0);
+			vector<int> countStr2(26,0);
+
+			//mapper for str1;
+			for(int i=0; i<str1.length(); i++)
+				countStr1[str1[i]-'a']++;
+			
+			//mapper for str2;
+			for(int i=0; i<str2.length(); i++)
+				countStr2[str2[i]-'a']++;
+
+			sort(countStr1.begin(), countStr1.end());
+			sort(countStr2.begin(), countStr2.end());
+			
+			for(int i=0; i<26; i++)
+				if(countStr1[i] != countStr2[i])
+					return 0;
+			return 1;
+		}
+		
+	95) Cyclically Rotate An Array By One:
+		You are given an integer array of size N. Your task is to rotate the array by one position in the clockwise direction.
+		For Example:
+			If N = 5 and arr[ ] = (1, 2, 3, 4, 5} then output will be 5 1 2 3 4.
+			If N = 8 and arr[ ] = {9, 8, 7, 6, 4, 2, 1, 3] then output will be 3 9 8 7 6 4 2 1.
+		Sample Input 1 :
+			5
+			1 2 3 4 5
+			Sample Output 1 :
+			5 1 2 3 4
+			Explanation For Sample Input 1 :
+			The first four elements are shifted towards the right by one position, and the last element i.e. 5 is shifted to the first position.
+			Sample Input 2 :
+			1
+			8
+			9 8 7 6 4 2 1 3
+			Sample Output 2 :
+			3 9 8 7 6 4 2 1
+
+		//Optimized:
+			#include <bits/stdc++.h> 
+			void rotate(vector<int>& arr, int n) {
+				int lastDigit = arr[n-1];
+				for(int i=n-1; i>0; i--){
+					arr[i] = arr[i-1];
+				}
+				arr[0] = lastDigit;
+			}
+		
+		//more optimized:
+			#include <bits/stdc++.h> 
+			void rotate(vector<int>& arr, int n) {
+				int lastDigit = arr.back();
+				arr.pop_back();
+				arr.insert(arr.begin(), lastDigit);    
+			}
+
+	96) Program to check the validity of a Password:
+		problem statement:
+			Ninjas are trying to hack a system of a terrorist organization so that they can know where they will be going
+			to attack next. But to hack the system and to get access to data they need a password that must satisfy
+			certain conditions as described below:
+			1) Length of the password must be between 8 to 15 characters.
+			2) At least one digit (0-9), one lowercase letter (a-z), one uppercase letter (A-Z) and
+			one special character (%, ^, &, #, *, %, etc) must be present.
+			3) Password must not contain any space.
+			You are given a string 'STR', help ninjas to find whether it's a valid password or not.
+			For example:
+			Given 'STR' = "Codingninja#" As it satisfies all the above conditions so it is a valid
+			password and therefore you have to return true.
+			Sample Input 1:
+				3
+				CODiNGNinja+1
+				abcXyz 123
+				itsnotValid1
+				Sample Output 1:
+				Valid
+				Not Valid
+				Not Valid
+				Explanation of Sample Input 1:
+				Test Case 1 :  
+				Given ‘STR’ = CODiNGNinja+1
+				As we can see that this string satisfies all the given conditions in the problem.
+				Therefore, it's a valid password.
+
+				Test Case 2 : 
+				Given ‘STR’ = abcXyz 123 
+				As the given string contains a space, so it's not a valid password.
+
+				Test Case 3:
+				Given ‘STR’ =  itsnotValid1
+				As the string does not contain any special character, so it’s not a valid password.
+				Sample Input 2:
+				3
+				&1CodingISBest
+				Ab@3
+				HEllo@World#0
+				Sample Output 2:
+				Valid
+				Not Valid
+				Valid
+
+		//optimized
+			bool isValid(string &str) {
+				if(str.length()<8 || str.length()>15)
+					return 0;
+
+				//checking contain digit
+				int cnt=0;
+				for(int i=0; i<str.length(); i++){
+					if(isdigit(str[i])){
+						cnt++;
+						break;
+					}
+				}
+				if(cnt==0)
+					return 0;
+				
+				//checking lowercase char
+				cnt=0;
+				for(int i=0; i<str.length(); i++){
+					if(islower(str[i])){
+						cnt++;
+						break;
+					}
+				}
+				if(cnt==0)
+					return 0;
+
+				//checking uppercase char
+				cnt=0;
+				for(int i=0; i<str.length(); i++){
+					if(isupper(str[i])){
+						cnt++;
+						break;
+					}
+				}
+				if(cnt==0)
+					return 0;
+
+				//checking contain space?
+				for(int i=0; i<str.length(); i++){
+					if(isblank(str[i])){
+						return 0;
+					}
+				}
+				return 1;		
+			}
+
+		//more optimized:
+			bool isValid(string &str) {
+				int length = str.length();
+				
+				// Check length
+				if (length < 8 || length > 15) {
+					return false;
+				}
+
+				bool hasDigit = false;
+				bool hasLowercase = false;
+				bool hasUppercase = false;
+
+				for (int i = 0; i < length; i++) {
+					if (isdigit(str[i])) {
+						hasDigit = true;
+					} else if (islower(str[i])) {
+						hasLowercase = true;
+					} else if (isupper(str[i])) {
+						hasUppercase = true;
+					}
+					
+					if (str[i] == ' ') {
+						return false;  // Check for spaces
+					}
+				}
+
+				// Check for at least one digit, lowercase, and uppercase
+				return hasDigit && hasLowercase && hasUppercase;	
+			}
+
+	97) Pascal's Triangle II:
+		https://leetcode.com/problems/pascals-triangle-ii/description/
+			#include <iostream>
+			#include<vector>
+			using namespace std;
+
+			vector<int> getRow(int rowIndex) {
+				vector<int> ans;
+				if(rowIndex == 0)
+					return {1};
+				else if(rowIndex == 1)
+					return {1,1};
+				else{
+					ans = {1,1};
+					for(int i=1; i<rowIndex; i++){
+						vector<int> temp;
+						temp.push_back(1);
+						for(int j=0; j<rowIndex-1; j++){
+							int num = ans[j]+ans[j+1];
+							temp.push_back(num);
+						}
+						temp.push_back(1);
+						ans.clear();
+						ans = temp;
+					}
+					// ans.pop_back();
+					}
+					return ans;
+				}
+			int main(){
+				
+				vector<int> ansss;
+				ansss = getRow(4);
+				for(int z: ansss)
+					std::cout << z << "\t";
+				return 0;
+			}
+
+		//leetcode working code:
+			class Solution {
+				public:
+				vector<int> getRow(int rowIndex) {
+					vector<int> ans(rowIndex + 1, 0);  // Initialize the result vector with 0s.
+					ans[0] = 1;  // The first element of each row is always 1.
+
+					for (int i = 1; i <= rowIndex; i++) {
+						for (int j = i; j >= 1; j--) {
+							ans[j] += ans[j - 1];
+						}
+					}
+					return ans;
+				}
+			};
+
+	98) Count Squares:
+		Problem Statement
+			You are given a matrix of size N* M. Can you count the number of squares in it?
+			As the count will be very large, so compute it with modulo 10^9 + 7.(1e9+7)
+			For Example:
+				Let N = 3 and M = 5
+				The number of squares of size 1 will be 15.
+				The number of squares of size 2 will be 8.
+				The number of squares of size 3 will be 3
+				Thus the answer will be 26.
+			Constraints:
+				1 <= T <= 10^5
+				1 <= N <= 10^9
+				1 <= M <= 10^9
+			Time limit: 1 sec
+			Sample Input 1:
+				2		
+				3 5
+				2 3
+				Sample Output 1:
+				26
+				8
+				Explanation
+				Test Case 1: Refer to the example described above.
+
+				Test Case 2:
+				The number of squares of size 1 will be 6.
+				The number of squares of size 2 will be 2.
+				Thus, the answer will be 8.
+				Sample Input 2:
+				3
+				1 8
+				6 4
+				3 3
+				Sample Output 2:
+				8
+				50
+				14
+		//not Optimized:
+			#include <bits/stdc++.h> 
+			int countSquares(int n, int m){
+				long long SUM=0;
+				int mod = 1e9+7;
+
+				int iterator = n;
+				for(int i=0; i< iterator; i++){
+					SUM = (SUM + (n*m)%mod)%mod;
+					n--; m--;
+					if(m==0)
+						break;
+				}
+				return SUM;
+				
+					//or
+				// int mod = 1e9 + 7;
+				// long long SUM = 0;
+				// int iterator = std::min(n, m); // Use the minimum of n and m to determine the number of squares.
+
+				// for (int i = 1; i <= iterator; i++) {
+				//     SUM = (SUM + 1LL*(n) * m) % mod;            //or we can use static_cast<long long> to convert int to long long instead of 1ll or 1LL
+				//                                             //SUM = (SUM + static_cast<long long>(n) * m) % mod;
+				//     n--;
+				//     m--;
+				// }
+				// return SUM;
+			}
+
+	99) Win or Lose
+		Problem Statement
+			You and your friends are playing a turn-based game. You will make the first move. 
+			Initially, you have an integer 'N'. On each player's turn, that player makes a move consisting of two steps.
+				1) Choose an integer 'i such that 0 < 'ї < 'N' and 'N" is divisible by 'ї.
+				2) Update number 'N' to 'N -ї.
+			If a player cannot make a move, they lose the game.
+			You are given the initial number 'N: You have to print "YES" if you win the game; otherwise, print "NO".
+			For example:
+			If the number 'N' = 6 and you select "i to be 2, then the new number N' will be 6 - 2 = 4.
+
+		Sample Input-1
+			2
+			2
+			3
+			Sample Output-1
+			YES
+			NO
+			Explanation For Sample Input 1:
+			For test case 1:
+			You can choose only ‘1’; the new number becomes 2 - 1 = 1.
+			Your friend can’t make any move. Hence you win the game.
+			For test case 2:
+			You can choose only ‘1’; the new number becomes 3 - 1 = 2.
+			Your friend can choose only ‘1’; the new number becomes 2 - 1 = 1.
+			You can’t make any move. Hence you lose the game.
+			Sample Input -2
+			2
+			13
+			16
+			Sample Output -2
+			NO
+			YES
+		
+		#include <bits/stdc++.h>
+		string winOrLose(int N) {
+			if(N&1)
+				return "NO";
+			return "YES";
+		}
+
+	100) Leaders in an array:
+		Problem Statement
+			Given a sequence of numbers. Find all leaders in sequence. An element is a leader if it is strictly greater than
+			all the elements on its right side.
+			Note:
+				1. Rightmost element is always a leader.
+				2. The order of elements in the return sequence must be the same as the given sequence
+			Example:
+				The given sequence is 13, 14, 3, 8, 2 •
+				13 Not a leader because on the right side 14 is greater than 13.
+				14 lt is a leader because no one greater element in the right side.
+				3 Not a leader because on the right side 8 are greater than 3.
+				8 It is a leader because no one greater element on the right side.
+				2 It is a leader because it is the rightmost element in a sequence.
+			Hence there are 3 leaders in the above sequence which are 14, 8, 2.
+			Sample Input 1:
+				2
+				6
+				6 7 4 2 5 3
+				4
+				11 10 9 8
+				Sample Output 1:
+				7 5 3
+				11 10 9 8
+				Explanation Of Sample Output 1:
+				In test case 1,
+					6 Not a leader because on the right side 7 is greater than 6.
+					7 lt is a leader because no one greater element in the right side.
+					4 Not a leader because on the right side 5 are greater than 4.
+					2 Not a leader because on the right side 5, 3 are greater than 2.
+					5 lt is a leader because no one greater element in the right side.
+					3 It is a leader because it is a rightmost element in a sequence.
+					Hence there are 3 leaders in sequence 7, 5, 3. 
+
+				In test case 2,
+					Given sequence is in descending order, so all elements are leaders
+
+				Sample Input 2:
+					2
+					6
+					5 10 11 12 -1 -2
+					4
+					10 -11 -3 -2
+					Sample Output 2:
+					12 -1 -2
+					10 -2
+				Explanation Of Sample Output 2:
+				In test case 1,
+					5 Not a leader because on the right side 10 is greater than 5.
+					10 Not a leader because on the right side 11 is greater than 10.
+					11 Not a leader because on the right side 12 are greater than 11.
+					12 lt is a leader because no one greater element in the right side.
+					-1 lt is a leader because no one greater element in the right side.
+					-2 It is a leader because it is a rightmost element in a sequence.
+				Hence there are 3 leaders in sequence 12, -1, -2. 
+				In test case 2,
+					10 lt is a leader because no one greater element in the right side.
+					-11 Not a leader because on the right side -3 are greater than -11.
+					-3 Not a leader because on the right side -2 are greater than -3.
+					-2 It is a leader because it is a rightmost element in a sequence.
+				Hence there are 2 leaders in sequence 10, -2. 
+
+		#include <bits/stdc++.h> 
+		vector<int> findLeaders(vector<int> &elements, int n) {
+			vector<int> leaders;
+			leaders.push_back(elements[n-1]);
+			for(int i=n-2; i>=0; i--){
+				int j;
+				for(j=i+1; j<n; j++){
+					if(elements[i] <= elements[j])
+						break;
+				}
+				if(j==n)
+					leaders.push_back(elements[i]);
+			}
+			reverse(leaders.begin(), leaders.end());
+			return leaders;
+		}
+
+	101) Reverse the String:
+		Problem Statement
+			You are given a string 'STR'. The string contains [a-z] [A-Z] [0-9] [special characters]. You have to find the
+			reverse of the string.
+			For example:
+			If the given string is: STR = "abcde". You have to print the string "edcba
+			Follow Up:
+			Try to solve the problem in 0(1) space complexity.
+			Detailed explanation (Input/output format, Notes, Images )
+			Constraints:
+				1 ≤ T ≤ 10
+				1 < STR| ≤ 10 ^ 5
+				Where STR is the length of the string STR.
+				Time limit: 1 sec.
+			Sample Input 1:
+				3
+				abcde
+				coding
+				hello1
+				Sample Output 1:
+				edcba
+				gnidoc
+				1olleh
+				Explanation Of The Sample Input 1:
+				For the first test case, STR = "abcde". We need to reverse the string, that is the first element becomes the last element and the last element becomes the first element, the second element becomes the second last element and the second last element becomes the second element and so on. So we get, "edcba".
+				Sample Input 2:
+				3
+				a
+				1det@Z
+				$1xYuP
+				Sample Output 2
+				a
+				Z@ted1
+				PuYx1$
+
+		#include <bits/stdc++.h> 
+		string reverseString(string str){
+			// string rev;
+			// int i=str.length()-1;
+			// while(i>=0){
+			// 	rev += str[i];
+			// 	i--;
+			// }
+			// return rev;
+			
+			//or
+
+			reverse(str.begin(), str.end());
+			return str;
+		} 
+	
+	102) Check whether second string can be formed from characters of first string:
+		Problem Statement
+			You are given two strings STR1 and STR2. You need to check whether STR2 can be
+			formed from the characters of STR1. Both the strings can contain any characters.
+			For Example:
+				If STR1 = "codingninjas" and STR2 = "sing". We can form the second
+				string using the characters of the first string. This is because "s",
+				"i", "n", "g" are present in the string STR1.
+			Constraints:
+				1 ≤ T ≤ 100
+				1 ≤ STR1|, STR2| ≤ 1000
+			Where 'T' is the number of test cases, ISTR1| and [STR2| are the lengths of the strings STR1 and STR2 respectively.
+			Time Limit: 1 sec.
+			Sample Input 1:
+				3
+				codingninjas
+				sing
+				good human
+				14good
+				coder
+				code
+				Sample Output 1:
+				YES
+				NO
+				YES
+				Explanation Of Input 1:
+				The first test case has already been explained in the problem statement.
+
+				For the second test case, STR1 = “good human” and STR2 = “14good”. We cannot form the second string using the characters of the first string. This is because “1” and “4” are not present in the string STR1.
+
+				For the third test case, STR1 = “coder” and STR2 = “code. We can form the second string using the characters of the first string. This is because “c”, “o”, “d”, “e” are present in the string STR1.
+				Sample Input 2:
+				3
+				madam
+				adam
+				H#LLO
+				hello
+				orange
+				orange
+				Sample Output 2
+				YES
+				NO
+				YES
+		
+		#include <bits/stdc++.h> 
+		string canFormSecondString(string str1, string str2){
+			if(str2.length() >  str1.length())
+				return "NO";
+				
+			for(int s2=0; s2<str2.length(); s2++){
+				int s1;
+				for(s1=0; s1<str1.length(); s1++){
+					if(str2[s2] == str1[s1]){
+						str1[s1] = '>';
+						break; 
+					}
+				}
+				if(s1 == str1.length())
+					return "NO";
+			}
+			return "YES";
+		}
+
+	103) Base 58:
+		Problem Statement
+			You are given a number N. Your goal is to convert the number into base 58.
+			The Base58 alphabet consists of the following characters:
+			"123456789ABCDEFGH|KLMNPORSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+			Each byte value from 0 to 57 maps to the alphabet above.
+			Conversion Eg: ( according to above mapping).
+			Base 10   |	Base 58
+			0		|		1
+			1		|		2
+			10		|		A
+			20		|		L
+			30		|		W
+			53		|		u
+			Sample Input 1:
+				2
+				10
+				67
+				Sample Output 1:
+				B
+				2A
+				Explanation For Sample Input 1:
+				In test case 1:
+
+				If we represent 10 in powers of 58, it will be, 10 = 10*(58^0)
+				10 in base 10 corresponds to B in base 58 ( according to the above mapping).
+				Thus our answer is: B
+
+				In test case 2:
+
+				If we represent 66 in powers of 58, it will be, 67 = 1*(58^1) + 9*(58^0)
+				1 in base 10 corresponds to 2 in base 58, 9 in base 10 corresponds to A in base 58.
+				Thus our answer is: 2A
+				Sample Input 2:
+				3
+				4364
+				1786
+				6978
+				Sample Output 2:
+				2JF
+				Xo
+				35K
+		#include <bits/stdc++.h> 
+		string encodeBase58(int N) {
+			string ans;
+			string mapper = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+			if(N == 0)
+				return "1";
+			while(N){
+				ans += mapper[N%58];
+				N /= 58;
+			}
+			reverse(ans.begin(), ans.end());
+			return ans;
+		}
+
+	104) Find Palindromes:
+		Problem Statement
+			You are given an integer 'N' Your task is to find all palindromic numbers from 1 to 'N'
+			Palindromic integers are those integers that read the same backward or forwards.
+			Note: Order of numbers should be in the non-decreasing matter.
+			For Example:
+				You are given 'N' as 12, so the output should be [1, 2, 3, 4, 5, 6, 7, 8, 9, 11], as all
+				single-digit numbers are palindromic, and 11 is also a palindromic number.
+			Sample Input 1:
+					2
+					12
+					5
+				Sample Output 1:
+					1 2 3 4 5 6 7 8 9 11
+					1 2 3 4 5
+				Explanation:
+				For the first test case, all the single-digit numbers are palindromic, 
+				and the number 11 is also palindromic. Hence the output is [1, 2, 3, 4, 5, 6, 7, 8, 9, 11].
+
+				For the second test case, N is less than 9. Therefore all the numbers from 1 to N 
+				are palindromes. Hence the output is [1, 2, 3, 4, 5].
+				Sample Input 2:
+					2
+					15
+					22
+				Sample Output 2:
+					1 2 3 4 5 6 7 8 9 11
+					1 2 3 4 5 6 7 8 9 11 22
+
+		#include <bits/stdc++.h> 
+		vector<int> getPalindromes(int n){
+			vector<int> palidromes;
+
+			for(int i=1; i<=n; i++) {
+				//this will work we used so many built in fuction,
+				//so TLE will be there.
+				// string s = to_string(i);
+				// reverse(s.begin(), s.end());
+				// int rev = stoi(s);
+				// if(rev == i){
+				// 	palidromes.push_back(i);
+				// }
+				int num = i;
+				int reversed = 0;
+
+				while (num > 0) {
+					reversed = reversed * 10 + num % 10;
+					num /= 10;
+				}
+
+				if (reversed == i) {
+					palidromes.push_back(i);
+				}
+			}
+			return palidromes;
+		}
+
+	105) Mindbending Product:
+		Problem Statement
+			You are given an array 'ARR' of size N. You have to construct a Product Array 'P' of the same size such that
+			P[i] is equal to the product of all the elements of ARR except ARR[i]. The constraint is that you are not
+			allowed to use the division operator.
+			For Example:
+			For an array {1, 2, 3, 4, 5}:
+			The required product array generated from the given array is {120, 60, 40, 30, 24 }
+			This can be generated in the following manner:
+			For generating 120 we have 2 * 3 * 4 * 5 i.e. the product of other array elements except 1.
+			For generating 60 we have 1 * 3 * 4 * 5 i.e. the product of other array elements except 2.
+			For generating 40 we have 1 * 2 * 4 * 5 i.e. the product of other array elements except 3.
+			For generating 30 we have 1 * 2 * 3 * 5 i.e. the product of other array elements except 4.
+			For generating 24 we have 1 * 2 * 3 * 4 i.e. the product of other array elements except 5.
+		Sample Input 1:
+			2
+			5
+			10 3 5 6 2
+			2
+			12 20
+			Sample Output 1:
+			180 600 360 300 900
+			20 12
+			Explanation:
+			Test Case 1: 
+			For the product array P,
+			At i=0 we have 3*5*6*2 = 180.
+			At i=1 we have 10*5*6*2 = 600. 
+			At i=2 we have 10*3*6*2 = 360. 
+			At i=3 we have 10*3*5*2 = 300. 
+			At i=4 we have 10*3*5*6 = 900
+			So, the P array is 180 600 360 300 900
+
+			Test Case 2: 
+			For the product array P, 
+			At i=0, we have 20. 
+			At i=1, we have 12.
+			So, the P array is 20 12. 
+		vector<long long> getProductArray(int arr[], int n){
+			vector<long long> ans;
+			if(n==1)
+				return {0};
+			
+			for(int i=0; i<n; i++){
+				long long pro =1;
+				for(int j=0; j<n; j++){
+				if(i==j)
+					continue;
+				pro *= arr[j];         
+				}
+				ans.push_back(pro);
+			}
+			return ans;
+		}
+
+	106) Count Even Odd:
+		Problem Statement
+			You have been given an array/list of integers 'ARR' of size 'N'. Your task is to find two things-
+			1. The number of elements that are occurring an Odd number of times.
+			2. The number of elements that are occurring Even a number of times.
+			For Example:
+				ARR = [2, 1, 2, 1, 5, 5, 2]
+				Output: 1 2
+				2 occurs three(odd) times.
+				1 occurs two(even) times.
+				5 occurs two(even) times.
+			So, the total 1 element is occurring an odd number of times and 2 elements are occurring
+			an even number of times.
+			Detailed explanation (Input/output format, Notes, Images )
+			Constraints:
+				1 <= T <= 10^2
+				0 <= N <= 5 * 10^3
+				1 <= ARR[i] <= 10^9
+				Time Limit: 1 sec
+		Sample Input 1:
+			2
+			5
+			4 5 1 2 1
+			4
+			2 1 2 1 
+			Sample Output 1:
+			3 1
+			0 2
+			Explanation For Sample 1:
+			In the first test case, three integers(4, 5 and 2) occur odd times and the only integer 1 occurs even times.
+
+			In the second test case, no integer occurs odd times and two integers(1 and 2) occurs even times.
+			Sample Input 2:
+			1
+			8
+			5 2 9 9 7 5 1 3
+			Sample Output 2:
+			4 2
+
+		#include <bits/stdc++.h> 
+		vector<int> countEvenOdd(vector<int> &arr, int n){
+			//NOT optimized
+			// int oddOccs=0, evenOcc=0;
+			// for(int i=0; i<n; i++){
+			// 	int cnt=1;
+			// 	if(arr[i] != -1){
+			// 		for(int j=i+1; j<n; j++){
+			// 			if(arr[i] == arr[j]){
+			// 				arr[j] =-1;
+			// 				cnt++;
+			// 			}
+			// 		}
+			// 		if(cnt&1)
+			// 			oddOccs++;
+			// 		else
+			// 			evenOcc++;
+			// 	}
+			// }
+			// return {oddOccs, evenOcc};
+			unordered_map<int, int> occurrenceMap;
+			int oddOccs = 0, evenOcc = 0;
+
+			for (int i = 0; i < n; i++) {
+				occurrenceMap[arr[i]]++;
+			}
+
+			for (auto const& entry : occurrenceMap) {
+				if (entry.second % 2 == 1) {
+					oddOccs++;
+				} else {
+					evenOcc++;
+				}
+			}
+			return {oddOccs, evenOcc};
+		}
+	
+	107) Flip given bits:
+		Problem Statement
+			You have been given an integer 'NUM' (32 bits) and an array of size 'N'.
+			Your task is to flip all the bits of 'NUM' at position 'ARR[i]' where 0<= i <= N-1.
+				Constraints:
+				1 <= 'T' <= 10
+				1 <= 'NUM' <= 10^9
+				1 <= 'N' <= 10^5
+				1 <= 'ARR[il' <= 31
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				21
+				3
+				4 2 1
+				40
+				1
+				4
+			Sample Output 1:
+				30
+				32
+			Explanation For Sample Input 1:
+				Before flipping
+				21 => 10101
+				After flipping the 4th, 2nd and 1st bit from the end we get 
+				30 => 11110
+
+				Before flipping
+				40 => 101000
+				After flipping the 4th bit from the end we get 
+				32 => 100000
+			Sample Input 2:
+				1
+				5
+				3
+				6 2 5
+				Sample Output 2:
+				55
+		#include <bits/stdc++.h> 
+		int flipSomeBits(int num, vector<int> &arr, int n){
+			string s = bitset<32>(num).to_string();
+			reverse(s.begin(), s.end());
+			
+			for(int i=0; i<n; i++){
+				if(s[arr[i]-1]=='1'){
+					s[arr[i]-1] = '0';
+				}else{
+					s[arr[i]-1] = '1';
+				}
+			}
+			reverse(s.begin(), s.end());
+
+			//removing leading zeros
+			while(s[0] == '0')
+				s.erase(0,1);
+
+			// cout<<s<<endl;
+			//binary to decimal conversion
+			int ans=0, cnt=0;
+			for(int i=s.length(); i>=0; i--){
+				if(s[i] == '1')
+					ans += pow(2,cnt);
+				cnt++;
+			}
+
+			//or
+			// return stoi(s, 0, 2);
+			return ans/2;
+		}
+			//or
+				#include <bits/stdc++.h> 
+				int flipSomeBits(int num, vector<int> &arr, int n){
+					string s = bitset<32>(num).to_string();
+					reverse(s.begin(), s.end());
+					
+					for(int i=0; i<n; i++){
+						if(s[arr[i]-1]=='1'){
+							s[arr[i]-1] = '0';
+						}else{
+							s[arr[i]-1] = '1';
+						}
+					}
+					reverse(s.begin(), s.end());
+					return stoi(s,0,2);
+				}
+	
+	108) Maximum In Sliding Windows Of Size K:
+		Problem Statement
+			Given an array/list of integers of length 'N', there is a sliding window of size 'K' which moves from the
+			beginning of the array, to the very end. You can only see the 'K' numbers in a particular window at a
+			time. For each of the 'N'-'K'+1 different windows thus formed, you are supposed to return the
+			maximum element in each of them, from the given array/list.
+			Constraints :
+				1 <= T <= 50
+				1 <= N <= 10^4
+				1 <= K <= N
+				0 <= ARR[i] <= 10^5
+				Where, ARR[i] denotes the i-th element in the array/list.
+					Time Limit: 1 sec.
+			Sample Input 1 :
+				2
+				3 1
+				1 2 2
+				5 2
+				4 2 1 4 4
+				Sample Output 1 :
+				1 2 2
+				4 2 4 4
+				Explanation To Sample Input 1 :
+				In the first test case, 
+				The maximum of window {1} is 1.
+				The maximum of window {2} is 2.
+				The maximum of window {2} is 2.
+				So the output will be {1, 2, 2}.
+
+				In the second test case, 
+				The maximum of window {4,2} is 4.
+				The maximum of window {2,1} is 2.
+				The maximum of window {1,4} is 4.
+				The maximum of window {4,4} is 4.
+				So the output will be {4, 2, 4, 4}.
+				Sample Input 2 :
+				2
+				5 3
+				2 2 2 3 3
+				7 4
+				2 3 1 4 5 1 5
+				Sample Output 2 :
+				2 3 3
+				4 5 5 5
+				Explanation To Sample Input 2 :
+				In the first test case, 
+				The maximum of window {2,2,2} is 2.
+				The maximum of window {2,2,3} is 3.
+				The maximum of window {2,3,3} is 3.
+				So the output will be {2, 3, 3}.
+
+				In the second test case, 
+				The maximum of window {2,3,1,4} is 4.
+				The maximum of window {3,1,4,5} is 5.
+				The maximum of window {1,4,5,1} is 5.
+				The maximum of window {4,5,1,5} is 5.
+				So the output will be {4, 5, 5, 5}.
+		
+		//not optimized
+			#include <bits/stdc++.h> 
+			vector<int> slidingWindowMaximum(vector<int> &nums, int &k){
+				vector<int> ans;
+				for (int i = 0; i <= nums.size() - k; i++) {
+					// parsing window of size k.
+					vector<int> temp(nums.begin() + i, nums.begin() + k + i);
+					int mx = *max_element(temp.begin(), temp.end());
+					ans.push_back(mx);
+				}
+				return ans;
+			}
+
+		//or
+			#include <bits/stdc++.h> 
+			vector<int> slidingWindowMaximum(vector<int> &nums, int &k){
+				vector<int> ans;
+				for(int i=0; i<nums.size()-k+1; i++){
+					vector<int> temp;
+					int cnt=k;          //window size
+					for (int j = i; cnt > 0; cnt--) {
+						temp.push_back(nums[j++]);
+					}
+					ans.push_back(*max_element(temp.begin(), temp.end()));
+				}
+				return ans;
+			}
+
+		//or
+			#include <bits/stdc++.h> 
+			vector<int> slidingWindowMaximum(vector<int> &nums, int &k){
+				vector<int> ans;
+				for(int i=0; i<nums.size()-k+1; i++){
+					vector<int> temp;
+					for (int j = i; j < i + k; j++) {
+						temp.push_back(nums[j]);
+					}
+					ans.push_back(*max_element(temp.begin(), temp.end()));
+				}
+				return ans;
+			}
+		
+		//optimized:
+			#include <bits/stdc++.h> 
+			vector<int> slidingWindowMaximum(vector<int> &nums, int &k){
+				vector<int> ans;
+				std::deque<int> maxDeque;
+
+				for (int i = 0; i < nums.size(); i++) {
+					// Remove elements that are out of the current window
+					while (!maxDeque.empty() && maxDeque.front() < i - k + 1) {
+						maxDeque.pop_front();
+					}
+
+					// Remove elements that are less than the current element
+					while (!maxDeque.empty() && nums[i] >= nums[maxDeque.back()]) {
+						maxDeque.pop_back();
+					}
+
+					// Add the current element to the deque
+					maxDeque.push_back(i);
+
+					// The front element of the deque is the maximum in the current window
+					if (i >= k - 1) {
+						ans.push_back(nums[maxDeque.front()]);
+					}
+				}
+				return ans;
+			}
+
+	109)
+	
+	110)
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 calender:
