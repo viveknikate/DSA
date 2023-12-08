@@ -4663,7 +4663,7 @@ Lecture-8: Switch case & functions:
 		3]. Square root of n ❌
 ---------------------------------------------------------------------------------------------------------
 	08/08/23
-Lecture-9:  Introduction to Arrays in C++
+Lecture-9: Introduction to Arrays in C++
 	Introduction to Arrays
 		-Array is a collection of variables of the same type.
 		-Arrays are used to store multiple values of same Datatype in a single variable, 
@@ -5353,6 +5353,87 @@ Lecture-10: Solving LeetCode/CodeStudio Questions [Arrays]
 			return 0;
 		}
 	
+	-sort & reverse array:
+		#include <iostream>
+		#include<bits/stdc++.h>
+		using namespace std;
+
+		int main() {
+			vector<int> holder = {5,9,3,10,8,4,1,2,6,7};
+			
+			std::cout << "The size of array is :: " << holder.size() << std::endl;
+			
+			//sorting first 5 elements only.
+			//output = 3,5,8,9,10,4,1,2,6,7
+			
+			std::cout << "Before sorting: " << std::endl;
+			for(int i: holder)
+				std::cout << i << "\t";             //5,9,3,10,8,4,1,2,6,7.
+				
+			std::cout << std::endl;
+			std::cout << "After sorting first 5 elements: " << std::endl;
+			
+			sort(holder.begin(), holder.begin()+5);
+			for(auto i: holder)
+				std::cout << i << "\t";             //3,5,8,9,10,4,1,2,6,7
+			
+			std::cout << std::endl;
+			cout<<"sorting array in increasing order: \n";
+			sort(holder.begin(), holder.end());
+			
+			for(int o: holder)
+				std::cout << o << "\t";
+				
+			std::cout << std::endl;
+			cout<<"sorting array in decreasing order: \n";
+			sort(holder.begin(), holder.end(), greater<int>());
+			
+			for(int o: holder)
+				std::cout << o << "\t";
+				
+			//reversing the array
+			std::cout << std::endl;
+			cout<<"Reversing the given array: \n";
+			reverse(holder.begin(), holder.end());
+			
+			for(int o: holder)
+				std::cout << o << "\t";
+				
+			
+			//sorting first 5 elements in decreasing order
+			std::cout << std::endl;
+			cout<<"sorting first 5 elements in decreasing order: \n";
+			sort(holder.begin(), holder.begin()+5, greater<int>());
+			
+			for(int o: holder)
+				std::cout << o << "\t";
+			
+			//Reversing first 6 elements
+			std::cout << std::endl;
+			cout<<"Reversing first 6 elements: \n";
+			reverse(holder.begin(), holder.begin()+6);
+			
+			for(int o: holder)
+				std::cout << o << "\t";
+			return 0;
+		}
+		//output:
+			The size of array is :: 10
+			Before sorting: 
+			5       9       3       10      8       4       1       2       6       7
+			After sorting first 5 elements: 
+			3       5       8       9       10      4       1       2       6       7
+			sorting array in increasing order: 
+			1       2       3       4       5       6       7       8       9       10
+			sorting array in decreasing order: 
+			10      9       8       7       6       5       4       3       2       1
+			Reversing the given array: 
+			1       2       3       4       5       6       7       8       9       10
+			sorting first 5 elements in decreasing order: 
+			5       4       3       2       1       6       7       8       9       10
+			Reversing first 6 elements: 
+			6       1       2       3       4       5       7       8       9       10
+
 	-Set:
 		-set by default store element in ascending order,
 		-set store unique elements. not duplicate.
@@ -11069,6 +11150,8 @@ Lecture-26: Pointers in C++ || Part-2
 		-gives the value.
 		arr[i] = *(arr+i)				//or
 		i[arr] = *(i+arr);
+		//or
+		arr[i] = *(arr+i) = i[arr];
 	eg.
 		#include <iostream>
 		using namespace std;
@@ -11209,6 +11292,29 @@ Lecture-26: Pointers in C++ || Part-2
 			
 			return 0;
 		}
+
+		//or
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				char c[] = "asdfqwerty";
+				
+				std::cout << c[0] << std::endl;         //a
+				std::cout << 3[c] << std::endl;         //f
+				std::cout << c << std::endl;            //asdfqwerty
+				
+				char* ptr = c;
+				std::cout << ptr << std::endl;          //asdfqwerty
+				
+				std::cout << ptr[1] << std::endl;       //s
+				std::cout << *(ptr+2) << std::endl;     //d
+				std::cout << (ptr+2) << std::endl;      //dfqwerty
+				std::cout << (c+2) << std::endl;        //this prints all content from 2nd index        //dfqwerty
+				std::cout << *(c+2) << std::endl;       //this prints the value at 2nd index           //d
+				
+				return 0;
+			}
 
 	//char pointer:
 		-When you create a pointer to single character, then use & operator to give the address,
@@ -11912,9 +12018,391 @@ Lecture-27: Double Pointers in C++
 			}
 
 		25)
+		25)
+		25)
+		25)❌Pending
 ---------------------------------------------------------------------------------------------------------
 	07/12/2023
 Lecture-28: Reference Variable | Static vs Dynamic Memory | Part-1
+	-Reference Variable:
+		-Reference variable has same memory location but different names;
+		-single variable/ memory location has multiple names means reference variable.
+		eg.
+			int i=5;
+			int& j = i;		//& you can attach it to int (dataType).
+			int & k = i;		//& you can keep space in between also.
+			int &l = i;		//& you can attach it to variable also. NO error
+
+			-j, k, l are the example of reference variable.
+		eg.
+			
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				int i=90;
+				
+				int& j =i;          //reference variable
+				int & k = i;
+				int &l = i;
+				
+				std::cout << i << std::endl;            //90
+				
+				//reference variable also has same value as i.
+				std::cout << "Ref var j "<< j << std::endl;         //90
+				std::cout << "Ref var k "<< k << std::endl;         //90
+				std::cout << "Ref var l "<< l << std::endl;         //90
+				
+				//if we change any of the value from i, j, k or l it will affect to other also
+				
+				k = 99;
+				std::cout << i << std::endl;            //99
+				
+				//After updation.
+				std::cout << "Ref var j "<< j << std::endl;         //99
+				std::cout << "Ref var k "<< k << std::endl;         //99
+				std::cout << "Ref var l "<< l << std::endl;         //99
+				
+				i++;
+				
+				std::cout << i << std::endl;            //100
+				
+				//After i increment. affected to all variable
+				std::cout << "Ref var j "<< j << std::endl;         //100
+				std::cout << "Ref var k "<< k << std::endl;         //100
+				std::cout << "Ref var l "<< l << std::endl;         //100
+				return 0;
+			}
+
+		-Why?
+			-When we pass a variable to function it takes it & create its copy.
+			 but when we use reference variable, it don't create copy of variable, 
+			 it makes changes to same variable.
+			
+			eg.
+				#include <iostream>
+				using namespace std;
+
+				void passValue(int u){
+					u++;
+				}
+
+				void passRef(int &z){			//z is reference variable, which is another name for i from main function.
+					z++;
+				}
+
+				int main() {
+					int i=90;
+					
+					//passing Value
+					std::cout << "Before " << i << std::endl;   //90
+					passValue(i);   
+					std::cout << "After " << i << std::endl;    //90
+					
+					std::cout << std::endl;
+					//passing Reference
+					std::cout << "Before " << i << std::endl;       //90
+					passRef(i);
+					std::cout << "After " << i << std::endl;        //91
+					return 0;         
+				}
+	
+		//BAD PRACTICE:
+			int& RefFunction(){
+
+			}
+
+			//or
+			int* RefFunction(){
+
+			}
+				
+			//returntype is Reference of variable/ memory address of variable.
+			//program runs but warning will be there, coz its returning the memory address
+			//of 'a' which is local variable of RefFunction, & as soon as function ends the variable gets deleted
+			//so that's why.
+
+			int& RefFunction(){                 
+				std::cout << "Reference function" << std::endl;
+				int a =90;
+				return a;           // will not get passed by to main function.
+			}
+
+			eg.
+				//BAD Practice int*:
+					you can write it return type like below, it won't give error
+					
+					int *functionName(){		
+						//* attached to functionName
+					}
+					
+					//or
+					int* functionName(){
+						//* attached to returnType
+					}
+
+					//or
+					int*functionName(){
+						//* attached to both
+					}
+
+					//or
+					int * functionName(){
+						//* not attached to anything.
+					}
+
+					#include <iostream>
+						using namespace std;
+
+						int* pointerReturningFunction(){
+						//int*pointerReturningFunction(){
+						//int *pointerReturningFunction(){
+
+							int a =12;
+							int * p = &a;
+							
+							std::cout << a << std::endl;		//12
+							std::cout << p << std::endl;		//memory address
+							
+							return p;
+						}
+
+						int main() {
+							int *ptr = pointerReturningFunction();
+
+							//Ask any one thing here either value of its address if you ask both,
+							//it prints the correct address but wrong value.
+
+							//if you want to ask both address & value then you need to 
+							//allocate the memory to HEAP.
+							//for previous case we are allocating memory to stack that's why giving wrong value.		
+							// Refere below program also. IMPORTANT.
+
+							//std::cout << ptr << std::endl;
+							std::cout << *ptr << std::endl;			//12
+							
+							return 0;               
+						}
+
+					//below program works perfectly fine.
+					#include <iostream>
+						using namespace std;
+
+						int*pointerReturningFunction(){
+							int * p = new int(20);				//Memory allocated on HEAP.
+							
+							std::cout << p << std::endl;			//0x56105a3ffeb0
+							std::cout << *p << std::endl;			//20
+							
+							return p;
+						}
+
+						int main() {
+							int *ptr = pointerReturningFunction();
+
+							std::cout << ptr << std::endl;			//0x56105a3ffeb0
+							std::cout << *ptr << std::endl;			//20
+							
+							return 0;               
+						}
+
+				//BAD Practice int&:
+					-you can write it return type like below, it won't give error
+						
+						int &functionName(){		
+							//& attached to functionName
+						}
+						
+						//or
+						int& functionName(){
+							//& attached to returnType
+						}
+
+						//or
+						int&functionName(){
+							//& attached to both
+						}
+
+						//or
+						int & functionName(){
+							//& not attached to anything.
+						}
+					//works fine.
+						#include <iostream>
+						using namespace std;
+
+						int & RefFunction(){
+							int i=88;
+							int& j = i;
+							std::cout << std::endl;
+							std::cout << "inside function: " << std::endl;
+							std::cout << i << std::endl;        //88
+							std::cout << &j << std::endl;       //0x7ffed7a7eefc
+							std::cout << &i << std::endl;       //0x7ffed7a7eefc
+							std::cout << std::endl;
+							return j;
+						}
+
+						int main() {
+							int a = RefFunction();              //normal variable that's why different memory address is printed
+							std::cout << a << std::endl;        //88
+							std::cout << &a << std::endl;       //0x7ffcdfee1704
+							
+							int &z = RefFunction();             //reference variable, printed same memory address as printed in function 
+														 //(but sometimes won't be printed same address, if compiler is optimized then only prints the same address)
+														 //better should not use this returning reference function.
+							std::cout << z << std::endl;        //88
+							std::cout << &z << std::endl;       //0x7ffed7a7eefc
+							
+							return 0;               
+						}
+
+	-Array:
+		-BAD practice:
+			int n;
+			cin>>n;
+			int arr[n];		//n is not known at compile time.
+							//bad never do this, the size should be constant/number should be known at compile time.
+							//if the program knows that the array size is large, then before coming for execution
+							//it brings extra memory. eg. int arr[10000];
+							//if don't know the size & size is larger then it will exceed memory limit, program gets crashed.
+			-here in above case we are taking n from user & creating array on stack.
+			-stack have limited/less memory than heap & this stack memory program brings
+			 before the starting the execution.
+			-suppose stack have 20 bytes of memory size, but you given n=25
+			 so it is not able store the 25 values, so program crashes/ terminates abnormally.
+			-Solution for this, to use Heap memory (Dynamic memory).
+						                       +----------------+
+				+-----------+				   |                |
+				|           |                    |                |
+				|           |                    |                |
+				|           |                    |                |
+				+-----------+ 				   |                |
+                  	  Stack size				   +----------------+
+				                     	    		    Heap size
+			
+		-Static memory allocation:
+			-memory alloted from stack
+			eg.
+				int arr[100];
+				char ch[1000];			//depends on stack memory
+				int a=45;
+				string s = "qwerty";
+			
+		-Dynamic memory allocation: (HEAP memory)
+			-need to use 'new' keyword.
+			-memory alloted from heap
+			-programmer is responsible for freeing the memory.
+			-eg.
+				//to create a int variable on heap, use this syntax:
+					new int;
+					-but above created variable don't have any name,
+					 it returns the address so we have to store that address, so
+					-Actual syntax
+						int *p = new int;			//pointer storing address of that variable which is on Heap.
+												//pointer is on stack
+					
+					eg.
+						#include <iostream>
+						using namespace std;
+
+						int main() {
+							int * p = new int;          //memory alloted on heap
+							
+							std::cout << p << std::endl;        //0x557055e95eb0
+							std::cout << *p << std::endl;       //0
+							
+							*p = 90;
+							
+							std::cout << p << std::endl;        //0x557055e95eb0
+							std::cout << *p << std::endl;       //90  
+							delete p;                   //memory freed from heap
+							
+							
+							return 0;
+						}
+
+					//to create a int array on heap, use this syntax:
+						new int[10];
+						eg.
+							#include <iostream>
+							using namespace std;
+
+							int main() {
+								int n;
+								cin>>n;                 //creating dynamic array
+								
+								int * p = new int[n];          //memory alloted on heap
+								
+								p[1] = 45;
+								p[2] = 60;
+								p[3] = 23;
+								p[4] = 1;
+								
+								for(int i=0; i<n; i++)
+									// std::cout <<*(p+i) << "\t";         //or
+									std::cout << p[i] << "\t";
+									
+								delete[] p;          //syntax works          //memory freed from heap
+								// delete [] p;      //syntax works
+								// delete []p;       //syntax works   
+								// delete[]p;        //syntax works
+								return 0;
+							}
+
+							//or
+								#include <iostream>
+								using namespace std;
+
+								int main() {
+									int n;
+									cin>>n;
+									
+									int * arr = new int[n];
+									
+									for(int i=0; i<n; i++)
+										cin>>arr[i];
+									
+									std::cout << "Array elements are : " << std::endl;
+									
+									for(int i=0;i<n; i++)
+										// std::cout << *(arr+i) << "\t";
+										std::cout << i[arr] << "\t";
+									return 0;
+								}
+
+					//to create a string on heap, use this syntax:
+						new string;
+					
+					//to create a string array on heap, use this syntax:
+						new string[10];
+					
+					//to create a char array on heap, use this syntax:
+						new char[10];
+
+			-Total memory used by below line
+				1)char * ptr = new char;
+					where,
+						pointer ptr has 8 bytes of size
+						char has 1 byte of size
+						so total is 8+1= 9 bytes memory used.
+					
+				2)int *p1 = new int[10];
+					where,
+					-pointer p1 has 8 bytes of size
+					-int has 4 bytes of size & its of 10 elements
+					so total is 4*10 = 40 bytes
+					-40 + 8 = 48 bytes of total memory used.
+			
+	-Dynamic allocated memory uses 8 bytes extra, which is a pointer on stack.
+	-in stack (static memory allocation) memory gets released automatically
+	-in Dynamic memory allocation, mannually have to do it.
+
+	❌Pending:
+		void pointer
+		address TypeCasting
+---------------------------------------------------------------------------------------------------------
+Lecture29: Dynamic Memory Allocation of 2D Arrays
 	
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
@@ -28444,11 +28932,75 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	218)
+	218) Transform to prime:
+		Problem Statement:
+			Given an array of n integers. Find the minimum positive number to be inserted in array, 
+			so that sum of all elements of array becomes prime.
+
+			Example 1:
+				Input:
+				N=5
+				arr = {2, 4, 6, 8, 12}
+				Output:  
+				5
+				Explanation: 
+				The sum of the array is 32 ,we can add 5 to this to make it 37 which is a prime number.
+
+			Example 2:
+				Input:
+				N=3
+				arr = {1, 5, 7}
+				Output:  
+				0 
+				Explanation: 
+				The sum of the array is 13 which is already prime. 
+
+			Your Task:
+				You don't need to read input or print anything. 
+				Your task is to complete the function minNumber() that takes array arr 
+				and integer N as input parameters and returns the minimum positive 
+				number to be inserted in the array so as to make it's sum a prime number.
+
+			Expected Time Complexity: O(N log(log N))
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 ≤ N ≤ 10^5
+				1 ≤ sum of all elements ≤ 10^6
+
+		class Solution {
+			public:
+			int minNumber(int arr[],int N) {
+
+				//calculating sum of array
+				vector<int> holder;
+				holder.assign(arr, arr+N);
+				int sum =0;
+
+				for(int i: holder)
+					sum += i;
+				
+				int adder=0;
+				while(1){
+					//checking sum is prime or not
+					int i;
+					for(i=2; i<=sum/2; i++){
+						if(sum % i == 0)
+							break;
+					}
+					
+					if(i == (sum/2)+1)
+						return adder;
+					sum ++;
+					adder++;
+				}
+			}
+		};
 
 	219)	
-	
+
 	220)	
+	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 calender:
