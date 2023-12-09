@@ -307,8 +307,7 @@ Lecture-2: Write Your First Program in C++
 				#include <iostream>
 				using namespace std;
 
-				int main()
-				{
+				int main() {
 					char str1[10] = "Freshers";
 					std::cout << str1 << std::endl;
 					
@@ -347,6 +346,24 @@ Lecture-2: Write Your First Program in C++
 					std::cout << str5.back() << std::endl;
 					return 0;
 				}
+
+				//or
+
+					#include <iostream>
+					using namespace std;
+
+					int main() {
+						string s1("qwerqty");
+						string s2 ("asdf");
+						string s3 = "vivek";
+						string s4 = {"one two"};
+						
+						std::cout << s1 << std::endl;       //qwerqty
+						std::cout << s2 << std::endl;       //asdf
+						std::cout << s3 << std::endl;       //vivek
+						std::cout << s4 << std::endl;       //one two
+						return 0;
+					}
 
 		Variable Naming Convention:
 			int abc1 = 1;			//valid
@@ -9116,7 +9133,7 @@ Lecture-22: All about Char Arrays, Strings & solving LeetCode Questions
 				return 0;
 			}
 
-		// string insertion:
+		// string insertion
 			#include <iostream>
 			using namespace std;
 
@@ -9131,9 +9148,127 @@ Lecture-22: All about Char Arrays, Strings & solving LeetCode Questions
 
 				s.insert(1,"Nikate");           //after one character insert new string.
 				std::cout << s << std::endl;	  //HNikateel Vivek lo World
-					
+
+				string s5 = "Name:.";
+				string s6 = "VivekMaheshNikate";
+				
+				s5.insert(5, s6,5,6);               //after 5 char insert s6 to s5, but just first 6 char of s6 only. from 5th index (0-index based)
+				std::cout << s5 << std::endl;       //Name:Mahesh.
+				
 				return 0;
 			}
+
+			//or
+				#include <iostream>
+				using namespace std;
+
+				int main() {
+					string s = "BIG WORLD";
+					
+					std::cout << s << std::endl;
+					s.insert(2,3,';');         //from 2nd index, means after char of s, insert (;) 3 times.
+					std::cout << s << std::endl;
+					
+					string s2 = "SMALL world";
+					
+					std::cout << s2 << std::endl;
+					s2.insert(3,4,'\\');           //After char 'A', means after 3rd char, insert (\) 4 times, 
+												// (\) is escape char so need to use twice
+					std::cout << s2 << std::endl;
+					
+					return 0;
+				}
+
+			//or
+				#include <iostream>
+				using namespace std;
+
+				int main() {
+					string s = "BIG WORLD";
+					
+					std::cout << s << std::endl;        //BIG WORLD
+					
+					//if you want to  insert just a char to string use this method
+					s.insert(s.begin()+1,'%'); 
+					std::cout << s << std::endl;        //B%IG WORLD
+
+					s = "BIG WORLD";
+					s.insert(s.end()-1,'+');      	//from ending of string   
+					std::cout << s << std::endl;        //BIG WORL+D
+
+					s = "BIG WORLD";
+					s.insert(s.begin()+2,'@');         //from starting of string
+					std::cout << s << std::endl;        //BI@G WORLD
+
+					
+					//want to insert string to string use below method
+					s = "BIG WORLD";
+					s.insert(4,"1234");
+					std::cout << s << std::endl;		//BIG 1234WORLD
+					
+					s = "BIG WORLD";
+					s.insert(3,"qwerty", 1);         //insert to s after 3 char but just insert first char of qwerty ie. q
+					std::cout << s << std::endl;		//BIGq WORLD
+					
+					s = "BIG WORLD";
+					s.insert(0,"qwerty", 2);         //insert to s from start, but just insert first 2 char of qwerty ie. qw
+					std::cout << s << std::endl;		//qwBIG WORLD
+					
+					s = "BIG WORLD";
+					s.insert(4,"qwerty", 3);         //insert to s after 4 char, but just insert first 3 char of qwerty ie. qwe
+					std::cout << s << std::endl;		//BIG qweWORLD
+					
+					s = "BIG WORLD";
+					s.insert(5,"qwerty", 3,3);         //insert to s after 5 char but just insert 3 char of qwerty, from 3rd index (0-based index).
+					std::cout << s << std::endl;		//BIG WrtyORLD
+					
+					return 0;
+				}
+
+			//or
+				#include <iostream>
+				using namespace std;
+
+				int main() {
+					string s1 ("ABCDef");             //length: 4
+					string s2 ("//\\\\");           //length: 6, but Actual length: 4 due to escape char \.
+					
+					std::cout << s1 << std::endl;
+					std::cout << s2 << std::endl;
+
+					s2.insert(2,s1);
+					std::cout << s2 << std::endl;
+					
+					//but just AB we need
+					s2 = "{{}}";
+					std::cout <<endl<< s2 << std::endl;
+
+					//GLITCH
+					s2.insert(2,s1,3);                  //sending string as variable s1 to insert function will ouput, start inserting from 3rd index of s1 till last.(0-based index)
+					std::cout << s2 << std::endl;               //{{D}}
+					
+					s2 = "{{}}";
+					s2.insert(2,"ABCDef",3);              //sending string directly to insert function will ouput, just takes first 3 char of given string.
+					std::cout << s2 << std::endl;           //{{ABC}}
+					
+					
+					s2="{{}}";
+					
+					s2.insert(2,s1,3);                  //start inserting s1 to s2 from 3rd index of s1.
+					std::cout << s2 << std::endl;       //{{Def}}
+					
+					s2="[[]]";
+					s2.insert(2,s1,3,2);                 //here we mentioned the start & no.of chars to take. 
+													//start index :3, no.of chars to take :2
+													//from 3rd of s1 take 2 chars ie. s1 is ABCDef from 3rd index is D
+													//from there 2 chars means ie. De
+													
+					std::cout << s2 << std::endl;           //[[De]].
+					
+					return 0;
+				}
+			
+
 
 		// Replace Spaces with @40:
 			Sample Input 1:
@@ -12739,7 +12874,34 @@ Lecture29: Dynamic Memory Allocation of 2D Arrays
 
 		int main(){
 			string s(10, 'V');
-			std::cout << s << std::endl;
+			std::cout << s << std::endl;			//VVVVVVVVVV
+			return 0;
+		}
+	
+		//or
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				string s1 ("asdf"), s2 ("wertwret");
+				
+				std::cout << s1 << std::endl;		//asdf
+				std::cout << s2 << std::endl;		//wertwret
+				
+				return 0;
+			}
+
+	//String front() back() method:
+
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			string s= "Hello World";
+			std::cout << s << std::endl; 			//Hello World
+			s.front() = 'V';
+			s.back() = 'N';
+			std::cout << s << std::endl;			//Vello WorlN
 			return 0;
 		}
 
