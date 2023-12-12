@@ -462,7 +462,6 @@ Lecture-2: Write Your First Program in C++
 
 			eg.
 				include <iostream>
-
 				int main() {
 					float f = 45.99f;
 					int b = f;
@@ -489,9 +488,28 @@ Lecture-2: Write Your First Program in C++
 					int a;
 					std::cout<<str<<std::endl;
 					std::cout<<a<<std::endl;
-					std::cout<<stoi(str)+10;			string to integer stoi().
+					std::cout<<stoi(str)+10;			//string to integer stoi().
 					return 0;
 				}
+
+				//or
+					string to Int
+						#include <iostream>
+						#include<sstream>
+						using namespace std;
+
+						int main() {
+							string s = "1234";
+							
+							stringstream ss;        //ss obj of stringstream class
+							ss<<s;          //inserting string
+							
+							int n;
+							ss>>n;          //outputing num to n
+							
+							std::cout <<n*2<< std::endl;        //2468
+							return 0;
+						}
 
 		How -ve num stored:
 			if first bit is 1, then num is -ve.
@@ -7167,6 +7185,9 @@ Lecture-19: C++ STL (Standard Template Library)
 				// fill the vector with 10 five times
 				v.assign(5, 10);
 
+				//or you can pass array in assign
+				v.assign({23,24,55,46,57,78});
+
 				cout << "The vector elements are: ";
 				for (int i = 0; i < v.size(); i++)
 					cout << v[i] << " ";
@@ -9244,11 +9265,11 @@ Lecture-22: All about Char Arrays, Strings & solving LeetCode Questions
 					std::cout <<endl<< s2 << std::endl;
 
 					//GLITCH
-					s2.insert(2,s1,3);                  //sending string as variable s1 to insert function will ouput, start inserting from 3rd index of s1 till last.(0-based index)
+					s2.insert(2,s1,3);                  //sending string as variable s1 to insert function will output, start inserting from 3rd index of s1 till last.(0-based index)
 					std::cout << s2 << std::endl;               //{{D}}
 					
 					s2 = "{{}}";
-					s2.insert(2,"ABCDef",3);              //sending string directly to insert function will ouput, just takes first 3 char of given string.
+					s2.insert(2,"ABCDef",3);              //sending string directly to insert function will output, just takes first 3 char of given string.
 					std::cout << s2 << std::endl;           //{{ABC}}
 					
 					
@@ -11769,10 +11790,13 @@ Lecture-27: Double Pointers in C++
 
 			int main() {
 				
-				int *p = 0;
+				int *p = 0;				//This pointer don't have any memory address, currently pointer no where, null pointer.
 				int first = 110;
 				
 				*p = first;             //segmentation fault. for null pointer after declaring initialize like this (p = &first)
+									//but here we are giving value of 110 to a particular memory address where the pointer is
+									//pointing, but pointer is pointing no where, so this cause error.
+									//we need to give a memory address to a pointer to point & then you can change its value.
 				std::cout << *p << std::endl;
 				
 				return 0;
@@ -12531,13 +12555,258 @@ Lecture-28: Reference Variable | Static vs Dynamic Memory | Part-1
 			
 	-Dynamic allocated memory uses 8 bytes extra, which is a pointer on stack.
 	-in stack (static memory allocation) memory gets released automatically
-	-in Dynamic memory allocation, mannually have to do it.
+	-in Dynamic memory allocation, mannually have to release the memory.
 
-	❌Pending:
-		void pointer
-		address TypeCasting
+	void pointer
+		-A void pointer is a general-purpose pointer. 
+		 that can hold the address of any data type, but it is not associated with any data type.
+		-A void pointer can hold an address of any type and can be typecasted to any type.
+		
+		-A void pointer in C++ is a special pointer that can point to objects of any data type. 
+		 In other words, a void pointer is a general purpose pointer that can store the address 
+		 of any data type and it can be typecasted to any type. 
+		-A void pointer is not associated with any particular data type.
+
+		-The size of a void pointer is different in different systems. 
+		-In 16-bit systems, the size of a void pointer is 2 bytes. 
+		-In a 32-bit system, the size of a void pointer is 4 bytes. 
+		-in a 64-bit system, the size of a void pointer is 8 bytes.
+
+		syntax:
+			void *ptr;
+			void* pointer_name;
+			void * pointer_name;
+			void*pointer_name;
+
+		
+		In C++, we cannot assign the memory address of a variable to the variable of a different data type. 
+		Consider the following example:
+			int *ptr;  // integer pointer declaration  
+			float a=10.2; // floating variable initialization  
+			ptr= &a;  // This statement throws an error.
+		
+		In the above example, we declare a pointer of type integer, i.e., ptr and a float variable, i.e., 'a'. 
+		After declaration, we try to store the address of 'a' variable in 'ptr', 
+		but this is not possible in C++ as the variable cannot hold the address of different data types.
+
+		#include <iostream.h>  
+		using namespace std;  
+		int main() {  
+			int *ptr;  
+			float f=10.3;  
+			ptr = &f; // error  
+			std::cout << "The value of *ptr is : " <<*ptr<< std::endl;  
+			return 0;  
+		}
+		In the above program, we declare a pointer of integer type and variable of float type. 
+		An integer pointer variable cannot point to the float variable, but it can point to an only integer variable.
+
+		-C++ has overcome the above problem by using the C++ void pointer as 
+		a void pointer can hold the address of any data type.
+
+		#include <iostream>  
+		using namespace std;  
+		int main() {  
+			void *ptr;   // void pointer declaration  
+			int a=9;   // integer variable initialization  
+			ptr=&a;   // storing the address of 'a' variable in a void pointer variable.  
+			std::cout << &a << std::endl;  
+			std::cout << ptr << std::endl;  
+			return 0;  
+		}
+		In the above program, we declare a void pointer variable 
+		and an integer variable where the void pointer contains the address of an integer variable.
+
+		Difference between void pointer in C and C++ :-
+			In C, we can assign the void pointer to any other pointer type without any typecasting, 
+			whereas in C++, we need to typecast when we assign the void pointer type to any other pointer type.
+			eg.
+				in C:
+					#include <stdio.h>  
+					int main() {  
+						void *ptr; // void pointer declaration  
+						int *ptr1;  // integer pointer declaration  
+						int a =90;  // integer variable initialization  
+						ptr=&a; // storing the address of 'a' in ptr  
+						ptr1=ptr; // assigning void pointer to integer pointer type.  		//without typecasting
+						printf("The value of *ptr1 : %d",*ptr1);  
+						return 0;  
+					}
+				
+				in C++ :
+					#include <iostream>  
+					using namespace std;  
+					int main() {  
+						void *ptr; // void pointer declaration  
+						int *ptr1; // integer pointer declaration  
+						int data=10; // integer variable initialization  
+						ptr=&data;  // storing the address of data variable in void pointer variable  
+						ptr1=(int *)ptr; // assigning void pointer to integer pointer  
+						std::cout << "The value of *ptr1 is : " <<*ptr1<< std::endl;  
+						return 0;  
+					}
+					In the above program, we declare two pointer variables of type void and int type respectively. 
+					We also create another integer type variable, i.e., 'data'. 
+					After declaration, we store the address of variable 'data' in a void pointer variable, i.e., ptr. 
+					Now, we want to assign the void pointer to integer pointer, 
+					in order to do this, we need to apply the cast operator, i.e., (int *) to the void pointer variable. 
+					This cast operator tells the compiler which type of value void pointer is holding. 
+					For casting, we have to type the data type and * in a bracket like (char *) or (int *).
+
+		-void pointer can not be dereferenced.
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				// C++ Program to demonstrate that a void pointer
+				// cannot be dereferenced
+				
+				//void pointer
+				int a=80;
+				void * ptr = &a;
+				
+				std::cout << ptr << std::endl;      //we can print the address, 
+												//but can't print value of void pointer pointing value
+											
+				// std::cout << *ptr << std::endl;         //error
+				
+				//to print the value ptr is pointing
+				// The void pointer 'ptr' is cast to an integer pointer
+				// using '(int*)ptr' Then, the value is dereferenced
+				// with `*(int*)ptr` to get the value at that memory location
+				std::cout << *(int *) ptr << std::endl;
+				
+				//or
+				int * pointer = (int *) ptr;            //need to tell the compiler that it is a int pointer.
+				std::cout << *pointer << std::endl;
+				return 0;
+			}	
+
+	address TypeCasting:
+		In C++, address typecasting is the process of converting a pointer of one type to a pointer of another type.
 ---------------------------------------------------------------------------------------------------------
+	12/12/2023
 Lecture29: Dynamic Memory Allocation of 2D Arrays
+	//2D Array Using Dynamic memory (HEAP).
+		#include <iostream>
+		using namespace std;
+		int main() {
+			//2D array using dynamic memory (heap)
+			int rows,cols;
+			std::cout << "Enter no.of Rows: ";
+			cin>>rows;
+			
+			std::cout << "Enter no.of Cols: ";
+			cin>>cols;
+			
+			int ** arr = new int*[rows];        
+			
+			for(int i=0; i<rows; i++)
+				arr[i] = new int[cols];
+			
+			for(int i=0; i<rows; i++)
+				for(int j=0; j<cols; j++)
+					cin>>arr[i][j];
+					
+			for(int i=0; i<rows; i++){
+				for(int j=0; j<cols; j++)
+					cout<<arr[i][j]<<"\t";
+				std::cout << std::endl;
+			}
+			
+			for(int i=0; i<rows; i++)
+				delete [] arr[i];               //to delete each array individually
+				
+			delete [] arr;                  //delete main double pointer holdoing other pointers
+			
+			return 0;
+		}
+
+	//2D jagged array (Array having different no.of columns in rows) Using Dynamic Memory (HEAP):
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			//2D Jagged array, dynamic way
+			int rows, cols;
+			std::cout << "Enter Rows:" << std::endl;
+			cin>> rows;
+			
+			int ** arr = new int *[rows];
+			
+			int ttl_elements =0;
+			
+			int * indiRowSize = new int[rows];
+			
+			for(int i=0; i<rows; i++){
+				std::cout << "Enter cols in : " << i <<"th row: "<< std::endl;
+				cin>>cols;
+				
+				ttl_elements += cols;
+				
+				arr[i] = new int [cols];
+				indiRowSize[i] = cols;
+			}
+			
+			std::cout << "Enter "<< ttl_elements << " array elements." << std::endl;
+			for(int i=0; i<rows; i++){
+				std::cout << "In "<< i <<"th row, Enter "<< indiRowSize[i] <<" elements." << std::endl;
+				for(int j=0; j<indiRowSize[i]; j++)
+					cin>>arr[i][j];
+			}
+			
+			std::cout << "The array elements are : " << std::endl;
+			for(int i=0; i<rows; i++){
+				for(int j=0; j<indiRowSize[i]; j++)
+					std::cout << arr[i][j]<<"\t";
+				std::cout << std::endl;
+			}
+			
+			for(int i=0; i<rows; i++){
+				//deleting individual array
+				delete [] arr[i];
+			}
+			
+			//deleting main array
+			delete [] arr;
+			delete [] indiRowSize;
+					
+			return 0;
+		}
+		//output:
+			Enter Rows:
+				4
+				Enter cols in : 0th row: 
+					1
+				Enter cols in : 1th row: 
+					2
+				Enter cols in : 2th row: 
+					3
+				Enter cols in : 3th row: 
+					4
+				Enter 10 array elements.
+				In 0th row, Enter 1 elements.
+				1
+				In 1th row, Enter 2 elements.
+				1
+				2
+				In 2th row, Enter 3 elements.
+				1
+				2
+				3
+				In 3th row, Enter 4 elements.
+				1
+				2
+				3
+				4 
+				The array elements are : 
+				1
+				1       2
+				1       2       3
+				1       2       3       4
+---------------------------------------------------------------------------------------------------------
+
+Lecture30: Macros, Global Variables, Inline Functions & Default Args
 	
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
@@ -13295,7 +13564,7 @@ Lecture29: Dynamic Memory Allocation of 2D Arrays
 				copied.assign(arr+3, arr+7);
 				std::cout << std::endl;
 				
-				for(int z: copied) 
+				for(int z: copied)
 					cout<<z<<" ";               //7,6,5,4 (last index excluded 7th which is 3.)
 				
 				return 0;
@@ -13591,12 +13860,12 @@ Lecture29: Dynamic Memory Allocation of 2D Arrays
 
 			return 0;
 		}
-			//output:
-				21
-				00000000000000000000000000010101
-				00000000000000000000000000001111
-				15
-				00000000000000000000000000001111
+		//output:
+			21
+			00000000000000000000000000010101
+			00000000000000000000000000001111
+			15
+			00000000000000000000000000001111
 
 	//Finding maximum/ minimum element from array & its index
 		using built in function:
@@ -14164,7 +14433,69 @@ Lecture29: Dynamic Memory Allocation of 2D Arrays
 			}
 			return 0;
 		}
----------------------------------------------------------------------------------------------------------
+
+	//Accumulator in c++:
+		#include <numeric> 
+		sum = accumulate(arr.begin(), arr.end(), 0);			//accumulate(startAddressArray, endAddressArray, initialSum);
+
+		The accumulate function is used to calculate the sum of all elements 
+		in the specified range (in this case, the range is defined by arr.begin() and arr.end()). 
+		The result is then added to the sum variable, which holds the running sum of the elements in the array. 
+		After this line of code is executed, sum will contain the total sum of all elements in the array.
+
+		#include <iostream>
+		#include<numeric>
+		#include<vector>
+		using namespace std;
+
+		int main() {
+			vector<int> v = {1,2,3,4,5,6,7,8,9,10};
+			int sum = accumulate(v.begin(), v.end(), 0);
+			
+			std::cout << accumulate(v.begin()+1,v.begin()+3,0) << std::endl;    //5     //exclude last index, means 3-1 = 2, total no.of elements to be added will be 2 only
+			
+			std::cout << "complete array summation : "<< sum << std::endl; //55
+			
+			std::cout << "sum of first 5 elements :"<< accumulate(v.begin(), v.begin()+5,0) << std::endl;           //15
+			
+			std::cout << "sum of 4 elements from 2nd index: "<< accumulate(v.begin()+1,v.begin()+5,0) << std::endl;     //14
+			
+			std::cout << "Sum of 3rd index & 4th index:" << accumulate(v.begin()+3, v.begin()+5,0) << std::endl;        //9
+			
+			std::cout << "sum of first 5 elements initial sum 3 :"<< accumulate(v.begin(), v.begin()+5, 3) << std::endl;           //18
+		}
+
+	//C++ OOPS:
+		-In C++, the default access specifier for members of a class is private. 
+		 This means that if you don't explicitly specify an access specifier for 
+		 your class members (methods or variables), they will be private by default.
+
+	//TimeConversion 12 hour to 24 hour format:
+		#include <iostream>
+		#include<bits/stdc++.h>
+
+		using namespace std;
+
+		int main() {
+			string s = "12:15:06 AM";
+			
+			string AmPm = s.substr(s.length()-2,2);
+			// std::cout << AmPm << std::endl;
+			string hour = s.substr(0,2);
+			// std::cout << hour << std::endl;
+			
+			if(AmPm == "PM" && hour != "12"){
+				hour = to_string(stoi(hour)+12);
+			}else if(AmPm == "AM" && hour == "12"){
+				hour ="00";
+			}
+			
+			string timeString = hour + s.substr(2,6);
+			
+			std::cout << timeString  << std::endl;
+			return 0;
+		}
+s---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array	
 		#include <bits/stdc++.h> 
@@ -29159,10 +29490,535 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	219)	
+	219)	Transpose Matrix:
+		Problem Statement:
+			Given a 2D integer array matrix, return the transpose of matrix.
+			The transpose of a matrix is the matrix flipped over its main diagonal, 
+			switching the matrix's row and column indices.
 
-	220)	
+			Example 1:
+				Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+				Output: [[1,4,7],[2,5,8],[3,6,9]]
+
+			Example 2:
+				Input: matrix = [[1,2,3],[4,5,6]]
+				Output: [[1,4],[2,5],[3,6]]
+
+			Constraints:
+				m == matrix.length
+				n == matrix[i].length
+				1 <= m, n <= 1000
+				1 <= m * n <= 10^5
+				-10^9 <= matrix[i][j] <= 10^9
+
+		class Solution {
+		public:
+			vector<vector<int>> transpose(vector<vector<int>>& matrix) {
+				vector<vector<int>> transpose;
+				for(int i=0; i<matrix[0].size(); i++){
+					vector<int> holder;
+					for(int j=0; j<matrix.size(); j++){
+						holder.push_back(matrix[j][i]);
+					}
+					transpose.push_back(holder);
+				}
+				return transpose;
+			}
+		};
+
+		//or
+			class Solution {
+			public:
+				vector<vector<int>> transpose(vector<vector<int>>& matrix) {
+					vector<vector<int>> transpose(matrix[0].size(),vector<int>(matrix.size()));
+					
+					for(int i=0; i<matrix.size(); i++)
+						for(int j=0; j<matrix[0].size(); j++)
+							transpose[j][i] = matrix[i][j];
+					
+					return transpose;
+				}
+			};
 	
+	220)	Count the loop: ❌Pending
+		-Count the no.of times loop will iterate.
+		Problem statement
+			Alice and Bob recently studied bitwise operators and were extremely fascinated
+			by them. Alice found the following function in a book:
+			Function magic(P, Q)
+				while Q > 0:
+				A = P AND Q
+				B = P XOR Q
+				Q = A* 2
+				P = В
+				return P
+			Alice wondered how many times the while loop would run for any value of 'P'
+			and 'Q'. Alice gave Bob the binary representation of 'P' and 'Q' and asked him to
+			help her count this.
+			Help Bob count the number of times the while loop would run for the given value
+			of 'P' and 'Q.
+
+		//Not optimized:
+			#include <bits/stdc++.h> 
+			int countLoop(string p, string q) {
+				int cnt=0;
+				int p = stoi(p1,0,2);
+				int q = stoi(q1,0,2);
+
+				while(q>0){
+					int a = p & q;
+					int b = p ^ q;
+					q = a << 1;
+					p = b;
+					cnt++;
+				}
+				return cnt;
+			}
+		
+		//optimized:
+			#include <bits/stdc++.h>
+			int countLoop(string p, string q) {
+					if (q[0] == '0') {
+					// 'q' is already zero.
+					return 0;
+				}
+
+				// Reversing both the strings.
+				std::string reversedP = p;
+				std::string reversedQ = q;
+				std::reverse(reversedP.begin(), reversedP.end());
+				std::reverse(reversedQ.begin(), reversedQ.end());
+
+				// Adding ‘0’ to the end so that both their lengths become equal.
+				while (reversedP.size() < reversedQ.size()) {
+					reversedP += "0";
+				}
+
+				while (reversedQ.size() < reversedP.size()) {
+					reversedQ += "0";
+				}
+
+				int carry = 0, ans = 0, cur = 0;
+
+				for (int i = 0; i < static_cast<int>(reversedP.size()); i++) {
+					carry = carry + (reversedP[i] - '0') + (reversedQ[i] - '0');
+
+					if (carry == 2) {
+						// Continuing carry chain.
+						cur += 1;
+					} else {
+						if (carry <= 1) {
+							// Carry chain broken.
+							cur = 0;
+						} else {
+							// Carry chain broken and new chain started.
+							cur = 1;
+						}
+					}
+
+					if (carry <= 1) {
+						carry = 0;
+					} else {
+						carry = 1;
+					}
+
+					// Storing the longest carry chain.
+					ans = std::max(ans, cur + 1);
+				}
+
+				return ans;
+			}
+	
+	221) Max Sum Subarray of size K:
+		Problem Statement:
+			Given an array of integers Arr of size N and a number K. 
+			Return the maximum sum of a subarray of size K.
+			NOTE*: A subarray is a contiguous part of any given array.
+
+			Example 1:
+				Input:
+				N = 4, K = 2
+				Arr = [100, 200, 300, 400]
+				Output:
+				700
+				Explanation:
+				Arr3  + Arr4 =700,
+				which is maximum.
+
+			Example 2:
+				Input:
+				N = 4, K = 4
+				Arr = [100, 200, 300, 400]
+				Output:
+				1000
+				Explanation:
+				Arr1 + Arr2 + Arr3 + Arr4 =1000,
+				which is maximum.
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function 
+				maximumSumSubarray() which takes the integer K, 
+				vector Arr with size N, containing the elements of the array 
+				and returns the maximum sum of a subarray of size K.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= N <= 105
+				1 <= Arri <= 105
+				1 <= K <= N
+		
+		//not optimized
+			class Solution{
+				public:
+				long maximumSumSubarray(int K, vector<int> &Arr , int N){
+					long mxr=0;
+					for(int i=0; i<=N-K; i++){
+						long sum =0;
+						for(int j=i; j<i+K; j++){
+							sum += Arr[j];
+						}
+						if(mxr<sum)
+							mxr = sum;
+					}
+					return mxr;
+				}
+			};
+
+		//optimized:
+			class Solution{   
+				public:
+				long maximumSumSubarray(int K, vector<int> &Arr , int N){
+					long mxr = 0;
+					long sum = 0;
+
+					// Calculate the sum of the first subarray of length K
+					for (int i = 0; i < K; i++) {
+						sum += Arr[i];
+					}
+				
+					mxr = sum;
+				
+					// Use a sliding window to efficiently find the maximum sum
+					for (int i = K; i < N; i++) {
+						// Update the sum by removing the first element of the window
+						// and adding the current element to the window
+						sum = sum - Arr[i - K] + Arr[i];
+				
+						// Update the maximum sum if needed
+						mxr = max(mxr, sum);
+					}
+					return mxr;
+				}
+			};
+
+	222) Ninja And His Old Friends
+		Problem Statement:
+			Ninja wants to meet his 'N' old friends standing in a row. All the friends along
+			with Ninja are very happy because they are meeting after a long time. The
+			happiness of each friend can be represented as a positive integer. Initially, Ninja
+			has some happiness value "K. Ninja shakes hands with all of his 'N' friends
+			standing in a row one by one.
+			While shaking hands if the happiness value of Ninja matches with that of his
+			friend, then the happiness value of Ninja becomes double. Ninja wants to
+			calculate his happiness value after he shakes hands with all of his friends.
+			For Example: For 'FRIENDS' = [3, 2, 1, 4]. And 'K = 2, following are the results
+			after each hand shake:
+			1. At index 0 the happiness value of his friend is 3 and the happiness value of
+			Ninja is 2. Both are unequal so "K' remains the same.
+			2. At index 1 the happiness value of his friend is 2 and the happiness value of
+			Ninja is 2. Both are equal so "K" becomes 4.
+			3. At index 2 the happiness value of his friend is 1 and the happiness value of
+			4 At index the epines solve or mistine is 4 and the happiness value of
+			Ninja is 4. Both are equal so "K' becomes 8.
+			As Ninja is busy with his friends so he needs your help. Can you help Ninja to
+			find his final happiness value after all the handshakes?
+
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 10 ^ 4
+				1 <= К <= 10 ^ 3
+				1 <= FRIENDS[i] <= 10 ^ 6
+				Where 'FRIENDS[I]' denotes the happiness value of the friend at the 'ї index,
+				respectively.
+				Time Limit: 1 sec
+			
+			Sample Input 1:
+				2
+				3 1
+				1 2 4 
+				2 4 
+				1 2
+				Sample Output 1:
+				8
+				4 
+				Explanation of Sample Input 1:
+				For the first test case:
+				1. At index 0 the happiness value of his friend is 1 and the happiness value of Ninja is 1. Both are equal so ‘K’ becomes 2.
+				2. At index 1 the happiness value of his friend is 2 and the happiness value of Ninja is 2. Both are equal so ‘K’ becomes 4.
+				3. At index 2 the happiness value of his friend is 4 and the happiness value of Ninja is 4. Both are equal so ‘K’ becomes 8.
+
+				For the second test case:
+				1. At index 0 the happiness value of his friend is 1 and the happiness value of Ninja is 4. Both are unequal so ‘K’ remains the same. 
+				2. At index 1 the happiness value of his friend is 2 and the happiness value of Ninja is 4. Both are unequal so ‘K’ remains the same. 
+				Sample Input 2:
+				2
+				2 5
+				5 5 
+				3 8
+				2 4 8 
+				Sample Output 2:
+				10
+				16
+				Explanation of Sample Input 2:
+				For the first test case:
+				1. At index 0 the happiness value of his friend is 5 and the happiness value of Ninja is 5. Both are equal so ‘K’ becomes 10.
+				2. At index 1 the happiness value of his friend is 5 and the happiness value of Ninja is 10. Both are unequal so ‘K’ remains the same.    
+
+				For the second test case:
+				1. At index 0 the happiness value of his friend is 2 and the happiness value of Ninja is 8. Both are unequal so ‘K’ remains the same.
+				2. At index 1 the happiness value of his friend is 4 and the happiness value of Ninja is 8. Both are unequal so ‘K’ remains the same.
+				3. At index 2 the happiness value of his friend is 8 and the happiness value of Ninja is 8. Both are equal so ‘K’ becomes 16.
+
+		#include <bits/stdc++.h> 
+		int shakeHands(vector<int> &friends ,int n, int k) {
+			for(int i=0; i<n; i++)  
+				if(friends[i] == k)
+					k *=2;
+
+			return k;
+		}
+
+	223) First Unique Character in a String:
+		Problem Statement:
+			Given a string s, find the first non-repeating character in it and return its index. 
+			If it does not exist, return -1.
+
+			Example 1:
+				Input: s = "leetcode"
+				Output: 0
+
+			Example 2:
+				Input: s = "loveleetcode"
+				Output: 2
+
+			Example 3:
+				Input: s = "aabb"
+				Output: -1
+			
+			Constraints:
+				1 <= s.length <= 105
+				s consists of only lowercase English letters.
+		
+		class Solution {
+			public:
+			int firstUniqChar(string s) {
+				for(int i=0; i<s.length(); i++){
+					int j;
+					for(j=0; j<s.length(); j++){
+						if(i==j)
+							continue;
+						if(s[i] == s[j])
+							break;
+					}
+					if(j==s.length())
+						return i;
+				}
+				return -1;
+			}
+		};
+
+	224) Element Appearing More Than 25% In Sorted Array:
+		Problem Statement:
+			Given an integer array sorted in non-decreasing order, 
+			there is exactly one integer in the array 
+			that occurs more than 25% of the time, return that integer. 
+			Example 1:
+				Input: arr = [1,2,2,6,6,6,6,7,10]
+				Output: 6
+			Example 2:
+				Input: arr = [1,1]
+				Output: 1
+
+			Constraints:
+				1 <= arr.length <= 104
+				0 <= arr[i] <= 105
+		
+		class Solution {
+			public:
+			int findSpecialInteger(vector<int>& arr) {
+				int cnt=1,i;
+				if(arr.size()==1)
+					return arr[0];
+
+				for(i=1; i<arr.size(); i++){
+					if(arr[i] == arr[i-1])
+						cnt++;
+					else
+						cnt=1;
+					
+					if(cnt > (arr.size()/4))
+						break;
+				}
+				return arr[i];    
+			}
+		};
+
+	225) Maximum Product of Two Elements in an Array:
+		Problem Statement:
+			Given the array of integers nums, you will choose two different indices i and j of that array. 
+			Return the maximum value of (nums[i]-1)*(nums[j]-1). 
+
+			Example 1:
+				Input: nums = [3,4,5,2]
+				Output: 12 
+				Explanation: If you choose the indices i=1 and j=2 (indexed from 0), 
+				you will get the maximum value, that is, (nums[1]-1)*(nums[2]-1) = (4-1)*(5-1) = 3*4 = 12. 
+
+			Example 2:
+				Input: nums = [1,5,4,5]
+				Output: 16
+				Explanation: Choosing the indices i=1 and j=3 (indexed from 0), 
+				you will get the maximum value of (5-1)*(5-1) = 16.
+
+			Example 3:
+				Input: nums = [3,7]
+				Output: 12
+
+			Constraints:
+				2 <= nums.length <= 500
+				1 <= nums[i] <= 10^3
+		
+		//Optimized:
+			class Solution {
+				public:
+				int maxProduct(vector<int>& nums) {
+					int maxPro=0;
+					for(int i=0; i<nums.size(); i++){
+						for(int j=0; j<nums.size(); j++){
+							if(i==j)
+								continue;
+							int crntValue = (nums[i]-1) * (nums[j]-1);
+							maxPro = max(crntValue, maxPro);
+						}
+					}
+					return maxPro;
+				}
+			};
+
+		//much more Optimized:
+			class Solution {
+				public:
+				int maxProduct(vector<int>& nums) {
+					sort(nums.begin(), nums.end());
+					return (nums[nums.size()-1]-1) * (nums[nums.size()-2]-1);
+				}
+			};
+
+	226) Sub Query Sum:
+		Problem statement
+			You have given a 2-dimensional array 'ARR' with "N' rows and "M' columns. The
+			queries are given in a 2-dimensional array 'Queries' of size 'K', in which Queries[i]
+			contains four integers denoting the left top and right bottom indices of the
+			submatrix whose sum we need to find. Your task is to find the sum of the
+			submatrix for each query given in the array 'Queries'.
+			For example:
+			Consider ARR = [[1, 2, 3] , [3, 4, 1], [2, 1, 2]] and Queries = [[0, 0, 1, 2]], the
+			submatrix with the left top index (0, 0) and right bottom index (1, 2) is
+			[[1, 2,3],
+			[3, 4, 1]].
+			The sum of the submatrix is 14. Hence, the answer is 14 in this case.
+			Constraints :
+				1 <= N <= 10 ^ 3
+				1 <= M <= 10 ^ 3
+				1 <= К <= 10 ^ 3
+				1 <= ARR[i][j] <= 10 ^ 6
+				0 <= Queries[i][0] , Queries[i][2] < N
+				0 <= Queries[i][1] , Queries[i][3] < M
+				Where 'T"' denotes the number of test cases, 'N"' and 'M' denotes the number of
+				rows and the number of columns in the array 'ARR" respectively, "K' denotes the
+				number of rows in the array 'Queries', 'ARR[i][j]' denotes the "j-th' element of 'i-
+				th' row of the array 'ARR' and 'Queries[i]' contains four integers denoting the left
+				top and right bottom indices of the submatrix.
+				Time Limit: 1sec
+
+		Sample Input 1 :
+			2
+			2 2 1
+			4 2 
+			1 3 
+			0 0 1 0
+			3 3 2
+			2 1 2
+			3 2 6 
+			1 4 5
+			1 1 2 2
+			0 1 0 2
+			Sample Output 1 :
+			5
+			17 3   
+			Explanation of sample input 1:
+			For the first test case, 
+			The submatrix with the left top index (0 , 0) and right bottom index (1 , 0) is  
+								[[4] , 
+								[1]]. 
+			The sum of the submatrix is 5. Hence, the answer is 5 in this case.
+
+			For the second test case,
+			The submatrix with the left top index (1 ,1) and right bottom index (2 , 2) is  
+								[[2 , 6] , 
+								[4 , 5]]. 
+			The sum of the submatrix is 17. Hence, the answer is 17 in this case.
+
+			The submatrix with the left top index (0 , 1) and right bottom index (0 , 2) is  
+								[[1 , 2]].  
+			The sum of the submatrix is 3. Hence, the answer is 3 in this case.
+			Sample Input 2 :
+			2
+			2 2 2
+			5 6 
+			7 5 
+			0 0 0 0
+			0 0 1 1
+			3 3 2
+			3 4 3
+			4 3 4 
+			1 1 1
+			0 0 0 2
+			0 0 2 1
+			Sample Output 2 :
+			5 23
+			10 16
+
+		#include <bits/stdc++.h> 
+		vector<int> findSubmatrixSum(vector<vector<int>> &arr, vector<vector<int>> &queries) {
+			vector<int> ans;
+			for(int i=0; i<queries.size(); i++){
+				int startRow, startCol, endRow, endCol;
+				startRow = queries[i][0];
+				startCol = queries[i][1];
+				endRow = queries[i][2];
+				endCol = queries[i][3];
+				int sum=0;
+				
+				for(int x=startRow; x<=endRow; x++)
+					for(int y=startCol; y<=endCol; y++)
+						sum += arr[x][y];
+				
+				ans.push_back(sum);
+			}
+			return ans;
+		}
+
+	227) 
+
+	228) 
+	
+	229) 
+	
+	230) 
+
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 calender:
