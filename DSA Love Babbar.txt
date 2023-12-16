@@ -1,6 +1,5 @@
 -When you start reading/ revising notes, read problem statement properly & think logical,
- if you don't understand the program, prefer try to resolve the problem by yourself.
--Google it if you don't understand the question.
+ if you don't understand the program, Google the question.
 -----------------------------------------------------------------------------------------------------------
 	01/08/2023
 Lecture-1: Intro to Programming & Flowcharts
@@ -12687,6 +12686,7 @@ Lecture-28: Reference Variable | Static vs Dynamic Memory | Part-1
 ---------------------------------------------------------------------------------------------------------
 	12/12/2023
 Lecture29: Dynamic Memory Allocation of 2D Arrays
+	-When you use the HEAP memory, always free it once your work is done.	
 	//2D Array Using Dynamic memory (HEAP).
 		#include <iostream>
 		using namespace std;
@@ -12805,8 +12805,341 @@ Lecture29: Dynamic Memory Allocation of 2D Arrays
 				1       2       3
 				1       2       3       4
 ---------------------------------------------------------------------------------------------------------
-
+	14/12/23
 Lecture30: Macros, Global Variables, Inline Functions & Default Args
+	-#include<iostream>
+		-here #include is a preprocessor directive, tell compiler to add built-in functionality in code
+		-like, cout function we use to print the output on screen but to access this fuction we have to add iostream.
+
+		double PI = 3.14;
+		-affect on performance, very very small(negligible).
+		-used storage to for this variable.
+		-sometime or by mistake somebody can change the value also.
+
+	-Macros:
+		-Macro syntax #define <name> <value>
+		-no need of memory, the value gets replaced wherever you mention the name of Macro.
+		-& Macro is not modifiable, means PI = PI +1; not possible.
+		-Macro is piece of code in program that is replaced by value of Macro.
+		eg.
+			#include <iostream>
+			#define PI 3.14               //Macro
+			using namespace std;
+
+			int main() {
+				
+				int r=5;
+				//double PI = 3.14;				//if we define PI as double then we are taking 8 bytes of memory space & its modifiable. like pi =pi+1;
+				double area = PI * r * r;
+				std::cout << area << std::endl;
+				std::cout << PI << std::endl;
+				return 0;
+			}
+
+		Practice:
+			#include <iostream>
+			#define VIVEK 4                 //Macro Defined & value
+			using namespace std;
+
+			int main() {
+				
+				std::cout << VIVEK << std::endl;            //Priting value of Macro
+				std::cout << VIVEK+1 << std::endl;          //math operation on Macro
+				return 0;
+			}
+
+		-A macro is a piece of code in a program that is replaced by the value of the macro. 
+		 Macro is defined by #define directive. 
+		 Whenever a macro name is encountered by the compiler, 
+		 it replaces the name with the definition of the macro. 
+		-Macro definitions need not be terminated by a semi-colon(;).
+		eg.
+			#include <iostream>
+			#define LIMIT 9
+			using namespace std;
+
+			int main() {
+				cout<<"The value of LIMIT : "<< LIMIT;			//The value of LIMIT : 9
+				return 0;
+			}
+
+		eg.
+			#include <iostream>
+			//Macro definition
+			#define AREA(l,b) (l*b)                 //don't give space between AREA & (l,b)
+			using namespace std;
+
+			int main() {
+				int len, bre;
+				
+				std::cout << "Enter len & bre :: " << std::endl;
+				cin>>len>>bre;
+				
+				std::cout << "The Area: "<< AREA(len,bre) << std::endl;         //finding area using Macro
+				return 0;
+			}
+			//output:
+				Enter len & bre :: 
+				9 9
+				The Area: 81
+		
+		eg.you can define macro & var with same name, but good practice is to use
+			different names.
+
+			#include <iostream>
+			//Macro definition
+			#define area(l,b) (l*b)
+			using namespace std;
+
+			int main() {
+				int len, bre;
+				
+				std::cout << "Enter len & bre :: " << std::endl;
+				cin>>len>>bre;
+				
+				int area = area(len,bre);
+				
+				std::cout << "The Area: "<< area <<std::endl;         //finding area using Macro
+				return 0;
+			}
+
+		#Types of Macros:
+			1]Object-Like macro:
+				An object-like macro is a simple identifier that will be replaced by a code fragment. 
+				It is called object-like because it looks like an object in code that uses it. 
+				It is popularly used to replace a symbolic name with numerical/variable represented as constant.
+				eg.
+					#include<iostream>
+					#define DATE 31
+					using namespace std;
+					int main(){
+						std::cout << "Today is :"<< DATE << "st." << std::endl;			//Today is :31st.
+						return 0;
+					}
+
+			2]Chain Macros:
+				-Macro inside macro is termed as chain macro.
+				-In chain macros first of all parent macro is expanded then the child macro is expanded.
+				eg.
+					#include<iostream>
+					using namespace std;
+					#define Name fname
+					#define fname "Vivek"
+
+					//or this also works
+					/*
+						#define fname "Vivek"		
+						#define Name fname
+					*/
+
+					int main(){
+						std::cout << "My name is (parent Macro):" << Name << std::endl;
+						std::cout << "My first name is (child Macro):: " << fname <<std::endl;
+						return 0;
+					}
+					//output:
+						My name is (parent Macro):Vivek
+						My first name is (child Macro):: Vivek
+					
+			3]Multi-line Macros: 
+				An object-like macro could have a multi-line. 
+				So to create a multi-line macro you have to use backslash-newline.
+				eg.
+					#include<iostream>
+					using namespace std;
+					#define ELE 1,\
+							2,\
+							3,\
+							4
+					int main(){
+						int arr[] = {ELE};
+						for(int i=0; i<4; i++)
+							std::cout << arr[i] << "\t";	
+						return 0;
+					}
+
+					//or
+						#include<iostream>
+						using namespace std;
+						#define SUM(a,b)    \
+							cout<<"A: "<<a<<"\t"; \
+							cout<<"B: "<<b<<"\t"; \
+							cout<<"Sum : "<<a+b;
+
+						int main(){
+							SUM(5,5);
+							return 0;
+						}
+	
+			4]Function-like Macro:
+				These macros are the same as a function call. 
+				It replaces the entire code instead of a function name. 
+				Pair of parentheses immediately after the macro name is necessary. 
+				If we put a space between the macro name and the parentheses in the macro definition, 
+				then the macro will not work. 
+				A function-like macro is only lengthened if and only if its name appears with a pair of parentheses after it.
+				If we don’t do this, the function pointer will get the address of the real function and lead to a syntax error.
+				eg.
+					#include<iostream>
+					using namespace std;
+					#define MINN(a,b) ((a<b)?cout<<a : cout<<b)
+					int main(){
+						MINN(14,5);
+						return 0;
+					}
+
+					//or
+						#include<iostream>
+						using namespace std;
+						#define MINN(a,b) ((a<b)?a:b)           //this value you can assign to another variable
+
+						#define LARG(a,b) ((a<b)?cout<<b:cout<<a)                   //this you cant assign to other variable
+
+						int main(){
+							int a =MINN(14,5);
+							std::cout << a << std::endl;
+							LARG(14,5);
+							
+							return 0;
+						}
+
+	-Global Variable:
+		-BAD Practice/ don't use
+		-all fuction can changes its value of variable.
+		-same variables(memory location) any function can access.
+		-you can use Reference Variable concept.
+
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			//local variable for main function
+			int a=10;
+			
+			std::cout << "inside main function A: "<< a << std::endl;
+			
+			{
+				//local variable for this block
+				//accessible for this block only
+				int a =90, b=88;
+				std::cout <<"Inside block A: "<< a << std::endl;
+				std::cout << "Inside block B: " << b << std::endl;
+			}
+			
+			// std::cout << b << std::endl;    //can't access b here.
+			return 0;
+		}
+	
+		eg.
+			#include <iostream>
+			using namespace std;
+			int score = 99;			//Global variable
+			void a(){
+				std::cout << "in a " << score  << std::endl;
+			}
+
+			void b(){
+				std::cout << "in b "<< score << std::endl;
+			}
+
+			void c(){
+				score++;
+				std::cout << "in c: " << score << std::endl;
+			}
+
+			int main() {
+				a();
+				b();
+				std::cout << "Main function: "<< score << std::endl;
+				
+				//this c function call affected score in all other function
+				c();
+				a();
+				b();
+				std::cout << "Main function: "<< score << std::endl;
+				
+				return 0;
+			}
+
+	-Inline function:
+		-Increases the code readability.
+		-increases performance, because when we create a normal function then function call takes little time (negligible) 
+		 [kind of performance damage very little, but yes performance damages].
+		-In Inline function it don't call to function it just replaces the single line code of that function to where you called.
+		-don't create extra memory for (pass by value) function argument.
+		-its like macro only, when function having one line code then you can use inline keyword, compiler accept this
+		-if function is of 2 to 3 lines of code then sometime compiler accept the function should be inline or sometime not.
+		-if fuction is more than 3 lines then compiler don't consider it as inline function, but code executes without any error.
+		eg.	
+			#include <iostream>
+			using namespace std;
+
+			//inline function
+			inline int getMax(int a, int b){
+				return (a>b)? a: b;
+			}
+
+			int main() {
+				std::cout << getMax(5,4) << std::endl;              //getMax(5,4) gets replaced by [(a>b)? a: b] this.
+				std::cout << getMax(100,104) << std::endl;
+				
+				return 0;
+			}
+
+	-Default Args:
+		-A default argument is a value provided in a function declaration that is automatically assigned by the compiler 
+		if the calling function doesn’t provide a value for the argument. 
+		In case any value is passed, the default value is overridden. 	
+		eg.
+			#include <iostream>
+				using namespace std;
+				void sum(int a, int b, int c=0){            //c is optional argument here
+					std::cout << a+b+c  << std::endl;
+				}
+
+				int main() {
+
+					sum(10,20);         // not passing last argument which is optional
+					sum(5,4,3);         //passing last argument
+					
+					return 0;
+				}
+			
+			#include <iostream>
+				using namespace std;
+
+				void printer(int arr[], int size, int start=0){
+				for(int i=start; i<size; i++)
+					std::cout << arr[i] << "\t";
+				}
+
+				int main() {
+				
+					int a[] = {1,2,3,4,5,6,7,8,9,10};
+					int n=10;
+					
+					printer(a, n);          //keeping last argument as optional
+					std::cout << std::endl;
+					printer(a,n,3);
+					return 0;
+				}
+
+		//valid
+			int sum(int x, int y, int z = 0, int w=0).
+
+		// Invalid because z has default value, but w after it doesn't have a default value
+			int sum(int x, int y, int z = 0, int w).	
+
+	Constant Variables
+		-constant variables identified by the const keyword in C++. 
+		-As the name suggests, if we declare any keyword as constant, we can’t change its value throughout the program.
+		Note: The constant variable needs to be assigned during initialization only,
+		 else it will store garbage values that can’t be changed further.
+		Syntax:
+			const datatype variable_name = value;
+		Example:
+			const int a = 5;
+---------------------------------------------------------------------------------------------------------
 	
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
@@ -14495,9 +14828,9 @@ Lecture30: Macros, Global Variables, Inline Functions & Default Args
 			std::cout << timeString  << std::endl;
 			return 0;
 		}
-s---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
-	1) Minimum Difference in an Array	
+	1) Minimum Difference in an Array
 		#include <bits/stdc++.h> 
 		int minDiff(int n, vector < int > arr) {
 			sort(arr.begin(), arr.end());
@@ -30011,13 +30344,418 @@ POTD:-[Problem of the Day]
 			return ans;
 		}
 
-	227) 
+	227) Consecutive 1's not allowed: ❌Pending
+		Problem Statement:
+			Given a positive integer N, count all possible distinct binary 
+			strings of length N such that there are no consecutive 1’s. 
+			Output your answer modulo 109 + 7.
+			Example 1:
 
-	228) 
+				Input:
+				N = 3
+				Output: 5
+				Explanation:
+				5 strings are (000,
+				001, 010, 100, 101).
+			Example 2:
+				Input:
+				N = 2
+				Output: 3
+				Explanation: 
+				3 strings are (00,01,10).
+
+			Your Task:
+				You don't have to print answer or take inputs. 
+				Complete the function countStrings() which takes single integer n, 
+				as input parameters and returns an integer denoting the answer. 
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(N)
+
+			Constraints:
+				1 ≤ N ≤ 10^5
+		
+		//not Optimized:
+			class Solution{
+				public:
+				// #define ll long long
+				ll countStrings(int n) {
+					long long cnt=0;
+					int mod = 1e9+7;
+					for(int i=0; ; i++){
+						string s = bitset<32>(i).to_string();
+						// std::cout << s << std::endl;
+						string st;
+						if(find(s.begin(), s.end(), '1') != s.end()){
+							st = s.substr(find(s.begin(), s.end(), '1')-s.begin());
+							// std::cout << st << std::endl;
+						}
+						
+						if(st.length() > n)
+							break;
+						
+						int flag=1;
+						for(int a=1; a<st.length(); a++){
+							if(st[a]=='1' && st[a-1] == '1'){
+							flag=0;
+							break;
+							}
+						}
+						if(flag)
+							cnt++;
+							
+						cnt %= mod;
+					}
+					return cnt;
+				}
+			};	
+
+		//Optimized:
+			class Solution{
+				public:
+				// #define ll long long
+				ll countStrings(int n) {
+				ll dp[n+1];
+				int mod = 1e9+7;
+				dp[1] = 2;
+				dp[2] = 3;
+				int i;
+				for(int i=3; i<=n; i++){
+					dp[i] = (dp[i-1]+dp[i-2]) %mod;
+				}
+				return dp[n];
+				}
+			};
 	
-	229) 
+	228) Difference Between Ones and Zeros in Row and Column:
+		Problem Statement:
+			You are given a 0-indexed m x n binary matrix grid.
+			A 0-indexed m x n difference matrix diff is created with the following procedure:
+
+			Let the number of ones in the ith row be onesRowi.
+			Let the number of ones in the jth column be onesColj.
+			Let the number of zeros in the ith row be zerosRowi.
+			Let the number of zeros in the jth column be zerosColj.
+
+			diff[i][j] = onesRowi + onesColj - zerosRowi - zerosColj
+			Return the difference matrix diff.
+
+			Example 1:
+				Input: grid = [[0,1,1],[1,0,1],[0,0,1]]
+				Output: [[0,0,4],[0,0,4],[-2,-2,2]]
+				Explanation:
+				- diff[0][0] = onesRow0 + onesCol0 - zerosRow0 - zerosCol0 = 2 + 1 - 1 - 2 = 0 
+				- diff[0][1] = onesRow0 + onesCol1 - zerosRow0 - zerosCol1 = 2 + 1 - 1 - 2 = 0 
+				- diff[0][2] = onesRow0 + onesCol2 - zerosRow0 - zerosCol2 = 2 + 3 - 1 - 0 = 4 
+				- diff[1][0] = onesRow1 + onesCol0 - zerosRow1 - zerosCol0 = 2 + 1 - 1 - 2 = 0 
+				- diff[1][1] = onesRow1 + onesCol1 - zerosRow1 - zerosCol1 = 2 + 1 - 1 - 2 = 0 
+				- diff[1][2] = onesRow1 + onesCol2 - zerosRow1 - zerosCol2 = 2 + 3 - 1 - 0 = 4 
+				- diff[2][0] = onesRow2 + onesCol0 - zerosRow2 - zerosCol0 = 1 + 1 - 2 - 2 = -2
+				- diff[2][1] = onesRow2 + onesCol1 - zerosRow2 - zerosCol1 = 1 + 1 - 2 - 2 = -2
+				- diff[2][2] = onesRow2 + onesCol2 - zerosRow2 - zerosCol2 = 1 + 3 - 2 - 0 = 2
+
+			Example 2:
+				Input: grid = [[1,1,1],[1,1,1]]
+				Output: [[5,5,5],[5,5,5]]
+				Explanation:
+				- diff[0][0] = onesRow0 + onesCol0 - zerosRow0 - zerosCol0 = 3 + 2 - 0 - 0 = 5
+				- diff[0][1] = onesRow0 + onesCol1 - zerosRow0 - zerosCol1 = 3 + 2 - 0 - 0 = 5
+				- diff[0][2] = onesRow0 + onesCol2 - zerosRow0 - zerosCol2 = 3 + 2 - 0 - 0 = 5
+				- diff[1][0] = onesRow1 + onesCol0 - zerosRow1 - zerosCol0 = 3 + 2 - 0 - 0 = 5
+				- diff[1][1] = onesRow1 + onesCol1 - zerosRow1 - zerosCol1 = 3 + 2 - 0 - 0 = 5
+				- diff[1][2] = onesRow1 + onesCol2 - zerosRow1 - zerosCol2 = 3 + 2 - 0 - 0 = 5
+
+			Constraints:
+				m == grid.length
+				n == grid[i].length
+				1 <= m, n <= 105
+				1 <= m * n <= 105
+				grid[i][j] is either 0 or 1.
+
+		class Solution {
+			public:
+			vector<vector<int>> onesMinusZeros(vector<vector<int>>& grid) {
+				vector<vector<int>> diff (grid.size(),vector<int> (grid[0].size()));
+				
+				for(int row=0; row<grid.size(); row++){
+					//current Row operation
+					int RowOnes=0, rowZero=0;
+					for(int c=0; c<grid[0].size(); c++){
+						if(grid[row][c] == 1)
+							RowOnes++;
+						else
+							rowZero++;
+					}
+					for(int col=0; col<grid[0].size(); col++){
+						//current Col operation
+						int colOnes=0, colZero=0;
+						for(int r=0; r<grid.size(); r++){
+							if(grid[r][col] ==1)
+							colOnes++;
+							else
+							colZero++;
+						}
+						diff[row][col] = RowOnes+colOnes - rowZero - colZero;
+					}
+				}
+				return diff;
+			}
+		};
 	
-	230) 
+	229) Average Marks:
+		Problem Statement:
+			Problem statement
+				You are given the name of a student in the form of a character
+				"firstLetterOfName' and 3 integers M1', 'M2, 'M3' representing the marks of the
+				student in 3 subjects. You have to print the firstLetterOfName' of the student
+				and the average marks obtained by the student.
+				Note: You need to print the integer part of the average only and neglect the
+				decimal part.
+				For Example :
+					If "firstLetterOfName' = 'K', M1' = 10, M2' = 6 and 'M3' = 9, then the average
+					marks would be around 7.67. Hence, the output should be as follows: K 7
+				Constraints:
+					1 <= T <= 10
+					'A' <= 'firstLetterOfName' <= 'Z'
+					0 <= M1 <= 100
+					0 <= M2 <= 100
+					0 <= M3 <= 100
+					Time Limit: 1 sec
+			
+			Sample Input 1:
+				2
+				A
+				3 4 6
+				T
+				7 3 8
+				Sample Output 1:
+				A 4
+				T 6
+				Explanation For Sample Input 1:
+				For sample case 1, average marks of the student are (3 + 4 + 6)/3 = 4.33 
+				and his/her first character of the name is ‘A’. 
+				Therefore, the output is : A 4
+				
+				For sample case 2, average marks of the student are (7 + 3 + 8)/3 = 6 
+				and his/her first character of the name is ‘T’. 
+				Therefore, the output is : T 6
+				Sample Input 2:
+				2
+				Q
+				10 34 96
+				P
+				71 80 3
+				Sample Output 2:
+				Q 46
+				P 51
+				Explanation For Sample Input 2:
+				For sample case 1, average marks of the student are (10 + 34 + 96)/3 = 46.67 
+				and his/her first character of the name is ‘Q’. 
+				Therefore, the output is : Q 46
+				
+				For sample case 2, average marks of the student are (71 + 80 + 3)/3 = 51.33 
+				and his/her first character of the name is ‘P’. 
+				Therefore, the output is : P 51
+
+		#include <bits/stdc++.h> 
+		#include <utility>
+
+		pair<char, int> averageMarks(char firstLetterOfName, int m1, int m2, int m3) {
+			char ch = firstLetterOfName;
+			int avg = (m1 +m2 +m3)/3;
+			return {ch, avg};
+		}
+
+		//or
+		pair<char, int> averageMarks(char firstLetterOfName, int m1, int m2, int m3) {
+			char ch = firstLetterOfName;
+			int avg = (m1 +m2 +m3)/3;
+			pair<char, int> p = {ch, avg};
+			return p;
+		}
+
+		//or
+		pair<char, int> averageMarks(char firstLetterOfName, int m1, int m2, int m3) {
+			char ch = firstLetterOfName;
+			int avg = (m1 +m2 +m3)/3;
+			pair<char, int> p;
+			p.first = firstLetterOfName;
+			p.second = avg;
+			return p;
+		}
+
+	230) Destination City:
+		Problem Statement:
+			You are given the array paths, where paths[i] = [cityAi, cityBi] means there exists a direct path going from cityAi to cityBi. 
+			Return the destination city, that is, the city without any path outgoing to another city.
+			It is guaranteed that the graph of paths forms a line without any loop, therefore, there will be exactly one destination city.
+
+			Example 1:
+				Input: paths = [["London","New York"],["New York","Lima"],["Lima","Sao Paulo"]]
+				Output: "Sao Paulo" 
+				Explanation: Starting at "London" city you will reach "Sao Paulo" city which is the destination city. Your trip consist of: "London" -> "New York" -> "Lima" -> "Sao Paulo".
+
+			Example 2:
+				Input: paths = [["B","C"],["D","B"],["C","A"]]
+				Output: "A"
+				Explanation: All possible trips are: 
+				"D" -> "B" -> "C" -> "A". 
+				"B" -> "C" -> "A". 
+				"C" -> "A". 
+				"A". 
+				Clearly the destination city is "A".
+
+			Example 3:
+				Input: paths = [["A","Z"]]
+				Output: "Z"
+
+			Constraints:
+				1 <= paths.length <= 100
+				paths[i].length == 2
+				1 <= cityAi.length, cityBi.length <= 10
+				cityAi != cityBi
+				All strings consist of lowercase and uppercase English letters and the space character.
+		
+		class Solution {
+			public:
+			string destCity(vector<vector<string>>& paths) {
+				string currentDestination = paths[0][1];
+				for(int i=0; i<paths.size(); i++){
+					if(currentDestination == paths[i][0]){
+						currentDestination = paths[i][1];
+						i=0;
+					}
+				}
+				return currentDestination;
+			}
+		};
+
+	231) Set Bits:
+		Problem statement
+			Write a program to count the number of 1's in the binary representation of an integer.
+			Constraints
+				1 <= N <= 100
+		Sample Input 1:
+			9
+			Sample Output 1:
+			2
+			Explanation of Sample Input 1:
+			Binary Representation of 9 is 1001.
+			Sample Input 2:
+			13
+			Sample Output 2:
+			3
+
+		#include <bits/stdc++.h> 
+		#include <iostream>
+
+		using namespace std;
+
+		//Write your countBits function here
+		int countBits(int n){
+			//return __builtin_popcount(n);
+			
+			//or
+			int cnt=0;
+			while(n>0){
+				if(n&1)
+					cnt++;
+				n>>=1;
+			}
+			return cnt;
+		}
+
+		int main() {
+			int n;
+			cin >> n;
+			cout<<countBits(n);
+			return 0;
+		}
+	
+	232) Valid Anagram:
+		Problem Statement:
+			Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+			An Anagram is a word or phrase formed by rearranging the letters of a 
+			different word or phrase, typically using all the original letters exactly once.
+
+			Example 1:
+				Input: s = "anagram", t = "nagaram"
+				Output: true
+
+			Example 2:
+				Input: s = "rat", t = "car"
+				Output: false
+
+			Constraints:
+				1 <= s.length, t.length <= 5 * 104
+				s and t consist of lowercase English letters.
+		
+		class Solution {
+			public:
+			bool isAnagram(string s, string t) {
+				if(s.length() != t.length())
+					return 0;
+				
+				int forS[26]={0}, forT[26]={0};
+				//mapping for s
+				for(int i=0; i<s.length(); i++){
+					forS[s[i]-'a']++;
+				}
+
+				//mapping for t
+				for(int i=0; i<t.length(); i++){
+					forT[t[i]-'a']++;
+				}
+
+				for(int i=0; i<26; i++){
+					if(forS[i] != forT[i])
+						return 0;
+				}
+				return 1;
+			}
+		};
+
+		//or
+		class Solution {
+			private:
+				int checker[26]={0};
+			public:
+				bool isAnagram(string s, string t) {
+					if(s.length() != t.size())          //you can use length or size method to access the no.of letter in string
+						return 0;
+					
+					//mapper for s
+					for(int i=0; i<s.size(); i++){
+						checker[s[i]-'a']++;
+					}
+
+					//mapper for t
+					for(int i=0; i<t.length(); i++){
+						checker[t[i]-'a']--;
+					}
+
+					for(int z=0; z<26; z++)
+						if(checker[z] != 0)
+							return 0;
+					return 1;
+				}
+		};
+		
+	233) 
+
+	234) 
+	
+	235) 
+	
+	236) 
+	
+	237) 
+	
+	238) 
+	
+	239) 
+	
+	240) 
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
@@ -30038,8 +30776,7 @@ calender:
 		bitset<setSize> bset1; // value is 00000000000000000000000000000000
 		bitset<setSize> bset2(20); //value is 00000000000000000000000000010100
 		bitset<setSize> bset3(string("1100")); // value is 00000000000000000000000000001100
-		cout<<"The values of bitsets are :
-		" ;
+		cout<<"The values of bitsets are : " ;
 		cout<<"bitset 1 : "<<bset1<<endl;
 		cout<<"bitset 2 : "<<bset2<<endl;
 		cout<<"bitset 3 : "<<bset3<<endl;
