@@ -3878,12 +3878,41 @@ Lecture-6: Binary & Decimal Num System
 
 		eg.
 			#include <bitset>
-			std::bitset<8> bits; // Creates a bitset with 8 bits, initialized to all zeros
+			std::bitset<8> bits; // Creates a bitset with 8 bits, defaultly initialized to all zeros
 			std::bitset<8> anotherBits("10101010"); // Initializes the bitset with the given binary string
 
 			std::bitset<32> thirtyTwoBits;   // Creates a bitset with 32 bits
 			std::bitset<64> sixtyFourBits;   // Creates a bitset with 64 bits
-			std::bitset<128> oneTwentyEightBits; // Creates a bitset with 128 bits
+			std::bitset<128> oneTwentyEightBits; // Creates a bitset with 128 bits, & all are zero.
+			
+			#include <iostream>
+			#include<bitset>
+			using namespace std;
+
+			int main() {
+				
+				int n=9;
+				bitset<32> bits (n);         //bitset<num> name (decimal_num_to_convert_into_binary);
+				
+				std::cout << n << "\t" << bits << std::endl;
+				
+				int a = 10;
+				bitset<32> b2(a);
+				std::cout << a << "\t" << b2 << std::endl;
+				
+				
+				//converting bitset datatype value into string.
+				string s = bits.to_string();
+				std::cout << s << std::endl;
+				
+				int num = stoi(s,0,2);              //from binary to decimal coversion.
+				std::cout << num << std::endl;
+
+				bitset<12> nt;
+				std::cout << nt << std::endl;       //000000000000
+				return 0;
+			}
+		
 		eg.
 			it's okay to define a std::bitset<8> and initialize it with a binary string that has fewer than 8 characters. 
 			The missing bits will be implicitly set to 0. In your example, std::bitset<8> anotherBits("101"), 
@@ -13698,6 +13727,30 @@ Lecture32: Understanding Recursion the easiest way || Day-2:
 			◎  (a % m) - (b % m) = (a - b) % m
 			◎  (a % m) * (b % m) = (a * b) % m
 
+	//to find the datatype of variable in c++ 
+		//use typeid(varName).name() function.
+		#include <bits/stdc++.h> 
+		#define M 32
+		using namespace std; 
+		int main() { 
+			auto x = 5;    //i for integer
+			auto y = 3.37; //D for double
+			auto ptr = &x; //Pi for pointer
+			auto z = "Hello";//PKc for string
+			auto ch = 'Z';      //c for char
+			bitset <M> bset(2);
+			auto k = bset; //bitset :: St6bitsetILm32EE 
+			
+			cout << typeid(x).name() << endl 
+				<< typeid(y).name() << endl 
+				<< typeid(k).name() << endl 
+				<< typeid(ptr).name() << endl 
+				<< typeid(z).name() << endl 
+				<< typeid(ch).name() << endl; 
+
+			return 0; 
+		} 
+
 	//Finding maximum num from vector
 		-using max_element function.
 		-we need to take iterator for this.
@@ -14891,6 +14944,16 @@ Lecture32: Understanding Recursion the easiest way || Day-2:
 	//Accumulator in c++:
 		#include <numeric> 
 		sum = accumulate(arr.begin(), arr.end(), 0);			//accumulate(startAddressArray, endAddressArray, initialSum);
+		where 0, initialSum is in int type ie. 32 bit
+
+		if you want sum of array of containing long long int values then accumulate function's initialSum = 0LL
+		eg.
+			sum = accumulate(v.begin(),v.end(),0LL);
+			//or
+			sum = accumulate(v.begin(),v.end(),0ll);
+			//or
+			long long value=0;
+			sum = accumulate(v.begin(),v.end(),value);
 
 		The accumulate function is used to calculate the sum of all elements 
 		in the specified range (in this case, the range is defined by arr.begin() and arr.end()). 
@@ -14947,6 +15010,28 @@ Lecture32: Understanding Recursion the easiest way || Day-2:
 			string timeString = hour + s.substr(2,6);
 			
 			std::cout << timeString  << std::endl;
+			return 0;
+		}
+
+	//is_sorted:
+		-The is_sorted function is part of the C++ Standard Template Library (STL), 
+		 specifically provided by the <algorithm> header. 
+		 This function is used to check whether a range of elements is sorted in non-decreasing order. 
+		-It returns a boolean value indicating whether the elements in the specified range are sorted.
+		
+		#include <iostream>
+		#include <algorithm>
+		#include <vector>
+
+		int main() {
+			std::vector<int> numbers = {1, 2, 3, 5, 4, 6};
+
+			if (std::is_sorted(numbers.begin(), numbers.end())) {
+				std::cout << "The vector is sorted.\n";
+			} else {
+				std::cout << "The vector is not sorted.\n";
+			}
+
 			return 0;
 		}
 ---------------------------------------------------------------------------------------------------------
@@ -31198,15 +31283,760 @@ POTD:-[Problem of the Day]
 				return q;
 			}
 	
-	237) 
+	237) Rightmost different bit:
+		Problem statement:
+			Given two numbers M and N. 
+			The task is to find the position of the rightmost different bit in the binary representation of numbers. 
+			If both M and N are the same then return -1 in this case.
+
+			Example 1: 
+				Input: 
+				M = 11, N = 9
+				Output: 
+				2
+				Explanation: 
+				Binary representation of the given numbers are: 1011 and 1001, 2nd bit from right is different.
+
+			Example 2:
+				Input: 
+				M = 52, N = 4
+				Output: 
+				5
+				Explanation: 
+				Binary representation of the given numbers are: 110100 and 0100, 5th-bit from right is different.
+
+			User Task:
+				The task is to complete the function posOfRightMostDiffBit() 
+				which takes two arguments M and N and returns 
+				the position of first different bits in M and N from right. 
+				If both m and n are the same then return -1 in this case.
+
+			Expected Time Complexity: O(max(log M, log N)).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				0 <= M, N <= 109
+
+		class Solution {
+			public:
+			//Function to find the first position with different bits.
+			int posOfRightMostDiffBit(int m, int n) {
+				string SM = bitset<32>(m).to_string();
+				string SN = bitset<32>(n).to_string();
+				
+				int cnt=1;
+				for(int i=SM.size()-1; i>=0; i--){
+					if(SM[i] != SN[i])
+						break;
+					cnt++;
+				}
+				
+				if(cnt == 33)
+					return -1;
+				return cnt;
+			}
+		};
+
+		//or
+			class Solution {
+				public:
+				//Function to find the first position with different bits.
+				int posOfRightMostDiffBit(int m, int n) {
+					string SM = bitset<32>(m).to_string();
+					string SN = bitset<32>(n).to_string();
+					
+					int cnt=1;
+					for(int i=SM.size()-1; i>=0; i--){
+						if(SM[i] != SN[i])
+							return cnt;
+						cnt++;
+					}
+					return -1;
+				}
+			};
+
+		//or using XOR operation:
+			class Solution {
+				public:
+				//Function to find the first position with different bits.
+				int posOfRightMostDiffBit(int m, int n) {
+					int XOR = m ^ n;
+					if(XOR == 0)
+						return -1;
+					
+					int pos=1;
+					while((XOR & 1) == 0){
+						XOR >>= 1;
+						pos++;
+					}
+					return pos;
+				}
+			};
 	
-	238) 
+	238) Image Smoother:
+		Problem Statement:
+			-Average of all surrounding elements.
+			An image smoother is a filter of the size 3 x 3 that can be applied 
+			to each cell of an image by rounding down the average of the cell and 
+			the eight surrounding cells (i.e. the average of the nine cells in the blue smoother). 
+			If one or more of the surrounding cells of a cell is not present, 
+			we do not consider it in the average (i.e. the average of the four cells in the red smoother).
+
+			Given an m x n integer matrix img representing the grayscale of an image, 
+			return the image after applying the smoother on each cell of it.
+
+			Example 1:
+				Input: img = [[1,1,1],[1,0,1],[1,1,1]]
+				Output: [[0,0,0],[0,0,0],[0,0,0]]
+				Explanation:
+				For the points (0,0), (0,2), (2,0), (2,2): floor(3/4) = floor(0.75) = 0
+				For the points (0,1), (1,0), (1,2), (2,1): floor(5/6) = floor(0.83333333) = 0
+				For the point (1,1): floor(8/9) = floor(0.88888889) = 0
+
+			Example 2:
+				Input: img = [[100,200,100],[200,50,200],[100,200,100]]
+				Output: [[137,141,137],[141,138,141],[137,141,137]]
+				Explanation:
+				For the points (0,0), (0,2), (2,0), (2,2): floor((100+200+200+50)/4) = floor(137.5) = 137
+				For the points (0,1), (1,0), (1,2), (2,1): floor((200+200+50+200+100+100)/6) = floor(141.666667) = 141
+				For the point (1,1): floor((50+200+200+200+200+100+100+100+100)/9) = floor(138.888889) = 138
+				
+
+			Constraints:
+				m == img.length
+				n == img[i].length
+				1 <= m, n <= 200
+				0 <= img[i][j] <= 255
+		
+		class Solution {
+			public:
+			vector<vector<int>> imageSmoother(vector<vector<int>>& img) {
+				vector<vector<int>> ans (img.size(),vector<int> (img[0].size()));
+
+				for(int row=0; row<img.size(); row++){
+					for(int col=0; col<img[0].size(); col++){
+						int value = img[row][col];
+						int cnt=1;
+
+						//upper side & checking are they present
+							int upperRow = row -1;
+							if(upperRow<img.size() && upperRow>=0){
+							value += img[upperRow][col];
+							cnt++;
+
+							int sideR_Upper = col+1, sideL_Upper= col-1;
+							if(sideR_Upper>=0 && sideR_Upper < img[0].size()){
+								cnt++;
+								value += img[upperRow][sideR_Upper];
+							}
+
+							if(sideL_Upper>=0 && sideL_Upper < img[0].size()){
+								cnt++;
+								value += img[upperRow][sideL_Upper];
+							}
+							}
+
+						//middle both sides
+							int midL_col = col-1;
+							if(midL_col >=0 && midL_col < img[0].size()){
+							cnt++;
+							value += img[row][midL_col];
+							}
+
+							int midR_col = col+1;
+							if(midR_col >=0 && midR_col < img[0].size()){
+							cnt++;
+							value += img[row][midR_col];
+							}
+
+						//lower Side
+							int lowerRow= row+1;
+							if(lowerRow>=0 && lowerRow<img.size()){
+							cnt++;
+							value += img[lowerRow][col];
+
+							int sideR_Lower = col+1, sideL_Lower= col-1;
+							if(sideR_Lower>=0 && sideR_Lower < img[0].size()){
+								cnt++;
+								value += img[lowerRow][sideR_Lower];
+							}
+
+							if(sideL_Lower>=0 && sideL_Lower < img[0].size()){
+								cnt++;
+								value += img[lowerRow][sideL_Lower];
+							}
+							}
+			
+			
+						value /= cnt;
+						ans[row][col] = value;
+					}
+				}
+				return ans;
+			}
+		};
 	
-	239) 
-	
-	240) 
+	239) Slot Game:
+		Problem statement
+			You're given a slot machine with four slots where each slot will contain the color
+			Red (R), Yellow(Y), Green(G), Blue(B), respectively. You don't know the colors of
+			this slot beforehand. You have to guess the colors. When you guess the correct
+			color for the correct slot, you get a perfect hit, and you get 2 points, but if you
+			guess a color that exists in the machine but is in the wrong slot, you get a
+			pseudo hit, and you get 1 point.
+			You're given the original string representing the slots' colors and the guess
+			string, and your task is to calculate and return the total number of points you
+			have scored.
+			Note:
+				A slot that has been counted as a perfect hit can never count as a pseudo-hit.
+			Example:
+				Original String = "RGYB" and Guess String = "YGRR".
+
+				The second slot of both the guess and original matches, hence it's a perfect hit.
+				The guess string contains yellow, which is also present in the original string but
+				not at the same slot as the guess slot. Hence it's a pseudo hit. The guess string
+				also contains two red slots, but the original string contains only one red which is
+				also not at the same slot as the guess string; hence it is also a pseudo hit.
+				Therefore total points will be 2+1+1= 4.
+
+			Constraints:
+				1<=T<= 5
+				length(original) = length(guess) = 4
+				Time limit: 1 sec
+			Sample Input 1
+				1
+				RGBY
+				GGRR
+				Sample Output 1:
+				3
+				Explanation of Sample Input 1:
+				The second slot of both the string matches. 
+				Therefore, it is a perfect hit, and we get 2 points. 
+				Our guess string contains the color Red ‘R’ two times, 
+				which is also present in the original string but only one time, 
+				and it is not in the same slot as the guess slot; 
+				hence we get a pseudo hit we get 1 point. 
+				Therefore total points will be 2+1=3.
+
+				Sample Input 2:
+					1
+					RGYB
+					YGRR
+					Sample Output 2:
+					4
+					Explanation of Sample Input 2:
+
+					The second slot of both the string matches. Therefore it is a perfect hit, and we get 2 points. 
+					Our guess strings also contain the color Yellow ‘Y’, which is also present in the original slot,
+					but it is not in the same slot as the guess string; hence we get a pseudo hit, and we get 1 point. 
+					Similarly, Our guess strings also contain the color  Red ‘R’ two times, which is also present in the 
+					original slot but only once, and it is not in the same slot as the guess string; hence we get a pseudo 
+					hit and get 1 point. Hence total points will be 2+1+1=4.
+
+		#include <bits/stdc++.h> 
+		int slotScore(string &original, string &guess) {
+			int value=0;
+			for(int i=0; i<guess.length(); i++){
+				if(guess[i] == original[i]){
+					original[i] = '0';				//putting something different char (anything) '0' here we kept.
+												//than the thing ie. (Z) which is kept in guess.
+					guess[i] = 'Z';
+					value +=2;
+				}
+			}
+
+
+			for(int i=0; i<guess.length(); i++){
+				if (find(original.begin(), original.end(), guess[i]) != original.end()) {
+					int index = abs(distance(find(original.begin(), original.end(), guess[i]),original.begin()));
+					original[index] = '0';
+					guess[i] = 'Z';			//putting any random char so for next time they don't get match.
+					value++;
+				}
+			}
+
+			//USE ABOVE FOR LOOP OR BELOW BOTH WORKS.
+
+			// for(int i=0; i<guess.length(); i++){
+			// 	for(int j=0; j<original.length(); j++){
+			// 		if(guess[i] == original[j]){
+			// 			original[j]='0';
+			// 			guess[i] = 'Z';
+			// 			value++;
+			// 			break;
+			// 		}
+			// 	}
+			// }
+			return value;
+		}
+
+	240) Buy Two Chocolates:
+		Problem Statement:
+			You are given an integer array prices representing the prices of various chocolates in a store. 
+			You are also given a single integer money, which represents your initial amount of money.
+			You must buy exactly two chocolates in such a way that you still have some non-negative leftover money. 
+			You would like to minimize the sum of the prices of the two chocolates you buy.
+
+			Return the amount of money you will have leftover after buying the two chocolates. 
+			If there is no way for you to buy two chocolates without ending up in debt, return money. 
+			Note that the leftover must be non-negative.
+
+			Example 1:
+				Input: prices = [1,2,2], money = 3
+				Output: 0
+				Explanation: Purchase the chocolates priced at 1 and 2 units respectively. You will have 3 - 3 = 0 units of money afterwards. Thus, we return 0.
+
+			Example 2:
+				Input: prices = [3,2,3], money = 3
+				Output: 3
+				Explanation: You cannot buy 2 chocolates without going in debt, so we return 3.
+
+			Constraints:
+				2 <= prices.length <= 50
+				1 <= prices[i] <= 100
+				1 <= money <= 100
+
+		class Solution {
+			public:
+			int buyChoco(vector<int>& prices, int money) {
+
+				sort(prices.begin(), prices.end());
+
+				if((prices[0]+prices[1]) <= money){
+					return money-(prices[0]+prices[1]);
+				}
+				return money;
+			}
+		};
+
+		//or
+			class Solution {
+				public:
+				int buyChoco(vector<int>& prices, int money) {
+					sort(prices.begin(), prices.end());
+
+					if((prices[0]+prices[1]) > money)
+						return money;
+					return money-(prices[0]+prices[1]);
+				}
+			};
+
+	241) 
+
+	242) 
+
+	243) 
+
+	244) 
+
+	245) 
+
+	246) 
+
+	247) 
+
+	248) 
+
+	249) 
+
+	250) 
 
 POTD-END
+---------------------------------------------------------------------------------------------------------
+#Hacker Rank Problems:
+	1) Plus Minus:
+		Problem statement:
+			Given an array of integers, calculate the ratios of its elements that are positive, 
+			negative, and zero. 
+			Print the decimal value of each fraction on a new line with  places after the decimal.
+			Note: This challenge introduces precision problems. The test cases are scaled to six decimal places, 
+			though answers with absolute error of up to  are acceptable.
+			arr = [1,1, 0, -1, -1]
+			There are n = 5 elements, two positive, two negative and one zero. Their ratios are
+			2/5 	= 0.400000, 2/5 = 0.400000 and 1/5 = 0.200000. Results are printed as:
+				0.400000
+				0.400000
+				0.200000
+			Print the following 3 lines, each to 6 decimals:
+
+			1)proportion of positive values
+			2)proportion of negative values
+			3)proportion of zeros
+
+				Sample Input
+				STDIN           Function
+				-----           --------
+				6               arr[] size n = 6
+				-4 3 -9 0 4 1   arr = [-4, 3, -9, 0, 4, 1]
+
+				Sample Output
+				3/6 = 0.500000
+				2/6 = 0.333333
+				1/6 = 0.166667
+
+		#include<bits/stdc++.h>
+		void plusMinus(vector<int> arr) {
+			float pos, neg, zr, len = arr.size();
+			pos=neg=zr=0;
+			for(int i=0; i<arr.size(); i++){
+				if(arr[i]<0)
+					neg++;
+				else if(arr[i]>0)
+					pos++;
+				else
+					zr++;
+			}
+			cout<< pos/len <<endl;
+			cout<< neg/len <<endl;
+			cout<< zr/len;
+		}
+
+	2) Mini-Max Sum:
+		Problem Statement:
+			Given five positive integers, find the minimum and maximum values that can be calculated 
+			by summing exactly four of the five integers. 
+			Then print the respective minimum and maximum values as a single line of two space-separated long integers
+			Example
+				arr = [1, 3, 5, 7, 9]
+				The minimum sum is 1 + 3 + 5 + 7 = 16 and the maximum sum is 3 + 5 + 7 + 9 = 24. 
+				The function prints
+					16 24
+				Function Description
+				Complete the miniMaxSum function in the editor below.
+				miniMaxSum has the following parameter(S):
+				• arr: an array of 5 integers
+				Print two space-separated integers on one line: the minimum sum and the maximum sum of 4 of 5 elements.
+				Input Format
+					A single line of five space-separated integers.
+				Constraints
+					1 ≤ arri] ≤ 10^9
+				Output Format
+					Print two space-separated long integers denoting the respective 
+					minimum and maximum values that can be calculated by summing 
+					exactly four of the five integers. (The output can be greater than a 32 bit integer.)
+
+				Sample Input
+					1 2 3 4 5
+				Sample Output
+					10 14
+				Explanation
+					The numbers are 1, 2, 3, 4, and 5. Calculate the following sums using four of the five integers:
+					1. Sum everything except 1, the sum is 2 + 3 + 4 + 5 = 14.
+					2. Sum everything except 2, the sum is 1 + 3 + 4 + 5 = 13.
+					3. Sum everything except 3, the sum is 1 + 2 + 4 + 5 = 12.
+					4. Sum everything except 4, the sum is 1 + 2 + 3 + 5 = 11.
+					5. Sum everything except 5, the sum is 1 + 2 + 3 + 4 = 10.
+					Hints: Beware of integer overflow! Use 64-bit Integer.
+		
+		// using different sum
+		void miniMaxSum(vector<int> arr) {
+
+			sort(arr.begin(), arr.end());
+			
+			long long mnSum=0;
+			long long mxSum=0;
+			
+			for(int i=0; i<4; i++)
+				mnSum += arr[i];
+			
+			for(int i=1; i<5; i++)
+				mxSum += arr[i];
+				
+			cout<<mnSum<<" "<<mxSum;
+		}
+
+		//or Using total sum
+			void miniMaxSum(vector<int> arr) {
+
+				sort(arr.begin(), arr.end());
+						
+				long long Sum=0;
+				for(int i=0; i<5; i++)
+						Sum += arr[i];
+
+				cout<<Sum-arr[4]<<" "<<Sum-arr[0];
+			}
+		
+		//or using accumulate function
+			void miniMaxSum(vector<int> arr) {
+
+				sort(arr.begin(), arr.end());
+				
+				long long value =0;
+				long long Sum =0;
+				
+				// Sum = accumulate(arr.begin(), arr.end(), value);			//here value is initial value of summation.
+				//Sum = accumulate(arr.begin(), arr.end(), 0LL);				//you can use ll or LL any to convert/cast into long long.
+				Sum = accumulate(arr.begin(), arr.end(), 0ll);
+
+				cout<<Sum-arr[4]<<" "<<Sum-arr[0];
+			}
+		
+		//or using max_element & min_element function
+			void miniMaxSum(vector<int> arr) {
+				long long SUM=0;
+				
+				for(int i=0; i<5; i++)
+					SUM += arr[i];
+				
+				long long minSum= SUM - *max_element(arr.begin(), arr.end());
+				long long maxSum= SUM - *min_element(arr.begin(), arr.end());
+				
+				// cout << SUM-*max_element(arr.begin(), arr.end()) << " " << SUM-*min_element(arr.begin(), arr.end());
+				
+				cout << minSum << " " << maxSum;
+			}
+				
+	3) Time Conversion:
+		Problem statement:
+			Given a time in 12-hour AM/PM format, convert it to military (24-hour) time.
+			Note: - 12:00:00AM on a 12-hour clock is 00:00:00 on a 24-hour clock.
+			- 12:00:00PM on a 12-hour clock is 12:00:00 on a 24-hour clock.
+			Example
+			• s = '12:01:00PM'
+			Return '12:01:00'.
+			• s = '12:01:00AM'
+			Return '00:01:00'.
+			Function Description
+			Complete the timeConversion function in the editor below. It should return a new string
+			representing the input time in 24 hour format.
+			timeConversion has the following parameter(S):
+			• string s: a time in 12 hour format
+			Returns
+			• string: the time in 24 hour format
+			Input Format
+			A single string s that represents a time in 12-hour clock format (i.e.: hh:mm:ssAM or
+			hh:mm:ssPM).
+			Constraints
+			• All input times are valid
+			Sample Input
+				07:05:45PM
+			Sample Output
+				19:05:45
+
+		string timeConversion(string s) {
+			string ampmHolder = s.substr(s.length()-2);
+			string hour = s.substr(0,2);
+			
+			if(ampmHolder == "PM" && hour != "12"){
+				hour = to_string((stoi(hour) + 12));
+			}else if(ampmHolder == "AM" && hour == "12"){
+				hour = "00";   
+			}
+			
+			return hour+s.substr(2,6);
+		}
+	
+	4) Sparse Arrays:
+		Problem Statement:
+			There is a collection of input strings and a collection of query strings. For each query string, determine how many times it
+			occurs in the list of input strings. Return an array of the results.
+			Example
+			strings = ['ab', 'ab', 'abc']
+			queries = ['ab', 'abc', 'bc']
+			There are 2 instances of 'ab', 1 of 'abc' and 0 of 'bc'. For each query, add an element to the return array, results = [2, 1, 0].
+			Function Description
+			Complete the function matchingStrings in the editor below. The function must return an array of integers representing the
+			frequency of occurrence of each query string in strings.
+			matchingStrings has the following parameters:
+			• string strings[n] - an array of strings to search
+			• string queries[q] - an array of query strings
+			Returns
+			• int[q]: an array of results for each query
+			Input Format
+			The first line contains and integer n, the size of strings[].
+			Each of the next n lines contains a string strings [i].
+			The next line contains q, the size of queries[]].
+			Each of the next q lines contains a string queries[i].
+			Constraints
+				1 ≤ n ≤ 1000
+				1 ≤ q ≤ 1000
+				1 ≤ |strings[i]|, |queries[i]| ≤ 20.
+			Sample Input 1
+				4
+				aba
+				baba
+				aba
+				xzxb
+				3
+				aba
+				xzxb
+				ab
+				Sample Output 1
+					2
+					1
+					0
+
+			Sample Input 2
+				3
+				def
+				de
+				fgh
+				3
+				de
+				lmn
+				fgh
+				Sample Output 2
+					1
+					0
+					1
+
+			Sample Input 3
+				13
+				abcde
+				sdaklfj
+				asdjf
+				na
+				basdn
+				sdaklfj
+				asdjf
+				na
+				asdjf
+				na
+				basdn
+				sdaklfj
+				asdjf
+				5
+				abcde
+				sdaklfj
+				asdjf
+				na
+				basdn
+				Sample Output 3
+					1
+					3
+					4
+					3
+					2
+
+		vector<int> matchingStrings(vector<string> strings, vector<string> queries) {
+			vector<int> ans;
+			for(int i=0; i<queries.size(); i++){
+				// string crntString = queries[i];
+				int cnt=0;
+				for(int j=0; j<strings.size(); j++){
+					if(queries[i] == strings[j])
+						cnt++;
+				}
+				ans.push_back(cnt);
+			}
+			return ans;
+		}
+
+	5) Lonely Integer:
+		Problem Statement:
+			Given an array of integers, where all elements but one occur twice, find the unique element.
+			Example
+			a = [1, 2, 3, 4, 3, 2, 1]
+			The unique element is 4.
+			Function Description
+			Complete the lonelyinteger function in the editor below.
+			lonelyinteger has the following parameter(s):
+			• int a[n]: an array of integers
+			Returns
+			• int: the element that occurs only once
+			Input Format
+			The first line contains a single integer, n, the number of integers in the array.
+			The second line contains n space-separated integers that describe the values in a.
+			Constraints
+				• 1 ≤ n < 100
+				• It is guaranteed that n is an odd number and that there is one unique element.
+				• 0 ≤ ali] ≤ 100, where 0 ≤ i < n.
+
+		#include<bits/stdc++.h>
+		int lonelyinteger(vector<int> a) {
+			map<int, int> FreqStore;
+			for(int i=0; i<a.size(); i++){
+				FreqStore[a[i]]++;
+			}
+			
+			int ans;
+			for(auto i: FreqStore)
+				if(i.second == 1){
+					ans = i.first;
+					break;   
+				}
+			return ans;
+		}
+
+		//or using XOR operator cause xor of n & n is 0.
+			0 xor 0 = 0
+			0 xor 1 = 1
+
+			int lonelyinteger(vector<int> a) {
+				int result = 0;
+				for(int i: a)
+					result ^= i;
+				return result;
+			}
+
+	6) Flipping bits:
+		Problem Statement:
+			You will be given a list of 32 bit unsigned integers. Flip all the bits (1 → 0 and 0 → 1) and
+			return the result as an unsigned integer.
+			Example
+			n = 9
+			9 = (1001). We're working with 32 bits, so:
+			00000000000000000000000000001001 = 9
+			11111111111111111111111111110110 = 4294967286
+			Return 4294967286.
+			Function Description
+			Complete the flippingBits function in the editor below.
+			flippingBits has the following parameter(s):
+			• int n: an integer
+			Returns
+			• int: the unsigned decimal integer result
+			Input Format
+			The first line of the input contains q, the number of queries.
+			Each of the next q lines contains an integer, n, to process.
+			Constraints
+			1 ≤ q ≤ 100
+			0 <= n < 2^32
+			Sample Input
+				3 
+				2147483647 
+				1 
+				0
+				Sample Output
+
+				2147483648 
+				4294967294 
+				4294967295
+				Explanation
+
+				Take 1 for example, as unsigned 32-bits is 
+				00000000000000000000000000000001 and doing the flipping we get 
+				11111111111111111111111111111110 which in turn is 4294967294.
+
+		long flippingBits(long n) {
+			bitset<32> bits(n);
+			bits.flip();
+			return static_cast<long>(bits.to_ulong());
+		}
+
+		//or
+			long flippingBits(long n) {
+				bitset<32> bits(n);
+				return static_cast<long>(bits.flip().to_ulong());
+			}
+
+		//or
+			long flippingBits(long n) {
+				bitset<32> bits(n);
+				long a = bits.flip().to_ulong();				//to convert string or any other type of data into unsigned long int use
+				return a;									// .to_ulong();
+			}
+
+			//to_ulong() :-
+				used to convert the binary representation stored in a bitset into an unsigned long integer.
+	
+	7) 
+	
+	8)
+	
+	9)
+	
+	10)
 ---------------------------------------------------------------------------------------------------------
 calender:
 	today 2nd sept 2023 (saturday)
@@ -31313,13 +32143,21 @@ calender:
 		#include <bits/stdc++.h>
 		using namespace std;
 		int main() {
-		bitset<6> bit1(string("100110"));
-		bitset<10> bit2(string("0100001111"));
-		cout << bit1 << " after applying flip() function with nothing passed as parameter returns "
-		<< bit1.flip() << endl;
-		cout << bit2 << " after applying flip() function with 7 passed as parameter returns "
-		<< bit2.flip(7);
-		return 0;
+			bitset<6> bit1(string("100110"));
+			bitset<10> bit2(string("0100001111"));
+			cout << bit1 << " after applying flip() function with nothing passed as parameter returns "
+			<< bit1.flip() << endl;
+			cout << bit2 << " after applying flip() function with 1 passed as parameter will flip 1st index element"<< bit2.flip(1)<<endl;
+			cout << bit2 << " after applying flip() function with 1 passed as parameter will flip 0th index element"<< bit2.flip(0)<<endl;
+			
+			
+			std::cout << std::endl;
+			int n=10;
+			std::cout << "10 in binary: " << bitset<32>(n)  << std::endl;
+			std::cout << "Flipping 10 binary (0 to 1 & 1 to 0)" << bitset<32>(n).flip(0) << std::endl;          //just flip the 0th index element
+			std::cout << "Flipping 10 binary (0 to 1 & 1 to 0)" << bitset<32>(n).flip() << std::endl;          //flip all the elements.
+			
+			return 0;
 		}
 
 	#include <iostream>
