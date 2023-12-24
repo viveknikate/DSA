@@ -13178,7 +13178,7 @@ Lecture 31: Learning Recursion the Best Way
 		-when base condition occurs then it stops calling function again.
 		-recursive call always lead towards base case.
 		-in base case return is mandatory.
-		-if we don't give return in base case then segmentation fault will occur.
+		-if we don't give return in base case then 'segmentation fault' will occur.
 		#In RECURSION -> Base case is mandatory (return statement in base case).
 				    -> Recursive relation is mandatory.
 				    -> Processing part
@@ -13290,7 +13290,236 @@ Lecture 31: Learning Recursion the Best Way
 ---------------------------------------------------------------------------------------------------------
 	//18/12/2023
 Lecture32: Understanding Recursion the easiest way || Day-2:
-	
+	Examples:
+		1) Reaching Home:
+			#include <iostream>
+			using namespace std;
+
+			void goingHome(int s, int e){
+				std::cout << "Start " << s << ", End " << e << std::endl;
+				if(s==e){
+					std::cout << "||REACHED HOME||" << std::endl;
+					exit(0);
+					// return;
+				}
+				goingHome(s+1, e);
+			}
+
+			int main() {
+				int start, end;
+				std::cout << "Enter start : ";
+				std::cin >> start;
+				
+				std::cout << "Enter end : ";
+				cin>>end;
+				
+				goingHome(start, end);
+				return 0;
+			}
+			//output:
+				Enter start : 1
+				Enter end : 5
+				Start 1, End 5
+				Start 2, End 5
+				Start 3, End 5
+				Start 4, End 5
+				Start 5, End 5
+				||REACHED HOME||
+
+		2) Fibonacci series by Recursion:
+			#include <iostream>
+			using namespace std;
+
+			int nthNum(int a){
+				if(a == 1)
+					return 0;
+				else if(a == 2)
+					return 1;
+				else
+					return nthNum(a-1) + nthNum(a-2);
+			}
+
+			int main() {
+			
+				//0 1 1 2 3 5 8 13 21 34 55 89
+				int n;
+				std::cout << "Enter n:" << std::endl;
+				std::cin >> n;
+				
+				std::cout << n << "th num is : " <<nthNum(n);
+				return 0;
+			}
+			//output:
+				Enter n: 12
+					12th num is : 89
+
+		#LeetCode Question:
+			1) Fibonacci:
+				https://leetcode.com/problems/fibonacci-number/description/
+				using Recursion:
+				class Solution {
+					public:
+					int fib(int n) {
+						if(n==0)
+							return 0;
+						else if(n==1)
+							return 1;
+						return (fib(n-1) + fib(n-2));
+					}
+				};
+
+				//using for loop:
+					class Solution {
+						public:
+						int fib(int n) {
+							if(n==0)
+								return 0;
+							else if(n==1)
+								return 1;
+							int prev = 0, crnt = 1;
+							for(int i=2; i<=n; i++){
+								int temp = prev + crnt;
+								prev = crnt;
+								crnt = temp;
+							}
+							return crnt;
+						}
+					};
+
+			2) Count Ways To Reach The N-th Stairs:
+				Problem statement
+					You have been given a number of stairs. Initially, you are at the Oth stair, and you
+					need to reach the Nth stair. Each time you can either climb one step or two
+					steps. You are supposed to return the number of distinct ways in which you can
+					climb from the Oth step to Nth step.
+					Example:
+					N=3
+					output =3
+					We can climb one step at a time i.e. {(0, 1) (1, 2),(2,3)) or we can climb the first
+					two-step and then one step i.e. {(0,2). (1, 3)} or we can climb first one step and
+					then two step i.e. {(0,1), (1,3)}.
+					Constraints:
+						1 <= 'T' <= 10
+						0 <= 'N' <= 1015
+						Where 'T' is the number of test cases, and 'N' is the number of stairs.
+					It is guaranteed that sum of 'N' over all test cases is <= 10^5.
+				Sample Input 1 :
+					2
+					2
+					3
+					Sample Output 1 :
+					2
+					3
+					Explanation Of Sample Input 1 :
+					In the first test case, there are only two ways to climb the stairs, 
+					i.e. {1,1} and {2}.
+
+					In the second test case, there are three ways to climb the stairs 
+					i.e. {1,1,1} , {1,2} and {2,1}.
+					Sample Input 2 :
+					2
+					4
+					5
+					Sample Output 2 :
+					5
+					8
+					Explanation Of Sample Input 2 :
+						In the first test case, there are five ways to climb the stairs 
+						i.e. {1,1,1,1} , {1,1,2} , {2,1,1} , {1,2,1} , {2,2}.
+
+						In the second test case, there are eight ways to climb the stairs
+						i.e. {1,1,1,1,1} , {1,1,1,2} , {1,1,2,1}, {1,2,1,1}, {2,1,1},{2,2,1},{2,1,2} and {2,2,1}.
+				-for nth stair you use the last stair or 2nd last stair.
+				-& for that last stair & 2nd last stair the process will be same, again for that last stair
+				-call goes last's last stair or last's 2nd last stair. & sum of all ways will be nth stair sum.
+				//Not optimized:
+					#include <bits/stdc++.h> 
+					int countDistinctWays(int nStairs) {
+						if(nStairs == 0)
+							return 1;
+						
+						if(nStairs<0)
+							return 0;
+
+						return countDistinctWays(nStairs-1) + countDistinctWays(nStairs-2);
+					}
+
+		3) Say Digit:
+			//Recursion:
+				#include <iostream>
+				using namespace std;
+
+				void SayDigit(int n) {
+					if(n==0)
+						return;
+					string store[10] = {"zero ", "one ", "two ", "three ", "four ", "five ", "six ", "seven ", "eight ", "nine "};
+					int digit = n % 10;
+					n /= 10;
+					SayDigit(n);
+					std::cout << store[digit] << " ";
+				}
+
+				int main() {
+					int num;
+					cout<<"Enter num: ";
+					cin>>num;
+
+					std::cout << std::endl;
+					SayDigit(num);
+
+					return 0;
+				}
+			
+			//or
+				#include <iostream>
+				using namespace std;
+
+				int main() {
+				
+					int num;
+					std::cout << "Enter num: " << std::endl;
+					cin>>num;
+					
+					string s = to_string(num);
+					for(int i=0; i<s.length(); i ++){
+						switch(s[i]){
+							case '1':
+								std::cout << "one ";
+								break;
+							case '2':
+								std::cout << "two ";
+								break;
+							case '3':
+								std::cout << "three ";
+								break;
+							case '4':
+								std::cout << "four ";
+								break;
+							case '5':
+								std::cout << "five ";
+								break;
+							case '6':
+								std::cout << "six ";
+								break;
+							case '7':
+								std::cout << "seven ";
+								break;
+							case '8':
+								std::cout << "eight ";
+								break;
+							case '9':
+								std::cout << "nine ";
+								break;
+							case '0':
+								std::cout << "zero ";
+						}
+					}
+					return 0;
+				}
+
+		
+
+
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -31621,15 +31850,304 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	241) 
+	241) Maximum Score After Splitting a String:
+		Problem Statement:
+			Given a string s of zeros and ones, return the maximum score 
+			after splitting the string into two non-empty substrings (i.e. left substring and right substring).
+			The score after splitting a string is the number of zeros in the left substring plus 
+			the number of ones in the right substring.
 
-	242) 
+			Example 1:
+				Input: s = "011101"
+				Output: 5 
+				Explanation: 
+				All possible ways of splitting s into two non-empty substrings are:
+				left = "0" and right = "11101", score = 1 + 4 = 5 
+				left = "01" and right = "1101", score = 1 + 3 = 4 
+				left = "011" and right = "101", score = 1 + 2 = 3 
+				left = "0111" and right = "01", score = 1 + 1 = 2 
+				left = "01110" and right = "1", score = 2 + 1 = 3
 
-	243) 
+			Example 2:
+				Input: s = "00111"
+				Output: 5
+				Explanation: When left = "00" and right = "111", we get the maximum score = 2 + 3 = 5
 
-	244) 
+			Example 3:
+				Input: s = "1111"
+				Output: 3
 
-	245) 
+			Constraints:
+				2 <= s.length <= 500
+				The string s consists of characters '0' and '1' only.
+
+		class Solution {
+			public:
+			int maxScore(string s) {
+				int mxScore=0;
+				for(int i=1; i<s.length(); i++){
+					string left = s.substr(0,i);
+					string right = s.substr(i);
+
+					//counting no.of zero in left string
+					int leftScore=0;
+					for(int a=0; a<left.length(); a++){
+						if(left[a] == '0')
+							leftScore++;
+					}
+
+					int rightScore=0;
+					//counting no.of ones in right string
+					for(int a=0; a<right.length(); a++){
+						if(right[a] == '1')
+							rightScore++;
+					}
+					mxScore = max(mxScore, (rightScore+leftScore));
+				}
+				return mxScore;
+			}
+		};		
+		
+	242) Maximize xor:
+		Problem statement
+			You have an integer array 'A' of the form of [x, x+1, x+2, x+3, ......]. As the array is
+			vast in size, you are given both endpoints of the array, i.e., If you are given two
+			integers, 'L' and 'R', the array 'A' will be [L, L+1, L+2,...... R-1, R]. Your task is to
+			find the maximum possible value of 'X' such that the following two conditions hold.
+			a ⊕ b= X, where '⊕' denotes bitwise xor operation.
+			Both numbers 'a' and 'b' belong to the array 'A:
+			Constraints -
+				1 <= 'T' <= 10^3
+				1 <= L <= R <= 10^9
+				Time Limit: 1 sec
+
+			Sample Input 1 :
+				2
+				8 20
+				1 3
+				Sample Output 1 :
+				31
+				3
+				Explanation for Sample Input 1 :
+				For case 1:
+				The array looks like [8, 9, 10, ….., 18, 19, 20]. 
+				From all possible pairs (a, b), pair (15, 16) gives maximum value of xor, which is 15 ⊕ 16 = 31.
+
+				For Case 2:
+				Optimal pair is (2, 3), which gives 2 ⊕ 3 = 3.
+				Sample Input 2 :
+				2
+				4 10
+				4 7
+				Sample Output 2 :
+				15
+				3
+
+		//Not Optimized:
+			#include <bits/stdc++.h> 
+			int maxXor(int L, int R){
+				vector<int> holder;
+				for(int i=L; i<=R; i++){
+					holder.push_back(i);
+				}
+
+				int mxXOR=0;
+				for(int i=0; i<holder.size()-1; i++){
+					int temp=0;
+					for(int j=i+1; j<holder.size(); j++){
+						temp = holder[i] ^ holder[j];
+						mxXOR = max(mxXOR, temp);
+					}
+				}
+				return mxXOR;
+			}
+
+		//Optimized:
+			#include <bits/stdc++.h> 
+			int maxXor(int L, int R){
+				int lxr = L ^ R;
+				int msbpos = 0;
+
+				while (lxr > 0) {
+					msbpos++;
+					lxr >>= 1;
+				}
+
+				int maxor = 0;
+				int two = 1;
+				while (msbpos-- > 0) {
+					maxor += two;
+					two <<= 1;
+				}
+				return maxor;
+			}
+
+	243) Count More than n/k Occurences:
+		Problem Statement:
+			Given an array arr of size N and an element k. 
+			The task is to find the count of elements in the array that appear more than n/k times.
+			Example 1:
+				Input:
+				N = 8
+				arr = [3,1,2,2,1,2,3,3]
+				k = 4
+				Output: 
+				2
+				Explanation: 
+				In the given array, 3 and 2 are the only elements that appears more than n/k times.
+
+			Example 2:
+				Input:
+				N = 4
+				arr = [2,3,3,2]
+				k = 3
+				Output: 
+				2
+				Explanation: In the given array, 3 and 2 are the only elements that appears more than n/k times. So the count of elements are 2.
+
+			Your Task:
+				The task is to complete the function countOccurence() 
+				which returns count of elements with more than n/k times appearance.
+
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(N).
+
+			Constraints:
+				1 <= N <= 10^5
+				1 <= a[i] <= 10^9
+				1 <= k <= N
+
+		class Solution {
+			public:
+			//Function to find all elements in array that appear more than n/k times.
+			int countOccurence(int arr[], int n, int k) {
+				int times = n/k;
+				map<int, int> FreqCounter;
+				
+				//Frequency counter
+				for(int i=0; i<n; i++){
+					FreqCounter[arr[i]]++;
+				}
+				
+				int cnt=0;
+				
+				// checking if the element is appear more than n/k times
+				for(auto z: FreqCounter)
+					if(z.second > times)
+						cnt++;
+				
+				//returning the result
+				return cnt;
+			}
+		};
+
+	244) Path Crossing:
+		Problem Statement:
+			Given a string path, where path[i] = 'N', 'S', 'E' or 'W', 
+			each representing moving one unit north, south, east, or west, respectively. 
+			You start at the origin (0, 0) on a 2D plane and walk on the path specified by path.
+			Return true if the path crosses itself at any point, that is, 
+			if at any time you are on a location you have previously visited. Return false otherwise.
+
+			Example 1:
+				Input: path = "NES"
+				Output: false 
+				Explanation: Notice that the path doesn't cross any point more than once.
+
+			Example 2:
+				Input: path = "NESWW"
+				Output: true
+				Explanation: Notice that the path visits the origin twice.
+		
+			Constraints:
+				1 <= path.length <= 10^4
+				path[i] is either 'N', 'S', 'E', or 'W'.
+		
+		class Solution {
+			public:
+			bool isPathCrossing(string path) {
+				int x=0, y=0;
+				vector<string> storer;
+				string temp = to_string(x) + "," + to_string(y);
+				storer.push_back(temp);
+				for(int i=0; i<path.length(); i++){
+					switch(path[i]){
+						case 'N':
+							y++;
+							break;
+						case 'E':
+							x++;
+							break;
+						case 'W':
+							x--;
+							break;
+						case 'S':
+							y--;
+							break;
+					}
+					temp = to_string(x) + "," + to_string(y);
+					if(find(storer.begin(), storer.end(), temp) != storer.end())				//finding that if we stored temp points previously
+						return 1;														//if yes, returning true.
+					storer.push_back(temp);
+				}
+				return 0;
+			}
+		};
+
+	245) Minimum Changes To Make Alternating Binary String:
+		Problem Statement:
+			You are given a string s consisting only of the characters '0' and '1'. 
+			In one operation, you can change any '0' to '1' or vice versa.
+			The string is called alternating if no two adjacent characters are equal. 
+			For example, the string "010" is alternating, while the string "0100" is not.
+			Return the minimum number of operations needed to make s alternating.
+
+			Example 1:
+				Input: s = "0100"
+				Output: 1
+				Explanation: If you change the last character to '1', s will be "0101", which is alternating.
+
+			Example 2:
+				Input: s = "10"
+				Output: 0
+				Explanation: s is already alternating.
+
+			Example 3:
+				Input: s = "1111"
+				Output: 2
+				Explanation: You need two operations to reach "0101" or "1010".
+				
+			Constraints:
+				1 <= s.length <= 104
+				s[i] is either '0' or '1'.
+ 
+		class Solution {
+			public:
+			int minOperations(string s) {
+				int cnt=0;
+				//for 0
+				char ch = '0';
+				for(int i=0; i<s.length(); i++){
+					if(s[i] != ch)
+						cnt++;
+
+					//This will alter the char, if previously it was '0', then it'll become '1' & viceversa.
+					(ch == '1') ? ch = '0' : ch = '1';
+				}
+
+				//for 1
+				ch = '1';
+				int cnt2=0;
+				for(int i=0; i<s.length(); i++){
+					if(s[i] != ch)
+						cnt2++;
+					
+					//This will alter the char, if previously it was '0', then it'll become '1' & viceversa.
+					(ch == '1') ? ch = '0' : ch = '1';
+				}
+				return min(cnt, cnt2);
+			}
+		};
 
 	246) 
 
@@ -32030,13 +32548,172 @@ POTD-END
 			//to_ulong() :-
 				used to convert the binary representation stored in a bitset into an unsigned long integer.
 	
-	7) 
+	7) Diagonal Difference:
+		Problem Statement:
+			Given a square matrix, calculate the absolute difference between the sums of its diagonals.
+			For example, the square matrix  is shown below:
+			1 2 3
+			4 5 6
+			9 8 9  
+			The left-to-right diagonal =  1+5+9 = 15
+			The right to left diagonal = 3+5+9 = 17.
+			Their absolute difference is |15-17|= 2.
+			Output Format
+
+			Output Format
+			Return the absolute difference between the sums of the matrix's two diagonals as a single integer.
+			Sample Input
+			3
+				11 2 4
+				4 5 6
+				10 8 -12
+			Sample Output
+			15
+			Explanation
+			The primary diagonal is:
+
+				11
+					5
+						-12
+			Sum across the primary diagonal: 11 + 5 - 12 = 4
+			The secondary diagonal is:
+						4
+					5
+				10
+			Sum across the secondary diagonal: 4 + 5 + 10 = 19
+			Difference: |4 - 19| = 15
+		
+		int diagonalDifference(vector<vector<int>> arr) {
+			int sumR =0;
+			for(int i=0; i<arr.size(); i++)
+				for(int j=0; j<arr.size(); j++)
+					if(i == j)
+						sumR += arr[i][j];
+			
+			int sumL=0;
+			int i=0,j=arr[0].size()-1;
+			while(i<arr.size() && j>=0){
+				sumL += arr[i][j];
+				j--;i++;
+			}
+			return abs(sumL-sumR);			
+		}
+
+		//or
+			int diagonalDifference(vector<vector<int>> arr) {
+				int rightSum, leftSum;
+				rightSum=leftSum=0;
+				
+				int j=0;
+				for(int i=0; i<arr.size(); i++){
+					rightSum += arr[i][j++];
+				}
+				
+				j = arr.size()-1;
+				for(int i=0; i<arr.size(); i++){
+					leftSum += arr[i][j--];
+				}
+				
+				return abs(leftSum-rightSum);
+			}
 	
-	8)
-	
-	9)
-	
-	10)
+		//or
+			int diagonalDifference(vector<vector<int>> arr) {
+				int rightSum, leftSum;
+				rightSum=leftSum=0;
+				
+				for(int i=0; i<arr.size(); i++){
+					rightSum += arr[i][i];
+					leftSum += arr[i][arr.size()-i-1];
+				}    
+				return abs(leftSum-rightSum);
+			}
+		
+	8) Counting Sort 1:
+		Problem Statement:
+			For this exercise, always return a frequency array with 100 elements. 
+			The example above shows only the first 4 elements, the remainder being zeros.
+			Challenge
+				Given a list of integers, count and return 
+				the number of times each value appears as an array of integers.
+			Function Description
+			Complete the countingSort function in the editor below.
+			countingSort has the following parameter(s):
+			arr[n]: an array of integers
+			Returns int[100]: a frequency array
+		
+		vector<int> countingSort(vector<int> arr) {
+			vector<int> ans(100,0);
+			for(int j=0; j<100; j++){
+				int cnt=0;
+				for(int i=0; i<arr.size(); i++){
+					if(arr[i] == j)
+						cnt++;
+				}
+				ans[j] = cnt;
+			}
+			return ans;
+		}
+
+		//or
+			vector<int> countingSort(vector<int> arr) {
+				std::vector<int> countingVector(100, 0);
+				for(int i : arr) {
+					countingVector[i] += 1;                
+				}
+				return countingVector;
+			}
+
+		//or
+			vector<int> countingSort(vector<int> arr) {
+				vector<int> ans(100,0);
+				for(auto i: arr
+					ans[i]++;
+				return ans;
+			}
+
+	9) Pangrams:
+		Problem Statement:
+			A pangram is a string that contains every letter of the alphabet. 
+			Given a sentence determine whether it is a pangram in the English alphabet. 
+			Ignore case. Return either pangram or not pangram as appropriate.
+			Sample Input
+			Sample Input 0
+				We promptly judged antique ivory buckles for the next prize
+			Sample Output 0
+				pangram
+			Sample Explanation 0
+				All of the letters of the alphabet are present in the string.
+			Sample Input 1
+				We promptly judged antique ivory buckles for the prize
+			Sample Output 1
+				not pangram
+			Sample Explanation 0
+			The string lacks an x.
+
+		NOTE:
+			to find char in string
+				find(s.begin(), s.end(), ch) != s.end()				//means char found
+			
+			//or
+				s.find(ch) != string::npos						//means also char found
+
+		string pangrams(string s) {
+			char ch = 'a';
+
+			// Converting string s to lowercase.
+			transform(s.begin(), s.end(), s.begin(), ::tolower);
+
+			for (int i = 0; i < 26; ++i) {
+				if (find(s.begin(), s.end(), ch) == s.end()) {		//or (s.find(ch) == string::npos)
+					return "not pangram";
+				}
+				ch++;
+			}
+			return "pangram";
+		}
+
+	10) 
 ---------------------------------------------------------------------------------------------------------
 calender:
 	today 2nd sept 2023 (saturday)
