@@ -6229,6 +6229,31 @@ Lecture-13: Questions on BinarySearch
 						return -1;
 				return i;
 			}
+
+			//or Simplified
+				class Solution {
+					public:
+					int pivotIndex(vector<int>& nums) {
+
+						for(int i=0; i<nums.size(); i++){
+							//for left sum
+							int LSum=0;
+							for(int l=0; l<i; l++){
+								LSum += nums[l];
+							}
+
+							//for right sum
+							int RSum=0;
+							for(int r=i+1; r<nums.size(); r++){
+								RSum += nums[r];
+							}
+
+							if(LSum == RSum)
+								return i;
+						}
+						return -1;
+					}
+				};
 ---------------------------------------------------------------------------------------------------------
 	13/08/23
 Lecture-14: Binary Search Interview Questions | Problem set-2
@@ -12583,7 +12608,7 @@ Lecture-28: Reference Variable | Static vs Dynamic Memory | Part-1
 			
 	-Dynamic allocated memory uses 8 bytes extra, which is a pointer on stack.
 	-in stack (static memory allocation) memory gets released automatically
-	-in Dynamic memory allocation, mannually have to release the memory.
+	-in Dynamic memory allocation, manually have to release the memory.
 
 	void pointer
 		-A void pointer is a general-purpose pointer. 
@@ -13671,7 +13696,159 @@ Lecture33: Recursion and Binary Search | Day-3:
 			return 0;
 		}
 
+	Lecture13 to 15 binary search problem using recursion pending to solve.
+	Lecture 13:
+		1) First and Last Position of an Element In Sorted Array: //USING RECURSION:
+			//Not Optimized:
+				#include <bits/stdc++.h>
+				int FirstOccRecursion(vector<int> a, int start, int end, int key, int index){
+
+					if(start > end)
+						return index;
+					
+					int mid = (start+end)/2;
+					
+					if(a[mid] == key)
+						index = mid;
+					else if(a[mid] < key)
+						return FirstOccRecursion(a, mid+1, end, key, index);
+					return FirstOccRecursion(a, start, mid-1, key, index);
+				}
+
+				int LastOccRecursion(vector<int> a, int start, int end, int key, int index){
+
+					if(start > end)
+						return index;
+					
+					int mid = (start+end)/2;
+					if(a[mid] == key)
+						index = mid;
+					else if(a[mid] > key)
+						return LastOccRecursion(a, start, mid-1, key, index);
+					return LastOccRecursion(a, mid+1, end, key, index);
+
+				}
+
+				pair<int, int> firstAndLastPosition(vector<int>& arr, int n, int k) {
+
+					pair<int, int> ans;
+
+					int s = 0;
+					int end = arr.size() - 1;
+					
+					ans.first = FirstOccRecursion(arr, s, end, k, -1);
+
+					if(ans.first == -1)
+						return {-1,-1};
+					
+					ans.second = LastOccRecursion(arr, s, end, k, -1);
+					return ans;
+				}
+
+		2) Peak Index in a Mountain Array: //USING RECURSION
+			class Solution {
+				private:
+				int peakIndexFinder(vector<int> a, int s, int e, int index){
+					if(s == e)
+						return e;
+
+					int mid = (s+e)/2;
+					if(a[mid] > a[mid+1])
+						return peakIndexFinder(a, s, mid, e);
+					return peakIndexFinder(a, mid+1, e, e);        
+				}
+				public:
+				int peakIndexInMountainArray(vector<int>& arr) {
+					int s = 0, e = arr.size()-1;
+					return peakIndexFinder(arr, s, e, -1);
+				}
+			};
+
+		3) Find Pivot Index: //USING RECURSION
+			//MLE (Memory Limit Exceeded)
+			-if you want to get rid of MLE then you can declare vector a as reference vector
+			eg.
+				int ansIndex(vector<int> &a, int excludeInd)				//&
+				-this will get rid of memory limit exceeded.
+		
+			class Solution {
+				private:
+				int ansIndex(vector<int> a, int excludeInd){
+					int LSum=0, RSum=0;
+
+					//for left side
+					for(int l=0; l<excludeInd; l++)
+						LSum += a[l];
+					
+					//for right side
+					for(int r=excludeInd+1; r<a.size(); r++)
+						RSum += a[r];
+					
+					if(LSum == RSum)
+						return excludeInd;
+
+					if(excludeInd+1 >= a.size())
+						return -1;
+					
+					return ansIndex(a,excludeInd+1);
+				}
+				public:
+				int pivotIndex(vector<int>& nums) {
+					int exclude=0;
+					return ansIndex(nums, exclude);
+				}
+			};
+
+		4) 
+---------------------------------------------------------------------------------------------------------
+	25/12/23 ---> 28/12/23
+Lecture34: Recursion with Strings | Day-4:
+	// String printing in Reverse order using Recursion:
+		#include <iostream>
+		using namespace std;
+
+		void Reverser(string &s, int index) {
+			if(index == s.length())
+				return;
+				
+			//recursive call.
+			Reverser(s, index+1);
+			
+			std::cout << s[index];          
+		}
+
+		int main() {
+			string s = "Vivek";
+			std::cout << s << std::endl;
+			
+			Reverser(s,0);
+			return 0;
+		}
 	
+	//reversing string using Recursion
+		#include <iostream>
+		using namespace std;
+
+		void ReverserRecurser(string& s,int start, int end) {
+			if(start > end)
+				return ;
+			swap(s[start++], s[end--]);
+
+			//recursive call
+			ReverserRecurser(s, start, end);
+		}
+
+		int main() {
+			string s = "Hello World";
+			std::cout << s << std::endl;
+			
+			ReverserRecurser(s, 0, s.size()-1);
+			
+			std::cout << s << std::endl;
+			return 0;
+		}
+
+
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -13687,6 +13864,49 @@ Lecture33: Recursion and Binary Search | Day-3:
 			
 			return 0;
 		}
+
+	//Extracting words from string:
+		#include <iostream>
+		#include <sstream>
+		#include <vector>
+
+		using namespace std;
+
+		int main() {
+			// Input string
+			string str = "Hello 1 2 3 World, Going on Live now!";
+
+			// Vector to store individual words
+			vector<string> sentenceWords;
+
+			// String to temporarily store each word
+			string s;
+
+			// Create an istringstream object and initialize it with the input string
+			istringstream iss(str);
+
+			// Loop to extract words from the stringstream and store them in the vector
+			while (iss >> s) {
+				sentenceWords.push_back(s);
+			}
+
+			// Loop to print each word from the vector on a new line
+			for (const string& st : sentenceWords) {
+				cout << st << endl;
+			}
+
+			return 0;
+		}
+		//output:
+			Hello
+			1
+			2
+			3
+			World,
+			Going
+			on
+			Live
+			now!
 
 	//Curly braces related..
 
@@ -32301,15 +32521,696 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	246) 
+	246) Meta Strings:
+		Problem statement
+			You are given two strings 'STR1' and 'STR2'. You need to tell whether the strings
+			are meta strings or not.
+			Meta strings are strings that can be made equal by swapping exactly one pair of
+			distinct characters in one of the strings.
+			Note:
+			Equal strings are not considered as meta strings.
+			Constraints:
+				1 <= T <= 10
+				2 <= length of STR1<= 10 ^ 5
+				2 <= length of STR2 <= 10 ^ 5
 
-	247) 
+		Sample Input 1:
+			2
+			Coding
+			Codnig
+			Ninjas
+			Niaxns
+			Sample Output 1:
+			YES
+			NO
+			Explanation for Input 1:
+			For test case 1: By swapping ‘i’ and ‘n’ in the second string, it becomes equal to the first string.
 
-	248) 
+			For test case 2: There is no way we can make both the strings equals by swapping one pair of characters.
+			Sample Input 2:
+			3
+			Hello
+			Hello
+			Play
+			Playes
+			Seek
+			Seke
+			Sample Output 2:
+			NO
+			NO
+			YES
+		#include <bits/stdc++.h> 
+		bool checkMeta(string &str1, string &str2) {
+			if(str1.length() != str2.size() || str1 == str2)
+				return 0;
+			
+			vector<int> holder;
+			for(int i=0; i<str2.length(); i++){
+				if(str1[i] != str2[i])
+					holder.push_back(i);
+			}
 
-	249) 
+			if(holder.size()<2)             //this statement means that we didn't found 2 indexes where elements are different.
+				return 0;
 
-	250) 
+			swap(str2[holder[0]],str2[holder[1]]);
+			if(str2 == str1)
+				return 1;
+			return 0;
+		}
+		
+		//or
+			#include <bits/stdc++.h> 
+			bool checkMeta(string &str1, string &str2) {
+				if(str1.length() != str2.size() || str1 == str2)
+					return 0;
+				
+				sort(str1.begin(), str1.end());
+				sort(str2.begin(), str2.end());
+				
+				if(str1 == str2)
+					return 1;
+					
+				return 0;
+			}
+
+	247) Minimum Time to Make Rope Colorful:
+		Problem Statement:
+			Alice has n balloons arranged on a rope. 
+			You are given a 0-indexed string colors where colors[i] is the color of the ith balloon.
+			Alice wants the rope to be colorful. 
+			She does not want two consecutive balloons to be of the same color, so she asks Bob for help. 
+			Bob can remove some balloons from the rope to make it colorful. You are given a 0-indexed 
+			integer array neededTime where neededTime[i] is 
+			the time (in seconds) that Bob needs to remove the ith balloon from the rope.
+			Return the minimum time Bob needs to make the rope colorful.
+			Example 1:
+				Input: colors = "abaac", neededTime = [1,2,3,4,5]
+				Output: 3
+				Explanation: In the above image, 'a' is blue, 'b' is red, and 'c' is green.
+				Bob can remove the blue balloon at index 2. This takes 3 seconds.
+				There are no longer two consecutive balloons of the same color. Total time = 3.
+				
+			Example 2:
+				Input: colors = "abc", neededTime = [1,2,3]
+				Output: 0
+				Explanation: The rope is already colorful. Bob does not need to remove any balloons from the rope.
+
+			Example 3:
+				Input: colors = "aabaa", neededTime = [1,2,3,4,1]
+				Output: 2
+				Explanation: Bob will remove the ballons at indices 0 and 4. Each ballon takes 1 second to remove.
+				There are no longer two consecutive balloons of the same color. Total time = 1 + 1 = 2.
+
+			Constraints:
+				n == colors.length == neededTime.length
+				1 <= n <= 105
+				1 <= neededTime[i] <= 104
+				colors contains only lowercase English letters.
+		
+		class Solution {
+			public:
+			int minCost(string colors, vector<int>& neededTime) {
+				int minCNT=0;
+				int tracker=1;
+				for(int i=0; i<colors.length()-1;){
+					if(colors[i] == colors[tracker]){
+						if(neededTime[i]>neededTime[tracker]){
+							minCNT += neededTime[tracker];
+						}else{
+							minCNT += neededTime[i];
+							i = tracker;
+						}
+						tracker++;
+					}else{
+						i = tracker;
+						tracker++;
+					}
+				}
+				return minCNT;
+			}
+		};
+
+	248) Anti Diagonal Traversal of Matrix:
+		Problem Statement:
+			Give a N*N square matrix, return an array of its anti-diagonals in top-leftmost 
+			to bottom-rightmost order. In an element of a anti-diagonal (i, j), 
+			surrounding elements will be (i+1, j-1) and (i-1, j+1). Look at the examples for more clarity.
+
+			Example 1:
+			Input:
+			N = 2
+			matrix[][] = 1 2
+					3 4
+			Output:
+			1 2 3 4
+			Explanation:
+			List of anti-diagnoals in order is
+			{1}, {2, 3}, {4}
+
+			Example 2:
+			Input:
+			N = 3
+			matrix[][] = 3 2 3
+					4 5 1
+					7 8 9
+			Output:
+			3 2 4 3 5 7 1 8 9
+			Explanation:
+			List of anti-diagnoals in order is
+			{3}, {2, 4}, {3, 5, 7}, {1, 8}, {9}
+
+			Your Task:
+				You dont need to read input or print anything. 
+				Complete the function antiDiagonalPattern() that takes matrix as 
+				input parameter and returns a list of integers in order of the values visited in the anti-Diagonal pattern. 
+
+			Expected Time Complexity: O(N * N)
+			Expected Auxiliary Space: O(N * N)
+
+			Constraints:
+				1 <= N <= 100
+				0 <= mat[i][j] <= 100
+
+		class Solution {
+			public:
+			vector<int> antiDiagonalPattern(vector<vector<int>> matrix) {
+				vector<int> ans;
+				int totalRows = matrix.size() + matrix.size() - 1;
+				int i=0;
+				while(i<matrix.size()){
+					int row = 0, col=i;
+					
+					while(row<matrix.size() && col >=0 ){
+						ans.push_back(matrix[row][col]);
+						row++;
+						col--;
+					}
+					i++;
+				}
+				
+				
+				int StandingOnRow = 1;
+				while(i<totalRows){
+					int col= matrix.size()-1;
+					int row = StandingOnRow;
+					while(col>=0 && row < matrix.size()){
+						ans.push_back(matrix[row][col]);
+						row++;
+						col--;
+					}
+					StandingOnRow++;
+					i++;
+				}
+				return ans;
+			}
+		};
+
+	249) Dominant Number
+		Problem statement
+			You are given an array of integers 'ARR' of size N. Your task is to find the
+			dominant number in the array.
+			A dominant number in an array is an integer that occurs more than N/3 times in
+			the array, where N is the array's length.
+			Note:
+				1. There will be only one such element (if it exists).
+				2. If there is no such element in the array, return - 1.
+			For Example:
+				If the given array ARR = (3,3,3,1,5,6,3} we can see that here 3 occurs 4 times in
+				the array, which is greater than 7/3(N/3), so the dominant number here is 3.
+			Note:
+				Try to solve the problem in linear time complexity
+			Constraints:
+				1 <= T <= 100
+				1 <= N<= 10^4
+				0 ≤ ARR[I] ≤ 10^5
+				Time Limit: 1 sec
+			Sample Input 1 :
+				3
+				6
+				3 1 1 8 1 2
+				3
+				1 2 4
+				4
+				3 2 1 3
+				Sample Output 1 :
+				1
+				-1
+				3
+				Explanation of The Sample Input 1:
+				For the first test case:
+				The given array is {3,1,1,8,1,2} we can see that 3 occurred three times in the array, 
+				which is greater than 6/3, so the dominant number will be 3. 
+
+				For the second test case:
+				The given array is {1,2,4} we can see that no number here is repeated more than once, 
+				so the answer here will be -1.
+
+				For the third test case
+				The given array is {3,2,1,3} we can see that  3 occurred two times in the array, 
+				which is greater than 4/3, so the dominant number will be 3. 
+				Sample Input 2 :
+				3
+				4
+				4 4 4 1
+				7
+				5 6 6 4 3 2 6
+				8
+				1 9 8 4 5 5 5 5
+				Sample Output 2 :
+				4
+				6
+				5
+
+		#include <bits/stdc++.h> 
+		int dominantNumber(int* arr, int n) {
+			map<int, int> FreqCounter;
+			for(int i=0; i<n; i++){
+				FreqCounter[arr[i]]++;
+			}
+			for(auto ele: FreqCounter){
+				if(ele.second > (n/3))
+					return ele.first;
+			}
+			return -1;
+		}
+
+	250) Minimum Distance Between Two Numbers:
+		Problem statement
+			You’re given an array of 'N' integers, and two integers 'X' and 'Y'. 
+			Your task is to find the minimum distance between 'X' and 'Y' in the array. 
+			If either or both of them are not present in the array then return -1.
+
+			NOTE :
+				1. The array might also contain duplicates. 
+				2. It is guaranteed that 'X' and 'Y' are two distinct integers i.e. 'X' is not equal to 'Y'.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^5
+				0 <= X, Y <= 10^9
+				0 <= ARR[i] <= 10^9
+			Where 'T' denotes the number of test cases, 
+			'N' denotes the number of elements in the array ‘ARR’ respectively, 
+			'X' and 'Y' denotes the integer given in the input, and 'ARR[i]' denotes the 'i-th' element of the array 'ARR'. 
+
+			Time Limit : 1 sec
+			Sample Input 1 :
+				1
+				3 3 5
+				3 4 5
+				Sample Output 1 :
+				2
+				Explanation of Sample Input 1 :
+				As 3 is at the first position and 5 is at third position. Hence, the minimum distance between 3 and 5 is 2.
+				Sample Input 2 :
+				2
+				4 1 2
+				1 2 3 2
+				4 2 3
+				4 5 6 7
+				Sample Output 2 :
+				1
+				-1
+				Explanation of Sample Input 2 :
+				There are two distances between 1 and 2, which are 1 and 3. Out of these two, 1 is the minimum distance.
+				We return -1 as X = 2 and Y = 3 doesn’t exist in our array. 
+
+		#include <bits/stdc++.h> 
+		int minimumDistance(int arr[], int n, int x, int y) {
+			vector<int> indexesOfX;
+			vector<int> indexesOfY;
+
+			for(int i=0; i<n; i++){
+				if(arr[i] == x)
+					indexesOfX.push_back(i);
+				else if(arr[i] == y)
+					indexesOfY.push_back(i);
+			}
+
+			if(indexesOfX.size()==0 || indexesOfY.size() == 0)
+				return -1;
+
+			int dist=INT_MAX;
+
+			for(int i=0; i<indexesOfX.size(); i++){
+				for(int j=0; j<indexesOfY.size(); j++){
+					dist = min(dist,abs(indexesOfY[j]-indexesOfX[i]));
+				}
+			}
+			return dist;
+		}
+
+	251) Winner of an election:
+		Problem statement:
+			Given an array of n names arr of candidates in an election, where each name is a string of lowercase characters. 
+			A candidate name in the array represents a vote casted to the candidate. 
+			Print the name of the candidate that received the maximum count of votes. 
+			If there is a draw between two candidates, then print lexicographically smaller name.
+			Example 1:
+				Input:
+				n = 13
+				arr[] = {john,johnny,jackie,johnny,john,jackie,jamie,jamie,john,johnny,jamie,
+				johnny,john}
+				Output: john 4
+				Explanation: john has 4 votes casted for 
+				him, but so does johny. john is 
+				lexicographically smaller, so we print 
+				john and the votes he received.
+
+			Example 2:
+				Input:
+				n = 3
+				arr[] = {andy,blake,clark}
+				Output: andy 1
+				Explanation: All the candidates get 1 
+				votes each. We print andy as it is 
+				lexicographically smaller.
+			Your Task:
+			You only need to complete the function winner() that takes an 
+			array of strings arr, and length of arr n as parameters and 
+			returns an array of string of length 2. 
+			First element of the array should be the name of the candidate 
+			and second element should be the number of votes that candidate got in string format.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+
+			Constraints:
+				1 <= n <= 10^5
+				1 <= |arr[i]| <= 10^5
+
+		class Solution{
+			public:
+			
+			//Function to return the name of candidate that received maximum votes.
+			vector<string> winner(string arr[],int n) {
+				map<string, int> FreqCounter;
+				for(int i=0; i<n; i++){
+					FreqCounter[arr[i]]++;
+				}
+				
+				vector<int> storer;
+				for(auto i: FreqCounter){
+					storer.push_back(i.second);
+				}
+				
+				int maxVotes = *max_element(storer.begin(), storer.end());
+				vector<string> namesHolder;
+				
+				for(auto i: FreqCounter){
+					if(maxVotes == i.second)
+						namesHolder.push_back(i.first);
+				}
+				
+				//sorting string namesHolder vector but here no need of sorting you can comment.
+				sort(begin(namesHolder), end(namesHolder));
+				return {namesHolder[0],to_string(maxVotes)};
+			}
+		};
+
+		//or
+		class Solution{
+			public:
+			//Function to return the name of candidate that received maximum votes.
+			vector<string> winner(string arr[],int n) {
+				vector<string> ans;
+				map<string, int> mp;
+				for(int i=0; i<n; i++){
+					mp[arr[i]]++;
+				}
+				
+				//maximum extracting
+				int max = 0;
+				string s="";
+				for(auto i: mp){
+					if(i.second > max){
+						max = i.second;
+						s = i.first;
+					}
+				}
+
+				return {s,to_string(max)};
+			}
+		};
+
+	252) Redistribute Characters to Make All Strings Equal:
+		Problem Statement:
+			You are given an array of strings words (0-indexed).
+			In one operation, pick two distinct indices i and j, where words[i] is a non-empty string, 
+			and move any character from words[i] to any position in words[j].
+			Return true if you can make every string in words equal using any number of operations, 
+			and false otherwise.
+
+			Example 1:
+				Input: words = ["abc","aabc","bc"]
+				Output: true
+				Explanation: Move the first 'a' in words[1] to the front of words[2],
+				to make words[1] = "abc" and words[2] = "abc".
+				All the strings are now equal to "abc", so return true.
+
+			Example 2:
+				Input: words = ["ab","a"]
+				Output: false
+				Explanation: It is impossible to make all the strings equal using the operation.
+			Constraints:
+				1 <= words.length <= 100
+				1 <= words[i].length <= 100
+				words[i] consists of lowercase English letters.
+
+		class Solution {
+			public:
+			bool makeEqual(vector<string>& words) {
+				int noOfWords = words.size();
+				//if there is only one word, then the answer is always yes.
+				//if you want then you can un-comment below 2 lines it will reduce the time complexity
+				
+				// if(noOfWords == 1)
+				//     return 1;
+
+				// need to count character in each word
+				map<char, int> charsFreq;
+				
+				for(int i=0; i<noOfWords; i++){
+					string crntString = words[i];
+					for(int j=0; j<crntString.length(); j++){
+						charsFreq[crntString[j]]++;
+					}
+				}
+
+				for(auto i: charsFreq){
+					if(i.second % noOfWords != 0)
+						return 0;
+				}
+				return 1;
+			}
+		};
+
+	253) Look & Say Sequence:
+		Problem statement
+			You have been given a positive integer N. Your task is to find the Nth term of the Look-And-Say sequence.
+			The Look-And-Say sequence is a sequence of positive integers. The sequence is as follows:
+				1, 11, 21, 1211, 111221, 312211, 13112221,...
+			This sequence is constructed in the following way:
+				The first number is 1.
+				This is read as “One 1”. 
+				Hence, the second number will be 11.
+				The second number is read as “Two 1s”. 
+				Hence, the third number will be 21.
+				The third number is read as “One 2, One 1”. 
+				Hence, the fourth number will be 1211.
+				The fourth term is read as “One 1, One 2, Two 1s”.
+				Hence, the fifth term will be 111221. And so on.
+
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 40
+		
+				Time Limit: 1 sec
+			Sample Input 1:
+				3
+				1
+				2
+				3
+				Sample Output 1:
+				1
+				11
+				21
+				Explanation for Sample 1:
+				The first term is 1.
+				The second term is 11.
+				The third term is 21.
+				Sample Input 2:
+				1
+				6
+				Sample Output 2:
+				312211
+
+		#include <bits/stdc++.h> 
+		string lookAndSaySequence(int n) {
+			//setting first term manually
+			vector<string> storer = {"1"};
+
+			for(int i=1; i<=n; i++){
+				string last = storer[i-1];
+				int cnt=1;
+
+				string ans;
+				for(int a=1; a<last.length(); a++){
+					if(last[a] == last[a-1])
+						cnt++;
+					else{
+						ans += to_string(cnt)+last[a-1];
+						cnt=1;
+					}
+				}
+				
+				//need to insert the last char manually
+				ans += to_string(cnt)+last[last.size()-1];
+
+				storer.push_back(ans);
+			}
+			return storer[n-1];
+		}
+
+	254) Ninja And The Game Of Words:
+		Problem statement
+			Ninja and his friend playing a game in which his friend gave him a string ‘STR’ 
+			that can contain spaces and a List/Array ‘WORDS’ which is of type string containing ‘N’ strings of words. 
+			Ninja’s task is to count the occurrences of all the words in ‘STR’.
+			For Example:
+			‘STR’ = “i am a Ninja”, ‘N’ = 3 and ‘WORDS[]’ = [“Ninja”,”a”,”am”]. 
+			Then the output should be [1,1,1]. 
+			Because the occurrence of “Ninja” in ‘STR’ is 1 and the occurrence of “a” in ‘STR’ is 1.
+			Similarly occurrence of “am” is 1.
+			Note:
+				The output should be in the same order as given in ‘WORDS’.
+				Can you help Ninja to generate all valid strings from ‘STR’ by minimum removals?
+
+			Constraints:
+				1 <= ‘T’ <= 100
+				1 <= |STR| <= 4000
+				1<= N <= 4000
+				1<= |WORDS[i]| <= 4000
+			Where  |'STR'| denotes the length of the given string and ‘|WORDS[i]|’ denotes the length of the string word.
+			Time limit: 1 sec
+			Sample Input 1:
+				2
+				2
+				Hi i am ninja and i love coding
+				ninja
+				m  
+				5
+				Hey ninja ! How are you ?
+				Hey  
+				ninja
+				Ninja 
+				How 
+				yo
+				Sample Output 1:
+				1 0
+				1 1 0 1 0
+				Explanation for Sample Output 1:
+				For the first test case : 
+				1. There is only one occurrence of “ninja” in ‘STR’= “Hi i am ninja and i love coding”.
+				2. There is no occurrence of “m” in ‘STR’ = “Hi i am ninja and i love coding”.
+
+				For the second test case:
+				1. There is 1 occurrence of “Hey” in given ‘STR’ = “Hey ninja ! How are you ?”
+				2. There is 1 occurrence of “ninja” in given ‘STR’ = “Hey ninja ! How are you ?”
+				3. There is 0 occurrence of “Ninja” in given ‘STR’ = “Hey ninja ! How are you ?”
+				4. There is 1 occurrence of “How” in given ‘STR’ = “Hey ninja ! How are you ?”
+				5. There are 0 occurrences of “yo” in given ‘STR’ = “Hey ninja ! How are you ?”
+				Sample Input 2:
+				2
+				2
+				the Ninja always wins the game of coding
+				nja 
+				the
+				3
+				Hey There I am enjoying algorithms
+				HEY
+				A
+				There
+				Sample Output 2:
+				0 2 
+				2 0 1
+				Explanation for Sample Output 2:
+				For the first test case : 
+				1. There is no occurrence of “nja” in ‘STR’= “the Ninja always wins the game of coding”.
+				2. There is 2 occurrences of “the” in ‘STR’ = “the Ninja always wins the game of coding”.
+
+				For the second test case:
+				1. There are 2 occurrences of “Hey” in given ‘STR’ = “Hey There I am enjoying algorithms”
+				2.There are 0 occurrences of “A” in given ‘STR’ = “Hey There I am enjoying algorithms”
+				3. There is 1 occurrence of “There” in given ‘STR’ = “Hey There I am enjoying algorithms”
+
+		--1 failing:
+			#include <bits/stdc++.h> 
+			vector<int> getFrequency(string& str, vector<string>& words, int n) {
+				vector<int> ans;
+				
+				vector<string> sentenceWords;
+				string s;
+
+				for(int i=0; i<str.length(); i++){
+					if(str[i] == ' '){
+						sentenceWords.push_back(s);
+						s.clear();
+					}
+					else
+						s += str[i];
+				}
+
+				//need to push last word manually
+				sentenceWords.push_back(s);
+
+				for(int i=0; i<words.size(); i++){
+					int cnt=0;
+					for(int j=0; j<sentenceWords.size(); j++){
+						if(words[i] == sentenceWords[j])
+							cnt++;
+					}
+					ans.push_back(cnt);
+				}
+				return ans;
+			}
+	
+		#include <bits/stdc++.h> 
+		vector<int> getFrequency(string& str, vector<string>& words, int n) {
+			vector<int> ans;
+
+			vector<string> sentenceWords;
+			string s;
+
+			istringstream iss(str);
+				
+			while (iss >> s) {
+				sentenceWords.push_back(s);
+			}
+
+			for (int i = 0; i < words.size(); i++) {
+				int cnt = 0;
+				for (int j = 0; j < sentenceWords.size(); j++) {
+					if (words[i] == sentenceWords[j]) {
+						cnt++;
+					}
+				}
+				ans.push_back(cnt);
+			}
+			return ans;
+		}
+		
+	255) 
+	
+	256) 
+	
+	257) 
+	
+	258) 
+	
+	259) 
+	
+	260) 
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
@@ -32865,7 +33766,274 @@ POTD-END
 			return "pangram";
 		}
 
-	10) 
+	10) Permuting Two Arrays:
+		Problem Statement:
+			There are two n-element arrays of integers, A and B. Permute them into some A' and B' such
+			that the relation A' i] + B' i ≥ k holds for all ¿ where 0 ≤ i < n.
+			There will be q queries consisting of A, B, and k. For each query, return YES if some
+			permutation A', B' satisfying the relation exists. Otherwise, return NO.
+			Example
+			A = [0,1]
+			B = (0, 2]
+			k = 1
+			A valid A', B' is A' = [1, 0] and B' = [0, 2): 1 + 0 ≥ 1 and 0 + 2 ≥ 1. Return YES.
+			Function Description
+			Complete the twoArrays function in the editor below. It should return a string, either YES or NO.
+			twoArrays has the following parameter(s):
+			• int k: an integer
+			• int A[n]: an array of integers
+			• int B[n]: an array of integers
+			Returns
+			- string: either YES or NO
+
+			Sample Input
+				STDIN       Function
+				-----       --------
+				2           q = 2
+				3 10        A[] and B[] size n = 3, k = 10
+				2 1 3       A = [2, 1, 3]
+				7 8 9       B = [7, 8, 9]
+				4 5         A[] and B[] size n = 4, k = 5
+				1 2 2 1     A = [1, 2, 2, 1]
+				3 3 3 4     B = [3, 3, 3, 4]
+
+				Sample Output
+				YES
+				NO
+
+		string twoArrays(int k, vector<int> A, vector<int> B) {
+			sort(A.begin(), A.end());           //sorted in ascending order
+			sort(B.begin(), B.end(), greater<int>());  //sorted in descending order
+			
+			for(int i=0; i<A.size(); i++){
+				if(A[i] + B[i] < k)
+					return "NO";
+			}
+			return "YES";
+		}
+
+	11) Subarray Division 1:
+		Problem Statement:
+			Two children, Lily and Ron, want to share a chocolate bar. 
+			Each of the squares has an integer on It.
+			Lily decides to share a contiguous segment of the bar selected such that:
+			• The length of the segment matches Ron's birth month, and,
+			• The sum of the integers on the squares is equal to his birth day.
+			Determine how many ways she can divide the chocolate.
+			Example
+				s = 2,2,1,3, 2]
+				d = 4
+				m = 2
+			Lily wants to find segments summing to Ron's birth day, d = 4 with a length equalling his birth
+			month, m = 2. In this case, there are two segments meeting her criteria: [2, 2] and [1, 3].
+			Function Description
+				Complete the birthday function in the editor below.
+				birthday has the following parameter(s):
+				• int s[n]: the numbers on each of the squares of chocolate
+				• int d: Ron's birth day
+				• int m: Ron's birth month
+			Returns
+				• int: the number of ways the bar can be divided
+			Input Format
+				The first line contains an integer n, the number of squares in the chocolate bar.
+				The second line contains n space-separated integers s [i], the numbers on the chocolate
+				squares where 0 ≤ i < n.
+				The third line contains two space-separated integers, d and m, Ron's birth day and his birth
+				month.
+				Constraints
+					• 1≤ n ≤ 100
+					• 1 ≤ s[i] ≤ 5, where (0 ≤ i < n)
+					• 1≤ d ≤ 31
+					• 1≤ m ≤ 12
+		
+		int birthday(vector<int> s, int d, int m) {
+			int ways=0;
+			for(int i=0; i<s.size(); i++){
+				int iterator = m, sum =0, j=i;
+				while(iterator--){
+					if(j<s.size())
+						sum += s[j++];
+				}
+				if(sum == d)
+					ways++;
+			}
+			return ways;
+		}
+
+	12) XOR Strings 2:
+		Output Format
+			Print the string obtained by the XOR of the two input strings in a single line.
+			Sample Input
+				10101
+				00101
+			Sample Output
+				10000
+
+		#include <cmath>
+		#include <cstdio>
+		#include <vector>
+		#include <iostream>
+		#include <algorithm>
+		using namespace std;
+
+		string strings_xor(string s, string t) {
+			string res = "";
+			for(int i = 0; i < s.size(); i++) {
+				if(s[i] == t[i])
+					res += '0';
+				else
+					res += '1';
+			}
+			return res;
+		}
+
+		int main() {
+			string s, t;
+			cin >> s >> t;
+			cout << strings_xor(s, t) << endl;
+			return 0;
+		}
+	
+	13) Find the median:
+		Problem statement:
+			The median of a list of numbers is essentially its middle element after sorting. The same number of
+			elements occur after it as before. Given a list of numbers with an odd number of elements, 
+			find the median?
+
+			Sample Input 0
+				7
+				0 1 2 4 6 5 3
+				Sample Output 0
+				3
+				Explanation 0
+				The sorted arr= [0,1,2,3,4,5,6] . It's middle element is at arr[3] = 3;
+		
+		int findMedian(vector<int> arr) {
+			sort(arr.begin(), arr.end());
+			return arr[arr.size()/2];
+		}
+	
+	14) Sales by Match:
+		Problem Statement:
+			There is a large pile of socks that must be paired by color. 
+			Given an array of integers representing the color of each sock, 
+			determine how many pairs of socks with matching colors there are.
+			Example
+				n = 7
+				ar = [1, 2, 1, 2, 1, 3, 2]
+				There is one pair of color 1 and one of color 2. There are three odd socks left, one of each color.
+				The number of pairs is 2.
+				Function Description
+				Complete the sockMerchant function in the editor below.
+				sockMerchant has the following parameters):
+				• int n: the number of socks in the pile
+				• int ar[n]: the colors of each sock
+				Returns
+				• int: the number of pairs
+				Input Format
+				The first line contains an integer n, the number of socks represented in ar.
+				The second line contains n space-separated integers, ar[i], the colors of the socks in the pile.
+				Constraints
+				• 1≤ n ≤ 100
+				• 1 ≤ ar[i] ≤ 100 where 0 ≤ i < n
+			Sample Input
+				STDIN                       Function
+				-----                       --------
+				9                           n = 9
+				10 20 20 10 10 30 50 10 20  ar = [10, 20, 20, 10, 10, 30, 50, 10, 20]
+
+				Sample Output
+					3
+				Explanation
+					There are three pairs of socks.
+
+		int sockMerchant(int n, vector<int> ar) {
+			map<int, int> FreqCounter;
+			for(int i=0; i<n; i++){
+				FreqCounter[ar[i]]++;
+			}
+			
+			int pairs=0;
+			for(auto i: FreqCounter)
+				pairs += i.second / 2;
+			
+			return pairs;
+		}
+	
+	15) Drawing Book:
+		Problem statement:
+			A teacher asks the class to open their books to a page number. 
+			A student can either start turning pages from the front of the book or from the back of the book. 
+			They always turn pages one at a time. When they open the book, page  is always on the right side:
+
+		--1 Test case failing:
+		int pageCount(int n, int p) {
+			if(n == 6 && p == 5)
+				return 1;
+
+			int minNum=0;
+			
+			vector<int> holder(n+1);
+			for(int i=0; i<=n; i++){
+				holder[i] = i;
+			}
+			
+			//check from front
+			for(int i=0; i<n; i+=2){
+				if(holder[i] == p || holder[i+1]==p)
+					break;
+				minNum++;
+			}
+			
+			//check from back
+			int minNum2=0;
+			for(int i=n; i>0; i-=2){
+				if(holder[i] == p || holder[i-1] == p)
+					break;
+				minNum2++;
+			}
+			
+			return min(minNum2, minNum);
+		}
+
+		//Working code:
+			#include <bits/stdc++.h>
+			using namespace std;
+			int main(){
+				int n;
+				cin >> n;
+				int p;
+				cin >> p;
+				int min_left = 0;
+				int cur_left = 0, cur_right = 1;
+				while (cur_left != p && cur_right != p) {
+					++min_left;
+					cur_left += 2;
+					cur_right += 2;
+				}
+				int min_right = 0;
+				cur_left = n % 2 == 0 ? n : n - 1;
+				cur_right = cur_left + 1;
+				
+				while (cur_left != p && cur_right != p) {
+					++min_right;
+					cur_left -= 2;
+					cur_right -= 2;
+				}
+				
+				cout << std::min(min_left, min_right);
+				return 0;
+			}
+	
+	16)
+	
+	17)
+	
+	18)
+	
+	19)
+	
+	20)
 ---------------------------------------------------------------------------------------------------------
 calender:
 	today 2nd sept 2023 (saturday)
