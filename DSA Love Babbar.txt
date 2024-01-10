@@ -70,6 +70,22 @@ Lecture-1: Intro to Programming & Flowcharts
 
 	-Loops:
 		-Print 1 to 5 nums.
+			#include<bits/stdc++.h>
+			using namespace std;
+
+			int main(){
+		
+				int i{};	
+				for(;i<=5;)
+					std::cout << i++ << "\t";
+				
+				int a {5};
+				std::cout << std::endl;
+				for(;a<=17;)
+					std::cout << a++ << "\t";
+				
+				return 0;
+			}	
 
 		-print even nums from given range (copy paste program directly on compiler to check)
 
@@ -5862,6 +5878,28 @@ Lecture-11: Time & Space Complexity, How to avoid Time Limit Exceeded [TLE]
 			eg.
 				-if we mention the array size then its fixed space complexity O(1).
 				-if we declare any variable, it will take fixed space, so space Complexity O(1).
+		
+		eg.
+			#include <iostream>
+			using namespace std;
+			int main() {
+				vector<int> v (10,90);		//vector generally having space complexity of O(n), but here n is constant which is 10
+										//so SC (space complexity): O(1)
+				int i = 45;				//TC (time complexity): O(1)
+				return 0;
+			}
+			
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int n;
+				cin>>n;
+
+				vector<int> v (n,7);		//creating vector of size n with default value 7.
+										//so SC (space complexity): O(n)
+				int i = 45;				//TC (time complexity): O(n), The vector constructor initializes all n elements to the value 7, which takes linear time.
+				return 0;
+			}
 ---------------------------------------------------------------------------------------------------------
 	12/08/23
 Lecture-12: Binary Search:
@@ -6533,24 +6571,28 @@ Lecture-16: Selection Sort
 					swap(arr[i], arr[j]);
 	}
 
-		-for Selection Sort program,
-			Space complexity:	O(1).
-			Time complexity: O(n²);		
-		
-		-Use case:
-			if given array/vector size is small then we can go for Selection sort.
-		
-		HW
-			-Flowchart : 
-			-Stable & unstable algorithm
+	-for Selection Sort program,
+		Space complexity:	O(1).
+		Time complexity: O(n²);		
+	
+	-Use case:
+		if given array/vector size is small then we can go for Selection sort.
+	
+	HW ❌Pending
+		-Flowchart : 
+		-Stable & unstable algorithm
+			-a stable sorting algorithm preserves the relative order of equal keys in the input.
+			examples of stable sorting algorithms:
+				Bubble sort, Counting sort, Heap sort, Insertion sort, Merge sort.
+			Here are some examples of unstable sorting algorithms:
+				Quicksort, Radix sort, Selection sort.
 
 	Practice:
 		#include <iostream>
 		using namespace std;
 		void printArray(int [], int);		//or void printArray(int anyName[], int)	or if you don't give name to array still its fine, its just function declaration.
 
-		int main()
-		{
+		int main() {
 			int arr[] = {55,44,33,32,11,22,57,90,87,76,65,1};
 			//1,11,22,32,33,44,55,57,65,76,87,90
 			
@@ -6587,8 +6629,9 @@ Lecture-17: BUBBLE SORT
 	-This algorithm is not suitable for large data sets as its average and worst-case time complexity is quite high.
 	Bubble Sort Algorithm
 		In this algorithm,
+		-in i'th round the i'th largest value get placed at right position.
 		-traverse from left and compare adjacent elements and the higher one is placed at right side. 
-		-In this way, the LARGEST element is moved to the rightmost end at first, at the end of array. 
+		-In this way, the LARGEST element is moved to the rightmost end in first round, at the end of array. 
 		-This process is then continued to find the second largest and place it and so on until the data is sorted.
 		
 		Advantages of Bubble Sort:
@@ -6648,6 +6691,8 @@ Lecture-17: BUBBLE SORT
 		}
 
 		//or neglecting the last element as it is already sorted,
+			-here i=1 to n
+
 			#include <bits/stdc++.h> 
 			void bubbleSort(vector<int>& arr, int n){
 				for(int i=1;i<n; i++)					
@@ -6655,6 +6700,35 @@ Lecture-17: BUBBLE SORT
 						if(arr[j]> arr[j+1])
 							swap(arr [j],arr[j+1]);
 			}
+
+		//or 
+			-here i=0 to (n-1)
+			#include <bits/stdc++.h> 
+			void bubbleSort(vector<int>& arr, int n) {
+				
+				for(int i=0; i<n-1; i++)
+					for(int j=0; j < n-i-1; j++)
+						if(arr[j] > arr[j+1])
+							swap(arr[j],arr[j+1]);
+			}
+
+			//optimizing more:
+				-if not a single swapping done, then array is already sorted
+				#include <bits/stdc++.h> 
+				void bubbleSort(vector<int>& arr, int n) {
+
+					for(int i=0; i<n-1; i++){
+						int flag = 1;
+						for(int j=0; j < n-i-1; j++)
+							if(arr[j] > arr[j+1]){
+								swap(arr[j],arr[j+1]);
+								flag = 0;
+							}
+
+						if(flag)
+							break;      // not a single swapping done, so break loop & exit.
+					}
+				}
 		
 		//optimizing more.., 
 		 in a random round there is no any swapping done, then we can consider that it's sorted.
@@ -6663,7 +6737,7 @@ Lecture-17: BUBBLE SORT
 				for(int i=1;i<n; i++){
 					bool isSwappingOn = false;
 
-					for(int j=0; j<n-i;j++)
+					for(int j=0; j<n-i;j++)				// (n-i) means the last i element no need to check, coz its already sorted.
 						if(arr[j] > arr[j+1]){
 							swap(arr [j],arr[j+1]);
 							//swapping on..
@@ -6675,8 +6749,52 @@ Lecture-17: BUBBLE SORT
 			}
 		
 	HW:
-		stable or unstable bubble sort?
-		in-place sort
+		Q. stable or unstable bubble sort?
+			-Bubble sort is stable algorithm
+		
+		Q. in-place sort
+			In-place sorting means sorting without using any extra space requirement. 
+			Quicksort is one example of In-Place Sorting.
+
+			In-place sorting is an algorithm that sorts data without using any additional memory. 
+			This is in contrast to out-of-place sorting algorithms, 
+			which require some additional memory to store the sorted data.
+			
+			There are many different in-place sorting algorithms, including:
+			1) Selection sort:
+				Selection sort works by repeatedly finding the smallest element 
+				in the unsorted portion of the array and swapping it with the leftmost unsorted element.
+			
+			2) Insertion sort:
+				Insertion sort works by repeatedly inserting the current element into the sorted portion of the array, one element at a time.
+
+			3) Bubble sort:
+				Bubble sort works by repeatedly comparing adjacent elements in the array and swapping them 
+				if they are in the wrong order.
+
+			4) Merge sort:
+				Merge sort works by recursively dividing the array into smaller and smaller subarrays, 
+				sorting each subarray, and then merging the sorted subarrays back together.
+
+			5) Quicksort:
+				Quicksort works by choosing a pivot element in the array and then 
+				partitioning the array into two subarrays, 
+				one containing all the elements smaller than the pivot and the other 
+				containing all the elements larger than the pivot. 
+				Quicksort is then recursively applied to each subarray.
+
+			In-place sorting algorithms are often preferred over out-of-place sorting algorithms 
+			because they require less memory. 
+			
+			However, in-place sorting algorithms can be slower than out-of-place sorting algorithms, 
+			especially for large arrays.
+
+		Q. Adaptive sorting algorithm:
+			An adaptive sorting algorithm is a sorting algorithm that can efficiently handle input data 
+			that is already partially sorted or nearly sorted. 
+			These algorithms take advantage of the existing order in the input data to improve their performance.
+			eg.
+				Bubble sort, Selection sort, Insertion sort, Merge sort, Quicksort.
 ---------------------------------------------------------------------------------------------------------
 	16/08/23	
 Lecture-18: INSERTION SORT
@@ -6703,6 +6821,22 @@ Lecture-18: INSERTION SORT
 				arr[j+1] = temp;
 			}
 		}
+	
+	//or Practice:
+		#include <bits/stdc++.h> 
+		void insertionSort(int n, vector<int> &arr){
+			for(int i=1; i<n; i++){
+				int crntVal = arr[i];
+				int j;
+
+				for(j=i-1; j>=0; j--){
+					if(arr[j] < crntVal)
+						break;
+					arr[j+1] = arr[j];
+				}
+				arr[j+1] = crntVal;
+			}
+		}
 
 	Characteristics of Insertion Sort
 		-This algorithm is one of the simplest algorithms with a simple implementation
@@ -6720,6 +6854,27 @@ Lecture-18: INSERTION SORT
 		-Worst-case: O(n²)
 	space complexity:
 		O(1)
+	
+	HW:
+		//using while loop
+		#include <bits/stdc++.h> 
+		void insertionSort(int n, vector<int> &arr){
+			int i=1;
+
+			while(i<n){
+				int crntVal = arr[i];
+				int j = i-1;
+
+				while(j>=0){
+					if(arr[j] < crntVal)
+						break;
+					arr[j+1] = arr[j];
+					j--;
+				}
+				arr[j+1] = crntVal;
+				i++;
+			}
+		}
 ---------------------------------------------------------------------------------------------------------
 	17/08/23
 Lecture-19: C++ STL (Standard Template Library)
@@ -12739,7 +12894,7 @@ Lecture-28: Reference Variable | Static vs Dynamic Memory | Part-1
 		In C++, address typecasting is the process of converting a pointer of one type to a pointer of another type.
 ---------------------------------------------------------------------------------------------------------
 	12/12/2023
-Lecture29: Dynamic Memory Allocation of 2D Arrays
+Lecture-29: Dynamic Memory Allocation of 2D Arrays
 	-When you use the HEAP memory, always free it once your work is done.	
 	//2D Array Using Dynamic memory (HEAP).
 		#include <iostream>
@@ -12860,7 +13015,7 @@ Lecture29: Dynamic Memory Allocation of 2D Arrays
 				1       2       3       4
 ---------------------------------------------------------------------------------------------------------
 	14/12/23
-Lecture30: Macros, Global Variables, Inline Functions & Default Args
+Lecture-30: Macros, Global Variables, Inline Functions & Default Args
 	-#include<iostream>
 		-here #include is a preprocessor directive, tell compiler to add built-in functionality in code
 		-like, cout<< function we use to print the output on screen but to access this fuction we have to add iostream.
@@ -13195,7 +13350,7 @@ Lecture30: Macros, Global Variables, Inline Functions & Default Args
 			const int a = 5;
 ---------------------------------------------------------------------------------------------------------
 	//18/12/2023
-Lecture 31: Learning Recursion the Best Way
+Lecture-31: Learning Recursion the Best Way
 	Recursion:
 		when function calls itself again & again.
 		-splitting big problem into smaller same problem.
@@ -13314,7 +13469,7 @@ Lecture 31: Learning Recursion the Best Way
 						1 2 3 4 5 
 ---------------------------------------------------------------------------------------------------------
 	//18/12/2023
-Lecture32: Understanding Recursion the easiest way || Day-2:
+Lecture-32: Understanding Recursion the easiest way || Day-2:
 	Examples:
 		1) Reaching Home:
 			#include <iostream>
@@ -13543,7 +13698,7 @@ Lecture32: Understanding Recursion the easiest way || Day-2:
 				}
 ---------------------------------------------------------------------------------------------------------
 	25/12/23
-Lecture33: Recursion and Binary Search | Day-3:
+Lecture-33: Recursion and Binary Search | Day-3:
 	1) Check the given array is sorted or not?
 		#include <iostream>
 		#include<vector>
@@ -13764,6 +13919,27 @@ Lecture33: Recursion and Binary Search | Day-3:
 				}
 			};
 
+			//Practiced:
+				class Solution {
+					private:
+					int finder(vector<int> v, int s, int e){
+						int mid = (s+e)/2;
+						// if(s == e)
+						//     return s;
+
+						if(v[mid] > v[mid-1] && v[mid] > v[mid+1])
+							return mid;
+						else if(v[mid] < v[mid+1])
+							return finder(v, mid+1, e);
+						return finder(v, s, mid);
+					}
+					public:
+					int peakIndexInMountainArray(vector<int>& arr) {
+						int s=0, e=arr.size()-1;
+						return finder(arr, s, e);
+					}
+				};
+
 		3) Find Pivot Index: //USING RECURSION
 			//MLE (Memory Limit Exceeded)
 			-if you want to get rid of MLE then you can declare vector a as reference vector
@@ -13799,11 +13975,37 @@ Lecture33: Recursion and Binary Search | Day-3:
 				}
 			};
 
-		4) 
+			//or Practiced:
+				class Solution {
+					private:
+					int indexFinder(vector<int>& a, int s){
+						if(s == a.size())
+							return -1;
+						
+						int Lsum=0;
+						Lsum = accumulate(a.begin(), a.begin()+s, Lsum);
+
+						int Rsum=0;
+						Rsum = accumulate(a.begin() + s +1, a.end(), Rsum);
+						
+						if(Lsum == Rsum)
+							return s;
+						return indexFinder(a, s+1);
+					}
+					public:
+					int pivotIndex(vector<int>& nums) {
+						// int start=0;
+						// return indexFinder(nums, start);
+						return indexFinder(nums, 0);
+					}
+				};
+
+	Lecture 14:
+
 		❌Pending
 ---------------------------------------------------------------------------------------------------------
 	25/12/23 ---> 28/12/23 ---> 31/12/2023 ---> 03/01/24
-Lecture34: Recursion with Strings | Day-4:
+Lecture-34: Recursion with Strings | Day-4:
 	// String printing in Reverse order using Recursion:
 		#include <iostream>
 		using namespace std;
@@ -13992,7 +14194,7 @@ Lecture34: Recursion with Strings | Day-4:
 			if(size == 0 || size ==1)
 				return ;
 			
-			//1st case solved -largest element gets placed at end of arrau
+			//1st case solved -largest element gets placed at end of array
 			for(int i=0; i<size-1; i++)
 				if(a[i] > a[i+1])
 					swap(a[i],a[i+1]);
@@ -14026,9 +14228,164 @@ Lecture34: Recursion with Strings | Day-4:
 				Sorted: 1       2       3       4       5       6       7       8       9       10
 			*/
 	
-	HW: ❌Pending
-		Selection Sort using Recursion:
-		Insertion Sort using Recursion:
+	HW: 
+	// Selection Sort 
+		Practice:
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				// int a[] = {1,4,2,10,5,6,3,9,7,8};
+				// int n=10;
+				
+				
+				int a[] = {8,55,44,22,33,55,11};
+				int n=7;
+				
+				std::cout << "Original Order: " << std::endl;
+				for(int o:a)
+					std::cout << o << "\t";
+				
+				//selection sort (sorted in ascending order)
+				for(int i=0; i<n; i++){
+					
+					int minIndx = i;
+					for(int j=i+1; j<n; j++){
+						if(a[minIndx] > a[j])
+							minIndx = j;
+					}
+					swap(a[minIndx], a[i]);
+				}
+				
+				std::cout << std::endl;
+				for(int k: a)
+					std::cout << k << "\t";
+				
+				std::cout << std::endl;
+				
+				//selection sort (sorted in descending order)
+				for(int i=0; i<n-1; i++){
+					int mxIndx=i;
+					for(int j=i+1; j<n; j++)
+						if(a[mxIndx] < a[j])
+							mxIndx = j;
+					swap(a[mxIndx], a[i]);
+				}
+				
+				
+				std::cout << std::endl;
+				for(auto ui: a)
+					std::cout << ui << "\t";
+				
+				return 0;
+			}
+		
+		using Recursion:
+			#include <iostream>
+			using namespace std;
+
+			//SelectionSort for ascending order
+			void SelectionSort(int a[], int size){
+				if(size == 0 || size ==1)
+					return ;
+				
+				int mxValueIndx = size-1;
+				for(int i=0; i<size-1; i++)
+					if(a[i] > a[mxValueIndx])
+						mxValueIndx = i;
+				swap(a[mxValueIndx], a[size-1]);
+				SelectionSort(a, size-1);
+			}
+
+			//SelectionSort for descending Order
+			void SelectionSortDESC(int a[], int size, int start){
+				if(start == size)
+					return;
+				
+				int mxValueIndx = start;
+				for(int i=start+1; i<size; i++)
+					if(a[mxValueIndx] < a[i])
+						mxValueIndx = i;
+				swap(a[mxValueIndx], a[start]);
+				
+				SelectionSortDESC(a, size, start+1);
+			}
+
+			int main() {
+				// int a[] = {1,4,2,10,5,6,3,9,7,8};
+				// int n=10;
+				
+				
+				int a[] = {8,55,44,22,33,55,11};
+				int n=7;
+				
+				std::cout << "Original Order: " << std::endl;
+				for(auto ui: a)
+					std::cout << ui << "\t";
+				
+				SelectionSort(a, n);
+				
+				std::cout << std::endl;
+				
+				for(auto ui: a)
+					std::cout << ui << "\t";
+				
+				SelectionSortDESC(a, n, 0);    
+				
+				std::cout << std::endl;
+				for(auto ui: a)
+					std::cout << ui << "\t";
+
+				return 0;
+			}
+
+	// Insertion Sort using Recursion:
+		#include <iostream>
+		using namespace std;
+		void InsertSorting(int arr[], int s, int size){
+			if(s >= size)
+				return;
+				
+			int crntValue = arr[s];
+			int j=s-1;
+			
+			while(j >=0){
+				if(arr[j] < crntValue)
+					break;
+					
+				arr[j+1] = arr[j];
+				j--;
+			}
+			
+			arr[j+1] = crntValue;
+			InsertSorting(arr, s+1, size);
+		}
+		int main() {
+			
+			int a[] = {90,89,23,34,54,67,78,67,34,12,78,89};   //12 23 34 34 54 67 67 78 78 89 89 90
+			int n=12;
+			
+			// int a[] = {1};
+			// int n=1;
+			
+			std::cout << "Original array:: " ;
+			for(int l: a)
+				std::cout << l << "\t";
+			
+			int start = 1;
+			int stop = n-1;
+			
+			InsertSorting(a, start, stop);
+
+			std::cout << "\n\nArray after sorting:: ";
+			for(int l: a)
+				std::cout << l << "\t";
+			
+			return 0;
+		}
+---------------------------------------------------------------------------------------------------------
+Lecture-35: Merge Sort using Recursion | Day-5 
+	
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -35138,13 +35495,237 @@ POTD:-[Problem of the Day]
 			return ans;
 		}
 	
-	274)
+	274) Count of Smaller Elements:
+		Problem statement
+			Given an array of size 'N' return the count array such that COUNT[i] equals the 
+			number of element which are smaller than ARR[i] on its the right side.
+
+			For Example : ARR = [4,2,1,5] the count array corresponding to the given array is :-
+				The Number of elements smaller than 4 on its right side is 2.
+				The Number of elements smaller than 2 on its right side is 1.
+				The Number of elements smaller than 1 on its right side is 0.
+				The Number of elements smaller than 5 on its right side is 0.
+				Hence the count array is [2,1,0,0]
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 3000
+				-10^3 <= arr[i] <= 10^3
+			Where ‘i’ varies from 1 to ‘N’ where 'N' is the length of the array.
+			Time Limit: 1 sec
+		
+		//Not Optimized:
+			vector<int>countNumber(int n, vector<int> &arr) {
+				vector<int> ans(n, 0);
+
+				for(int i=0; i<n-1; i++){
+
+					int cnt=0;
+					for(int j=i+1; j<n; j++)
+						if(arr[i] > arr[j])
+							cnt++;
+						
+					ans[i] = cnt;
+				}
+				return ans;
+			}
+		
+		//Optimized:
+			void merge(int left, int mid, int right, vector<pair<int, int>>& arr,vector<int>& count) {
+				vector<pair<int, int>> temp(right - left + 1);
+				int i = left;
+				int j = mid + 1;
+				int k = 0;
+
+				while(i <= mid && j <= right)
+					if(arr[i].first <= arr[j].first) 
+						temp[k++] = arr[j++];
+					else{
+						count[arr[i].second] += (right - j + 1);
+						temp[k++] = arr[i++];
+					}
+
+				while(i <= mid)
+					temp[k++] = arr[i++];
+
+				while(j <= right)
+					temp[k++] = arr[j++];
+
+				for(int l = left; l <= right; l++)
+					arr[l] = temp[l - left];
+			}
+
+			void mergeSort(int left, int right, vector<pair<int, int>>& arr, vector<int>& count) {
+				if(left >= right)
+					return;
+
+				int mid = left + (right - left) / 2;
+
+				mergeSort(left, mid, arr, count);
+				mergeSort(mid + 1, right, arr, count);
+				merge(left, mid, right, arr, count);
+			}
+
+			vector<int>countNumber(int n, vector<int> &nums) {
+				vector<pair<int, int>> arr;
+
+				for(int i = 0; i < n; i++)
+					arr.push_back({nums[i], i});
+
+				vector<int> count(n, 0);
+
+				mergeSort(0, n - 1, arr, count);
+
+				return count;
+			}
 	
-	275)
+	275) Search Pattern (KMP-Algorithm):
+		Problem statement:
+			Given two strings, one is a text string, txt and other is a pattern string, pat. 
+			The task is to print the indexes of all the occurences of pattern string in the text string. 
+			Use one-based indexing while returing the indices. 
+			Note: Return an empty list incase of no occurences of pattern. Driver will print -1 in this case.
 
-	276)
+			Example 1:
+				Input:
+				txt = "geeksforgeeks"
+				pat = "geek"
+				Output: 
+				1 9
+				Explanation: 
+				The string "geek" occurs twice in txt, one starts are index 1 and the other at index 9. 
 
-	277)
+			Example 2:
+				Input: 
+				txt = "abesdu"
+				pat = "edu"
+				Output: 
+				-1
+				Explanation: 
+				There's not substring "edu" present in txt.
+
+			Your Task:
+				You don't need to read input or print anything. 
+				Your task is to complete the function search() which 
+				takes the string txt and the string pat as inputs and 
+				returns an array denoting the start indices (1-based) of substring pat in the string txt. 
+
+			Expected Time Complexity: O(|txt|).
+			Expected Auxiliary Space: O(|txt|).
+
+			Constraints:
+			1 ≤ |txt| ≤ 10^5
+			1 ≤ |pat| < |S|
+			Both the strings consists of lowercase English alphabets.
+
+		class Solution {
+			public:
+			vector<int> search(string pat, string txt) {
+				std::vector<int> ans;
+				int it = 0;
+			
+				while (true) {
+					auto foundIt = std::search(txt.begin() + it, txt.end(), pat.begin(), pat.end());
+			
+					if (foundIt != txt.end()) {
+						int idx = std::distance(txt.begin(), foundIt);
+						ans.push_back(idx+1);
+						it = idx + 1; // Move to the next position after the found pattern
+					} else {
+						break; // Break the loop if no more occurrences are found
+					}
+				}
+				return ans;
+			}
+		};
+
+	276) Ninja World Tournament:
+		Problem statement
+			Ninja was feeling bored during the lockdown. 
+			So, he decided to watch the Ninja World Tournament. 
+			The tournament consists of several matches, where the scores of past matches may affect future matches’ scores.
+
+			At the beginning of the match, every player starts with an empty track record. 
+			Ninja wants to calculate the final score for a player. So, given a list of strings, ‘MATCHRESULT’, 
+			where ‘MATCHRESULT[i]’ is the ‘i’th operation Ninja must apply to the track record and is one of the following:
+
+				1) An integer “A”: Introduce a new score of ‘A’ on the track record.
+				2) "+": Introduce a new score on the track record that is the sum of the previous two scores.
+				3) "C": Nullify the previous score, removing it from the track record.
+				4) "D": Introduce a new score on the track record that is double the previous score.
+			Ninja deduced that this could be easily solved using programming. 
+			So, he needs your help to calculate the sum of all the scores present in the track record.
+
+			Note:
+			It is guaranteed there will always be a previous score before the “C” and “D” operations and 
+			two previous scores before the “+” operation.
+			Sample Input 1:
+				2
+				5
+				2 3 + D C
+				4
+				15 C 10 D
+				Sample Output 1:
+				10
+				30
+				Explanation of Sample Output 1:
+				Test Case 1 :  
+				Given MATCHRESULT = {“2”, “3”, “+”, “D”, “C”}. Initially, TRACKRECORD = {}.
+				For “2”, Introducing 2 on the ‘TRACKRECORD’. Therefore, TRACKRECORD = {2}.
+				For “3”, Introducing 3 on the ‘TRACKRECORD’. Therefore, TRACKRECORD = {2, 3}.
+				For “+”, Introducing the sum of 2 and 3, i.e., 5 on the ‘TRACKRECORD’. Therefore, TRACKRECORD = {2, 3, 5}.
+				For “D”, Introducing the double of 5, i.e., 10 on the ‘TRACKRECORD’. Therefore, TRACKRECORD = {2, 3, 5, 10}.
+				For “C”, Nullifying the score 10 and thus removing it from the ‘TRACKRECORD’. Therefore, TRACKRECORD = {2, 3, 5}.
+				Sum of all the scores = 2 + 3 + 5 = 10.
+
+
+				Test Case 2 :     
+				Given MATCHRESULT = {“15”, “C”, “10”, “D”}. Initially, TRACKRECORD = {}.
+				For “15”, Introducing 15 on the ‘TRACKRECORD’. Therefore, TRACKRECORD = {15}.
+				For “C”, Nullifying the score 15 and thus removing it from the ‘TRACKRECORD’. Therefore, TRACKRECORD = {}.
+				For “10”, Introducing 10 on the ‘TRACKRECORD’. Therefore, TRACKRECORD = {10}.
+				For “D”, Introducing the double of 10, i.e., 20 on the ‘TRACKRECORD’. Therefore, TRACKRECORD = {10, 20}.
+				Sum of all the scores = 10 + 20 = 30.
+				Sample Input 2:
+				2
+				6
+				7 D 2 + C D
+				7
+				15 48 13 + D D C
+				Sample Output 2:
+				27
+				259
+
+		#include <bits/stdc++.h> 
+		int calculateScore(vector<string> &matchResult, int n) {
+			stack<int> s;
+			for (int i = 0; i < n; i++) {
+				if(matchResult[i] != "+" && matchResult[i] != "C" && matchResult[i] != "D"){
+					s.push(stoi(matchResult[i]));
+				}else{
+					if(matchResult[i] == "+"){
+						int first = s.top();
+						s.pop();
+
+						int newNum = s.top() + first;
+						s.push(first);
+						s.push(newNum);
+					}else if(matchResult[i] == "D"){
+						s.push(s.top() * 2);
+					}else{
+						s.pop();
+					}
+				}
+			}
+
+			int sum =0;
+			while(!s.empty()){
+				sum += s.top();
+				s.pop();
+			}
+			return sum;
+		}
+
+	277) 
 
 	278)
 	
