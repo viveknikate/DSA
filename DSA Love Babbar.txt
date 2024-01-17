@@ -10976,7 +10976,7 @@ Lecture-24: Basic Maths for DSA || Sieve || Modular Arithmetics || Euclid’s Al
 			return a;
 		}
 
-		int main(){	
+		int main(){
 			int a,b;
 			std::cout << "Enter 2 nums: " << std::endl;
 			cin>>a>>b;
@@ -14383,8 +14383,270 @@ Lecture-34: Recursion with Strings | Day-4:
 			
 			return 0;
 		}
+
+	// Insertion Sort ascending order & descending order:
+		#include <iostream>
+		#include<bits/stdc++.h>
+		using namespace std;
+
+		void InsertionSortASC(int z[], int s, int size){
+			if(s == size)
+				return ;
+			
+			int j = s - 1;
+			int temp = z[s];
+			
+			while(j>=0){
+				if(z[j] < temp)
+					break;
+				z[j+1] = z[j];
+				j--;
+			}
+			
+			z[j+1] = temp;
+			
+			InsertionSortASC(z, s+1, size);
+		}
+
+		void InsertionSortDESC(int o[], int s, int size){
+			if(s == size)
+				return ;
+			
+			int temp = o[s];
+			int j = s-1;
+			
+			while(j >= 0){
+				if(o[j] > temp)
+					break;
+				o[j+1] = o[j];
+				j--;
+			}
+			o[j+1] = temp;
+			InsertionSortDESC(o, s+1, size);
+		}
+
+		int main() {
+		
+			int a[] = {24,90,3,18,8,9,15,30,50,64,12,13,6,7,1,2,0,11,4,5};
+			//0 1 2 3 4 5 6 7 8 9 11 12 13 15 18 24 30 50 64 90
+			
+			int n=20;
+			
+			// int a[] = {2,1}, n=2;
+			
+			std::cout << "Original :" << "\t";
+			for(int z: a)
+				std::cout << z << "\t";
+			
+			InsertionSortASC(a, 1, n);
+			
+			std::cout<< "\nASC Order: " << "\t";
+			for(int z: a)
+				std::cout << z << "\t";
+				
+			std::cout <<endl << endl;
+			
+			int b[] = {50,30,24,90,8,9,15,64,3,18,12,13,6,7,1,2,0,11,4,5}, size=20;
+			//90 64 50 30 24 18 15 13 12 11 9 8 7 6 5 4 3 2 1 0
+			
+			std::cout << "Original: " << "\t";
+			for(int o: b)
+				std::cout << o << "\t";
+			
+			InsertionSortDESC(b,1,size);
+			
+			std::cout << "\nDESC Order: " << "\t";
+			
+			for(int o: b)
+				std::cout << o << "\t";
+			
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
+	16/01/24
 Lecture-35: Merge Sort using Recursion | Day-5 
+	-We implement Merge sort in recursive way.
+	-Merge sort is fastest algorithm compared to Bubble sort, Insertion Sort & Selection sort.
+	-2 Approaches are there, 
+		1) Create new array & copy values
+		2) use indexes ❌Pending (Homework)
+
+	code:
+		
+		#include <iostream>
+		using namespace std;
+
+		void SortedMerge(int *tempArr, int s, int e){
+		
+		int mid = ( s + e ) / 2;
+		
+		int len1 = mid - s + 1;
+		int len2 = e - mid;
+		
+		int *firstArr = new int[len1];
+		int *secondArr = new int[len2];
+		
+		int value = s;
+		
+		for(int i=0; i<len1; i++){
+			firstArr[i] = tempArr[value++];
+		}
+		
+		value = mid+1;
+		for(int i=0; i<len2; i++){
+			secondArr[i] = tempArr[value++];
+		}
+		
+		//sorting logic
+		int index1=0, index2=0;
+		int mainArrIndex = s;
+		
+		while(index1 < len1 && index2 < len2){
+			if(firstArr[index1] < secondArr[index2])
+				tempArr[mainArrIndex] = firstArr[index1++];
+			else
+				tempArr[mainArrIndex] = secondArr[index2++];
+			mainArrIndex++;
+		}
+
+		
+		while(index1 < len1){
+			tempArr[mainArrIndex++] = firstArr[index1++];
+		}
+		
+		while(index2 < len2){
+			tempArr[mainArrIndex++] = secondArr[index2++];
+		}
+		
+		delete [] firstArr;
+		delete [] secondArr;
+		}
+
+		void mergeSortBreaker(int *a, int s, int e){
+		if(s == e)
+			return ;
+		
+		int mid = ( s + e ) / 2;
+		
+		//breaking the left part of array
+		mergeSortBreaker(a, s, mid);
+		
+		//breaking the right part of array
+		mergeSortBreaker(a, mid+1, e);
+		
+		//merging the parts which are broken
+		SortedMerge(a, s, e);
+		}
+
+		int main() {
+		int arr[] = {4,3,2,1,10,9,8,7,6,5};
+		
+		int n = 10;
+		int s = 0, e = n-1;
+		
+		for(int i: arr)
+			std::cout << i << "\t";
+		
+		std::cout << std::endl;
+		
+		mergeSortBreaker(arr, s, e);
+		
+		for(int i: arr)
+			std::cout << i << "\t";
+		
+		return 0;
+		}
+ 
+ /******************************************************************************
+                              Online C++ Debugger.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Debug" button to debug it.
+
+*******************************************************************************/
+
+#include <iostream>
+using namespace std;
+
+void sortedMerge(int a[], int s, int e){
+    
+    int mid = (s + e) / 2;
+    
+    
+    int startArrlen = mid - s + 1;
+    int endArrlen = e - mid;
+    
+    int *leftArr = new int[startArrlen];
+    int *rightArr = new int[endArrlen];
+    
+    int startIndex = s;
+    //copying array elements to leftArr & rightArr
+    for(int i=0; i<startArrlen; i++)
+        leftArr[i] = a[startIndex++];
+        
+    for(int i=0; i<endArrlen; i++)
+        rightArr[i] = a[startIndex++];
+    
+    //sorting & traversing to whole array
+    int mainIndex = s;
+    int ind1, ind2;
+    ind1 = ind2 = 0;
+    while(ind1 < startArrlen && ind2 < endArrlen) {
+        if(leftArr[ind1] < rightArr[ind2])
+            a[mainIndex] = leftArr[ind1++];
+        else
+            a[mainIndex] = rightArr[ind2++];
+        mainIndex++;
+    }
+    
+    while(ind1 < startArrlen) {
+        a[mainIndex++] = leftArr[ind1++];
+    }
+    
+    while(ind2 < endArrlen) {
+        a[mainIndex++] = rightArr[ind2++];
+    }
+    
+    delete [] leftArr;
+    delete [] rightArr;
+}
+
+void SplittingArr(int a[], int s, int e){
+    if(s==e)
+        return;
+        
+    int mid = (s + e) / 2;
+        
+    //leftSide
+    SplittingArr(a, s, mid);
+    
+    //rightSide
+    SplittingArr(a, mid+1, e);
+    
+    //merging the array which splitted already
+    sortedMerge(a, s, e);
+}
+
+int main() {
+    
+    int arr[] = {5,4,3,2,1,9,8,7,6,10};
+    int n=10;
+    
+    for(int i:arr)
+        std::cout << i << "\t";
+    
+    std::cout << std::endl;
+    std::cout << std::endl;
+    
+    int s = 0, e = n-1;
+    
+    SplittingArr(arr, s, e);
+    
+    for(int i:arr)
+        std::cout << i << "\t";
+    return 0;
+}
+
+
 	
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
@@ -14477,6 +14739,24 @@ Lecture-35: Merge Sort using Recursion | Day-5
 				cnt = 10, 
 				cout << "The count in the else block is " << cnt <<  endl;
 
+			return 0;
+		}
+
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			
+			int n =5;
+			int a = 10;
+			int b = 20;
+			
+			std::cout << a << "\t" << b << "\t" << n << std::endl;
+			if(n==5)
+				a = 1, 
+				b= 3;
+			
+			std::cout << a <<"\t"<< b << std::endl;
 			return 0;
 		}
 		
@@ -16286,6 +16566,21 @@ Lecture-35: Merge Sort using Recursion | Day-5
 		return 0;
 		}
 
+		//updating values in loop
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int n=5;
+				
+				//updating the value during running loop
+				for(int i=0; i<n; i++){
+					if(i&1)
+						n++;
+					std::cout << i << "\t";			//1 2 3 4 5 6 7 8
+				}
+				return 0;
+			}
+
 	//initialization {}:
 		#include<climits>
 		#include <iostream>
@@ -16306,6 +16601,96 @@ Lecture-35: Merge Sort using Recursion | Day-5
 			return 0;
 		}
 
+	//one-liner (single line code) for 
+		1) vector to set
+		2) set to vector
+
+		#include <iostream>
+		#include<vector>
+		#include<set>
+		#include<map>
+		#include<algorithm>
+		#include<unordered_set>
+
+		using namespace std;
+
+		int main() {
+			// vector<int> v = {1,2,3,4,5,6,11,12,11,12,7,8,9,0,1,2,3,4,5,6,7,8,9,0};       //or
+			vector<int> v {1,2,3,4,5,6,13,11,12,11,12,7,8,9,0,1,2,3,4,5,6,7,8,9,0};
+			int n=25;
+			
+			for(int i: v)
+				std::cout << i << " ";
+			
+			//vector to unordered_set
+			std::cout << std::endl;
+			unordered_set<int> us (v.begin(), v.end());
+			//for above line is a shorthand for below code
+			/*
+				for(int i=0; i<v.size(); i++)
+					us.insert(v[i]);
+			*/
+			
+			for(int i: us)
+				std::cout << i << " ";
+				
+			std::cout << std::endl;
+			//vector to set
+			set<int> ss (v.begin(), v.end());
+			for(int i: ss)
+				std::cout << i << " ";
+				
+			
+			std::cout << std::endl;
+			std::cout << std::endl;
+			//converting unordered_set to vector
+			vector<int> v1 (us.begin(), us.end());
+			for(int i: v1)
+				std::cout << i << " ";
+				
+			
+			std::cout << std::endl;
+			std::cout << std::endl;
+			// converting set to vector
+			vector<int> v2 (ss.begin(), ss.end());
+			for(int i: v2)
+				std::cout << i << " ";
+			
+				
+			//map
+			map<int, int> mp;
+			for(int i=0; i<v.size(); i++)
+				mp[v[i]]++;
+			
+			std::cout << std::endl;
+			std::cout <<"MP "<< std::endl;
+			//printing
+			for(auto itr: mp)
+				std::cout << itr.first << "\t" << itr.second << std::endl;
+				
+			//or shorthand for above code, to apply map on vector
+			map<int, int> mp1;
+			std::for_each(v.begin(), v.end(), [&mp1](const int& element) { mp1[element]++; });
+
+			std::cout << std::endl;
+			std::cout <<"MP2 "<< std::endl;
+			//printing
+			for(auto itr: mp1)
+				std::cout << itr.first << "\t" << itr.second << std::endl;
+				
+			
+			//map values into vector
+			vector<int> mp1_to_vec;
+			
+			for(auto i: mp)
+				mp1_to_vec.push_back(i.second);
+			
+			std::cout << std::endl;
+			for(auto i: mp1_to_vec)
+				std::cout << i << " ";
+				
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array
@@ -31065,7 +31450,7 @@ POTD:-[Problem of the Day]
 
 	215) Faulty Key:
 		problem statement:
-			Addition wihtout using + & ++ operator.
+			Addition without using + & ++ operator.
 				Ninja is trying to write a function that takes two integers and returns their sum.
 				But, due to some faults in his keyboard, he can not use the "+", operator, which
 				means he is not able to simply return 'A + 'B', where A and 'B' are the numbers
@@ -35725,14 +36110,1481 @@ POTD:-[Problem of the Day]
 			return sum;
 		}
 
-	277) 
+	277) Beautiful Index:
+		Problem statement:
+			You are given an array ‘A’ of length ‘N’. 
+			You say an index ‘i’ is beautiful if the sum of the first ‘i - 1’ 
+			elements of the array ‘A’ equals the sum of the last ‘N - i’ elements of the array ‘A’, 
+			where ‘i’ is in 1-based indexing. Now you wonder which is the leftmost beautiful index.
 
-	278)
-	
-	279)
+			Note:If you select the first index, then the sum of the prefix will be ‘0’, 
+				and if you select the last index, then the sum of the suffix will be ‘0’.
 
-	280)
+			Note:You have to print the index in 1-based indexing.
+
+			For example:
+				Let’s say the array ‘A’ = [1, 3, 1, 5], then if we select index ‘2’, 
+				the sum of the prefix is ‘1’, and the sum of the suffix is 1 + 5 = 6. 
+				Since the sum is not the same, hence index ‘2’ is not a beautiful index.
+			Constraints -
+				1 <= ‘T’ <= 10
+				1 <= ‘N’ <= 10^5 
+				-10^9 <= A[i] <= 10^9, for 1 <= i <= ‘N’
+				Note: Sum of ‘N’ over all test cases does not exceed 10^5.
+				Time Limit: 1 sec
+
+			Sample Input-1
+				2
+				3
+				1 1 1
+				3
+				1 2 3
+				Sample Output-1
+				2
+				-1
+				Explanation for Sample Input 1:
+				For test case 1:
+				Index ‘2’ is the leftmost beautiful index. The left sum is 1 and the right sum is also 1.
+				For test case 2:
+				No index is beautiful.
+				Sample Input -2
+				2
+				6
+				1 7 3 6 5 6
+				3
+				2 1 -1
+				Sample Output -2
+				4
+				1
+
+		//Not Optimized:
+			#include <bits/stdc++.h> 
+			int beautifulIndex(int N, vector<int> A) {
+				if(N == 1)
+					return 1;
+				
+				for(int i=0; i<N-1; i++){
+					int rightSideSum = accumulate(A.begin(), A.begin()+i, 0);
+					int leftSideSum = accumulate(A.begin()+i+1, A.end(), 0);
+
+					if(rightSideSum == leftSideSum)
+						return i+1;
+				}
+				return -1;
+			}
+
+		//Optimized:
+			#include <bits/stdc++.h> 
+			int beautifulIndex(int N, vector<int> A) {
+
+				int leftSum = 0;
+				
+				// int TotalSum = accumulate(A.begin(), A.end(), 0);
+				// int rightSum = TotalSum;
+				// Or
+
+				int rightSum = accumulate(A.begin(), A.end(), 0);
+				
+				for(int i=0; i<N; i++){
+					rightSum -= A[i];
+
+					if(rightSum == leftSum)
+						return i+1;
+					
+					leftSum += A[i];
+				}
+
+				return -1;
+			}
 	
+	278) Count Special Numbers:
+		Problem statement:
+			A positive integer is called a Special Number if all the digits in 
+			its decimal representation lie between 1 to 5 (both inclusive). 
+			For example : 
+				245, 312, etc. are some special numbers, 
+				whereas 340, 17, 0, etc. are some non-special numbers.
+			Given an integer 'N' . Your task is to find how many special numbers lie between 1 to N.
+
+			Sample Input 1 :
+				2
+				7
+				13
+				Sample Output 1 :
+				5 
+				8
+				Explanation for Sample Input 1 :
+				For the first test case : 
+				All the special numbers that are smaller than 7 are [ 1, 2, 3, 4, 5 ]. 
+				Hence, the answer is 5 in this case.
+
+				For the second test case : 
+				All the special numbers that are smaller than 13 are [ 1, 2, 3, 4, 5, 11, 12, 13 ]. 
+				Hence, the answer is 8 in this case.
+				Sample Input 2 :
+				2
+				2
+				20
+				Sample Output 2 :
+				2
+				10
+
+		#include <bits/stdc++.h> 
+		int countSpecialNumbers(int n) {
+			vector<int> v(n);
+
+			for(int i=0; i<n; i++)
+				v[i] = i+1;
+			
+			vector<int> holder;
+
+			for(int i=0; i<n; i++){
+				int crntDigit = v[i];
+				int pushable = 1;           //pushable means crntDigit contains digit which lies in between 1 to 5.
+
+				while(crntDigit > 0){
+					int lastDigit = crntDigit % 10;
+					
+					if(1 > lastDigit || lastDigit > 5){
+						pushable = 0;           //unable to push now, coz crntDigit contains any one digit which is not in-between 1 to 5.
+						break;
+					}
+					crntDigit /= 10;
+				}
+
+				if(pushable)
+					holder.push_back(crntDigit);
+			}
+			return holder.size();
+		}
+
+		//Or Another Approach: (Concise)
+			#include <bits/stdc++.h> 
+			bool checkSpecialNumber(int k) {
+
+				// Iterating through all digits
+				while (k > 0) {
+					int rem = k % 10;
+					if (rem == 0 or rem > 5)
+						return false;
+
+					k /= 10;
+				}
+				return true;
+			}
+
+			int countSpecialNumbers(int n) {
+				int specialNumbersFound = 0;
+
+				// Iterating through all numbers from 1 to n
+				for (int i = 1; i <= n; i++)
+					if (checkSpecialNumber(i))
+						specialNumbersFound++;
+
+				// Returning the final answer
+				return specialNumbersFound;
+			}
+	
+		//Or Detailed:
+			bool checkSpecialNumber(int k)
+			{
+				// Iterating through all digits
+				while (k > 0)
+				{
+					int rem = k % 10;
+					if (rem == 0 or rem > 5)
+					{
+						return false;
+					}
+
+					k /= 10;
+				}
+				return true;
+			}
+
+			int countSpecialNumbers(int n)
+			{
+				int specialNumbersFound = 0;
+
+				// Iterating through all numbers from 1 to n
+				for (int i = 1; i <= n; i++)
+				{
+					if (checkSpecialNumber(i))
+					{
+						specialNumbersFound++;
+					}
+				}
+
+				// Returning the final answer
+				return specialNumbersFound;
+
+			}
+		
+	279) Determine if String Halves Are Alike:
+		Problem Statement:
+			You are given a string s of even length. 
+			Split this string into two halves of equal lengths, and let a be the first half and b be the second half.
+			Two strings are alike if they have the same number of vowels ('a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U').
+			Notice that s contains uppercase and lowercase letters.
+
+			Return true if a and b are alike. Otherwise, return false.
+
+			Example 1:
+				Input: s = "book"
+				Output: true
+				Explanation: a = "bo" and b = "ok". a has 1 vowel and b has 1 vowel. Therefore, they are alike.
+
+			Example 2:
+				Input: s = "textbook"
+				Output: false
+				Explanation: a = "text" and b = "book". a has 1 vowel whereas b has 2. Therefore, they are not alike.
+				Notice that the vowel o is counted twice.
+		
+			Constraints:
+				2 <= s.length <= 1000
+				s.length is even.
+				s consists of uppercase and lowercase letters.
+
+		class Solution {
+			private:
+			int vowelCounter(string s){
+				int cnt=0;
+				for(char c: s)
+					if(c == 'a' || c == 'e' || c == 'i' || c == 'o' ||c == 'u')
+						cnt++;
+				return cnt;
+			}
+			public:
+			bool halvesAreAlike(string s) {
+				//convert s to lowercase string
+				transform(s.begin(), s.end(), s.begin(), ::tolower);
+
+				string s1 = s.substr(0, s.length()/2);
+				string s2 = s.substr(s.length()/2);
+
+				//counting vowels in each string
+				if( vowelCounter(s1) == vowelCounter(s2))
+					return 1;
+				return 0;
+			}
+		};
+
+		//or concise
+			class Solution {
+				//private:				//its not necessary to keep private specifire here, if you remove it also program works fine
+										//or else if you brings that public specifire which is just above halvesAreAlike function that's also fine.
+				public:										
+				int vowelCounter(string s){
+					int cnt=0;
+					for(char c: s)
+						if(c == 'a' || c == 'e' || c == 'i' || c == 'o' ||c == 'u')
+							cnt++;
+					return cnt;
+				}
+				public:
+				bool halvesAreAlike(string s) {
+					//convert s to lowercase string
+					transform(s.begin(), s.end(), s.begin(), ::tolower);
+
+					//counting vowels in each string
+					if( vowelCounter(s.substr(0, s.length()/2)) == vowelCounter(s.substr(s.length()/2)) )
+						return 1;
+					return 0;
+
+					//or
+					// return ( vowelCounter(s.substr(0, s.length()/2)) == vowelCounter(s.substr(s.length()/2)) );
+				}
+			};
+	
+		//or Another approach:
+			class Solution {
+				public:
+				bool halvesAreAlike(std::string s) {
+					unordered_set<char> vowels = {'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'};
+					int vowelsCount = 0;
+					int midIndex = s.length() / 2;
+
+					for (int i = 0; i < midIndex; i++) {
+						char charA = s[i];
+						char charB = s[midIndex + i];
+						if (vowels.count(charA)) vowelsCount++;
+						if (vowels.count(charB)) vowelsCount--;
+					}
+
+					return vowelsCount == 0;
+				}
+			};
+	
+	280) Reverse First K elements of Queue:
+		Problem Statement:
+			Given an integer K and a queue of integers, 
+			we need to reverse the order of the first K elements of the queue, 
+			leaving the other elements in the same relative order.
+			Only following standard operations are allowed on queue.
+
+			enqueue(x) : Add an item x to rear of queue
+			dequeue() : Remove an item from front of queue
+			size() : Returns number of elements in queue.
+			front() : Finds front item.
+			Note: The above operations represent the general processings. 
+			In-built functions of the respective languages can be used to solve the problem.
+
+			Example 1:
+				Input:
+				5 3
+				1 2 3 4 5
+				Output: 
+				3 2 1 4 5
+				Explanation: 
+				After reversing the given
+				input from the 3rd position the resultant
+				output will be 3 2 1 4 5.
+
+			Example 2:
+				Input:
+				4 4
+				4 3 2 1
+				Output: 
+				1 2 3 4
+				Explanation: 
+				After reversing the given
+				input from the 4th position the resultant
+				output will be 1 2 3 4.
+
+			Your Task:
+				Complete the provided function modifyQueue() that takes queue and K as parameters 
+				and returns a modified queue. The printing is done automatically by the driver code.
+
+			Expected Time Complexity : O(N)
+			Expected Auxiliary Space : O(K)
+
+			Constraints:
+				1 <= K <= N <= 105
+
+		class Solution {
+			public:
+			// Function to reverse first k elements of a queue.
+			queue<int> modifyQueue(queue<int> q, int k) {
+				stack<int> st;
+				for(int i=0; i<k; i++){
+					st.push(q.front());
+					q.pop();
+				}
+				
+				queue<int> qt;
+				
+				for(int i=0; i<k; i++){
+					qt.push(st.top());
+					st.pop();
+				}
+				
+				while(!q.empty()){
+					qt.push(q.front());
+					q.pop();
+				}
+				return qt;
+			}
+		};
+
+		//without using extra space (in-place approach)
+			class Solution {
+			public:
+				// Function to reverse first k elements of a queue.
+				queue<int> modifyQueue(queue<int> q, int k) {
+					stack<int> st;
+					
+					int remainingElement = q.size() - k;
+					
+					//inserting first k element into stack, to reverse them
+					for(int i=0; i<k; i++){
+						st.push(q.front());
+						q.pop();
+					}
+					
+					//inserting first k element into same queue in reverse order
+					while(!st.empty()){
+						q.push(st.top());
+						st.pop();
+					}
+					
+					//inserting remainingElement at the end of queue & poping the same element from start of queue.
+					for(int i=0; i<remainingElement; i++){
+						q.push(q.front());
+						q.pop();
+					}
+					
+					return q;
+				}
+			};
+
+	281) Periodic String:
+		Problem statement
+			Given a string ‘S’ find whether the given string is periodic or not.
+			A string is said to be periodic if it repeats itself after a certain number of characters 
+			and the period of repetition is less than the size of the string.
+
+			For example: Let ‘S’ be “ababab” we can clearly see that this string is periodic as 
+			‘ab’ is repeated 3 times to make the string ‘S’.
+
+			Constraints:
+				1 <= T <= 50
+				1<= S.length<=10^5
+
+			Where 'S.length' denotes the length of string ‘S’.
+			The given string consists of lowercase English alphabets only.
+
+			Time limit: 1 sec
+			Sample Input 1:
+				3
+				xxxxxx
+				aabbaaabba
+				abcba
+				Sample Output 1:
+				True
+				True
+				False      
+				Explanation of sample input 1 :
+				Test Case 1:
+				In the first test case, we can clearly see that the 
+				string has a repeating string ‘x’ 6 times. So we return true
+
+				Test Case 2:
+					In the second test case, we can see that the string ‘aabba’ repeats twice to form the given string. 
+					Hence we return true,
+
+				Test Case 3:
+					In the third test case, we can see that there is no string which repeats 
+					itself to form the given string, hence we return false.
+
+				Sample Input 2:
+				2
+				vwvnqpnchqik
+				ubzumubzumubzumubzum
+				Sample Output 2:
+				False
+				True
+
+		#include <bits/stdc++.h> 
+		bool isPeriodic(string s) {
+			int n = s.length();
+
+			for(int i=1; i<=n/2; i++){
+				bool isPeriod = true;
+
+				for(int j=0; j<n-i; j++){
+					if(s[j] != s[j+i]){
+						isPeriod = false;
+						break;
+					}
+				}
+
+				if(isPeriod)
+					return 1;
+			}
+			return 0;
+		}	
+	
+	282) Minimum Number of Steps to Make Two Strings Anagram:
+		Problem Statement:
+			You are given two strings of the same length s and t. 
+			In one step you can choose any character of t and replace it with another character.
+			Return the minimum number of steps to make t an anagram of s.
+
+			An Anagram of a string is a string that contains the same characters with a different (or the same) ordering.
+
+			Example 1:
+				Input: s = "bab", t = "aba"
+				Output: 1
+				Explanation: Replace the first 'a' in t with b, t = "bba" which is anagram of s.
+
+			Example 2:
+				Input: s = "leetcode", t = "practice"
+				Output: 5
+				Explanation: Replace 'p', 'r', 'a', 'i' and 'c' from t with proper characters to make t anagram of s.
+
+			Example 3:
+				Input: s = "anagram", t = "mangaar"
+				Output: 0
+				Explanation: "anagram" and "mangaar" are anagrams. 
+
+			Constraints:
+				1 <= s.length <= 5 * 104
+				s.length == t.length
+				s and t consist of lowercase English letters only.
+	
+		class Solution {
+			public:
+			int minSteps(string s, string t) {
+			
+				//first count the char in string s
+				map<char, int> FreqS;
+				for(int i=0; i<s.length(); i++)
+					FreqS[s[i]]++;
+				
+				//second count the char in string t
+				map<char, int> FreqT;
+				for(int i=0; i<t.length(); i++)
+					FreqT[t[i]]++;
+
+				int cnt=0;
+				for(auto itr: FreqS){
+					if(itr.second == FreqT[itr.first])
+						continue;
+					else if(itr.second > FreqT[itr.first])
+						cnt += itr.second - FreqT[itr.first];
+					else
+						cnt;        //no need of else
+
+				}
+				return cnt;
+			}
+		};
+
+		//or
+			class Solution {
+				public:
+				int minSteps(string s, string t) {
+				
+					//first count the char in string s
+					map<char, int> FreqS;
+					for(int i=0; i<s.length(); i++)
+						FreqS[s[i]]++;
+					
+					//second count the char in string t
+					map<char, int> FreqT;
+					for(int i=0; i<t.length(); i++)
+						FreqT[t[i]]++;
+
+					int cnt=0;
+					for(auto itr: FreqS){
+						if(itr.second > FreqT[itr.first])
+							cnt += itr.second - FreqT[itr.first];
+					}
+					return cnt;
+				}
+			};
+
+		//or without using Map (another approach)
+			class Solution {
+				public:
+				int minSteps(string s, string t) {
+					vector<int> FreqS (26, 0);
+					vector<int> FreqT (26, 0);
+					
+					//counting the char repetition in S
+					for(int i=0; i<s.length(); i++)
+						FreqS[s[i] - 'a']++;
+
+					//counting the char repetition in T
+					for(int i=0; i<s.length(); i++)             //both string having same length so we kept i<s.length() here.
+						FreqT[t[i] - 'a']++;
+
+					int cnt=0;
+					for(int i=0; i<26; i++)
+						if(FreqS[i] > FreqT[i])
+							cnt += (FreqS[i] - FreqT[i]);
+
+					return cnt;
+				}
+			};
+
+		//Optimized:
+			class Solution {
+				public:
+				int minSteps(string s, string t) {
+					int occ[26] = {0};
+					for (auto it : s) occ[it-'a'] ++;
+					for (auto it : t) occ[it-'a']--;
+
+					int res = 0;
+					for (int i = 0; i < 26; i++) res += abs(occ[i]);
+
+					return res / 2;
+				}
+			};
+
+			//below code is just for reference, decreases the execution time the below code.
+			auto init = []() {
+				ios::sync_with_stdio(false);
+				cin.tie(nullptr);
+				cout.tie(nullptr);
+				return 'c';			//you can return anything return 'v', return 'a', or you can use 'return 0' also.
+			}();
+
+	283) GCD Sum:
+		Problem statement
+			Consider all numbers from 1 to ‘N’, 
+			your task is to find the sum of gcd of all pairs (i, j) such that 1 <= i < j <= N.
+			For example for N = 3, all pairs are { (1, 2), (1, 3), (2, 3) }.
+			Note :
+				Gcd of two numbers (X, Y) is defined as the largest integer that divides both ‘X’ and ‘Y’. 
+			Sample Input 1 :
+				2
+				3
+				5
+				Sample Output 1 :
+				3
+				11
+				Explanation Of Sample Input 1 :
+				Test case 1:
+				gcd(1, 2) + gcd(1, 3) +  gcd(2, 3) = 1 + 1 + 1 = 3.
+
+				Test case 2:
+				gcd(1, 2) + gcd(1, 3) +  gcd(1, 4) + gcd(1, 5) +
+				gcd(2, 3) + gcd(2, 4) + gcd(2, 5) +
+				gcd(3, 4) + gcd(3, 5) +
+				gcd(4, 5)  = 11.
+				Sample Input 2 :
+				1
+				1
+				Sample Output 2 :
+				0
+				Explanation Of Sample Input 2 :
+				Test case 1:
+				As there is no possible Paris, so the gcd sum is 0.
+
+		//Not Optimized:
+			#include<algorithm>     //this is for to built-in Function of GCD
+			long long gcdSum(int n){
+				long long sm=0;
+				for(int i=1; i<=n; i++)
+					for(int j=i+1; j<=n; j++)
+						sm += __gcd(i,j);
+				return sm;
+			}
+
+	284) Maximum Difference
+		Problem statement
+			You are given an integer array ‘arr’ of size ‘N’. 
+			Your task is to find the maximum difference between two consecutive elements in the sorted form of the array ‘arr’.
+
+			If the ‘arr’ contains less than two elements, return 0.
+			For example:
+				You are given arr = {1, 3, 8, 6, 7}, then our answer will be 3. 
+				Sorted form of arr = {1, 3, 6, 7, 8}. The maximum absolute difference between two consecutive elements is 6 - 3 = 3, which is the correct answer.
+			Constraints:
+				1 <= T <= 10 
+				1 <= N  <= 10 ^ 6
+				0 <= arr[i] <= 10 ^ 9
+
+				Time limit: 1 sec
+			Note:
+				You do not need to input or print anything, as it has already been taken care of. 
+				Just implement the given function.
+
+			Sample Input 1:
+				2
+				5
+				1 3 8 6 7
+				5
+				0 6 4 8 9
+				Sample Output 1:
+				3
+				4
+				Explanation:
+				For the first test case, you are given arr = {1, 3, 8, 6, 7}. Then our answer will be 3. 
+				Sorted form of arr = {1, 3, 6, 7, 8}. 
+				The maximum absolute difference between two consecutive elements is 6 - 3 = 3, which is the correct answer.
+
+				For the second test case, you are given arr = {0, 6, 4, 8, 9}. Then our answer will be 4. 
+				Sorted form of arr = {0, 4, 6, 8, 9}. 
+				The maximum absolute difference between two consecutive elements is 4 - 0 = 4, which is the correct answer.
+				Sample Input 2:
+				2
+				4
+				1 3 2 4
+				5
+				4 4 1 9 10
+				Sample Output 2:
+				1
+				5
+	
+		#include <bits/stdc++.h>
+		int maxDifference(int n, vector<int> &arr) {
+			if(arr.size() < 2)
+				return 0;
+
+			sort(arr.begin(), arr.end());
+
+			int mx = INT_MIN;
+			for(int i=1; i<arr.size(); i++)
+				if(abs(arr[i-1]-arr[i]) > mx)
+					mx = abs(arr[i-1]-arr[i]);
+			return mx;    
+		}
+
+	285) Maximum Difference:
+		Problem statement
+			You are given an array 'ARR' of the 'N' element. 
+			Your task is to find the maximum difference between any of the two elements from 'ARR'.
+			If the maximum difference is even print “EVEN” without quotes. 
+			If the maximum difference is odd print “ODD” without quotes.
+
+			For example:
+				Given 'ARR' = [1, 10, 5, 2, 8, 1 ] , answer is "ODD".
+				Here the maximum difference is between 10 and 1, 10 - 1 = 9
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 5000 
+				1 <= ARR[i] <= 10 ^ 9
+
+			where ‘N’ is the length of the array 'ARR', and 'ARR[i]' is an element of the 'ARR' respectively.
+			Time limit: 1 sec.
+			Sample Input 1:
+				2
+				4
+				2 9 3 4
+				6
+				1 1 1 1 1 1 
+				Sample Output 1:
+				ODD
+				EVEN
+				Explanation of Sample Input 1:
+				For the first test case, the maximum difference is 7, between 9 and 2.
+
+				For the second test case, all elements are the same, the maximum difference is 0.
+				Sample Input 2:
+				2
+				2
+				567 11
+				1
+				28
+				Sample Output 2:
+				EVEN
+				EVEN 
+
+		#include <bits/stdc++.h> 
+		string maximumDifference(int n, vector<int>& arr) {
+			int mx = *max_element(arr.begin(), arr.end());
+			int mn = *min_element(arr.begin(), arr.end());
+			
+			if((mx-mn) & 1)
+				return "ODD";
+			return "EVEN";
+		}
+	
+	286) Find duplicate rows in a binary matrix:
+		Problem Statement:
+			Given a boolean matrix of size RxC where each cell contains either 0 or 1,
+			find the row numbers (0-based) of row which already exists or are repeated.
+
+			Example 1:
+				Input:
+				R = 2, C = 2
+				matrix[][] = {{1, 0},
+						{1, 0}}
+				Output: 
+				1
+				Explanation:
+				Row 1 is duplicate of Row 0.
+
+			Example 2:
+				Input:
+				R = 4, C = 3
+				matrix[][] = {{ 1, 0, 0},
+						{ 1, 0, 0},
+						{ 0, 0, 0},
+						{ 0, 0, 0}}
+				Output: 
+				1 3 
+				Explanation:
+				Row 1 and Row 3 are duplicates of Row 0 and 2 respectively. 
+
+			Your Task:
+				You dont need to read input or print anything. 
+				Complete the function repeatedRows() that takes the matrix as 
+				input parameter and returns a list of row numbers which are duplicate rows.
+
+			Expected Time Complexity: O(R * C)
+			Expected Auxiliary Space: O(R * C)
+
+			Constraints:
+				1 ≤ R, C ≤ 10^3
+				0 ≤ matrix[i][j] ≤ 1
+
+		class Solution {   
+			public:
+			vector<int> repeatedRows(vector<vector<int>> &matrix, int M, int N) {
+				vector<string> holder;
+				vector<int> ans;
+				
+				for(int i=0; i<M; i++){
+					string s;
+					for(int j=0; j<N; j++){
+						s += to_string(matrix[i][j]);
+					}
+
+					/*
+						// or for above for loop you can use below syntax wihtout '{ }' braces.
+						for(int j=0; j<N; j++)
+							s += to_string(matrix[i][j]);
+					
+					*/
+
+					if(find(holder.begin(), holder.end(), s) != holder.end())
+						ans.push_back(i);
+					else
+						holder.push_back(s);
+					
+					/*
+						//or for above if-else syntax you can use below syntax which is concise.
+
+						if(find(holder.begin(), holder.end(), s) != holder.end()) ans.push_back(i);
+						else holder.push_back(s);
+					*/
+				}
+				return ans;
+			} 
+		};
+
+	287) Determine if Two Strings Are Close:
+		Problem Statement:
+			Two strings are considered close if you can attain one from the other using the following operations:
+			Operation 1: Swap any two existing characters.
+			For example, abcde -> aecdb
+			Operation 2: Transform every occurrence of one existing character into another existing character, and do the same with the other character.
+			For example, aacabb -> bbcbaa (all a's turn into b's, and all b's turn into a's)
+			You can use the operations on either string as many times as necessary.
+
+			Given two strings, word1 and word2, return true if word1 and word2 are close, and false otherwise.			
+
+			Example 1:
+				Input: word1 = "abc", word2 = "bca"
+				Output: true
+				Explanation: You can attain word2 from word1 in 2 operations.
+				Apply Operation 1: "abc" -> "acb"
+				Apply Operation 1: "acb" -> "bca"
+
+			Example 2:
+				Input: word1 = "a", word2 = "aa"
+				Output: false
+				Explanation: It is impossible to attain word2 from word1, or vice versa, in any number of operations.
+
+			Example 3:
+				Input: word1 = "cabbba", word2 = "abbccc"
+				Output: true
+				Explanation: You can attain word2 from word1 in 3 operations.
+				Apply Operation 1: "cabbba" -> "caabbb"
+				Apply Operation 2: "caabbb" -> "baaccc"
+				Apply Operation 2: "baaccc" -> "abbccc"
+
+			Constraints:
+				1 <= word1.length, word2.length <= 105
+				word1 and word2 contain only lowercase English letters.
+	
+		class Solution {
+			public:
+			bool closeStrings(string word1, string word2) {
+				
+				//this below three lines of code will increase the efficiency, decreases time complexity
+				ios_base::sync_with_stdio(false);
+				cin.tie(nullptr);
+				cout.tie(nullptr);
+
+				//if both strings are different in length then return false
+				if(word1.length() != word2.length())
+					return 0;
+				
+				//creating set for word1
+				set<char> set_word1(word1.begin(), word1.end());
+
+				//creating set for word2
+				set<char> set_word2(word2.begin(), word2.end());
+
+				if(set_word1.size() != set_word2.size())
+					return 0;
+
+				//map counting char for word1
+				map<char, int> map_word1;
+				for(int i=0; i<word1.length(); i++)
+					map_word1[word1[i]]++;
+				
+				//map counting char for word1
+				map<char, int> map_word2;
+				for(int i=0; i<word2.length(); i++)
+					map_word2[word2[i]]++;
+				
+				//vector for word1
+				vector<int> valueWord1;
+				vector<char> keyWord1;
+				for(auto itr: map_word1){
+					keyWord1.push_back(itr.first);
+					valueWord1.push_back(itr.second);
+				}
+				
+				//vector for word2
+				vector<int> valueWord2;
+				vector<char> keyWord2;
+				for(auto itr: map_word2){
+					keyWord2.push_back(itr.first);
+					valueWord2.push_back(itr.second);
+				}
+				
+				sort(valueWord1.begin(), valueWord1.end());
+				sort(valueWord2.begin(), valueWord2.end());
+				sort(keyWord1.begin(), keyWord1.end());
+				sort(keyWord2.begin(), keyWord2.end());
+
+				if(valueWord1 == valueWord2 && keyWord1 == keyWord2)
+					return 1;
+				return 0;
+			}
+		};
+	
+		//or Optimized:
+			class Solution {
+				public:
+				bool closeStrings(string word1, string word2) {
+					
+					ios_base::sync_with_stdio(false);
+					cin.tie(NULL);
+					cout.tie(NULL);
+					int n = word1.length();
+					if(word2.length()!=n){
+						return false;
+					}
+					int fre[26]; 
+					memset(fre, 0, sizeof(fre));
+					int fre2[26];
+					memset(fre2, 0, sizeof(fre2));
+
+					for(int i=0;i<n;i++){
+						fre[word1[i]-'a']++;
+					}
+					for(int i=0;i<n;i++){
+						fre2[word2[i]-'a']++;
+					}
+					vector<int>v1,v2;
+					for(int i=0;i<26;i++){
+						if(fre[i]!=fre2[i]){
+							if(fre[i]==0 || fre2[i]==0){
+								return false;
+							}
+						}
+						if(fre[i]!=fre2[i]){
+							v1.push_back(fre[i]);
+							v2.push_back(fre2[i]);
+						}
+					}
+					sort(v1.begin(), v1.end());
+					sort(v2.begin(), v2.end());
+					int m = v1.size();
+					for(int i=0;i<m;i++){
+						if(v1[i]!=v2[i]){
+							return false;
+						}
+					}
+					return true;
+				}
+			};
+		
+	288) Number Game: ❌Pending
+		Problem Statement:
+			Alice and Bob have invented a new game to play. 
+			The rules are as follows-
+				First, they get a set of ‘N’ distinct integers. 
+				And then they take turns to make the following moves. 
+				During each move, either Alice or Bob (the player whose turn is the current) 
+				can choose two distinct integers ‘X’ and ‘Y’ from the set, 
+				such that the set doesn't contain their absolute difference |X - Y|. 
+				Then this player adds integer |X - Y| to the set (so, the size of the set increases by one).
+
+			If the current player has no valid move, he (or she) loses the game. The question is who will finally win the game if both players play optimally. Remember that Alice always moves first.
+
+			Constraints :
+				1 <= T <= 10
+				2 <= N <= 10^5
+				1 <= array[i] <= 10^9
+
+			Time Limit : 1 sec
+			Sample Input 1 :
+				2
+				2
+				2 3
+				2
+				5 3
+				Sample Output 1 :
+				Alice
+				Alice
+				Explanation of Sample Input 1
+				For the first test case, we have, initial set as { 2, 3}. 
+				Alice moves first, and the only move she can do is to choose 2 and 3, 
+				then to add 1 to the set. The new set is { 1, 2, 3 }. Next Bob moves, 
+				there is no valid move anymore, so the winner is Alice.
+
+				For the second test case, we have, initial set as { 3, 5}. Alice moves first, 
+				and the only move she can do is to choose 5 and 3, then to add 2 to the set. 
+				So, the new set is { 2, 3, 5 }. Next Bob moves, he cannot choose 2 and 5 as | 2 - 5 | = 3
+				is already in the set. He chooses 2 and 3 and adds 1 to the set. The new set is { 1, 2, 3, 5 }. 
+				Now, Alice can choose 1 and 5 and add 4 to the set. The new set is { 1, 2, 3, 4, 5 }. 
+				Next Bob moves, there is no valid move anymore, so the winner is Alice.
+
+				Sample Input 2 :
+				3
+				2
+				2 3
+				2
+				5 3
+				3
+				5 6 7
+				Sample Output 2 :
+				Alice
+				Alice
+				Bob
+
+		#include <bits/stdc++.h> 
+		string gameWinner(vector<int> &arr, int n) {
+			int max = *std::max_element(arr.begin(), arr.end());
+
+			int rem = max - n;
+			if (rem % 2 != 1)
+				return "Bob";
+			return "Alice";
+		}
+	
+	289) Find Players With Zero or One Losses:
+		Problem statement:
+			You are given an integer array matches where matches[i] = [winneri, loseri] 
+			indicates that the player winneri defeated player loseri in a match.
+			Return a list answer of size 2 where:
+
+			answer[0] is a list of all players that have not lost any matches.
+			answer[1] is a list of all players that have lost exactly one match.
+			The values in the two lists should be returned in increasing order.
+
+			Note:
+				You should only consider the players that have played at least one match.
+				The testcases will be generated such that no two matches will have the same outcome.
+
+			Example 1:
+				Input: matches = [[1,3],[2,3],[3,6],[5,6],[5,7],[4,5],[4,8],[4,9],[10,4],[10,9]]
+				Output: [[1,2,10],[4,5,7,8]]
+				Explanation:
+				Players 1, 2, and 10 have not lost any matches.
+				Players 4, 5, 7, and 8 each have lost one match.
+				Players 3, 6, and 9 each have lost two matches.
+				Thus, answer[0] = [1,2,10] and answer[1] = [4,5,7,8].
+
+			Example 2:
+				Input: matches = [[2,3],[1,3],[5,4],[6,4]]
+				Output: [[1,2,5,6],[]]
+				Explanation:
+				Players 1, 2, 5, and 6 have not lost any matches.
+				Players 3 and 4 each have lost two matches.
+				Thus, answer[0] = [1,2,5,6] and answer[1] = [].
+
+			Constraints:
+				1 <= matches.length <= 105
+				matches[i].length == 2
+				1 <= winneri, loseri <= 105
+				winneri != loseri
+				All matches[i] are unique.
+
+		//Not Optimized:
+			class Solution {
+				public:
+				vector<vector<int>> findWinners(vector<vector<int>>& matches) {
+					vector<int> NotLost;
+					vector<int> LostOne;
+
+					map<int, int> FreqLost;
+
+					for(int i=0; i<matches.size(); i++)
+						FreqLost[matches[i][1]]++;
+
+					for(int i=0; i<matches.size(); i++){
+						for(int j=0; j<matches[0].size(); j++){
+							if(FreqLost[matches[i][j]] > 1 )
+								continue;
+							if(FreqLost[matches[i][j]] == 0){
+								if(find(NotLost.begin(), NotLost.end(), matches[i][j]) == NotLost.end())
+								NotLost.push_back(matches[i][j]);
+							}
+							else if(FreqLost[matches[i][j]] == 1){
+								if(find(LostOne.begin(), LostOne.end(), matches[i][j]) == LostOne.end())
+								LostOne.push_back(matches[i][j]);
+							}
+						}
+					}
+
+					sort(NotLost.begin(), NotLost.end());
+					sort(LostOne.begin(), LostOne.end());
+
+					return {NotLost,LostOne};
+				}
+			};
+	
+		//Optimized:
+			class Solution {
+				public:
+				vector<vector<int>> findWinners(vector<vector<int>>& matches) {
+
+					map<int, int> FreqLost;
+
+					set<int> NotLostSet;
+					set<int> OneLostSet;
+
+					for(int i=0; i<matches.size(); i++)
+						FreqLost[matches[i][1]]++;
+
+					for(int i=0; i<matches.size(); i++){
+						int win = matches[i][0];
+						int loss = matches[i][1];
+
+						//for first value
+						if(FreqLost[win] == 0)
+							NotLostSet.insert(win);
+						else if(FreqLost[win] == 1)
+							OneLostSet.insert(win);
+
+						//for second value
+						if(FreqLost[loss] == 0)
+							NotLostSet.insert(loss);
+						else if(FreqLost[loss] == 1)
+							OneLostSet.insert(loss);
+					}
+
+					//converting set to vector
+					
+					vector<int> NotLost(NotLostSet.begin(), NotLostSet.end());
+					vector<int> LostOne(OneLostSet.begin(), OneLostSet.end());
+
+					sort(NotLost.begin(), NotLost.end());
+					sort(LostOne.begin(), LostOne.end());
+
+					return {NotLost,LostOne};
+				}
+			};
+
+			//or
+				class Solution {
+					public:
+					vector<vector<int>> findWinners(vector<vector<int>>& matches) {
+
+						map<int, int> FreqLost;
+
+						set<int> NotLostSet;
+						set<int> OneLostSet;
+
+						for(int i=0; i<matches.size(); i++)
+							FreqLost[matches[i][1]]++;
+
+						for(int i=0; i<matches.size(); i++){
+							for(int j=0; j<matches[0].size(); j++){         //or the default size is 2 so, for(int j=0; j<2; j++)
+								if(FreqLost[matches[i][j]] == 0)
+									NotLostSet.insert(matches[i][j]);
+								else if(FreqLost[matches[i][j]] == 1)
+									OneLostSet.insert(matches[i][j]);
+							}
+						}
+
+						//converting set to vector
+						vector<int> NotLost(NotLostSet.begin(), NotLostSet.end());
+						vector<int> LostOne(OneLostSet.begin(), OneLostSet.end());
+
+						sort(NotLost.begin(), NotLost.end());
+						sort(LostOne.begin(), LostOne.end());
+
+						return {NotLost,LostOne};
+					}
+				};
+
+	290) Least Greater Element:
+		Problem statement
+			You are given an array 'ARR' of Integers. 
+			Your task is to replace each element of the array with the smallest element, 
+			which is strictly greater than that element and is present on the right side 
+			of that element in the array i.e. for each valid index ‘i’ replace ARR[i] 
+			with the smallest ARR[j] such that ARR[j]>ARR[i] and j>i.
+
+			In case there exists no such element satisfying the above conditions for a particular array element, 
+			replace it with -1.
+
+			For example :
+
+				Consider the array ARR = [ 1, 4, 2, 6 ] having 4 elements.
+				The array containing the Least Greater Elements for the above array will be [ 2, 6, 6, -1 ].
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^4
+				0 <= ARR[i]  <= 10^9
+
+				Where 'T' denotes the number of test cases, 'N' denotes the elements in the array 'ARR', 
+				and 'ARR[i]' denotes the 'i'th' element of the array 'ARR'.
+
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				4
+				5 6 7 2
+				3 
+				4 3 6
+				Sample Output 1 :
+				6 7 -1 -1 
+				6 6 -1
+				Explanation for Sample Input 1 :
+				For the first test case : 
+				1) For ARR [0] = 5, the least greater element is 6.
+				2) For ARR [1] = 6, the least greater element is 7.
+				3) For ARR [2] = 7, no least greater element exists. Hence, we will consider -1 here.
+				4) For ARR [3] = 2, no least greater element exists. Hence, we will consider -1 here.
+				Therefore, the output array is [ 6, 7, -1, -1 ] in this case.
+
+				For the second test case : 
+				1) For ARR [0] = 4, the least greater element is 6.
+				2) For ARR [1] = 3, the least greater element is 6.
+				3) For ARR [2] = 6, no least greater element exists. Hence, we will consider -1 here.
+				Therefore, the output array is [ 6, 6, -1 ] in this case.
+				Sample Input 2 :
+				2
+				3
+				6 2 6
+				4
+				5 6 1 4
+				Sample Output 2 :
+				-1 6 -1
+				6 -1 4 -1
+
+		#include <bits/stdc++.h> 
+		vector<int> leastGreaterElement(vector<int> &arr) {
+			vector<int> ans (arr.size(), -1);
+			for(int i=0; i<arr.size()-1; i++){
+				int minValue=-1;
+				int j;
+				for(j=i+1; j<arr.size(); j++){
+					if(arr[i] < arr[j]){
+						minValue = arr[j];
+						break;
+					}
+				}
+				for(j; j<arr.size(); j++){
+					if(arr[i] < arr[j]){
+						minValue = min(minValue,arr[j]);
+					}
+				}
+				ans[i] = minValue;
+			}
+			return ans;
+		}
+
+		//or
+			#include <bits/stdc++.h> 
+			vector<int> leastGreaterElement(vector<int> &arr) {
+				vector<int> ans(arr.size(), -1);
+
+				for (int i = 0; i < arr.size() - 1; ++i) {
+					int minValue = -1;
+
+					for (int j = i + 1; j < arr.size(); ++j) {
+						if (arr[i] < arr[j]) {
+							minValue = (minValue == -1) ? arr[j] : min(minValue, arr[j]);
+						}
+					}
+					ans[i] = minValue;
+				}
+				return ans;
+			}
+
+	291) Add Two Fractions:
+		Problem statement
+			You’re given two fractions, a/b, and c/d. 
+			Your task is to add these two fractions and print this answer in the simplest form.
+
+			Constraints :
+				1 <= T <= 10 ^ 4
+				1 <= a,b,c,d <= 10 ^ 9
+				Time Limit: 1 sec
+
+				Where 'T' denotes the number of test cases, 'a', 'b', 'c' and 'd' denote the integers given as input in the problem.
+			Sample Input 1 :
+				1
+				5 7 4 9
+				Sample Output 1 :
+				73 63
+				Explanation of Sample Input 1 :
+				Sum of 5/7 + 4/9 = 73/63, which is already in its simplest form because we cannot reduce it further.
+				Sample Input 2 :
+				1
+				1 500 2 1500
+				Sample Output 2 :
+				1 300
+				Explanation of Sample Input 2 :
+				Sum of 1/500 + 2/1500 = 5/1500, which after reducing in simplest form becomes 1/300.
+
+		#include <bits/stdc++.h> 
+		vector<long long int> addFraction(long long int a,long long int b, long long int c,long long int d) {
+			vector<long long int> ans;
+
+			long long numerator = ((a*d) + (b*c));
+			long long denom = (b*d);
+
+			long long fact = __gcd(numerator, denom);
+
+			return {numerator/ fact, denom/ fact};
+		}
+
+	292) No Adjacent Same:
+		Problem statement
+			You are given a 32-bit integer 'N'. 
+			At the right of the leftmost set bit, your task is to check if there are no two adjacent bits that are the same.
+
+			For Example :
+			42 is valid because it's binary representation '101010' has no two adjacent bits that are the same.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^9
+				Time Limit: 1 sec
+
+			Sample Input 1:
+				2
+				21
+				31
+				Sample Output 1:
+				true
+				false
+				Explanation For Sample Input 1:
+					In example 1, binary representation of 21 is '10101'. 
+					Since, no two adjacent bits are the same here, it is valid.
+				
+					In example 2, binary representation of 31 is ‘11111’. 
+					All the digits of binary representation are the same, hence it is not valid.
+				Sample Input 2:
+				2
+				20
+				85
+				Sample Output 2:
+				false
+				true
+				Explanation For Sample Input 2:
+					In example 1, binary representation of 20 is '10100'. 
+					Since, the 0-th and 1-st digits of the binary number are the same, it is invalid.
+
+					In example 2, binary representation of 85 is ‘1010101’. 
+					Since, no two adjacent bits are the same here, it is valid.
+
+		#include <bits/stdc++.h> 
+		bool checkBits(unsigned int n) {
+			string s = bitset<32>(n).to_string();
+
+			//removing the leading zero's 
+			if(s.find('1') != string::npos)
+				s = s.substr(s.find('1'));
+			
+			// or
+			// while(s[0] == '0')
+			//     s.erase(s.begin());
+			
+			for(int i=1; i<s.length(); i++)
+				if(s[i] == s[i-1])
+					return 0;
+			return 1;
+		}
+
+	293) Unique Number of Occurrences:
+		Problem Statement:
+			Given an array of integers arr, 
+			return true if the number of occurrences of each value in the array is unique or false otherwise.
+			Example 1:
+				Input: arr = [1,2,2,1,1,3]
+				Output: true
+				Explanation: The value 1 has 3 occurrences, 2 has 2 and 3 has 1. No two values have the same number of occurrences.
+
+			Example 2:
+				Input: arr = [1,2]
+				Output: false
+
+			Example 3:
+				Input: arr = [-3,0,1,-3,1,1,1,-3,10,0]
+				Output: true
+
+			Constraints:
+				1 <= arr.length <= 1000
+				-1000 <= arr[i] <= 1000
+		
+		Flowchart:
+			[Start] --> 
+				[Initialize Freq map] --> [Loop over arr] --> [Count occurrences]
+
+				[Loop Complete] --> [Initialize valueHolder vector] --> [Initialize itr]
+
+				[Loop over Freq] --> [Store occurrences in valueHolder] --> [Increment itr]
+
+				[Sort valueHolder] --> [Loop over sorted valueHolder] --> [Check for duplicates]
+
+				[Duplicate Found] --> [Return 0 (false)]
+
+				[No Duplicate] --> [Return 1 (true)]
+			[End]
+		
+		class Solution {
+			public:
+			bool uniqueOccurrences(vector<int>& arr) {
+				//counting the occurrences
+				map<int, int> Freq;
+				for(int i=0; i<arr.size(); i++)
+					Freq[arr[i]]++;
+				
+				//storing the occurrences values
+				vector<int> valueHolder;
+				// for(auto i : Freq)
+				//     valueHolder.push_back(i.second);
+
+				//or
+				// for (std::map<int, int>::iterator i = Freq.begin(); i != Freq.end(); ++i)
+				//     valueHolder.push_back(i->second);
+
+				
+				//or
+				map<int, int> :: iterator itr = Freq.begin();
+				while(itr != Freq.end())
+					valueHolder.push_back(itr->second),
+					itr++;
+				
+				//sorting vector valueHolder
+				sort(valueHolder.begin(), valueHolder.end());
+				for(int i=1; i<valueHolder.size(); i++)
+					if(valueHolder[i-1] == valueHolder[i])
+						return 0;
+				
+				return true;
+			}
+		};
+
+		//optimized:
+			class Solution {
+				public:
+				bool uniqueOccurrences(vector<int>& arr) {
+					//counting the occurrences
+					map<int, int> Freq;
+					for(int x: arr)
+						Freq[x]++;
+					
+					set<int> s;
+
+					//this below line to insert all the value of Freq map into set s.
+					// transform(Freq.begin(), Freq.end(), inserter(s, s.end()), [](auto pair) {return pair.second; });
+					//or
+					for(auto a: Freq)
+						s.insert(a.second);
+
+					return Freq.size() == s.size();
+				}
+			};
+
+	294) 
+	
+	295)
+	
+	296)
+
+	297)
+
+	298)
+	
+	299)	
+
+	300)
+
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
@@ -36735,11 +38587,13 @@ calender:
 	}
 --------------------------------------------------------------------------------------------------------
 //❌Pending
+	//https://www.codingninjas.com/studio/problems/rotate-matrix_981260
+	
 	//Excel Column Number https://www.codingninjas.com/studio/problems/excel-column-number_630461 ❌Pending
 
 	//K Sum Subset https://www.codingninjas.com/studio/problems/k-sum-subset_2546852 ❌Pending
 
-	//power of n wihtout using looops & recursion ❌Pending
+	//power of n without using looops & recursion ❌Pending
 	https://www.geeksforgeeks.org/find-whether-given-integer-power-3-not/
 
 	https://www.codingninjas.com/studio/problem-details/two-substrings_920397 ❌Pending
