@@ -291,7 +291,15 @@ Lecture-2: Write Your First Program in C++
 			eg.
 				float f1 = 35e3;
 				double d1 = 12E4;
+
 				float ff = 35.453f;				//f to represent its is a floating point num.
+				
+				float f2 = 35e30;
+				double d2 = 12E84;
+				
+				cout << f2 << "\n";
+				cout << d2 << endl;
+				
 				double dd = 12.78909d;			//d to represent its is a double
 				cout << f1 << "\n";				// 35000
 				cout << d1;					// 120000
@@ -381,9 +389,13 @@ Lecture-2: Write Your First Program in C++
 					}
 
 		Variable Naming Convention:
-			int abc1 = 1;			//valid
-			int _abc = 21;			//valid
-			int 1abc = -10; 		//invalid because the first character letter/underscore not number
+			int abc1 = 1;			// valid
+			int _abc = 21;			// valid
+			int $abc = 22;			// valid
+			int #abc = 22;			// invalid
+			int @abc = 22;			// invalid
+			int a abc = 22;		// invalid variable name can't contain whitespace
+			int 1abc = -10; 		// invalid because the first character must be letter/underscore or $ (dollar) should not be number.
 
 		sizeof:
 			eg.
@@ -15412,6 +15424,398 @@ Lecture-35: Merge Sort using Recursion | Day-5
 
 			return 0; 
 		} 
+		
+		//type of struct with name:
+			#include <iostream>
+			using namespace std;
+			
+			//struct name one having 3 letters in it, so datatype of this is - 3one & its outside of main function
+			//so the datatype is just 3one.
+			//if it is inside the main function then the dataType will be Z4mainE3one
+			struct one{         
+				int a;
+				string b;
+			} st1;
+
+			struct four{        //struct name four having 4 letters in it, so datatype of this is - 4four
+				int x;
+				float ft;
+			} st2;
+
+			struct {
+				int age;
+				string name;
+				float Salary;
+				bool isFine;
+			} st3;
+
+			int main() {
+				struct {
+					int age;
+					string name;
+					float Salary;
+					bool isFine;
+					int arr[10];
+				} st4;
+
+				//datatype finding
+				std::cout << typeid(st1).name() << std::endl;           //3one
+				std::cout << typeid(st2).name() << std::endl;           //4four
+				std::cout << typeid(st3).name() << std::endl;           //9._anon_89        anon- indicates its outside of main function & its anonymous
+				std::cout << typeid(st4).name() << std::endl;           //Z4mainEUt_        main- indicates inside of main function
+				
+				struct InSideMainKnow{
+					int age;
+					string name;
+					float Salary;
+					bool isFine;
+				} st5;
+				
+				std::cout << typeid(st5).name() << std::endl;       //struct with name InSideMainKnow having 14 letters
+				//so datatype is Z4mainE14InSideMainKnow
+				
+				return 0;
+			}
+
+
+		//or
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				
+				struct {
+					int age;
+					string name;
+					float Salary;
+					bool isFine;
+				} p1;
+				
+				
+				std::cout << typeid(p1).name() << std::endl;        //Z4mainEUt_        variable of type struct
+				//this type is for anonymous struct, Z4mainEUt_ here main indicate its inside main function.
+				
+				float arr[] = {1.2, 2.3, 3.4, };        //actually it should throw error, but it just works fine.
+				std::cout << typeid(arr).name() << std::endl;       //A3_f   
+				// where, A- indicates array
+				// 3 - indicates 3 elements are there in array, & trailling comma is fine. compiler ignores it.
+				// f - indicates its floating array.
+				
+				int *ptr;
+				std::cout << typeid(ptr).name() << std::endl;           //Pi datatype of pointer
+				
+				string strArr[] = {"abc","def"};
+				std::cout << typeid(strArr).name() << std::endl;        //A2_NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE  datatype of string array
+				// where, A- indicates array
+				// 2 - indicates 2 elements are there in array, 
+				// Nst - indicates string array.
+				
+				int intArr[] = {1,2,3,4,5,6,};              //here also extra comma at end.
+													//actually it should throw error, but it just works fine.
+				std::cout << typeid(intArr).name() << std::endl;
+				//A6_i          
+				// where, A- indicates array
+				// 6 - indicates 6 elements are there in array, 
+				// i - indicates integer array.
+				
+				double doubleArr[] = {1.22,3.44,6.90,7.88,};              //here also extra comma at end.
+													//actually it should throw error, but it just works fine.
+				std::cout << typeid(doubleArr).name() << std::endl;    
+				//A4_d
+				// where, A- indicates array
+				// 4 - indicates 4 elements are there in array, 
+				// d - indicates this array contains values of type double
+				
+				return 0;
+			}
+	
+	//Structure:
+		//You can define the struct outside of main function
+		//struct without having name (anonymous), with single variable p1.
+
+			#include <iostream>
+			using namespace std;
+
+			struct {
+				int age;
+				string name;
+			} p1;
+
+			int main() {
+				//priting the values
+				std::cout << p1.age << std::endl;			//0
+				std::cout << p1.name << std::endl;			//		(nothing will be printed)
+				return 0;
+			}
+
+		//You can define the struct inside of main function with 2 variable p1, p2.
+		//struct without having name (anonymous).
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				struct {
+					int age;
+					string name;
+				} p1, p2;
+			
+				//priting the values
+				std::cout << p1.age << std::endl;			//0
+				std::cout << p1.name << std::endl;			//		(nothing will be printed)
+				
+				std::cout << p2.age << std::endl;			//0
+				std::cout << p2.name << std::endl;    		//		(nothing will be printed)
+				return 0;
+			}
+
+		// struct inside & outside of main function assinging value to it.
+		// anonymous structures
+			#include <iostream>
+			using namespace std;
+
+			struct {
+				int age;
+				string name;
+			}p1,p2;
+
+			int main() {
+				
+				struct {
+					int id;
+					string sub;
+				} std1, std2;
+				
+				p1.age = 12;
+				p1.name = "Twelth";
+				
+				p2.age = 15;
+				p2.name = "Fifteen";
+				
+				//priting the values
+				std::cout << p1.age << std::endl;
+				std::cout << p1.name << std::endl;
+				
+				std::cout << std::endl;
+				std::cout << p2.age << std::endl;
+				std::cout << p2.name << std::endl;
+
+				std::cout << std::endl;
+				
+				std1.id = 101;
+				std1.sub = "Science";
+				
+				std2.id = 201;
+				std2.sub = "Computer Graphics";
+				
+				std::cout << std1.id << std::endl;
+				std::cout << std1.sub << std::endl;
+				
+				std::cout << std::endl;
+				std::cout << std2.id << std::endl;
+				std::cout << std2.sub << std::endl;
+				return 0;
+			}
+
+		//structure outside of main function with some default value
+			#include <iostream>
+			using namespace std;
+
+			struct {
+				int age = 1000;
+				string name = "SAMPLE";
+			}p1,p2;
+
+			int main() {
+			
+				//priting the values
+				std::cout << p1.age << std::endl;
+				std::cout << p1.name << std::endl;
+				
+				std::cout << std::endl;
+				std::cout << p2.age << std::endl;
+				std::cout << p2.name << std::endl;    
+				return 0;
+			}
+		
+		// changing the default of structure
+		// anonymous structure
+			#include <iostream>
+			using namespace std;
+			//This default values gets printed if we don't assign values manually
+			// if we assign values to it, the default values gets overriden/ replaced with new values we assigned.
+			// if you want, you can keep this structure declaration inside main function also.
+
+			struct {
+				int age = 1000;
+				string name = "SAMPLE";
+			} p1,p2;
+
+			int main() {
+				//priting the values
+				std::cout << p1.age << std::endl;
+				std::cout << p1.name << std::endl;
+				
+				p2.age = 22;
+				p2.name = "Ram";
+				
+				std::cout << std::endl;
+				std::cout << p2.age << std::endl;
+				std::cout << p2.name << std::endl;    
+				return 0;
+			}
+		
+		// Named structure:			
+			#include <iostream>
+			using namespace std;
+
+			struct first {
+				// default values
+				int age = 12;       
+				string name = "test";
+			}s1;
+
+			int main() {
+				
+				std::cout << typeid(s1).name() << std::endl;
+				std::cout << s1.age << std::endl;
+				
+				s1.age=24;
+				std::cout << s1.age << std::endl;
+				
+				//creating variable with custom datatype
+				// variable of type first
+				
+				std::cout << std::endl;
+				first s2;
+				std::cout << s2.age << std::endl;
+				std::cout << s2.name << std::endl;
+				
+				std::cout << std::endl;
+				s2.age =24;
+				s2.name = "Nikate";
+				std::cout << s1.age << std::endl;
+				std::cout << s2.name << std::endl;
+				
+				std::cout  << std::endl;
+				
+				struct second {
+					string name = "Sample";
+					int arr[3] = {20,29,100};
+				};
+				
+				second my;
+				std::cout << typeid(my).name() << std::endl;
+				std::cout << my.name << std::endl;
+				std::cout << my.arr[0] << std::endl;
+				
+				//updating values
+				std::cout  << std::endl;
+				my.name = "Second Structure";
+				my.arr[0] = 89;                 //first values i want to be 89. 
+				std::cout << my.name << std::endl;
+				std::cout << my.arr[0] << std::endl;
+				std::cout << my.arr[1] << std::endl;
+				
+				return 0;
+			} 
+
+	//Class Structure are same?
+		-Yes, they are almost same, but there are some differences.
+		-the main difference between them is that struct members are public by default, 
+		-while class members are private by default. 
+		-Structs can contain member functions, just like classes.
+
+		-in below program struct with int x, y & Sum function is public, so we can access them in main directly.
+			#include <iostream>
+			using namespace std;
+			struct {
+				int x=10, y=20;
+				
+				void Sum(){
+					std::cout << "Sum is:: "<< x+y << std::endl;
+				}
+			} s ;
+
+			int main() {
+				
+				s.Sum();			//30
+				
+				//after updating
+				s.x = 100;
+				s.y = 10;
+				s.Sum();			//110
+				return 0;
+			}
+
+		-Using class:
+			-here int x, y & Sum function is private by default we can't access them in main fuction.
+			-need to change the visibility.
+			//ERROR  
+				#include <iostream>
+				using namespace std;
+				class Operation {
+				
+					int x=10, y=20;
+					
+					void Sum(){
+						std::cout << "Sum is:: "<< x+y << std::endl;
+					}
+				};
+
+				int main() {
+				
+					Operation ops;
+					ops.Sum();
+					
+					return 0;
+				}
+			
+			//Working:
+				#include <iostream>
+				using namespace std;
+				class Operation {
+					public:
+						int x=10, y=20;
+						
+						void Sum(){
+							std::cout << "Sum is:: "<< x+y << std::endl;
+						}
+				};
+
+				int main() {
+					Operation ops;
+					ops.Sum();              //30
+					
+					ops.x = 100, ops.y = 10;        
+					ops.Sum();              //110
+					
+					Operation ops2;
+					ops2.Sum();             //30
+					
+					return 0;
+				}
+
+	//Size of structure:
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			struct st{
+				int a;          //size-4
+				double d;        //size-8
+				int arr[10];    //size - 40
+				string s;       //size - 32
+			};
+			
+			// sizeof(datatypeName)
+			std::cout << sizeof(string) << std::endl;   //32
+			std::cout << sizeof(double) << std::endl;   //8
+			
+			std::cout << sizeof(int) << std::endl;      //4
+			std::cout << "Size of struct st: " << sizeof(st) << std::endl;       //88            extra bytes added by compiler when we use double or int or string at same time.
+
+			return 0;
+		}
 
 	//Finding maximum num from vector
 		-using max_element function.
@@ -38261,8 +38665,101 @@ POTD:-[Problem of the Day]
 				}
 			}
 
-	300) 
+	300) Rearrange Array:
+		Problem statement
+			You're given an array ARR[] of size N, 
+			where every element belongs to the range 0 to N-1. 
+			Your task is to rearrange the given array so that ARR[i] becomes ARR[ARR[i]] 
+			and make sure that this task is done with O(1) extra space.
 
+			Constraints :
+				1 <= T <= 10^2
+				1 <= N <= 10^4
+				0 <= ARR[i] <= N-1
+
+				Where 'ARR[i]' is 'ith' element of ARR.
+
+				Time Limit : 1 sec
+			Sample Input 1 :
+				1
+				4
+				0 1 2 3
+				Sample Output 1:
+				0 1 2 3    
+				Explanation of Sample Input 1 :
+				We can see that ARR[ARR[0]] i.e ARR[0] is 0, 
+				hence ARR[0] in the output array will be 0. Also, 
+				ARR[ARR[1]] i.e ARR[1]  is1, hence ARR[1] in the output array will be 1. 
+				Similarly,  ARR[ARR[2]] i.e ARR[2] is 2, hence ARR[2] in the output array will be 2. 
+				Finally, ARR[ARR[3]] i.e ARR[3] is 3, hence ARR[3] in the output array will be 3.
+
+				Sample Input 2 :
+				1
+				4
+				3 2 0 1
+				Sample Output 2 :
+				1 0 3 2
+				Explanation of Sample Input 2 :
+				We can see that ARR[ARR[0]] i.e ARR[3] is 1, 
+				hence ARR[0] in the output array will be 1. Also, 
+				ARR[ARR[1]] i.e ARR[2] is 0, hence ARR[1] in the output array will be 0. 
+				Similarly,  ARR[ARR[2]] i.e ARR[0] is 3, hence ARR[2] in the output array will be 3. 
+				Finally, ARR[ARR[3]] i.e ARR[1] is 2, hence ARR[3] in the output array will be 2.
+
+		//Using Extra Space:
+			#include <bits/stdc++.h> 
+			void rearrangeArray(int arr[], int n) {
+				vector<int> ans(n);
+
+				for(int i=0; i<n; i++){
+					ans[i] = arr[arr[i]];
+				}
+
+				// 1. method to copy vector to array
+				// for(int i=0; i<n; i++)
+				// 	arr[i] = ans[i];
+
+				// 2. method to copy vector to array
+				copy(ans.begin(), ans.end(), arr);
+
+				// 3. method to copy vector to array
+				// transform(ans.begin(), ans.end(), arr, [] (int x){
+				// 	return x;
+				// });
+			}
+
+		//Without using extra space (in-place Re-arrangement)
+			#include <bits/stdc++.h> 
+			void rearrangeArray(int arr[], int n) {
+				for(int i = 0; i < n; i++){        
+					arr[i] += (arr[arr[i]] % n) * n;    
+				}
+
+				for (int i = 0; i < n; i++) {
+					arr[i] /= n;
+				}
+			}
+
+	301)
+	
+	302)
+	
+	303)
+	
+	304)
+	
+	305)
+	
+	306)
+	
+	307)
+	
+	308)
+	
+	309)
+	
+	310)
+	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
