@@ -9508,8 +9508,6 @@ Lecture-22: All about Char Arrays, Strings & solving LeetCode Questions
 					
 					return 0;
 				}
-			
-
 
 		// Replace Spaces with @40:
 			Sample Input 1:
@@ -9765,6 +9763,27 @@ Lecture-22: All about Char Arrays, Strings & solving LeetCode Questions
 						is string contain Hell? Yes
 						New string after removing : o_World
 					*/
+
+		// Find all occurrences of string in mainString
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				string mainString = "abcdabcdabcd";
+				// string sample="xyz";
+				string sample="bcd";
+				
+				int n=0;        //start search for sample string in mainString from 0th index,
+				
+				//printing all occurrences of string sample in mainString
+				while(mainString.find(sample, n) != string::npos){
+					std::cout << mainString.find(sample,n) << std::endl;
+					n = mainString.find(sample,n) + 1;
+				}
+				//1 5 9
+				(n==0) ? std::cout << "String not Exist" << std::endl : std::cout << std::endl; ;
+				return 0;
+			}
 
 		// Remove All Occurrences of a Substring
 			https://leetcode.com/problems/remove-all-occurrences-of-a-substring/description/
@@ -14896,14 +14915,10 @@ Lecture-35: Merge Sort using Recursion | Day-5
 			For small datasets, Merge sort has a higher time complexity than some other sorting algorithms, 
 			such as insertion sort. This can result in slower performance for very small datasets.
 
-
-
 	-Dry run
 	-recursion tree ❌Pending
 
-	-Inversion count problem ❌Pending
-
-	
+	-Inversion count problem ❌Pending	
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -38740,26 +38755,838 @@ POTD:-[Problem of the Day]
 				}
 			}
 
-	301)
+	301) Set Mismatch:
+		Problem Statement:
+			You have a set of integers s, which originally contains all the numbers from 1 to n. 
+			Unfortunately, due to some error, one of the numbers in s got duplicated to another number in the set, 
+			which results in repetition of one number and loss of another number.
+			You are given an integer array nums representing the data status of this set after the error.
+
+			Find the number that occurs twice and the number that is missing and return them in the form of an array.
+
+			Example 1:
+				Input: nums = [1,2,2,4]
+				Output: [2,3]
+
+			Example 2:
+				Input: nums = [1,1]
+				Output: [1,2]
+
+			Constraints:
+				2 <= nums.length <= 104
+				1 <= nums[i] <= 104
+
+		class Solution {
+			public:
+			vector<int> findErrorNums(vector<int>& nums) {
+				int repeated;
+				int notFound=1;
+
+				map<int, int> Freq;
+				for(int i=0; i<nums.size(); i++){
+					Freq[nums[i]]++;
+
+					if(find(nums.begin(), nums.end(), notFound) != nums.end())
+						notFound++;
+				}
+
+				for(auto i: Freq)
+					if(i.second == 2)
+						repeated = i.first;
+
+				/* or
+					for(auto i: Freq)
+						if(i.second == 2){
+							repeated = i.first;
+							break;
+						}
+				*/
+
+				return {repeated, notFound};
+			}
+		};
+
+		//Little optimized:
+			class Solution {
+				public:
+				vector<int> findErrorNums(vector<int>& nums) {
+					int repeated, notFound=1;
+					map<int, int> freq;
+
+					for(int i: nums){
+						freq[i]++;
+						if(freq[i] == 2){
+							repeated = i;
+							break;
+						}
+					}
+
+					for(int i=1; i<=nums.size(); i++)
+						if(find(nums.begin(), nums.end(), i) == nums.end()) {
+							notFound = i;
+							break;
+						}
+
+					return {repeated, notFound};
+				}
+			};
+
+		//More Optimized:
+			class Solution {
+				public:
+				vector<int> findErrorNums(vector<int>& nums) {
+					int duplicate;
+
+					for (const int num : nums)
+						if (nums[abs(num) - 1] < 0)
+							duplicate = abs(num);
+						else
+							nums[abs(num) - 1] *= -1;
+
+					for (int i = 0; i < nums.size(); ++i)
+						if (nums[i] > 0)
+							return {duplicate, i + 1};
+
+					throw;
+					// return {};
+					//if you are returning any answer within loop only, & you are sure that you will find that answer before loop ends,
+					// then for just sake use throw keyword. after using this no need to use returning at the end of function.
+					// if you don't use throw keyword here then you have to return your answer out of loop.
+					//or else you can use return with empty vector like above.
+				}
+			};
+
+	302) Naughty Luke:
+		Problem statement
+			Luke, a naughty kid, went to a museum one day. 
+			He sees an ancient grid 'A' consisting of 'N' rows and 'N' columns. 
+			Each cell of a grid is coloured with either black or white.
+			Luke performs two sequential operations on the grid ‘A’. 
+			First, he twists the grid vertically around the center. 
+			After that, as the second operation, he changes the colours of all the cells. 
+			If the cell is white, it is changed to black and vice-versa.
+
+			The following drawings show the twist operation and the colour change operation, respectively :
+			The black colour is represented by '1' and white colour is represented by '0' here. 
+			You have to print the final grid.
+
+			Example :
+				'N' = 2, 'A' = { {0, 1}, {0, 0} }.
+
+			After twisting, the grid looks like :
+				'A' =  { {1, 0}, {0, 0} }.
+
+			After changing the colours, the grid looks like :
+				'A' =  { {0, 1}, {1, 1} }.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 100.
+
+			Sum of 'N' ^ 2 over all the test cases is <= 10 ^ 4.
+			Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				3
+				1 1 0
+				0 1 1
+				1 0 0
+				1
+				0
+				Sample Output 1 :
+				1 0 0
+				0 0 1
+				1 1 0
+				1
+				Explanation Of Sample Input 1 :
+				For test 1:
+				After twisting the grid looks like : { {0, 1, 1}, {1, 1, 0}, {0, 0, 1} }.
+				After changing the colour of cells the grid looks like : { {1, 0, 0}, {0, 0, 1}, {1, 1, 0} }.
+
+				For test 2:
+				After twisting the grid looks like : { {0} }.
+				After changing the colour of cells the grid looks like : { {1} }.
+				Sample Input 2 :
+				2
+				3
+				1 1 1
+				1 1 1
+				1 1 1
+				4
+				1 1 1 1
+				0 0 0 0
+				1 1 1 1
+				0 0 0 0
+				Sample Output 2 :
+				0 0 0
+				0 0 0
+				0 0 0
+				0 0 0 0
+				1 1 1 1
+				0 0 0 0
+				1 1 1 1
+
+		#include <bits/stdc++.h>
+		vector<vector<int>> getFinalGrid(vector<vector<int>> &a, int n) {
+			//Rotating
+			for(int i=0; i<n; i++)
+				for(int j=0; j<n/2; j++)
+					swap(a[i][j], a[i][n-j-1]);
+
+			//changing
+			for(int i=0; i<n; i++)
+				for(int j=0; j<n; j++)
+					(a[i][j] == 0) ? a[i][j] = 1 : a[i][j]=0;
+				
+			/*
+				//or for above for loop
+				for(int i=0; i<n; i++)
+					for(int j=0; j<n; j++)
+						if(a[i][j] == 0)
+							a[i][j] = 1;
+						else
+							a[i][j]=0;
+			*/		
+			return a;
+		}
 	
-	302)
+	303) Implement strStr():
+		Problem statement
+			You are given two strings A and B. Find the index of the first occurrence of A in B. 
+			If A is not present in B, then return -1.
+
+			For Example:
+				A = “bc”, B = “abcddbc”.
+				String “A” is present at index 1, and 5(0-based index), 
+				but we will return 1 as it is the first occurrence of “A” in string “B”.
+			Follow Up:
+				Can you solve this in linear time and space complexity?
+			Constraints:
+				1 <= T <= 100
+				1 <= |A|, |B| <= 5 * 10^4 
+
+				Time limit: 1 second
+			Sample Input 1:
+				2
+				ninjas codingninjas
+				code codingninjas
+				Sample Output 1:
+				6
+				-1
+				Explanation For Sample Input 1:
+				For the first test case, “ninjas” is present at the 6th index of “codingninjas”.
+
+				For the second test case, “code” is not present in “codingninjas”.
+				Sample Input 2:
+				2
+				e add
+				en engagement
+				Sample output 2:
+				-1
+				0
+
+		#include <bits/stdc++.h> 
+		int findIndexOf(string a, string b){
+			if(b.find(a) != string::npos)
+				return b.find(a);
+			return -1;					//if we didn't found a single occurrence
+		}
 	
-	303)
+	304) Rotate Matrix:
+		Problem statement
+			Given a 2-dimensional matrix of size ‘N’ x ‘M’, rotate the elements of the matrix clockwise.
+
+			For example: 
+			Input Matrix: [ [ 1, 2, 3 ] 
+						[ 4, 5, 6 ] 
+						[ 7, 8, 9 ] ]
+
+			Output Matrix: [ [ 4, 1, 2 ] 
+						[ 7, 5, 3 ] 
+						[ 8, 9, 6 ] ]
+
+			The output matrix is generated by rotating the elements of the input matrix in a clockwise direction. Note that every element is rotated only once. 
+			Note :
+				You do not need to print anything; 
+				it has already been taken care of. Also, update the given matrix in-place.
+			Constraints :
+				1 <= T <= 10
+				1 <= N, M <= 100
+				-10^5 <= data <= 10^5,
+
+				where ‘T’ is the number of test cases,  
+				‘N’ and ‘M’ are the numbers of rows and columns respectively and 
+				‘data’ is the value of the elements of the matrix.
+			Sample Input 1 :
+				1
+				4 4
+				1 2 3 4
+				5 6 7 8
+				9 10 11 12
+				13 14 15 16
+				Sample Output 1 :
+				5 1 2 3
+				9 10 6 4
+				13 11 7 8
+				14 15 16 12
+				Explanation of Sample Input 1 :
+
+				The resulting matrix after rotating the given matrix clockwise is shown above. 
+				Sample Input 2 :
+				2
+				2 2
+				1 3
+				4 5
+				3 3
+				3 4 5
+				5 6 7
+				8 10 20
+				Sample Output 2 :
+				4 1
+				5 3
+				5 3 4
+				8 6 5
+				10 20 7 
+
+		#include <bits/stdc++.h>
+		void rotateMatrix(vector<vector<int>> &mat, int n, int m) {
+			if(n==1 || m==1)
+				return;
+
+			int startRow = 0;
+			int startCol = 0;
+			int endRow = n-1;
+			int endCol = m-1;
+
+			int totalelement = n*m;
+			int cnt=0;
+
+			while(cnt < totalelement){
+
+				// for start row
+				for(int i=startCol; i<=endCol && cnt< totalelement; i++){
+					swap(mat[startRow][startRow],mat[startRow][i]);
+					cnt++;
+				}
+				startRow++;
+
+				// for end col
+				for(int i=startRow; i<=endRow && cnt< totalelement; i++){
+					swap(mat[startRow-1][startRow-1],mat[i][endCol]);
+					cnt++;
+				}
+				endCol--;
+
+				// for end row
+				for(int i=endCol; i>=startCol && cnt < totalelement; i--){
+					swap(mat[startRow-1][startRow-1], mat[endRow][i]);
+					cnt++;
+				}
+				endRow--;
+
+				// for start col
+				for(int i=endRow; i>=startRow; i--){
+					swap(mat[startRow-1][startRow-1],mat[i][startCol]);
+					cnt++;
+				}
+				startCol++;
+
+				if(startRow == endRow || startCol == endCol)
+					return;
+			}
+		}
 	
-	304)
+	305) Create A Matrix With Alternating X And 0:
+		Problem statement
+			You are given two integers ‘N’ and ‘M’. 
+			Your task is to create a matrix of size N x M in which every element is either ‘X’ or ‘0’. 
+			The ‘X’s and ‘0’s must be filled alternatively, the matrix should have an outermost rectangle of ‘X’s, 
+			then a rectangle of ‘0’s, then a rectangle of ‘X’s, and so on.
+
+			For example :
+				For given dimension N = 5 and M = 5 :
+
+				[      [X, X, X, X, X],
+					[X, 0, 0, 0, X],
+					[X, 0, X, 0, X],
+					[X, 0, 0, 0, X],
+					[X, X, X, X, X]     ]
+				Detailed explanation ( Input/output format, Notes, Images )
+				Constraints :
+					1 ≤ T ≤ 50
+					1 ≤ N ≤ 100
+					1 ≤ M ≤ 100
+
+					Where ‘T’ is the number of test cases.
+					‘N’ and ‘M’ are the given dimensions.
+
+					Time Limit: 1 sec 
+				Sample Input 1 :
+					2
+					3 3
+					2 2
+					Sample Output 1 :
+					X X X
+					X 0 X
+					X X X
+					X X
+					X X
+					Explanation of Input 1 :
+					For the first test case, the constructed matrix will contain two rectangles, 
+					the outermost rectangle is of ‘X’s, then there is a rectangle of ‘0’s.
+
+					For, second test case, the constructed matrix will contain one rectangle of ‘X’s.
+					Sample Input 2 :
+					2
+					4 3
+					5 5
+					Sample Output 2 :
+					X X X 
+					X 0 X
+					X 0 X 
+					X X X
+					X X X X X
+					X 0 0 0 X
+					X 0 X 0 X
+					X 0 0 0 X
+					X X X X X
+					Explanation of Input 2 :
+					For the first test case, the constructed matrix will contain two rectangles, 
+					the outermost rectangle is of ‘X’s, then there is a rectangle of ‘0’s.
+
+					For, second test case, the constructed matrix will contain three rectangles, 
+					where the outermost rectangle will be of ‘X’s then ‘0’s and lastly ‘X’s again.
+
+		#include <bits/stdc++.h> 
+		vector<vector<char>> constructMatrix(int n, int m) {
+			vector<vector<char>> ans (n, vector<char> (m,'a'));
+
+			char ch = 'X';
+
+			int totalCnt = n*m;
+
+			int startRow=0;
+			int startCol=0;
+
+			int endRow=n-1;
+			int endCol=m-1;
+			
+			int cnt =0;
+
+			while(cnt< totalCnt){
+				
+				//for start row
+				for(int i=startCol; i<=endCol && cnt < totalCnt; i++){
+					ans[startRow][i] = ch;
+					cnt++;
+				}
+				startRow++;
+
+				//for last Col
+				for(int i=startRow; i<=endRow && cnt < totalCnt; i++){
+					ans[i][endCol] = ch;
+					cnt++;
+				}
+				endCol--;
+
+				//for last Row
+				for(int i=endCol; i>=startCol && cnt <  totalCnt; i--){
+					ans[endRow][i] = ch;
+					cnt++;
+				}
+				endRow--;
+
+				//for start col
+				for(int i=endRow; i>=startRow && cnt < totalCnt; i--){
+					ans[i][startCol] = ch;
+					cnt++;
+				}
+				startCol++;
+				ch = (ch == 'X') ? '0' : 'X';
+			}
+			return ans;
+		}
 	
-	305)
+	306) Magical Numbers:
+		Problem statement
+			Ninja has two integers, 'N' and 'X', and he wants to create a magical number using them. 
+			The number with a form like '10^N + X' is called a magical number.
+			Your task is to return a magical number to Ninja.
+
+
+			Example:
+				'N' = 3
+				'X' = 3
+				The magical number will be '10^3 + 3 = 1000 + 3 = 1003'. So, the answer is '1003'.
+
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^5
+				0 <= X <= 9
+
+				It is guaranteed that the sum of 'N' over all test cases is less than or equal to '10^5'.
+
+				Time limit: 1 second
+			Sample Input 1:
+				2
+				3 9
+				4 1
+				Sample Output 1:
+				1009
+				10001
+				Explanation Of Sample Input 1:
+				For test case 1:
+				The magical number will be '10^3 + 9 = 1000 + 9 = 1009'.
+				So, the answer is '1009'.
+
+				For test case 2:
+				The magical number will be '10^4 + 1 = 10000 + 1 = 10003'.
+				So, the answer is '10001'.
+
+				Sample Input 2:
+				2
+				9 7
+				6 7
+				Sample Output 2:
+				1000000007
+				1000007
+
+		#include<bits/stdc++.h>
+		string findMagicalNumber(int n, int x) {
+			string s="1";
+			for(int i=0; i<n; i++){
+				s.push_back('0');
+			}
+
+			if(x == 0)
+				return s;
+			s.erase(s.begin()+1);
+			string st = to_string(x);
+			s.append(st);
+			return s;
+		}
+
+		//or
+			#include<bits/stdc++.h>
+			string findMagicalNumber(int n, int x) {
+				string s="1";
+				for(int i=0; i<n; i++){
+					s.push_back('0');
+				}
+
+				s.pop_back();
+				char ch = '0' + x;
+				s.push_back(ch);
+				return s;
+			}
 	
-	306)
+	307) Ninja And The Rows:
+		Problem statement
+			Ninja has been provided a matrix 'MAT' of size 'N X M' where 'M' 
+			is the number of columns in the matrix, and 'N' is the number of rows.
+			The weight of the particular row is the sum of all elements in it. 
+			Ninja wants to find the maximum weight amongst all the rows.
+
+			Your task is to help the ninja find the maximum weight amongst all the rows.
+			EXAMPLE:
+				Input: 'N' = 2, 'M' = 3, 'MAT' = [[1, 2, 3], [2, 0, 0]]
+				Output: 6
+
+				The weight of first row is 1 + 2 + 3 = 6
+				The weight of the second row is 2 + 0 + 0 = 2;
+				hence the answer will be a maximum of 2 and 6, which is 6.
+
+			Constraints :
+				1 <= 'T' <= 10
+				1 <= 'N' <= 10^2
+				1 <= 'M' <= 10^2
+				0 <= 'MAT[I][J]' <= 10^5
+
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				3 3
+				1 2 3
+				3 4 2
+				3 4 2
+				1 1
+				2
+				Sample Output 1 :
+				9
+				2
+				Explanation Of Sample Input 1 :
+				For the first test case, the answer will be 9. It will be formed by the 2nd row, 
+				and it will be the maximum amongst all.
+
+				For the first test case, as there is only one row, 
+				the answer will be its sum which is 2.
+				Sample Input 2 :
+				2
+				1 3
+				1 2 3
+				4 2
+				2 2
+				3 4 
+				2 4
+				4 5
+				Sample Output 2 :
+				6
+				9
+
+		#include <bits/stdc++.h> 
+		int maximumWeightRow(int n, int m, vector<vector<int>> &mat) {
+			int mxAns = INT_MIN;
+			for(int i=0; i<n; i++){
+				int crntSum=0;
+				for(int j=0; j<m; j++){
+					crntSum += mat[i][j];
+				}
+				mxAns = max(mxAns, crntSum);
+			}
+			return mxAns;
+		}
 	
-	307)
+	308) Majority element:
+		Problem statement
+			You have been given an array/list 'ARR' consisting of 'N' integers. 
+			Your task is to find the majority element in the array. If there is no majority element present, print -1.
+
+			Note:
+				A majority element is an element that occurs more than floor('N' / 2) times in the array.
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 5 * 10^3
+				-10^5 <= ARR[i] <= 10^5
+
+			Where 'ARR[i]' denotes the element at the 'i'th index in the array/list 'ARR'.
+
+			Time limit: 1 sec
+			Sample Input 1:
+				2
+				5
+				2 3 9 2 2
+				4
+				8 5 1 9 
+				Sample Output 1:
+				2
+				-1
+				Explanation of Sample Output 1:
+				In test case 1, frequencies of occurrences of different elements are:
+
+				2 → 3 times
+				3 → 1 time
+				9 → 1 time
+
+				As 2 occurs more than floor(5/2) (i.e. floor(2.5) = 2) times, it is the majority element.
+
+				In test case 2, frequencies of occurrences of different elements are:
+
+				8 → 1 time
+				5 → 1 time
+				1 → 1 time
+				9 → 1 time
+
+				As no element occurs more than floor(4/2) = 2 times. Thus No majority element is present.
+				Sample Input 2:
+				2
+				7
+				8 8 8 8 8 9 1 
+				4
+				2 2 3 3
+				Sample Output 2:
+				8
+				-1
+				Explanation of Sample Output 2:
+				In test case 1, frequencies of occurrences of different elements are:
+
+				8 → 5 times
+				9 → 1 time
+				1 → 1 time
+
+				As 8 occurs more than floor(7/2) (i.e. floor(3.5) = 3) times, it is the majority element.
+
+				In test case 2, frequencies of occurrences of different elements are:
+
+				2 → 2 times
+				3 → 2 times
+
+				As no element occurs more than floor(4/2) = 2 times. Thus No majority element is present.
+
+		#include <bits/stdc++.h>
+		int findMajorityElement(int arr[], int n) {
+			map<int, int> Freq;
+
+			for(int i=0; i<n; i++)
+				Freq[arr[i]]++;
+			
+			for(auto itr: Freq){
+				if(itr.second > (n/2))
+					return itr.first;
+			}
+			return -1;
+		}
 	
-	308)
+	309) First non repeating character:
+		Problem statement
+			Ninja is now bored with numbers and is now playing with characters but 
+			hates when he gets repeated characters. Ninja is provided a string, 
+			and he wants to return the first unique character in the string.
+			The string will contain characters only from the English alphabet set, 
+			i.e., ('A' - 'Z') and ('a' - 'z'). If there is no non-repeating character, 
+			print the first character of the string. If there is no non-repeating character, 
+			return the first character of the string.
+
+			Constraints:
+				1 <= T <= 10
+				1 <= Length of Input String <= 10^4
+
+				Time Limit: 1 sec 
+			Sample Input 1 :
+				2
+				aDcadhc
+				AabBcC
+				Sample Output 1:
+				D
+				A
+				Explanation for Sample Input 1:
+				In the first test case, ‘a’ is repeated.’ D’ is the first non-repeating character in the string, so we return it.
+
+				In the second test case, all the characters are non-repeating, so we return the first character.
+				Sample Input 2 :
+				2
+				ABcd
+				AAAbcdb
+				Sample Output 2:
+				A
+				c 
+
+		#include <bits/stdc++.h> 
+		char firstNonRepeatingCharacter(string str) {
+			for(int i=0; i<str.length()-1; i++){
+			int flag = 1;
+
+			for(int j=i+1; j<str.length(); j++)
+				if(str[i] == str[j]){
+				flag=0;
+				break;
+				}
+
+			
+			for(int j=i-1; j>=0; j--)
+				if(str[i] == str[j]){
+				flag=0;
+				break;
+				}
+
+			if(flag)
+				return str[i];
+			}
+			return str[0];
+		}
+
+		//or
+			#include <bits/stdc++.h> 
+			char firstNonRepeatingCharacter(string str) {
+				map<char, int> Freq;
+				for(char ch: str){
+				Freq[ch]++;
+				}
+
+				for(char ch: str)
+				if(Freq[ch] == 1)
+					return ch;
+				return str[0];
+			}
 	
-	309)
+	310) Sort By Kth Bit:
+		Problem statement
+			You are given an array/list ‘ARR’ of ‘N’ positive integers and an integer ‘K’. 
+			Your task is to group all the array elements with ‘K-th’ bit (rightmost bit is ‘1st’ bit) 
+			equal to 0 followed by all the elements with ‘K-th’ bit equal to 1.
+
+			Note 1: The relative order inside both the groups should remain as it was in the input.
+			Note 2: You have to return the modified array/list..
+
+			For Example :
+			If ‘ARR’ is {1,2,3,4} and ‘K’ = 1, then after modification, 
+			‘ARR’ should be {2,4,1,3} because ‘K-th’ (‘K’ = 1) of {2,4} is 0 and ‘K-th’ bit of {1,3} is 1.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^4
+				1 <= ARR[i] <= 10^9
+				1 <= K <= 31
+
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				4 1
+				4 3 2 1
+				5 2
+				2 5 1 6 7
+				Sample Output 1:
+				4 2 3 1
+				5 1 2 6 7
+				Explanation For Sample Input 1:
+				In example 1, the original ‘ARR’ is {4,3,2,1} and ‘K’ = 1. 
+				After modification, the ‘ARR’ should be {4,2,3,1} because {4,2} 
+				will come first as their 1st bit is 0 and {3,1} will come after that as their 1st bit is 1.
+
+				In example 2, the original ‘ARR’ is {2,5,1,6,7} and ‘K’ = 2. 
+				After modification the ‘ARR’ should be {5,1,2,6,7} because {5,1} 
+				will come first as their 2nd bit is 0 and {2,6,7} will come after that as their 2nd bit is 1.
+				Sample Input 2:
+				2
+				5 1
+				3 6 2 1 4
+				5 3
+				7 6 2 9 3
+				Sample Output 2:
+				6 2 4 3 1
+				2 9 3 7 6
+				Explanation For Sample Input 2:
+				In example 1, the original ‘ARR’ is {3,6,2,1,4} and ‘K’ = 1. 
+				After modification the ‘ARR’ should be {6,2,4,3,1} because {6,2,4} 
+				will come first as their 1st bit is 0 and {3,1} will come after that as their 1st bit is 1.
+
+				In example 2, the original ‘ARR’ is {7,6,2,9,3} and ‘K’ = 3. 
+				After modification the ‘ARR’ should be {2,9,3,7,6} because {2,9,3} 
+				will come first as their 3rd bit is 0 and {7,6} will come after that as their 3rd bit is 1.
+
+		vector<int> sortArrayByKBit(int n, int k, vector<int> &arr) {
+			vector<int> front;
+			vector<int> back;
+
+			for(int i=0; i<arr.size(); i++){
+				int temp = arr[i];
+				temp >>= k-1;
+
+				if(temp & 1)
+					back.push_back(arr[i]);
+				else
+					front.push_back(arr[i]);
+			}
+			front.insert(front.end(), back.begin(), back.end());			//adding vector back to end of front vector
+			return front;
+		}
 	
-	310)
+	311)
+
+	312)
+
+	313)
+
+	314)
+
+	315)
+
+	316)
+
+	317)
 	
+	318)
+
+	319)
+	
+	320)
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
@@ -39761,9 +40588,7 @@ calender:
 	return 0;
 	}
 --------------------------------------------------------------------------------------------------------
-//❌Pending
-	//https://www.codingninjas.com/studio/problems/rotate-matrix_981260
-	
+//❌Pending	
 	//Excel Column Number https://www.codingninjas.com/studio/problems/excel-column-number_630461 ❌Pending
 
 	//K Sum Subset https://www.codingninjas.com/studio/problems/k-sum-subset_2546852 ❌Pending
