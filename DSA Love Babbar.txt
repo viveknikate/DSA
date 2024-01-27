@@ -5664,7 +5664,7 @@ Lecture-10: Solving LeetCode/CodeStudio Questions [Arrays]
 		1 4
 		2 3
 
-		Explaination For Sample Output 1:
+		Explanation For Sample Output 1:
 		Here, 1 + 4 = 5
 			2 + 3 = 5
 		Hence the output will be, (1,4) , (2,3).
@@ -14904,7 +14904,8 @@ Lecture-35: Merge Sort using Recursion | Day-5
 
 	Drawbacks of Merge Sort:
 		Space complexity: 
-			Merge sort requires additional memory to store the merged sub-arrays during the sorting process. 
+			Merge sort requires additional memory to store the merged sub-arrays during the sorting process.
+			The Space complexity of merge sort algorithm is O(n).
 
 		Not in-place: 
 			Merge sort is not an in-place sorting algorithm, 
@@ -14915,9 +14916,76 @@ Lecture-35: Merge Sort using Recursion | Day-5
 			For small datasets, Merge sort has a higher time complexity than some other sorting algorithms, 
 			such as insertion sort. This can result in slower performance for very small datasets.
 
-	-Dry run
-	-recursion tree ❌Pending
+	-Dry run + recursion tree :
+		#include <iostream>
+			using namespace std;
 
+			void SortNmerge(int *p, int s, int e) {
+				int mid = (s + e) / 2;
+				int len1 = mid - s + 1;
+				int len2 = e - mid;
+				
+				int *firstArr = new int[len1];
+				int *secondArr = new int[len2];
+				
+				int index=s;
+				for(int i=0; i<len1; i++)
+					firstArr[i] = p[index++];
+				
+				for(int i=0; i<len2; i++)
+					secondArr[i] = p[index++];
+				
+				int mainIndex = s;
+				int index1=0, index2=0;
+				
+				while(index1 < len1 && index2< len2){
+					if(firstArr[index1] < secondArr[index2])
+						p[mainIndex] = firstArr[index1++];
+					else
+						p[mainIndex] = secondArr[index2++];
+					mainIndex++;
+				}
+				
+				while(index1 < len1)
+					p[mainIndex++] = firstArr[index1++];
+				
+				while(index2 < len2)
+					p[mainIndex++] = secondArr[index2++];
+				
+				delete [] firstArr;
+				delete [] secondArr;
+			}
+
+			void Splitter(int a[],int s, int e){
+				if(s == e)
+					return ;
+				
+				int mid = (s + e) / 2;
+				
+				Splitter(a, s, mid);
+				Splitter(a, mid+1, e);
+				SortNmerge(a, s, e);
+			}
+
+			int main() {
+				int arr[] = {1,2,3,4,5,10,9,8,7,6};
+				int len = 10;
+				
+				for(int i: arr)
+					std::cout << i <<"\t";              //1       2       3       4       5       10      9       8       7       6
+					
+				std::cout << std::endl;
+				
+				int start=0, end=len-1;
+				Splitter(arr, start, end);
+				
+				for(int a: arr)
+					std::cout << a << "\t";             //1       2       3       4       5       6       7       8       9       10
+				return 0;
+			}
+		=>
+			
+		
 	-Inversion count problem ❌Pending	
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
@@ -18185,7 +18253,7 @@ POTD:-[Problem of the Day]
 
 	#Weekend Problem:
 		21) Chocolate Removal Challenge:
-			Explaination:
+			Explanation:
 				You are given an array 'A' of size 'N'. Each element 'A[i]' represents the number of chocolates in the 'i-th' pile. 
 				In a single move, you are allowed to perform the following operation: 
 				If a pile contains more than 23 chocolates, you can take out all the chocolates leaving only 23 in the pile.
@@ -27648,7 +27716,8 @@ POTD:-[Problem of the Day]
 			};
 
 	151) Sort Integers by The Number of 1 Bits:
-		You are given an integer array arr. Sort the integers in the array in ascending order 
+		Problem Statement:
+			You are given an integer array arr. Sort the integers in the array in ascending order 
 			by the number of 1's in their binary representation and in case of two or more 
 			integers have the same number of 1's you have to sort them in ascending order.
 			Return the array after sorting it.
@@ -27683,6 +27752,11 @@ POTD:-[Problem of the Day]
 					manipulator.push_back(temp);
 				}
 
+				
+				// need to sort manipulator vector
+				// firstly based on total setBits, if num1's set bits are 1 & num2's set bits are 0
+				// then num2 will be placed before num1.
+
 				sort(manipulator.begin(), manipulator.end(), [](pair<int,int> &a, pair<int,int> &b){
 					if(a.second != b.second)
 						return a.second < b.second;
@@ -27698,6 +27772,26 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 		};
+
+		//or without using pair:
+			class Solution {
+				public:
+				vector<int> sortByBits(vector<int>& arr) {
+					vector<int> ans;
+					int tracker=0;
+					sort(arr.begin(), arr.end());
+					
+					while(tracker<32){				//32 is because of size of integer is 4bytes ie. 32 bit. (0 to 31 = 32bits).
+						for(int i=0; i<arr.size(); i++){
+							int single_bit = __builtin_popcount(arr[i]);
+							if(single_bit == tracker)
+								ans.push_back(arr[i]);
+						}
+						tracker++;
+					}
+					return ans;
+				}
+			};
 
 	152) Beautiful Xor Pairs:
 		Problem Statement
@@ -30700,7 +30794,7 @@ POTD:-[Problem of the Day]
 				N = 16
 				Output: 
 				16 11 6 1 -4 1 6 11 16
-				Explaination: 
+				Explanation: 
 				The value decreases until it is greater than 0. After that it increases and stops when it becomes 16 again.
 
 			Example 2:
@@ -30708,7 +30802,7 @@ POTD:-[Problem of the Day]
 				N = 10
 				Output: 
 				10 5 0 5 10
-				Explaination: It follows the same logic as per the above example.
+				Explanation: It follows the same logic as per the above example.
 
 			Your Task:
 			You do not need to read input or print anything. 
@@ -37607,7 +37701,7 @@ POTD:-[Problem of the Day]
 					}
 
 					/*
-						// or for above for loop you can use below syntax wihtout '{ }' braces.
+						// or for above for loop you can use below syntax without '{ }' braces.
 						for(int j=0; j<N; j++)
 							s += to_string(matrix[i][j]);
 					
@@ -39568,25 +39662,1559 @@ POTD:-[Problem of the Day]
 			return front;
 		}
 	
-	311)
+	311) Terms Of AP:
+		Problem statement
+			Ayush is given a number ‘X’. 
+			He has been told that he has to find the first ‘X’ terms of the series 3 * ‘N’ + 2, 
+			which are not multiples of 4. Help Ayush to find it as he has not been able to answer.
+			Example: 
+				Given an ‘X’ = 4. The output array/list which must be passed to Ayush will be [ 5, 11, 14, 17 ].
 
-	312)
+			Constraints:
+				1 <= T <= 10^2
+				1 <= X <= 10^5
 
-	313)
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				2
+				5
+				Sample Output 1:
+				5 11
+				5 11 14 17 23
+				Explanation For Sample Input 1:
+				In the first test case, the first number is 5, 
+				while the second number cannot be 8 as it is divisible by 4, 
+				and so, the next number is directly 11 as it is not divisible by 4.
 
-	314)
+				In the second test case, the first two numbers are 5 and 11. 
+				While following three numbers are 14, 17 and 23 for ‘N’ = 4, 5 and 7 respectively. 
+				20 is divisible by 4, and thus, 20 cannot be included in the list.
+				Sample Input 2:
+				2
+				7
+				8
+				Sample Output 2:
+				5 11 14 17 23 26 29
+				5 11 14 17 23 26 29 35
+				Explanation For Sample Input 2:
+				In the first test case, the first five numbers are 5, 11, 14, 17 and 23.
+				While the following two numbers are 26 and 29 for N = 8 and 9 respectively.
 
-	315)
+				In the second test case, the seven numbers are explained in the above test case and for N = 10,
+				we get the number 32, which is divisible by 4 and thus, we reject it. 
+				For N = 11, the number is 35 and is not divisible by 4.
 
-	316)
+		#include <bits/stdc++.h> 
+		#include <vector>
+		vector <int> termsOfAP(int x) {
+			vector<int> ans;
+			int crntValue = 1;
 
-	317)
+			int looper = x;
+			for(int i=0; i<looper; i++){
+				if((3 * (crntValue) + 2) % 4 !=0){
+					ans.push_back(3 * crntValue + 2);
+				}else{
+					looper++;
+				}
+				crntValue++;
+			}
+				
+			return ans;
+		}
+
+	312) Squares of a Sorted Array:
+		Problem Statement:
+			Given an integer array nums sorted in non-decreasing order, 
+			return an array of the squares of each number sorted in non-decreasing order.
+			Example 1:
+				Input: nums = [-4,-1,0,3,10]
+				Output: [0,1,9,16,100]
+				Explanation: After squaring, the array becomes [16,1,0,9,100].
+				After sorting, it becomes [0,1,9,16,100].
+			
+			Example 2:
+				Input: nums = [-7,-3,2,3,11]
+				Output: [4,9,9,49,121]
+				
+			Constraints:
+
+				1 <= nums.length <= 104
+				-104 <= nums[i] <= 104
+				nums is sorted in non-decreasing order.
+			
+			Follow up: Squaring each element and sorting the new array is very trivial, 
+			could you find an O(n) solution using a different approach?
+
+		class Solution {
+			public:
+			vector<int> sortedSquares(vector<int>& nums) {
+				vector<int> ans;
+				for(int i: nums)
+					ans.push_back(i*i);
+				
+				sort(ans.begin(), ans.end());
+				return ans;
+			}
+		};
+
+		//More optimized:
+			class Solution {
+				public:
+				vector<int> sortedSquares(vector<int>& A) {
+					vector<int> res(A.size());
+					int l = 0, r = A.size() - 1;
+					for (int k = A.size() - 1; k >= 0; k--) {
+						if (abs(A[r]) > abs(A[l])) res[k] = A[r] * A[r--];
+						else res[k] = A[l] * A[l++];
+					}
+					return res;
+				}
+			}; 
+
+	313) Running Sum of 1d Array
+		Problem statement:
+			Given an array nums. We define a running sum of an array as runningSum[i] = sum(nums[0]…nums[i]).
+			Return the running sum of nums.
+			Example 1:
+			Input: nums = [1,2,3,4]
+			Output: [1,3,6,10]
+			Explanation: Running sum is obtained as follows: [1, 1+2, 1+2+3, 1+2+3+4].
+
+			Example 2:
+			Input: nums = [1,1,1,1,1]
+			Output: [1,2,3,4,5]
+			Explanation: Running sum is obtained as follows: [1, 1+1, 1+1+1, 1+1+1+1, 1+1+1+1+1].
+
+			Example 3:
+			Input: nums = [3,1,2,10,1]
+			Output: [3,4,6,16,17]
+
+			Constraints:
+				1 <= nums.length <= 1000
+				-10^6 <= nums[i] <= 10^6
+
+		class Solution {
+			public:
+			vector<int> runningSum(vector<int>& nums) {
+				int sum=0;
+				for(int i=0; i<nums.size(); i++){
+					sum += nums[i];
+					nums[i] = sum;
+				}
+				return nums;
+			}
+		};
+
+		//or
+			class Solution {
+				public:
+				vector<int> runningSum(vector<int>& nums) {
+					for(int i=1; i<nums.size(); i++)
+						nums[i] += nums[i-1];
+					return nums;
+				}
+			};
+
+	314) Single Number:
+		Problem Statement:
+			Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+			You must implement a solution with a linear runtime complexity and use only constant extra space.	
+
+			Example 1:
+				Input: nums = [2,2,1]
+				Output: 1
+
+			Example 2:
+				Input: nums = [4,1,2,1,2]
+				Output: 4
+
+			Example 3:
+				Input: nums = [1]
+				Output: 1
+			
+
+			Constraints:
+				1 <= nums.length <= 3 * 104
+				-3 * 104 <= nums[i] <= 3 * 104
+				Each element in the array appears twice except for one element which appears only once.
+
+		class Solution {
+			public:
+			int singleNumber(vector<int>& nums) {
+				int ans = nums[0];			//or, int ans = 0;
+				for(int i=1; i<nums.size(); i++)
+					ans ^= nums[i];
+				return ans;
+			}
+		};
+
+	315) Single Number II: ❌Pending
+		Problem Statement:
+			Given an integer array nums where every element appears three times except for one, 
+			which appears exactly once. Find the single element and return it.
+			You must implement a solution with a linear runtime complexity and use only constant extra space.
+
+			Example 1:
+				Input: nums = [2,2,3,2]
+				Output: 3
+
+			Example 2:
+				Input: nums = [0,1,0,1,0,1,99]
+				Output: 99
+
+			Constraints:
+				1 <= nums.length <= 3 * 104
+				-2^31 <= nums[i] <= 2^31 - 1
+				Each element in nums appears exactly three times except for one element which appears once.
 	
-	318)
+		class Solution {
+			public:
+			int singleNumber(vector<int>& nums) {
+				map<int, int> Freq;
+				for(int i: nums)
+					Freq[i]++;
+				
+				for(auto at:Freq)
+					if(at.second == 1)
+						return at.first;
 
-	319)
+				throw;      
+				//i don't have anything to put inside return  statement here that's why i kept throw keyword
+				//code will never reach till here. code will gets his answer before reaching here only.
+			}
+		};
+
+		//Without using extra space:
+			class Solution {
+				public:
+				int singleNumber(vector<int>& nums) {
+					int ans = 0;
+
+					for (int i = 0; i < 32; ++i) {
+						int sum = 0;
+						
+						for (const int num : nums)
+							sum += (num >> i) & 1;
+
+						sum %= 3;
+						ans |= sum << i;
+					}
+
+					return ans;
+				}
+			};
+
+			//or
+			class Solution {
+				public:
+				int singleNumber(vector<int>& nums) {
+					int ones = 0, twos = 0;
+					for (int num : nums) {
+						ones = (ones ^ num) & ~twos;
+						twos = (twos ^ num) & ~ones;
+					}
+					return ones;
+				}
+			};
+
+	316) Single Number III:
+		Problem Statement:
+			Given an integer array nums, 
+			in which exactly two elements appear only once and all the other elements appear exactly twice. 
+			Find the two elements that appear only once. You can return the answer in any order.
+			You must write an algorithm that runs in linear runtime complexity and uses only constant extra space.
+
+			Example 1:
+				Input: nums = [1,2,1,3,2,5]
+				Output: [3,5]
+				Explanation:  [5, 3] is also a valid answer.
+
+			Example 2:
+				Input: nums = [-1,0]
+				Output: [-1,0]
+
+			Example 3:
+				Input: nums = [0,1]
+				Output: [1,0]
+
+			Constraints:
+				2 <= nums.length <= 3 * 104
+				-231 <= nums[i] <= 231 - 1
+				Each integer in nums will appear twice, only two integers will appear once.
+
+		class Solution {
+			public:
+			vector<int> singleNumber(vector<int>& nums) {
+				vector<int> ans;
+				map<int, int> Freq;
+				for(int i: nums)
+					Freq[i]++;
+				
+				for(auto at: Freq)
+					if(at.second == 1)
+						ans.push_back(at.first);
+
+				return ans;
+			}
+		};
+		
+		//Without using extra space: ❌Pending
+			class Solution {
+				public:
+				vector<int> singleNumber(vector<int>& nums) {
+					//consider 1 1 2 2 5 7 4 4
+					//xor will give 2 ie 1st bit is different in numbers
+					//divide it into 2 half numbers ie with ith bit set or not
+					int xor1=0;
+					for(auto it:nums) {
+						xor1=xor1^it;
+					}
+
+					//check which bit is set
+					int n=xor1;
+					int i=0;
+					//  i=n&~(n-1);
+					while(n){
+						if(n&1)
+							break;
+						i++;
+						n=n>>1;
+					}
+
+					int xor2=0,xor3=0;
+					for(auto it:nums) {
+						if((it&(1<<i)))//check ith bit is set
+							xor2=xor2^it;
+						else
+							xor3=xor3^it;
+					}
+					return {xor2,xor3};
+				}
+			};
 	
-	320)
+	317) Bitwise AND of Numbers Range:
+		Problem statement:
+			Given two integers left and right that represent the range [left, right], 
+			return the bitwise AND of all numbers in this range, inclusive.	
+
+			Example 1:
+				Input: left = 5, right = 7
+				Output: 4
+
+			Example 2:
+				Input: left = 0, right = 0
+				Output: 0
+
+			Example 3:
+				Input: left = 1, right = 2147483647
+				Output: 0
+			
+			Constraints:
+				0 <= left <= right <= 231 - 1
+
+		//Explanation:
+			The trick here is that :
+			Bitwise-AND of any two numbers will always produce a number less than or equal to the smaller number.
+
+			Consider the following example:
+						12 ---- 1100
+						11 ---- 1011
+						10 ---- 1010
+						9  ---- 1001
+						8  ---- 1000
+						7  ---- 0111
+						6  ---- 0110
+						5  ---- 0101
+												
+			Desired Range: [5,12]
+			Starting from 12, the loop will first do
+				12 & 11 = 8
+
+			Next iteration, the loop will do
+				8 & 7 = 0
+
+			why did we skip anding of 10,9? Because even if we did so, 
+			the result would eventually be anded with 8 whose value would be lesser than equal to 8.
+
+			Hence, you start from the range end and keep working your way down the range till you reach the start.
+
+		//Not Optimized:
+			class Solution {
+				public:
+				int rangeBitwiseAnd(int left, int right) {
+					int ans=left;
+					for(int i=left+1; i<=right; i++)
+						ans &= i;
+
+					return ans;
+				}
+			};
+
+			//or
+				int rangeBitwiseAnd(int left, int right) {
+					int ans=left;
+					for(long i=left+1; i<=right; i++){
+						ans &= i;
+						if(ans == 0)
+							break;
+					}
+					return ans;
+				}
+
+		//Optimized:
+			class Solution {
+				public:
+				int rangeBitwiseAnd(int left, int right) {
+					
+					while(left < right)
+						right &= right-1;
+
+					return right;
+				}
+			};
+	
+	318) Replace Elements with Greatest Element on Right Side:
+		Problem Statement:
+			Given an array arr, replace every element in that array with the greatest element among the elements to its right, 
+			and replace the last element with -1.
+
+			After doing so, return the array.
+
+			Example 1:
+				Input: arr = [17,18,5,4,6,1]
+				Output: [18,6,6,6,1,-1]
+				Explanation: 
+				- index 0 --> the greatest element to the right of index 0 is index 1 (18).
+				- index 1 --> the greatest element to the right of index 1 is index 4 (6).
+				- index 2 --> the greatest element to the right of index 2 is index 4 (6).
+				- index 3 --> the greatest element to the right of index 3 is index 4 (6).
+				- index 4 --> the greatest element to the right of index 4 is index 5 (1).
+				- index 5 --> there are no elements to the right of index 5, so we put -1.
+
+			Example 2:
+				Input: arr = [400]
+				Output: [-1]
+				Explanation: There are no elements to the right of index 0.
+
+			Constraints:
+				1 <= arr.length <= 104
+				1 <= arr[i] <= 105
+
+		class Solution {
+			public:
+			vector<int> replaceElements(vector<int>& arr) {
+				vector<int> ans(arr.size(), -1);
+
+				for(int i=0; i<arr.size()-1; i++)
+					ans[i] = *max_element(arr.begin()+i+1, arr.end());
+
+				return ans;
+			}
+		};
+
+		//without using extra function(max_element):
+			class Solution {
+				public:
+				vector<int> replaceElements(vector<int>& arr) {
+					
+					int maxi = -1;
+					int n = arr.size();
+
+					vector<int>ans(n);
+
+					for(int i = n-1; i>=0; i--){
+					ans[i] = maxi;
+					maxi = max(arr[i], maxi);
+					}
+					
+					return ans;
+				}
+			};
+
+	319) Add binary strings:
+		Problem statement
+			You have been given two binary strings ‘A’ and ‘B’. 
+			Your task is to find the sum of both strings in the form of a binary string.
+
+			Binary strings are the representation of integers in the binary form. For example, 
+			the binary strings of 9 and 16 are “1001” and “10000” respectively.
+
+			Constraints:
+				1 <= T <= 5
+				1 <= N, M <= 5000
+				‘A’ and ‘B’ consist only of '0' or '1' characters.
+				Each string does not contain leading zeros except for the zero itself.
+
+				Time limit: 1 sec
+			Sample Input 1:
+				2
+				2 2
+				10 01
+				3 2
+				111 10
+				Sample Output 1:
+				11
+				1001
+				Explanation of sample input 1:
+				In the first test case, the first string is “10” which is 2 in the decimal format, 
+				and the second string is “01” which is 1 in the decimal format. So, 2 + 1 = 3, 
+				which is represented as “11” in binary form.
+
+				In the first test case, the first string is “111” which is 7 in the decimal format, 
+				and the second string is “10” which is 2 in the decimal format. So, 7 + 2 = 9, 
+				which is represented as “1001” in binary form.
+				Sample Input 2:
+				2
+				3 1
+				111 0
+				1 1
+				1 1
+				Sample Output 2:
+				111
+				10
+				Explanation for sample input 2:
+				In the first test case, the first string is “111” which is 7 in the decimal format, 
+				and the second string is “0” which is 0 in the decimal format. So, 7 + 0 = 0, 
+				which is represented as “111” in binary form.
+
+				In the first test case, the first string is “1” which is 1 in the decimal format and the second string is “1” 
+				which is 1 in the decimal format. So, 1 + 1 = 2, which is represented as “10” in binary form.
+
+		//Not Optimized:
+			#include<bits/stdc++.h>
+			string addBinaryString(string &a, string &b, int n, int m) {
+				//from binary string to integer num
+				int n1 = stoi(a,0,2);
+				int n2 = stoi(b,0,2);
+
+				int sum = n1 + n2;
+				string ans = bitset<32>(sum).to_string();
+
+				//removing leading zero's
+				ans = ans.substr(ans.find('1'));
+
+				return ans;    
+			}
+		
+		//Optimized:
+			#include<bits/stdc++.h>
+			string addBinaryString(string &a, string &b, int n, int m) {
+				string ans;
+				int mxLength = max(n,m);
+
+				char carry='0';
+
+				while(mxLength >=0) {
+					char ch1, ch2;
+					if(n<=0){
+						ch1 = '0';
+					}else{
+						n--;
+						ch1 = a[n];
+					}
+
+					if(m<=0){
+						ch2 = '0';
+					}else{
+						m--;
+						ch2 = b[m];
+					}
+
+					char ch;
+					if((ch1 == '1' && ch2 == '0' && carry == '0') || 
+						(ch1 == '0' && ch2 == '1' && carry == '0') || 
+						(ch1 == '0' && ch2 == '0' && carry == '1')) {
+						ch = '1';
+						carry='0';
+					}else if((ch1 == '1' && ch2 == '0' && carry == '1') || 
+						(ch1 == '0' && ch2 == '1' && carry == '1') || 
+						(ch1 == '1' && ch2 == '1' && carry =='0')) {
+						ch = '0';
+						carry ='1';
+					}else if((ch1 == '0' && ch2 == '0' && carry == '0')){
+						ch='0';
+						carry='0';
+					}else if((ch1 == '1' && ch2 == '1' && carry == '1')){
+						ch = '1';
+						carry = '1';
+					}
+
+					ans += ch;
+					mxLength--;
+				}
+				reverse(ans.begin(), ans.end());
+
+				//removing leading zero's;
+				ans = ans.substr(ans.find('1'));
+
+				return ans;
+			}
+	
+		//Or Other approach:
+			#include<bits/stdc++.h>
+			string addBinaryString(string &a, string &b, int n, int m) {
+				//  To store the sum of binary strings.
+				string sum;
+
+				int i = 0;
+				
+				//  To store the carry while adding the bits.
+				int carry = 0;
+
+				while (i < max(n, m)) {
+					//  Initialize the current sum of the bits.
+					int curSum = carry;
+
+					if (i < n) {
+						//  Add the value in the current sum.
+						curSum = curSum + (a[n - 1 - i] - '0');
+					}
+
+					if (i < m){
+						//  Add the value in the current sum.
+						curSum = curSum + (b[m - 1 - i] - '0');
+					}
+
+					//  Append the resulting bit at the end of the string.
+					sum.push_back((curSum) % 2 + '0');
+
+					//  Update the carry value.
+					carry = curSum / 2;
+
+					i++;
+				}
+				if (carry != 0) {
+					sum.push_back('1');
+				}
+
+				//  Reverse the binary string to move the least significant bits at the end of the string.
+				reverse(sum.begin(), sum.end());
+
+				return sum;
+			}
+
+	320) Best Time to Buy and Sell Stock:
+		Problem statement
+			You are given an array/list 'prices' where the elements of the array represent the prices of 
+			the stock as they were yesterday and indices of the array represent minutes. 
+			Your task is to find and return the maximum profit you can make by buying and selling the stock. 
+			You can buy and sell the stock only once.
+
+			Note:
+				You can’t sell without buying first.
+			For Example:
+				For the given array [ 2, 100, 150, 120],
+				The maximum profit can be achieved by buying the stock at minute 0 when its price is 
+				Rs. 2 and selling it at minute 2 when its price is Rs. 150.
+				So, the output will be 148.
+
+			Constraints:
+				1 <= T <= 10
+				2 <= N <= 10^4
+				1 <= ARR[i] <= 10^9
+
+				Time Limit: 1 sec.
+			Sample Input 1:
+				2
+				4
+				1 2 3 4
+				4
+				2 2 2 2
+				Sample Output 1:
+				3
+				0
+				Explanation For Sample Output 1:
+				For the first test case, it’s optimal to buy the stock at minute 0 and sell it at minute 3 to get a maximum profit of 3.
+
+				For the second test case, the maximum profit will be 0 for all possible ways of buying and selling stock.
+				Sample Input 2:
+				2
+				6
+				17 20 11 9 12 6
+				4
+				98 101 66 72
+				Sample Output 2:
+				3
+				6
+
+		//Not Optimized:
+			#include <bits/stdc++.h> 
+			int maximumProfit(vector<int> &prices){
+				int mxProfit=0, n = prices.size();
+				
+				for(int i=0; i<n-1; i++)
+					for(int j=i+1; j<n; j++)
+						mxProfit = max(mxProfit, (prices[j]-prices[i]));
+				
+				return mxProfit;
+			}
+
+		//Optimized:
+			#include <bits/stdc++.h> 
+			int maximumProfit(vector<int> &prices){
+				int ans = 0;
+				int minValue = prices[0];
+
+				for(int i=1; i<prices.size();i++){
+					int tmpSum = prices[i] - minValue;
+
+					if(tmpSum > ans)
+						ans = tmpSum;
+
+					if(prices[i]<minValue)
+						minValue = prices[i];
+				}
+				return ans;
+			}
+
+	321) Best Time to Buy and Sell Stock II:
+		Problem statement
+			You have been given stock values/prices for N number of days. 
+			Every i-th day signifies the price of a stock on that day. 
+			Your task is to find the maximum profit which you can make by buying and selling the stocks.
+
+			Note :
+				You may make as many transactions as you want but can not have more than one 
+				transaction at a time i.e, if you have the stock, you need to sell it first, 
+				and then only you can buy it again.
+			Constraints :
+				1 <= t <= 10^2
+				0 <= N <= 10^5
+				Time Limit: 1 sec
+			Sample Input 1 :
+				1
+				7
+				1 2 3 4 5 6 7
+				Sample Output 1 :
+				6
+				Explanation :
+				We can make the maximum profit by buying the stock on the first day and selling it on the last day.
+				Sample Input 2 :
+				1
+				7
+				7 6 5 4 3 2 1
+				Sample Output 2 :
+				0
+				Explanation :
+				We can make the maximum profit by not buying the stock.
+
+		long getMaximumProfit(long *values, int n) {
+			long mxProfit = 0;
+
+			for(int i=0; i<n-1; i++){
+				long diff = values[i+1] - values[i];
+				if(diff>0) 
+					mxProfit+=diff;
+			}
+			return mxProfit;
+		}
+		
+	322) Valid Pallindrome II:
+		Problem statement
+			Ninja’s friend challenged him with a trick question. 
+			He gave him a string ‘S’ and asked him if it is possible to make this string palindrome 
+			by deleting one character from the string. Can you help the ninja to solve this problem?
+
+			You are given a string ‘S’ of size ‘N’. 
+			You have to determine whether it is possible to make the string palindrome by deleting at most one character.
+
+			For Example
+				If the string is ‘AZBCDCBA’, the answer will be YES as we can delete the character ‘Z’ 
+				and the remaining string is a palindrome. 
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^5.
+
+				Time limit: 1 sec
+			Sample Input 1:
+				2
+				8
+				AZBCDCBA
+				3
+				ABA
+				Sample Output 1:
+				YES
+				YES
+				Explanation of sample input 1:
+				For the first test case,
+				If we remove the letter ‘Z’ from the string , the remaining string ‘ABCDCBA’ is palindromic.Hence, the answer is YES.
+
+				For the second test case:
+				The given string is already palindromic. Hence, the answer is YES.
+				Sample Input 2:
+				2
+				6
+				ROSSVR
+				6
+				VWHGWV
+				Sample Output 2:
+				NO
+				YES
+		
+		//Not Optimized:
+			#include <bits/stdc++.h> 
+			bool checkPalin(string s, int indx);
+
+				bool validPalindrome(int n, string &s) {
+				int index = 0;
+				while(index < s.length()){
+					if(checkPalin(s, index))
+						return 1;
+					index++;
+				}
+				return 0;
+			}
+
+			bool checkPalin(string s, int indx){
+				string temp1 = s;
+				if(indx != 0)
+					temp1.erase(temp1.begin()+indx);
+				
+				string temp2 = temp1;
+				reverse(temp2.begin(), temp2.end());
+				if(temp2 == temp1)
+					return 1;
+				return 0;
+			}
+
+			//Little Optimized:
+				#include <bits/stdc++.h> 
+				bool checkPalinOK(string s, int indx){
+					if(indx != 0)
+						s.erase(s.begin()+(indx-1));
+
+					for(int i=0; i<s.length()/2 ; i++)
+						if(s[i] != s[s.length()-1-i])
+							return 0;
+					
+					return 1;
+				}
+
+				bool validPalindrome(int n, string &s) {
+					int index = 0;
+					while(index <= n/2){
+						if(checkPalinOK(s, index))
+							return 1;
+						index++;
+					}
+					return 0;
+				}
+		
+
+		//Optimized:
+			#include <bits/stdc++.h> 
+			bool validPalindrome(int n, string &s) {
+				int i=0, j=n-1, cnt=0;
+
+				while(i<j){
+					if(s[i]!=s[j]){
+						cnt++;
+						if(cnt==2)
+							return false;
+						if(s[i+1]==s[j])
+							i++;
+						else if(s[j-1]==s[i])
+							j--;
+						else 
+							return false;
+					}else{
+						i++;
+						j--;
+					}
+				}
+				return true;
+			}
+
+	323) Ninja and String Conversion 
+		Problem statement
+			Ninja has a string 'S' of length 'N' consisting of both lowercase and
+			uppercase letter.
+			He has to perform these tasks:
+			-If the letter is in lowercase, then replace it with the next letter e.g. replace
+			 'a' with 'b', 'b' with 'c', and 'z' with 'a'.
+			
+			-If the letter is in uppercase, then replace it with the previous letter e.g.
+			 replace 'B' with 'A', 'C' with 'B', and 'A' with 'Z'.
+			Return the updated string after performing these task
+		
+			Example:
+				'N' = 4
+				'S' = "bDcF"
+				Here, 'b'and 'c' are two lowercase letters in the string, so we replace them with
+				letters after that i.e. 'c' and 'd', respectively.
+				'D' and 'F' are two uppercase letters in the string, so we replace them with
+				letters before that i.e. 'C' and 'E' respectively.
+				Hence the updated string is "cCdE".
+				Input Format:
+					The first line contains an integer 'T', which denotes the number of test
+					cases to be run. Then the test cases follow.
+					The first line of each test case contains an integer 'N' denoting the length of the string.
+					The second line contains 'N' characters denoting the string 'S'.
+				Output Format:
+					For each test case, return the updated string.
+				Note:
+					You don't need to print anything. It has already been taken care of. Just implement the given function.
+				Constraints:
+					1 <= T <= 100
+					2 <= N <= 10^5
+					Time Limit: 1 sec
+				Sample Input 1:
+					2
+					3
+					Aad
+					3
+					Par
+				Sample Output 1:
+					Zbe
+					Ors
+					Explanation Of Sample Input 1:
+					For test case 1:
+					Here 'a' and 'd' are two lowercase letters in the string so we replace them
+					with letters after that i.e. 'b' and 'e' respectively.
+					'A' is an uppercase letter in the string so we replace them with letters
+					before that i.e. 'Z'.
+					Hence the updated string is "Zbe".
+					For test case 2:
+					Here 'q' and 'r' are two lowercase letters in the string so we replace them
+					with letters after that ie. 'Y' and 's' respectively.
+					'P' is an uppercase letter in the string so we replace them with letters
+					before that i.e. 'O'.
+					Hence the updated string is "Ors".
+				Sample Input 2:
+					2
+					3
+					xyz
+					3
+					hEx
+					Sample Output 2:
+					yza
+					iDy
+
+		string ninjaAndStringConversion(int n, string &s){
+			string ans;
+
+			for(int i=0; i<n; i++){
+				if(s[i] == 'A')
+					ans += 'Z';
+				else if(s[i] >= 'B' && s[i] <= 'Z')
+					ans += s[i] - 1;
+				else if(s[i] == 'z')
+					ans += 'a';
+				else
+					ans += s[i] + 1;		
+			}
+			return ans;	
+		}
+
+	324) What is that character?
+		Problem statement
+			You are given a string 'S' of length 'N' consisting of lowercase letters. You create
+			a new string by concatenating the string to itself infinitely many times.
+			Your task is to return the character present at the 'K'-th index (0 - based) of the
+			new string you created.
+			Example:
+				'N' = 3
+				'K' = 7
+				S' = "abc"
+				If we make a new string by concatenating it by itself infinitely many times, it will
+				become "abcabcabcabc...". The character present at the 7th index (0 - based) in
+				this is 'b'.
+			
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^4
+				0 <= K <= 10^5
+				String 'S' contains lowercase letters only.
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				5 2
+				xjeha
+				4 12
+				zmbh
+				Sample Output 1:
+				e
+				z
+			Explanation Of Sample Input 1:
+				For test case 1:
+				We can see that the character at index '2' is 'e' since the length of the string
+				is already less than 'K'.
+				Hence the answer for this case is 'e'.
+				For test case 2:
+				After concatenating the string to itself 4 times, the string becomes
+				"zmbhzmbhzmbhzmbh" and we can see that the character at the 12th
+				index is 'z'.
+				Hence the answer for this case is 'z'.
+			Sample Input 2:
+				8 1923
+				ughbskud
+				2 10000
+				uj
+				Sample Output 2:
+				b
+				u
+
+		char getCharacter(string &s, int k) {
+			return s[ k % s.length()];
+		}
+
+	325) Odd Products
+		Problem statement
+			Ninja loves the odd numbers. He gives you an array 'A' of size 'N'. Help Ninja to
+			find numbers of pairs '(L. R)' such that products of array elements in the range 'L'
+			to 'R' have an odd number of divisors.
+			Return the number of such pairs.
+			Example:
+			'N' = 2
+			A' = [1, 4]
+			There are total three possible pairs of '(L, R):
+			L = 1, R = 1, 'product = 1', divisors = [1]
+			L = 1, R = 2, 'product = 1*4 = 4', divisors = [1, 2, 4]
+			L= 2, R = 2, 'product = 4, divisors = [1, 2 , 4]
+			All three pairs have an odd number of divisors, so the answer is '3.
+			Constraints :
+				1 <= T <= 10
+				2 <= N <= 10^5
+				1 <= A[i] <= 300
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				4
+				1 2 4 2
+				2
+				1 2
+				Sample Output 1:
+				4
+				1
+				Explanation Of Sample Input 1:
+				For test case 1:
+				There are total '10' possible pairs of '(L. R):
+				L = 1, R = 1, 'product = 1', divisors = [1]
+				L = 1, R = 2, 'product = 1*2', divisors = [1, 2]
+				L = 1, R = 3. 'product = 1*2*4 = 8'. divisors = [1, 2, 4. 8]
+				L = 1, R = 4, 'product = 1*2'4*2 = 16', divisors = [1, 2, 4, 8, 16]
+				L = 2. R = 2, 'product = 2'. divisors = [1, 2]
+				L = 2, R = 3, 'product = 2*4 = 8', divisors = [1, 2, 4, 8]
+				L = 2, R = 4, 'product = 2'4*2 = 16', divisors = [1. 2, 4, 8]
+				L = 3. R = 3, 'product = 4', divisors = [1, 2, 4]
+				L = 3. R = 4. 'product = 4*2 = 8'. divisors = [1, 2, 4. 8]
+				L = 4, R = 4, 'product = 2', divisors = [1, 2]
+				We can see that only '4' pairs have an odd number of divisors, so the
+				answer is '4'.
+
+				For test case 2:
+				There are total three possible pairs of '(L, R)':
+				L = 1, R = 1, product = 1', divisors = [1]
+				L = 1, R = 2, 'product = 1*2 = 2'. divisors = [1. 2]
+				L = 2, R = 2. 'product = 2', divisors = [1, 2]
+				Only one pair has an odd number of divisors, so the answer is '1'.
+			Sample Input 2:
+				2
+				4
+				4 4 4 4
+				5
+				4 2 8 10 16
+				Sample Output 2:
+				10
+				4
+
+		#include <iostream>
+		#include<bits/stdc++.h>
+		using namespace std;
+
+		int OddDivisorsCount(vector<int> v){
+			
+			int OddCount=0;
+			
+			for(int i=0; i<v.size(); i++){
+				int multi = v[i];
+				vector<int> temp;
+				temp.push_back(multi);
+				
+				for(int j=i+1; j<v.size(); j++){
+					multi *= v[j];
+					temp.push_back(multi);
+				}
+				
+				//current array
+				// for(int c=0; c<temp.size(); c++)
+				//     std::cout << temp[c] << "\t";
+				// std::cout << std::endl;
+				
+				for(int z=0; z<temp.size(); z++){
+					int crntNum = temp[z];
+					int count =0;
+						
+					for(int x=1; x <= crntNum; x++){
+						if( crntNum % x ==0)
+							count++;
+					}
+					
+					if(count&1)
+						OddCount++;
+				}
+			}
+			return OddCount;
+		}
+
+
+		int main() {
+			vector<int> v1 = {1,2,4,2};
+			std::cout << OddDivisorsCount(v1) << std::endl;             //4
+			
+			vector<int> v2 = {1,4};
+			std::cout << OddDivisorsCount(v2) << std::endl;             //3
+			
+			vector<int> v3 = {1,2};
+			std::cout << OddDivisorsCount(v3) << std::endl;             //1
+			
+			vector<int> v4 = {4,4,4,4};
+			std::cout << OddDivisorsCount(v4) << std::endl;             //10
+			
+			vector<int> v5 = {4,2,8,10,16};
+			std::cout << OddDivisorsCount(v1) << std::endl;             //4
+			return 0;
+		}
+
+	326) Find all Divisors of a natural number: (temp ❌Pending)
+		https://www.codingninjas.com/studio/problems/find-all-divisors-of-a-natural-number_5587903?leftPanelTabValue=PROBLEM
+		Problem statement
+			You are given a natural number ‘N’. Find all the divisors of the number ‘N’. 
+			Print them in increasing order.
+
+			Example:
+				Input: ‘N’ = 10 
+				Output: [1, 2, 5, 10]
+
+				1, 2, 5, and 10 are the only divisors of the number 10.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^9
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				100
+				13
+				Sample Output 1 :
+				1 2 4 5 10 20 25 50 100
+				1 13
+				Explanation Of Sample Input 1 :
+				For the first case:
+				100 is divisible by 1 2 4 5 10 20 25 50 100 only.
+
+				For the second case:
+				13 is divisible by 1 and 13 only.
+				Sample Input 2 :
+				2
+				125
+				15
+				Sample Output 2 :
+				1 5 25 125 
+				1 3 5 15
+
+		#include <bits/stdc++.h> 
+		vector<int> getAllDivisors(int n){
+			vector<int> ans;
+			for(int i=1; i<=n; i++)
+				if(n % i == 0)
+					ans.push_back(i);
+
+			return ans;
+		}
+
+		//or
+			#include <bits/stdc++.h> 
+			vector<int> getAllDivisors(int n){
+				vector<int> ans;
+				for(int i=1; i<=n/2; i++)
+					if(n % i == 0)
+						ans.push_back(i);
+
+				//pushing last element manually	
+				ans.push_back(n);    
+				return ans;
+			}
+
+	327) Find Odd Occurrence Element: (temp ❌Pending)
+		https://www.codingninjas.com/studio/problems/find-odd-occurrence-element_1062620?leftPanelTabValue=PROBLEM
+		Problem statement
+			You are given an array of 'N' elements. 
+			In this given array, each element appears an even number of times except one element which appears odd no. of times. 
+			Your task is to find the element which occurs an odd number of times.
+
+			For example :
+				Input array [5,5,6,4,6],If we look at the frequency of different elements in this array. 
+				We can see,4 appears an odd number of times, so our answer will be 4.
+			Constraints :
+				1<= T <=100
+				1 <= N <= 10000
+				1 <= ARR[i] <= 10^8
+
+			Where 'T' denotes the number of test cases, 'N' denotes the number of elements in the array, 
+			and 'ARR[i]' denotes the 'i'th' element of the array 'ARR'.
+
+			Time limit : 1 sec
+			Sample input 1 :
+				4
+				5
+				2 7 7 7 2
+				3
+				9 9 9
+				7
+				1 2 3 3 2 1 4
+				5
+				11 20 5 5 20
+				Sample output 1 :
+				7
+				9
+				4
+				11
+				Explanation for sample output 1 :
+				(i) For the first array, element 7 appears 3 times.
+				(ii) For the second array, element 9 appears 3 times.
+				(iii) For the third array, element 4 appears 1 time.
+				(iv) For the fourth array, element 11 appears 1 time.
+				Sample input 2 :
+				5
+				5
+				1 1 2 2 1
+				3
+				9 2 9
+				7
+				9 7 6 9 9 9 7
+				9
+				6 6 4 6 5 5 4 6 6 
+				1
+				10
+				Sample output 2 :
+				1
+				2
+				6
+				6
+				10
+				Explanation for sample output 2:
+				(i) For the first array, element 1 appears 3 times.
+				(ii) For the second array, element 2 appears 1 time.
+				(iii) For the third array, element 6 appears 1 time.
+				(iv) For the fourth array, element 6 appears 5 times.
+				(v) For the fifth array, there is only 1 element, so the answer is 10.
+
+		#include <bits/stdc++.h> 
+		int findOdd(int * arr,int n) {
+			int ans=0;
+			for(int i=0; i<n; i++)
+				ans ^= arr[i];
+			return ans;
+		}
+
+		//or Another approach:
+			#include <bits/stdc++.h> 
+			int findOdd(int * arr,int n) {
+				map<int, int> Freq;
+				for(int i=0; i<n; i++) {
+					Freq[arr[i]]++;
+				}
+
+				for(auto itr: Freq)
+					if(itr.second & 1)
+						return itr.first;
+
+				throw; //Program will not reach here.
+			}
+
+	328) Find the character:	(temp ❌Pending)
+		https://www.codingninjas.com/studio/problems/find-the-character_2410404
+		Problem statement
+			Two strings ‘A’ and ‘B’ are given. A string ‘C’ has to be formed 
+			using these two strings according to the following rules:
+
+			1. Append string ‘A’ to C one time.
+			2. Append string ‘B’ to C two times.
+			3. Append string ‘A’ to C three times.
+			4. Append string ‘B’ to C four times.
+			5. Append string ‘A’ to C five times.
+			And so on…. 
+			Your task is to return the ‘K’th character to the newly formed string ‘C’.
+
+			For Example
+				If ‘A’ = “AB” and B = “CD” and K = 7.
+				The formed string will be “ABCDCDABABAB…...”.
+				So, the 7th character is A.
+			Constraints:
+				1 <= T <= 10
+				1 <= length of ‘A’,length of ‘B’ <= 100.
+				1 <= ‘K’ <= 10^15
+				Time limit: 1 sec
+			Sample Input 1:
+				2
+				AB
+				CD
+				7
+				ABC
+				A
+				10
+				Sample Output 1:
+				A
+				B
+				Explanation of sample input 1:
+				For the first test case,
+				The formed string will be “ABCDCDABABABCDCDCDCD…...”.
+				The 7th  character is A. Hence, the answer is A.
+
+				For the second test case:
+				The formed string will be “ABCAAABCABCABCAAAA……..” .
+				The 10th character is B. Hence, the answer is B.
+				Sample Input 2:
+				2
+				ABCDD
+				F
+				6
+				ACE
+				X
+				3
+				Sample Output 2:
+				F  
+				E
+
+		int findTheCharacter(string &a, string &b, int k) {
+			string tempHolder;
+			int cnt=1;
+
+			while(tempHolder.size() < k){
+				if(cnt&1)
+					for(int i=0; i<cnt; i++)
+						tempHolder += a;
+				else
+					for(int i=0; i<cnt; i++)
+						tempHolder += b;
+
+				cnt++;
+			}
+
+			return tempHolder[k-1];
+		}
+
+	329) Palindrome number (temp ❌Pending)
+		https://www.codingninjas.com/studio/problems/palindrome-number_624662?leftPanelTabValue=PROBLEM
+		Problem statement
+			Check whether a given number ’n’ is a palindrome number.
+			Note :
+				Palindrome numbers are the numbers that don't change when reversed.
+				You don’t need to print anything. Just implement the given function.
+		Example:
+			Input: 'n' = 51415
+			Output: true
+			Explanation: On reversing, 51415 gives 51415.
+		Sample Input 1 :
+			1032
+		Sample Output 1 :
+			false
+		Explanation Of Sample Input 1:
+			1032, on being reversed, gives 2301, which is a totally different number.
+		Sample Input 2 :
+			121
+			Sample Output 2 :
+			true
+			Explanation Of Sample Input 2:
+			121, on being reversed, gives 121, which is the same.
+			Expected time complexity:
+			The expected time complexity is O(log(n)).
+			Constraints :
+				1 <= n <= 10^9
+				Time Limit: 1 sec
+
+		bool palindrome(int n) {
+			string s = to_string(n);
+			for(int i=0; i<s.length()/2; i++)
+				if(s[i] != s[s.length()-1-i])
+					return 0;
+			return 1;
+		}
+
+		//or
+			bool palindrome(int n) {
+				int tempRev=0;
+				int tempValue = n;
+				while(n){
+					int lastDigit = n % 10;
+					tempRev = tempRev*10 + lastDigit;
+					n /= 10;
+				}
+				if(tempRev == tempValue)
+					return 1;
+				return 0;
+			}
+
+	330) First Missing Positive:
+		Problem statement
+			You are given an array 'ARR' of integers of length N. 
+			Your task is to find the first missing positive integer in linear time and constant space. 
+			In other words, find the lowest positive integer that does not exist in the array. 
+			The array can have negative numbers as well.
+
+			For example, the input [3, 4, -1, 1] should give output 2 because 
+			it is the smallest positive number that is missing in the input array.
+
+			Sample Input 1 :
+				1
+				5
+				3 2 -6 1 0
+				Sample Output 1:
+				4
+				Explanation for Input 1:
+				The first positive number is 1 and it is present in the array similarly 2 and 3 are also present in the array. 
+				4 is missing from the array. Thus, the minimum positive integer that is missing is 4.
+				Sample Input 2 :
+				1
+				5
+				0 1 2 3 4
+				Sample Output 2:
+				5
+
+		//Not Optimized:
+			#include <bits/stdc++.h> 
+			int firstMissing(int arr[], int n) {
+				sort(arr, arr+n);
+				int missNum = 1;
+				for(int i=0; i<n; i++){
+					if(missNum == arr[i]){
+						missNum++;
+						i=0;
+					}
+				}
+				return missNum;
+			}
+
+			//or
+				#include <bits/stdc++.h> 
+				int firstMissing(int arr[], int n) {
+					sort(arr, arr+n);
+					int missNum = 1;
+					for(int i=0; i<n; i++){
+						if(missNum == arr[i]){
+							missNum++;
+							i=0;
+						}
+
+						if(arr[i] > missNum)
+							return missNum;
+					}
+					return missNum;
+				}
+
+			//or
+				bool search(int arr[], int n, int num)  {
+					// Linear search for checking whether element is present or not.
+					for (int i = 0; i < n; i++)
+						if (arr[i] == num) 
+							return true;
+
+					return false;
+				}
+
+				int firstMissing(int arr[], int n) {
+					// For every element check whether it is missing or not.
+					for (int i = 1; i <= n; i++)
+						// Return the first missing positive number.
+						if (search(arr, n, i) == false)
+							return i;
+
+					return n + 1;
+				}
+			
+		//Optimized:
+			#include <algorithm>
+			int firstMissing(int arr[], int n) {
+				if(n == 0) 
+					return 1;
+
+				sort(arr, arr + n);
+
+				int counter = 1;
+
+				for (int i = 0; i < n; i++) {
+					if (arr[i] == counter)
+						counter++;
+
+					// Skip the negative number.
+					if (arr[i] < counter)
+						continue;
+					// First missing positive number.
+					else
+						break;
+				}
+
+				return counter;
+			}
+		
+			//or
+				#include <algorithm>
+				int firstMissing(int arr[], int n) {
+					int ans = 1;
+					sort(arr, arr+n);
+					
+					for(int i=0; i<n; i++)
+						if(arr[i] == ans)
+							ans++;
+							
+					return ans;
+				}
+			
+			//or Another approach:
+				Store the elements
+					1.With the help of extra space, we can mark all the positive elements present in the array.
+					2.Traverse the array and store all the positive elements between 0 to N+1 of the array in the visited array.
+					3.ARR[i] will be stored at VIS[ARR[i]].
+					4.After storing all the positive elements in the visited array,
+					 run a loop from 1 to N+1 and check which smallest element is not present in the visited array.
+					5.Return the element that is missing from the visited array.
+					Time Complexity
+						O(N), where N is the length of the array, 
+						as we are traversing the array twice.
+
+					Space Complexity
+						O(N), Where N is the length of the array, 
+						as we are using a visited array for storing the positive elements.
+
+
+				int firstMissing(int arr[], int n) {
+					bool visited[n + 2] = {0};
+
+					// Add all the positive integers in visited array.
+					for (int i = 0; i < n; i++) 
+						if (arr[i] >= 0 && arr[i] <= n)
+							visited[arr[i]] = true;
+
+					// Find the first missing positive integer.
+					for (int i = 1; i < n + 2; i++) 
+						if (!visited[i]) 
+							return i;
+
+					return -1;
+				}
+
+	331) 
+
+	332)
+
+	333)
+
+	334)
+
+	335)
+
+	336)
+
+	337)
+
+	338)
+
+	339)
+
+	340)
+
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
