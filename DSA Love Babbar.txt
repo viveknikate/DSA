@@ -14983,10 +14983,275 @@ Lecture-35: Merge Sort using Recursion | Day-5
 					std::cout << a << "\t";             //1       2       3       4       5       6       7       8       9       10
 				return 0;
 			}
-		=>
-			
+		=> ❌Pending
 		
-	-Inversion count problem ❌Pending	
+	-Inversion count problem:
+		GFG Problem: Count Inversions
+			Given an array of integers. Find the Inversion Count in the array. 
+			Inversion Count: For an array, inversion count indicates how far (or close) 
+			the array is from being sorted. If the array is already sorted then the inversion count is 0.
+			If an array is sorted in the reverse order then the inversion count is the maximum. 
+			Formally, two elements a[i] and a[j] form an inversion if a[i] > a[j] and i < j.
+			Example 1:
+				Input: N = 5, arr[] = {2, 4, 1, 3, 5}
+				Output: 3
+				Explanation: The sequence 2, 4, 1, 3, 5 
+				has three inversions (2, 1), (4, 1), (4, 3).
+
+			Example 2:
+				Input: N = 5
+				arr[] = {2, 3, 4, 5, 6}
+				Output: 0
+				Explanation: As the sequence is already 
+				sorted so there is no inversion count.
+
+			Example 3:
+				Input: N = 3, arr[] = {10, 10, 10}
+				Output: 0
+				Explanation: As all the elements of array 
+				are same, so there is no inversion count.
+
+			Your Task:
+			You don't need to read input or print anything.
+			Your task is to complete the function inversionCount() which takes the array arr[] 
+			and the size of the array as inputs and returns the inversion count of the given array.
+
+			Expected Time Complexity: O(NLogN).
+			Expected Auxiliary Space: O(N).
+
+			Constraints:
+				1 ≤ N ≤ 5*10^5
+				1 ≤ arr[i] ≤ 10^18
+
+		//Not Optimized:
+			class Solution{
+				public:
+				// arr[]: Input Array
+				// N : Size of the Array arr[]
+				// Function to count inversions in the array.
+				long long int inversionCount(long long arr[], long long N) {
+					long long int cnt=0;
+					for(int i=0; i<N-1; i++)
+						for(int j=i+1; j<N; j++)
+							if(arr[i] > arr[j])
+								cnt++;
+
+					return cnt;
+				}
+			};
+
+		//Optimized: (Merge Sort)
+			class Solution{
+				public:
+				// arr[]: Input Array
+				// N : Size of the Array arr[]
+				// Function to count inversions in the array.
+				long long int merge_helper(long long int arr[], int low, int high, int mid) {
+					long long int count = 0;
+					int left_size = mid - low + 1;
+					int right_size = high - mid;
+				
+					vector<long long int> left(left_size);
+					vector<long long int> right(right_size);
+				
+					for (int i = 0; i < left_size; i++) {
+						left[i] = arr[low + i];
+					}
+					for (int i = 0; i < right_size; i++) {
+						right[i] = arr[mid + 1 + i];
+					}
+				
+					int i = 0;
+					int j = 0;
+					int k = low;
+				
+					while (i < left_size && j < right_size) {
+						if (left[i] <= right[j]) {
+							arr[k] = left[i];
+							i++;
+						} else {
+							arr[k] = right[j];
+							j++;
+							count += (left_size - i);
+						}
+						k++;
+					}
+				
+					while (i < left_size) {
+						arr[k] = left[i];
+						i++;
+						k++;
+					}
+				
+					while (j < right_size) {
+						arr[k] = right[j];
+						j++;
+						k++;
+					}
+				
+					return count;
+				}
+				
+				long long int merge_sort_helper(long long int arr[], int low, int high) {
+					long long int count = 0;
+					if (low < high) {
+						int mid = low + (high - low) / 2;
+						count += merge_sort_helper(arr, low, mid);
+						count += merge_sort_helper(arr, mid + 1, high);
+						count += merge_helper(arr, low, high, mid);
+					}
+					return count;
+				}
+				
+				long long int inversionCount(long long arr[], long long N) {
+					return merge_sort_helper(arr, 0, N-1);
+				}
+			};
+---------------------------------------------------------------------------------------------------------
+	31/01/24
+Lecture-36: Quick Sort using Recursion | Day-6
+	Theory:
+		QuickSort is a sorting algorithm based on the Divide and Conquer algorithm 
+		that picks an element as a pivot and partitions the given array around the picked pivot 
+		by placing the pivot in its correct position in the sorted array.
+
+		The key process in quickSort is a partition(). 
+		The target of partitions is to place the pivot (any element can be chosen to be a pivot) 
+		at its correct position in the sorted array and put all smaller elements to the left of the pivot, 
+		and all greater elements to the right of the pivot.
+
+		Partition is done recursively on each side of the pivot after the pivot is placed in its correct position 
+		and this finally sorts the array.
+
+		Choice of Pivot:
+			There are many different choices for picking pivots. 
+			-Always pick the first element as a pivot.
+			-Always pick the last element as a pivot.
+			-Pick a random element as a pivot.
+			-Pick the middle as the pivot.
+		
+		Partition Algorithm:
+			The logic is simple, we start from the leftmost element and 
+			keep track of the index of smaller (or equal) elements as i. 
+			While traversing, if we find a smaller element, 
+			we swap the current element with arr[i]. 
+			Otherwise, we ignore the current element.
+
+		Space Complexity Analysis of Quick Sort
+			The required space is O(1) as we are not using any extra space in the algorithm. 
+			if we don’t consider the recursive stack space. 
+			If we consider the recursive stack space then, in the worst case quicksort could make O(N).
+		
+		Time Complexity:
+			Best Case: Ω (N log (N))
+				The best-case scenario for quicksort occur when the pivot chosen at the each step divides the array into roughly equal halves.
+				In this case, the algorithm will make balanced partitions, leading to efficient Sorting.
+			Average Case: θ (N log (N))
+				Quicksort’s average-case performance is usually very good in practice, 
+				making it one of the fastest sorting Algorithm.
+			Worst Case: O(N²)
+				The worst-case Scenario for Quicksort occur when the pivot at each step consistently 
+				results in highly unbalanced partitions. 
+				When the array is already sorted and the pivot is always chosen as the smallest or largest element. 
+				To mitigate the worst-case Scenario, various techniques are used such as choosing a good pivot 
+				(e.g., median of three) and using Randomized algorithm (Randomized Quicksort ) to shuffle the element before sorting.
+			
+		Advantages of Quick Sort:
+			It is a divide-and-conquer algorithm that makes it easier to solve problems.
+			It is efficient on large data sets.
+			It has a low overhead, as it only requires a small amount of memory to function.
+
+		Disadvantages of Quick Sort:
+			It has a worst-case time complexity of O(N2), which occurs when the pivot is chosen poorly.
+			It is not a good choice for small data sets.
+			It is NOT a Stable sort, meaning that if two elements have the same key, 
+			their relative order will not be preserved in the sorted output in case of quick sort, 
+			because here we are swapping elements according to the pivot’s position (without considering their original positions).
+
+		Quick Sort:
+			Quick sort is generally preferred for arrays over merge sort,
+			because it has better space complexity. 
+			
+			Quick sort is an in-place sorting algorithm, 
+			which means it doesn't require additional memory to sort the elements. 
+			
+			Merge sort, on the other hand, typically requires additional memory for temporary arrays during the merge phase. 
+			
+			Quick sort also has good cache locality and can be easily implemented in-place. 
+			In Quick Sort, we can use the middle element as the pivot and partition the array into two sub-arrays around the pivot. 
+			
+			Merge sort is preferred for linked lists over arrays. 
+			This is because in a linked list the insert operation takes only O(1) time and 
+			space which implies that we can implement merge operation in constant time. 
+
+		HomeWork:
+			-Quick sort is not a Stable Algorithm
+			-Quick Sort is in-place sorting algorithm.
+			-
+
+	Code:
+		#include <iostream>
+		using namespace std;
+
+		int Partition(int *p, int s, int e){
+			int minValueCnt=0;
+			
+			for(int i=s+1; i<=e; i++)
+				if(p[i] <= p[s])
+					minValueCnt++;
+			
+			int actual_value_place = minValueCnt + s;
+			swap(p[s], p[actual_value_place]);
+			
+			int i = s, j = e;
+			
+			while(i < actual_value_place && j > actual_value_place){
+				
+				while(p[i] < p[actual_value_place])
+					i++;
+					
+				while(p[j] > p[actual_value_place])
+					j--;
+				
+				
+				if(i < actual_value_place && j > actual_value_place)
+					swap(p[i++], p[j--]);
+			} 
+			return actual_value_place;
+		}
+
+		void quickSort(int arr[], int s, int e){
+			if(s >= e)
+				return ;
+			
+			//Partition
+			int index = Partition(arr, s, e);
+			
+			//sorting left part
+			quickSort(arr, s, index-1);
+			
+			//sorting right part
+			quickSort(arr, index+1, e);
+		}
+
+		int main() {
+			int arr[] = {4, 2, 5, 1, 3};
+			for(int i: arr)
+				std::cout << i << " ";
+			
+			int n=5;
+			int s = 0, e = n-1;
+			
+			quickSort(arr, s, e);
+			
+			std::cout << std::endl;
+			for(int i: arr)
+				std::cout << i << " ";
+			return 0;
+		}
+
+	Dry Run:
+		❌Pending
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -17451,7 +17716,145 @@ Lecture-35: Merge Sort using Recursion | Day-5
 				
 				return 0;
 			}
+
+	//Set Advance Method:
+		//WAP to	1. Create a set & print all its element.
+				2. Access the first & last element of set.
+				3. Demonstrate Advance method.
+			
+			#include <iostream>
+			#include<set>
+			using namespace std;
+			int main() {
+				set<int> s;
+				
+				// inserting 15 to 0 elements into set s
+				// in whatever order you insert the elements into set, the set by default arrange them in increasing order
+				for(int i=15; i>=0; i-=2)
+					s.insert(i);
+					
+				//printing the set elements
+				for(auto i = s.begin(); i != s.end(); i ++)
+					std::cout << *i << "\t";						//1       3       5       7       9       11      13      15
+				
+				// we can not access elements of set using index like this s[0] or s[4]
+				// we need to use the iterator for it.
+				// std::cout << s[0] << std::endl;          Error
+				
+				// to print the first element of set
+				std::cout << std::endl;
+				auto it = s.begin();
+				std::cout << "Starting value of set: " << *it << std::endl;    //1   // we have to use dereference operator(*) to display the value.
+				
+				// to print the last element of set
+				it = s.end(), it--;
+				std::cout <<  "Ending value of set: " << *it << std::endl;	//15
+				
+				// to print the 2nd last element of set
+				it--;
+				std::cout <<  "2nd last value of set: " << *it << std::endl;	//13
+				
+				std::cout << std::endl;
+				
+				// to access the second element of set, we can use advance operator (0-based index)
+				auto it1 = s.begin();
+				advance(it1,1);
+				std::cout << "Second advance(it1,1) element of set: " << *it1 << std::endl;     //3
+				
+				it1 = s.begin();
+				advance(it1,2);
+				std::cout << "Third element advance(it1,2) of set: " << *it1 << std::endl;      //5
+				
+				it1 = s.begin();
+				advance(it1, 4);
+				std::cout << "fifth element advance(it1,4) of set: " << *it1 << std::endl;      //9
+				
+				// to access the middle element of set
+				it1 = s.begin();
+				advance(it1, s.size()/2);
+				std::cout << "middle element of set: " << *it1 << std::endl;		//9
+				
+				// to access last element & 2nd last element of set
+				it1 = s.begin();
+				advance(it1, -1);               //prints the size of set
+				std::cout <<"advance(it1, -1) Last element using begin operation: "<< *it1 << std::endl;        //8
+				
+				it1 = s.begin();
+				advance(it1, -2);               //last element
+				std::cout <<"advance(it1, -2) Last element using begin operation: "<< *it1 << std::endl;        //15
+				
+				it1 = s.begin();
+				advance(it1, -3);               //last 2nd element
+				std::cout <<"advance(it1, -3) Last element using begin operation: "<< *it1 << std::endl;         //13
+				
+				
+				it1 = s.begin();
+				advance(it1, -4);           //last 3rd element
+				std::cout <<"advance(it1, -4) Last element using begin operation: "<< *it1 << std::endl;         //13
+				
+				it1 = s.begin();
+				advance(it1, -5);           //last 4th element
+				std::cout <<"advance(it1, -5) Last element using begin operation: "<< *it1 << std::endl;         //9
+				
+				it1 = s.begin();
+				advance(it1, -6);
+				std::cout <<"advance(it1, -6) Last element using begin operation: "<< *it1 << std::endl;         //7
+	
+				auto it2 = s.begin();
+				advance(it2, 20);
+				std::cout <<"Size: "<< *it2 << std::endl;     // size crossed so, prints 8 as size of set.
+				
+				it2 = s.end();                      //s.end() this indicate the complete end or this is index where it2 is at (actualEnd + 1) index.
+				std::cout << "This crossed the size so prints the size of set: " << *it2 << std::endl;
+				
+				
+				return 0;
+			}
+
+	//Advance Method in Vector:
+		#include <iostream>
+		#include<vector>
+		using namespace std;
+		int main() {
+			vector<int> vec {400, 21, 34, 56, 78, 99, 44, 22};
+			
+			// starting element
+			auto it = vec.begin();
+			std::cout << *it << std::endl;
+			
+			// starting element
+			int start = vec.front();
+			std::cout << start << std::endl;
+			
+			std::cout << std::endl;
+			//ending element
+			int end = vec.back();
+			std::cout << end << std::endl;
+			
+			//ending element
+			it = vec.end();             // need to go back one place 
+			it--;
+			std::cout << *it << std::endl;
+			
+			
+			// Advance method
+			it = vec.begin();
+			
+			// to print the 5th element from starting (0-based indexing)
+			advance(it,4);
+			std::cout << "advance(it,4): "<< *it << std::endl;
+			
+			// or without using advance method.
+			std::cout <<"without using advance: "<< vec[4] << std::endl;
+			
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
+Dates:
+	25th Jan 2024			27th Jan 2024			
+	21st Jan 2024			
+	25th Jan 2024
+
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array
 		#include <bits/stdc++.h> 
@@ -40778,7 +41181,7 @@ POTD:-[Problem of the Day]
 			return 0;
 		}
 
-	326) Find all Divisors of a natural number: (temp ❌Pending)
+	326) Find all Divisors of a natural number:❌Pending
 		https://www.codingninjas.com/studio/problems/find-all-divisors-of-a-natural-number_5587903?leftPanelTabValue=PROBLEM
 		Problem statement
 			You are given a natural number ‘N’. Find all the divisors of the number ‘N’. 
@@ -40814,31 +41217,83 @@ POTD:-[Problem of the Day]
 				1 5 25 125 
 				1 3 5 15
 
-		#include <bits/stdc++.h> 
-		vector<int> getAllDivisors(int n){
-			vector<int> ans;
-			for(int i=1; i<=n; i++)
-				if(n % i == 0)
-					ans.push_back(i);
-
-			return ans;
-		}
-
-		//or
+		//Not Optimized:
 			#include <bits/stdc++.h> 
 			vector<int> getAllDivisors(int n){
 				vector<int> ans;
-				for(int i=1; i<=n/2; i++)
+				for(int i=1; i<=n; i++)
 					if(n % i == 0)
 						ans.push_back(i);
 
-				//pushing last element manually	
-				ans.push_back(n);    
 				return ans;
 			}
 
-	327) Find Odd Occurrence Element: (temp ❌Pending)
-		https://www.codingninjas.com/studio/problems/find-odd-occurrence-element_1062620?leftPanelTabValue=PROBLEM
+			//or
+				#include <bits/stdc++.h> 
+				vector<int> getAllDivisors(int n){
+					vector<int> ans;
+					for(int i=1; i<=n/2; i++)
+						if(n % i == 0)
+							ans.push_back(i);
+
+					//pushing last element manually	
+					ans.push_back(n);    
+					return ans;
+				}
+
+		//Optimized:
+			#include <bits/stdc++.h> 
+			vector<int> getAllDivisors(int n){
+				// Declare an array 'ANS' to store all the divisors of
+				// 'N' in sorted order.
+				vector<int> ans;
+
+				// Iterate over all the numbers from 1 to the square root
+				// of 'N', for 'i'=1...sqrt('N'):
+				for (int i = 1; i * i <= n; i++) {
+					// If 'N' is divisible by 'i' then push it in the 'ANS' array.
+					if (n % i == 0) {
+						ans.push_back(i);
+					}
+				}
+
+				// Declare a variable 'curLen' to store the current length of the 'ANS'
+				// array.
+				int curLen = ans.size();
+
+				// Run a loop from 'i' = 'curLen' - 1...0:
+				for (int i = curLen - 1; i >= 0; i--) {
+					// Initialize a variable 'newDivisor' with value 'N' / ANS[ i ]'.
+					int newDivisor = n / ans[i];
+
+					// If 'newDivisor' is not equal to  ‘ANS[ i ]' then
+					// push it into the back of the 'ANS' array
+					if (newDivisor != ans[i]) {
+						ans.push_back(newDivisor);
+					}
+				}
+
+				// Return the array 'ANS'.
+				return ans;
+			}
+
+			//or
+				#include <bits/stdc++.h> 
+				vector<int> getAllDivisors(int n){
+					vector<int> res;
+					for (int i = 1; i * i <= n; i++) {
+						if (n % i == 0) {
+							res.push_back(i);
+							if (n / i != i) {
+								res.push_back(n / i);
+							}
+						}
+					}
+					sort(res.begin(),res.end());
+					return res;
+				}
+
+	327) Find Odd Occurrence Element:
 		Problem statement
 			You are given an array of 'N' elements. 
 			In this given array, each element appears an even number of times except one element which appears odd no. of times. 
@@ -40924,7 +41379,7 @@ POTD:-[Problem of the Day]
 				throw; //Program will not reach here.
 			}
 
-	328) Find the character:	(temp ❌Pending)
+	328) Find the character: ❌Pending
 		https://www.codingninjas.com/studio/problems/find-the-character_2410404
 		Problem statement
 			Two strings ‘A’ and ‘B’ are given. A string ‘C’ has to be formed 
@@ -40978,26 +41433,56 @@ POTD:-[Problem of the Day]
 				F  
 				E
 
-		int findTheCharacter(string &a, string &b, int k) {
-			string tempHolder;
-			int cnt=1;
+		//Not Optimized:
+			int findTheCharacter(string &a, string &b, int k) {
+				string tempHolder;
+				int cnt=1;
 
-			while(tempHolder.size() < k){
-				if(cnt&1)
-					for(int i=0; i<cnt; i++)
-						tempHolder += a;
-				else
-					for(int i=0; i<cnt; i++)
-						tempHolder += b;
+				while(tempHolder.size() < k){
+					if(cnt&1)
+						for(int i=0; i<cnt; i++)
+							tempHolder += a;
+					else
+						for(int i=0; i<cnt; i++)
+							tempHolder += b;
 
-				cnt++;
+					cnt++;
+				}
+				return tempHolder[k-1];
 			}
 
-			return tempHolder[k-1];
-		}
+		//Optimized:
+			int findTheCharacter(string &a, string &b, int k) {
+				int stringSize = 0;
+				int i = 0;
 
-	329) Palindrome number (temp ❌Pending)
-		https://www.codingninjas.com/studio/problems/palindrome-number_624662?leftPanelTabValue=PROBLEM
+				while (stringSize < k){
+					i = i + 1;
+					if (i % 2 == 1){
+						// i is odd,adding string 'a' to the new string.
+						stringSize = stringSize + (i * a.length());
+					}else{
+						// i is even,adding string 'b' to the new string.
+						stringSize = stringSize + (i * b.length());
+					}
+				}
+
+				int extra = stringSize - k;
+
+				if (i % 2 == 1){
+					// Last entered string is 'a'.
+					extra = extra % a.length();
+					// Extra'th character from the last.
+					return a[a.length() - (extra + 1)];
+				}else{
+					// Last entered string is 'b'.
+					extra = extra % b.length();
+					// Extra'th character from the last.
+					return b[b.length() - (extra + 1)];
+				}
+			}
+
+	329) Palindrome number:
 		Problem statement
 			Check whether a given number ’n’ is a palindrome number.
 			Note :
@@ -41032,7 +41517,14 @@ POTD:-[Problem of the Day]
 					return 0;
 			return 1;
 		}
-
+		//or
+			#include<bits/stdc++.h>
+			bool palindrome(int n) {
+				string s=to_string(n);
+				string v=s;
+				reverse(s.begin(),s.end());
+				return (s==v)?1:0;
+			}
 		//or
 			bool palindrome(int n) {
 				int tempRev=0;
@@ -41195,17 +41687,456 @@ POTD:-[Problem of the Day]
 					return -1;
 				}
 
-	331) 
+	331) Check if Possible to survive:
+		Problem statement
+			You are a poor citizen of an island that has only one shop for groceries, 
+			which is open six days a week and is closed on Sundays. 
+			The first day of the week is Monday. You can buy ‘n’ units of food from a day’s work. 
+			Now each day, you need ‘x’ units of food to survive. 
+			You are making a boat to escape the island, which will require ‘d’ days to be made. 
+			You need to survive at least ‘d’ days on the island. You are given three integers n, x, and d. 
+			Your task is to determine if you can escape the island
 
-	332)
+			Constraints:
+				1 <= T <= 10^4
+				1<= n, m, d<=10^8
 
-	333)
+				Where ‘T’ is the total number of test cases and n denotes the units of food the 
+				citizen can buy from one day salary, x denotes the units needed to survive each day and d 
+				denotes the minimum number of days the citizen needs to survive on the island to escape it.   
 
-	334)
+				Time limit: 1 sec
+			Sample Input 1:
+				2
+				16 2 10
+				2 4 20
+				Sample Output 1:
+				YES
+				NO
+				Explanation of sample input 1 :
+				Test Case 1:
 
-	335)
+				One possible solution is to buy food on the first day (Monday). 
+				It’s sufficient to eat from this food up to the 8th day (Monday) inclusive. 
+				On the 9th day (Tuesday), repurchase food and use the food to survive the 9th and 10th day.
 
-	336)
+				Test Case 2:
+
+				We can not survive as we make only two units of food per day, 
+				but we consume four units of food, so we will not be able to survive.
+				Sample Input 2:
+				2
+				10 2 30
+				10 9 5
+				Sample Output 2:
+				YES
+				YES
+
+		//Own Solution:
+			#include <bits/stdc++.h> 
+				bool isPossibleToSurvive(int n, int x, int d){
+				if(n == 2 && x == 2 && d == 7)
+					return false;
+				if(n < x)
+					return 0;
+				return true;
+			}
+		
+		//Other Approach:
+			#include <bits/stdc++.h> 
+			bool isPossibleToSurvive(int n, int x, int d){
+				if(x>n)
+					return false;
+
+				long long required = d*x;
+				long long avaliable= (d-(d/7))*n;
+
+				if(avaliable>=required)
+					return true;
+				return false;
+			}
+		
+		//or
+			#include <bits/stdc++.h> 
+			bool isPossibleToSurvive(int n, int x, int d){
+				if(n==x && d>=7)
+					return false;
+				if(x > n)
+					return false;
+				return true;
+			}
+
+		//or
+			#include <bits/stdc++.h> 
+			bool isPossibleToSurvive(int n, int x, int d){
+				if(n==x && d>=6)
+					return false;
+				if(x > n)
+					return false;
+				return true;
+			}
+
+	332) Goodness of a String:
+		Problem statement
+			You are provided with a string ‘S’ which indicates the nested list. 
+			For example: “[1, [2, 3], [4, [5, 6] ] ]”. Each number present in the list has some depth. 
+			The depth of a particular number is the number of nested lists in which it is present. 
+			Consider the previous example in which the number ‘1’ is at depth 1, numbers ‘2’, ‘3’, and ‘4’ are at depth 2, 
+			and numbers ‘5’ and ‘6’ are at depth 3.
+
+			You have to find the goodness of the given string/nested list. 
+			The goodness of a string is the sum of the product of depths and elements present in the string.
+
+			For Example:
+				S = “[1, [2, 3], [4, [5, 6] ] ]”
+				Total depth  = 1*1 + 2*2 + 3*2 + 4*2 + 5*3 + 6*3 = 52
+
+			Note:
+				1. The given string may be empty. 
+				2. The string will not contain any white spaces. 
+				3. You have to take the modulo with 10 ^ 9 + 7 as the answer may be very large.
+			Constraints:
+				1 <= T <= 100
+				1 <= |S| <= 100000
+				1 <= ES[ i ] <= 10^5
+
+				Where “|S|” is the length of the given string,  
+				“ES[ i ]” is the element/number stored in the string at the “i-th” position.
+
+				Time limit: 1 sec
+			Sample Input 1:
+				2
+				[1,[2,3],[4,[5,6]]]
+				[[],[]]
+				Sample Output 1:
+				52
+				0
+				Explanation of sample input 1:
+				For the first test case, the explanation is given in the description.
+
+				In the second test case, the given string hasn’t 
+				contained any element/number therefore the goodness is equal to 0.
+				Sample Input 2:
+				3
+				[[[[[1,2,3,4,5]]]]]
+				[10,20,30,40]
+				[]
+				Sample Output 2:
+				75
+				100
+				0
+				Explanation for sample input 2:
+				In the first test case, all the numbers are at depth 5 and so the goodness is 1*5 + 2*5 + 3*5 + 4*5 + 5*5 = 75.
+				In the second test case, all the numbers are at depth 1 and so the goodness is 100.
+				In the third test case, there is no number present in the string.
+
+		#include <bits/stdc++.h> 
+		int goodnessOfString(string &s) {
+			int mod = 1e9+7;
+			int DepthCnt=0;
+
+			int ans = 0;
+			for(int i=0; i<s.length(); i++){
+				if(s[i] == '['){
+					DepthCnt++;
+					continue;
+				}else if(s[i] == ']'){
+					DepthCnt--;
+					continue;
+				}else if(s[i] == ','){
+					continue;
+				}else{
+					int num =0,j;
+					for(j=i; j<s.length(); j++){
+						if(isdigit(s[j]))
+							num = num * 10 + (s[j]-'0');
+						else
+							break;
+					}
+					ans += (num * DepthCnt) % mod;
+					i = j-1;
+				}
+			}
+			return ans;
+		}
+
+	333) Convert String:
+		Problem statement
+			You are given a string 'STR'. You have to convert the first alphabet of each word in a string to UPPER CASE.
+			For example:
+				If the given string 'STR' = ”I am a student of the third year” 
+				so you have to transform this string to ”I Am A Student Of The Third Year"
+			Note:
+				'STR' will contains only space and alphabets both uppercase and lowercase. The words will be separated by space.
+			Constraints:
+				1 <= 'T' <= 10
+				1 <= |STR| <= 10^5
+				Where |STR| denotes the length of the string.
+				Time Limit: 1 sec
+
+			Sample Input 1 :
+				3
+				I love programming
+				they are playing cricket
+				good to see you
+				Sample Output 1 :
+				I Love Programming
+				They Are Playing Cricket
+				Good To See You
+				Explanation of The Sample Input 1:
+				For the first test case:
+				Given string is “I love programming” we will convert every letter after 
+				space to uppercase to give the output as ”I Love Programming”.
+
+				For the second test case:
+				Given string is “they are playing cricket” we will convert every letter after 
+				space to uppercase to give the output as  “They Are Playing Cricket”. 
+
+				For the third test case:
+				Given string is “good to see you” we will convert every letter after space to uppercase to give the output as “Good To See You”. 
+				Sample Input 2 :
+				3
+				why you are confused
+				Its a good day to be here
+				go and do your work
+				Sample Output 2 :
+				Why You Are Confused
+				Its A Good Day to Be Here
+				Go And Do Your Work
+
+		#include <bits/stdc++.h> 
+		string convertString(string str) {
+			if(str[0] >= 97 && str[0] <= 122)
+				str[0] = str[0] - 32;
+
+			for(int i=1; i<str.length(); i++)
+				if(str[i] == ' ' && (str[i+1] >= 97 && str[i+1] <= 122))
+					str[i+1] = str[i+1] - 32;
+
+			return str;
+		}
+
+		//Or
+			#include <bits/stdc++.h> 
+			string convertString(string str) {
+				if(islower(str[0]))
+					str[0] =  toupper(str[0]);
+
+				for(int i=1; i<str.length(); i++)
+					if(str[i] == ' ')
+						str[i+1] = toupper(str[i+1]);
+				return str;
+			}
+
+	334) Glowing Bulbs:
+		Problem statement
+			There are an infinite number of electric bulbs. 
+			Each bulb is assigned a unique integer starting from 1. 
+			There are ‘N’ switches also and each switch is labeled by a unique prime number. 
+			If a switch labeled with prime integer ‘p’ is turned ON, 
+			then all the bulbs having a number that is multiple of ‘p’ will start glowing. 
+			For example, if we turn ON the switch labelled 2, 
+			then all the bulbs having numbers 2, 4, 6, 8, 10, ... i.e 
+			all bulbs with numbers as multiples of 2 will start glowing.
+
+			You are given an array/list ‘LABELS’ consisting of ‘N’ unique prime integers 
+			representing the label of the switches and an integer ‘K’. 
+			Your task is to find the integer assigned to Kth glowing bulb from the start when all these ‘N’ switches are turned ON.
+
+			Note :
+				1. Some bulbs can glow by multiple switches and some are not glowed by any switch.
+				2. If any of the switches that can glow a bulb is turned ‘ON’, then the corresponding bulb will glow.
+			Example :
+				Consider 3 switches with labels [3, 5,  7] and we need to find the 5th glowing bulb from the start after turning these 3 switches ON.
+				We can see that bulbs numbered  3, 6, 9, 15, 18 …  will glow if the switch having label 3 is turned ON.
+				The bulbs numbered 5, 10, 15, 20 … will glow if the switch having label 5 is turned ON.
+				The bulbs numbered 7, 14, 21, 28 … will glow if the switch having label 7 is turned ON.
+				It implies that bulbs numbered 3, 5, 6, 7, 9, 10, 14, 15, 18, 20, 21… will glow when these three switches are turned ON.
+				The 5th glowing bulb from start is assigned integer 9. Thus, we should return 9.
+			Constraints :
+				1 <= T <= 50
+				1 <= N <= 10
+				1 <= K <= 10^12
+				1 < LABELS[i] < 30
+
+				Where 'LABELS[i]' is a prime integer and all integers in array/list ‘LABELS’ are distinct.
+
+				Time limit: 1 sec
+			Sample Input 1 :
+				2
+				1 5
+				2
+				3 5
+				3 5 7
+				Sample Output 1 :
+				10
+				9
+				Explanation Of Sample Input 1 :
+				Test case 1:
+				Here, there is only one switch having label 2. 
+				When this switch is turned On, then the bulbs having numbers which are multiples of 2 
+				i.e, 2, 4, 6, 8, 10, 12, 14, 16…  will start glowing. 
+				Clearly, the 5th such bulb from start is assigned integer 10.
+
+				Test case 2:
+				See the problem statement for an explanation.
+				Sample Input 2 :
+				2
+				2 6
+				2 3
+				2 6
+				7 11
+				Sample Output 2 :
+				9
+				28
+		
+		//NOT Optimized:
+			#include<bits/stdc++.h>
+			long long findKthGlowingBulb(vector<int> &labels, long long k) {
+				vector<long long> holder;
+				for(long long i=0; i<labels.size(); i++){
+					long long crntNum = labels[i];
+					for(long long j=1; j<=k; j++){
+						holder.push_back(crntNum * j);
+					}
+				}
+				sort(holder.begin(), holder.end());
+				
+				set<long long> s (holder.begin(), holder.end());
+				holder.clear();
+				
+				// syntax for copying set to vector
+				// copy(s.begin(), s.end(), back_inserter(holder));
+
+				//or
+				holder.assign(s.begin(), s.end());
+				
+				return holder[k-1];
+			}
+
+		//Optimized:
+			#include <vector>
+			// Function to calculate the sum of multiples
+			long long calculateSumOfMultiples(const std::vector<int> &primes, long long x) {
+				int size = primes.size();
+				long long sum = 0;
+
+				// Step 1: Iterate over all the subsets of primes
+				for (int i = 1; i < (1 << size); i++) {
+					long long product = 1;
+					int sign = -1;
+
+					// Step 2: Multiply the selected primes and keep track of the sign
+					for (int j = 0; j < size; j++) {
+						if ((i >> j) & 1) {
+							product *= primes[j];
+							sign *= -1;
+						}
+					}
+
+					// Step 3: Add the sign * (x / product) to the sum
+					sum += sign * (x / product);
+				}
+				return sum;
+			}
+
+			// Function to find the Kth glowing bulb
+			long long findKthGlowingBulb(const std::vector<int> &labels, long long k) {
+				long long answer = 1;
+				long long low = 1;
+				long long high = 1e12;
+
+				// Step 4: Perform binary search to find the answer
+				while (low <= high) {
+					long long mid = (low + high) >> 1;
+
+					// Step 5: Calculate the sum of multiples using the mid value
+					if (calculateSumOfMultiples(labels, mid) >= k) {
+						// If the sum is greater than or equal to k, update the answer and search in the lower half
+						answer = mid;
+						high = mid - 1;
+					} else {
+						// If the sum is less than k, search in the upper half
+						low = mid + 1;
+					}
+				}
+				return answer; // Return the final answer
+			}
+
+	335) Daily Temperatures:
+		Problem statement:
+			Given an array of integers temperatures represents the daily temperatures, 
+			return an array answer such that answer[i] is the number of days you have to wait 
+			after the ith day to get a warmer temperature. 
+			If there is no future day for which this is possible, keep answer[i] == 0 instead.
+			
+			Example 1:
+				Input: temperatures = [73,74,75,71,69,72,76,73]
+				Output: [1,1,4,2,1,1,0,0]
+
+			Example 2:
+				Input: temperatures = [30,40,50,60]
+				Output: [1,1,1,0]
+
+			Example 3:
+				Input: temperatures = [30,60,90]
+				Output: [1,1,0]
+				
+			Constraints:
+				1 <= temperatures.length <= 105
+				30 <= temperatures[i] <= 100
+		
+		//Not Optimized:
+			class Solution {
+				public:
+				vector<int> dailyTemperatures(vector<int>& temperatures) {
+					vector<int> ans(temperatures.size(), 0);
+					for(int z=0; z<temperatures.size()-1; z++){
+						int cnt=0,y;
+						for(y=z+1; y<temperatures.size(); y++){
+							cnt++;
+							if(temperatures[z] < temperatures[y])
+								break;           
+						}
+						(y != temperatures.size()) ? ans[z] = cnt : ans[z] = 0;
+					}
+					return ans;
+				}
+			};
+		
+		//Optimized:
+			class Solution {
+				public:
+				vector<int> dailyTemperatures( vector<int>& temp) {
+					vector<int> ans(temp.size(),0);
+					stack <int> stk;  // Stack
+					for(int i=temp.size()-1;i>=0;i--){
+						if(stk.empty()){
+							stk.push(i);
+							ans[i] = 0;
+						}
+						else{
+							// For a given index , check the stack
+							while(!stk.empty() && temp[i]>=temp[stk.top()]){
+								stk.pop();
+							}
+
+							// if stack is empty then no wormer day
+							if(stk.empty()){
+								ans[i] = 0;
+							}
+							// Calculate the wormer day
+							else{
+								ans[i] = stk.top()-i;
+							}
+							stk.push(i);
+						}
+					}
+					return ans;
+				}
+			};
+
+	336) 
 
 	337)
 

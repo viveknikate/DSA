@@ -113,54 +113,40 @@ Insertion Sort:
      }
 
 Number equality
-Easy
-0/40
-Problem statement
 Alice has two integers, 'X' and 'Y'. She wants to make both numbers equal. As usual, she cannot do it herself and needs your help.
-
-
-
 In one operation, Alice will select one integer from 'X' and 'Y', increase its value by '1', and decrease the value of the other integer by '2'.
-
-
-
 Return '1' if Alice can make both integers equal after performing some operations. Otherwise, return '0'.
-
-
-
 Example:
-X = 7
-Y = 13
-
+     X = 7
+     Y = 13
 In the first operation, Alice will choose 'X'. So after performing an operation, 'X' and 'Y' will be '8' and '11', respectively.
 In the second operation, Alice will again choose 'X'. So after performing an operation, 'X' and 'Y' will be '9' and '9', respectively.
 
 After performing two operations, we see that 'X' and 'Y' are equal.
 So the answer for this case is '1'.
-Detailed explanation ( Input/output format, Notes, Images )
 Constraints:
-1 <= 'X' <= 10^9
-1 <= 'Y' <= 10^9
-Time limit: 1 sec
+     1 <= 'X' <= 10^9
+     1 <= 'Y' <= 10^9
+     Time limit: 1 sec
 Sample input 1:
-2
-4 4
-2 5
-Sample output 1:
-1
-1
-Explanation of sample input 1:
-For test case 1:
-We can see that 'X' and 'Y' are already equal.
-So, the answer for this case is '1'.
+     2
+     4 4
+     2 5
+     Sample output 1:
+     1
+     1
+     Explanation of sample input 1:
+     For test case 1:
+     We can see that 'X' and 'Y' are already equal.
+     So, the answer for this case is '1'.
 
-For test case 2:
-In the first operation, Alice will choose 'X'. So after performing an operation, both 'X' and 'Y' will be '3'. We see that 'X' and 'Y' are equal.
-Hence, the answer for this case is '1'.
-Sample input 2:
-2
-1 4
-1 5
-Sample output 2:
-1
-0
+     For test case 2:
+     In the first operation, Alice will choose 'X'. So after performing an operation, both 'X' and 'Y' will be '3'. We see that 'X' and 'Y' are equal.
+     Hence, the answer for this case is '1'.
+     Sample input 2:
+     2
+     1 4
+     1 5
+     Sample output 2:
+     1
+     0
