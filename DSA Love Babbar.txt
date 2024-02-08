@@ -3248,6 +3248,34 @@ Lecture-4: Solving Pattern Questions (Part-2)
 				}
 				return 0;
 			}
+
+	30) Hollow Box star pattern:
+		#include <iostream>
+		#include <bits/stdc++.h> 
+		using namespace std;
+
+		void printPattern(int m, int n) {
+		for(int i=0; i<m; i++){
+			for(int j=0; j<n; j++)
+				if(i == 0 || i == m-1 || j==0 || j== n-1)
+					cout<<" * ";
+				else
+					cout<<"   ";
+				cout<<"\n";
+			}
+		}
+
+		int main() {
+			int row = 4, col = 5;
+			printPattern(row,col);
+			return 0;
+		}
+		//output:
+			*  *  *  *  * 
+			*           * 
+			*           * 
+			*  *  *  *  * 
+
 ---------------------------------------------------------------------------------------------------------
 	04/08/2023
 Lecture-5: Bitwise Operators, For Loops, Operator Precedence & Variable Scoping
@@ -14656,7 +14684,7 @@ Lecture-35: Merge Sort using Recursion | Day-5
 	-Merge sort is fastest algorithm compared to Bubble sort, Insertion Sort & Selection sort.
 	-2 Approaches are there, 
 		1) Create new array & copy values
-		2) use indexes ❌Pending (Homework)
+		2) use indexes
 	-Space Complexity for mergeSort algorithm is O(n), where n is length of array
 	-Time Complexity is O(n log(n))
 	1st Approach:
@@ -14876,16 +14904,69 @@ Lecture-35: Merge Sort using Recursion | Day-5
 			Splitting(arr, start, end);
 		}
 
+	2nd Approach:
+		//Not Optimized:
+			class Solution {
+				public:
+				void sortedMerge(vector<int> &n, int s, int e){
+					int mid = (s + e) / 2;
+					int starter1 = s;
+					int starter2 = mid + 1;
+
+					while (starter1 <= mid && starter2 <= e) {
+						if (n[starter1] <= n[starter2]) {
+							starter1++;
+						} else {
+							// Shift elements in the first half to make space for the current element from the second half
+							int temp = n[starter2];
+							for (int i = starter2; i > starter1; i--) {
+								n[i] = n[i - 1];
+							}
+							n[starter1] = temp;
+
+							// Update pointers
+							starter1++;
+							mid++;
+							starter2++;
+						}
+					}
+				}
+
+				void Split(vector<int> & nums, int s, int e){
+					if(s == e)
+						return ;
+					
+					int mid = (s+e)/2;
+
+					//Left side part
+					Split(nums, s, mid);
+
+					//right side part
+					Split(nums, mid+1, e);
+
+					sortedMerge(nums, s, e);
+				}
+
+				// Merge Sort
+				vector<int> sortArray(vector<int>& nums) {
+					int s=0, e=nums.size()-1;
+					
+					Split(nums, s, e);
+
+					return nums;
+				}
+			};
+
 	-Application:
-		Sorting large datasets: 
+		Sorting large datasets:
 			Merge sort is particularly well-suited for sorting large datasets 
 			due to its guaranteed worst-case time complexity of O(n log n).
 
-		External sorting: 
+		External sorting:
 			Merge sort is commonly used in external sorting, 
 			where the data to be sorted is too large to fit into memory.
 
-		Custom sorting: 
+		Custom sorting:
 			Merge sort can be adapted to handle different input distributions, 
 			such as partially sorted, nearly sorted, or completely unsorted data.
 	
@@ -17149,9 +17230,75 @@ Lecture-36: Quick Sort using Recursion | Day-6
 				for(auto i: vec2)
 					std::cout << i << "\t";     //ABC     ABCA    ABCD    ABCE
 
+				return 0;
+			}
+
+		Practice-3:
+			sorting single element of string only
+			#include <iostream>
+			#include<algorithm>
+			using namespace std;
+
+			int main() {
+				string s ="Hello World";
+				std::cout << s << std::endl;
+				
+				// increasing order
+				// sort(begin(s),end(s));
+				// or
+				sort(s.begin(), s.end());
+				
+				std::cout << s << std::endl;
+				
+				// decreasing order
+				// sort(begin(s),end(s), greater<int>());
+				// or
+				sort(s.begin(), s.end(), greater<int> ());
+				
+				std::cout << s << std::endl;
 
 				return 0;
 			}
+
+	// Sorting static array:
+		#include <iostream>
+		#include<vector>
+		#include<algorithm>
+
+		using namespace std;
+
+		int main() {
+				
+			int a[] = {4,3,2,1,10,9,8,7,55};
+			int n=9;
+			
+			for(int I: a)
+				std::cout << I << "\t";
+			
+			// increasing order
+			sort(begin(a), end(a));
+			// or
+			// sort(a, a+n);
+			
+			
+			std::cout << std::endl;
+				
+			for(int I: a)
+				std::cout << I << "\t";
+			
+			// Decreasing Order
+			// sort(begin(a), end(a), greater<int>());
+			// or
+			sort(a, a+n, greater<int> ());
+
+			
+			std::cout << std::endl;
+				
+			for(int I: a)
+				std::cout << I << "\t";
+				
+			return 0;
+		}
 
 	//Iterator:
 		-ContainerType should be replaced with the type of your container (e.g., std::vector<int>, std::list<double>, etc.).
@@ -17849,6 +17996,337 @@ Lecture-36: Quick Sort using Recursion | Day-6
 			
 			return 0;
 		}
+
+	// begin() & cbegin():
+		-begin() is non-constant iterator. returns the value which we can modifiable.
+		-cbegin() is constant iterator. returns the value which we can not modify.
+
+		begin(): This function returns an iterator to the beginning of the container. 
+				If the container is non-const, the returned iterator allows modification of the elements in the container. 
+				If the container is const-qualified, the returned iterator is a constant iterator, 
+				meaning it does not allow modification of the elements in the container.
+
+		cbegin(): This function returns a constant iterator to the beginning of the container 
+				regardless of whether the container itself is const-qualified or not. 
+				It always returns a constant iterator, 
+				meaning it does not allow modification of the elements in the container.
+		eg.
+			begin() & end():
+				#include <iostream>
+				#include<vector>
+				using namespace std;
+
+				int main() {
+					vector<int> v = {1,32,3,4,5,6};
+					
+					// array elements
+					for(int i: v)
+						std::cout << i << " ";
+
+					cout<<endl;
+					// printing vector using iterator in reverse order
+					for(auto i = v.begin(); i != v.end(); i++)
+						std::cout << *i  << " ";
+					
+					//this is vector iterator
+					vector<int>::iterator it = v.begin()+3;     //pointing to 4
+					
+					//or you can create vector iterator using auto keyword
+					auto it2 = v.begin()+1;           //pointing to second element ie. 32
+					std::cout << std::endl;
+					std::cout <<"Auto keyword: "<< *it2 ;
+					
+					// printing the value of iterator to where it is pointing
+					std::cout << std::endl<<endl;
+					std::cout <<"Value of iterator before modification : "<< *it << std::endl;
+					
+					// this is normal iterator so we can change its value also
+					*it = 99;
+					std::cout << "Value of iterator After modification : "<< *it << endl;
+					
+					// array elements after modification (4 replaced by 99)
+					std::cout << std::endl;
+					for(int i: v)
+						std::cout << i << " ";
+
+					return 0;
+				}
+				/*
+					output:
+					1 32 3 4 5 6 
+					1 32 3 4 5 6 
+					Auto keyword: 32
+					
+					Value of iterator before modification : 4
+					Value of iterator After modification : 99
+					
+					1 32 3 99 5 6 
+				*/
+
+			cbegin() & cend():
+				#include <iostream>
+				#include<vector>
+				using namespace std;
+
+				int main() {
+					vector<int> v = {1,32,3,4,5,6};
+			
+					// array elements
+					std::cout << "Using foreach loop: " << "\t";
+					for(int i: v)
+						std::cout << i << " ";
+						
+					std::cout << std::endl;
+					std::cout <<"Using iterator : \t";
+					// printing vector using iterator in reverse order
+					for(auto i = v.cbegin(); i != v.cend(); i++)
+						std::cout << *i  << " ";
+					
+					// this is iterator which returns the value of array as constant, you can't change that
+					vector<int>::const_iterator cItr = v.cbegin()+1;            //pointing to the second element of array
+					
+					std::cout << std::endl<<endl;
+					std::cout << "2nd element of v: " << *cItr << std::endl;
+					
+					// *cItr = 89;          //Error we can't do this.
+					
+					//or you can use auto keyword to create const_iterator for vector
+					auto cItr2 = v.cbegin()+5;          //6
+					
+					std::cout << "Auto keyword : "<< *cItr2 << std::endl;
+					
+					
+					// array elements after modification (4 replaced by 99)
+					std::cout << std::endl;
+					for(int i: v)
+						std::cout << i << " ";
+
+					return 0;
+				}
+				/*
+					output:
+					Using foreach loop:     1 32 3 4 5 6 
+					Using iterator :        1 32 3 4 5 6 
+
+					2nd element of v: 32
+					Auto keyword : 6
+
+					1 32 3 4 5 6 
+				*/
+
+		rbegin() and rend():
+			are functions used to obtain reverse iterators to the beginning and the end of a container, 
+			respectively. On the other hand, crbegin() and crend() are similar functions, 
+			but they return constant reverse iterators, which do not allow modification of the elements in the container.
+
+			rbegin(): Returns a reverse iterator pointing to the last element of the container, which is the reverse beginning.
+			rend(): Returns a reverse iterator referring to the position just before the first element of the container, which is the reverse end.
+			crbegin(): Returns a constant reverse iterator pointing to the last element of a const-qualified container.
+			crend(): Returns a constant reverse iterator referring to the position just before the first element of a const-qualified container.
+		eg.
+			rbegin() & rend():
+				#include <iostream>
+				#include<vector>
+				using namespace std;
+
+				int main() {
+					vector<int> v = {40,50, 90, 10, 5, 2, 3, 1};
+					
+					std::cout << "Actual array: " << "\t";
+					for(int i: v)
+						std::cout << i << " ";
+					
+					std::cout << std::endl;
+					std::cout << std::endl << "Array using reverse iterator: ";
+					
+					// printing vector using iterator in reverse order
+					for(auto i = v.rbegin(); i != v.rend(); i++)
+						std::cout << *i  << " ";
+						
+					std::cout  << std::endl;
+					
+					// this is pointing to last element ie. 1 (using reverse_iterator)
+					vector<int>::reverse_iterator itr1 = v.rbegin();
+					std::cout << "starting element from last (0-index based): " << *itr1 << std::endl;
+					
+					
+					// changing the value at 3 place using rbegin iterator
+					// using auto keyword
+					auto itr2 = v.rbegin()+3;
+					std::cout << "3rd element from last (0-index based): " << *itr2 << std::endl;
+					
+					*itr2 = 78;
+					std::cout << "3rd element from last modfied (0-index based): "<< *itr2 << std::endl;
+					
+					std::cout  << std::endl;
+					std::cout << "Actual Array: ";
+					for(int i: v)
+						std::cout << i << " ";
+					
+					return 0;
+				}
+				/*
+					output:
+						Actual array:   40 50 90 10 5 2 3 1 
+
+						Array using reverse iterator: 1 3 2 5 10 90 50 40 
+						starting element from last (0-index based): 1
+						3rd element from last (0-index based): 5
+						3rd element from last modfied (0-index based): 78
+
+						Actual Array: 40 50 90 10 78 2 3 1 
+				*/
+
+			crbegin() & crend():
+				#include <iostream>
+				#include<vector>
+				using namespace std;
+
+				int main() {
+					vector<int> v = {1,32,3,4,5,6};
+					
+					// array elements
+					std::cout << "Using foreach loop: " << "\t";
+					for(int i: v)
+						std::cout << i << " ";
+						
+					std::cout << std::endl;
+					
+					//last element
+					vector<int>:: const_reverse_iterator crt = v.crbegin();
+					std::cout << "last element: " << *crt << std::endl;
+					
+					//2nd last element
+					crt = v.crbegin() + 1;
+					std::cout << "2nd last element: " <<*crt << std::endl;
+					
+					// *crt =  12;                          //ERROR:assignment of read-only, this is constant reverse iterator, so you can't modify the value  
+						std::cout << *crt << std::endl;	
+						
+					// printing in reverse order using constant reverse iterator
+					std::cout << "printing in reverse order using constant reverse iterator : " << "\t";
+					for(auto i = v.crbegin(); i != v.crend(); i++)
+						std::cout << *i << " ";
+						
+					return 0;
+				}
+			
+		practice string vector:
+			#include <iostream>
+			#include<vector>
+			using namespace std;
+
+			int main() {
+				vector<string> vec {"ABC", "DEF", "GHI", "JKL", "MNO"};
+
+				std::cout << "using foreach loop: ";
+				for(string s: vec)
+					std::cout << s << " ";
+
+				std::cout << std::endl<<endl<< "using iterator: ";
+				for(auto i=vec.begin(); i!= vec.end(); i++)
+					std::cout << *i <<" ";
+					
+				std::cout<<endl;
+				std::cout << std::endl << "Using reverse iterator: ";
+				for(auto i=vec.rbegin(); i!= vec.rend(); i++)
+					std::cout << *i  << " ";
+					
+				std::cout<<endl;
+				std::cout << std::endl << "Using constant iterator: ";
+				for(auto i=vec.cbegin(); i!= vec.cend(); i++)
+					std::cout << *i  << " ";
+
+				std::cout<<endl;
+				std::cout << std::endl << "Using constant reverse iterator: ";
+				for(auto i=vec.crbegin(); i!= vec.crend(); i++)
+					std::cout << *i  << " ";
+						
+				return 0;
+			}
+			/*
+			output:
+				using foreach loop: ABC DEF GHI JKL MNO 
+
+				using iterator: ABC DEF GHI JKL MNO 
+				
+				Using reverse iterator: MNO JKL GHI DEF ABC 
+				
+				Using constant iterator: ABC DEF GHI JKL MNO 
+				
+				Using constant reverse iterator: MNO JKL GHI DEF ABC
+			*/
+
+	// Rotate method:
+		using rotate method, by default rotate to left by specific number
+
+		using rotate method, to rotate right by specific number
+
+		without using rotate method
+
+		in-place rotation:
+
+	//Optional Beeping Sound char ascii value 7 & Delay functionality:
+		#include <iostream>
+		// #include<bits/stdc++.h>
+		using namespace std;
+
+		//for Delay functionality
+		#include<chrono>
+		#include<thread>
+		int main() {
+		
+			std::cout <<char(7)<< std::endl;
+			this_thread::sleep_for(chrono::milliseconds(400));
+			
+			std::cout <<char(7)<< std::endl;
+			this_thread::sleep_for(chrono::milliseconds(400));
+			
+			std::cout <<char(7)<< std::endl;
+			this_thread::sleep_for(chrono::milliseconds(400));
+			
+			std::cout <<char(7)<< std::endl;
+			this_thread::sleep_for(chrono::milliseconds(400));
+			
+			std::cout <<char(7)<< std::endl;
+			return 0;
+		}
+
+	//Name printer:
+		#include <iostream>
+		// #include<ctime>
+		#include<bits/stdc++.h>
+		using namespace std;
+
+		int main() {
+			string s = "Vivek Nikate";
+			
+			int pointer = 1;
+			
+			string printer;
+			
+			for(int i=0; i<s.length(); i++){	
+				pointer=1;
+				
+				while(1){
+					printer += char(pointer);
+					
+					std::cout << printer <<endl;
+					
+					printer.pop_back();
+					
+					if(pointer == s[i]){
+						printer+= char(pointer);
+						break;
+					}
+					pointer++;
+					this_thread::sleep_for(chrono::milliseconds(10));       //1000 means 1 second
+				}        
+			}	
+			return 0;
+		}
+
+	//
 ---------------------------------------------------------------------------------------------------------
 Dates:
 	25th Jan 2024			27th Jan 2024			
@@ -23658,7 +24136,7 @@ POTD:-[Problem of the Day]
 		//Not Optimized:
 			int maxArea(vector<int>& height) {
 				int ans=0;
-					for(int i=0; i<height.size(); i++){
+				for(int i=0; i<height.size(); i++){
 					int dist = 1;
 					for(int j=i+1; j<height.size(); j++){
 						int minn = (min(height[i],height[j]))* dist;
@@ -33783,30 +34261,44 @@ POTD:-[Problem of the Day]
 		};
 
 		//or
-		class Solution {
-			private:
-				int checker[26]={0};
-			public:
-				bool isAnagram(string s, string t) {
-					if(s.length() != t.size())          //you can use length or size method to access the no.of letter in string
-						return 0;
-					
-					//mapper for s
-					for(int i=0; i<s.size(); i++){
-						checker[s[i]-'a']++;
-					}
-
-					//mapper for t
-					for(int i=0; i<t.length(); i++){
-						checker[t[i]-'a']--;
-					}
-
-					for(int z=0; z<26; z++)
-						if(checker[z] != 0)
+			class Solution {
+				private:
+					int checker[26]={0};
+				public:
+					bool isAnagram(string s, string t) {
+						if(s.length() != t.size())          //you can use length or size method to access the no.of letter in string
 							return 0;
-					return 1;
+						
+						//mapper for s
+						for(int i=0; i<s.size(); i++){
+							checker[s[i]-'a']++;
+						}
+
+						//mapper for t
+						for(int i=0; i<t.length(); i++){
+							checker[t[i]-'a']--;
+						}
+
+						for(int z=0; z<26; z++)
+							if(checker[z] != 0)
+								return 0;
+						return 1;
+					}
+			};
+
+		//or simplest
+			class Solution {
+				public:
+				bool isAnagram(string s, string t) {
+					if(s.length() != t.length())
+						return 0;
+					sort(s.begin(), s.end());
+					sort(t.begin(), t.end());
+					if(s == t)
+						return 1;
+					return 0;
 				}
-		};
+			};
 		
 	233) Count Customers Who Did Not Get A Computer: ❌Pending
 		Problem statement:
@@ -34430,6 +34922,30 @@ POTD:-[Problem of the Day]
 			// }
 			return value;
 		}
+
+		//Or Another approach:
+			#include <bits/stdc++.h> 
+			int slotScore(string &original, string &guess) {
+				int ans =0;
+				
+				for(int i=0; i<4; i++){
+					if(original[i] == guess[i]){
+						original[i] ='0';
+						guess[i] = '0';
+						ans += 2;
+					}
+				}
+
+				for(int i=0; i<4; i++){
+					if(guess[i] == '0')
+						continue;
+					else if(original.find(guess[i]) != string::npos){
+						original[original.find(guess[i])] = '0';
+						ans += 1;
+					}
+				}
+				return ans;
+			}
 
 	240) Buy Two Chocolates:
 		Problem Statement:
@@ -42136,16 +42652,2986 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	336) 
+	336) Panagram Checking:
+		Problem statement:
+			Given a string s check if it is "Panagram" or not.
+			A "Panagram" is a sentence containing every letter in the English Alphabet.
 
-	337)
+			Example 1:
+				Input:
+				s = "Bawds jog, flick quartz, vex nymph"
+				Output: 
+				1
+				Explanation: 
+				In the given input, there
+				are all the letters of the English
+				alphabet. Hence, the output is 1.
 
-	338)
+			Example 2:
+				Input:
+				s = "sdfs"
+				Output: 
+				0
+				Explanation: 
+				In the given input, there
+				aren't all the letters present in the
+				English alphabet. Hence, the output
+				is 0.
 
-	339)
+			Your Task:
+				You do not have to take any input or print anything. 
+				You need to complete the function checkPangram() that takes a string 
+				as a parameter and returns true if the string is a Panagram, or else it returns false.
 
-	340)
+			Expected Time Complexity: O( |s| )
+			Expected Auxiliary Space: O(1)
+			|s| denotes the length of the input string.
 
+			Constraints:
+				1 ≤ |s| ≤ 10^4
+				Both Uppercase & Lowercase are considerable
+
+		class Solution {
+			public:
+			//Function to check if a string is Pangram or not.
+			bool checkPangram (string s) {
+				if(s.length() < 26)
+					return 0;
+					
+				//need to transfer the string into lowercase
+				transform(s.begin(), s.end(), s.begin(), ::tolower);
+				
+				int flag = 1;
+				char ch = 'a';
+				while(ch <= 'z'){
+					if(s.find(ch) != string::npos)
+						ch++;
+					else{
+						flag=0;
+						break;
+					}
+				}
+				if(flag)
+					return 1;
+				return 0;
+			}
+		};
+
+	337) Ninja and Subarrays:
+		Problem statement
+			One day Ninja got an array and started to play with it. 
+			He is finding subarrays of the array randomly and suddenly starts to wonder 
+			about the maximum of the sum of the smallest and 
+			the second smallest elements of all the subarrays possible of size at least 2.
+
+			For Example:
+				For the array [3 2 1]
+				All the subarrays of size at least 2 are:
+				[3 2], [2 1], [3 2 1]
+				For the first subarray, the smallest and second smallest elements are 2 and 3, and their sum is 5.
+				For the second subarray, the smallest and second smallest elements are 1 and 2, and their sum is 3.
+				For the third subarray, the smallest and second smallest elements are 1 and 2, and their sum is 3.
+				So the maximum among these sums is 5.
+				Since Ninja is too lazy to do this task, he asked you for help. 
+				You have to find the maximum of the sum of the smallest and the second smallest elements 
+				of all the subarray possible of size at least 2.
+			Constraints:
+				1 <= T <= 5
+				2 <= N <= 10^5
+				1 <= A[i] <= 10^4
+
+				Time Limit: 1 sec.
+			Sample Input 1:
+				2
+				4
+				1 2 3 4
+				2
+				3 8
+				Sample Output 1:
+				7
+				11
+				Explanation For Sample Output 1:
+				For the first test case, all the possible subarrays of size at least 2 are:
+				[1 2], [1 2 3], [1 2 3 4], [2 3], [2 3 4], [3 4].
+				The respective sum of the smallest and second smallest elements are 3, 3, 3, 5, 5, 7.
+				So the answer will be the maximum of all of them, i.e., 7.
+
+				For the second test case, there is only one subarray possible [3 8]. So the answer will be 11. 
+				Sample Input 2:
+				2
+				5
+				8 3 7 2 4
+				4
+				6 4 7 5
+				Sample Output 2:
+				11
+				12
+
+		//Not Optimized:
+			#include <bits/stdc++.h> 
+			int sumOfSmallestAndSecondSmallest(int n, vector<int> &arr){
+				int mxSUM=0;
+
+				for(int i=0; i<arr.size()-1; i++){
+					vector<int> temp = {arr[i]};
+					for(int j=i+1; j<arr.size(); j++){
+						temp.push_back(arr[j]);
+						int mx = *max_element(temp.begin(), temp.end());
+						int mn = *min_element(temp.begin(), temp.end());
+						mxSUM = max(mxSUM, (mx+mn));
+					}
+				}
+				return mxSUM;
+			}
+
+		//Optimized:
+			#include <bits/stdc++.h> 
+			int sumOfSmallestAndSecondSmallest(int n, vector<int> &arr){
+				int ans = 0;
+				for(int i=1;i<n;i++)
+					ans = max(ans,arr[i]+arr[i-1]);
+				return ans;
+			}
+
+	338) Star Pattern:
+		https://www.codingninjas.com/studio/problems/star-pattern_893204?leftPanelTabValue=PROBLEM
+			Problem statement
+				Print the following pattern
+				Pattern for N = 4
+				The dots represent spaces.
+				Constraints :
+					1 <= T <= 100
+					1 <= N <= 100
+				Sample Input 1 :
+					2
+					1
+					2   
+					Sample Output 1 :
+					*
+					 * 
+					***
+					Sample Input 2 :
+					2
+					3
+					4
+					Sample Output 2 :
+					  *
+					 ***
+					*****
+					   *
+					  ***
+					 *****
+					*******
+			
+			#include <bits/stdc++.h> 
+			void printPattern(int n) {
+				for(int i=1; i<=n; i++){
+					for(int s=n-i; s>0; s--) {
+						cout<<" ";
+					}
+
+					for(int j=1; j<=(2*i)-1; j++) {
+						cout<<"*";
+					}
+					cout<<endl;
+				}
+			}
+
+	339) Arrow Pattern:
+		https://www.codingninjas.com/studio/problems/arrow-pattern_893298
+		Problem statement
+			You are given an integer ‘N’. Your task is to print a pattern with the following description
+
+			1.The pattern will consist of 2 * ‘N’ - 1 lines.
+			2.The pattern will consist of ‘ ‘ (space) and ‘*’ characters only.
+			3.The pattern will be an arrow pattern.
+			4.An arrow pattern starts with 1 ‘*’ character and increases length till ‘N’ ‘*’ and 
+			then decreases it till 1 ‘*’ and each line will consist of the same number of ‘ ‘ and ‘*’ characters. 
+			5.For a better understanding of the arrow, pattern refers to example and sample input-output.
+			For example:
+
+			If ‘N’ is 5 then the pattern will be
+
+				*
+				 **
+				  ***
+				   ****
+				    *****
+				   ****
+				  ***
+				 **
+				*
+			Detailed explanation ( Input/output format, Notes, Images )
+			Sample Input 1:
+			2
+			5
+			3
+			Sample Output 1:
+			*
+			 **
+			  ***
+			   ****
+			    *****
+			   ****
+			  ***
+			 **
+			*
+
+			*
+			 **
+			  ***
+			 **
+			*
+			Explanation of Sample Input 1:
+			Test Case 1:
+
+			Given ‘N’ = 5
+			We will print the pattern as the description of the arrow pattern.
+
+			Test Case 2:
+
+			Given ‘N’ = 3
+			We started with 1 ‘*’ increase it till 3 ‘*’ and then again decrease till 1’*’.
+			Sample Input 2:
+			2
+			1
+			2
+			Sample Output 2:
+			*
+			
+			*
+			 **
+			*
+			Explanation of Sample Input 2:
+			Test Case 1:
+
+			Given ‘N' = 1
+			There will be only 1 line and that will contain a single ‘*’.
+
+			Test Case 2:
+
+			Given ‘N’ = 2
+			First-line will contain 1 ‘ ‘ and 1 ‘*’, the second line will contain 2 ‘ ‘ 
+			and 2 ’*’ and the third line will contain 1 ‘ ‘ and 1 ‘*’.
+
+		//Not Optimized:
+			vector<string> printArrowPattern(int n) {
+				vector<string> ans;
+
+				// first half
+				for(int i=0; i<n; i++){
+					string crntStr;
+
+					// spacing
+					for(int s=0; s<=i; s++)
+						crntStr += " ";
+
+					// star
+					for(int j=0; j<=i; j++)
+						crntStr += "*";
+					
+					ans.push_back(crntStr);
+				}
+
+				// second half
+				for(int i=n-1; i>=0; i--){
+					string AnotherCrntStr;
+
+					// spacing
+					for(int s=i; s>0; s--)
+						AnotherCrntStr += " ";
+
+					// star
+					for(int j=i; j>0; j--)
+						AnotherCrntStr += "*";
+
+					ans.push_back(AnotherCrntStr);
+				}
+				return ans;
+			}
+
+		//Optimized:
+			vector<string> printArrowPattern(int n) {
+				// Create an array of string for storing the pattern
+				vector<string> answer;
+
+				// Create 2 strings 'str1' for ' ' and 'str2' for '*'
+				string str1, str2;
+
+				// Run a loop from 1 to 2'N' - 1
+				for (int i = 1; i <= (2 * n - 1); i++) {
+					// Check condition for increse length or decrese length
+					if (i <= n) {
+						// Append ' ' to 'str1'
+						str1.push_back(' ');
+
+						// Append '*' to 'str2'
+						str2.push_back('*');
+
+						// Append 'str1' + 'str2' to 'answer'
+						answer.push_back(str1 + str2);
+					} else {
+						// Remove last characters from both strings
+						str1.pop_back();
+						str2.pop_back();
+
+						// Append concatation of both strings to 'answer' array
+						answer.push_back(str1 + str2);
+					}
+				}
+
+				//Return 'answer' array that contains pattern
+				return answer;
+			}
+
+	340) Diamond of Stars:
+		https://www.codingninjas.com/studio/problems/diamond-of-stars_893297
+		Problem statement
+			You are given an integer ‘N’. Your task is to print the following pattern for the ‘N’ number of rows.
+
+			For Example:
+			Pattern for ‘N’ = 5:
+			  *
+			 ***
+			*****
+			 ***
+			  *
+			The dots represent spaces. Note:
+			‘N’ is always odd.
+			Constraints :
+				1 <= ‘T’ <= 5
+				1 <= ‘N’ <= 600
+
+				Time limit = 1 sec.
+			Sample Input 1:
+			2
+			5
+			1
+			Sample Output 1:
+			  *
+			 ***
+			*****
+			 ***
+			  *
+			
+			*
+			Explanation of the Sample Input 1:
+			For test case 1: 
+			The pattern for ‘N’ = 5, will be as given above.
+
+			For test case 2: 
+			The pattern for ‘N’ = 1, will be as given above.
+			Sample Input 2:
+				3
+				7
+			Sample Output 2:
+			 *
+			***
+			 *
+			  
+			   *
+			  ***
+			 *****
+			*******
+			 *****
+			  ***
+			   *
+
+		//Own Solution:
+			#include <bits/stdc++.h> 
+			void printPattern(int n) {
+
+				//if n is even then increment it by
+				if(!(n&1))
+					++n;
+
+				int cnt=1;
+				int space = n/2, i;
+
+				//first half
+				while(1){
+					// spacing
+					for(int sp = space; sp>0; sp--)
+						cout<<" ";
+
+					space--;
+					
+					// star
+					for(int star=1; star<=cnt; star++)
+						cout<<"*";
+					cout<<"\n";
+					
+					cnt +=2;
+					if(cnt>n)
+						break;
+				}
+
+				//to match the continuity
+				cnt -= 4;
+
+				// second half
+				space = 1;
+				while(1){
+
+					// spacing
+					for(int s=1; s<=space; s++){
+						cout<<" ";
+					}
+
+					space++;
+
+					// Star
+					for(int  j=1; j<=cnt; j++)
+						cout<<"*";
+					cout<<endl;
+					
+					cnt -=2;
+					if(cnt<=0)
+						break;
+				}
+			}
+
+		//Refered:
+			#include <bits/stdc++.h> 
+			void printPattern(int n) {
+				// if n is even then increment it
+				int lines = (n % 2 == 0) ? n + 1 : n;
+
+				int space = lines / 2;
+				int stars = 1;
+
+				// first half
+				for (int i = 0; i < lines; ++i) {
+					// spacing
+					for (int sp = 0; sp < space; ++sp)
+						std::cout << " ";
+
+					// stars
+					for (int st = 0; st < stars; ++st)
+						std::cout << "*";
+
+					std::cout << std::endl;
+
+					// update space and stars for next line
+					if (i < lines / 2) {
+						space--;
+						stars += 2;
+					} else {
+						space++;
+						stars -= 2;
+					}
+				}
+			}
+
+	341) Rotate Matrix K times:
+		Problem statement
+			Ninja is a teacher at a school. 
+			He introduced a game of matrix. 
+			He gives a square matrix, i.e. N X N matrix, 
+			to all the school students and asks them to rotate the matrix ‘K’ times in clockwise direction.
+			Among them, a student Ninja is new to programming. He doesn’t have much experience, 
+			so he asks you to solve the problem. Can you help Ninja to rotate the matrix exactly ‘K’ times clockwise?
+
+			Rotation of the matrix here means rotating each row of matrix 'K' times such that the new position of 
+			the element having coordinates (i, j) will become (i, (j + K) % N).
+
+			For Example:
+				Let the matrix be and let 'K' will be 1:
+				1 2 3
+				4 5 6
+				7 8 9
+
+				The new matrix will be:
+				3 1 2
+				6 4 5
+				9 7 8
+			Sample Input 1:
+				2 
+				3
+				2 
+				2 2 4
+				1 3 4
+				1 2 3
+				2
+				1
+				1 1
+				1 1
+				Sample Output 1:
+				2 4 2 
+				3 4 1 
+				2 3 1 
+
+				1 1 
+				1 1 
+				Explanation for Sample Input 1:
+					In the first test case, the matrix M = [[2,2,4],[1,3,4],[1,2,3]] which on rotating the matrix 2 times, 
+					itself yields the matrix as given above. 
+
+					In the second test case, the matrix M = [[1,1],[1,1]] which on rotating 1 time yields the same matrix M. 
+				Sample Input 2:
+				2
+				2
+				1
+				3 6
+				1 2
+				3
+				2
+				1 2 3
+				4 5 6
+				7 8 9
+				Sample Output 2:
+				6 3 
+				2 1 
+
+				2 3 1 
+				5 6 4 
+				8 9 7
+
+		//refer miscellaneous Rotate method section:
+		#include <bits/stdc++.h> 
+		vector<vector<int>> solve(vector<vector<int>> &arr, int k) {
+			int n = arr.size();
+			vector<vector<int>> ans(n,vector<int>(n,0));
+
+			if(n == k)
+				return arr;
+
+			for(int row=0; row<n; row++)
+				for(int col=0; col<n; col++)
+					ans[row][(col + k) % n] = arr[row][col];
+				
+			return ans;
+		}
+	
+	342) Sequential Digits:
+		Problem statement:
+			An integer has sequential digits if and only if each digit in the number is one more than the previous digit.
+			Return a sorted list of all the integers in the range [low, high] inclusive that have sequential digits.
+			Example 1:
+				Input: low = 100, high = 300
+				Output: [123,234]
+				
+			Example 2:
+				Input: low = 1000, high = 13000
+				Output: [1234,2345,3456,4567,5678,6789,12345]
+		
+			Constraints:
+				10 <= low <= high <= 10^9
+		
+		//Not optimized:
+			class Solution {
+				public:
+				bool check(string s){
+					for(int i=1; i<s.length(); i++){
+						int num1 = s[i-1];
+						int num2 = s[i];
+						if(num1+1 != num2)
+							return 0;
+					}
+					return 1;
+				}
+				vector<int> sequentialDigits(int low, int high) {
+					vector<int> ans;
+					for(int i=low; i<=high; i++){
+						string s = to_string(i);
+						if(check(s)){
+							int num = stoi(s);
+							ans.push_back(num);
+						}
+					}
+					return ans;
+				}
+			};
+
+		//Optimized (Own solution):
+			class Solution {
+				public:
+				vector<int> sequentialDigits(int low, int high) {
+					vector<int> ans;
+					int cnt = 1;
+					int tempCnt = 1;
+					string s = to_string(tempCnt);
+
+					while(cnt<=9){
+						int num = stoi(s);
+
+						if(num >= low && num <= high)
+							ans.push_back(num);
+
+						tempCnt++;
+						char ch = tempCnt + '0';					//to convert char to int substract '0' from char,
+						s.push_back(ch);						//to convert int to char add '0' to the int value.
+
+						if(tempCnt > 9){
+							cnt++;
+							s.clear();
+							tempCnt = cnt;
+							char chTemp = tempCnt + '0';
+							s.push_back(chTemp);
+						}
+					}
+					sort(ans.begin(), ans.end());
+					return ans;
+				}
+			};
+
+		//Optimized:
+			class Solution {
+				public:
+				vector<int> sequentialDigits(int low, int high) {
+					vector<int> ans;
+					for (int i = 1; i <= 9; ++i) {
+						int num = i;
+						int tempCnt = i;
+						string s = to_string(tempCnt);
+
+						while (tempCnt <= 9) {
+							num = stoi(s);
+							if (num >= low && num <= high)
+								ans.push_back(num);
+							
+							char modified = (++tempCnt) + '0';
+							s.push_back(modified);
+
+							if (tempCnt > 9) {
+								break;
+							}
+						}
+					}
+					sort(ans.begin(), ans.end());
+					return ans;
+				}
+			};
+
+	343) Implement Atoi:
+		Problem statement:
+			Given a string, s, the objective is to convert it into integer format without utilizing any built-in functions. 
+			If the conversion is not feasible, the function should return -1.
+			Note: Conversion is feasible only if all characters in the string 
+			are numeric or if its first character is '-' and rest are numeric.
+
+			Example 1:
+				Input:
+				s = "-123"
+				Output: 
+				-123
+				Explanation:
+				It is possible to convert -123 into an integer 
+				and is so returned in the form of an integer
+
+			Example 2:
+				Input:
+				s = "21a"
+				Output: 
+				-1
+				Explanation: 
+				The output is -1 as, due to the inclusion of 'a',
+				the given string cannot be converted to an integer.
+
+			Your Task:
+				You do not have to take any input or print anything. 
+				Complete the function atoi() which takes a string s as an input parameter and 
+				returns an integer value representing the given string. If the conversion is not feasible, the function should return -1.
+
+			|s| = length of string str.
+			Expected Time Complexity: O( |s| ), 
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ |s| ≤ 10
+
+		//Question says don't use built-in function but we use stoi() built-in function
+			class Solution{
+				public:
+				/*You are required to complete this method */
+				int atoi(string s) {
+					string holder;
+					
+					int i=0, multiplier = 1;
+					
+					if(s[i] == '-'){
+						i++;
+						multiplier = -1;
+					}
+						
+					for(i; i<s.length(); i++){
+						if(isdigit(s[i]))
+							holder.push_back(s[i]);
+						else
+							return -1;
+					}
+					
+					int num = stoi(holder);
+					num *= multiplier;
+					return num;
+				}
+			};
+		
+		//Without using any built-in function:
+			class Solution{
+				public:
+				/*You are required to complete this method */
+				int atoi(string s) {
+					int multiplier=1, i=0;
+					
+					if(s[i] == '-'){
+						i++;
+						multiplier = -1;
+					}
+						
+					string holder;
+					for(i; i<s.length(); i++){
+						int num = s[i] - '0';           //this will convert the current char to corresponding num
+						
+						if(num>=0 && num <= 9)          //if that char is not a number then this condition gets false, 
+												//goes to else part & returns -1
+							holder.push_back(s[i]);     
+						else
+							return -1;
+					}
+					
+					int ans = holder[0] - '0';                 //to convert the char to int
+					for(int a = 1; a<holder.length(); a++){
+						ans *= 10;
+						ans += (holder[a] - '0');
+					}
+					
+					if(multiplier == -1)
+						ans *= -1;
+					
+					return ans;
+				}
+			};
+
+	344) Find the Good Matrix:
+		Problem statement
+			You have given a 2-dimensional array ‘ARR’ with ‘N’ rows and ‘M’ columns 
+			in which each element contains only two values,i.e., 0 and 1. 
+			Your task is to convert the given matrix into the Good matrix in which if an element is 0, 
+			you need to set all elements values present in its entire row and column to 0.
+
+			For example:
+				Consider ARR = [[1 , 0 , 1] ,
+							[1 , 1 , 1] , 
+							[1 , 1 , 1]], 
+				the Good matrix after updating the given matrix as described in the question is  
+							[[0 , 0 , 0] , 
+							[1 , 0 , 1] , 
+							[1 , 0 , 1]]. 
+				Since ARR[0][1] is 0, we need to set all element’s values present in 0-th row and 1-th column to 0.
+
+			Note :
+				You do not need to print the matrix. Just change in the given input.
+			Constraints :
+				1 <= T <= 20
+				1 <= N <= 300
+				1 <= M <= 300
+
+				ARR[i][j] can only contain two values, i.e, 0 and 1.    
+				Where 'T' denotes the number of test cases, 'N' and 'M' denotes the number of rows and 
+				the number of columns in the array ‘ARR’ respectively, 
+				and 'ARR[i][j]' denotes the ’j-th’ element of  'i-th' row of the array 'ARR'. 
+
+				Time Limit: 1sec
+			Sample Input 1 :
+				2
+				2 2 
+				0 1 
+				1 1
+				3 3
+				1 1 0
+				1 1 1 
+				1 1 1
+				Sample Output 1 :
+				0 0
+				0 1
+				0 0 0
+				1 1 0
+				1 1 0
+				Explanation of sample input 1:
+				For the first test case, 
+				The Good matrix after updating the given matrix as described in the question is  
+								[[0 , 0] , 
+								[0 , 1]]. 
+				Since ARR[0][0] is 0, we need to set all elements value present in 0-th row and 0-th column to 0.
+
+				For the second test case,
+				The Good matrix after updating the given matrix as described in the question is  
+								[[0 , 0 , 0] , 
+								[1 , 1 , 0] , 
+								[1 , 1 , 0]]. 
+				Since ARR[0][2] is 0, we need to set all elements value present in 0-th row and 2-th column to 0.
+				Sample Input 2 :
+				2
+				4 4 
+				1 1 1 1   
+				0 1 1 1
+				1 1 1 1
+				0 1 1 1
+				3 3
+				0 1 1
+				0 1 1 
+				1 1 1
+				Sample Output 2 :
+				0 1 1 1
+				0 0 0 0
+				0 1 1 1
+				0 0 0 0
+				0 0 0
+				0 0 0
+				0 1 1
+
+		#include <bits/stdc++.h> 
+		vector<vector<int>> findGoodMatrix(vector<vector<int>> &arr) {
+			//create a matrix with same size
+			//random default value kept as 99.
+			vector<vector<int>> ans (arr.size(), vector<int>(arr[0].size(), 99));
+
+			for(int i=0; i<arr.size(); i++){
+				for(int j=0; j<arr[0].size();j++){
+					if(arr[i][j] == 0){
+						//setting complete row of ans matrix to 0
+						for(int a=0; a<arr[0].size(); a++)
+							ans[i][a] = 0;
+						
+						// setting complete col of ans matrix to 0
+						for(int a=0; a<arr.size(); a++)
+							ans[a][j] = 0;           
+					}else{
+						//need to check if its not 99 then it might be 0, & we don't want to change the value with 0.
+						if(ans[i][j] == 99)
+							ans[i][j] = arr[i][j];
+					}
+				}
+			}
+			return ans;
+		}
+
+		//Or
+			#include <bits/stdc++.h> 
+			vector<vector<int>> findGoodMatrix(vector<vector<int>> &arr) {
+				//vector which holds the index of matrix whose value is 0
+				vector<pair<int, int>> indexes;
+
+				//checking every value of matrix
+				for(int i=0; i<arr.size(); i++)
+					for(int j=0; j<arr[0].size(); j++)
+						if(arr[i][j] == 0)
+							indexes.push_back({i,j});
+				
+				//traversing through vector of pairs indexes
+				for(int i=0; i<indexes.size(); i++){
+					const int row = indexes[i].first;
+					const int col = indexes[i].second;
+
+					// making complete row 0
+					for(int r=0; r<arr.size(); r++)
+						arr[r][col] = 0;
+
+					// making complete col 0
+					for(int c=0; c<arr[0].size(); c++)
+						arr[row][c] = 0;
+				}
+				return arr;
+			}
+
+	345) Sort an Array:
+		Problem statement:
+			Given an array of integers nums, sort the array in ascending order and return it.
+			You must solve the problem without using any built-in functions in O(nlog(n)) time complexity 
+			and with the smallest space complexity possible.
+
+			Example 1:
+				Input: nums = [5,2,3,1]
+				Output: [1,2,3,5]
+				Explanation: After sorting the array, the positions of some numbers are not changed (for example, 2 and 3), while the positions of other numbers are changed (for example, 1 and 5).
+
+			Example 2:
+				Input: nums = [5,1,1,2,0,0]
+				Output: [0,0,1,1,2,5]
+				Explanation: Note that the values of nums are not necessairly unique.
+			
+			Constraints:
+				1 <= nums.length <= 5 * 10^4
+				-5 * 10^4 <= nums[i] <= 5 * 10^4
+			
+		//Not Optimized (Selection sort):
+			class Solution {
+				public:
+				// Selection sort
+				vector<int> sortArray(vector<int>& nums) {
+
+					int len = nums.size();
+					for(int i=0;i< len-1; i++){
+						int minValIndex = i;
+						for(int j=i+1;j<len; j++){
+							if(nums[minValIndex] > nums[j])
+								minValIndex = j;
+						}
+						// 4 2 9 1 
+						swap(nums[minValIndex],nums[i]);
+					}
+					return nums;
+				}
+			};
+
+			//or Bubble sort
+				class Solution {
+					public:
+					// Bubble sort
+					vector<int> sortArray(vector<int>& nums) {
+						
+						for(int i=0; i<nums.size()-1; i++)
+							for(int j=i+1; j<nums.size(); j++)
+								if(nums[i] > nums[j])
+									swap(nums[i], nums[j]);
+							
+						return nums;
+					}
+				};
+
+			//or this is little optimized (insertion sort):
+				class Solution {
+					public:
+					// Insert sort
+					vector<int> sortArray(vector<int>& nums) {
+						for(int i=0; i<nums.size(); i++) {
+							int j=i-1, crntNum = nums[i];
+							
+							while(j>=0 && crntNum < nums[j]) { 
+								nums[j+1] = nums[j];
+								j--;
+							}
+							nums[j+1] = crntNum;
+						}    
+						return nums;
+					}
+				};
+			
+			//or same as above insertion sort:
+				class Solution {
+					public:
+					// Insert sort
+					vector<int> sortArray(vector<int>& nums) {
+						
+						int i=0;
+						while(i < nums.size()) {
+							int crntNum = nums[i], j = i-1;
+							
+							while(j >= 0) {
+								if(crntNum > nums[j])
+									break;
+								nums[j+1] = nums[j];
+								j--;
+							}
+							nums[j+1] = crntNum;
+							i++;
+						}
+						return nums;
+					}
+				};
+
+		//Optimized: (Merge sort):
+			class Solution {
+				public:
+				void sortedMerge(vector<int> &n, int s, int e) {
+					int mid = (s + e) / 2;
+					int starter1 = s;
+					int starter2 = mid + 1;
+					vector<int> temp;
+
+					while (starter1 <= mid && starter2 <= e) {
+						if (n[starter1] <= n[starter2]) {
+							temp.push_back(n[starter1]);
+							starter1++;
+						} else {
+							temp.push_back(n[starter2]);
+							starter2++;
+						}
+					}
+
+					// Copy the remaining elements from the first half
+					while (starter1 <= mid) {
+						temp.push_back(n[starter1]);
+						starter1++;
+					}
+
+					// Copy the remaining elements from the second half
+					while (starter2 <= e) {
+						temp.push_back(n[starter2]);
+						starter2++;
+					}
+
+					// Copy the merged elements back to the original vector
+					for (int i = 0; i < temp.size(); i++) {
+						n[s + i] = temp[i];
+					}
+				}
+
+				void Split(vector<int> & nums, int s, int e){
+					if(s == e)
+						return ;
+					
+					int mid = (s+e)/2;
+
+					//Left side part
+					Split(nums, s, mid);
+
+					//right side part
+					Split(nums, mid+1, e);
+
+					sortedMerge(nums, s, e);
+				}
+
+				// Merge Sort
+				vector<int> sortArray(vector<int>& nums) {
+					int s=0, e=nums.size()-1;
+					
+					Split(nums, s, e);
+
+					return nums;
+				}
+			};
+
+	346) Numbers with product K:
+		Problem statement
+			Ninja Ankush likes to brag that he is the Ultimate Ninja among his peers. 
+			Therefore his fellow Ninja Nikhil gave him a riddle to check if Ankush is really the Ultimate Ninja. 
+			Nikhil gave Ankush a range and a number ‘K’, and asked how many numbers exist in the range 
+			such that the product of the digits of the number is equal to ‘K’. 
+			Help Ninja Ankush to prove to Ninja Nikhil that he, in fact, is the Ultimate Ninja.
+
+			More Formally, Given three positive integers ‘L’, ‘R’ and ‘K’, 
+			the task is to count the numbers in the range ‘L’ and ‘R’ inclusive, 
+			whose product of digits is equal to ‘K’.
+
+			For example
+			Given:
+				‘L’ = 1, ‘R’ = 23, ‘K’ = 6.
+
+				The answer will be 3 since there are three numbers between 1 and 23 
+				whose product of digits is 6, and those are 6, 16, and 23.
+
+			Constraints:
+				1 <= ‘T’ <= 10
+				1 <= ‘L’ <= 10 ^ 8
+				‘L’ <= ‘R’ <= 10 ^ 8
+				1 <= ‘K’ <= 10 ^ 4
+
+				Time Limit: 1sec.
+			Sample Input 1 :
+				2
+				1 23 6
+				11 25 2
+				Sample Output 1 :
+				3
+				2 
+				Explanation of the Sample Input 1:
+				In the first test case, The answer will be 3 since there are 3 numbers between 1 and 23 
+				whose product of digits is 6, and those are 6, 16, and 23.
+
+				In the second test case, The answer will be 2 since there are 2 numbers 
+				between 1 and 25 whose product of digits is 2, and those are 12, 21.
+				Sample Input 2 :
+				2
+				3 23 3
+				4 50 9
+				Sample Output 2 :
+				2
+				3
+
+		//Not Optimized:
+			int numsWithProductK(int l, int r, int k) {
+				vector<int> holder;
+				
+				for(int i=l; i<=r; i++){
+
+					int crntNum = i, multiplier = 1;
+					while(crntNum){
+						multiplier *= crntNum % 10;
+						crntNum /= 10;
+					}
+
+					if(multiplier == k)
+						holder.push_back(i);
+				}
+
+				return holder.size();
+			}
+
+			//or
+				/*
+					Time Complexity : O(R - L * log(R))
+					Space Complexity : O(1)
+
+					Where 'R' & 'L' are the numbers given.
+				*/
+
+				bool isIt(int i, int k) {
+
+					string s = to_string(i);
+					int product = 1 ;
+
+					for (char c : s) {
+						product = (product * (c - '0'));
+					}
+
+					return (product == k);
+				}
+
+				int numsWithProductK(int l, int r, int k) {
+
+					int cnt = 0;
+					
+					for (int i = l ; i <= r ; i++) {
+						// To check if current number satisfies condition.
+						if (isIt(i, k)) {
+							cnt++;
+						}
+					}
+
+					return cnt;
+				}
+
+		//Optimized:
+			1)
+				/*
+					Time Complexity : O(log(R) * (10 ^ log10(R)))
+					Space Complexity : O(10 ^ log10(R))
+
+					Where 'K' & 'R' the number given to us.
+				*/
+
+				const int maxProduct = 10000;
+
+				int numsWithProductKhelper(string num, int idx, int product, int k, int leadingZeros, int tight) {
+					if (idx >= num.length() or product > k)
+						return product == k;
+
+					int res = 0;
+
+					int end = tight ? num[idx] - '0' : 9;
+
+					for (int dig = 0; dig <= end; dig++) {
+
+						if (dig == 0 && !leadingZeros) {
+
+							// Recurr for 'idx + 1', and no more leading zeros.
+							res += numsWithProductKhelper(num, idx + 1, product, k, false, (tight & (dig == end)));
+						} else {
+							
+							// Recurr for 'idx + 1' and we have multiplied the current digit in product.
+							res += numsWithProductKhelper(num, idx + 1, product * dig, k, true, (tight & (dig == end)));
+						}
+					}
+
+					return res;
+				}
+
+				int numsWithProductK(int l, int r, int k) {
+
+					// Converting 'r' to string.
+					string str = to_string(r);
+
+					int cntR = numsWithProductKhelper(str, 0, 1, k, false, true);
+					// Converting 'l - 1' to string.
+					str = to_string(l - 1);
+					int cntL = numsWithProductKhelper(str, 0, 1, k, false, true);
+
+					int answer = cntR - cntL;
+
+					return answer;
+				}
+
+			2)using DP:
+				/*
+					Time Complexity : O(log(R) * 10 * K)
+					Space Complexity : O(K)
+
+					Where 'K' & 'R' the number given to us.
+				*/
+
+				const int maxProduct = 10000;
+				int numsWithProductKhelper(string num, int idx, int product, int k, int leadingZeros, int tight, int dp[maxProduct][10][2][2]) {
+					if (idx >= num.length() or product > k) {
+						return product == k;
+					}
+
+					if (dp[product][idx][tight][leadingZeros] != -1) {
+						return dp[product][idx][tight][leadingZeros];
+					}
+
+					int res = 0;
+
+					int end = tight ? num[idx] - '0' : 9;
+
+					for (int dig = 0; dig <= end; dig++) {
+
+						if (dig == 0 && !leadingZeros) {
+
+							// Recurr for 'idx + 1', and no more leading zeros.
+							res += numsWithProductKhelper(num, idx + 1, product, k, false, (tight & (dig == end)), dp);
+						} else {
+
+							// Recurr for 'idx + 1' and we have multiplied the current digit in product.
+							res += numsWithProductKhelper(num, idx + 1, product * dig, k, true, (tight & (dig == end)), dp);
+						}
+					}
+
+					return dp[product][idx][tight][leadingZeros] = res;
+				}
+
+				int numsWithProductK(int l, int r, int k) {
+					string str = to_string(r);
+
+					int dp[maxProduct][10][2][2];
+
+					memset(dp, -1, sizeof(dp));
+					int cntR = numsWithProductKhelper(str, 0, 1, k, false, true, dp);
+
+					str = to_string(l - 1);
+
+					memset(dp, -1, sizeof(dp));
+					int cntL = numsWithProductKhelper(str, 0, 1, k, false, true, dp);
+
+					int answer = cntR - cntL;
+
+					return answer;
+				}
+
+	347) Reversing Series Pattern:
+		Problem statement
+			You are given an integer ‘N’. Your task is to return a reverse series pattern for the given ‘N’.
+			The reverse series pattern for ‘N’ = 5 will look like following:
+				1 
+				3 2 
+				4 5 6 
+				10 9 8 7 
+				11 12 13 14 15
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 500
+
+			Time Limit : 1 sec
+			Sample Input 1 :
+				2
+				7
+				6
+				Sample Output 1 :
+				1
+				3 2
+				4 5 6
+				10 9 8 7
+				11 12 13 14 15
+				21 20 19 18 17 16
+				22 23 24 25 26 27 28
+				1
+				3 2
+				4 5 6
+				10 9 8 7
+				11 12 13 14 15
+				21 20 19 18 17 16 
+				Sample Input 2 :
+				2
+				3
+				4
+				Sample Output 2 :
+				1
+				3 2
+				4 5 6
+				1
+				3 2
+				4 5 6 
+				10 9 8 7
+
+		#include <bits/stdc++.h> 
+		vector<vector<int>> reversePattern(int n) {
+			vector<vector<int>> ans;
+			int cnt=1;
+			for(int i=0; i<n; i++){
+				vector<int> temp;
+				for(int j=0; j<=i; j++){
+					temp.push_back(cnt++);
+				}
+				ans.push_back(temp);
+			}
+
+			for(int i=0; i<ans.size(); i++)
+				if(i&1)
+					reverse(ans[i].begin(), ans[i].end());
+
+			return ans;
+		}
+
+		// On Online Debugger
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				cout<<"Enter n: ";
+				int n;
+				cin>>n;
+				int cnt=0, temp;
+				
+				for(int i=1; i<=n; i++) {
+					if(i&1){
+						for(int j=1; j<=i; j++)
+							std::cout << ++cnt << " ";
+					}else{
+						temp = i + cnt;
+						cnt = temp;
+						for(int j=1; j<=i; j++)
+							std::cout << temp-- << " ";
+					}
+					
+					std::cout << std::endl;
+				}
+				return 0;
+			}
+			Enter n: 5
+				1 
+				3 2 
+				4 5 6 
+				10 9 8 7 
+				11 12 13 14 15 
+
+	348) Decimal Equivalent of Binary Linked List:
+		Problem statement:
+			Given a singly linked list of length n. The link list represents a binary number, 
+			ie it contains only 0s and 1s. Find its decimal equivalent.
+			The significance of the bits decreases with the increasing index in the linked list.
+			An empty linked list is considered to represent the decimal value 0. 
+			Since the answer can be very large, answer modulo 10^9+7 should be printed.
+
+			Example 1:
+				Input:
+				n = 3
+				Linked List = {0, 1, 1}
+				Output:
+				3
+				Explanation:
+				0*2^2 + 1*2^1 + 1*2^0 =  1 + 2 + 0 = 3
+			Example 2:
+				Input:
+				n = 4
+				Linked List = {1, 1, 1, 0}
+				Output:
+				14
+				Explanation:
+				1*2^3 + 1*2^2 + 1*2^1 + 0*2^0 =  8 + 4 + 2 + 0 = 14
+
+			Your Task:
+				You do not have to take any input or print anything. 
+				Complete the function decimalValue() which takes a head node of a linked list 
+				as an input parameter and returns decimal representation of it.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				0 <= n <= 100
+				Data of each node is either 0 or 1
+
+		/* Link list Node/
+		struct Node {
+			bool data;   // NOTE data is bool
+			Node* next;
+			
+			Node(int x){
+				data = x;
+				next = NULL;
+			}
+		}; */
+
+		class Solution {
+			public:
+				// Should return decimal equivalent modulo 1000000007 of binary linked list 
+			long long unsigned int decimalValue(Node *head) {
+				const int MOD = 1e9 + 7;
+				long long unsigned int result = 0;
+		
+				Node* current = head;
+				while (current != nullptr) {
+					// Multiply the current result by 2 and add the binary digit
+					result = (result * 2 + current->data) % MOD;
+					current = current->next;
+				}
+				return result;
+			}
+		};
+
+	349) Subtract The Product And Sum Of Digits Of An Integer:
+		Problem statement
+			You are given an integer number ‘N’, 
+			and your task is to return the difference between the product of its digits and the sum of its digits.
+
+			Note:
+				You do not need to print anything; it has already been taken care of. Just implement the given function.
+			For Example :
+				Input: N = 234
+				Output: 15 
+				Explanation: 
+				Product of digits = 2 * 3 * 4 = 24 
+				Sum of digits = 2 + 3 + 4 = 9 
+				Result = 24 - 9 = 15
+			Constraints :
+				1 <= T <= 3000
+				1 <= N <= 10^5
+
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				234
+				4421
+				Sample Output 1 :
+				15
+				21
+				Explanation For Sample Input 1 :
+				Product of digits = 2 * 3 * 4 = 24 
+				Sum of digits = 2 + 3 + 4 = 9 
+				Result = 24 - 9 = 15
+
+				Product of digits = 4 * 4 * 2 * 1 = 32 
+				Sum of digits = 4 + 4 + 2 + 1 = 11
+				Result = 32 - 11 = 21
+				Sample Input 2 :
+				1
+				87
+				Sample Output 2 :
+				41
+
+		#include <bits/stdc++.h> 
+		int findProductSumDifference(int n){
+			int prod = 1, sum =0;
+
+			while(n){
+				int lastDigit = n % 10; 
+				prod *= lastDigit;
+				sum += lastDigit;
+				n /= 10;
+			}
+			return prod-sum;
+		}
+
+	350) Count Of 3s:
+		Problem statement
+			You are given an integer ‘N’. 
+			You simply need to find out the number of occurrences of 3 as a digit in the range of numbers from [0, N].
+
+			Note:
+				You need to count occurrences at every place of the number.
+			For example :
+				You are given N = 13, then the number of occurrences of 3 in range [0, 13] = 2 (3, 13), you need to return 2.
+			Constraints:
+				1 <= T <= 10^2
+				0 <= N <= 10^5
+
+				where ‘T’ is the number of test cases and 'N' is the given integer.
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				13
+				24
+				Sample Output 1:
+				2
+				3
+				Explanation For Sample Input 1:
+				In the first test case, 
+				Number of occurrences of 3 in range [0, 13] = 2 (3, 13). Return 2
+
+				In the second test case, 
+				Number of occurrences of 3 in range [0, 24] = 3 (3, 13, 23). Return 3
+				Sample Input 2:
+				2
+				10
+				33
+				Sample Output 2:
+				1
+				8
+				Explanation For Sample Input 2:
+				In the first test case, 
+				Number of occurrences of 3 in range [0, 10] = 1 (3). Return 1
+
+				In the second test case, 
+				Number of occurrences of 3 in range [0, 33] = 8 (3, 13, 23, 30, 31, 32, 33). Return 8
+		
+		#include <bits/stdc++.h> 
+		long long int countOf3(int x) {
+			long long ans=0;
+			for(int i=0; i<=x; i++){
+				int num = i;
+
+				while(num){
+					if(num % 10 == 3)
+						ans++;    
+					num /= 10;
+				}
+			}
+			return ans;
+		}
+	
+	351) Group Anagrams:
+		Problem Statement:
+			Given an array of strings strs, group the anagrams together. 
+			You can return the answer in any order.
+			An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, 
+			typically using all the original letters exactly once.
+
+			Example 1:
+				Input: strs = ["eat","tea","tan","ate","nat","bat"]
+				Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+
+			Example 2:
+				Input: strs = [""]
+				Output: [[""]]
+
+			Example 3:
+				Input: strs = ["a"]
+				Output: [["a"]]
+			
+			Constraints:
+				1 <= strs.length <= 104
+				0 <= strs[i].length <= 100
+				strs[i] consists of lowercase English letters.
+
+		// Not Optimized:
+			class Solution {
+				public:
+				vector<vector<string>> groupAnagrams(vector<string>& strs) {
+					vector<vector<string>> ans;
+					for(int i=0; i<strs.size(); i++){
+						if(strs[i] == "0")
+							continue;
+						
+						vector<string> temp;
+						temp.push_back(strs[i]);
+
+						//mapper for first string
+						int mapper1[26] = {0};
+						string Stemp = strs[i];
+						strs[i] = "0";
+
+						for(int z=0; z<Stemp.length(); z++)
+							mapper1[Stemp[z] - 'a']++;
+						
+						for(int j=i+1; j<strs.size(); j++){
+							if(strs[j] == "0")
+								continue;
+							
+							//mapper for second string
+							int mapper2[26] = {0};
+							string s2 = strs[j];
+
+							for(int z=0; z<s2.length(); z++) {
+								mapper2[s2[z] -'a']++;
+							}
+
+							int flag = 1;
+							for(int y=0; y<26; y++){
+								if(mapper1[y] != mapper2[y]){
+								flag = 0;
+								break;
+								}
+							}
+
+							if(flag){
+								strs[j] = "0";
+								temp.push_back(s2);
+							}
+						}
+						ans.push_back(temp);
+					}
+					return ans;
+				}
+			};
+
+		// Optimized: ❌Pending
+			class Solution {
+				public:
+				string getSignature(const string& s) {
+					vector<int> count(26, 0);
+					for (char c : s) {
+						count[c - 'a']++;
+					}
+
+					stringstream ss;
+					for (int i = 0; i < 26; i++) {
+						if (count[i] != 0) {
+							ss << (char)('a' + i) << count[i];
+						}
+					}
+					return ss.str();
+				}
+
+				vector<vector<string>> groupAnagrams(vector<string>& strs) {
+					vector<vector<string>> result;
+					unordered_map<string, vector<string>> groups;
+
+					for (const string& s : strs) {
+						groups[getSignature(s)].push_back(s);
+					}
+
+					for (const auto& entry : groups) {
+						result.push_back(entry.second);
+					}
+
+					return result;
+				}
+			};
+
+	352) Majority Element:
+		Problem Statement:
+			Given an array nums of size n, return the majority element.
+			The majority element is the element that appears more than [n/2⌋ times. 
+			You may assume that the majority element always exists in the array.
+
+			Example 1:
+				Input: nums = [3,2,3]
+				Output: 3
+
+			Example 2:
+				Input: nums = [2,2,1,1,1,2,2]
+				Output: 2
+			
+			Constraints:
+				n == nums.length
+				1 <= n <= 5 * 10^4
+				-10^9 <= nums[i] <= 10^9
+			Follow-up: Could you solve the problem in linear time and in O(1) space?
+
+		class Solution {
+			public:
+			int majorityElement(vector<int>& nums) {
+				int count = nums.size() / 2;
+				map<int, int> Freq;
+
+				for(int i: nums)
+					Freq[i]++;
+				for(auto i: Freq)
+					if(i.second > count)
+						return i.first;
+				throw;
+			}
+		};
+	
+	353) Two Sum:
+		Problem Statement:
+			Given an array of integers nums and an integer target, 
+			return indices of the two numbers such that they add up to target.
+			You may assume that each input would have exactly one solution, 
+			and you may not use the same element twice.
+			You can return the answer in any order.
+
+			Example 1:
+				Input: nums = [2,7,11,15], target = 9
+				Output: [0,1]
+				Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+
+			Example 2:	
+				Input: nums = [3,2,4], target = 6
+				Output: [1,2]
+
+			Example 3:
+				Input: nums = [3,3], target = 6
+				Output: [0,1]
+
+			Constraints:
+				2 <= nums.length <= 10^4
+				-10^9 <= nums[i] <= 10^9
+				-10^9 <= target <= 10^9
+				Only one valid answer exists.
+
+		class Solution {
+			public:
+			vector<int> twoSum(vector<int>& nums, int target) {
+				vector<int> ans;
+				
+				for(int i=0;i<nums.size(); i++){
+					for(int j=i+1; j<nums.size(); j++){
+						if(nums[i]+nums[j] == target){
+							ans.push_back(i);
+							ans.push_back(j);
+							return ans;
+						}
+					}
+				}
+				return ans;
+			}
+		};
+	
+	354) Palindrome Number:
+		Problem Statement:
+			Given an integer x, return true if x is a palindrome, and false otherwise.
+
+			Example 1:
+				Input: x = 121
+				Output: true
+				Explanation: 121 reads as 121 from left to right and from right to left.
+
+			Example 2:
+				Input: x = -121
+				Output: false
+				Explanation: From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.
+
+			Example 3:
+				Input: x = 10
+				Output: false
+				Explanation: Reads 01 from right to left. Therefore it is not a palindrome.
+
+			Constraints:
+			-2^31 <= x <= 2^31 - 1
+
+		class Solution {
+			public:
+			bool isPalindrome(int x) {
+				if(x<0)
+					return 0;
+				string s = to_string(x);
+				
+				int i=0;
+				while(i < (s.length()/2)){
+					if(s[i] != s[s.length()-1-i])
+						return 0;
+					i++;
+				}
+				return 1;
+			}
+		};
+
+		Follow up: Could you solve it without converting the integer to a string?
+			class Solution {
+				public:
+				bool isPalindrome(int x) {
+					if(x<0)
+						return 0;
+					long revNum = 0;
+					int tempNum = x;
+
+					while(tempNum){
+						revNum = (revNum * 10) + (tempNum % 10);
+						tempNum /= 10;
+					}
+					return (revNum == x) ? 1 : 0;
+				}
+			};
+
+	355) Contains Duplicate:
+		Problem statement:
+			Given an integer array nums, 
+			return true if any value appears at least twice in the array, 
+			and return false if every element is distinct.
+
+			Example 1:
+				Input: nums = [1,2,3,1]
+				Output: true
+			
+			Example 2:
+				Input: nums = [1,2,3,4]
+				Output: false
+
+			Example 3:
+				Input: nums = [1,1,1,3,3,4,3,2,4,2]
+				Output: true
+				
+			Constraints:
+				1 <= nums.length <= 10^5
+				-10^9 <= nums[i] <= 10^9
+
+		// Not Optimized:
+			class Solution {
+				public:
+				bool containsDuplicate(vector<int>& nums) {
+					for(int i=0; i<nums.size(); i++)
+						for(int j=i+1; j<nums.size(); j++)
+							if(nums[i] == nums[j])
+								return 1;
+					return 0;
+				}
+			};
+		
+		//Optimized1:
+			class Solution {
+				public:
+				bool containsDuplicate(vector<int>& nums) {
+					sort(nums.begin(), nums.end());
+
+					for(int i=1; i<nums.size(); i++)
+						if(nums[i-1] == nums[i])
+							return 1;
+					return 0;
+				}
+			};
+	
+	356) Find Resultant Array After Removing Anagrams:
+		Problem statement:
+			You are given a 0-indexed string array words, where words[i] consists of lowercase English letters.
+			In one operation, select any index i such that 0 < i < words.length and words[i - 1] and words[i] are anagrams, 
+			and delete words[i] from words. 
+			Keep performing this operation as long as you can select an index that satisfies the conditions.
+			Return words after performing all operations. 
+			It can be shown that selecting the indices for each operation in any arbitrary order will lead to the same result.
+			An Anagram is a word or phrase formed by rearranging the letters of 
+			a different word or phrase using all the original letters exactly once. 
+			For example, "dacb" is an anagram of "abdc".
+
+			Example 1:
+				Input: words = ["abba","baba","bbaa","cd","cd"]
+				Output: ["abba","cd"]
+				Explanation:
+				One of the ways we can obtain the resultant array is by using the following operations:
+				- Since words[2] = "bbaa" and words[1] = "baba" are anagrams, we choose index 2 and delete words[2].
+				Now words = ["abba","baba","cd","cd"].
+				- Since words[1] = "baba" and words[0] = "abba" are anagrams, we choose index 1 and delete words[1].
+				Now words = ["abba","cd","cd"].
+				- Since words[2] = "cd" and words[1] = "cd" are anagrams, we choose index 2 and delete words[2].
+				Now words = ["abba","cd"].
+				We can no longer perform any operations, so ["abba","cd"] is the final answer.
+
+			Example 2:
+				Input: words = ["a","b","c","d","e"]
+				Output: ["a","b","c","d","e"]
+				Explanation:
+				No two adjacent strings in words are anagrams of each other, so no operations are performed.
+
+			Constraints:
+				1 <= words.length <= 100
+				1 <= words[i].length <= 10
+				words[i] consists of lowercase English letters.
+
+		class Solution {
+			public:
+			bool check(int *p1, int *p2){
+				for(int i=0; i<26; i++)
+					if(p1[i] != p2[i])
+						return 0;
+				return 1;
+			}
+			vector<string> removeAnagrams(vector<string>& words) {
+				vector<string> ans;
+				for(int i=0; i<words.size(); i++){
+					if(words[i] == "0")
+						continue;
+					
+					string crntS = words[i];
+					ans.push_back(crntS);
+
+					// mapping
+					int mapper1[26] = {0};
+					for(int z=0; z<crntS.length(); z++)
+						mapper1[crntS[z]-'a']++;
+
+					for(int j=i+1; j<words.size(); j++){
+						// mapping
+						int mapper2[26] = {0};
+						string sTemp = words[j];
+						for(int a=0; a<sTemp.length(); a++)
+							mapper2[sTemp[a] - 'a']++;
+						
+						if(check(mapper1, mapper2))
+							words[j] = "0";
+						else
+							break;
+					}
+				}
+				return ans;
+			}
+		};
+
+		// Another Approach: (Simple)
+			class Solution {
+				public:
+				vector<string> removeAnagrams(vector<string>& words) {
+					vector<string> ans;
+					ans.push_back(words[0]);
+
+					for(int i=1; i<words.size(); i++){
+						string s1 = words[i-1];
+						string s2 = words[i];
+						sort(s1.begin(), s1.end());
+						sort(s2.begin(), s2.end());
+
+						if(s1 != s2)
+							ans.push_back(words[i]);
+					}
+					return ans;
+				}
+			};
+	
+	357) Implement a phone directory:
+		Problem statement
+			You are given a list/array of strings which denotes the contacts that exist in your phone directory. 
+			The search query on a string ‘str’ which is a query string displays all 
+			the contacts which are present in the given directory with the prefix as ‘str’. 
+			One special property of the search function is that when a user searches for 
+			a contact from the contact list then suggestions (contacts with prefix as the 
+			string entered so for) are shown after the user enters each character.
+
+			Note :
+				If no suggestions are found, return an empty 2D array.
+
+			For Example :
+				In the above example everytime we enter a character, 
+				a few suggestions display the strings which contain the entered string as prefixes.
+
+			Constraints :
+				1 <= T <= 50
+				1 <= N <= 100
+				1 <= len <= 10
+				ARR[i] contains lowercase English alphabets.
+				All the given strings contain lowercase English alphabets.
+				Time Limit: 1 sec.
+			Sample Input 1 :
+				2
+				5
+				cod coding codding code coly
+				coding
+				2
+				ninjas coding
+				ninja
+				Sample Output 1 :
+				cod coding codding code coly
+				cod coding codding code coly
+				cod coding codding code coly
+				coding
+				coding
+				coding
+				ninjas
+				ninjas
+				ninjas
+				ninjas
+				ninjas
+				Explanation to Sample Input 1 :
+				In the first test case, 
+				The suggestions for “c” is {“cod”, “coding”, “codding”, “code”, “coly”}.
+				The suggestions for “co” is {“cod”, “coding”, “codding”, “code”, “coly”}.
+				The suggestions for “cod” is {“cod”, “coding”, “codding”, “code”, “coly”}.
+				The suggestion for “codi” is {“coding”}.
+				The suggestion for “codin” is {“coding”}.
+				The suggestion for “coding” is {“coding”}.
+
+				In the second test case, 
+				The suggestion for “n” is {“ninjas”}.
+				The suggestion for “ni” is {“ninjas”}.
+				The suggestion for “nin” is {“ninjas”}.
+				The suggestion for “ninj” is {“ninjas”}.
+				The suggestion for “ninja” is {“ninjas”}.
+				Sample Input 2 :
+				3
+				2
+				coding ninjas
+				cell
+				2
+				ab abc
+				a
+				2
+				ab abc
+				b
+				Sample Output 2 :
+				coding
+				ab abc
+				No suggestions found
+				Explanation to Sample Input 2 :
+				In the first test case, 
+				The suggestion for “c” is {“coding”}.
+				For the rest of the letters, there are no suggestions.
+
+				In the second test case,
+				The suggestion for “a” is {“ab”, “abc”}.
+
+				In the third test case, no suggestions are found.
+
+		#include <bits/stdc++.h>
+		vector<vector<string>> phoneDirectory(vector<string>&contactList, string &queryStr) {
+			vector<vector<string>> ans;
+
+			unordered_set<string> removeDuplicate;
+
+			for(int i=0; i<contactList.size(); i++)
+				removeDuplicate.insert(contactList[i]);
+			
+			//setting set back to vector
+			contactList.clear();
+			for(auto i=removeDuplicate.begin(); i!= removeDuplicate.end(); i++)
+				contactList.push_back(*i);
+
+			string temp;
+
+			for(int i=0; i<queryStr.length(); i++){
+				temp += queryStr[i];
+
+				vector<string> holder;
+
+				for(int a=0; a<contactList.size(); a++){
+					string crntS = contactList[a];
+					if(temp.length() > crntS.length())
+						continue;
+					
+					int flag=1;
+					for(int y=0; y<temp.length(); y++)
+						if(temp[y] != crntS[y]){
+							flag =0;
+							break;
+						}
+					
+					if(flag)
+						holder.push_back(crntS);            
+				}
+				if(holder.size() !=0 ){
+					sort(holder.begin(), holder.end());
+					ans.push_back(holder);
+				}
+			}
+			// cout<<ans.size()<<endl;
+			return ans;
+		}
+		
+	358) Remove Duplicates from Sorted Array:
+		Problem Statement:
+			Given an integer array nums sorted in non-decreasing order, 
+			remove the duplicates in-place such that each unique element appears only once. 
+			The relative order of the elements should be kept the same. 
+			Then return the number of unique elements in nums.
+			Consider the number of unique elements of nums to be k, 
+			to get accepted, you need to do the following things:
+
+			Change the array nums such that the first k elements of nums contain the 
+			unique elements in the order they were present in nums initially. 
+			The remaining elements of nums are not important as well as the size of nums.
+			Return k.
+			Custom Judge:
+				The judge will test your solution with the following code:
+
+				int[] nums = [...]; // Input array
+				int[] expectedNums = [...]; // The expected answer with correct length
+
+				int k = removeDuplicates(nums); // Calls your implementation
+
+				assert k == expectedNums.length;
+				for (int i = 0; i < k; i++) {
+					assert nums[i] == expectedNums[i];
+				}
+			If all assertions pass, then your solution will be accepted.
+
+			Example 1:
+				Input: nums = [1,1,2]
+				Output: 2, nums = [1,2,_]
+				Explanation: Your function should return k = 2, with the first two elements of nums being 1 and 2 respectively.
+				It does not matter what you leave beyond the returned k (hence they are underscores).
+
+			Example 2:
+				Input: nums = [0,0,1,1,1,2,2,3,3,4]
+				Output: 5, nums = [0,1,2,3,4,_,_,_,_,_]
+				Explanation: Your function should return k = 5, with the first five elements of nums being 0, 1, 2, 3, and 4 respectively.
+				It does not matter what you leave beyond the returned k (hence they are underscores).
+
+			Constraints:
+				1 <= nums.length <= 3 * 104
+				-100 <= nums[i] <= 100
+				nums is sorted in non-decreasing order.
+
+		class Solution {
+			public:
+			int removeDuplicates(vector<int>& nums) {
+				set<int> s(nums.begin(), nums.end());
+				
+				// for(int i=0; i<nums.size(); i++)
+				//     s.insert(nums[i]);
+
+				//copying value of set to vector nums
+				nums.clear();
+
+				// for(auto i=s.begin(); i!= s.end(); i++)
+				//     nums.push_back(*i);
+
+				nums.assign(s.begin(), s.end());
+				return s.size(); 
+			}
+		};
+
+		// in-place approach:
+			class Solution {
+				public:
+				int removeDuplicates(vector<int>& nums) {
+					
+					for(int i=0; i<nums.size()-1; i++)
+						if(nums[i] == nums[i+1]){
+							nums.erase(nums.begin()+i);
+							i--;
+						}
+					return nums.size();
+				}
+			};
+
+		//Advance modfied if condition without brackets
+			class Solution {
+				public:
+				int removeDuplicates(vector<int>& nums) {
+					for(int i=0; i<nums.size()-1; i++)
+						if(nums[i] == nums[i+1])
+							nums.erase(nums.begin()+i), i--;
+							
+					return nums.size();
+				}
+			};
+
+	359) Sort Characters By Frequency:
+		Problem Statement:
+			Given a string s, sort it in decreasing order based on the frequency of the characters. 
+			The frequency of a character is the number of times it appears in the string.
+			Return the sorted string. If there are multiple answers, return any of them.
+
+			Example 1:
+				Input: s = "tree"
+				Output: "eert"
+				Explanation: 'e' appears twice while 'r' and 't' both appear once.
+				So 'e' must appear before both 'r' and 't'. Therefore "eetr" is also a valid answer.
+
+			Example 2:
+				Input: s = "cccaaa"
+				Output: "aaaccc"
+				Explanation: Both 'c' and 'a' appear three times, so both "cccaaa" and "aaaccc" are valid answers.
+				Note that "cacaca" is incorrect, as the same characters must be together.
+
+			Example 3:
+				Input: s = "Aabb"
+				Output: "bbAa"
+				Explanation: "bbaA" is also a valid answer, but "Aabb" is incorrect.
+				Note that 'A' and 'a' are treated as two different characters.
+
+			Constraints:
+				1 <= s.length <= 5 * 10^5
+				s consists of uppercase and lowercase English letters and digits.
+
+		class Solution {
+			public:
+			static bool compare(pair<char, int> a, pair<char, int> b){
+				return a.second > b.second;
+			}
+			string frequencySort(string s) {
+				map<char, int> Freq;
+
+				// Frequency Counted
+				for(char ch: s)
+					Freq[ch]++;
+
+				vector<pair<char, int>> holder;
+				for(auto i=Freq.begin(); i!= Freq.end(); i++){
+					pair<char, int> tempPair = *i;
+					holder.push_back(tempPair);
+				}
+
+				sort(holder.begin(), holder.end(), compare);
+
+				string ans;
+				for(int i=0; i<holder.size(); i++){
+					int value = holder[i].second;
+					while(value--)
+						ans += holder[i].first;
+				}
+				return ans;
+			}
+		};
+	
+	360) Product of the Last K Numbers:
+		Problem statement
+			Given a sequence of queries of insertion and getProduct, 
+			you need to create an array using queries of type-0 and answer queries of type-1.
+			In each query, the input is of two types :
+				0 X: insert element ‘X’ at the end array.
+				1 K: find the product of the last 'K' elements in the array
+			Note:
+				For the query of type 1, you can assume that the array has at least k values. 
+				And at any time, the product of any contiguous sequence of numbers 
+				will fit into a single 32-bit integer without overflowing.
+			Constraints:
+				1 <= T <= 3
+				0 <= X <= 100
+				0 <= QUERIES <=5000
+				1 <= K <= 5000
+
+				Where X denotes the value to be stored in the array.
+				Time limit: 1 sec.
+			Sample Input 1:
+				1
+				10
+				0 3
+				0 0
+				0 2
+				0 5
+				0 4
+				1 2
+				1 3
+				1 4
+				0 8
+				1 2
+				Sample Output 1:
+				20 40 0 32
+				Explanation for Sample Input 1:
+				After the first 5 insertions, the array will be [3 0 2 5 4]
+
+				Product with k=2 is 5*4 = 20
+				Product with k=3 is 2*5*4 = 40
+				Product with k=4 is 0*2*5*4 = 0
+
+				Insert 8 : [ 3 0 2 5 4 8]
+				Product with k=2 is 4*8 = 32
+				Sample Input 2:
+				1
+				12
+				0 24
+				1 1
+				0 58
+				0 2
+				1 3
+				0 73
+				1 3
+				0 66
+				0 0
+				1 4
+				0 8
+				1 7
+				Sample Output 2:
+				24 2784 8468 0 0
+
+		#include <bits/stdc++.h> 
+		vector<int> solve( int q, vector<pair<int, int>> queries ) {
+			vector<int> holder, ans;
+
+			for(int i=0; i<queries.size(); i++){
+				if(queries[i].first == 0)
+					holder.push_back(queries[i].second);
+				else{
+					int counter = queries[i].second;
+					int prod = 1;
+					for(int j=holder.size()-1; counter > 0; j--, counter--){
+						prod *= holder[j];
+					}
+					ans.push_back(prod);
+				}
+			}
+			return ans;
+		}
+
+	361) Pattern Printing (Hollow Box Star Pattern):
+		(Lecture-4 question:30th)
+		Problem statement
+			Ninja has been given two integers 'M' and ‘N’.
+			Now Ninja has to draw a rectangle of height ‘M’ and breadth ‘N’ 
+			using the character * such that the * only occurs at the boundaries of the rectangle, 
+			and inside of this boundary, there is space only.
+
+			Now, Ninja doesn’t know how to perform this operation.
+			You being Ninja's best friend, your task is to help Ninja to solve this problem.
+			EXAMPLE:
+				Input: 'M' = 2, ‘N’ = 2
+			Output:
+				**
+				**
+			Constraints :
+				1 <= 'T' <= 10
+				1 <= 'M' <= 10^5
+				1 <= 'N' <= 10^5
+				1 <= 'M' * 'N' <= 10^5
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				2 2  
+				4 3
+				Sample Output 1 :
+				**
+				**  
+				***
+				* *
+				* *
+				***
+				Sample Input 2 :
+				2
+				1 1
+				3 3
+				Sample Output 2 :
+				*
+				***
+				* *
+				***
+
+		#include <bits/stdc++.h> 
+		void printPattern(int m, int n) {
+			for(int i=0; i<m; i++){
+				for(int j=0; j<n; j++)
+					if(i == 0 || i == m-1 || j==0 || j== n-1)
+						cout<<"*";
+					else
+						cout<<" ";
+				cout<<"\n";
+			}
+		}
+	
+	362) Sum Of Infinite Array: ❌Pending
+		Problem statement
+			Given an array “A” of N integers and you have also defined the new array “B” as a concatenation of array “A” 
+			for an infinite number of times.
+			For example, if the given array “A” is [1,2,3] then, infinite array “B” is [1,2,3,1,2,3,1,2,3,.......].
+			Now you are given Q queries, each query consists of two integers “L“ and “R”(1-based indexing). 
+			Your task is to find the sum of the subarray from index “L” to “R” (both inclusive) 
+			in the infinite array “B” for each query.
+
+			Note :
+				The value of the sum can be very large, return the answer as modulus 10^9+7.
+			Constraints :
+				1 <= T <= 100
+				1 <= N <= 10^4   
+				1 <= A[i] <= 10^9
+				1 <= Q <= 10^4
+				1 <= L <= R <= 10^18
+				Time Limit: 1sec
+			Sample Input 1 :
+				1
+				3
+				1 2 3
+				2
+				1 3
+				1 5
+				Sample Output 1 :
+				6 9
+				Explanation to Sample Input 1 :
+				For the first test case, the given array A is [1,2,3] therefore the infinite array “B” 
+				will be [1,2,3,1,2,3,1,2,3,.......]. 
+				So the answer for the given first query is 6 because the sum of the
+				subarray from index 1 to 3 of infinite array “B” i.e. (B[1]+B[2]+B[3]) is 6.
+
+				For the given second query is 9 because the sum of the subarray from index 1 to 5 
+				of array “B” .ie (B[1]+B[2]+B[3]+B[4]+B[5]) is 9.
+				Sample Input 2 :
+				1
+				4
+				5 2 6 9
+				3
+				1 5
+				10 13
+				7 11
+				Sample Output 2 :
+				27 22 28
+ 
+		//Not Optimized:
+			vector<int> sumInRanges(vector<int> &arr, int n, vector<vector<long long>> &queries, int q) {
+				vector<int> ans;
+				int mod = 1e9+7;
+
+				for(int i=0; i<q; i++) {
+					long start = queries[i][0];
+					long end = queries[i][1];
+
+					int sum=0;
+					for(long l=start; l<=end; l++){
+						int v = l % arr.size();
+						v -= 1;
+						if(v < 0){
+							sum = (sum + arr[arr.size()-1]) % mod;
+						}else{
+							sum = (sum + arr[v]) % mod;
+						}
+					}
+					ans.push_back(sum);
+				}
+				return ans;
+			}
+	
+		//Optimized:
+			/*
+				Time Complexity:O(Q+N).
+				Space Complexity:O(N).
+
+				Where N is the size of the given array, and Q is the number of queries given.
+			*/
+
+			int mod = 1000000007;
+			// Function to calculate prefix sum upto index x of the infite array.
+			long long func(vector<long long> &sumArray, long long x, long long n) {
+				// Number of times the given array comes completely upto index x.
+				long long count = (x / n) % mod;
+
+				long long res = (count * sumArray[(int) n]) % mod;
+
+				// Adding the remaining elements sum.
+				res = (res + sumArray[(int) (x % n)]) % mod;
+
+				return res;
+			}
+
+			vector<int> sumInRanges(vector<int> &arr, int n, vector<vector<long long>> &queries, int q) {
+
+				// It stores answer for each query.
+				vector<int> ans;
+
+				// It store cumulative sum where sumArray[i] = sum(A[0]+..A[i]).
+				vector<long long> sumArray(n + 1);
+
+				for (int i = 1; i <= n; i++) {
+					sumArray[i] = (sumArray[i - 1] + arr[i - 1]) % mod;
+				}
+
+				// Traversing the given queries.
+				for (int i = 0; i < queries.size(); i++) {
+					vector<long long> range = queries[i];
+					long long l = range[0];
+					long long r = range[1];
+
+					// It stores the prefix sum from index 0 to index r in an infinite array.
+					long long rsum = func(sumArray, r, n);
+
+					// It stores the prefix sum from index 0 to index l-1 in an infinite array.
+					long long lsum = func(sumArray, l - 1, n);
+
+					// Add answer for each query.
+					ans.push_back((int) ((rsum - lsum + mod) % mod));
+				}
+				return ans;
+			}
+
+	363) Print the Pattern:
+		Problem statement
+			Ninja is given a pattern. Now he is asked to print the same pattern for any given ‘N’ number of rows.
+			Note:
+			There is only one space between the values of each column in a row.
+			For example, Pattern for ‘N’ = 5 will be.
+				1 2 3 4 5 
+				11 12 13 14 15 
+				21 22 23 24 25 
+				16 17 18 19 20 
+				6 7 8 9 10 
+			Sample Input1 :
+				1 
+				5
+				Sample Output2 :
+				1 2 3 4 5 
+				11 12 13 14 15 
+				21 22 23 24 25 
+				16 17 18 19 20 
+				6 7 8 9 10 
+				Explanation of Sample Input 1:
+				For test case 1:
+				We print the given pattern for the given 5 rows where each row has 
+				different values in increasing order with a difference in the value of 1 between 
+				each element and 1 space between each column in a row.
+			Sample Input2 :
+				1
+				4
+				Sample Output2 :
+				1 2 3 4
+				9 10 11 12
+				13 14 15 16
+				5 6 7 8
+				Explanation of Sample Input 2:
+				For test case 1:
+				We print the given pattern for the given 4 rows where each row has 
+				different values in increasing order with a difference of 1 in the 
+				value of 1 between each element and 1 space between each column in a row.
+
+		#include <bits/stdc++.h> 
+		vector<string> printPattern(int n) {
+			vector<string> ans(n);
+			int rows =1;
+			int cnt = 1;
+
+			int start = 0, end = n-1;
+
+			while(1){
+				string s;
+				for(int i=0;i<n; i++){
+					s += to_string(cnt++) + " ";
+				}
+
+				if(rows & 1)
+					ans[start++] = s;
+				else
+					ans[end--] = s;
+				
+				if(rows == n)
+					break;
+				rows++;
+			}
+			return ans;
+		}
+	
+	364) Sequence Query:
+		Only for +ve a, d & x integers
+		Problem statement:
+			Alice is analyzing a mathematical sequence where the first element of the
+			sequence is 'A' and the difference between any two consecutive elements is 'D'.
+			She is given an integer 'X.
+			Return 1 if 'X' appears in the sequence; else, return O.
+			Example :
+				Input: 'A' = 2, 'D' = 3. 'X' = 8|
+				Output: 1
+				The sequence here is 2, 5, 8, 11. .... As 8 is present in the sequence, the output is 1.
+			Constraints:
+				-10^9 ≤ A. D. X ≤ 10^9
+				Time limit: 1 sec
+			Sample Input 1:
+				1 2 7
+				Sample Output 1 :
+				1
+				Explanation For Sample Input 1:
+				The sequence here is 1, 3, 5, 7. ... As 7 is present in the sequence, the output is 1.
+				Sample Input 2:
+				5 0 3
+				Sample Output 2 :
+				0
+				Explanation For Sample Input 2:
+				The sequence here is 5, 5. 5. .... As 3 is not present in the sequence, the
+				output is 0.
+			
+		int checkSequence(int a, int d, int x) {
+			start:
+				if(a == x)
+					return 1;
+				else{
+					if(a > x)
+						return 0;
+					a += d;
+					goto start;
+				}
+		}
+
+		//or using while loop: Not Optimized
+			int checkSequence(int a, int d, int x) {
+				
+				while(a <= x){
+					if(a == x)
+						return 1;
+					else
+						a += d;
+				}
+				return 0;
+			}
+
+	365) Ninja Hathori:
+		Problem statement
+			Ninja has a secret string 's' consisting of lowercase letters. The string 's' has a
+			length of 2 or more characters. Now he constructs another string 't' from this
+			string's' and offers this string to his best friend Hathori to guess the string 's'
+			from the string 't.
+			Ninja builds 't' from 's' as follows: He wrote all the substrings of length 2 of the
+			string's' in the order from left to right, and then joins them to form the string 't'.
+			For example, if s = "xyz" then all substrings of length 2 of the string 's' are "xy"
+			and "yz". Therefore, the string t= "xyyz".
+			You need to help the Hathori in guessing the string 's' from the string 't'. It is
+			guaranteed that 't' was built accordingly and it can be proved that the answer is
+			unique for each valid string.
+			For example:
+				Let's say 't' = "xyyx"
+			Here, if we take s = "xyx", then substrings of length 2 of string 's' are: "xy" and
+			"yx". so the string 't = "xyyx"". Hence the correct answer is "xyx".
+			Constraints -
+				1 <= 'T' <= 10
+				1 <= 'N' <= 10^4
+				Time Limit: 1 sec
+			Sample Input-1
+				2
+				хуух
+				ab
+				Sample Output-1
+				хух
+				ab
+				Explanation for Sample Input 1:
+				For test case 1:
+				Here, if we take s = "xyx", then substrings of length 2 of string 's' are: "xy"
+				and "yx", so the string 't - "xyyx". Hence the correct answer is "xyx".
+				For test case 2:
+				Here, if we take s = "ab", then substrings of length 2 of string 's' is only
+				"ab", so the string 't - "ab'". Hence the correct answer is "ab".
+			Sample Input -2
+				2
+				aaa
+				abbc
+				Sample Output -2
+				aa
+				abc
+
+		#include <bits/stdc++.h> 
+		string ninjaHathori(string s) {
+			string ans;
+			ans += s[0];
+			for(int i=1; i<s.length(); i++)
+				if(ans[ans.length()-1] != s[i])
+					ans += s[i];
+				else
+					ans += " ";
+
+			// need to remove all the spaces we kept
+			if(ans[ans.length()-1] == ' ')
+				ans[ans.length()-1] = ans[ans.length()-2];
+
+			int i=0;
+			while(i < ans.length()){
+				if(ans[i] == ' ')
+					ans.erase(ans.begin()+i);
+				else
+					i++;
+			}
+			
+			return ans;
+		}
+	
+	366) Create Sequence:
+		Problem statement
+			Ninja is good at numbers. So today his friend gave him a task that required him to 
+			find out numbers made of 2 and 5 only less than a given limit.
+
+			Given an integer N, you need to print all numbers less than N which are having digits only 2 or 5 or both.
+			For example :
+			All numbers less than 30 with digits 2 and 5 are 2, 5, 22, 25.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^16
+				Time Limit: 1 sec
+
+			Note :
+				You are not required to print anything; it has already been taken care of. Just implement the function.
+			Sample Input 1 :
+				2  
+				10
+				100
+				Sample Output 1 :
+				2 5 
+				2 5 22 25 52 55
+				Explanation For Sample Output 1 :
+				For the first test case, only 2 and 5 are the required numbers. 
+				Hence we print them in ascending order.
+				For the second test case, we have 6 required numbers.
+				Sample Input 2 :
+				2
+				2
+				7
+				Sample Output 2 :
+				2
+				2 5
+
+		//Not Optimized:
+			vector<long long> createSequence(long long n){
+				vector<long long> ans;
+				for(long long i=2; i<=n; i++){
+					long long crntNum = i;
+					int flag = 1;
+
+					while(crntNum){
+						int singleDigit = crntNum % 10;
+						if(singleDigit != 2 && singleDigit != 5){
+							flag=0;
+							break;
+						}
+						crntNum /= 10;
+					}
+
+					if(flag)
+						ans.push_back(i);
+				}
+				return ans;
+			}
+		
+		//Optimized:
+			void solve(long long n,long long temp,vector<long long>&ans){
+				if(n>temp){
+					if(temp>0)
+						ans.push_back(temp);
+					solve(n,temp*10+2,ans);
+					solve(n,temp*10+5,ans);
+				}
+				return ;	
+			}
+
+			vector<long long> createSequence(long long n){
+				// Write your code here.
+				vector<long long>ans;
+				if(n==2){
+					ans.push_back(2);
+					return ans;
+				}
+				long long temp=0;
+				solve(n,temp,ans);
+				sort(ans.begin(),ans.end());
+				return ans;
+			}
+	
+	367) Maximum Subarray: ❌Pending
+		Problem statement:
+			Given an integer array nums, find the subarray
+			with the largest sum, and return its sum.
+
+			Example 1:
+				Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+				Output: 6
+				Explanation: The subarray [4,-1,2,1] has the largest sum 6.
+
+			Example 2:
+				Input: nums = [1]
+				Output: 1
+				Explanation: The subarray [1] has the largest sum 1.
+
+			Example 3:
+				Input: nums = [5,4,-1,7,8]
+				Output: 23
+				Explanation: The subarray [5,4,-1,7,8] has the largest sum 23.
+
+			Constraints:
+				1 <= nums.length <= 10^5
+				-10^4 <= nums[i] <= 10^4
+			
+			Follow up: If you have figured out the O(n) solution, 
+			try coding another solution using the divide and conquer approach, 
+			which is more subtle.
+
+		// Not Optimized:
+			class Solution {
+				public:
+				int maxSubArray(vector<int>& nums) {
+					int mxValue = *max_element(nums.begin(), nums.end());
+
+					for(int i=0; i<nums.size(); i++){
+						int sum = nums[i];
+						for(int j=i+1; j<nums.size(); j++){
+							sum += nums[j];
+							mxValue = max(mxValue, sum);
+						}
+					}
+					return mxValue;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				int maxSubArray(vector<int>& nums) {
+					int maxEndingHere = nums[0]; // Max sum ending at the current position
+					int maxSoFar = nums[0];      // Max sum found so far
+
+					for (int i = 1; i < nums.size(); ++i) {
+						// Calculate the maximum sum ending at the current position
+						maxEndingHere = max(nums[i], maxEndingHere + nums[i]);
+						
+						// Update the global maximum sum if necessary
+						maxSoFar = max(maxSoFar, maxEndingHere);
+					}
+					return maxSoFar;
+				}
+			};
+
+	368) Plus One:
+		Problem Statement:
+			You are given a large integer represented as an integer array digits, 
+			where each digits[i] is the ith digit of the integer. 
+			The digits are ordered from most significant to least significant in left-to-right order. 
+			The large integer does not contain any leading 0's.
+			Increment the large integer by one and return the resulting array of digits.
+
+			Example 1:
+				Input: digits = [1,2,3]
+				Output: [1,2,4]
+				Explanation: The array represents the integer 123.
+				Incrementing by one gives 123 + 1 = 124.
+				Thus, the result should be [1,2,4].
+
+			Example 2:
+				Input: digits = [4,3,2,1]
+				Output: [4,3,2,2]
+				Explanation: The array represents the integer 4321.
+				Incrementing by one gives 4321 + 1 = 4322.
+				Thus, the result should be [4,3,2,2].
+
+			Example 3:
+				Input: digits = [9]
+				Output: [1,0]
+				Explanation: The array represents the integer 9.
+				Incrementing by one gives 9 + 1 = 10.
+				Thus, the result should be [1,0].
+				
+			Constraints:
+				1 <= digits.length <= 100
+				0 <= digits[i] <= 9
+				digits does not contain any leading 0's.
+		
+		class Solution {
+			public:
+			vector<int> plusOne(vector<int>& digits) {
+				digits[digits.size()-1]++;
+				int carry =0;
+
+				for(int i=digits.size()-1; i>0; i--){
+					carry = 0;
+					if(digits[i] > 9){
+						carry = digits[i] / 10;
+						digits[i] = digits[i] % 10;
+						digits[i-1] += carry;
+					}
+
+					if(carry == 0)
+						break;
+				}
+
+				carry = digits[0] / 10;
+				if(carry != 0){
+					digits[0] = digits[0] % 10;
+					digits.insert(digits.begin(), carry);
+				}
+				return digits;
+			}
+		};
+	
+	369) Happy Number:
+		Problem Statement:
+			Write an algorithm to determine if a number n is happy.
+			A happy number is a number defined by the following process:
+			Starting with any positive integer, replace the number by the sum of the squares of its digits.
+			Repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1.
+			Those numbers for which this process ends in 1 are happy.
+			Return true if n is a happy number, and false if not.
+
+			Example 1:
+				Input: n = 19
+				Output: true
+				Explanation:
+				1^2 + 9^2 = 82
+				8^2 + 2^2 = 68
+				6^2 + 8^2 = 100
+				1^2 + 0^2 + 0^2 = 1
+
+			Example 2:
+				Input: n = 2
+				Output: false
+				Explanation:
+				2^2 = 4
+				4^2 = 16
+				1^2 + 6^2 = 37
+				3^2 + 7^2 = 58
+				5^2 + 8^2 = 89
+				8^2 + 9^2 = 145
+				1^2 + 4^2 + 5^2 = 42
+				4^2 + 2^2 = 20
+				2^2 + 0^2 = 4 		//here we can stop coz 4 is repeated, we can't reach to 1.
+
+			Constraints:
+				1 <= n <= 2^31 - 1
+
+		class Solution {
+			public:
+			bool isHappy(int n) {
+				vector<int> holder;
+
+				while(1) {
+					int sum =0;
+					while(n){
+						sum += pow(n%10, 2);
+						n /= 10;
+					}
+
+					if(sum == 1)
+						return 1;
+
+					if(find(holder.begin(), holder.end(), sum) != holder.end())
+						return 0;
+					
+					holder.push_back(sum);
+					n = sum;
+				}
+
+				// no need of this below return statement
+				// return 0;
+			}
+		};
+	
+	370) Remove Element:
+		Problem statement:
+			Given an integer array nums and an integer val, remove all occurrences of val in nums in-place. 
+			The order of the elements may be changed. 
+			Then return the number of elements in nums which are not equal to val.
+			Consider the number of elements in nums which are not equal to val be k, 
+			to get accepted, you need to do the following things:
+
+			Change the array nums such that the first k elements of nums contain the elements which are not equal to val. 
+			The remaining elements of nums are not important as well as the size of nums. Return k.
+			Custom Judge:
+				The judge will test your solution with the following code:
+
+				int[] nums = [...]; // Input array
+				int val = ...; // Value to remove
+				int[] expectedNums = [...]; // The expected answer with correct length.
+									// It is sorted with no values equaling val.
+
+				int k = removeElement(nums, val); // Calls your implementation
+
+				assert k == expectedNums.length;
+				sort(nums, 0, k); // Sort the first k elements of nums
+				for (int i = 0; i < actualLength; i++) {
+				assert nums[i] == expectedNums[i];
+				}
+				If all assertions pass, then your solution will be accepted.
+
+			Example 1:
+				Input: nums = [3,2,2,3], val = 3
+				Output: 2, nums = [2,2,_,_]
+				Explanation: Your function should return k = 2, with the first two elements of nums being 2.
+				It does not matter what you leave beyond the returned k (hence they are underscores).
+
+			Example 2:
+				Input: nums = [0,1,2,2,3,0,4,2], val = 2
+				Output: 5, nums = [0,1,4,0,3,_,_,_]
+				Explanation: Your function should return k = 5, with the first five elements of nums containing 0, 0, 1, 3, and 4.
+				Note that the five elements can be returned in any order.
+				It does not matter what you leave beyond the returned k (hence they are underscores).
+
+			Constraints:
+				0 <= nums.length <= 100
+				0 <= nums[i] <= 50
+				0 <= val <= 100
+
+		class Solution {
+			public:
+			int removeElement(vector<int>& nums, int val) {
+				for(int i=0; i<nums.size(); i++)
+					if(nums[i] == val){
+						nums.erase(nums.begin()+i);
+						i--;
+					}
+				return nums.size();   
+			}
+		};
+
+		//or Another approach:
+			class Solution {
+				public:
+				int removeElement(vector<int>& nums, int val) {
+					int index = 0, i;
+
+					for(i=0; i<nums.size(); i++){
+						if(nums[i] != val){
+							nums[index] = nums[i];
+							index++;
+						}
+					}
+					return index;   
+				}
+			};
+
+	371)
+	
+	372)
+	
+	373)
+	
+	374)
+	
+	375)
+	
+	376)
+	
+	377)
+
+	378)
+	
+	379)
+
+	380)
+	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
@@ -43147,7 +46633,7 @@ calender:
 	return 0;
 	}
 --------------------------------------------------------------------------------------------------------
-//❌Pending	
+//❌Pending
 	//Excel Column Number https://www.codingninjas.com/studio/problems/excel-column-number_630461 ❌Pending
 
 	//K Sum Subset https://www.codingninjas.com/studio/problems/k-sum-subset_2546852 ❌Pending
