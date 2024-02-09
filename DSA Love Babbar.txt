@@ -3275,7 +3275,6 @@ Lecture-4: Solving Pattern Questions (Part-2)
 			*           * 
 			*           * 
 			*  *  *  *  * 
-
 ---------------------------------------------------------------------------------------------------------
 	04/08/2023
 Lecture-5: Bitwise Operators, For Loops, Operator Precedence & Variable Scoping
@@ -15268,71 +15267,129 @@ Lecture-36: Quick Sort using Recursion | Day-6
 		HomeWork:
 			-Quick sort is not a Stable Algorithm
 			-Quick Sort is in-place sorting algorithm.
-			-
 
 	Code:
-		#include <iostream>
-		using namespace std;
+		First element as pivot approach:
+			#include<iostream>
+			using namespace std;
 
-		int Partition(int *p, int s, int e){
-			int minValueCnt=0;
-			
-			for(int i=s+1; i<=e; i++)
-				if(p[i] <= p[s])
-					minValueCnt++;
-			
-			int actual_value_place = minValueCnt + s;
-			swap(p[s], p[actual_value_place]);
-			
-			int i = s, j = e;
-			
-			while(i < actual_value_place && j > actual_value_place){
-				
-				while(p[i] < p[actual_value_place])
-					i++;
+			int partition( int arr[], int s, int e) {
+				int cnt = 0;
+				for(int i = s+1; i<=e; i++) {
+					if(arr[i] <= arr[s]) {
+						cnt++;
+					}
+				}
+
+				//place pivot at right position
+				int pivotIndex = s + cnt;
+				swap(arr[pivotIndex], arr[s]);
+
+				//left and right wala part smbhal lete h 
+				int i = s, j = e;
+
+				while(i < pivotIndex && j > pivotIndex) {
+
+					while(arr[i] <= arr[pivotIndex]) {
+						i++;
+					}
+
+					while(arr[j] > arr[pivotIndex]) {
+						j--;
+					}
 					
-				while(p[j] > p[actual_value_place])
-					j--;
+					if(i < pivotIndex && j > pivotIndex) {
+						swap(arr[i++], arr[j--]);
+					}
+				}
+				return pivotIndex;
+			}
+
+			void quickSort(int arr[], int s, int e) {
+
+				//base case
+				if(s >= e) 
+					return ;
+
+				//partitioon karenfe
+				int p = partition(arr, s, e);
+
+				//left part sort karo
+				quickSort(arr, s, p-1);
+
+				//right wala part sort karo
+				quickSort(arr, p+1, e);
+
+			}
+
+			int main() {
+				int arr[] = {43,595,348,857,684,94,108,542,732,655,563,434,964,92,680,434,321,966,835,774,65,984};
+				int n = 22;
+
+				for(int i: arr)
+					std::cout << i << "\t";
+					
+				std::cout  << std::endl;
+				quickSort(arr, 0, n-1);
+
+				for(int i: arr)
+					std::cout << i << "\t";
+
+				return 0;
+			}
+
+		Last element as pivot approach:
+			#include <iostream>
+			using namespace std;
+			int Partitioner(int *a, int s, int e){
+				int pivot = a[e]; // Choose the last element as the pivot
+				int i = s - 1; // Index of smaller element
+				
+				for (int j = s; j <= e - 1; j++) {
+					if (a[j] <= pivot) {
+						i++; // Increment index of smaller element
+						swap(a[i], a[j]);
+					}
+				}
+				swap(a[i + 1], a[e]);
+				return i + 1;
+			}
+			void quickSort(int *a, int s, int e) {
+				
+				// base condition
+				if(s >= e)
+					return ;
+				
+				// make partition
+				int partition_index = Partitioner(a, s, e);
 				
 				
-				if(i < actual_value_place && j > actual_value_place)
-					swap(p[i++], p[j--]);
-			} 
-			return actual_value_place;
-		}
+				// handling left part of array
+				quickSort(a, s, partition_index-1);
+				
+				// handling right part of array
+				quickSort(a, partition_index+1, e);
+			}
 
-		void quickSort(int arr[], int s, int e){
-			if(s >= e)
-				return ;
-			
-			//Partition
-			int index = Partition(arr, s, e);
-			
-			//sorting left part
-			quickSort(arr, s, index-1);
-			
-			//sorting right part
-			quickSort(arr, index+1, e);
-		}
-
-		int main() {
-			int arr[] = {4, 2, 5, 1, 3};
-			for(int i: arr)
-				std::cout << i << " ";
-			
-			int n=5;
-			int s = 0, e = n-1;
-			
-			quickSort(arr, s, e);
-			
-			std::cout << std::endl;
-			for(int i: arr)
-				std::cout << i << " ";
-			return 0;
-		}
+			int main() {
+				int arr[] = {43,595,348,857,684,94,108,542,732,655,563,434,964,92,680,434,321,966,835,774,65,984};
+				for(int o: arr)
+					std::cout << o << "\t";
+					
+				std::cout << std::endl;
+				int n = 22;
+				quickSort(arr, 0, n-1);
+				
+				std::cout << std::endl;
+				for(int o: arr)
+					std::cout << o << "\t";
+				return 0;
+			}	
 
 	Dry Run:
 		❌Pending
+---------------------------------------------------------------------------------------------------------
+
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -18328,11 +18385,6 @@ Lecture-36: Quick Sort using Recursion | Day-6
 
 	//
 ---------------------------------------------------------------------------------------------------------
-Dates:
-	25th Jan 2024			27th Jan 2024			
-	21st Jan 2024			
-	25th Jan 2024
-
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array
 		#include <bits/stdc++.h> 
@@ -32022,6 +32074,14 @@ POTD:-[Problem of the Day]
 					if(i.second & 1)
 						return i.first;
 			}
+		
+		//Most easiest:
+			int missingNumber(int n, vector<int> &arr){
+				int ans=0;
+				for(int i: arr)
+					ans ^= i;
+				return ans;
+			}
 
 	200) Reverse Number:
 		Problem Statement:
@@ -45353,68 +45413,59 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 	
-	367) Maximum Subarray: ❌Pending
-		Problem statement:
-			Given an integer array nums, find the subarray
-			with the largest sum, and return its sum.
+	367) Binary Search:
+		Problem Statement:
+			Given a sorted array of size N and an integer K, 
+			find the position(0-based indexing) at which K is present in the array using binary search.
 
 			Example 1:
-				Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
-				Output: 6
-				Explanation: The subarray [4,-1,2,1] has the largest sum 6.
+				Input:
+				N = 5
+				arr[] = {1 2 3 4 5} 
+				K = 4
+				Output: 3
+				Explanation: 4 appears at index 3.
 
 			Example 2:
-				Input: nums = [1]
-				Output: 1
-				Explanation: The subarray [1] has the largest sum 1.
+				Input:
+				N = 5
+				arr[] = {11 22 33 44 55} 
+				K = 445
+				Output: -1
+				Explanation: 445 is not present.
 
-			Example 3:
-				Input: nums = [5,4,-1,7,8]
-				Output: 23
-				Explanation: The subarray [5,4,-1,7,8] has the largest sum 23.
+			Your Task:  
+				You dont need to read input or print anything. 
+				Complete the function binarysearch() which takes arr[], 
+				N and K as input parameters and returns the index of K in the array. 
+				If K is not present in the array, return -1.
+
+			Expected Time Complexity: O(LogN)
+			Expected Auxiliary Space: O(LogN) if solving recursively and O(1) otherwise.
 
 			Constraints:
-				1 <= nums.length <= 10^5
-				-10^4 <= nums[i] <= 10^4
-			
-			Follow up: If you have figured out the O(n) solution, 
-			try coding another solution using the divide and conquer approach, 
-			which is more subtle.
+				1 <= N <= 10^5
+				1 <= arr[i] <= 10^6
+				1 <= K <= 10^6
 
-		// Not Optimized:
-			class Solution {
-				public:
-				int maxSubArray(vector<int>& nums) {
-					int mxValue = *max_element(nums.begin(), nums.end());
-
-					for(int i=0; i<nums.size(); i++){
-						int sum = nums[i];
-						for(int j=i+1; j<nums.size(); j++){
-							sum += nums[j];
-							mxValue = max(mxValue, sum);
-						}
-					}
-					return mxValue;
+		class Solution {
+			public:
+			int binarysearch(int arr[], int n, int k) {
+				int s = 0, e = n-1;
+				
+				while(s<=e){
+					int mid = e + (s - e)/2;
+					
+					if(arr[mid] == k)
+						return mid;
+					else if(arr[mid] > k)
+						e = mid - 1;
+					else
+						s = mid + 1;
 				}
-			};
-
-		// Optimized:
-			class Solution {
-				public:
-				int maxSubArray(vector<int>& nums) {
-					int maxEndingHere = nums[0]; // Max sum ending at the current position
-					int maxSoFar = nums[0];      // Max sum found so far
-
-					for (int i = 1; i < nums.size(); ++i) {
-						// Calculate the maximum sum ending at the current position
-						maxEndingHere = max(nums[i], maxEndingHere + nums[i]);
-						
-						// Update the global maximum sum if necessary
-						maxSoFar = max(maxSoFar, maxEndingHere);
-					}
-					return maxSoFar;
-				}
-			};
+				return -1;
+			}
+		};
 
 	368) Plus One:
 		Problem Statement:
@@ -45612,25 +45663,1007 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	371)
-	
-	372)
-	
-	373)
-	
-	374)
-	
-	375)
-	
-	376)
-	
-	377)
+	371) K-Pure Numbers:❌Pending
+		Problem statement
+			A number is said to be K-Pure if it is divisible by K only once. Formally X is K-Pure
+			if X is divisible by K and (X/K) is not divisible by K.
+			Given 'N' and 'K, return the number of K-Pure Numbers from '1' to 'N'.
+			Example:
+			'N' = 15
+			K' = 3
+			There are 4 K-Pure Numbers 3,6,12 and 15.
 
-	378)
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^9
+				1 <= K <= 10^9
+				Time Limit: 1 second
+			Sample Input 1:
+				2
+				82
+				50 7
+				Sample Output 1:
+				Explanation Of Sample Input 1:
+				4
+				6
+				For test case 1:
+				There are 4 K-Pure Numbers 2, 6, 14 and 18.
+				For test case 2:
+				There are 6 K-Pure Numbers 7, 14, 21, 28, 35 and 42.
+				Sample Input 2:
+				2
+				522 5
+				426 5
+				Sample Output 2:
+				84
+				68
 	
-	379)
+		//Not Optimized:
+			int kPure(int n, int k) {
+				int cnt=0;
+				for(int i=k; i<=n; i+=k){
+					int value = i;
+					if(value % k == 0){
+						value /= k;
+						if(value % k != 0)
+							cnt++;
+					}
+				}
+				return cnt;
+			}
 
-	380)
+	372) Future Expansion:❌Pending
+		Problem statement
+			Ninja has a string 'S' of the length 'N'. He wants to expand it and make its length
+			atleast 'M'. He can do the following operation at a time:
+			• Choose any character 'X' present in the string, copy all of the characters 'X'
+			from the string, and paste them at the end of the string 'S'.
+			Your task is to to return the minimum number of operations required to expand
+			the length of string 'S' to at least 'M'.
+			Example:
+			'N' = 4
+			'S' = "abcc"
+			'M' = 7
+			The best way to make the length of the string atleast '7'(M) is:
+			Choose the character 'a':
+			"abcc" → "abcca"
+			Choose the character 'c':
+			"abcca" → "abccacc"
+			The Ninja needs two operations to expand the string to length '7'. So. the
+			answer is '2'.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^5
+				a <= S[i] <= z
+				N <= М <= 10^18
+				Time Limit: 1 second
+			Sample Input 1:
+				2
+				4 8
+				abcd
+				5 7
+				xyaab
+				Sample Output 1:
+				3
+				1
+				Explanation Of Sample Input 1:
+				For test case 1:
+				The best way to make the length of the string at least '8'(M) is:
+				Choose the character 'a':
+				"abcd" → "abcda"
+				Choose the character 'c':
+				"abcda" → "abcdac"
+				Choose the character 'a':
+				"abeda" → "abcdacaa"
+				The Ninja needs three operations to expand the string. So, the answer is '3'.
+				For test case 2:
+				The best way to make the length of the string atleast '7'(M) is:
+				Choose the character 'a':
+				"xyaab" → "xyaabaa"
+				The Ninja needs one operation to expand the string. So, the answer is 1.
+			Sample Input 2:
+				2
+				6 110
+				bvaynd
+				5 151
+				wfpoa
+				Sample Output 2:
+				7
+				8
+
+		//Not Optimized:
+			int findMinimumOperations(int n, long long m, string s) {
+				int OpsCnt=0;
+				if(s.length() >= m)
+					return OpsCnt;
+
+				map<char, int> Freq;
+				for(char ch: s)
+					Freq[ch]++;
+				
+				int len = s.length();
+
+				int mx=INT_MIN;
+
+				for(auto i: Freq)
+					mx = max(mx, i.second);
+				
+				while(len < m){
+					len += mx;
+					mx += mx;
+					OpsCnt++;
+				}
+
+				return OpsCnt;
+			}
+	
+	373) Alex And Infinity Circle:
+		Problem statement
+			Alex wanted to buy a new keyboard, but due to the low battery in his GPS, 
+			he had to print his route on paper, now he wants to know if he can return safely 
+			to his home following the instructions written by him. The city of Alex can be 
+			represented by a 2D plane, and every location is denoted by ('X','Y') coordinates. 
+			Alex is currently standing at ( 0, 0 ) facing north.
+
+			The printed route contains a string with characters like:
+			'L' : which denotes he should turn to the left of the direction he is facing.
+			'R' : which denotes he should turn to the right of the direction he is facing. 
+			'G' : which denotes he should walk in the same direction by one unit.
+			Determine whether he can return home safely or not by following his instruction on the printed sheet.
+			Note:
+				He can follow the same printed set of instructions as many times as wanted.
+			Constraints:
+				1 <= T <= 50
+				1 <= N <= 100
+				‘STR’ = {‘L’, ‘R’ and ‘G’}.
+				Where ‘T’ is the number of test cases, 'N' is the length of string ‘STR’  and ‘STR’ 
+				is the string that denotes the direction that Alex should move. 
+
+				Time limit: 1 sec
+			Sample Input 1:
+				2
+				6
+				GGRRGG
+				2
+				GGG
+				Sample Output 1:
+				True
+				False
+				Explanation of sample input 1:
+				In the first test case, Alex follows the following instructions, 
+				he will go from (0,0) -> (0,1) -> (0,2) -> turned towards east -> turned towards south -> (0,1) -> (0,0).
+
+				In the second test case, he will always go towards the right, hence it is impossible for him to return home.
+				Sample Input 2:
+				2
+				2
+				LR
+				2
+				GL
+				Sample Output 2:
+				True
+				True
+				Explanation of sample input 2:
+				In the first test case, he is in the same position just turning in his direction.
+
+				In the second test case, he will go from (0,0) -> (0,1) -> (turned left) -> 
+				(-1,1) -> (turned left) ->(-1,0) ->(turned left) -> (0,0)
+
+		#include <bits/stdc++.h> 
+		string isPossible(string s,int n) {
+
+			// Processing all operations
+			int x,y;
+			x = y = 0;
+			char Direction[] = {'N','E','S','W'};
+			
+
+			int direct_index = 0;
+			char CurrentDirect = Direction[direct_index];
+
+			int checkTimes = 1;
+
+			checker:
+			for(int i=0; i<n; i++){
+				if(s[i] == 'G' && CurrentDirect == 'N')
+					x++;
+				else if(s[i] == 'G' && CurrentDirect=='S')
+					x--;
+				else if(s[i] == 'G' && CurrentDirect== 'E')
+					y++;
+				else if(s[i] == 'G' && CurrentDirect == 'W')
+					y--;
+				else if(s[i] == 'R'){
+					direct_index++;
+					if(direct_index >= 4)
+						direct_index = 0;
+
+					CurrentDirect = Direction[direct_index];
+
+				}else if(s[i] == 'L'){
+					direct_index--;
+					if(direct_index < 0)
+						direct_index = 3;
+					CurrentDirect = Direction[direct_index];
+				}    
+			}
+			
+			checkTimes++;
+			if(checkTimes != 5)
+				goto checker;
+
+			// result after all operations
+			if(x == 0 && y == 0)
+				return "True";
+
+			// default result
+			return "False";
+		}
+	
+	374) Longest Sub-string With K Distinct Characters:
+		Problem statement
+			You are given a string 'S' of length 'N' consisting of lowercase English alphabet letters. 
+			You are also given a positive integer 'K'.
+			Now, a substring of this string is good if it contains at most 'K' distinct characters. 
+			A string 'X' is a substring of string 'Y' if it can be obtained by deletion of several 
+			continuous elements(possibly zero) from the beginning and the end from the string 'Y'.
+
+			Your task is to return the maximum size of any good substring of the string 'S'.
+			Example:
+				‘S’ = “bacda” and ‘K’ = 3.
+
+			So, the substrings having at most ‘3’ distinct characters are called good substrings. Some possible good substrings are:
+				1. “bac”
+				2. “acd”
+				3. “acda”
+
+			The substring “acda” is the largest possible good substring, 
+			as we cannot get any other substring of length 5 or more having 
+			distinct characters less than or equal to ‘3’. Thus, you should return ‘4’ as the answer.
+
+			Constraints:
+				1 <= T <= 10
+				1 <= K <= 26
+				1 <= N <= 10^4
+
+				All the characters of the string are lowercase English alphabet letters.
+				Time Limit: 1 sec
+
+			Sample Input 1:
+				2
+				2
+				abcbc
+				1
+				abccc
+				Sample Output 1:
+				4
+				3
+				Explanation For Sample Input 1:
+				For the first test case :
+				K = 2, so we can choose substring “bcbc” having 2 distinct character which is less than or equal to K = 2. 
+
+				We cannot get any other substring of length 5 or more having distinct characters less than or equal to 2. 
+				Thus, you should return ‘4’ as the answer.
+
+				For the second test case :
+				K = 1, so we can choose substring “ccc” having only 1 distinct character which is less than or equal to K = 1. 
+
+				We cannot get any other substring of length 4 or more having distinct characters less than or equal to 1. 
+				Thus, you should return ‘3’ as the answer.
+				Sample Input 2:
+				1
+				6
+				abcba
+				3
+				acbdab
+				Sample Output 2:
+				5
+				4
+ 
+		//Not Optimized
+			#include <bits/stdc++.h> 
+			int getLengthofLongestSubstring(string s, int k) {
+				int longLen =0;
+
+				for(int i=0; i<s.length(); i++){
+					string str;
+					int cnt=0;
+
+					str += s[i];
+					for(int j=i+1; j<s.length(); j++){
+						if(str.find(s[j]) != string::npos){
+							str += s[j];
+						}else{
+							cnt++;
+							if(cnt == k)
+								break;
+							str += s[j];
+						}
+					}
+					int value = str.length();
+					longLen = max(longLen, value);
+				}
+				return longLen;
+			}
+
+		//Optimized: ❌Pending
+			#include <bits/stdc++.h> 
+			int getLengthofLongestSubstring(string s, int k) {
+				int left=0, right=0; 
+				unordered_map<char,int>mp;
+
+				int maxlen=0;
+
+				while(right<s.length()){
+					mp[s[right]]++;
+					while(mp.size()>k){
+						mp[s[left]]--;
+						if(mp[s[left]]==0)
+							mp.erase(s[left]);
+						left++;
+					}
+					maxlen=max(right-left+1,maxlen);
+					right++;
+				}
+				return maxlen;
+			}
+	
+			//or
+				/*
+					Time Complexity : O(N * logN)
+					Space Complexity : O(1)
+
+					Where N is the size of the string.
+				*/
+
+				#include <vector>
+
+				// Returns the number of distinct characters in the array 'freq'.
+				int countDistinct(vector<int>& freq) {
+					int distinct = 0;
+					for (int i = 0; i < 26; i++) {
+						if (freq[i]) {
+							distinct++;
+						}
+					}
+					return distinct;
+				}
+
+				int getLengthofLongestSubstring(string s, int k) {
+					int longestLength = 0;
+					int n = s.size();
+
+					int low = 1, high = n;
+
+					while (low <= high) {
+						int mid = low + (high - low) / 2;
+						bool possible = false;
+						vector<int> freq(26, 0);
+
+						for (int i = 0; i < mid; i++) {
+							freq[s[i] - 'a']++;
+						}
+
+						possible |= (countDistinct(freq) <= k);
+
+						// Using sliding window, check if a valid substring of length 'mid' is possible.
+						for (int i = mid; i < n; i++) {
+							freq[s[i] - 'a']++;
+							freq[s[i - mid] - 'a']--;
+							possible |= (countDistinct(freq) <= k);
+						}
+
+						/*
+							If a valid substring of length 'mid' is possible then update 'longestLength'
+							and check for substrings having length greater than 'mid'.
+						*/
+						if (possible) {
+							longestLength = max(longestLength, mid);
+							low = mid + 1;
+						}
+						// If no such substring is possible check for substrings with length less than 'mid'.
+						else {
+							high = mid - 1;
+						}
+					}
+
+					return longestLength;
+				}
+
+			//or
+				/*
+					Time Complexity : O(N)
+					Space Complexity : O(1)
+
+					Where N is the size of the string.
+				*/
+				#include <vector>
+
+				// Returns the number of distinct characters in the array 'freq'.
+				int countDistinct(vector<int>& freq) {
+					int distinct = 0;
+
+					for (int i = 0; i < 26; i++) {
+						if (freq[i]) {
+							distinct++;
+						}
+					}
+					return distinct;
+				}
+
+				int getLengthofLongestSubstring(string s, int k) {
+					int longestLength = 0;
+					int n = s.size();
+
+					vector<int> freq(26, 0);
+					// Starting index of the window.
+					int start = 0;
+
+					// Traverse for ending index of the window.
+					for (int i = 0; i < n; i++) {
+						freq[s[i] - 'a']++;
+
+						while (countDistinct(freq) > k) {
+							freq[s[start] - 'a']--;
+							start++;
+						}
+
+						longestLength = max(longestLength, i - start + 1);
+					}
+
+					return longestLength;
+				}
+
+	375) Quick Sort:
+		Problem Statement:
+			Quick Sort is a Divide and Conquer algorithm. It picks an element as a pivot and partitions the given array around the picked pivot.
+			Given an array arr[], its starting position is low (the index of the array) and its ending position is high(the index of the array).
+
+			Note: The low and high are inclusive.
+			Implement the partition() and quickSort() functions to sort the array.
+
+			Example 1:
+				Input: 
+				N = 5 
+				arr[] = { 4, 1, 3, 9, 7}
+				Output:
+				1 3 4 7 9
+
+			Example 2:
+				Input: 
+				N = 9
+				arr[] = { 2, 1, 6, 10, 4, 1, 3, 9, 7}
+				Output:
+				1 1 2 3 4 6 7 9 10
+
+			Your Task: 
+				You don't need to read input or print anything. Your task is to complete the functions partition() and 
+				quickSort() which takes the array arr[], low and high as input parameters and partitions the array. 
+				Consider the last element as the pivot such that all the elements less than(or equal to) 
+				the pivot lie before it and the elements greater than it lie after the pivot.
+
+			Expected Time Complexity: O(N*logN)
+			Expected Auxiliary Space: O(logN)
+
+			Constraints:
+				1 <= N <= 10^3
+				1 <= arr[i] <= 10^4
+
+		Last element as pivot approach:
+			class Solution {
+				public:
+				//Function to sort an array using quick sort algorithm.
+				void quickSort(int a[], int s, int e) {
+					// base condition
+					if(s >= e)
+						return ;
+					
+					// make partition
+					int partition_index = Partitioner(a, s, e);
+					
+					// handling left part of array
+					quickSort(a, s, partition_index-1);
+					
+					// handling right part of array
+					quickSort(a, partition_index+1, e);
+				}
+				
+				public:
+				int Partitioner (int a[], int s, int e) {
+					int pivot = a[e]; // Choose the last element as the pivot
+					int i = s - 1; // Index of smaller element
+					
+					for (int j = s; j <= e - 1; j++) {
+						if (a[j] <= pivot) {
+							i++; // Increment index of smaller element
+							swap(a[i], a[j]);
+						}
+					}
+					swap(a[i + 1], a[e]);
+					return i + 1;
+				}
+			};
+	
+		First element as pivot approach:
+			class Solution {
+				public:
+				//Function to sort an array using quick sort algorithm.
+				void quickSort(int a[], int s, int e) {
+					// base condition
+					if(s >= e)
+						return ;
+					
+					// make partition
+					int partition_index = Partitioner(a, s, e);
+					
+					// handling left part of array
+					quickSort(a, s, partition_index-1);
+					
+					// handling right part of array
+					quickSort(a, partition_index+1, e);
+				}
+				
+				public:
+				int Partitioner (int arr[], int s, int e) {
+					int pivot = arr[s];
+
+					int cnt = 0;
+					for(int i = s+1; i<=e; i++) {
+						if(arr[i] <=pivot) {
+							cnt++;
+						}
+					}
+				
+					//place pivot at right position
+					int pivotIndex = s + cnt;
+					swap(arr[pivotIndex], arr[s]);
+				
+					//left and right wala part smbhal lete h 
+					// int i = s, j = e;
+				
+					while(s < pivotIndex && e > pivotIndex) {
+				
+						while(arr[s] <= pivot) 
+						{
+							s++;
+						}
+				
+						while(arr[e] > pivot) {
+							e--;
+						}
+				
+						if(s < pivotIndex && e > pivotIndex) {
+							swap(arr[s++], arr[e--]);
+						}
+					}
+					return pivotIndex;
+				}
+			};
+
+		//My own solution:
+			class Solution {
+				public:
+				//Function to sort an array using quick sort algorithm.
+				void quickSort(int arr[], int low, int high) {
+					if(low >= high)
+						return ;
+						
+					// find the partition index
+					int index = partition(arr, low, high);
+					
+					// handling right side
+					quickSort(arr, index+1, high);
+					
+					// handling left side
+					quickSort(arr, low, index-1);
+				}
+			
+				public:
+				int partition (int arr[], int low, int high) {
+					int cnt=0;
+					for(int i=low+1; i<=high; i++)
+						if(arr[low] >= arr[i])
+							cnt++;
+							
+					int partitionIndex = cnt + low;
+					
+					swap(arr[partitionIndex], arr[low]);
+					
+					//clear left-right side of partition_index
+					while(low<partitionIndex && high>partitionIndex){
+						
+						// keep going till you can not find the element which is larger than partitionIndex on right side
+						while(low < partitionIndex){
+							if(arr[low] > arr[partitionIndex])
+								break;
+							low++;
+						}
+								
+						// keep going till you can not find the element which is less than partitionIndex on left side
+						while(high > partitionIndex){
+							if(arr[high] <= arr[partitionIndex])
+								break;
+							high--;
+						}
+						
+						swap(arr[low], arr[high]);
+					}	
+					return partitionIndex;
+				}
+			};
+
+	376) Kadane's Algorithm:
+		Problem Statement:
+			Given an array Arr[] of N integers. 
+			Find the contiguous sub-array(containing at least one number) which has the maximum sum and return its sum.
+			Example 1:
+
+			Input:
+				N = 5
+				Arr[] = {1,2,3,-2,5}
+				Output:
+				9
+				Explanation:
+				Max subarray sum is 9
+				of elements (1, 2, 3, -2, 5) which 
+				is a contiguous subarray.
+
+			Example 2:
+				Input:
+				N = 4
+				Arr[] = {-1,-2,-3,-4}
+				Output:
+				-1
+				Explanation:
+				Max subarray sum is -1 
+				of element (-1)
+
+			Your Task:
+				You don't need to read input or print anything. 
+				The task is to complete the function maxSubarraySum() which takes Arr[] and N as 
+				input parameters and returns the sum of subarray with maximum sum.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+
+
+			Constraints:
+				1 ≤ N ≤ 10^6
+				-107 ≤ A[i] ≤ 10^7
+
+		class Solution{
+			public:
+			// arr: input array
+			// n: size of array
+			//Function to find the sum of contiguous subarray with maximum sum.
+			long long maxSubarraySum(int arr[], int n){
+				long long ans = arr[0];
+				long long crntMX = arr[0];
+				
+				for(int i=1; i<n; i++){
+					long long value = arr[i] ;
+					crntMX = max(value, crntMX + arr[i]);
+					
+					ans = max(ans, crntMX);
+				}
+				return ans;
+			}
+		};
+
+	377) Maximum Subarray: ❌Pending
+		Problem statement:
+			Kadane's Algorithm
+			Given an integer array nums, find the subarray
+			with the largest sum, and return its sum.
+
+			Example 1:
+				Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+				Output: 6
+				Explanation: The subarray [4,-1,2,1] has the largest sum 6.
+
+			Example 2:
+				Input: nums = [1]
+				Output: 1
+				Explanation: The subarray [1] has the largest sum 1.
+
+			Example 3:
+				Input: nums = [5,4,-1,7,8]
+				Output: 23
+				Explanation: The subarray [5,4,-1,7,8] has the largest sum 23.
+
+			Constraints:
+				1 <= nums.length <= 10^5
+				-10^4 <= nums[i] <= 10^4
+			
+			Follow up: If you have figured out the O(n) solution, 
+			try coding another solution using the divide and conquer approach, 
+			which is more subtle.
+
+		// Not Optimized:
+			class Solution {
+				public:
+				int maxSubArray(vector<int>& nums) {
+					int mxValue = *max_element(nums.begin(), nums.end());
+
+					for(int i=0; i<nums.size(); i++){
+						int sum = nums[i];
+						for(int j=i+1; j<nums.size(); j++){
+							sum += nums[j];
+							mxValue = max(mxValue, sum);
+						}
+					}
+					return mxValue;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				int maxSubArray(vector<int>& nums) {
+					int maxEndingHere = nums[0]; // Max sum ending at the current position
+					int maxSoFar = nums[0];      // Max sum found so far
+
+					for (int i = 1; i < nums.size(); ++i) {
+						// Calculate the maximum sum ending at the current position
+						maxEndingHere = max(nums[i], maxEndingHere + nums[i]);
+						
+						// Update the global maximum sum if necessary
+						maxSoFar = max(maxSoFar, maxEndingHere);
+					}
+					return maxSoFar;
+				}
+			};
+
+	378) Kth smallest element:
+		Problem Statement:
+			Given an array arr[] and an integer K where K is smaller than size of array, 
+			the task is to find the Kth smallest element in the given array. It is given that all array elements are distinct.
+			Note :-  l and r denotes the starting and ending index of the array.
+
+			Example 1:
+
+			Input:
+			N = 6
+			arr[] = 7 10 4 3 20 15
+			K = 3
+			L=0 R=5
+
+			Output : 7
+			Explanation :
+			3rd smallest element in the given 
+			array is 7.
+			Example 2:
+
+			Input:
+			N = 5
+			arr[] = 7 10 4 20 15
+			K = 4 L=0 R=4
+			Output : 15
+			Explanation :
+			4th smallest element in the given 
+			array is 15.
+			Your Task:
+			You don't have to read input or print anything. 
+			Your task is to complete the function kthSmallest() which takes the array arr[], 
+			integers l and r denoting the starting and ending index of the array and 
+			an integer K as input and returns the Kth smallest element.
+			
+			
+			Expected Time Complexity: O(n*log(n))
+			Expected Auxiliary Space: O(log(n))
+			Constraints:
+				1 <= N <= 10^5
+				L==0
+				R==N-1
+				1<= arr[i] <= 10^5
+				1 <= K <= N
+
+		class Solution{
+			public:
+			// arr : given array
+			// l : starting index of the array i.e 0
+			// r : ending index of the array i.e size-1
+			// k : find kth smallest element and return using this function
+			int kthSmallest(int arr[], int l, int r, int k) {
+				sort(arr, arr+r+1);
+				return arr[k-1];
+			}
+		};
+
+		//or
+			class Solution{
+				public:
+				// arr : given array
+				// l : starting index of the array i.e 0
+				// r : ending index of the array i.e size-1
+				// k : find kth smallest element and return using this function
+				
+				// Merge sort algorithm
+				void Merger(int *a, int s, int e){
+					int mid = (s+e)/2;
+					
+					int len1 = mid - s + 1;
+					int len2 = e - mid;
+					
+					int *first = new int[len1];
+					int *sec = new int[len2];
+					
+					//copy
+					int starter = s;
+					for(int i=0; i<len1; i++){
+						first[i] = a[starter++];
+					}
+					
+					for(int i=0; i<len2; i++){
+						sec[i] = a[starter++];
+					}
+					
+					
+					int mainIndex = s;
+					int index1, index2;
+					index1 = index2 =0;
+					
+					while(index1 < len1 && index2 < len2){
+						if(first[index1] < sec[index2]){
+							a[mainIndex] = first[index1++];
+						}else{
+							a[mainIndex] = sec[index2++];
+						}
+						mainIndex++;
+					}
+					
+					while(index1 < len1) {
+						a[mainIndex++] = first[index1++];
+					}
+					
+					while(index2 < len2){
+						a[mainIndex++] = sec[index2++];
+					}
+					
+					delete [] first;
+					delete [] sec;
+				}
+				
+				
+				void split(int *p, int s, int e){
+					if(s >= e)
+						return ;
+					
+					int mid = (s+e)/2;
+					
+					// handle left side part
+					split(p, s, mid);
+					
+					// handle right side part
+					split(p, mid+1, e);
+					
+					//Merge them back
+					Merger(p, s, e);
+				}
+				
+				int kthSmallest(int arr[], int l, int r, int k) {
+					split(arr, l, r);
+					return arr[k-1];
+				}
+			};
+	
+	379) Kth Largest Element in an Array:
+		Problem statement:
+			Given an integer array nums and an integer k, return the kth largest element in the array.
+			Note that it is the kth largest element in the sorted order, not the kth distinct element.
+			Example 1:
+
+			Input: nums = [3,2,1,5,6,4], k = 2
+			Output: 5
+			Example 2:
+
+			Input: nums = [3,2,3,1,2,4,5,5,6], k = 4
+			Output: 4
+
+			Constraints:
+				1 <= k <= nums.length <= 10^5
+				-104 <= nums[i] <= 10^4
+		
+		class Solution {
+			public:
+			int findKthLargest(vector<int>& nums, int k) {
+				sort(nums.begin(), nums.end(), greater<int>());
+				return nums[k-1];
+			}
+		};
+
+		class Solution {
+			public:
+			int findKthLargest(vector<int>& nums, int k) {
+				sort(nums.begin(), nums.end());
+				return nums[nums.size()-k];
+			}
+		};
+
+		Can you solve it without sorting? ❌Pending
+
+	380) Top K Frequent Elements:
+		Problem Statement:
+			Given an integer array nums and an integer k, return the 
+			k most frequent elements. You may return the answer in any order.
+
+			Example 1:
+				Input: nums = [1,1,1,2,2,3], k = 2
+				Output: [1,2]
+
+			Example 2:
+				Input: nums = [1], k = 1
+				Output: [1]
+
+			Constraints:
+				1 <= nums.length <= 10^5
+				-10^4 <= nums[i] <= 10^4
+				k is in the range [1, the number of unique elements in the array].
+				It is guaranteed that the answer is unique.
+			
+			Follow up: Your algorithm's time complexity must be better than O(n log n), where n is the array's size.
+		
+		class Solution {
+			public:
+			static bool cmpSortDesc(pair<int, int> a, pair<int, int> b){
+				return a.second > b.second;
+			}
+
+			vector<int> topKFrequent(vector<int>& nums, int k) {
+				vector<int> ans;
+				map<int, int> Freq;
+				for(int i: nums)
+					Freq[i]++;
+
+				vector<pair<int, int>> holder;
+				for(auto i: Freq){
+					pair<int, int> temp = {i.first, i.second};
+					holder.push_back(temp);
+				}
+
+				//sorting
+				sort(holder.begin(), holder.end(), cmpSortDesc);
+				
+				int i=0;
+				while(k--){
+					ans.push_back(holder[i].first);
+					i++;
+				}
+				return ans;
+			}
+		};
+	
+	381) 
+		Problem statement:
+
+	382) 
+		Problem statement:
+
+	383) 
+		Problem statement:
+
+	384) 
+		Problem statement:
+
+	385) 
+		Problem statement:
+
+	386) 
+		Problem statement:
+
+	387) 
+		Problem statement:
+
+	388) 
+		Problem statement:
+
+	389) 
+		Problem statement:
+
+	390) 
+		Problem statement:
+
+
 	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
