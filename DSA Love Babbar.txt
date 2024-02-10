@@ -16822,9 +16822,7 @@ Lecture-36: Quick Sort using Recursion | Day-6
 			map<int,int> FreqCnt;
 			for(int i=0; i<v.size(); i++)
 				FreqCnt[v[i]]++;
-			
-			
-			
+				
 			//using advance for loop, when you use advance for loop syntax is dot first for key, 
 			//dot second for value (var.first, var.second);
 			for(auto i: FreqCnt)
@@ -16844,7 +16842,97 @@ Lecture-36: Quick Sort using Recursion | Day-6
 			for(auto itr = FreqCnt.begin(); itr != FreqCnt.end(); itr++){
 				std::cout << itr -> first << "\t" << itr -> second << std::endl;
 			}
+			return 0;
+		}
+
+	//Map Sorting:
+		// #include <iostream>
+		#include<bits/stdc++.h>
+		// #include<vector>
+		// #include<map>
+		// #include<unordered_map>
+		// #include<algorithm>
+		using namespace std;
+
+		bool valuesCmp(pair<int, int> a, pair<int, int> b){
+			return a.second < b.second;
+		}
+
+		bool valuesCmpDesc(pair<int, int> a, pair<int, int> b){
+			if(a.second == b.second)
+				return a.first > b.first;
+			return a.second < b.second;
+		}
+
+		bool value_KEY_DESC(pair<int, int> a, pair<int, int> b){
+			// if(a.second == b.second)
+			//     return a.first > b.first;
+			return a.second > b.second;
+		}
+
+		bool valueDESC_KeyASC(pair<int, int> a, pair<int, int> b){
+			if(a.second == b.second)
+				return a.first < b.first;
+			return a.second > b.second;
+		}
+
+		int main() {
 			
+			vector<int> v {12,9,10,1,1,1,1,1,3,3,3,3,5,5,5,4,4,0,0,2,2,11};
+			std::cout << v.size() << std::endl;
+			
+			// frequency of element
+			// keys are in increasing order by default in map, & if you sort the map based on value
+			map<int, int> Freq;
+			for(int i: v)
+				Freq[i]++;
+			
+			// printing Freq map
+			for(auto i=Freq.begin(); i!=Freq.end(); i++)
+				std::cout << i->first <<"\t"<< i->second << std::endl;
+				
+			// sorting the Freq map based on values in increasing order
+			// if values are same then based on keys, in increasing order
+			vector<pair<int, int>> holder;
+			for(auto i: Freq){
+				// pair<int, int> temp = {i.first, i.second};       //or
+				pair<int, int> temp;
+				temp = make_pair(i.first, i.second);
+				holder.push_back(temp);
+			}
+			
+			std::cout << std::endl;
+			// printing the holder vector
+			//key & values are in ascending order
+			for(int i=0; i<holder.size(); i++)
+				std::cout << holder[i].first << "\t" << holder[i].second << std::endl;
+				
+			sort(holder.begin(), holder.end(), valuesCmp);
+			
+			std::cout << std::endl<<"After sorting: \n";
+			for(int i=0; i<holder.size(); i++)
+				std::cout << holder[i].first << "\t" << holder[i].second << std::endl;
+				
+				
+			// if values are same based on keys in descending order & values are in ascending order
+			std::cout << std::endl << "Descending Order: \n";
+			sort(holder.begin(), holder.end(), valuesCmpDesc);
+			
+			for(int i=0; i<holder.size(); i++)
+				std::cout << holder[i].first << "\t" << holder[i].second << std::endl;
+
+			// values are in descending order with keys are in descending order
+			std::cout << "\nValues and keys all are in descending order: " << std::endl;
+			sort(holder.begin(), holder.end(), value_KEY_DESC);
+			for(int i=0; i<holder.size(); i++)
+				std::cout << holder[i].first << "\t" << holder[i].second << std::endl;
+						
+			// values are in descending order but key are in ascending order
+			std::cout << "\nValues are in descending order but keys are in ascending order : " << std::endl;
+			sort(holder.begin(), holder.end(), valueDESC_KeyASC);
+			for(int i=0; i<holder.size(); i++)
+				std::cout << holder[i].first << "\t" << holder[i].second << std::endl;
+
 			return 0;
 		}
 
@@ -17291,29 +17379,28 @@ Lecture-36: Quick Sort using Recursion | Day-6
 			}
 
 		Practice-3:
-			sorting single element of string only
+			sorting string elements.
 			#include <iostream>
 			#include<algorithm>
 			using namespace std;
 
 			int main() {
-				string s ="Hello World";
-				std::cout << s << std::endl;
+				string s ="ABCDEZZBA";
+				std::cout << s << std::endl;		// ABCDEZZBA
 				
 				// increasing order
 				// sort(begin(s),end(s));
 				// or
 				sort(s.begin(), s.end());
 				
-				std::cout << s << std::endl;
+				std::cout << s << std::endl;		// AABBCDEZZ
 				
 				// decreasing order
 				// sort(begin(s),end(s), greater<int>());
 				// or
 				sort(s.begin(), s.end(), greater<int> ());
 				
-				std::cout << s << std::endl;
-
+				std::cout << s << std::endl;		// ZZEDCBBAA
 				return 0;
 			}
 
@@ -17536,6 +17623,232 @@ Lecture-36: Quick Sort using Recursion | Day-6
 				std::cout <<endl<< "printing using unordered_map with sortedVersion : " << std::endl;
 				for(int i: sortedVersion)
 					std::cout << "Key: "<< i << "  Value: "<< unMP[i] << std::endl;
+				
+				return 0;
+			}
+
+		// unordered_map keys ascending order:
+			#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+
+			bool keyASC(pair<int, int> a, pair<int, int> b){
+				return a.first < b.first;
+			}
+
+			int main() {
+				vector<int> vec = {600,7, 7, 7,0, 100, 500 ,500,600};
+				
+				//using map printing vector elements & their indexes
+				unordered_map<int, int> unMP;
+				int cnt=0;
+				for(int i: vec)
+					unMP[i]++;
+					
+				//unordered_map printing
+				std::cout << endl << "unordered_map : " << std::endl;
+				vector<pair<int, int>> holder;
+				for(auto i = unMP.begin(); i!= unMP.end(); i++){
+					std::cout << "Key: "<< i->first << " Value: " << i->second << std::endl;
+				holder.push_back({i->first, i->second});
+				}
+				
+				sort(holder.begin(), holder.end(), keyASC);
+				
+				//using advance for loop
+				std::cout << endl << "Holder : " << std::endl;
+				for(auto i: holder)
+					std::cout << "key: " << i.first << " Value: " << i.second << std::endl;
+				std::cout << std::endl;
+				
+				return 0;
+			}
+		
+		// unordered_map keys descending order:
+			#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+
+			bool keyDESC(pair<int, int> a, pair<int, int> b){
+				return a.first > b.first;
+			}
+
+			int main() {
+				vector<int> vec = {600,7, 7, 7, 0, 100, 500 ,500,600};
+				
+				//using map printing vector elements & their indexes
+				unordered_map<int, int> unMP;
+				int cnt=0;
+				for(int i: vec)
+					unMP[i]++;
+					
+				//unordered_map printing
+				std::cout << endl << "unordered_map : " << std::endl;
+				vector<pair<int, int>> holder;
+				for(auto i = unMP.begin(); i!= unMP.end(); i++){
+					std::cout << "Key: "<< i->first << " Value: " << i->second << std::endl;
+				holder.push_back({i->first, i->second});
+				}
+				
+				sort(holder.begin(), holder.end(), keyDESC);
+				
+				//using advance for loop
+				std::cout << endl << "Holder : " << std::endl;
+				for(auto i: holder)
+					std::cout << "key: " << i.first << " Value: " << i.second << std::endl;
+				std::cout << std::endl;
+				
+				return 0;
+			}
+
+		// unordered_map value ascending order:
+			-if values are same, then it just put the keys in any random order smaller or larger before or after
+			#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+
+			bool valuASC(pair<int, int> a, pair<int, int> b){
+				return a.second < b.second;
+			}
+
+			int main() {
+				vector<int> vec = {600,7, 7, 7, 0,400, 100, 500 ,500,600,400};
+				
+				//using map printing vector elements & their indexes
+				unordered_map<int, int> unMP;
+				int cnt=0;
+				for(int i: vec)
+					unMP[i]++;
+					
+				//unordered_map printing
+				std::cout << endl << "unordered_map : " << std::endl;
+				vector<pair<int, int>> holder;
+				for(auto i = unMP.begin(); i!= unMP.end(); i++){
+					std::cout << "Key: "<< i->first << " Value: " << i->second << std::endl;
+					holder.push_back({i->first, i->second});
+				}
+				
+				sort(holder.begin(), holder.end(), valuASC);
+				
+				//using advance for loop
+				std::cout << endl << "Holder : " << std::endl;
+				for(auto i: holder)
+					std::cout << "key: " << i.first << " Value: " << i.second << std::endl;
+				std::cout << std::endl;
+				return 0;
+			}
+
+		// unordered_map values are ascending order, if values are same then keys also should be in ascending order:
+			#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+
+			bool valuASC(pair<int, int> a, pair<int, int> b){
+				if(a.second == b.second)
+					return a.first < b.first;
+				return a.second < b.second;
+			}
+
+			int main() {
+				vector<int> vec = {600,7, 7, 7, 0,400, 100, 500 ,500,600,400};
+				
+				//using map printing vector elements & their indexes
+				unordered_map<int, int> unMP;
+				int cnt=0;
+				for(int i: vec)
+					unMP[i]++;
+					
+				//unordered_map printing
+				std::cout << endl << "unordered_map : " << std::endl;
+				vector<pair<int, int>> holder;
+				for(auto i = unMP.begin(); i!= unMP.end(); i++){
+					std::cout << "Key: "<< i->first << " Value: " << i->second << std::endl;
+					holder.push_back({i->first, i->second});
+				}
+				
+				sort(holder.begin(), holder.end(), valuASC);
+				
+				//using advance for loop
+				std::cout << endl << "Holder : " << std::endl;
+				for(auto i: holder)
+					std::cout << "key: " << i.first << " Value: " << i.second << std::endl;
+				std::cout << std::endl;
+				
+				return 0;
+			}
+
+		// unordered_map values are in descending order:
+			#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+
+			bool valueDESC(pair<int, int> a, pair<int, int> b){
+				return a.second > b.second;
+			}
+
+			int main() {
+				vector<int> vec = {600,7, 7, 7, 0,400, 100, 500 ,500,600,400};
+				
+				//using map printing vector elements & their indexes
+				unordered_map<int, int> unMP;
+				int cnt=0;
+				for(int i: vec)
+					unMP[i]++;
+					
+				//unordered_map printing
+				std::cout << endl << "unordered_map : " << std::endl;
+				vector<pair<int, int>> holder;
+				for(auto i = unMP.begin(); i!= unMP.end(); i++){
+					std::cout << "Key: "<< i->first << " Value: " << i->second << std::endl;
+				holder.push_back({i->first, i->second});
+				}
+				
+				sort(holder.begin(), holder.end(), valueDESC);
+				
+				//using advance for loop
+				std::cout << endl << "Holder : " << std::endl;
+				for(auto i: holder)
+					std::cout << "key: " << i.first << " Value: " << i.second << std::endl;
+				std::cout << std::endl;
+				
+				return 0;
+			}
+
+		// unordered_map values are in descending order if values are same then keys also should be in descending order:
+			#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+
+			bool valueDESC(pair<int, int> a, pair<int, int> b){
+				if(a.second == b.second)
+					return a.first > b.first;
+				return a.second > b.second;
+			}
+
+			int main() {
+				vector<int> vec = {600,7, 7, 7, 0,400, 100, 500 ,500,600,400};
+				
+				//using map printing vector elements & their indexes
+				unordered_map<int, int> unMP;
+				int cnt=0;
+				for(int i: vec)
+					unMP[i]++;
+					
+				//unordered_map printing
+				std::cout << endl << "unordered_map : " << std::endl;
+				vector<pair<int, int>> holder;
+				for(auto i = unMP.begin(); i!= unMP.end(); i++){
+					std::cout << "Key: "<< i->first << " Value: " << i->second << std::endl;
+				holder.push_back({i->first, i->second});
+				}
+				
+				sort(holder.begin(), holder.end(), valueDESC);
+				
+				//using advance for loop
+				std::cout << endl << "Holder : " << std::endl;
+				for(auto i: holder)
+					std::cout << "key: " << i.first << " Value: " << i.second << std::endl;
+				std::cout << std::endl;
 				
 				return 0;
 			}
@@ -18314,14 +18627,78 @@ Lecture-36: Quick Sort using Recursion | Day-6
 				Using constant reverse iterator: MNO JKL GHI DEF ABC
 			*/
 
-	// Rotate method:
-		using rotate method, by default rotate to left by specific number
+	// Rotate method: ❌Pending
+		1) using rotate method, by default rotate to left by specific number
 
-		using rotate method, to rotate right by specific number
+		2) using rotate method, to rotate right by specific number
 
-		without using rotate method
+		3) without using rotate method
 
-		in-place rotation:
+		4) in-place rotation:
+
+		5) rotated using loops:
+			#include <iostream>
+			using namespace std;
+			int main() {
+				
+				string s = "ABCDEFG";
+				int d = 3;
+				std::cout << s << std::endl;            // ABCDEFG
+					
+				// rotating left by d Digits
+				for(int i=0; i<d; i++){
+					char ch = *(s.begin());         // s.begin() returns the iterator at the char so access the value/ char we need to use * there.
+					s.erase(s.begin());
+					s.push_back(ch);
+				}
+				
+				std::cout << s << std::endl;        // DEFGABC
+				
+				s = "Vivek";
+				
+				// rotating right by d digits
+				while(d--){
+					char lastCh = *(s.end()-1);         //we used * here to access the value at that iterator, s.end() returns the iterator memory address.
+					s.erase(s.end()-1);
+					s.insert(s.begin(), lastCh);
+				}
+				
+				std::cout << s << std::endl;            // vekVi
+				return 0;
+			}
+	
+		6) rotated using substr method
+			// Left
+				#include <iostream>
+				using namespace std;
+				int main() {
+					string s = "ABCDEFGH";
+					int d = 5;
+					std::cout << s << std::endl;        // ABCDEFGH
+
+					// rotating left by d
+					s = s.substr(d) + s.substr(0,d);
+					
+					std::cout << s << std::endl;        // FGHABCDE
+					return 0;
+				}
+			
+			// Right
+				#include <iostream>
+				using namespace std;
+				int main() {
+					string s = "ABCDEFGH";
+					int d = 5;
+					std::cout << s << std::endl;        // ABCDEFGH
+
+					// rotating right by d
+					int len = s.length();
+					s = s.substr(len-d) + s.substr(0,len-d);            // DEFGH  + ABC
+					
+					std::cout << s << std::endl;        // FGHABCDE
+					return 0;
+				}
+		Tip: Also refer POTD problem num. 382
 
 	//Optional Beeping Sound char ascii value 7 & Delay functionality:
 		#include <iostream>
@@ -19318,33 +19695,34 @@ POTD:-[Problem of the Day]
 			}
 
 	23) Strobogrammatic Number ll:
-		-Given a length ‘N’, you need to find all the strobogrammatic numbers of length ‘N’.
-		-A strobogrammatic number is a number that looks the same when rotated by 180.
-		-In other words, a number that on rotating right side up and upside down appears the same is a strobogrammatic number.
-		-‘986’ is a strobogrammatic number because on rotating ‘986’ by 180 degrees, ‘986’ will be obtained.
-		-If N = 2, all the strobogrammatic numbers of length = 2 are “11”, “88”, “69”, “96”.
-		-Sample Input 1:
-			2
-			3
-			1
-			Sample Output 1:
-			101 111 181 609 619 689 808 818 888 906 916 986 
-			0 1 8 
-			Explanation For Sample Input 1:
-			Test Case 1: All the possible Strobogrammatic numbers of length = 3 are “101”, “111”, “181”, “609”, “619”, “689”, “808”, “818”, “906”, “916”, “986”.
+		Problem statement:
+			Given a length ‘N’, you need to find all the strobogrammatic numbers of length ‘N’.
+			A strobogrammatic number is a number that looks the same when rotated by 180.
+			In other words, a number that on rotating right side up and upside down appears the same is a strobogrammatic number.
+			‘986’ is a strobogrammatic number because on rotating ‘986’ by 180 degrees, ‘986’ will be obtained.
+			If N = 2, all the strobogrammatic numbers of length = 2 are “11”, “88”, “69”, “96”.
+			Sample Input 1:
+				2
+				3
+				1
+				Sample Output 1:
+				101 111 181 609 619 689 808 818 888 906 916 986 
+				0 1 8 
+				Explanation For Sample Input 1:
+				Test Case 1: All the possible Strobogrammatic numbers of length = 3 are “101”, “111”, “181”, “609”, “619”, “689”, “808”, “818”, “906”, “916”, “986”.
 
-			Test Case 2: Strobogrammatic numbers of length = 1 are “0”, “1”, and “8”.
-			Sample Input 2:
-			2
-			4
-			2
-			Sample Output 2:
-			1001 1111 1691 1881 1961 6009 6119 6699 6889 6969 8008 8118 8698 8888 8968 9006 9116 9696 9886 9966 
-			11 69 88 96 
-			Explanation For Sample Input 2:
-			Test Case 1: All the possible Strobogrammatic numbers of length = 4 are printed.
+				Test Case 2: Strobogrammatic numbers of length = 1 are “0”, “1”, and “8”.
+				Sample Input 2:
+				2
+				4
+				2
+				Sample Output 2:
+				1001 1111 1691 1881 1961 6009 6119 6699 6889 6969 8008 8118 8698 8888 8968 9006 9116 9696 9886 9966 
+				11 69 88 96 
+				Explanation For Sample Input 2:
+				Test Case 1: All the possible Strobogrammatic numbers of length = 4 are printed.
 
-			Test Case 2: All the possible Strobogrammatic numbers of length = 2 are printed.
+				Test Case 2: All the possible Strobogrammatic numbers of length = 2 are printed.
 
 		//Not optimized:
 			#include <bits/stdc++.h> 
@@ -19436,6 +19814,50 @@ POTD:-[Problem of the Day]
 							s[a] = '9';
 					
 					if(temp == s)
+						ans.push_back(s);
+				}
+				return ans;
+			}
+
+		//or
+			#include <bits/stdc++.h> 
+			bool checkStrobogrammatic(string z){
+				if( z.find('2') != string::npos ||
+					z.find('3') != string::npos ||
+					z.find('4') != string::npos ||
+					z.find('5') != string::npos ||
+					z.find('7') != string::npos)
+						return 0;
+					
+				string holder = z;
+				for(int t=0; t<holder.length(); t++){
+					if(holder[t] == '9')
+						holder[t] = '6';
+					else if(holder[t] == '6')
+						holder[t] = '9';
+				}
+
+				reverse(holder.begin(), holder.end());
+				if(holder != z)
+					return 0;
+				return true;
+			}
+
+			vector<string> findStrobogrammatic(int n) {
+				int start = 1, end;
+				while(--n){
+					start *= 10;
+				}
+				end = start * 10;
+
+				vector<string> ans;
+				if(start==1)
+					ans.push_back("0");
+
+				for(int i=start; i<end; i++){
+					int crntNum = i;
+					string s = to_string(crntNum);
+					if(checkStrobogrammatic(s))
 						ans.push_back(s);
 				}
 				return ans;
@@ -26805,6 +27227,39 @@ POTD:-[Problem of the Day]
 				return 1;
 			return 0;
 		}
+
+		// or
+			#include <bits/stdc++.h> 
+			bool isStrobogrammatic(string &n) {
+				if(n.find('2') != string::npos || 
+					n.find('3')!= string::npos || 
+					n.find('4')!= string::npos || 
+					n.find('5')!= string::npos ||
+					n.find('7')!= string::npos)
+						return 0;
+					
+				string s;
+				for(int i=0; i<n.length(); i++){
+					// you can use either += this operator of push_back syntax to add value into string s
+					if(n[i] == '1')
+						s += '1';
+					else if(n[i] == '6')
+						s += '9';
+					else if(n[i] == '8')
+						s.push_back('8');
+					else if(n[i] == '9')
+						s.push_back('6');
+					else                            //default case for n[i] == '0'
+						s.push_back('0');
+				}
+
+				// reverse the new string s
+				// if reversed string is same as that of n, then we can say that its Strobogrammatic
+				reverse(s.begin(), s.end());
+				if(s == n)
+					return true;
+				return 0;
+			}
 	
 	129) Day 21: AUS vs NED: Sub-Squad
 		-just have to return the total distinct number present in vector
@@ -46633,17 +47088,430 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	381) 
+	381) Palindromic Substrings:
 		Problem statement:
+			Given a string s, return the number of palindromic substrings in it.
+			A string is a palindrome when it reads the same backward as forward.
+			A substring is a contiguous sequence of characters within the string.
+			Example 1:
+				Input: s = "abc"
+				Output: 3
+				Explanation: Three palindromic strings: "a", "b", "c".
 
-	382) 
-		Problem statement:
+			Example 2:
+				Input: s = "aaa"
+				Output: 6
+				Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
+				
+			Constraints:
+				1 <= s.length <= 1000
+				s consists of lowercase English letters.
+		
+		class Solution {
+			public:
+			bool checkPalin(string str){
+				// string tempo = str;
+				// reverse(tempo.begin(), tempo.end());
+				// if(tempo == str)
+				//     return 1;
+				// return false;
 
-	383) 
-		Problem statement:
+				//or logic for reverse, to minimize Time complexity
+				for(int i=0; i<str.length()/2; i++)
+					if(str[i] != str[str.length()-1-i])
+						return 0;
+				return true;
+			}
 
-	384) 
+			int countSubstrings(string s) {
+				int PalinDromicCNT= s.length();
+
+				for(int i=0; i<s.length()-1; i++){
+					string temp;
+					temp += s[i];
+					for(int j=i+1; j<s.length(); j++){
+						temp += s[j];
+						if(checkPalin(temp))
+							PalinDromicCNT++;                
+					} 
+				}
+				return PalinDromicCNT;
+			}
+		};
+
+	382) Rotate Bits:
 		Problem statement:
+			Given an integer N and an integer D, 
+			rotate the binary representation of the integer N by D digits 
+			to the left as well as right and return the results in their decimal representation after each of the rotation.
+			Note: Integer N is stored using 16 bits. i.e. 12 will be stored as 0000000000001100.
+
+			Example 1:
+				Input:
+				N = 28, D = 2
+				Output:
+				112
+				7
+				Explanation: 
+				28 in Binary is: 0000000000011100
+				Rotating left by 2 positions, it becomes 0000000001110000 = 112 (in decimal).
+				Rotating right by 2 positions, it becomes 0000000000000111 = 7 (in decimal).
+
+			Example 2:
+				Input: 
+				N = 29, D = 2
+				Output: 
+				116
+				16391
+				Explanation: 
+				29 in Binary is: 0000000000011101
+				Rotating left by 2 positions, it becomes 0000000001110100 = 116 (in decimal).
+				Rotating right by 2 positions, it becomes 010000000000111 = 16391 (in decimal).
+
+			Your Task:
+				You don't need to read input or print anything. 
+				Your task is to complete the function rotate() which 
+				takes the integer N and integer D as inputs and returns 
+				an array of size 2 where arr[0] = Decimal value after left 
+				rotation and arr[1] = Decimal value after right rotation.
+
+			Expected Time Complexity: O(1).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 <= N <  2^16
+				1 <= D <= 10^5
+
+		// Not Optimized: (This is also optimized, just need this remain d = d % s.length())
+			class Solution {
+				public:
+				vector <int> rotate (int n, int d){
+					vector<int> ans;
+					
+					// generated binary representation of n
+					string s = bitset<16>(n).to_string();
+					
+					// rotating left by d Digits
+					// d %= s.length();					//if we don't write this line, we get TLE.
+					for(int i=0; i<d; i++){
+						char StartCh = *(s.begin()); 
+						s.erase(s.begin());
+						s.push_back(StartCh);
+					}
+					
+					int left = stoi(s, 0, 2);
+					ans.push_back(left);
+					
+					s = bitset<16>(n).to_string();
+					
+					// rotating right by d digits
+					while(d--){
+						char lastChar = *(s.end()-1);
+						s.erase(s.end()-1);
+						s.insert(s.begin(), lastChar);
+					}
+					
+					int right = stoi(s, 0, 2);
+					ans.push_back(right);
+					return ans;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				vector <int> rotate (int n, int d){
+					vector<int> ans;
+					
+					// generated binary representation of n
+					string s = bitset<16>(n).to_string();
+					
+					// rotating left by d Digits
+					// if d is out of length of string s, then making it to fit within length of string s.
+					d %= s.length();
+					
+					
+					s = s.substr(d) + s.substr(0, d);
+					
+					int left = stoi(s, 0, 2);
+					ans.push_back(left);
+					
+					s = bitset<16>(n).to_string();
+					
+					// rotating right by d digits
+					s = s.substr(s.length()-d) + s.substr(0, s.length()-d);
+					
+					int right = stoi(s, 0, 2);
+					ans.push_back(right);
+					return ans;
+				}
+			};
+
+	383) Stack Implementation Using Array
+		Problem statement:
+			Stack is a data structure that follows the LIFO (Last in First out) principle. 
+			Design and implement a stack to implement the following functions:
+			1. Push(num): Push the given number in the stack if the stack is not full.
+			2. Pop: Remove and print the top element from the stack if present, else print -1.
+			3. Top: Print the top element of the stack if present, else print -1.
+			4. isEmpty: Print 1 if the stack is empty, else print 0.
+			5. isFull: Print 1 if the stack is full, else print 0.
+			You have been given ‘m’ operations which you need to perform in the stack. 
+			Your task is to implement all the functions of the stack.
+
+			Example:
+				We perform the following operations on an empty stack which has capacity 2:
+				When operation 1 1 is performed, we insert 1 in the stack.
+				When operation 1 2  is performed, we insert 2 in the stack. 
+				When operation 2 is performed, we remove the top element from the stack and print 2.
+				When operation 3 is performed, we print the top element of the stack, i.e., 3.
+				When operation 4 is performed, we print 0 because the stack is not empty.
+				When operation 5 is performed, we print 0 because the stack is size 1, which is not equal to its capacity.
+			Sample Input 1 :
+				2 6
+				1 1
+				1 2
+				2
+				3
+				4
+				5
+			Sample Output 1 :
+				2 
+				1
+				0
+				0
+				Explanation For Sample Output 1 :
+				We perform the following operations on an empty stack which has capacity 2:
+				When operation 1 1 is performed, we insert 1 in the stack.
+				When operation 1 2  is performed, we insert 2 in the stack. 
+				When operation 2 is performed, we remove the top element from the stack and print 2.
+				When operation 3 is performed, we print the top element of the stack, i.e., 1.
+				When operation 4 is performed, we print 0 because the stack is not empty.
+				When operation 5 is performed, we print 0 because the stack is size 1, which is not equal to its capacity.
+				Sample Input 2 :
+				5 5
+				1 2
+				2
+				2 
+				1 1
+				3
+				Sample Output 2 :
+				2 
+				-1
+				1
+				Explanation For Sample Output 2 :
+				We perform the following operations on an empty stack which has a capacity of 5:
+				When operation 1 2 is performed, we insert 2 in the stack.
+				When operation 2 is performed, we remove the top element from the stack and print 2.
+				When operation 2 is performed, as the stack is empty, we print -1.
+				When operation 1 1 is performed, we insert 1 in the stack.
+				When operation 3 is performed, we print the top element of the stack, i.e., 1.
+			Constraints :
+				1 <= 'n', 'm' <= 10^3
+				Time Limit: 1 sec
+
+		// Stack class.
+			class Stack {
+				public:
+				int *arr, size, currentIndex;
+				
+				Stack(int capacity) {
+					size = capacity;
+					arr = new int[capacity];
+					currentIndex = -1;
+				}
+
+				void push(int num) {
+					if(!isFull()){
+						currentIndex++;
+						arr[currentIndex] = num;
+					}
+				}
+
+				int pop() {
+					if(!isEmpty()){
+						int x = arr[currentIndex];
+						currentIndex--;
+						return x;
+					}
+					return -1;
+				}
+				
+				int top() {
+					if(!isEmpty())
+						return arr[currentIndex];
+					return -1;
+				}
+				
+				int isEmpty() {
+					if(currentIndex == -1)
+						return 1;
+					return 0;
+				}
+				
+				int isFull() {
+					if(currentIndex == size-1)
+						return 1;
+					return 0;
+				}    
+			};
+
+		//or
+			// Stack class.
+			class Stack {
+				public:
+				int *arr, size, currentIndex;
+				
+				Stack(int capacity) {
+					size = capacity;
+					arr = new int[capacity];
+					currentIndex = -1;
+				}
+
+				void push(int num) {
+					// if(isFull())
+					//     return ;
+					//or
+					if(currentIndex == size-1)
+						return ;
+					currentIndex++;
+					arr[currentIndex] = num;
+				}
+
+				int pop() {
+					// if(isEmpty())
+					//     return -1;
+					//or 
+					if(currentIndex == -1)
+						return -1;
+					int x = arr[currentIndex];
+					currentIndex--;
+					return x;
+				}
+				
+				int top() {
+					if(isEmpty())
+						return -1;
+					//or
+					// if(currentIndex == -1)
+					//     return -1;
+					return arr[currentIndex];
+				}
+				
+				int isEmpty() {
+					if(currentIndex == -1)
+						return 1;
+					return 0;
+				}
+				
+				int isFull() {
+					if(currentIndex == size-1)
+						return 1;
+					return 0;
+				}    
+			};
+
+	384) Longest Palindromic Substring:
+		Problem statement:
+			You are given a string 'str' of length 'N'.
+			Your task is to return the longest palindromic substring. 
+			If there are multiple strings, return any.
+			A substring is a contiguous segment of a string.
+			For example :
+				str = "ababc"
+				The longest palindromic substring of "ababc" is "aba", 
+				since "aba" is a palindrome and it is the longest substring of length 3 which is a palindrome.
+
+				There is another palindromic substring of length 3 is "bab". 
+				Since starting index of "aba" is less than "bab", so "aba" is the answer.
+			Sample Input 1:
+				abccbc
+				Sample Output 1:
+				bccb
+				Explanation for input 1:
+				For string "abccbc",  there are several palindromic substrings such as "a", "b", "c", "cc", "bccb", 
+				and "cbc". However, the longest palindromic substring is "bccb".
+				Sample Input 2:
+				aeiou
+				Sample Output 2:
+				a
+			Constraints :
+				1 <= |str| <= 10^3
+				Time Limit: 1 sec
+		
+		//Not Optimized:
+			bool checkLongPalin(string z){
+				for(int a=0; a<z.length()/2; a++)
+					if(z[a] != z[z.length()-1-a])
+						return false;
+				return 1;
+			}
+
+			string longestPalinSubstring(string str) {
+				// we can write this to just copy the first char to string ans
+				// string ans = str.substr(0,1);
+				//or
+				string ans;
+				ans += str[0];
+
+				for(int i=0; i<str.length()-1; i++){
+					string temp = str.substr(i, 1);
+
+					for(int j=i+1; j<str.length(); j++){
+						temp += str[j];
+						if(checkLongPalin(temp) && temp.length() > ans.length())
+							ans = temp;
+					}
+				}
+				return ans;
+			}
+		
+		//Optimized: ❌Pending
+			/*
+				Time Complexity : O(N ^ 2)
+				Space Complexity: O(1)
+				
+				Where N is the length of the string.
+			*/
+
+			#include <algorithm>
+
+			int expandAroundCenter(string str, int left, int right) {
+				int start = left, end = right;
+				int n = str.length();
+
+				// Expand the center.
+				while (start >= 0 && end < n && str[start] == str[end]) {
+					start--;
+					end++;
+				}
+				return end - start - 1;
+			}
+
+			string longestPalinSubstring(string str) {
+				int n = str.length();
+
+				if (n < 1) 
+					return "";
+				
+				int start = 0, end = 0;
+				for (int i = 0; i < n; i++) {
+					// Longest odd length palindrome with center points as i.
+					int len1 = expandAroundCenter(str, i, i);
+
+					// Longest even length palindrome with center points as i and i + 1.
+					int len2 = expandAroundCenter(str, i, i + 1);
+
+					int len = max(len1, len2);
+
+					// Update the start and end.
+					if (len > end - start + 1) {
+						start = i - (len - 1) / 2;
+						end = i + (len) / 2;
+					}
+				}
+				return str.substr(start, end - start + 1);
+			}
 
 	385) 
 		Problem statement:
@@ -46662,8 +47530,6 @@ POTD:-[Problem of the Day]
 
 	390) 
 		Problem statement:
-
-
 	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
