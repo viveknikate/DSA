@@ -14093,7 +14093,6 @@ Lecture-33: Recursion and Binary Search | Day-3:
 				}
 
 				int LastOccRecursion(vector<int> a, int start, int end, int key, int index){
-
 					if(start > end)
 						return index;
 					
@@ -14103,7 +14102,6 @@ Lecture-33: Recursion and Binary Search | Day-3:
 					else if(a[mid] > key)
 						return LastOccRecursion(a, start, mid-1, key, index);
 					return LastOccRecursion(a, mid+1, end, key, index);
-
 				}
 
 				pair<int, int> firstAndLastPosition(vector<int>& arr, int n, int k) {
@@ -28174,6 +28172,64 @@ POTD:-[Problem of the Day]
 
 					}
 	
+			//or
+				#include<bits/stdc++.h>
+				int differentGCDSubsequence(vector<int> &arr) {
+
+					set<int> GCD_Unique_maker (arr.begin(), arr.end());
+					vector<int> GCD_Holder (GCD_Unique_maker.begin(), GCD_Unique_maker.end());
+					
+					for(int i=0; i < GCD_Holder.size()-1; i++){
+						for(int j=i+1; j < GCD_Holder.size(); j++){
+							int gcdValue = __gcd(GCD_Holder[i], GCD_Holder[j]);
+							GCD_Unique_maker.insert(gcdValue);
+						}
+					}
+
+					// checking gcd for complete array
+					vector<int> holder (GCD_Unique_maker.begin(), GCD_Unique_maker.end());
+					
+					int value = holder[0];
+					for(int i=1; i<holder.size(); i++){
+						value = __gcd(value, holder[i]);
+					}
+
+					GCD_Unique_maker.insert(value);
+					return GCD_Unique_maker.size();
+				}
+
+		//Optimized:
+			#include<bits/stdc++.h>
+				int gcd(int a, int b) {
+					if(a == 0) return b;
+					return gcd(b%a, a);
+				}
+
+				int differentGCDSubsequence(vector<int> &arr)  {
+
+					int maxElement = *max_element(arr.begin(), arr.end());
+					int total = maxElement + 1;
+					bool *checkNumber;
+					checkNumber = new bool[total];
+					for(int i : arr) 
+						checkNumber[i] = true;
+						
+					int count = 0;
+					for(int i = 1; i <= maxElement; i++) {  
+						int calcGCD = 0;
+						for(int j = i; j < total; j += i) {
+							if(checkNumber[j] == true)
+								calcGCD = gcd(calcGCD, j);
+								
+							if(calcGCD == i) {
+								++count;
+								break;
+							}
+						}
+					}
+					return count;
+				}
+
 	139) Shortest Word Distance II:
 		Problem Statement
 			You have a bookshelf in the form of an array 'arr' in which names of the books(single word name) are given.
@@ -46235,6 +46291,11 @@ POTD:-[Problem of the Day]
 				return cnt;
 			}
 
+		// Optimized:
+			int kPure(int n, int k) {
+				return (n/k) - (n/k)/k;
+			}
+
 	372) Future Expansion:❌Pending
 		Problem statement
 			Ninja has a string 'S' of the length 'N'. He wants to expand it and make its length
@@ -46318,6 +46379,26 @@ POTD:-[Problem of the Day]
 				}
 
 				return OpsCnt;
+			}
+		
+		// Optimized:
+			int findMinimumOperations(int n, long long m, string s) {
+				map<char, int> mp;
+				long long mx=-1;
+
+				for(char ch: s){
+					mp[ch]++;
+					if(mp[ch] > mx)
+						mx = mp[ch];
+				}
+				int Ops=0;
+				long long incresingSize = n;
+				while(incresingSize < m){
+					incresingSize += mx;
+					mx *= 2;
+					Ops++;
+				}
+				return Ops;
 			}
 	
 	373) Alex And Infinity Circle:
@@ -48047,9 +48128,204 @@ POTD:-[Problem of the Day]
 			return BinarySearch(arr, partIndex, n-1, k);
 		}
 		
-	391) 
+	391) Find First Palindromic String in the Array:
+		Problem statement:
+			Given an array of strings words, 
+			return the first palindromic string in the array. 
+			If there is no such string, return an empty string "".
+			A string is palindromic if it reads the same forward and backward.
 
-	
+			Example 1:
+				Input: words = ["abc","car","ada","racecar","cool"]
+				Output: "ada"
+				Explanation: The first string that is palindromic is "ada".
+				Note that "racecar" is also palindromic, but it is not the first.
+			
+			Example 2:
+				Input: words = ["notapalindrome","racecar"]
+				Output: "racecar"
+				Explanation: The first and only string that is palindromic is "racecar".
+
+			Example 3:
+				Input: words = ["def","ghi"]
+				Output: ""
+				Explanation: There are no palindromic strings, so the empty string is returned.
+
+			Constraints:
+				1 <= words.length <= 100
+				1 <= words[i].length <= 100
+				words[i] consists only of lowercase English letters.
+
+		class Solution {
+			public:
+			Solution(){
+				ios_base::sync_with_stdio(false); 
+				cin.tie(NULL);
+			}
+
+			bool checkPalin(string str){
+				for(int i=0; i < str.length() / 2; i++) {
+					if(str[i] != str[str.length()-1-i])
+						return 0;
+				}
+				return 1;
+			}
+			
+			string firstPalindrome(vector<string>& words) {
+				for(string s: words){
+					if(checkPalin(s))
+						return s;
+				}
+				return "";
+			}
+		};
+
+	392) Kth Smallest Element:
+		Problem Statement:
+			You are given an array of integers 'ARR' of size 'N' and another integer 'K'.
+			Your task is to find and return 'K'th smallest value present in the array.
+			Note: All the elements in the array are distinct.
+			Example
+				If 'N' is 5 and 'K' is 3 and the array is 7, 2, 6, 1, 9
+				Sorting the array we get 1, 2, 6, 7, 9
+				Hence the 3rd smallest number is 6.
+			Sample Input 1:
+				7 5
+				5 9 1 8 10 6 4 
+			Sample Output 1:
+				8
+				Explanation of Input 1:
+				Sorted array will be 1 4 5 6 8 9 10, this shows that 8 is the fifth-smallest element in the array.
+				Sample Input 2:
+				7 2
+				24 8 23 28 3 1 19 
+				Sample Output 2:
+				3
+				Constraints:
+					1 <= N <=10 ^ 4
+					1 <= K <= N
+					1 <= ARR[i] <= 10 ^ 9
+					Time limit: 1 sec.
+
+		int kthSmallest(int n,int k,vector<int> Arr) {
+			sort(Arr.begin(), Arr.end());
+			return Arr[k-1];
+		}
+
+	393) Number of occurrence:
+		Problem Statement:
+			You have been given a sorted array/list of integers 'arr' of size 'n' and an integer 'x'.
+			Find the total number of occurrences of 'x' in the array/list.
+			Example:
+				Input: 'n' = 7, 'x' = 3
+				'arr' = [1, 1, 1, 2, 2, 3, 3]
+
+			Output: 2
+				Explanation: Total occurrences of '3' in the array 'arr' is 2.
+
+			Sample Input 1:
+				7 3
+				1 1 1 2 2 3 3
+				Sample Output 1:
+				2
+				Explanation For Sample Input 1:
+				In the given list, there are 2 occurrences of integer 3.
+				Sample Input 2:
+				5 6
+				1 2 4 4 5
+				
+				Sample Output 2:
+				0
+
+				Explanation For Sample Input 2:
+					In the given list, there are 0 occurrences of integer 6.
+
+				Expected time complexity:
+					The expected time complexity is O(log 'n').
+
+				Constraints:
+					1 <= n <= 10^4
+					1 <= arr[i] <= 10^9
+					1 <= x <= 10^9
+					Where arr[i] represents the element i-th element in the array/list.
+					Time Limit: 1sec
+
+		// Not optimized:
+			#include<bits/stdc++.h>
+			int count(vector<int>& arr, int n, int x) {
+				map<int, int> Freq;
+				for(int i: arr)
+					Freq[i]++;
+				return Freq[x];
+			}
+
+		// Optimized:
+			#include<bits/stdc++.h>
+			int firstIndex(vector<int> a, int x){
+				int s=0, e= a.size()-1;
+				int index = -1;
+				while(s <= e){
+					int mid = (s+e)/2;
+					if(a[mid] == x){
+					index = mid;
+					e = mid-1;
+					}else if(a[mid] > x){
+					e = mid - 1;
+					}else{
+					s = mid + 1;
+					}
+				}
+				return index;
+			}
+
+			int lastIndex(vector<int> a, int x){
+				int s=0, e= a.size()-1;
+				int index = -1;
+				while(s <= e){
+					int mid = (s+e)/2;
+					if(a[mid] == x){
+					s = mid + 1;
+					index = mid;
+					}else if(a[mid] > x){
+					e = mid - 1;
+					}else{
+					s = mid + 1;
+					}
+				}
+				return index;	
+			}
+
+			int count(vector<int>& arr, int n, int x) {
+				//finding the first occurrence of x
+				int firstOcc = firstIndex(arr, x);
+				
+				if(firstOcc == -1)
+					return 0;
+
+				int lastOcc = lastIndex(arr, x);
+				return lastOcc - firstOcc + 1;
+			}
+
+	394) Implement Upper Bound:
+		Problem Statement:
+
+	395) Implement Lower Bound
+		Problem Statement:
+
+	396) 
+		Problem Statement:
+
+	397) 
+		Problem Statement:
+
+	398) 
+		Problem Statement:
+
+	399) 
+		Problem Statement:
+
+	400) 
+		Problem Statement:
 	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
