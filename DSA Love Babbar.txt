@@ -10887,11 +10887,11 @@ Lecture-23: Introduction to 2D Arrays in C++ LeetCode Questions
 							for(int j=0; j<matrix[0].size(); j++){
 								if(isZero[i][j] == 1){
 									for(int row =0; row<matrix.size(); row++){
-									matrix[row][j] = 0;
+										matrix[row][j] = 0;
 									}
 									
 									for(int col =0; col<matrix[0].size(); col++){
-									matrix[i][col] = 0;
+										matrix[i][col] = 0;
 									}
 								}
 							}
@@ -10934,11 +10934,17 @@ Lecture-23: Introduction to 2D Arrays in C++ LeetCode Questions
 		3)
 			
 		4)
+
 		5)
+
 		6)
+
 		7)
+		
 		8)
+
 		9)
+		
 		10)
 ---------------------------------------------------------------------------------------------------------
 	05/10/23
@@ -21169,6 +21175,8 @@ POTD:-[Problem of the Day]
 			}
 		};
 
+
+
 	44) Find position of set bit
 		Given a number N having only one ‘1’ and all other ’0’s in its binary representation, 
 			find position of the only set bit. If there are 0 or more than 1 set bit the answer should be -1. 
@@ -29382,6 +29390,78 @@ POTD:-[Problem of the Day]
 					}
 				}
 				return cnt;
+			}
+		
+		// Optimized: ❌Pending
+			/*
+				Time Complexity : O(N)
+				Space Complexity : O(N)
+
+				Where 'N' is the size of ‘ARR’.
+			*/
+
+			struct TrieNode {
+				TrieNode *children[2];
+				int value = 0;
+			};
+
+			void insert(TrieNode *root, int num) {
+				TrieNode *ptr = root;
+				ptr->value += 1;
+					
+				for(int i = 15; i >= 0; i--) {
+					int curBit = ((num & (1 << i)) == 0) ? 0 : 1;
+
+					if(ptr->children[curBit] == NULL) {
+						ptr->children[curBit] = new TrieNode();
+					}
+					
+					ptr->children[curBit]->value += 1;
+					ptr = ptr->children[curBit];
+				}
+			}
+			
+			int helper(TrieNode *root, int cur, int num) {
+				/*
+					*   This function count number of integers in trie
+					*   having bitwise xor with 'cur' less than 'num'.
+				*/
+
+				int count = 0;
+				TrieNode *ptr = root;
+
+				for(int i = 15; i >= 0; i--) {
+					int curBit = (((cur & (1 << i)) ^ (num & (1 << i))) == 0) ? 0 : 1;
+					
+					if((num & (1 << i)) != 0) {
+					
+						if(ptr->children[1-curBit] != NULL) {
+							count += ptr->children[1-curBit]->value;
+						} 
+					}
+
+					if(ptr->children[curBit] == NULL) {
+						break;
+					}
+
+					ptr = ptr->children[curBit];
+				}
+				return count;   
+			}
+			
+			int countBeautifulPairs(vector<int> &arr, int low, int high) {
+				//  Size of array
+				int n = arr.size();
+				int counter = 0;
+				
+				TrieNode *root = new TrieNode();
+
+				//  Counting number of beautiful pairs.
+				for(int i = 0; i < n; i++) {
+					counter = counter + helper(root, arr[i], high+1) - helper(root, arr[i], low);
+					insert(root, arr[i]);
+				}
+				return counter;
 			}
 
 	153) Move all zeroes to end of array: (Lecture-20 Problem-4)
@@ -46948,6 +47028,45 @@ POTD:-[Problem of the Day]
 				}
 			};
 
+			//or
+				class Solution {
+					public:
+					//Function to sort an array using quick sort algorithm.
+					void quickSort(int arr[], int low, int high) {
+						if(low >= high)
+							return ;
+						
+						int partIndex = partition(arr, low, high);
+						
+						quickSort(arr, low, partIndex-1);
+						
+						quickSort(arr, partIndex+1, high);
+					}
+					
+					public:
+					int partition (int arr[], int low, int high) {
+						int cnt=0;
+						for(int i=low+1; i <= high; i++)
+							if(arr[low] >= arr[i])
+								cnt++;
+								
+						int actualPlace = low + cnt;
+						swap(arr[actualPlace], arr[low]);
+						
+						while(low < actualPlace && actualPlace < high){
+							
+							while(low < actualPlace && arr[low] <= arr[actualPlace])
+									low++;
+								
+							while(high > actualPlace && arr[high] > arr[actualPlace])
+									high--;
+									
+							swap(arr[low], arr[high]);
+						}
+						return actualPlace;
+					}
+				};
+
 	376) Kadane's Algorithm:
 		Problem Statement:
 			Given an array Arr[] of N integers. 
@@ -49042,13 +49161,154 @@ POTD:-[Problem of the Day]
 			return -1;
 		}
 	
-	405)
+	405) Power of Two: (same Question as 44)
 		Problem statement:
+			You have been given an integer 'N'.
+			Your task is to return true if it is a power of two. Otherwise, return false.
+			An integer 'N' is a power of two, if it can be expressed as 2 ^ 'K' where 'K' is an integer.
+			For example:
+				'N' = 4,
+				4 can be represented as 2^2. So, 4 is the power of two, and hence true is our answer.
+			Sample Input 1:
+				16
+				Sample Output 1:
+				true
+				Explanation of Sample Input 1:
+				16 can be represented as 2^4. So, 16 is the power of two, and hence true is our answer.
+				Sample Input 2:
+				10
+				Sample Output 2:
+				false
+			Constraints:
+				-2^31 <= 'N' <= 2^31 - 1
+				Time Limit: 1sec
+
+		bool isPowerOfTwo(int n) {
+			while(n>=2){
+				if(n % 2 != 0)
+					break;
+				n /= 2;
+			}
+
+			if(n==1)
+				return true;
+			return 0;
+		}
+
+		//or
+			#include <bits/stdc++.h>
+			bool isPowerOfTwo(int n) {	
+				// Write your code here.
+				bool b = false;
+				for(int i=0; i<n; i++){
+					int temp = pow(2,i);
+					if(temp == n){
+						b = true;
+						break;
+					}
+
+					if(temp > n){
+						b = false;
+						break;
+					}
+				}
+				return b;
+			}
+
+		//or
+			Bit Manipulation
+				The basic idea is to use Bit Manipulation. 
+				If we subtract a power of 2 numbers by 1 then all unset bits after the only set bit become set; 
+				and the set bit becomes unset.
+				For example for 4 (100) and 16 (10000), 
+				we get the following after subtracting 1
+				3 -> 011
+				15 -> 01111
+				So, if a number ‘N’ is power of 2 then bitwise & of ‘N’ and ‘N’-1 will be zero.
+				 We can say ‘N’ is a power of 2 or not based on the value of ‘N’&('N'-1). 
+				 The expression ‘N’&('N'-1) will not work when ‘N’ is 0. To handle this case also, 
+				 our expression will become ‘N’&(!'N'&('N'-1)).
+
+				Time Complexity
+					O(1).
+
+				Since, bitwise & of two integers takes constant time, thus, the time complexity will be O(1).
+				Space Complexity
+					O(1).
+				Since no extra memory is used except some variables, thus, the space complexity will be O(1).
+			
+			#include <bits/stdc++.h>
+			bool isPowerOfTwo(int n){
+				return n != 0 && ((n & (n-1)) == 0);
+			}
 	
-	406)
+	406) Count Palindrome Words In A String:
 		Problem statement:
+			You are given a string S of words. 
+			Your task is to find the number of palindrome words in the given string S.
+			A word is called palindrome, if it reads the same backwards as forwards.
+			Note:
+				Words are separated by one or more whitespace characters.
+			For Example:
+				For the given string “Madam oyo cat”, “Madam”, and “oyo” are the palindrome words 
+			Constraints:
+				1 <= T <= 10 
+				0 <= |S| <= 10^5 
+				All the characters of the string S contain whitespace, lowercase, and uppercase English letters only.
+				Time limit: 1 second
+			Sample Input 1:
+				1
+				Nitin and I are good friends
+				Sample Output 1:
+				2
+				Explanation For Sample Input 1:
+				For the first test case, there are 2 palindrome words only i.e “Nitin” and “I”.
+				Sample Input 2:
+				2
+				Madam taught us the level order traversal of a binary tree yesterday
+				We love coding ninjas
+				Sample output 2:
+				3
+				0
+		
+		#include <bits/stdc++.h> 
+		bool checkPalin(string s){
+			for(int i=0; i<s.length()/2; i++)
+				if(s[i] != s[s.length()-1-i])
+					return 0;
+			return true;
+		}
+
+		int countNumberOfPalindromeWords(string s) {
+			vector<string> holder;
+			string temp;
+
+			// transforming the string 
+			transform(s.begin(), s.end(), s.begin(), ::tolower);
+
+			for(int i=0; i<s.length(); i++){
+				if(s[i] == ' '){
+					if(!temp.empty())
+						holder.push_back(temp);
+					temp.clear();
+					continue;
+				}
+				temp += s[i];
+			}
+
+			// need to insert the last string manually
+			if(!temp.empty())
+				holder.push_back(temp);
+
+			int cnt=0;
+			for(int i=0; i<holder.size(); i++)
+				if(checkPalin(holder[i]))
+					cnt++;
+				
+			return cnt;
+		}
 	
-	407)
+	407) 
 		Problem statement:
 	
 	408)
