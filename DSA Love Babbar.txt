@@ -22920,6 +22920,47 @@ POTD:-[Problem of the Day]
 					return num;
 				}
 
+			// or using Swith case:
+				class Solution {
+					public:
+					int valueFinder(char ch){
+						switch(ch){
+							case 'I':
+								return 1;
+							case 'V':
+								return 5;
+							case 'X':
+								return 10;
+							case 'L':
+								return 50;
+							case 'C':
+								return 100;
+							case 'D':
+								return 500;
+							case 'M':
+								return 1000;
+						}
+					}
+					int romanToDecimal(string &str) {
+						int ans = valueFinder(str[str.size()-1]);
+						int prev = ans;
+						// pointing the last 2nd character
+						int i = str.size() - 2;
+						
+						while(i >=0){
+							int value = valueFinder(str[i]);
+							if(value >= prev)
+								ans += value;
+							else
+								ans -= value;
+							
+							prev = value;
+							i--;
+						}
+						return ans;
+					}
+				};
+
 	66) Modular Exponentiation :
 		You are given a three integers 'X','N', and 'M'. Your task is to find ('X'^ 'N') % 'M'. A ^ B is defined 
 		as X raised to power N and X % M is the remainder when X is divided by M.
@@ -27111,6 +27152,18 @@ POTD:-[Problem of the Day]
 			return 0;
 		}
 
+		//or
+			bool findOverlap(string &s){
+				int cnt=0;
+				for(int i=0; i<s.length(); i++)
+					if((s[i] == 'A' && s[i+1] == 'B') ||(s[i] == 'B' && s[i+1] == 'A'))
+						s[i] = '0', s[i+1]='0',i++, cnt++;
+
+				if(cnt >= 2)
+					return 1;
+				return false;
+			}
+
 	126) K-th Symbol in Grammar:
 		We build a table of n rows (1-indexed). We start by writing 0 in the 1st row. Now in every subsequent row, 
 			we look at the previous row and replace each occurrence of 0 with 01, and each occurrence of 1 with 10.
@@ -29565,6 +29618,21 @@ POTD:-[Problem of the Day]
 				1 <= n <= 104
 				0 <= nums[i] <= n
 				All the numbers of nums are unique.
+
+		// Brute force solution
+			class Solution {
+				public:
+				int missingNumber(vector<int>& nums) {
+					int maxValue = *max_element(nums.begin(), nums.end());
+					int cnt=0;
+					for(int i: nums){
+						if(find(nums.begin(), nums.end(), cnt) == nums.end())
+							return cnt;
+						cnt++;
+					}
+					return cnt;
+				}
+			};
 
 		class Solution {
 			public:
@@ -50550,8 +50618,8 @@ POTD:-[Problem of the Day]
 		Problem statement
 			Given a string 'S' of length 'L', return the length of the longest substring without repeating characters.
 			Example:
-
-				Suppose given input is "abacb", then the length of the longest substring without repeating characters will be 3 ("acb").
+				Suppose given input is "abacb", then the length 
+				of the longest substring without repeating characters will be 3 ("acb").
 			Constraints:
 				0 <= L <= 10^5     
 				Time limit: 1 sec
@@ -50586,13 +50654,327 @@ POTD:-[Problem of the Day]
 			return mxSize;
 		}
 
-	424) 
+	424) Sum Of Zeroes:
+		Problem statement
+			You are given a binary matrix (it contains only 0s and 1s) with dimensions ‘N * M’. 
+			You need to find and return the sum of coverages of all zeros of the given matrix.
 
-	425) 
+			Coverage for a particular 0 is defined as the total number of ‘1s’ around it
+			(i.e., immediate left, immediate right, immediate up, and immediate bottom positions).
 
-	426) 
+			Constraints:
+				1 <= T <= 10
+				1 <= N, M <= 10^3
 
-	427) 
+				Time limit: 1 second
+			Sample Input 1:
+				1
+				2 2 
+				1 0
+				0 1
+				Sample Output 1:
+				4
+				Explanation of Input 1:
+				In the given matrix, there are 2 zeros. 
+				For the 0 at the 1st row, 2nd column position, 
+				coverage is 2(there is 1 adjacent top one and 1 adjacent right one).
+
+				For the 0 at the 2nd row, 
+				2nd column the coverage is 2(there is 1 adjacent top one and 1 adjacent right one).
+
+				Hence the net coverage is 2 + 2 = 4.
+				Sample Input 2:
+				1
+				2 3
+				0 0 0
+				0 0 0
+				Sample Output 2
+				0
+
+		#include <bits/stdc++.h> 
+		int coverageOfMatrix(vector<vector<int>> &mat) {
+			int ttlCnt=0;
+
+			for(int i=0; i<mat.size(); i++){
+				int crntCnt=0;
+				for(int j=0; j<mat[0].size(); j++){
+					if(mat[i][j] == 0){
+						int Bcol = j-1, Ncol = j+1;
+						int Brow = i-1, Nrow=i+1;
+						if(Bcol >=0 && mat[i][Bcol] == 1)
+							crntCnt++;
+						
+						if(Ncol < mat[i].size()  && mat[i][Ncol] == 1)
+							crntCnt++;
+
+						// before row
+						if(Brow >=0  && mat[Brow][j] == 1)
+							crntCnt++;
+
+						// next row
+						if(Nrow < mat.size() && mat[Nrow][j] == 1)
+							crntCnt++;
+					}
+				}
+				ttlCnt += crntCnt;
+			}
+			return ttlCnt;
+		}
+
+	425) Roman to Integer (POTD 65):
+		Problem Statement:
+			Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+				Symbol       Value
+				I             1
+				V             5
+				X             10
+				L             50
+				C             100
+				D             500
+				M             1000
+
+			For example, 2 is written as II in Roman numeral, 
+			just two ones added together. 12 is written as XII, 
+			which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
+
+			Roman numerals are usually written largest to smallest from left to right.
+			However, the numeral for four is not IIII. Instead, the number four is written as IV.
+			Because the one is before the five we subtract it making four.
+			The same principle applies to the number nine, which is written as IX.
+			There are six instances where subtraction is used:
+
+			I can be placed before V (5) and X (10) to make 4 and 9. 
+			X can be placed before L (50) and C (100) to make 40 and 90. 
+			C can be placed before D (500) and M (1000) to make 400 and 900.
+			Given a roman numeral, convert it to an integer.
+
+			Example 1:
+				Input: s = "III"
+				Output: 3
+				Explanation: III = 3.
+
+			Example 2:
+				Input: s = "LVIII"
+				Output: 58
+				Explanation: L = 50, V= 5, III = 3.
+
+			Example 3:
+				Input: s = "MCMXCIV"
+				Output: 1994
+				Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
+
+			Constraints:
+				1 <= s.length <= 15
+				s contains only the characters ('I', 'V', 'X', 'L', 'C', 'D', 'M').
+				It is guaranteed that s is a valid roman numeral in the range [1, 3999].
+
+		class Solution {
+			public:
+			// last char approach
+			int romanToInt(string s) {
+				int ans=0;
+				map<char, int> mapper = {{'I', 1},
+									{'V', 5},
+									{'X',10},
+									{'L',50},
+									{'C',100},
+									{'D', 500},
+									{'M', 1000}};
+
+				ans += mapper[s[s.length()-1]];
+				for(int i=s.length()-2; i>=0; i--){
+					if(mapper[s[i]] >= mapper[s[i+1]])
+						ans += mapper[s[i]];
+					else
+						ans -= mapper[s[i]];
+				}
+				return ans;
+			}
+		};
+
+	426) Roman Number to Integer:
+		Problem statement:
+			Given a string in roman no format (s)  your task is to convert it to an integer.
+			Various symbols and their values are given below.
+			I 1
+			V 5
+			X 10
+			L 50
+			C 100
+			D 500
+			M 1000
+
+			Example 1:
+			Input:
+			s = V
+			Output: 5
+
+			Example 2:
+			Input:
+			s = III 
+			Output: 3
+
+			Your Task:
+				Complete the function romanToDecimal() which takes a string as 
+				input parameter and returns the equivalent decimal number. 
+
+			Expected Time Complexity: O(|S|), |S| = length of string S.
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1<=roman no range<=3999
+
+		// same question as POTD 65 without using map.
+		class Solution {
+			public:
+			int romanToDecimal(string &str) {
+				map<char, int> mapper { {'I', 1},
+									{'V', 5},
+									{'X', 10},
+									{'L', 50},
+									{'C', 100},
+									{'D', 500},
+									{'M', 1000}};
+									
+				int ans = mapper[str[str.length()-1]];
+				for(int i=str.length()-2; i>=0; i--){
+					if(mapper[str[i]] >= mapper[str[i+1]])
+						ans += mapper[str[i]];
+					else
+						ans -= mapper[str[i]];
+				}
+				return ans;
+			}
+		};
+
+	427) Ceil The Floor:
+		Problem statement
+			You're given a sorted array 'a' of 'n' integers and an integer 'x'.
+			Find the floor and ceiling of 'x' in 'a[0..n-1]'.
+
+			Note:
+				Floor of 'x' is the largest element in the array which is smaller than or equal to 'x'.
+				Ceiling of 'x' is the smallest element in the array greater than or equal to 'x'.
+			Example:
+				Input: 
+					n=6, x=5, a=[3, 4, 7, 8, 8, 10]   
+				Output:
+					4
+				Explanation:
+				The floor and ceiling of 'x' = 5 are 4 and 7, respectively.
+
+			Sample Input 1 :
+				6 8
+				3 4 4 7 8 10
+
+				Sample Output 1 :
+				8 8
+
+				Explanation of sample input 1 :
+				Since x = 8 is present in the array, it will be both floor and ceiling.
+
+			Sample Input 2 :
+				6 2
+				3 4 4 7 8 10
+
+			Sample Output 2 :
+				-1 3
+
+			Explanation of sample input 2 :
+				Since no number is less than or equal to x = 2 in the array, 
+				its floor does not exist. The ceiling will be 3.
+
+			Constraints :
+				1 <= n <= 2 * 10^5      
+				1 <= a[i] <= 10^9
+				Time limit: 1 sec
+
+		/* TC: O(n) & SC: O(n) */
+		pair<int, int> getFloorAndCeil(vector<int> &a, int n, int x) {
+			pair<int, int> ans;
+			for(int i=0; i<n ; i++){
+				if(a[i] == x)
+					return ans = {x,x};
+				else if(a[i] < x)
+					ans.first = a[i];
+				else if(a[i] > x)
+					break;
+			}
+
+			if(ans.first == 0)
+				ans.first = -1;
+
+			for(int i=n-1; i>=0 ; i--){
+				if(a[i] > x)
+					ans.second = a[i];
+				else if(a[i] < x)
+					break;
+			}
+			
+			if(ans.second == 0)
+				ans.second = -1;
+
+			return ans;
+		}
+
+		/*TC: O(n) & SC: O(1) */
+		pair<int, int> getFloorAndCeil(vector<int> &a, int n, int x) {
+			int first=-1, second=-1;
+
+			// for floor
+			for(int i=0; i<n ; i++){
+				if(a[i] == x)
+					return {x,x};
+				else if(a[i] < x)
+					first = a[i];
+				else if(a[i] > x)
+					break;
+			}
+
+			// for ceil
+			for(int i=n-1; i>=0; i--){
+				if(a[i] > x)
+					second = a[i];
+				else
+					break;
+			}
+			return {first, second};
+		}
+
+		// using binary search
+		/* TC: O(log(n)) & SC: O(1) */
+		pair<int, int> getFloorAndCeil(vector<int> &a, int n, int x){
+			int s=0, e=n-1, first=-1, second=-1;
+
+			// Searching for floor
+			while(s <= e){
+				int mid = (s+e)/2;
+				if(a[mid] == x)
+					return {x,x};
+				else if(a[mid] > x)
+					e = mid - 1;
+				else{
+					first = a[mid];
+					s = mid+1;
+				}
+			}
+
+			// Searching for ceil
+			// need to reset the s & e values
+			s = 0, e =n-1;
+
+			while(s <= e){
+				int mid = (s+e)/2;
+				if(a[mid] < x)
+					s = mid+1;
+				else{
+					second = a[mid];
+					e = mid-1;
+				}
+			}
+
+			return {first, second};
+		}
 
 	428) 
 
