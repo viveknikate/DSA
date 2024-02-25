@@ -32816,7 +32816,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	198) Find All Anagrams in a String
+	198) Find All Anagrams in a String (POTD-47)
 		Problem statement
 			You have been given a string STR and a non-empty string PTR. Your task is to
 			find all the starting indices of PTR's anagram in STR.
@@ -35208,6 +35208,19 @@ POTD:-[Problem of the Day]
 			}
 			return cnt;
 		}
+
+		//  or
+		/*
+			int countBits(int a){
+				int cnt=0;
+				while(a){
+					if(a&1)
+						cnt++;
+					a>>=1;
+				}
+				return cnt;
+			}
+		*/
 
 		int main() {
 			int n;
@@ -52321,19 +52334,591 @@ POTD:-[Problem of the Day]
 				return res;
 			}
 
-	442) 
+	442) Anagram Substring Search (Coding Ninja):
+		Problem statement
+			Given two strings ‘STR’ and ‘PTR’. 
+			Find all the starting indices of ‘PTR’ anagram substring in ‘STR’. 
+			Two strings are anagram if and only if one string can be converted into another string by rearranging the character.
+
+			For example, ‘ABCD’ and ‘ACBD’ are two anagram strings because ‘ACBD’ 
+			can be converted into ‘ABCD’ by rearranging the ‘B’ and ‘C’. 
+			’ABA’ and ‘ABB’ are not anagram because we can’t convert ‘ABA’ 
+			to ‘ABB’ by rearranging the characters of particular strings.
+
+			‘ABACD’ and ‘CABAD’ are anagram because ‘ABACD’ can be converted into ‘CABAD’ 
+			by rearranging the first ‘A’ with ‘C’ and second ‘A’ with ‘B’.
+
+			Note:
+				Strings ‘STR’ and ‘PTR’ consist only of English uppercases.
+				Length of string ‘STR’ will always be greater than or equal to the length of string ‘PTR’.
+				The index is ‘0’ based.
+				In case, there is no anagram substring then return an empty sequence.
+
+			Explanation:
+				For example, the given ‘STR’ is ‘BACDGABCD’ and ‘PTR’ is ‘ABCD’. Indices are given
+
+				0-3 in ‘STR’ index 0,1,2,3 are ‘BACD’ and it is an anagram with ‘ABCD’
+				1-4 in ‘STR’ index 1,2,3,4 are ‘ACDG’ and it is not anagram with ‘ABCD’
+				2-5 in ‘STR’ index 2,3,4,5 are ‘CDGA’ and it is not anagram with ‘ABCD’
+				3-6 in ‘STR’ index 3,4,5,6 are ‘DGAB’ and it is not anagram with ‘ABCD’
+				4-7 in ‘STR’ index 4,5,6,7 are ‘GABC’ and it is not anagram with ‘ABCD’
+				5-8 in ‘STR’ index 5,6,7,8 are ‘ABCD’ and it is an anagram with ‘ABCD’
+				Hence there are 2 starting indices of substrings in the string ‘STR’ 
+				that are anagram with given ‘PTR’  which are index 0 and 5.
+
+			Constraints:
+				1 <= 'T' <= 50
+				1 <= 'N', 'M' <= 10 ^ 4
+				Where ‘T’ is the total number of test cases, 
+				‘N’ denotes the number of characters in the first given string ‘STR’ 
+				and ‘M’ denotes the number of characters in the second given string ‘PTR’. 
+				Strings ‘STR’ and ‘PTR’ only consist of English uppercase alphabets.
+
+				Time limit: 1 second.
+			Sample Input 1:
+				2
+				10 3
+				CBAEBABACD
+				ABC
+				5 2
+				ABADE
+				BA
+				Sample Output 1:
+				0 6
+				0 1
+				Explanation of sample input 1::
+				Test Case 1:
+
+				‘str’ is ‘CBAEBABACD’ and ‘ptr’ is ‘ABC’
+
+				0-2 in ‘str’ index 0,1,2 are ‘CBA’ and it is an anagram with ‘ABC’
+				1-3 in ‘str’ index 1,2,3 are ‘BAE’ and it is not anagram with ‘ABC’
+				2-4 in ‘str’ index 2,3,4 are ‘AEB’ and it is not anagram with ‘ABC’
+				3-5 in ‘str’ index 3,4,5 are ‘EBA’ and it is not anagram with ‘ABC’
+				4-6 in ‘str’ index 4,5,6 are ‘BAB’ and it is not anagram with ‘ABC’
+				5-7 in ‘str’ index 5,6,7 are ‘ABA’ and it is not anagram with ‘ABC’
+				6-8 in ‘str’ index 6,7,8 are ‘BAC’ and it is an anagram with ‘ABC’
+				7-9 in ‘str’ index 7,8,9 are ‘ACD’ and it is not anagram with ‘ABC’
+
+				Hence there are only two anagram substrings in the given string ‘str’ 
+				that are anagram with given string  ‘ptr’ which are ‘CBA’ and ‘BAC’
+				and starting indices of respective anagram substrings are 0 and 6.
+
+
+				Test case 2:
+
+				‘str’ is ‘ABADE’ and ‘ptr’ is ‘BA’.
+
+				In the given string ‘ABADE’ the substring of length 2 starting with index 0 is ‘AB’
+				which is an anagram with the string ‘BA’ and a substring of length 2 starting with
+				index 1 is ‘BA’ which is also an anagram with the string ‘BA’. Because 0 and 1 are
+				starting indices of the substrings, we return 0 and 1.
+				Sample Input 2:
+				2
+				10 4
+				BACDGABCDA
+				ABCD
+				7 1
+				ABABABA
+				A
+				Sample Output 2:
+				0 5 6
+				0 2 4 6
+
+		// Not Optimized:
+			#include <bits/stdc++.h>
+			bool areSame(int *p1, int *p2){
+				for(int z=0; z<26; z++)
+					if(p1[z] != p2[z])
+						return false;
+				return true;
+			}
+
+			vector<int> findAnagramsIndices(string str, string ptn, int n, int m) {
+				vector<int> ans;
+
+				// mapping for ptn
+				int ptnArr[26] = {0};
+				for(char ch: ptn)
+					ptnArr[ch - 'A']++;
+
+				for(int i=0; i<=(str.length()-ptn.length()); i++){
+					string s1 = str.substr(i,ptn.size());
+					
+					// mapping for s1
+					int s1Arr[26] = {0};
+					for(char ch: s1)
+						s1Arr[ch - 'A']++;
+
+					if(areSame(ptnArr, s1Arr))
+						ans.push_back(i);
+				}
+				return ans;
+			}
+
+		// Optimized:
+			#include <bits/stdc++.h>
+			bool areSame(int *p1, int *p2){
+				for(int z=0; z<26; z++)
+					if(p1[z] != p2[z])
+						return false;
+				return true;
+			}
+
+			vector<int> findAnagramsIndices(string str, string ptn, int n, int m) {
+				vector<int> ans;
+
+				// mapping for ptn
+				int ptnArr[26] = {0};
+				for(char ch: ptn)
+					ptnArr[ch - 'A']++;
+
+				string s1 = str.substr(0,ptn.size());
+				
+				// mapping for s1
+				int s1Arr[26] = {0};
+				for(char ch: s1)
+					s1Arr[ch - 'A']++;
+
+				
+				if(areSame(ptnArr, s1Arr))
+					ans.push_back(0);
+
+				for(int i=1, j=ptn.size(); i<=(str.length()-ptn.length()) && j < str.length(); i++, j++){
+
+					// map char at i (decrement)
+					s1Arr[str[i-1] - 'A']--;
+
+					// map char at j (increment)
+					s1Arr[str[j]- 'A']++;
+
+					if(areSame(ptnArr, s1Arr))
+						ans.push_back(i);
+				}
+				return ans;
+			}
 	
-	443)
+	443) Reverse Stack Using Recursion:
+		Problem statement
+			Reverse a given stack of 'N' integers using recursion. 
+			You are required to make changes in the input parameter itself.
+			Note: You are not allowed to use any extra space other than the internal stack space used due to recursion.
+			Example:
+				Input: [1,2,3,4,5] 
+				Output: [5,4,3,2,1]
+
+			Sample Input 1 :
+				3
+				2 1 3
+				Sample Output 1 :
+				3 1 2
+				Explanation to Sample Input 1 :
+				Reverse of a give stack is 3 1 2 where first element becomes last and last becomes first.                   
+				Sample Input 2 :
+				2
+				3 2
+				Sample Output 2 :
+				2 3
+			Constraints :
+				0 <= N <= 10^3
+				Where 'N' is the number of elements in the given stack.
+				Time Limit: 1 sec
+
+		void reverseStack(stack<int> &stack) {
+			queue<int> Q;
+			while(!stack.empty()){
+				Q.push(stack.top());
+				stack.pop();
+			}
+
+			while(!Q.empty()){
+				stack.push(Q.front());
+				Q.pop();
+			}
+		}
 	
-	444)
+	444) Prime Number of Set Bits in Binary Representation:
+		Problem statement:
+			Given two integers left and right, return the count of numbers in 
+			the inclusive range [left, right] having a prime number of set bits in their binary representation.
+			Recall that the number of set bits an integer has is the number of 1's present when written in binary.
+			For example, 21 written in binary is 10101, which has 3 set bits.
+			Example 1:
+				Input: left = 6, right = 10
+				Output: 4
+				Explanation:
+				6  -> 110 (2 set bits, 2 is prime)
+				7  -> 111 (3 set bits, 3 is prime)
+				8  -> 1000 (1 set bit, 1 is not prime)
+				9  -> 1001 (2 set bits, 2 is prime)
+				10 -> 1010 (2 set bits, 2 is prime)
+				4 numbers have a prime number of set bits.
+
+			Example 2:
+				Input: left = 10, right = 15
+				Output: 5
+				Explanation:
+				10 -> 1010 (2 set bits, 2 is prime)
+				11 -> 1011 (3 set bits, 3 is prime)
+				12 -> 1100 (2 set bits, 2 is prime)
+				13 -> 1101 (3 set bits, 3 is prime)
+				14 -> 1110 (3 set bits, 3 is prime)
+				15 -> 1111 (4 set bits, 4 is not prime)
+				5 numbers have a prime number of set bits.
+				
+			Constraints:
+				1 <= left <= right <= 10^6
+				0 <= right - left <= 10^4
 	
-	445)
+		class Solution {
+			private:
+			bool isPrime(int a){
+				if(a == 1)
+					return 0;
+				else if(a == 2)
+					return 1;
+				
+				for(int i=2; i<=(a/2); i++)
+					if((a % i) == 0)
+						return 0;
+				return 1;
+			}
+			public:
+			int countPrimeSetBits(int left, int right) {
+				int cnt=0;
+				while(left <= right){
+					if(isPrime(__builtin_popcount(left)))
+						cnt++;
+					left++;   
+				}
+				return cnt;
+			}
+		};
+
+	445) Counting Bits:
+		Problem statement:
+			Given an integer n, return an array ans of length n + 1 
+			such that for each i (0 <= i <= n), 
+			ans[i] is the number of 1's in the binary representation of i.
+
+			Example 1:
+				Input: n = 2
+				Output: [0,1,1]
+				Explanation:
+				0 --> 0
+				1 --> 1
+				2 --> 10
+
+			Example 2:
+				Input: n = 5
+				Output: [0,1,1,2,1,2]
+				Explanation:
+				0 --> 0
+				1 --> 1
+				2 --> 10
+				3 --> 11
+				4 --> 100
+				5 --> 101
+				
+			Constraints:
+				0 <= n <= 10^5
+			
+		Follow up:
+			It is very easy to come up with a solution with a runtime of O(n log n). 
+			Can you do it in linear time O(n) and possibly in a single pass?
+				class Solution {
+					public:
+					vector<int> countBits(int n) {
+						vector<int> ans;
+						int i=0;
+						while(i <= n){
+							ans.push_back(__builtin_popcount(i++));
+						}
+						return ans; 
+					}
+				};
+
+				// Optimized:
+					class Solution {
+						public:
+						vector<int> countBits(int n) {
+							vector<int> ans(n+1,0);
+							int i=0;
+							while(i <= n){
+								ans[i] = __builtin_popcount(i);
+								i++;
+							}
+							return ans; 
+						}
+					};
+			
+			Can you do it without using any built-in function (i.e., like __builtin_popcount in C++)?
+				class Solution {
+					private:
+					int countSetBits(int a){
+						int cnt=0;
+						while(a){
+							if(a&1)
+								cnt++;
+							a >>=1;
+						}
+						return cnt;
+					}
+					public:
+					vector<int> countBits(int n) {
+						vector<int> ans(n+1,0);
+						int i=0;
+						while(i <= n){
+							ans[i] = countSetBits(i);
+							i++;
+						}
+						return ans; 
+					}
+				};
+
+	446) Smallest Value of the Rearranged Number:
+		Problem statement:
+			You are given an integer num. 
+			Rearrange the digits of num such that its value is minimized and it does not contain any leading zeros.
+			Return the rearranged number with minimal value.
+			Note that the sign of the number does not change after rearranging the digits.
+
+			Example 1:
+				Input: num = 310
+				Output: 103
+				Explanation: The possible arrangements for the digits of 310 are 013, 031, 103, 130, 301, 310. 
+				The arrangement with the smallest value that does not contain any leading zeros is 103.
+
+			Example 2:
+				Input: num = -7605
+				Output: -7650
+				Explanation: Some possible arrangements for the digits of -7605 are -7650, -6705, -5076, -0567.
+				The arrangement with the smallest value that does not contain any leading zeros is -7650.
+
+			Constraints:
+				-10^15 <= num <= 10^15
+
+		class Solution {
+			public:
+			long long smallestNumber(long long num) {
+				vector<int> v;
+				long long ans=0;
+				int temp = 1;
+
+				if(num >= 0){
+					while(num){
+						v.push_back(num%10);
+						num /= 10;
+					}
+					sort(v.begin(), v.end());
+					
+					// find the first non-zero element
+					for(int i=0; i<v.size(); i++){
+						if(v[i] != 0){
+							swap(v[0], v[i]);
+							break;
+						}
+					}
+
+					int i=0;
+					while(i<v.size())
+						ans = ans*10 + v[i++];
+
+				}else{
+					temp = -1;
+					num *= temp;
+					while(num){
+						v.push_back(num%10);
+						num /= 10;
+					}
+					sort(v.begin(), v.end(), greater<int>());
+					int i=0;
+					while(i<v.size())
+						ans = (ans*10) + v[i++];
+				}
+				return ans*temp;
+			}
+		};
 	
-	446)
+	447) Longest Palindromic Substring:
+		Problem statement
+			You are given a string ‘S’ of length ‘N’.
+			You must return the longest palindromic substring in ‘S’.
+			Note: Return any of them in case of multiple substrings with the same length.
+			Example:
+			Input: ‘S’ =’badam’
+			Output: ‘ada’
+			‘ada’ is the longest palindromic substring, and it can be proved that it is the longest possible palindromic substring.
+			Constraints :
+				1 <= 'T' <= 10
+				1 <= 'N' <= 10^5
+				‘a’ <= ‘S[i]’ <= ‘Z’   
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				6
+				adccdb
+				6
+				aaabbb
+				Sample Output 1 :
+				dccd
+				aaa
+				Explanation Of Sample Input 1 :
+				For test case 1:
+
+				‘S’ =’adccdb’
+
+				‘dccd’ is the longest palindromic substring, and it can be proved that it is the longest possible palindromic substring.
+				Hence we return ‘dccd’.
+
+				For test case 2:
+
+				‘S’ =’aaabbb’
+
+				‘aaa’ is the longest palindromic substring, and it can be proved that it is the longest possible palindromic substring.
+				Hence we return ‘dccd’.
+				‘Bbb’ is also a valid answer.
+				Sample Input 2 :
+				2
+				5
+				hello
+				1
+				a 
+				Sample Output 2 :
+				ll
+				a
+
+		// Not Optimized:
+			bool checkPalin(string s){
+				for(int i=0; i<(s.size()/2); i++)
+					if(s[i] != s[s.size()-1-i])
+						return 0;
+				return 1;
+				}
+
+				string longestPalindromicSubstring(string &s) {
+				int i=0;
+				string ans = string (1, s[0]);
+				int cnt=1;
+				while(i<s.size()-1){
+					string temp = s.substr(i,cnt);
+					if(temp.size() > ans.size()){
+						if(checkPalin(temp))
+							ans = temp;
+					}
+					cnt++;
+					if(cnt > s.size()){
+						cnt=1;
+						i++;
+					}
+				}
+				return ans;
+			}
 	
-	447)
-	
-	448)
+		// Optimized: ❌Pending
+			string longestPalindromicSubstring(string &s) {
+				// Preprocess the string to insert special characters to handle even-length palindromes
+				string processed = "#";
+				for (char c : s) {
+					if (isalpha(c)) {
+						processed += tolower(c);
+						processed += '#';
+					}
+				}
+
+				int n = processed.size();
+				vector<int> palLength(n, 0); // Array to store the length of the palindrome centered at each index
+				int center = 0, right = 0; // Center and right boundary of the current palindrome being processed
+
+				for (int i = 1; i < n - 1; ++i) {
+					// Mirror index of the current index i
+					int mirror = 2 * center - i;
+
+					// Check if the current index i is within the right boundary of the current palindrome
+					if (i < right)
+						palLength[i] = min(right - i, palLength[mirror]);
+
+					// Expand palindrome at current index i
+					while (i - palLength[i] > 0 && i + palLength[i] < n - 1 &&
+							processed[i - palLength[i] - 1] == processed[i + palLength[i] + 1])
+						palLength[i]++;
+
+					// If the expanded palindrome at index i expands beyond the current right boundary,
+					// update the center and right boundary
+					if (i + palLength[i] > right) {
+						center = i;
+						right = i + palLength[i];
+					}
+				}
+
+				// Find the maximum length palindrome
+				int maxLen = 0, maxCenter = 0;
+				for (int i = 1; i < n - 1; ++i) {
+					if (palLength[i] > maxLen) {
+						maxLen = palLength[i];
+						maxCenter = i;
+					}
+				}
+
+				// Extract the longest palindromic substring from the processed string
+				int start = (maxCenter - maxLen) / 2;
+				return s.substr(start, maxLen);
+			}
+
+	448) Top K Frequent Words:
+		Problem statement:
+			Given an array of strings words and an integer k, return the k most frequent strings.
+			Return the answer sorted by the frequency from highest to lowest. 
+			Sort the words with the same frequency by their lexicographical order.
+
+			Example 1:
+				Input: words = ["i","love","leetcode","i","love","coding"], k = 2
+				Output: ["i","love"]
+				Explanation: "i" and "love" are the two most frequent words.
+				Note that "i" comes before "love" due to a lower alphabetical order.
+
+			Example 2:
+				Input: words = ["the","day","is","sunny","the","the","the","sunny","is","is"], k = 4
+				Output: ["the","is","sunny","day"]
+				Explanation: "the", "is", "sunny" and "day" are the four most frequent words, with the number of occurrence being 4, 3, 2 and 1 respectively.
+			
+			Constraints:
+				1 <= words.length <= 500
+				1 <= words[i].length <= 10
+				words[i] consists of lowercase English letters.
+				k is in the range [1, The number of unique words[i]]
+		Follow-up: Could you solve it in O(n log(k)) time and O(n) extra space?
+
+		class Solution {
+			private:
+			static bool cmpValueBased(pair<string, int> a, pair<string, int> b){
+				if(a.second == b.second)
+					return a.first < b.first;
+				return a.second > b.second;
+			}
+			public:
+			vector<string> topKFrequent(vector<string>& words, int k) {
+				vector<string> ans;
+				map<string, int> Freq;
+
+				for(string s: words)
+					Freq[s]++;
+
+				// storing the map into vector of pais
+				vector<pair<string, int>> holder;
+				for(auto i: Freq)
+					holder.push_back(i);
+
+				sort(holder.begin(), holder.end(), cmpValueBased);
+				
+				int i=0;
+				while(k){
+					ans.push_back(holder[i++].first);
+					k--;
+				}
+				return ans;
+			}
+		};
 	
 	449)
 
