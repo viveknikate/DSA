@@ -10694,16 +10694,16 @@ Lecture-23: Introduction to 2D Arrays in C++ LeetCode Questions
 					int mid = (start+end)/2;
 
 					while(start<=end){
-					int rowIndex = mid / col;
-					int colIndex = mid % col;
-					int value = matrix[rowIndex][colIndex];
-					if(value == target)
-						return 1;
-					else if(value < target)
-						start = mid + 1;
-					else
-						end = mid - 1;
-					mid = (start + end )/2;
+						int rowIndex = mid / col;
+						int colIndex = mid % col;
+						int value = matrix[rowIndex][colIndex];
+						if(value == target)
+							return 1;
+						else if(value < target)
+							start = mid + 1;
+						else
+							end = mid - 1;
+						mid = (start + end )/2;
 					}
 					return false;
 				}
@@ -18955,7 +18955,94 @@ Lecture-39: Permutations of a String
 			return 0;
 		}
 
-	//
+	// Transpose of matrix: (in-place)
+		#include <iostream>
+		using namespace std;
+		int main() {
+			int arr[][3] = {
+				{1,2,3},
+				{4,5,6},
+				{7,8,9}
+			};
+			
+			for(int i=0; i<3; i++){
+				for(int j=0; j<3; j++)
+					cout<<arr[i][j]<<"\t";
+				std::cout << std::endl;
+			}
+			
+			// logic to shift row to col & vice-versa
+			for(int i=0; i<3; i++){
+				for(int j=i; j<3; j++)
+					swap(arr[i][j], arr[j][i]);
+				
+			}
+			
+			std::cout  << std::endl << std::endl;
+			for(int i=0; i<3; i++){
+				for(int j=0; j<3; j++)
+					cout<<arr[i][j]<<"\t";
+				std::cout << std::endl;
+			}
+			return 0;
+		}
+
+	// To print the 2D matrix with advance for loop (need to use & sign else error will occur)
+		#include <iostream>
+		using namespace std;
+		int main() {
+			
+			int arr[][5] = {
+							{1,2,3,4,5},
+							{6,7,8,9,10},
+							{11,12,13,14,15},
+							{16,17,18,19,20},
+							{21,22,23,24,25},
+						};
+						
+			for(auto& i: arr){					//here & operator is must, this indicate the beginning of array
+				for(auto j: i)
+					std::cout << j <<"\t";
+			
+				std::cout << std::endl;    
+			}
+			return 0;
+		}
+
+	// Reversin the columns of array:
+		#include <iostream>
+		using namespace std;
+		int main() {
+			// reversing the cols of matrix
+			int arr[][5] = {
+							{1,2,3,4,5},
+							{6,7,8,9,10},
+							{11,12,13,14,15},
+							{16,17,18,19,20},
+							{21,22,23,24,25},
+						};
+						
+			for(auto& i: arr){
+				for(auto j: i)
+					std::cout << j <<"\t";
+			
+				std::cout << std::endl;    
+			}
+			
+			int n=5;
+			for(int i=0; i<(n/2); i++)
+				for(int j=0; j<n; j++)
+					swap(arr[i][j], arr[n-i-1][j]);
+					
+				
+			std::cout  << std::endl;
+			for(auto &partiallArr: arr){
+				for(auto value: partiallArr)
+					std::cout << value << "\t";
+				std::cout << std::endl;
+			}
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array
@@ -52920,9 +53007,735 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	449)
+	449) Power Set (GFG):
+		Problem statement:
+			Given a string s of length n, 
+			find all the possible subsequences of the string s in lexicographically-sorted order.
 
-	450)
+			Example 1:
+				Input : 
+				s = "abc"
+				Output: 
+				a ab abc ac b bc c
+				Explanation : 
+				There are a total 7 number of subsequences possible 
+				for the given string, and they are mentioned above 
+				in lexicgraphically sorted order.
+
+			Example 2:
+				Input: 
+				s = "aa"
+				Output: 
+				a a aa
+				Explanation : 
+				There are a total 3 number of subsequences possible 
+				for the given string, and they are mentioned above 
+				in lexicgraphically sorted order.
+
+			Your Task:
+				You don't need to read input or print anything. 
+				Your task is to complete the function AllPossibleStrings() 
+				which takes a string s as the input parameter and returns a 
+				list of all possible subsequences (non-empty) that can be formed from s in lexicographically-sorted order.
+
+			Expected Time Complexity: O(n*2n)
+			Expected Space Complexity: O(n * 2n)
+
+			Constraints: 
+				1 <= n <= 16
+				s will constitute of lower case english alphabets
+
+		class Solution{
+			private:
+			void solve(string main, int i, string temp, vector<string> &ans){
+				if(i >= main.size()){
+					if(temp.size()>0)
+						ans.push_back(temp);
+						
+					return ;
+				}
+				
+				// exclude call
+				solve(main, i+1, temp, ans);
+				
+				// include call
+				temp.push_back(main[i]);
+				solve(main, i+1, temp, ans);
+			}
+			
+			public:
+			vector<string> AllPossibleStrings(string s){
+				vector<string> ans;
+				string temp;
+				int i=0;
+				solve(s, i, temp, ans);
+				sort(ans.begin(), ans.end());
+				return ans;
+			}
+		};
+
+	450) Left Rotate Matrix K times:
+		Problem statement:
+			Given three integers N, M, and K and a matrix Mat of dimensions NxM. Left rotate the matrix K times.
+
+			Example 1:
+				Input:
+				N=3,M=3,K=1
+				Mat=[[1,2,3],[4,5,6],[7,8,9]]
+				Output:
+				2 3 1
+				5 6 4
+				8 9 7
+				Explanation:
+				Left rotating the matrix once gives this result.
+
+			Example 2:
+				Input:
+				N=3,M=3,K=2
+				Mat=[[1,2,3],[4,5,6],[7,8,9]]
+				Output:
+				3 1 2
+				6 4 5
+				9 7 8
+				Explanation:
+				Left rotating the matrix twice gives this result
+
+			Your Task:
+				You don't need to read input or print anything. 
+				Your task is to complete the function rotateMatrix() 
+				which takes the three integers N, M, K, and 
+				the matrix Mat and returns the matrix Mat left rotated K times.
+
+			Expected Time Complexity:O(N*M)
+			Expected Auxillary Space:O(N*M)
+
+			Constraints:
+				1<=N,M,Mat[i][j]<=1000
+				1<=K<=10000
+
+		// Not optimized:
+			class Solution {
+				public:
+				vector<vector<int>> rotateMatrix(int N, int M, int K, vector<vector<int>> Mat) {
+					vector<vector<int>> ans;
+					int value = K;
+					
+					for(int i=0; i<N; i++){
+						vector<int> temp;
+						K=value;
+						for(int j=0; j<M; j++){
+							temp.push_back(Mat[i][j]);
+						}
+						while(K--){
+							temp.push_back(temp.front());
+							temp.erase(temp.begin());
+						}
+						ans.push_back(temp);
+					}
+					return ans;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				vector<vector<int>> rotateMatrix(int N, int M, int K, vector<vector<int>> Mat) {
+					vector<vector<int>> ans;
+					int value = K;
+					
+					for(int i=0; i<N; i++){
+						vector<int> temp;
+						K=value;
+						for(int j=0; j<M; j++){
+							temp.push_back(Mat[i][j]);
+						}
+
+						int f=0;
+						while(K--){
+							temp.push_back(temp[f++]);
+						}
+						
+						temp.erase(temp.begin(), temp.begin()+f);
+						ans.push_back(temp);
+					}
+					return ans;
+				}
+			};	
+	
+	451) C++ Matrix Rotation by 180 degree:
+		Problem statement:
+			Given a square matrix of size N X N, turn it by 180 degrees in anticlockwise direction without using extra memory.
+			Example 1:
+				Input: N = 4, 
+				matrix = {{1, 2, 3, 4}, 
+						{5, 6, 7 ,8}, 
+						{9, 10, 11, 12},
+						{13, 14, 15, 16}}
+				Output: {{16, 15, 14, 13}, 
+					{12, 11, 10, 9}, 
+					{8, 7, 6, 5}, 
+					{4, 3, 2, 1}}
+
+			Example 2:
+				Input: N = 2,
+				matrix = {{1, 2},
+						{3, 4}}
+				Output: {{4, 3}, 
+					{2, 1}}
+			
+			Your Task:
+				You don't need to read or print anything. 
+				Your task is to complete the function rotate() 
+				which takes matrix as input parameter and rotate 
+				the matrix by 180 degree wihtout using extra memory. 
+				You have to rotate the matrix in-place which means you have to modify the input matrix directly.
+			
+
+			Expected Time Complexity: O(N2)
+			Expected Space Complexity: O(1)
+
+			Constraints:
+				1 ≤ N ≤ 500
+
+		class Solution {
+			public:
+			void rotate(vector<vector<int>> & matrix) {
+				vector<vector<int>> holder;
+				for(int i=matrix.size()-1; i>=0; i--){
+					vector<int> temp;
+					for(int j=matrix[0].size()-1; j>=0; j--){
+						temp.push_back(matrix[i][j]);
+					}
+					holder.push_back(temp);
+				}
+				matrix = holder;
+			}
+		};
+
+		// without using extra space SC:O(1):
+			class Solution {
+				public:
+				void rotate(vector<vector<int>> & matrix) {
+					
+					// if matrix is of odd size
+					// changing the middle row in reverse
+					if(matrix.size() & 1){
+						int row = matrix.size()/2;
+						for(int j=0; j<matrix.size()/2; j++)
+							swap(matrix[row][j], matrix[row][matrix.size()-j-1]);
+					}
+					
+					for(int i=0; i<matrix.size()/2; i++)
+						for(int j=0; j<matrix[0].size(); j++)
+							swap(matrix[i][j], matrix[matrix.size()-1-i][matrix.size()-1-j]);
+				}
+			};
+
+	452) Arranging the array:
+		Problem statement:
+			You are given an array of size N. Rearrange the given array in-place 
+			such that all the negative numbers occur before all non-negative numbers.
+			(Maintain the order of all -ve and non-negative numbers as given in the original array).
+
+			Example 1:
+				Input:
+				N = 4
+				Arr[] = {-3, 3, -2, 2}
+				Output:
+				-3 -2 3 2
+				Explanation:
+				In the given array, negative numbers
+				are -3, -2 and non-negative numbers are 3, 2. 
+
+			Example 2:
+				Input:
+				N = 4
+				Arr[] = {-3, 1, 0, -2}
+				Output:
+				-3 -2 1 0
+				Explanation:
+				In the given array, negative numbers
+				are -3, -2 and non-negative numbers are 1, 0.
+
+			Your Task:  
+				You don't need to read input or print anything.
+				Your task is to complete the function Rearrange() 
+				which takes the array Arr[] and its size N as inputs 
+				and returns the array after rearranging with spaces between the elements of the array.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ N ≤ 10^5
+				-10^9 ≤ Elements of array ≤ 10^9
+
+		class Solution {
+			public:
+			void Rearrange(int arr[], int n) {
+				vector<int> neg, pos;
+				
+				for(int i=0; i<n; i++)
+					if(arr[i] < 0)
+						neg.push_back(arr[i]);
+					else
+						pos.push_back(arr[i]);
+						
+				int i=0;
+				for(int n: neg)
+					arr[i++] = n;
+				
+				for(int n: pos)
+					arr[i++] = n;
+			}
+		};
+
+		// without using extra space SC: O(1)
+			❌Pending
+
+	453) Rotate by 90 degree:
+		Problem statement:
+			Given a square matrix of size N x N. 
+			The task is to rotate it by 90 degrees in anti-clockwise direction without using any extra space. 
+
+			Example 1:
+			Input:
+			N = 3 
+			matrix[][] = {{1, 2, 3},
+					{4, 5, 6}
+					{7, 8, 9}}
+			Output: 
+			Rotated Matrix:
+			3 6 9
+			2 5 8
+			1 4 7
+
+			Example 2:
+				Input:
+				N = 2
+				matrix[][] = {{1, 2},
+						{3, 4}}
+				Output: 
+				Rotated Matrix:
+				2 4
+				1 3
+
+			Your Task:
+				You dont need to read input or print anything. 
+				Complete the function rotateby90() which takes the 
+				matrix as input parameter and rotates it by 90 degrees 
+				in anti-clockwise direction without using any extra space. 
+				You have to modify the input matrix in-place. 
+
+			Expected Time Complexity: O(N2)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ N ≤ 100
+				1 <= matrix[][] <= 1000
+
+		// using extra memory:
+			class Solution {
+				public:
+				//Function to rotate matrix anticlockwise by 90 degrees.
+				void rotateby90(vector<vector<int>>& matrix, int n) {
+					vector<vector<int>> ans;
+					for(int i=matrix.size()-1; i>=0; i--){
+						vector<int> temp;
+						for(int j=0; j<matrix.size(); j++){
+							temp.push_back(matrix[j][i]);
+						}
+						ans.push_back(temp);
+					}
+					matrix = ans;
+				} 
+			};
+			
+		// without using extra memory O(1):
+			class Solution {   
+				public:
+				//Function to rotate matrix anticlockwise by 90 degrees.
+				void rotateby90(vector<vector<int> >& matrix, int n) {
+					// sr & sc are start row & start col
+					// er & ec are end row & end col
+					int sr,sc;
+					int er,ec;
+					
+					sr=sc=0;
+					er=ec=n-1;
+					
+					while(sr < er){                         // sc < ec
+						
+						// need to re-iterate (n-1) time coz we want to rotate it by 90 degree
+						int times= ec - sc;
+						
+						while(times--){
+							int value = matrix[sr][sc];
+							// for start col
+							for(int i=sr+1; i<=er; i++){
+								swap(matrix[i][sc], value);
+							}
+							
+							// for end row
+							for(int i=sc+1; i<=ec; i++){
+								swap(matrix[er][i], value);
+							}
+							
+							// for end col
+							for(int i=er-1; i>=sr; i--){
+								swap(matrix[i][ec], value);
+							}
+							
+							// for start row
+							for(int i=ec-1; i>=sc; i--){
+								swap(matrix[sr][i], value);
+							}
+						}
+						sr++; er--;
+						sc++; ec--;
+					}
+				} 
+			};
+
+			// or simpel way:
+				class Solution {   
+					public:
+					//Function to rotate matrix anticlockwise by 90 degrees.
+					void rotateby90(vector<vector<int> >& matrix, int n) {
+						
+						// transpose generated
+						for(int i=0; i<matrix.size(); i++)
+							for(int j=i; j<matrix.size(); j++)
+								swap(matrix[i][j], matrix[j][i]);
+						
+						// reversing columns
+						for(int i=0; i<matrix.size()/2; i++)
+							for(int j=0; j<matrix.size(); j++)
+								swap(matrix[i][j], matrix[matrix.size()-1-i][j]);
+					} 
+				};
+				
+	454) Transpose of a Matrix: (Refer Q. 219)
+		-In transpose of matrix, all rows become columns and vice versa.
+		 if mat have  n rows and m columns then the transposed matrix will be of size m rows & n cols.
+		 Problem statement
+			You are given a matrix ‘MAT’. 
+			Print and return the transpose of the matrix. 
+			The transpose of a matrix is obtained by changing rows to columns and columns to rows. 
+			In other words, transpose of a matrix A[][] is obtained by changing A[i][j] to A[j][i].
+
+			For example:
+				Let matrix be : 
+				1 2
+				3 4
+
+				Then transpose of the matrix will be: 
+				1 3
+				2 4
+			Constraints :
+				1 <= T <= 10
+				1 <= M, N <= 3*10^3
+				0 <= MAT[i][j] <= 10^7
+				Time Limit: 1 sec
+
+			Sample Input 1 :
+				2
+				2 2
+				1 2
+				3 4
+				3 2
+				1 2 
+				2 3
+				3 4
+				Sample Output 1 :
+				1 3
+				2 4
+				1 2 3
+				2 3 4
+				Explanation For Sample Input 1 :
+				For test case 1: 
+				The transpose of the matrix will be: 
+				1 3
+				2 4
+
+				For test case 2:    
+				The transpose of the matrix will be: 
+				1 2 3
+				2 3 4
+				Sample Input 2 :
+				2
+				2 3
+				1 2 3 
+				3 4 5
+				2 1
+				1
+				2
+				Sample Output 2 :
+				1 3
+				2 4 
+				3 5
+				1 2
+
+		// Brute force:
+			#include <bits/stdc++.h> 
+			vector<vector<int>> transpose(int m, int n, vector<vector<int>> &mat) {
+				vector<vector<int>> ans;
+				for (int col = 0; col < n; col++) {
+					vector<int> temp;
+					for (int row = 0; row < m; row++)
+						temp.push_back(mat[row][col]);
+					ans.push_back(temp);
+				}
+				return ans;
+			}
+
+		// creating vector with n rows & m cols
+			#include <bits/stdc++.h> 
+			vector<vector<int>> transpose(int m, int n, vector<vector<int>> &mat){
+				int rows = m, cols=n;
+				// creating vector of (cols) n rows & (rows) m cols.
+				vector<vector<int>> ans (cols, vector<int>(rows));
+
+				for(int i=0; i<rows; i++){
+					for(int j=0; j<cols; j++)
+						ans[j][i] = mat[i][j];
+				}
+				return ans;
+			}
+
+	455) Spiral Matrix:
+		Problem statement
+			You are given a 2D matrix ‘MATRIX’ of ‘N’*’M’ dimension. You have to return the spiral traversal of the matrix.
+
+			Example:
+				Input:
+				MATRIX = [ [1, 3, 5, 7], [10, 11, 16, 20], [23, 30, 34, 60] ]
+				Output:
+					1 3 5 7 20 60 34 30 23 10 11 16
+
+				Explanation: Starting from the element in the first row and the first column, 
+				traverse from left to right (1 3 5 7), then top to bottom (20 60), then right
+				to left (34 30 23), then bottom to up (10) and then left to right (11 16).
+			Constraints:
+				1 <= N, M <= 10^5
+				1 <= MATRIX [ i ] [ j ] <= 10^9
+				The sum of N*M over all test cases is less than 2*10^5.
+				Time Limit: 1 sec
+			Sample Input 1:
+				3 3
+				1 3 7
+				10 12 15
+				19 20 21
+				Sample Output 1:
+				1 3 7 15 21 20 19 10 12
+				Explanation Of Sample Input 1:
+				Input:
+				MATRIX = [ [1, 3, 7], [10, 12, 15], [19, 20, 21] ], 
+				Output:
+				1 3 7 15 21 20 19 10 12
+
+				Explanation: Starting from the element in the first row and the first column, 
+				traverse from left to right (1 3 7), then top to bottom (15 21), then right 
+				to the left (20 19), then bottom to up (10) and then left to right (12).
+				Sample Input 2:
+				4 4
+				1 5 9 13
+				14 15 16 17
+				19 20 21 50
+				59 60 71 80
+				Sample Output 2:
+				1 5 9 13 17 50 80 71 60 59 19 14 15 16 21 20
+
+		vector<int> spiralMatrix(vector<vector<int>>&MATRIX) {
+			int sr, sc, er, ec;
+			sr=sc=0;
+			er = MATRIX.size()-1;
+			ec = MATRIX[0].size()-1;
+
+			int ttlElements = (er+1) * (ec+1);
+			int cnt=0;
+
+			vector<int> ans;
+			while(cnt < ttlElements){
+
+				// for start row
+				for(int i=sc; i<=ec && cnt < ttlElements; i++){
+					ans.push_back(MATRIX[sr][i]);
+					cnt++;
+				}
+				sr++;
+
+				// for end col
+				for(int i=sr; i<=er && cnt < ttlElements ; i++){
+					ans.push_back(MATRIX[i][ec]);
+					cnt++;
+				}
+				ec--;
+
+				// for end row
+				for(int i=ec; i>=sc && cnt < ttlElements; i--){
+					ans.push_back(MATRIX[er][i]);
+					cnt++;
+				}
+				er--;
+				
+				// for start col
+				for(int i=er; i>=sr && cnt < ttlElements; i--){
+					ans.push_back(MATRIX[i][sc]);
+					cnt++;
+				}
+				sc++;        
+			}
+			return ans;
+		}
+
+	456) Search In A Sorted 2D Matrix:
+		Problem statement
+			You are given a 2D matrix ‘MATRIX’ of ‘N’*’M’ dimension. 
+			You must check whether a given number ‘target’ is present in the matrix.
+			The following properties apply to the given matrix:
+				1. In each row, integers are sorted from left to right.
+				2. Each row's first integer is greater than the previous row's last integer.
+			Example:
+			Input:
+			'MATRIX' = [ [1, 3, 5, 7], [10, 11, 16, 20], [23, 30, 34, 60] ], 'TARGET' = 3 
+			Output:1
+			Explanation: Since the given number ‘TARGET’ is present in the matrix, we return true.
+			Sample Input 1:
+				3 3
+				1 3 7
+				10 12 15
+				19 20 21
+				12
+				Sample Output 1:
+				1
+				Explanation Of Sample Input 1:
+				Input:
+				'MATRIX' = [ [1, 3, 7], [10, 12, 15], [19, 20, 21] ], 'TARGET' = 12 
+				Output: 1
+
+				Explanation: Since the given number ‘TARGET’ is present in the matrix, we return true.
+				Sample Input 2:
+				4 4
+				1 5 9 13
+				14 15 16 17
+				19 20 21 50
+				59 60 71 80
+				80
+				Sample Output 2:
+				1
+			Constraints:
+				1 <= 'N', 'M' <=10^5
+				1 <= 'MATRIX [ i ] [ j ]', 'TARGET' <= 10^9
+				The sum of N*M over all test cases is less than 2*10^5.
+				Time Limit: 1 sec
+
+		// Linear search Not Optimized :
+			bool searchElement(vector<vector<int>> &MATRIX, int target) {
+				for(int i=0; i<MATRIX.size(); i++)
+					for(int j=0; j<MATRIX[0].size(); j++)
+						if(target == MATRIX[i][j])
+							return 1;
+				return 0;
+			}
+
+		// Binary Search (Optimized)
+			bool searchElement(vector<vector<int>> &MATRIX, int target) {
+				// need to check for every row
+				int crntRow, s=0, e=MATRIX[0].size()-1, i;
+				
+				for(i=0; i<MATRIX.size(); i++){
+					// checking the last element is greater than target
+					// if last element is greater than target then the element is lies in current row
+					if(MATRIX[i][MATRIX[0].size()-1] >= target){
+						crntRow= i;
+						break;
+					}
+				}
+
+				if(i >= MATRIX.size())
+					return 0;
+
+				// applying binary search
+				while(s <= e){
+					int mid = (s+e)/2;
+					if(MATRIX[crntRow][mid] == target)
+						return 1;
+					else if(target > MATRIX[crntRow][mid])
+						s = mid+1;
+					else
+						e = mid-1;
+				}
+
+				// element is not exist in given row
+				return 0;
+			}
+
+	457) Print Like A Wave:
+		Problem statement
+			For a given two-dimensional integer array/list ‘ARR’ of size (N x M), 
+			print the ‘ARR’ in a sine wave order, i.e., print the 
+			first column top to bottom, next column bottom to top, and so on.
+			
+			For eg:-
+				The sine wave for the matrix:-
+				1 2
+				3 4
+				will be [1, 3, 4, 2].
+				Detailed explanation ( Input/output format, Notes, Images )
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 100
+				1 <= M <= 100
+				0 <= ARR[i][j] <= 100
+				Time Limit: 1sec
+
+			Sample Input 1:
+				2
+				3 4
+				1 2 3 4
+				5 6 7 8
+				9 10 11 12
+				4 4
+				1 2 4 5
+				3 6 8 10
+				11 12 13 15
+				16 14 9 7
+				Sample Output 1:
+				1 5 9 10 6 2 3 7 11 12 8 4
+				1 3 11 16 14 12 6 2 4 8 13 9 7 15 10 5 
+				Explanation For Sample Input 1:
+				Here, the elements are printed in a form of a wave, first, the 0th column is printed 
+				from top to bottom then the 1st column from bottom to top, and so on. Basically, 
+				the even column is printed from top to bottom and the odd column in the opposite direction.
+				Sample Input 2:
+				2
+				1 1
+				3
+				1 2
+				6 5
+				Sample Output 2:
+				3
+				6 5 
+
+		#include <bits/stdc++.h> 
+		vector<int> wavePrint(vector<vector<int>> arr, int nRows, int mCols) {
+			vector<int> ans;
+			for(int i=0; i<mCols; i++)
+				if(i&1)
+					for(int j=nRows-1; j>=0; j--)
+						ans.push_back(arr[j][i]);
+				else
+					for(int j=0; j<nRows; j++)
+						ans.push_back(arr[j][i]);
+			return ans;
+		}
+
+	458) 
+
+	459)
+
+	460)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
