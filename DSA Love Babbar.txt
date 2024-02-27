@@ -53293,128 +53293,94 @@ POTD:-[Problem of the Day]
 		// without using extra space SC: O(1)
 			❌Pending
 
-	453) Rotate by 90 degree:
+	453) Maximize Number of 1's (Refer POTD 435):
 		Problem statement:
-			Given a square matrix of size N x N. 
-			The task is to rotate it by 90 degrees in anti-clockwise direction without using any extra space. 
-
+			Given a binary array arr of size N and an integer M. 
+			Find the maximum number of consecutive 1's produced by flipping at most M 0's.
+			
 			Example 1:
-			Input:
-			N = 3 
-			matrix[][] = {{1, 2, 3},
-					{4, 5, 6}
-					{7, 8, 9}}
-			Output: 
-			Rotated Matrix:
-			3 6 9
-			2 5 8
-			1 4 7
+				Input:
+				N = 3
+				arr[] = {1, 0, 1}
+				M = 1
+				Output:
+				3
+				Explanation:
+				Maximum subarray is of size 3
+				which can be made subarray of all 1 after
+				flipping one zero to 1.
 
 			Example 2:
 				Input:
-				N = 2
-				matrix[][] = {{1, 2},
-						{3, 4}}
-				Output: 
-				Rotated Matrix:
-				2 4
-				1 3
-
-			Your Task:
-				You dont need to read input or print anything. 
-				Complete the function rotateby90() which takes the 
-				matrix as input parameter and rotates it by 90 degrees 
-				in anti-clockwise direction without using any extra space. 
-				You have to modify the input matrix in-place. 
-
-			Expected Time Complexity: O(N2)
-			Expected Auxiliary Space: O(1)
-
-			Constraints:
-				1 ≤ N ≤ 100
-				1 <= matrix[][] <= 1000
-
-		// using extra memory:
-			class Solution {
-				public:
-				//Function to rotate matrix anticlockwise by 90 degrees.
-				void rotateby90(vector<vector<int>>& matrix, int n) {
-					vector<vector<int>> ans;
-					for(int i=matrix.size()-1; i>=0; i--){
-						vector<int> temp;
-						for(int j=0; j<matrix.size(); j++){
-							temp.push_back(matrix[j][i]);
-						}
-						ans.push_back(temp);
-					}
-					matrix = ans;
-				} 
-			};
+				N = 11
+				arr[] = {1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1}
+				M = 2
+				Output:
+				8
+				Explanation:
+				Maximum subarray is of size 8
+				which can be made subarray of all 1 after
+				flipping two zeros to 1.
 			
-		// without using extra memory O(1):
-			class Solution {   
+			Your Task:
+				Complete the function findZeroes() which takes array arr and two integers n, m,
+				as input parameters and returns an integer denoting the answer.
+			
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+			
+			Constraints:
+				1 <= N <= 10^7
+				0 <= M <= N
+				0 <= arri <= 1
+
+		// Not optimized:
+			class Solution{
 				public:
-				//Function to rotate matrix anticlockwise by 90 degrees.
-				void rotateby90(vector<vector<int> >& matrix, int n) {
-					// sr & sc are start row & start col
-					// er & ec are end row & end col
-					int sr,sc;
-					int er,ec;
-					
-					sr=sc=0;
-					er=ec=n-1;
-					
-					while(sr < er){                         // sc < ec
-						
-						// need to re-iterate (n-1) time coz we want to rotate it by 90 degree
-						int times= ec - sc;
-						
-						while(times--){
-							int value = matrix[sr][sc];
-							// for start col
-							for(int i=sr+1; i<=er; i++){
-								swap(matrix[i][sc], value);
-							}
+				// m is maximum of number zeroes allowed to flip
+				// n is size of array
+				int findZeroes(int arr[], int n, int m) {
+					int mxCnt=0,cnt=0, k=m;
+					for(int i=0; i<n; i++){
+						cnt=0, m=k;
+						for(int j=i; j<n; j++){
+							if(arr[j]== 0)
+								m--;
 							
-							// for end row
-							for(int i=sc+1; i<=ec; i++){
-								swap(matrix[er][i], value);
-							}
-							
-							// for end col
-							for(int i=er-1; i>=sr; i--){
-								swap(matrix[i][ec], value);
-							}
-							
-							// for start row
-							for(int i=ec-1; i>=sc; i--){
-								swap(matrix[sr][i], value);
-							}
+							if(m < 0) break;
+							cnt++;
 						}
-						sr++; er--;
-						sc++; ec--;
+						mxCnt = max(mxCnt, cnt);
 					}
-				} 
+					return mxCnt;
+				}
 			};
 
-			// or simpel way:
-				class Solution {   
-					public:
-					//Function to rotate matrix anticlockwise by 90 degrees.
-					void rotateby90(vector<vector<int> >& matrix, int n) {
+		// Optimized:
+			class Solution{
+				public:
+				// m is maximum of number zeroes allowed to flip
+				// n is size of array
+				int findZeroes(int arr[], int n, int m) {
+					int left, right, zeroCnt=0;
+					left=right=0;
+					int ans=0, cnt=0;
+					
+					for(right; right<n; right++){
+						if(arr[right] == 0)
+							zeroCnt++;
 						
-						// transpose generated
-						for(int i=0; i<matrix.size(); i++)
-							for(int j=i; j<matrix.size(); j++)
-								swap(matrix[i][j], matrix[j][i]);
-						
-						// reversing columns
-						for(int i=0; i<matrix.size()/2; i++)
-							for(int j=0; j<matrix.size(); j++)
-								swap(matrix[i][j], matrix[matrix.size()-1-i][j]);
-					} 
-				};
-				
+						while(zeroCnt > m){
+							if(arr[left] == 0)
+								zeroCnt--;
+							left++;
+						}
+						ans = max(ans, right-left+1);
+					}
+					return ans;
+				}  
+			};
+
 	454) Transpose of a Matrix: (Refer Q. 219)
 		-In transpose of matrix, all rows become columns and vice versa.
 		 if mat have  n rows and m columns then the transposed matrix will be of size m rows & n cols.
@@ -53731,11 +53697,765 @@ POTD:-[Problem of the Day]
 			return ans;
 		}
 
-	458) 
+	458) Add to Array-Form of Integer:
+		problem statement:
+			The array-form of an integer num is an array representing its digits in left to right order.
+			For example, for num = 1321, the array form is [1,3,2,1].
+			Given num, the array-form of an integer, and an integer k,
+			return the array-form of the integer num + k.
 
-	459)
+			Example 1:
+				Input: num = [1,2,0,0], k = 34
+				Output: [1,2,3,4]
+				Explanation: 1200 + 34 = 1234
 
-	460)
+			Example 2:
+				Input: num = [2,7,4], k = 181
+				Output: [4,5,5]
+				Explanation: 274 + 181 = 455
+
+			Example 3:
+				Input: num = [2,1,5], k = 806
+				Output: [1,0,2,1]
+				Explanation: 215 + 806 = 1021
+			
+			Constraints:
+				1 <= num.length <= 10^4
+				0 <= num[i] <= 9
+				num does not contain any leading zeros except for the zero itself.
+				1 <= k <= 10^4
+
+		class Solution {
+			public:
+			vector<int> addToArrayForm(vector<int>& num, int k) {
+				int speedup = ([](){cin.tie(0);cout.tie(0);ios_base::sync_with_stdio(0);return 0;})();
+
+				// here k is acting as carry
+				for(int i=num.size()-1; i>=0; i--){
+					num[i] += k;
+					k = num[i] / 10;
+					// breaking the loop if k (carry) is zero.
+					if(!k) break;
+					num[i] %= 10;
+				}
+
+				while(k){
+					num.insert(num.begin(), k%10);
+					k /= 10;
+				}
+				return num;
+			}
+		};
+
+	459) Rotate by 90 degree:
+		https://www.geeksforgeeks.org/problems/rotate-by-90-degree-1587115621/1
+		Problem statement:
+			Given a square matrix of size N x N. 
+			The task is to rotate it by 90 degrees in anti-clockwise direction without using any extra space. 
+
+			Example 1:
+			Input:
+			N = 3 
+			matrix[][] = {{1, 2, 3},
+					{4, 5, 6}
+					{7, 8, 9}}
+			Output: 
+			Rotated Matrix:
+			3 6 9
+			2 5 8
+			1 4 7
+
+			Example 2:
+				Input:
+				N = 2
+				matrix[][] = {{1, 2},
+						{3, 4}}
+				Output: 
+				Rotated Matrix:
+				2 4
+				1 3
+
+			Your Task:
+				You dont need to read input or print anything. 
+				Complete the function rotateby90() which takes the 
+				matrix as input parameter and rotates it by 90 degrees 
+				in anti-clockwise direction without using any extra space. 
+				You have to modify the input matrix in-place. 
+
+			Expected Time Complexity: O(N2)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ N ≤ 100
+				1 <= matrix[][] <= 1000
+
+		// using extra memory:
+			class Solution {
+				public:
+				//Function to rotate matrix anticlockwise by 90 degrees.
+				void rotateby90(vector<vector<int>>& matrix, int n) {
+					vector<vector<int>> ans;
+					for(int i=matrix.size()-1; i>=0; i--){
+						vector<int> temp;
+						for(int j=0; j<matrix.size(); j++){
+							temp.push_back(matrix[j][i]);
+						}
+						ans.push_back(temp);
+					}
+					matrix = ans;
+				} 
+			};
+			
+		// without using extra memory O(1):
+			class Solution {   
+				public:
+				//Function to rotate matrix anticlockwise by 90 degrees.
+				void rotateby90(vector<vector<int> >& matrix, int n) {
+					// sr & sc are start row & start col
+					// er & ec are end row & end col
+					int sr,sc;
+					int er,ec;
+					
+					sr=sc=0;
+					er=ec=n-1;
+					
+					while(sr < er){                         // sc < ec
+						
+						// need to re-iterate (n-1) time coz we want to rotate it by 90 degree
+						int times= ec - sc;
+						
+						while(times--){
+							int value = matrix[sr][sc];
+							// for start col
+							for(int i=sr+1; i<=er; i++){
+								swap(matrix[i][sc], value);
+							}
+							
+							// for end row
+							for(int i=sc+1; i<=ec; i++){
+								swap(matrix[er][i], value);
+							}
+							
+							// for end col
+							for(int i=er-1; i>=sr; i--){
+								swap(matrix[i][ec], value);
+							}
+							
+							// for start row
+							for(int i=ec-1; i>=sc; i--){
+								swap(matrix[sr][i], value);
+							}
+						}
+						sr++; er--;
+						sc++; ec--;
+					}
+				} 
+			};
+
+			// or simpel way:
+				class Solution {   
+					public:
+					//Function to rotate matrix anticlockwise by 90 degrees.
+					void rotateby90(vector<vector<int> >& matrix, int n) {
+						
+						// transpose generated
+						for(int i=0; i<matrix.size(); i++)
+							for(int j=i; j<matrix.size(); j++)
+								swap(matrix[i][j], matrix[j][i]);
+						
+						// reversing columns
+						for(int i=0; i<matrix.size()/2; i++)
+							for(int j=0; j<matrix.size(); j++)
+								swap(matrix[i][j], matrix[matrix.size()-1-i][j]);
+					} 
+				};
+		
+	460) Rotate by 90 degree:
+		https://www.geeksforgeeks.org/problems/rotate-by-90-degree0356/1
+		Problem statement:
+			Given a square matrix[][] of size N x N. 
+			The task is to rotate it by 90 degrees in an anti-clockwise direction without using any extra space.
+			Example 1:
+				Input:
+				N = 3
+				matrix[][] = [[1 2 3],
+						[4 5 6],
+						[7 8 9]]
+			Output:
+				3 6 9 
+				2 5 8 
+				1 4 7
+			Your Task:
+				You only need to implement the given function rotate(). 
+				Do not read input, instead use the arguments given in the function. 
+
+			Expected Time Complexity: O(N*N)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ N ≤ 50
+				1 <= matrix[][] <= 100
+
+		/* matrix : given input matrix, you are require 
+		to change it in place without using extra space */
+		void rotate(vector<vector<int> >& matrix) {
+			// transpose generator
+			for(int i=0; i<matrix.size(); i++)
+				for(int j=i; j<matrix.size(); j++)
+					swap(matrix[i][j], matrix[j][i]);
+			
+			// reversing the columns so that it will like rotated by 90 degree
+			for(int i=0; i<matrix.size()/2; i++)
+				for(int j=0; j<matrix.size(); j++)
+					swap(matrix[i][j], matrix[matrix.size()-1-i][j]);	
+		}
+
+	461) Rotate a 2D array without using extra space:
+		https://www.geeksforgeeks.org/problems/rotate-a-2d-array-without-using-extra-space1004/1
+		Problem statement:
+			Given a N x N 2D matrix Arr representing an image. Rotate the image by 90 degrees (anti-clockwise). 
+			You need to do this in place. Note that if you end up using an additional array, you will only receive partial score.
+			Example 1:
+				Input:
+				N = 3
+				Arr[][] = {{1,  2,  3}
+						{4,  5,  6}
+						{7,  8,  9}}
+				Output:
+				3  6  9 
+				2  5  8 
+				1  4  7 
+				Explanation: The given matrix is rotated
+				by 90 degree in anti-clockwise direction.
+
+			Example 2:
+				Input:
+				N = 4
+				Arr[][] = {{1,  2,  3,  4}
+						{5,  6,  7,  8}
+						{9, 10, 11, 12}
+						{13, 14, 15, 16}}
+				Output:
+				4  8 12 16 
+				3  7 11 15 
+				2  6 10 14 
+				1  5  9 13
+				Explanation: The given matrix is rotated
+				by 90 degree in anti-clockwise direction.
+			Your Task:  
+				You don't need to read input or print anything. 
+				Your task is to complete the function rotate() which takes the 2D array of integers 
+				arr and n as parameters and returns void. You need to change the array itself.
+
+			Expected Time Complexity: O(N*N)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ N ≤ 1000
+				1 ≤ Arr[i][j] ≤ 1000
+
+		//using extra space
+			class Solution{
+				public:	
+					void rotateMatrix(vector<vector<int>>& arr, int n) {
+						vector<vector<int>> ans;
+						
+						for(int i=arr[0].size()-1; i>=0; i--){
+							vector<int> temp;
+							for(int j=0; j<arr.size(); j++)
+								temp.push_back(arr[j][i]);
+								
+							ans.push_back(temp);
+						}
+						arr = ans;
+					}
+				};
+
+		// without using extra space O(1):
+			class Solution{
+				public:	
+				void rotateMatrix(vector<vector<int>>& arr, int n) {
+					// transpose
+					for(int i=0; i<arr.size(); i++)
+						for(int j=i; j<arr.size(); j++)
+							swap(arr[i][j], arr[j][i]);
+						
+					for(int i=0; i<arr.size()/2; i++)
+						for(int j=0; j<arr.size(); j++)
+							swap(arr[i][j], arr[arr.size()-1-i][j]);
+				}
+			};
+
+	462) Patternify:
+		Problem statement
+			You are given an integer ‘N’. Your task is to print a pattern with the following description
+			The pattern will consist of ‘N’ lines.
+			For 1 <= ‘i’ <= ‘N’ ‘i’th line consists of a string of ‘N’  + 1 - ‘i’  ‘*’ characters.
+
+			For example:
+				If ‘N’ is 5 then the pattern will be.
+
+				*****
+				****
+				***
+				**
+				*
+			Sample Input 1:
+				2
+				5
+				3
+				Sample Output 1:
+				*****
+				****
+				***
+				**
+				*
+				***
+				**
+				*
+				Explanation of Sample Input 1:
+				Test Case 1:
+
+				Given ‘N’ = 5
+				We will print the pattern as description first line will contain a string of 5 ‘*’, 
+				the second line will contain a string of 4 ‘*’, the third line will contain 3 ‘*’, 
+				the fourth line will contain 2 ‘*’ and the fifth line will contain 1 ’*’.
+
+				Test Case 2:
+
+				Given ‘N’ = 3
+				For 1 <= ‘i’ <= 3  , ‘i’th line contains 4 - ’i’, ‘*’ characters.
+				Sample Input 2:
+				2
+				1
+				2
+				Sample Output 2:
+				*
+				**
+				* 
+				Explanation of Sample Input 2:
+				Test Case 1:
+
+				Given ‘N' = 1
+				There will be only 1 line and that will contain a single ‘*’.
+
+				Test Case 2:
+
+				Given ‘N’ = 2
+				First-line will contain 2 ‘*’ while the second line will contain 1 ‘*’ as per description.
+
+		#include <bits/stdc++.h> 
+		vector<string> printPatt(int n) {
+			vector<string> ans;
+
+			for(int i=0; i<n; i++){
+				string s = string(n-i, '*'); 
+				ans.push_back(s);
+			}
+			return ans;
+		}
+	
+	463) Play With OR:
+		Problem statement:
+			You are given an array arr[] of length n, 
+			you have to re-construct the same array arr[] in-place. 
+			The arr[i] after reconstruction will become arr[i] OR arr[i+1], 
+			where OR is bitwise or. If for some i, i+1 does not exists, 
+			then do not change arr[i].
+
+			Example 1:
+
+				Input :
+				n = 5
+				arr[] = {10, 11, 1, 2, 3}
+				Output :
+				11 11 3 3 3
+				Explanation:
+				At index 0, arr[0] or arr[1] = 11
+				At index 1, arr[1] or arr[2] = 11
+				At index 2, arr[2] or arr[3] = 3
+				...
+				At index 4, No element is left So, it will remain as it is.
+				New Array will be {11, 11, 3, 3, 3}.
+			Example 2:
+
+				Input :
+				n= 4
+				arr[] = {5, 9, 2, 6} 
+				Output :
+				13 11 6 6
+				Explanation:
+				At index 0, arr[0] or arr[1] = 13.
+				At index 1, arr[1] or arr[2] = 11.
+				At index 2, arr[2] or arr[3] = 6.
+				At index 3, No element is left So, it will remain as it is.
+				New Array will be {13, 11, 6, 6}.
+			Your Task:
+				You are required to implement the function game_with_number(), 
+				which takes an array arr, representing values at each index,
+				and the size of the array n. The function should modify the 
+				elements of the same array arr[] in-place by replacing them 
+				with the values obtained by performing the bitwise OR operation on consecutive elements.
+
+				Expected Time Complexity: O(n).
+				Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 ≤ n ≤ 10^5
+				1 ≤ arr[i] ≤ 10^7
+
+		int* game_with_number(int arr[], int n) {
+			for(int i=0; i<n-1; i++)
+				arr[i] |= arr[i+1];
+				
+			return arr;
+		}
+
+		// or function returning pointer
+		int* game_with_number(int arr[], int n) {
+			int *p = arr;
+			for(int i=0; i<n-1; i++)
+				p[i] |= p[i+1];
+			return p;
+		}
+
+	464) Find kth element of spiral matrix:
+		https://www.geeksforgeeks.org/problems/find-nth-element-of-spiral-matrix/1
+		Problem statement:
+			Given a matrix with n rows and m columns. 
+			Your task is to find the kth element which is obtained while traversing the matrix spirally. 
+			You need to complete the method findK which takes four arguments the first argument is 
+			the matrix A and the next two arguments will be n and m denoting the size of the matrix 
+			A and then the forth argument is an integer k. 
+			The function will return the kth element obtained while traversing the matrix spirally.
+			
+			Example 1:
+				Input:
+				n = 4, m = 4, k = 10
+				A[][] = {{1  2  3  4},
+					{5  6  7  8},
+					{9  10 11 12},
+					{13 14 15 16}}
+				Output:
+				13
+
+			Explanation:
+			The spiral order of matrix will look like 1->2->3->4->8->12->16->15->14->13->9->5->6->7->11->10. 
+			So the 10th element in this order is 13. 
+			
+			Example 2:
+				Input:
+				n = 3, m = 3, k = 4
+				A[][] = {{1 2 3},
+					{4 5 6},
+					{7 8 9}}
+				Output:
+				6
+				Explanation:
+				The spiral order of matrix will look like 1->2->3->6->9->8->7->4->5. 
+				So the 4th element in this order is 6.
+			Your Task:
+				You only need to implement the given function findK(). 
+				Do not read input, instead use the arguments given in the function. 
+				Return the K'th element obtained by traversing matrix spirally.
+
+			Expected Time Complexity: O(n*m)
+			Expected Auxiliary Space: O(n*m)
+
+			Constraints:
+				1<=n,m<=10^3
+				1<=k<=n*m
+				-10^9 <= A[i][j] <= 10^9
+
+		class Solution {
+			public:
+			/*You are required to complete this method*/
+			int findK(int a[MAX][MAX],int n,int m,int k) {
+				int sr, sc, er, ec;
+				sr=sc=0, er=n-1, ec=m-1;
+				int val=a[0][0];
+				
+				// for(int i=0; i<n; i++){
+				//     for(int j=0; j<m; j++)
+				//         cout<<a[i][j]<<"\t";
+				//     cout<<"\n";
+				// }
+				
+				while(k) {
+					// for start row
+					for(int i=sc; i<=ec && k>0; i++){
+						val = a[sr][i];
+						k--;
+					}
+					sr++;
+					
+					// for end col
+					for(int i=sr; i<=er && k>0; i++){
+						val = a[i][ec];
+						k--;
+					}
+					ec--;
+					
+					// for end row
+					for(int i=ec; i>=sc && k>0; i--){
+						val = a[er][i];
+						k--;
+					}
+					er--;
+					
+					// for start col
+					for(int i=er; i>=sr && k>0; i--){
+						val = a[i][sc];
+						k--;
+					}
+					sc++;
+				}
+				return val;
+			}
+		};
+
+	465) Spirally traversing a matrix (Refer POTD Q.455):
+		https://www.geeksforgeeks.org/problems/spirally-traversing-a-matrix-1587115621/1
+		Problem statement:
+			Given a matrix of size r*c. Traverse the matrix in spiral form.
+
+			Example 1:
+				Input:
+				r = 4, c = 4
+				matrix[][] = {{1, 2, 3, 4},
+						{5, 6, 7, 8},
+						{9, 10, 11, 12},
+						{13, 14, 15,16}}
+				Output: 
+				1 2 3 4 8 12 16 15 14 13 9 5 6 7 11 10
+				Explanation:
+
+			Example 2:
+				Input:
+				r = 3, c = 4  
+				matrix[][] = {{1, 2, 3, 4},
+						{5, 6, 7, 8},
+						{9, 10, 11, 12}}
+				Output: 
+				1 2 3 4 8 12 11 10 9 5 6 7
+				Explanation:
+				Applying same technique as shown above, 
+				output for the 2nd testcase will be 
+				1 2 3 4 8 12 11 10 9 5 6 7.
+
+			Your Task:
+				You dont need to read input or print anything.
+				Complete the function spirallyTraverse() that takes matrix, 
+				r and c as input parameters and returns a list of 
+				integers denoting the spiral traversal of matrix. 
+
+			Expected Time Complexity: O(r*c)
+			Expected Auxiliary Space: O(r*c), for returning the answer only.
+
+			Constraints:
+				1 <= r, c <= 100
+				0 <= matrix[i] <= 100
+
+		class Solution {   
+		public: 
+			//Function to return a list of integers denoting spiral traversal of matrix.
+			vector<int> spirallyTraverse(vector<vector<int>> m, int r, int c) {
+				vector<int> ans;
+				
+				int sr, sc, er, ec;
+				sr=sc=0;
+				er=r-1, ec=c-1;
+				
+				int totalElements = r*c, cnt=0;
+				while(cnt < totalElements){
+					
+					// for start row
+					for(int i=sc; i<=ec && cnt< totalElements; i++){
+						ans.push_back(m[sr][i]);
+						cnt++;
+					}
+					
+					sr++;
+					// for end col
+					for(int i=sr; i<=er && cnt< totalElements; i++){
+						ans.push_back(m[i][ec]);
+						cnt++;
+					}
+					
+					ec--;
+					// for end row
+					for(int i=ec; i>=sc && cnt< totalElements; i--){
+						ans.push_back(m[er][i]);
+						cnt++;
+					}
+					
+					er--;
+					// for start col
+					for(int i=er; i>=sr && cnt< totalElements; i--){
+						ans.push_back(m[i][sc]);
+						cnt++;
+					}
+					
+					sc++;
+				}
+				return ans;
+			}
+		};
+
+	466) Rotating an Array:
+		https://www.geeksforgeeks.org/problems/reversal-algorithm5340/1
+		Problem statement:
+			Given an array of size n.
+			The task is to rotate array by d elements where d ≤ n.
+
+			Example 1:
+				Input:
+				n = 7
+				arr[] = {-1, -2, -3, 4, 5, 6, 7}
+				d = 2
+				Output: {-3, 4, 5, 6, 7, -1, -2}
+				Explanation: 
+				Rotate by 1: [-2, -3, 4, 5, 6, 7, -1]
+				Rotate by 2: [-3, 4, 5, 6, 7, -1, -2]
+
+			Example 2:
+				Input:
+				n = 4
+				arr[] = {1, 3, 4, 2}
+				d = 3
+				Output: {2, 1, 3, 4}
+
+			Your Task:
+				You don't need to read input or print anything.
+				Your task is to complete the function leftRotate() which takes the array of integers arr[],
+				its size n and d as input parameters and rotates arr[] in-place without using any extra memory.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ n ≤ 10^6
+				-10^9 ≤ arr[i] ≤ 10^9
+				0 ≤ d ≤ n
+
+		// Not Optimized:
+			class Solution{   
+				public:
+				void leftRotate(int arr[], int n, int d) {
+					if(d >= n)
+						d %= n;
+						
+					while(d--){
+						int value = arr[0];
+						// copy the next element into current
+						for(int i=0; i<n-1; i++)
+							arr[i] = arr[i+1];
+							
+						arr[n-1] = value;
+					}
+				}
+			};
+
+		// Optimized:
+			class Solution{   
+				public:
+				void leftRotate(int arr[], int n, int d) {
+					rotate(arr, arr+d, arr+n);
+				}
+			};
+
+			// or
+				class Solution{   
+					public:
+					void leftRotate(int arr[], int n, int d) {
+						reverse(arr, arr+d);
+						reverse(arr+d, arr+n);
+						reverse(arr, arr+n);
+					}
+				};
+
+	467) Rotate Array:
+		https://www.geeksforgeeks.org/problems/rotate-array-by-n-elements-1587115621/1
+		Problem statement:
+			Given an unsorted array arr[] of size N. 
+			Rotate the array to the left (counter-clockwise direction) by D steps,
+			where D is a positive integer. 
+			
+			Example 1:
+				Input:
+				N = 5, D = 2
+				arr[] = {1,2,3,4,5}
+				Output: 3 4 5 1 2
+				Explanation: 1 2 3 4 5  when rotated
+				by 2 elements, it becomes 3 4 5 1 2.
+
+			Example 2:
+				Input:
+				N = 10, D = 3
+				arr[] = {2,4,6,8,10,12,14,16,18,20}
+				Output: 8 10 12 14 16 18 20 2 4 6
+				Explanation: 2 4 6 8 10 12 14 16 18 20 
+				when rotated by 3 elements, it becomes 
+				8 10 12 14 16 18 20 2 4 6.
+			
+			Your Task:
+				You need not print or read anything. 
+				You need to complete the function rotateArr() which takes the array, 
+				D and N as input parameters and rotates the array by D elements.
+				The array must be modified in-place without using extra space. 
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= N <= 10^6
+				1 <= D <= 10^6
+				0 <= arr[i] <= 10^5
+
+		class Solution{
+			public:
+			
+			//Function to rotate an array by d elements in counter-clockwise direction. 
+			void rotateArr(int arr[], int d, int n){
+				if(d >=n )
+					d %= n;
+
+				// reversing the complete array
+				reverse(arr, arr+n);
+				
+				// reversing the first (n-d) elements of array
+				reverse(arr, arr+(n-d));
+				
+				// reversing the (n-d) till last elements of array
+				reverse(arr+(n-d), arr+n);
+			}
+		};
+
+		// or the default rotation for rotate method is left rotation (anticlockwise).
+		class Solution{
+			public:
+			//Function to rotate an array by d elements in counter-clockwise direction. 
+			void rotateArr(int arr[], int d, int n){
+				if(d >=n )
+					d %=n;
+				rotate(arr, arr+d, arr+n);
+			}
+		};
+
+		For clockwise rotation:
+			void rotateArr(int arr[], int d, int n){
+				if(d >=n )
+					d %=n;
+					
+				rotate(arr, arr+(n-d), arr+n);
+			}
+
+	468) 
+
+	469) 
+
+	470) 
+
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
