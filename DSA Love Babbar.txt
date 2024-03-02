@@ -4157,7 +4157,7 @@ Lecture-7: LeetCode Problem Solving Session
 				}
 ---------------------------------------------------------------------------------------------------------
 	07/08/23
-Lecture-8: Switch case & functions:
+Lecture-8: Switch case & functions
 		syntax.
 			switch(condition){
 				case value_1 :
@@ -5942,7 +5942,7 @@ Lecture-11: Time & Space Complexity, How to avoid Time Limit Exceeded [TLE]
 			}
 ---------------------------------------------------------------------------------------------------------
 	12/08/23
-Lecture-12: Binary Search:
+Lecture-12: Binary Search
 		Binary search is applied only in list/ array where the data is sorted, 
 		 either in increasing or in decreasing order, called monotonic function.
 		Steps for Binary Search :
@@ -13639,7 +13639,7 @@ Lecture-31: Learning Recursion the Best Way
 						1 2 3 4 5 
 ---------------------------------------------------------------------------------------------------------
 	//18/12/2023
-Lecture-32: Understanding Recursion the easiest way || Day-2:
+Lecture-32: Understanding Recursion the easiest way || Day-2
 	Examples:
 		1) Reaching Home:
 			#include <iostream>
@@ -13927,7 +13927,7 @@ Lecture-32: Understanding Recursion the easiest way || Day-2:
 				}
 ---------------------------------------------------------------------------------------------------------
 	25/12/23
-Lecture-33: Recursion and Binary Search | Day-3:
+Lecture-33: Recursion and Binary Search | Day-3
 	1) Check the given array is sorted or not?
 		#include <iostream>
 		#include<vector>
@@ -14232,7 +14232,7 @@ Lecture-33: Recursion and Binary Search | Day-3:
 		❌Pending
 ---------------------------------------------------------------------------------------------------------
 	25/12/23 ---> 28/12/23 ---> 31/12/2023 ---> 03/01/24
-Lecture-34: Recursion with Strings | Day-4:
+Lecture-34: Recursion with Strings | Day-4
 	// String printing in Reverse order using Recursion:
 		#include <iostream>
 		using namespace std;
@@ -15387,7 +15387,7 @@ Lecture-36: Quick Sort using Recursion | Day-6
 		❌Pending
 ---------------------------------------------------------------------------------------------------------
 	21/02/24
-Lecture-37: Recursion-Subsets/ Subsequences of String:
+Lecture-37: Recursion-Subsets/ Subsequences of String
 	1) Subsets:
 		Given an integer array nums of unique elements, return all possible 
 		subsets(the power set).
@@ -15583,87 +15583,92 @@ Lecture-38: Phone Keypad Problem Recursion
 ---------------------------------------------------------------------------------------------------------
 	23/02/24
 Lecture-39: Permutations of a String
-	Permutations:
-		Problem Statement:
-			Given an array nums of distinct integers, return all the possible permutations. 
-			You can return the answer in any order.
-			Example 1:
-				Input: nums = [1,2,3]
-				Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+	-1st Approach:
+		using data structure & map something
+		❌Pendingg
 
-			Example 2:
-				Input: nums = [0,1]
-				Output: [[0,1],[1,0]]
+	-2nd Approach:
+		Permutations:
+			Problem Statement:
+				Given an array nums of distinct integers, return all the possible permutations. 
+				You can return the answer in any order.
+				Example 1:
+					Input: nums = [1,2,3]
+					Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
 
-			Example 3:
-				Input: nums = [1]
-				Output: [[1]]
+				Example 2:
+					Input: nums = [0,1]
+					Output: [[0,1],[1,0]]
+
+				Example 3:
+					Input: nums = [1]
+					Output: [[1]]
+			
+				Constraints:
+					1 <= nums.length <= 6
+					-10 <= nums[i] <= 10
+					All the integers of nums are unique.
+			
+			// using built in method:
+				-built in method need the array should be in sorted order, else next_permutation will not work.
+				- Using while loop:
+					class Solution {
+						public:
+						vector<vector<int>> permute(vector<int>& nums) {
+							vector<vector<int>> ans;
+							sort(nums.begin(), nums.end());
+							
+							// this line is keep the original sequence
+							ans.push_back(nums);
+
+							// this line is gets executes while there are next permutation are present
+							while(next_permutation(nums.begin(), nums.end()))
+								ans.push_back(nums);
+							return ans;
+						}
+					};
 		
-			Constraints:
-				1 <= nums.length <= 6
-				-10 <= nums[i] <= 10
-				All the integers of nums are unique.
-		
-		// using built in method:
-			-built in method need the array should be in sorted order, else next_permutation will not work.
-			- Using while loop:
+				- Using Do-While loop:
+					class Solution {
+						public:
+						vector<vector<int>> permute(vector<int>& nums) {
+							vector<vector<int>> ans;
+
+							// array should be sorted before passing for the next permutation method       
+							sort(nums.begin(), nums.end());
+							
+							do{
+								ans.push_back(nums);
+							}while(next_permutation(nums.begin(), nums.end()));
+							return ans;
+						}
+					};
+			
+			// without using built in method:
 				class Solution {
+					private:
+					void GenPermute(vector<int> main, vector<vector<int>> &out, int i){
+						if(i == main.size()){
+							out.push_back(main);
+							return ;
+						}
+
+						// for every element giving the chance to get placed at index i
+						for(int j=i; j<main.size(); j++){
+							swap(main[i], main[j]);
+							GenPermute(main, out, i+1);
+							swap(main[i], main[j]);
+						}
+					}
 					public:
 					vector<vector<int>> permute(vector<int>& nums) {
 						vector<vector<int>> ans;
-						sort(nums.begin(), nums.end());
-						
-						// this line is keep the original sequence
-						ans.push_back(nums);
-
-						// this line is gets executes while there are next permutation are present
-						while(next_permutation(nums.begin(), nums.end()))
-							ans.push_back(nums);
+						GenPermute(nums, ans, 0);
 						return ans;
 					}
 				};
-	
-			- Using Do-While loop:
-				class Solution {
-					public:
-					vector<vector<int>> permute(vector<int>& nums) {
-						vector<vector<int>> ans;
 
-						// array should be sorted before passing for the next permutation method       
-						sort(nums.begin(), nums.end());
-						
-						do{
-							ans.push_back(nums);
-						}while(next_permutation(nums.begin(), nums.end()));
-						return ans;
-					}
-				};
-		
-		// without using built in method:
-			class Solution {
-				private:
-				void GenPermute(vector<int> main, vector<vector<int>> &out, int i){
-					if(i == main.size()){
-						out.push_back(main);
-						return ;
-					}
-
-					// for every element giving the chance to get placed at index i
-					for(int j=i; j<main.size(); j++){
-						swap(main[i], main[j]);
-						GenPermute(main, out, i+1);
-						swap(main[i], main[j]);
-					}
-				}
-				public:
-				vector<vector<int>> permute(vector<int>& nums) {
-					vector<vector<int>> ans;
-					GenPermute(nums, ans, 0);
-					return ans;
-				}
-			};
-
-	Permutations of string:
+		Permutations of string:
 		Problem statement:
 			You are given a string 'STR' consisting of lowercase English letters. 
 			Your task is to return all permutations of the given string in lexicographically increasing order.
@@ -15714,7 +15719,9 @@ Lecture-39: Permutations of a String
 			for(int j=i; j<s.size(); j++){
 				swap(s[i], s[j]);
 				GenPermut(s, ans, i+1);
-				swap(s[i],s[j]);
+
+				// This below line is not necessary
+				// swap(s[i],s[j]);
 			}
 		}
 		vector<string> generatePermutations(string &str) {
@@ -15749,6 +15756,11 @@ Lecture-39: Permutations of a String
 				}while(next_permutation(str.begin(), str.end()));
 				return ans;
 			}
+---------------------------------------------------------------------------------------------------------
+	01/03/2024
+Lecture-40: Rat in a Maze Problem
+	
+	
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -19207,6 +19219,42 @@ Lecture-39: Permutations of a String
 					std::cout << value << "\t";
 				std::cout << std::endl;
 			}
+			return 0;
+		}
+
+	// vector assign method (replacing all element of array with new ones):
+		#include <iostream>
+		#include<bits/stdc++.h>
+		using namespace std;
+		int main() {
+			vector<int> a ={1,2,3,4,5};
+			vector<int> b ={1,100};
+			
+			for(int i: a)
+				std::cout << i << "\t";             //1       2       3       4       5
+			std::cout << std::endl;
+			
+			a.assign(b.begin(),b.end());
+			for(int i: a)
+				std::cout << i << "\t";             // 1    100
+			return 0;
+		}
+
+	// vector insert method (appending the all element to end of vector):
+		#include <iostream>
+		#include <vector>
+		using namespace std;
+
+		int main() {
+			vector<int> a = {1, 2, 3, 4, 5};
+			vector<int> b = {1,100};
+			for (int i : a)
+				cout << i << "\t";				// 1       2       3       4       5
+			cout << endl;
+
+			a.insert(a.end(), b.begin(), b.end());
+			for (int i : a)
+				cout << i << "\t";				// 1       2       3       4       5       1       100
 			return 0;
 		}
 ---------------------------------------------------------------------------------------------------------
@@ -25111,6 +25159,13 @@ POTD:-[Problem of the Day]
 			return left;
 		}
 
+		//or Not Optimized:
+			#include <bits/stdc++.h>
+			int findPeakElement(vector<int> &arr) {
+				auto mx = max_element(arr.begin(), arr.end());
+				return mx - arr.begin();
+			}
+
 	92) Container With Most Water:
 		Given a sequence of 'N' space-separated non-negative integers A [1], A [2], A [3]…....A [i].....A[n]. Where each
 		number of the sequence represents the height of the line drawn at point '. Hence on the cartesian plane,
@@ -26700,7 +26755,6 @@ POTD:-[Problem of the Day]
 					5
 					64
  
-
 		#include <bits/stdc++.h> 
 		int getNewNum(vector<int> arr, int n) {
 			string s;
@@ -26723,7 +26777,7 @@ POTD:-[Problem of the Day]
 			}
 			reverse(s.begin(), s.end());
 			// cout<<s<<endl;
-			return stoi(s,0,2);				//converting string to binary.
+			return stoi(s,0,2);				//converting string from binary to decimal
 		}
 
 	114) Day 27 : Magician and Chocolates:
@@ -41955,7 +42009,27 @@ POTD:-[Problem of the Day]
 					}
 					return res;
 				}
-			}; 
+			};
+
+			//or same Simplified:
+				class Solution {
+					public:
+					vector<int> sortedSquares(vector<int>& nums) {
+						vector<int> ans (nums.size());
+						int low=0, high=nums.size()-1;
+
+						for(int i=nums.size()-1; i>=0; i--){
+							if(abs(nums[low]) > abs(nums[high])){
+								ans[i] = (nums[low]*nums[low]);
+								low++;
+							}else{
+								ans[i] = (nums[high]*nums[high]);  
+								high--; 
+							}
+						}
+						return ans;
+					}
+				};
 
 	313) Running Sum of 1d Array
 		Problem statement:
@@ -55049,18 +55123,1130 @@ POTD:-[Problem of the Day]
 			return 0;
 		}
 
-	475) 
+	475) Peak element:
+		Problem statement:
+			Given an 0-indexed array of integers arr[] of size n, find its peak element. 
+			An element is considered to be peak if it's value is greater than or equal 
+			to the values of its adjacent elements (if they exist). 
+			The array is guaranteed to be in ascending order before the peak element and in descending order after it.
+			Note:
+				The output will be 1 if the index returned by your function is correct; otherwise, it will be 0.
+			Example 1:
+				Input: 
+				n = 3
+				arr[] = {1, 2, 3}
+				Peak Element's Index: 2
+				Output: 1
+				Explanation: 
+				If the index returned is 2, then the output printed will be 1. 
+				Since arr[2] = 3 is greater than its adjacent elements, and 
+				there is no element after it, we can consider it as a peak 
+				element. No other index satisfies the same property.
+			Example 2:
+				Input:
+				n = 3
+				arr[] = {3, 4, 2}
+				Peak Element's Index: 1
+				Output: 1
+				Explanation: 
+				If the index returned is 1, then the output printed will be 1.
+				Since arr[1] = 4 is greater than its adjacent elements, and
+				there is no element after it, we can consider it as a peak
+				element. No other index satisfies the same property.
+			Your Task:
+				You don't have to read input or print anything.
+				Complete the function peakElement() which takes the array arr[]
+				and its size n as input parameters and return the index of the peak element.
+			Expected Time Complexity: O(log(n)).
+			Expected Auxiliary Space: O(1)
+			Constraints:
+				1 ≤ n ≤ 10^5
+				1 ≤ arr[i] ≤ 10^6
 
-	476)
+		// Optimized:
+			class Solution {
+				public:
+				int peakElement(int arr[], int n) {
+					
+					// if(n==1)
+					//     return 0;
+					
+					int s=0, e=n-1;
+					while(s < e){
+						int mid = (s+e)/2;
+						if(arr[mid] > arr[mid+1])
+							e = mid;
+						else
+							s = mid +1;
+					}
+					return s;
+				}
+			};
 
-	477)
+		// Other approach:
+			class Solution {
+				public:
+				int peakElement(int arr[], int n) {
+					auto mx = max_element(arr, arr+n);
+					return distance(arr, mx);
+				}
+			};
+			
+	476) Maximum Odd Binary Number:
+		Problem statement:
+			You are given a binary string s that contains at least one '1'.
+			You have to rearrange the bits in such a way that the resulting
+			binary number is the maximum odd binary number that can be created from this combination.
+			Return a string representing the maximum odd binary 
+			number that can be created from the given combination.
+			Note that the resulting string can have leading zeros.
 
-	478)
+			Example 1:
+				Input: s = "010"
+				Output: "001"
+				Explanation: Because there is just one '1', 
+				it must be in the last position. So the answer is "001".
 
-	479)
+			Example 2:
+				Input: s = "0101"
+				Output: "1001"
+				Explanation: One of the '1's must be in the last position. 
+				The maximum number that can be made with the remaining digits is "100".
+				So the answer is "1001".
 
-	480)
+			Constraints:
+				1 <= s.length <= 100
+				s consists only of '0' and '1'.
+				s contains at least one '1'.
+
+		class Solution {
+			public:
+			string maximumOddBinaryNumber(string s) {
+				if(s.size()==1)
+					return s;
+				sort(begin(s), end(s), greater<char>());
+				
+				//searching last one in string & placing it to the last
+				// this below will give the index of first zero
+				// then we will do index + 1 get the index of last one
+				// & swap them with last zero
+
+				int i=0; 
+				while(i < s.size() && s[i] != '0')
+					i++;
+				
+				int index = i-1;
+				swap(s[index],s[s.size()-1]);
+				return s;
+			}
+		};
+
+	477) Bored Chef:
+		Problem statement
+			You are given a string ‘S’ of size ‘N’ 
+			where each character is numbered from ‘0’ to ‘N - 1’.
+			You are allowed to swap any two adjacent characters any number of times.
+			You are also given an integer ‘K’. 
+			Your task is to check whether it is possible to group 
+			any same ‘K’ characters by using the given operation.
+
+			Your task is to tell whether it is possible to group any same ‘K’ characters
+			and return ‘1’ if it is possible, otherwise return ‘0’.
+
+			Example:
+				‘N’ = 5
+				‘K’ = 2
+				‘S’ = “acdab”
+				In the first operation, you can swap ‘0th’ and the ‘1st’ character.
+				You’ll get the string ‘S’ as: “cadab”
+				In the second operation, you can swap ‘1st’ and the ‘2nd’ character.
+				You’ll get the string ‘S’ as: “cdaab”.
+				Here, we are getting a group of two ‘a’s together.
+				Hence, the answer for this test case is ‘1’.
+
+			Constraints:
+				1 <= ‘T’ <= 10
+				1 <= ‘N’ <= 10^5
+				1 <= ‘K’ <= ‘N’
+				‘a’ <= ‘S[i]’ <= ‘z’
+				Time Limit: 1 sec
+
+			Sample Input 1:
+				2
+				4 3
+				abaa 
+				4 2
+				abcd
+				Sample Output 1:
+				1
+				0
+				Explanation of sample input 1:
+				For test case 1:
+				In the first operation, swap ‘0th’ and the ‘1st’ element. You’ll get the string ‘S’ as: “baaa”
+
+				Here, the substring from index ‘1’ to ‘3’ contains a group of ‘3’ ‘a’s.
+				Hence, the answer for this test case is ‘1’.
+
+				For test case 2:
+				Here, it is impossible to group ‘2’ same characters. So, the answer for this test case is ‘0’.
+				Sample Input 2:
+				2
+				5 3
+				zzzzz 
+				4 1
+				fghe
+				Sample Output 2:
+				1
+				1
+
+		int boredChef(int n, int k, string &s) {
+			map<char, int> F;
+			for(char c: s){
+				F[c]++;
+				if(F[c] >= k)
+				return 1;
+			}
+			return 0;
+		}
+
+	478) All Equals:
+		Problem statement
+			You are given an array 'A' of 'N' integers numbered from '0' to 'N - 1'.
+			In one operation, you can select an index 'i' and update 'A[i]' to 'A[i] + A[i]'.
+			Determine if you can make all the elements of the
+			array equal after performing the given operation any number of times. 
+			Return '1' in that case. Otherwise, return '0'.
+			Example:
+				N = 3
+				A = [1, 4, 4]
+				In the first operation, update 'A[0]' to 'A[0] + A[0]' = '1 + 1' = '2'.
+				In the second operation, again update 'A[0]' to 'A[0] + A[0]' = '2 + 2' = '4'.
+				The resultant array is ['4', '4', '4']. You can see that all the elements of the array are equal.
+				So, the answer for this case is '1'.
+			Constraints:
+				1 <= 'N' <= 10^5
+				'1' <= A[i] <= '10^5'
+				Time limit: 1 sec
+			Sample input 1:
+				2
+				3
+				2 2 2
+				4
+				3 6 8 12
+				Sample output 1:
+				1
+				0
+				Explanation of sample input 1:
+				For test case 1:
+				We can see that the elements of the array are already the same.
+				So the answer for this case is '1'.
+
+				For test case 2:
+				It can be proved that we can not make all the elements of the array equal 
+				after performing the given operation any number of times.
+				So, the answer for this case is '0'.
+				Sample input 2:
+				2
+				3
+				14 7 56
+				4
+				1 12 4 16
+				Sample output 2:
+				1
+				0
+
+		int canYouMakeEqual(int n, vector<int> &v) {
+			int G = *max_element(v.begin(), v.end());
+			for(int i=0; i<n; i++){
+				while(v[i] < G)
+					v[i] += v[i];
+				if(v[i] != G)
+					return 0;
+			}
+			return 1;
+		}
+
+	479) Recreate Array:
+		Problem statement
+			In the realm of ninjas, there exist 100 distinct types of weapons numbered from 0 to 99. 
+			Your mission is to gather a set of weapons specified in an array 'A'.
+			If a particular weapon is listed multiple times in the array, 
+			you must collect that many copies of that weapon to fulfill the mission.
+
+			You've entered a new shop stocked with an array 'B'.
+			The unique shopping rule here is that you can purchase any consecutive sequence of items (subarray),
+			and the cost is determined by the length of that chosen subarray.
+
+			Return the minimum cost to complete your mission or -1 if not possible.
+
+			Example:
+				‘N’ = 5
+				‘M’ = 2
+				‘A’ = [2, 1, 3]
+				‘B’ = [1, 2, 2, 1, 1, 3, 3]
+
+			You have to buy the subarray [2, 1, 1, 3]. There doesn’t exist any smaller subarray which tends to your needs.
+			So the answer will be '4'.
+			Detailed explanation ( Input/output format, Notes, Images )
+			Constraints:
+			1 <= ‘T’ <= 10
+			1 <= ‘N’, ’M’ <= 10^4
+			0 <= ‘A’, ’B’ <= 99
+
+			Time Limit: 1 sec
+			Sample Input 1:
+			2
+			4 10
+			4 2 2 7
+			2 5 5 2 4 7 6 2 2 8 
+			4 6
+			4 5 10 10
+			1 4 5 4 5 10
+			Sample Output 1:
+			5
+			-1
+			Explanation of sample input 1:
+			For 1st test case:
+			We can either choose [2 4 7 6 2] or [4 7 6 2 2] to buy with the cost of 5.
+			For 2nd test case:
+			As we need 2 type 10 weapons and it is not available on the store hence -1.
+			Sample Input 2:
+			3
+			3 7
+			5 8 5
+			1 1 5 8 5 10 4
+			2 6
+			1 1
+			1 2 2 2 2 1
+			10 10
+			1 2 3 4 5 6 7 8 9 0
+			1 2 3 4 5 6 7 8 9 0
+			Sample Output 2:
+			3
+			6
+			10
+
+		// Not Optimized:
+			bool CheckMaps(map<int, int> M1, map<int, int> M2){
+				for(auto itr = M1.begin(); itr != M1.end(); itr++)
+					if(M1[itr->first] > M2[itr->first])
+						return 0;
+				return 1;
+			}
+
+			int minCost(vector<int>& a, vector<int>& b) {
+				// finding the weapons needed
+				map<int, int> Fa;
+				for(int i: a)
+					Fa[i]++;
+				
+				// need to generate subArray of same things as Fa with MIN Size
+				// the subarray we are generating is should be of size of sum of values in Fa.
+				// sum of values
+
+				// int size=0;
+				// for(auto i: Fa)
+				//     size += i.second;
+
+				int minSize = INT_MAX;
+				for(int i=0; i<= (b.size()-a.size()); i++){
+					int s=i, e= i+a.size()-1;
+
+					// Generate the window of s to e
+					while(e < b.size()){
+						map<int, int> Matching;
+						for(int z=i; z<=e; z++)
+							Matching[b[z]]++;
+
+						// checking is matching contains all the weaspon we required,
+						// if yes and if its new subarrays is of size less than minSize then storing its into minSize
+						if(CheckMaps(Fa, Matching))
+							minSize = min(minSize, (e-s+1));
+							
+						e++;
+					}
+				}
+				return (minSize == INT_MAX) ? -1 : minSize;
+			}
+
+		// Optimized:
+			❌Pending
+
+	480) Make Array Elements Equal:
+		Problem statement
+			You are given an array of integers of size ‘N’. 
+			You have to make the elements of the array equal, 
+			and the cost of changing the element ‘x’ to ‘y’ is abs(x -y). 
+			Your task is to find the minimum cost to make the elements of the array equal.
+
+			For example:
+				Consider ARR = [3, 4, 5] now suppose if we want to change every element value to 4, 
+				then the cost of changing 3 to 4 is |3 - 4| which is 1, and the 
+				cost of changing 5 to 4 is |5 - 4| which is 1, so the total cost is 1 + 1 = 2. 
+				The value 2 is the minimum cost to make all values in the array equal. Hence, the answer is 2.
+			Constraints:
+				1 <= T <= 5
+				1 <= N <= 10^5
+				1 <= ARR[i] <= 10^8
+
+				Time limit: 1 sec
+			Sample Input 1:
+				2
+				3
+				1 8 19
+				4
+				2 17 26 11
+				Sample Output 1:
+				18
+				30
+				Explanation:
+				In test case 1
+				We can change all element’s value to 8 with cost |1-8| + |19 - 8| = 18.
+				The value 18 is the minimum cost to make all values in the array equal.
+				Hence, the answer is 18.
+
+				In test case 2 
+				We can change all element’s value to 11 with cost |2 - 11| + |17 - 11| + |26 - 11| = 30.
+				The value 30 is the minimum cost to make all values in the array equal.
+				Hence, the answer is 30. 
+				Sample Input 2:
+				1
+				3
+				1 100 101
+				Sample Output 2:
+				100
+
+		#include <bits/stdc++.h> 
+		int findMinimumCost(vector<int> &arr, int n){
+			int minValue= INT_MAX;
+			for(int i=0; i<n; i++){
+				int CrntSum=0;
+				for(int j=0; j<n; j++)
+					CrntSum += abs(arr[i]-arr[j]);
+				
+				minValue = min(minValue, CrntSum);
+			}
+			return minValue;
+		}
+
+	481) Permutation in String: (Refer Lecture-22)
+		Problem statement:
+			Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise.
+			In other words, return true if one of s1's permutations is the substring of s2.
+			Example 1:
+				Input: s1 = "ab", s2 = "eidbaooo"
+				Output: true
+				Explanation: s2 contains one permutation of s1 ("ba").
+			Example 2:
+				Input: s1 = "ab", s2 = "eidboaoo"
+				Output: false
+			Constraints:
+				1 <= s1.length, s2.length <= 104
+				s1 and s2 consist of lowercase English letters.
+
+		class Solution {
+			private:
+			bool checkMaps(int *p1, int *p2){
+				for(int trav=0; trav < 26; trav++)
+					if(p1[trav] != p2[trav])
+						return 0;
+				return 1;
+			}
+			public:
+			bool checkInclusion(string s1, string s2) {
+
+				if(s1.size() > s2.size())
+					return 0;
+
+				// mapping for s1
+				int mapS1[26] = {0};
+				for(int a=0; a<s1.size(); a++)
+					mapS1[s1[a] - 'a']++;
+				
+				// this loop should run till <= (s2.length()-s1.size())
+				for(int z=0; z<= (s2.size()-s1.size()); z++){
+					string sample = s2.substr(z, s1.size());
+
+					// mapping for sample
+					int mapS2[26] = {0};
+					for(int x=0; x<sample.size(); x++)
+						mapS2[sample[x] - 'a']++;
+					
+					if(checkMaps(mapS1, mapS2))
+						return 1;
+				}
+				return 0;        
+			}
+		};
+
+	482) Reduce Array:
+		Problem statement
+			You are given an array ‘Arr’ of ‘N’ integers. 
+			Your task is to reduce each of the elements to zero. 
+			You can perform the following two operations on the array.
+			Select an index ‘i’. If ‘Arr[i]’ is odd then replace it with ‘(Arr[i]-1) / 2’ else replace it with ‘Arr[i] / 2’.
+			Return the total number of operations required to reduce each element of the array to zero.
+			Example:
+			‘N’=5, ‘Arr’ = [2 , 5 , 6 , 3 , 1].
+			2 -> 1 -> 0
+			5 -> 2 -> 1 -> 0
+			6 -> 3 -> 1 -> 0
+			3 -> 1 -> 0
+			1 -> 0
+			Hence total operations will be 11.
+			Constraints :
+				1<=‘T’<=10
+				1<=‘N’<=10^5
+				1<=‘Arr[i]’<=10^9
+
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				5
+				3 4 2 1 1
+				3
+				6 8 4
+				Sample Output 1 :
+				9
+				10
+				Explanation Of Sample Input 1 :
+				For testcase one:
+
+				‘N’=5, ‘Arr’ = [3 , 4 , 2 , 1 , 1].
+				3 -> 1 -> 0
+				4 -> 2 -> 1 -> 0
+				2 -> 1 -> 0
+				1 -> 0
+				1 -> 0
+
+				Hence total operations will be 9.
+				For test case two:
+
+				‘N’=3, ‘Arr’ = [6 , 8 , 4].
+				6 -> 3 -> 1 -> 0
+				8 -> 4 -> 2 -> 1 -> 0
+				4 -> 2 -> 1 -> 0
+
+				Hence total operations will be 10.
+				Sample Input 2 :
+				2
+				5
+				13 8 5 1 7
+				4
+				16 80 4 4
+				Sample Output 2 :
+				15
+				18
 		
+		#include <bits/stdc++.h> 
+		int reduceArray( vector<int> & v) {
+			int cnt=0;
+			for(int i=0; i<v.size(); i++){
+				while(v[i]){
+					cnt++;
+					v[i]/=2;
+				}
+			}
+			return cnt;
+		}
+	
+	483) First element to occur k times:
+		problem statement:
+			Given an array of n integers. Find the first element that occurs atleast k number of times.
+			Example 1:
+				Input :
+				n = 7, k = 2
+				a[] = {1, 7, 4, 3, 4, 8, 7}
+				Output :
+				4
+			Explanation :
+				Both 7 and 4 occur 2 times. But 4 is first that occurs twice.
+				As at index = 4, 4 has occurred twice whereas 7 appeared twice
+				at index 6.
+
+			Example 2:
+				Input :
+				n = 10, k = 3
+				a[] = {3, 1, 3, 4, 5, 1, 3, 3, 5, 4}
+				Output :
+				3
+				Explanation :
+				Here, 3 is the only number that appeared atleast 3 times in the array.
+
+			Your Task:  
+				You don't need to read input or print anything. 
+				Your task is to complete the function firstElementKTime() 
+				which takes the array a[], its size n, and an integer k as
+				input arguments and returns the required answer. 
+				If the answer is not present in the array, return -1.
+
+			Expected Time Complexity: O(n).
+			Expected Auxiliary Space: O(n).
+
+			Constraints:
+				1 <= n <= 10^4
+				1 <= k <= 100
+				0<= a[i] <= 200
+	
+		class Solution{
+			public:
+			int firstElementKTime(int n, int k, int a[]) {
+				map<int, int> F;
+				int i=0;
+				while(i < n){
+					F[a[i]]++;
+					if(F[a[i]] >= k)
+						return a[i];
+					i++;
+				}
+				return -1;
+			}
+		};
+
+	484) Permutations in array:
+		Problem statement:
+			Given two arrays of equal size N and an integer K.
+			The task is to check if after permuting both arrays, 
+			we get sum of their corresponding element greater than or equal to k
+			i.e Ai + Bi >= K for all i (from 0 to N-1). 
+			Return true if possible, else false.
+
+			Example 1:
+			Input : 
+				a[] = {2, 1, 3}, 
+				b[] = { 7, 8, 9 }, 
+				k = 10. 
+			Output : 
+			True
+			Explanation:
+			Permutation  a[] = { 1, 2, 3 } 
+			and b[] = { 9, 8, 7 } 
+			satisfied the condition a[i] + b[i] >= K.
+
+			Example 2:
+				Input : 
+				a[] = {1, 2, 2, 1}, b[] = { 3, 3, 3, 4 }, k = 5.
+				Output : 
+				False
+				Explanation:
+				Since any permutation won't give the answer.
+			Your Task:  
+				You don't need to read input or print anything. 
+				Your task is to complete the function isPossible() which takes the 
+				array A[], B[], its size N and an integer K as inputs and returns the answer.
+
+			Expected Time Complexity: O(N. Log(N))
+			Expected Auxiliary Space: O(1)
+		
+			Constraints:
+				1 ≤ N ≤ 10^5
+				1 ≤ K ≤ 10^18
+				1 ≤ Ai, Bi ≤ 10^17
+			
+		class Solution {
+			public:
+			bool isPossible(long long a[], long long b[], int n, long long k) {
+				sort(a, a+n);
+				sort(b, b+n, greater<int>());
+				
+				for(int i=0; i<n; i++)
+					if((a[i]+b[i]) < k)
+						return 0;
+				return 1;
+			}
+		};
+
+	485) Unusual String Sort:
+		Problem statement:
+			Given a string composed of both lowercase and uppercase letters.
+			Sort it in such a manner such that the uppercase
+			and lowercase letter comes in an alternate manner but in sorted way.
+
+			Example 1:
+				Input:
+				S = bAwutndekWEdkd
+				Output: AbEdWddekkntuw
+				Explanation: letters A,E,W are sorted 
+				as well as letters b,d,d,d,e,k,k,n,t,u,w are 
+				sorted and both appears alternately in the 
+				string as far as possible.
+
+			Example 2:
+				Input: 
+				S = AiBFR
+				Output: AiBFR
+				Explanation: letters A,B,F,R and sorted 
+				as well as letter i. 
+
+			User Task:
+				You don't need to read input or print anything. 
+				You just have to complete the function stringSort() 
+				which takes a string as input and returns the sorted string as described in the problem description.
+			Expected Time Complexity: O(|S|).
+			Expected Auxiliary Space: O(1). 
+
+			Constraints:
+				1<=|S|<=1000
+
+		class Solution {
+			public:
+			string stringSort (string s) {
+				string ans;
+				sort(s.begin(), s.end());				//or         sort(begin(s), end(s));
+				vector<char> upper, lower;
+				for(int i=0; i<s.size(); i++)
+					if(isupper(s[i]))
+						upper.push_back(s[i]);
+					else
+						lower.push_back(s[i]);
+					
+				int i=0,k=0;
+				int cnt=1;
+				while(i < upper.size() && k<lower.size()){
+					if(cnt&1)
+						ans += upper[i++];
+					else
+						ans += lower[k++];
+					cnt++;
+				}
+				
+				// individual check
+				while(i<upper.size())
+					ans += upper[i++];
+					
+				while(k<lower.size())
+					ans += lower[k++];
+				
+				return ans;
+			}
+		};
+
+	486) Same characters in two strings:
+		Problem statement:
+			Given two strings A and B of equal length, find how many times 
+			the corresponding position in the two strings hold exactly 
+			the same character. The comparison should not be case sensitive. 
+			
+			Example 1:
+				Input:
+				A = choice 
+				B = chancE
+				Output: 4
+				Explanation: characters at position 0, 1, 4 and 5
+				are same in the two strings A and B.
+
+			Example 2:
+				Input:
+				A = Geek 
+				B = gang
+				Output: 1
+				Explanation: charactera at position 0 is the
+				same in the two strings A and B.
+
+			Your Task:  
+				You dont need to read input or print anything. 
+				Complete the function sameChar() which takes the two strings A and B
+				as input parameters and returns the 
+				count of the characters that are same in A and B.
+
+			Expected Time Complexity: O(N) where N is the length of strings A and B.
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1<= A.length(), B.length() <= 10^4
+
+		class Solution{
+			public:
+			int sameChar(string A, string B) {
+				int cnt=0;
+				
+				for(int i=0; i<A.size(); i++)
+					if(toupper(A[i]) == toupper(B[i])) 		//or if(tolower(A[i]) == tolower(B[i]))
+						cnt++;
+
+				return cnt;
+			}
+		};
+	
+	487) Permutations of a given string: (Lecture-39)
+		Problem statement:
+			Given a string S. 
+			The task is to print all unique permutations of the given string
+			that may contain dulplicates in lexicographically sorted order. 
+			
+			Example 1:
+				Input: ABC
+				Output:
+				ABC ACB BAC BCA CAB CBA
+				Explanation:
+				Given string ABC has permutations in 6 
+				forms as ABC, ACB, BAC, BCA, CAB and CBA .
+
+			Example 2:
+				Input: ABSG
+				Output:
+				ABGS ABSG AGBS AGSB ASBG ASGB BAGS 
+				BASG BGAS BGSA BSAG BSGA GABS GASB 
+				GBAS GBSA GSAB GSBA SABG SAGB SBAG 
+				SBGA SGAB SGBA
+				Explanation:
+				Given string ABSG has 24 permutations.
+
+			Your Task:  
+				You don't need to read input or print anything. 
+				Your task is to complete the function find_permutation() 
+				which takes the string S as input parameter and returns a vector of string in lexicographical order.
+
+			Expected Time Complexity: O(n! * n)
+			Expected Space Complexity: O(n! * n)
+
+			Constraints:
+				1 <= length of string <= 5
+
+		class Solution {
+			private:
+				void PermuteGen(string main, vector<string> &ans, int i){
+					if(i >= main.size()){
+						ans.push_back(main);
+						return ;
+					}
+					
+					for(int j=i; j<main.size(); j++){
+						swap(main[i], main[j]);
+						PermuteGen(main, ans, i+1);
+					}
+				}
+				public:
+				vector<string>find_permutation(string S){
+					vector<string> ans;
+					PermuteGen(S, ans, 0);
+					sort(begin(ans), end(ans));
+					
+					set<string> setter (begin(ans), end(ans));
+					
+					//ans.clear(); 
+					// this assign method clears the vector first then includes all the elements
+					ans.assign(setter.begin(), setter.end());
+					return ans;
+				}
+			};
+	
+	488) Sort string:
+		Problem statement:
+			Given a string S, sort it in the following manner. 
+			Sorted string must contain a vowel as first letter and a consonant as 
+			next letter and so on OR a consonant as first letter and a vowel as next letter and so on, 
+			depending on the string. If there is no vowel left 
+			then print the remaining consonant in ascending order and vice versa. 
+			Note: Order of vowel must be a->e->i->o->u and order of consonant must be b->c->d... and so on.
+			Example 1:
+			Input: abcdei 
+			Output: abecid 
+			Explanation: 'a' (Vowel) came first so the
+			pattern of sorted string is vcvcvcvc... 
+			
+			Example 2:
+			Input: bcadefgh
+			Output: bacedfgh 
+			Explanation: 'b' (consonant) came first so
+			the pattern of sorted string is cvcvcvcv....
+			
+			Your Task:
+				You don't need to read input or print anything. 
+				Your task is to complete the function SortedString() 
+				which takes the string s as input parameters and returns the sorted string.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(N)
+			Constraints:
+				1<=|S|<=1000000
+
+		class Solution {
+			public:
+			string SortedString(string s) {
+				string ans;
+				int pttrn=0;
+				// checking the pattern will be cvcvcv or vcvcvc
+				if(s[0] == 'a' || s[0] == 'e' || s[0] == 'i' || s[0] == 'o' || s[0] == 'u')
+					//vcvcvc pattern
+					pttrn = 1;
+				//else
+					// cvcvcv pattern
+					
+				sort(begin(s), end(s));
+				string vowels, consonants;
+				
+				for(char ch : s){
+					if(ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u')
+						vowels += ch;
+					else
+						consonants += ch;
+				}
+				
+				int cnt=1, i=0,j=0;
+				if(pttrn){
+					// vcvcvcvc pattern
+					while(i < vowels.size() && j<consonants.size()){
+						if(cnt&1)
+						ans += vowels[i++];
+						else
+						ans += consonants[j++];
+						cnt++;
+					}
+				}else{
+					//cvcvcv pattern
+					while(i < vowels.size() && j<consonants.size()){
+						if(cnt&1)
+						ans += consonants[j++];
+						else
+						ans += vowels[i++];
+						cnt++;
+					}
+				}
+				
+				//individual check
+				while(i<vowels.size())
+					ans += vowels[i++];
+					
+				while(j<consonants.size())
+					ans += consonants[j++];
+				return ans;
+			}
+		};
+	
+	489) Sort a String:
+		Problem statement:
+			Given a string consisting of lowercase letters, arrange all its letters in ascending order. 
+			Example 1:
+			Input:
+			S = "edcab"
+			Output: "abcde"
+			Explanation: characters are in ascending
+			order in "abcde".
+			Example 2:
+			Input:
+			S = "xzy"
+			Output: "xyz"
+			Explanation: characters are in ascending
+			order in "xyz".
+
+
+			Your Task:  
+			You don't need to read input or print anything. 
+			Your task is to complete the function sort() which takes the string as inputs and returns the modified string.
+
+			Expected Time Complexity: O(|S| * log |S|)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ |S| ≤ 10^5
+				S contains only lowercase alphabets.
+
+		// Not Optimized:
+			string sort(string s){
+				for(int i=1; i<s.size(); i++){
+					int j=i-1;
+					char ch = s[i];
+					while(j>=0){
+						if(s[j] < ch)
+							break;
+						s[j+1] = s[j];
+						j--;
+					}
+					s[++j] = ch;
+				}
+				return s;
+			}
+		
+		// Optimized:
+			string sort(string s){
+				sort(s.begin(), s.end());
+				return s;
+			}
+
+	490) Check String:
+		Problem statement:
+			Given a string, check if all its characters are the same or not.
+			Example 1:
+			Input:
+			s = "geeks"
+			Output: False
+			Explanation: The string contains different
+			character 'g', 'e', 'k' and 's'.
+
+			Example 2:
+			Input:
+			s = "gggg"
+			Output: True
+			Explanation: The string contains only one
+			character 'g'.
+
+			Your Task:
+				You don't need to read input or print anything. 
+				Your task is to complete the function check() which 
+				takes a string as input and returns True if all the 
+				characters in the string are the same. Else, it returns False.
+
+			Expected Time Complexity: O(|S|).
+			Expected Auxiliary Space: O(1).
+			Constraints:
+				1 <= |S| <= 10^4
+
+		class Solution {
+			public:
+			bool check (string s) {
+				for(int i=1; i<s.size(); i++)
+					if(s[i] != s[i-1])
+						return 0;
+				return 1;
+			}
+		};
+
+	491) Ordering of strings:
+		Problem statement:
+			You will be given N number of strings.
+			You have to find the lexicographically smallest string and the lexicographically largest string among these strings.
+			
+			Example 1:
+				Input:
+				N = 3
+				strings = a , ab , abc
+				Output: a abc
+				Explanation: Lexicographically smallest is
+				"a" and lexicographically largest is
+				"abc".
+
+			Example 2:
+				Input:
+				N = 2
+				strings = abc , abc
+				Output: abc abc
+				Explanation: Lexicographically smallest is
+				"abc" and lexicographically largest is
+				"abc"		
+
+			Your Task:  
+				You dont need to read input or print anything. 
+				Complete the function orderStringâ€‹() which takes a 2d character array and an integer
+				N as input parameter and returns an array of size 2 where first value should be 
+				lexicographically smallest string and second value should be lexicographically largest string.
+
+			Expected Time Complexity: O(N* max of all string length ).
+			Expected Auxiliary Space: O(1).		
+
+			Constraints:
+				1 <= N , length of each string <= 10^3
+
+		class Solution{
+			public:
+			vector<string> orderString(string s[], int n) {
+				vector<string> ans;
+				
+				string min=s[0], max=s[0];
+				for(int i=1; i<n; i++){
+					if(min > s[i])
+						min = s[i];
+					
+					if(max < s[i])
+						max = s[i];
+				}
+				ans.push_back(min);
+				ans.push_back(max);
+				return ans;
+			}	
+		};
+
+	492) Prefix match with other strings:
+		Problem statement:
+			Given an array of strings arr[] of size n,
+			a string str and an integer k. 
+			The task is to find the count of strings in arr[] 
+			whose prefix of length k matches with the k-length prefix of str.
+
+			Example 1:
+				Input:
+				n = 6
+				arr[] = {“abba”, “abbb”, “abbc”, “abbd”, 
+				“abaa”, “abca”}
+				str = “abbg”
+				k = 3
+				Output: 
+				4 
+			Explanation:
+			“abba”, “abbb”, “abbc” and “abbd” have their prefix of length 3 equal to 3-length prefix of str i.e., "abb".
+			
+			Example 2:
+			Input:
+			n = 3
+			arr[] = {“geeks”, “geeksforgeeks”, “forgeeks”}
+			str = “ge”
+			k = 5
+			Output: 
+			0
+			Explanation:
+			There do not exists any prefix of str with length 5. So, there are no matches possible.
+
+			Your Task:  
+			You don't need to read input or print anything. 
+			Your task is to complete the function klengthpref() which takes the array of 
+			strings arr[], its size n and an integer k, a string str as input parameters 
+			and returns the count of strings in arr[] whose prefix of 
+			length k matches with the k length prefix of str.
+
+			Expected Time Complexity: O(n*l) where l is the length of the longest word in arr[].
+			Expected Auxiliary Space: O(n*l) where l is the length of the longest word in arr[].
+
+			Constraints:
+				1 <= n <= 1000
+				1 <= |arr[i]| , |str| <= 1000
+				1 <= k <= 1000
+				arr[i], str must contain only lowercase English alphabets
+
+		class Solution{ 
+			private:
+			bool checkPrefix(string sample, string main, int k){
+				int i=0;
+				if(sample.size() < k)
+					return 0;
+					
+				while(k){
+					if(sample[i] != main[i])
+						return 0;
+					i++,k--;
+				}
+				return 1;
+			}
+			public:
+			int klengthpref(string arr[], int n, int k, string str){    
+				if(str.size() < k)
+					return 0;
+				
+				int cnt=0;
+				for(int i=0; i<n; i++) {
+					string crtnString = arr[i];
+					
+					if(checkPrefix(arr[i], str, k))
+						cnt++;
+				}
+				return cnt;
+			}
+		};
+		
+	493)
+
+	494)
+
+	495)
+	
+	496)
+	
+	497)
+	
+	498)
+
+	499)
+
+	500)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
