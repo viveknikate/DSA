@@ -19257,6 +19257,127 @@ Lecture-40: Rat in a Maze Problem
 				cout << i << "\t";				// 1       2       3       4       5       1       100
 			return 0;
 		}
+
+	// Accessin the inner vectors of 2D vector:
+		#include <iostream>
+		#include <vector>
+		#include <algorithm>
+
+		using namespace std;
+
+		int main() {
+			// Define a 2D vector of strings
+			vector<vector<string>> vec2D = {{"banana", "apple", "orange"},
+										{"grape", "kiwi", "pear"},
+										{"strawberry", "blueberry", "raspberry"}};
+
+			// Sort each inner vector
+			for (auto& innerVec : vec2D) {
+				sort(innerVec.begin(), innerVec.end());
+			}
+
+			// Output the sorted 2D vector
+			for (const auto& innerVec : vec2D) {
+				for (const auto& str : innerVec) {
+					cout << str << " ";
+				}
+				cout << endl;
+			}
+
+			return 0;
+		}
+
+	// sorting of 2d Vector:
+		#include <iostream>
+		#include <vector>
+		#include <algorithm>
+
+		using namespace std;
+
+		int main() {
+			// Define a 2D vector of integers
+			vector<vector<int>> vec2D = {{1, 2, 3},
+									{1, 5, 9},
+									{1, 6, 5}};
+
+			// Sort the 2D vector
+			sort(vec2D.begin(), vec2D.end());
+
+			// Output the sorted 2D vector
+			for (const auto& innerVec : vec2D) {
+				for (const auto& num : innerVec) {
+					cout << num << " ";
+				}
+				cout << endl;
+			}
+
+			return 0;
+		}
+		//output:
+			1 2 3 
+			1 5 9 
+			1 6 5 
+
+		//or (run this code on compiler to check output)
+			#include <iostream>
+			#include <vector>
+			#include <algorithm>
+			using namespace std;
+
+			int main() {
+				// Define a 2D vector of integers
+				vector<vector<int>> vec2D = {{1, 4, 0},
+										{1, 4, 9},
+										{1, 2, 5}};
+										
+				// Output the sorted 2D vector
+				for (const auto& innerVec : vec2D) {
+					for (const auto& num : innerVec) {
+						cout << num << " ";
+					}
+					cout << endl;
+				}
+
+				// Sort the 2D vector using the custom comparison function
+				sort(vec2D.begin(), vec2D.end());
+				
+				std::cout << std::endl;
+				std::cout << "Sorted in Increasing order every vector also: " << std::endl;
+				// Output the sorted 2D vector
+				for (const auto& innerVec : vec2D) {
+					for (const auto& num : innerVec) {
+						cout << num << " ";
+					}
+					cout << endl;
+				}
+				
+				
+				std::cout << endl<< "sorted 2D vector in drecreasing order: " << std::endl;
+				sort(vec2D.begin(), vec2D.end(), greater<vector<int>>());
+					for (const auto& innerVec : vec2D) {
+						for (const auto& num : innerVec) {
+							cout << num << " ";
+						}
+					cout << endl;
+				}
+				
+				// re-ordering every inner vector in drecreasing order
+				// don't forget to use the & sign here else this change will not 
+				// if you do like this then change will not be visible coz its just create the copy of vector
+				// for(auto innerVec : vec2D)
+				for(auto& innerVec : vec2D)
+					sort(innerVec.begin(), innerVec.end(), greater<int>());
+					
+				std::cout << "re-ordering every inner vector in drecreasing order :" << std::endl;
+				sort(vec2D.begin(), vec2D.end(), greater<vector<int>>());
+					for (const auto& innerVec : vec2D) {
+						for (const auto& num : innerVec) {
+							cout << num << " ";
+						}
+					cout << endl;
+				}
+				return 0;
+			}
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array
@@ -56232,21 +56353,1130 @@ POTD:-[Problem of the Day]
 			}
 		};
 		
-	493)
+	493) Largest Number formed from an Array:
+		Problem statement:
+			Given an array of strings arr[] of length n representing non-negative integers,
+			arrange them in a manner, such that, after concatanating them in order,
+			it results in the largest possible number.
+			Since the result may be very large, return it as a string.
 
-	494)
+			Example 1:
+				Input: 
+				n = 5
+				arr[] =  {"3", "30", "34", "5", "9"}
+				Output: "9534330"
+				Explanation: 
+				Given numbers are  {"3", "30", "34", "5", "9"}, 
+				the arrangement "9534330" gives the largest value.
 
-	495)
+			Example 2:
+				Input: 
+				n = 4
+				arr[] =  {"54", "546", "548", "60"}
+				Output: "6054854654"
+				Explanation: 
+				Given numbers are {"54", "546", "548", "60"}, the 
+				arrangement "6054854654" gives the largest value.
+
+			Your Task:  
+				You don't need to read input or print anything.
+				Your task is to complete the function printLargest() which takes the
+				array of strings arr[] as a parameter and returns a string denoting the answer.
+
+			Expected Time Complexity: O(n*log(n) ).
+			Expected Auxiliary Space: O(n).
+
+			Constraints:
+				1 ≤ n ≤ 10^5
+				0 ≤ arr[i] ≤ 10^18
+				Sum of all the elements of the array is greater than 0.
+
+		class Solution{
+			public:
+			// The main function that returns the arrangement with the largest value as
+			// string.
+			// The function accepts a vector of strings
+			string printLargest(int n, vector<string> &arr) {
+				string ans;
+				
+				sort(arr.begin(), arr.end(), [](string a, string b){
+					return a+b > b+a;
+				});
+				
+				for(auto s : arr)
+					ans += s;
+				return ans;
+			}
+		};
+
+		//or
+			class Solution{
+				public:
+					// The main function that returns the arrangement with the largest value as
+					// string.
+					// The function accepts a vector of strings
+				bool static comp(string a, string b){
+					return (a+b) > (b+a);
+				}
+				string printLargest(int n, vector<string> &arr) {
+					string ans;
+					sort(arr.begin(), arr.end(), comp);
+					for(auto s : arr)
+						ans += s;
+					return ans;
+				}
+			};
+
+			class Solution{
+				public:
+				// The main function that returns the arrangement with the largest value as
+				// string.
+				// The function accepts a vector of strings
+				static bool comp(string a, string b){
+					string s1,s2;
+					s1 = a+b, s2 = b+a;
+					return s1>s2;
+				}
+				string printLargest(int n, vector<string> &arr) {
+					string ans;
+					sort(arr.begin(), arr.end(), comp);
+					for(auto s : arr)
+						ans += s;
+					return ans;
+				}
+			};
+
+	494) Count Occurences of Anagrams:
+		Problem statement:
+			Given a word pat and a text txt. Return the count of the occurrences of anagrams of the word in the text.
+			Example 1:
+				Input:
+				txt = forxxorfxdofr
+				pat = for
+				Output: 3
+				Explanation: for, orf and ofr appears
+				in the txt, hence answer is 3.
+
+			Example 2:
+			Input:
+			txt = aabaabaa
+			pat = aaba
+			Output: 4
+			Explanation: aaba is present 4 times
+			in txt.
+			Your Task:
+				Complete the function search() which takes two strings pat, txt,
+				as input parameters and returns an integer denoting the answer. 
+				You don't need to print answer or take inputs.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(26) or O(256)
+
+			Constraints:
+			1 <= |pat| <= |txt| <= 10^5
+			Both strings contain lowercase English letters.	
+
+		// Not Optimized:
+			class Solution{
+				private:
+				bool checkMapper(int p1[], int p2[]){
+					for(int u=0; u<26; u++)
+						if(p1[u] != p2[u])
+							return 0;
+					return 1;
+				}
+				public:
+				int search(string pat, string txt) {
+					int FreqPat[26] = {0};
+					
+					// mapping for pat
+					for(int a=0; a<pat.size(); a++)
+						FreqPat[pat[a]-'a']++;
+					
+					int cnt=0;
+					for(int i=0; i<=(txt.size()-pat.size()); i++){
+						string sub = txt.substr(i, pat.size());
+						
+						// mapping
+						int FreqTxt[26] = {0};
+						for(int j=0; j<sub.size(); j++)
+							FreqTxt[sub[j]-'a']++;
+						
+						if(checkMapper(FreqPat, FreqTxt))
+							cnt++;
+					}
+					return cnt;
+				}
+			};
+
+		// Optimized (Sliding Window approach):
+			class Solution{
+				private:
+				bool checkMapper(int p1[], int p2[]){
+					for(int u=0; u<26; u++)
+						if(p1[u] != p2[u])
+							return 0;
+					return 1;
+				}
+				public:
+				int search(string pat, string txt) {
+					int FreqPat[26] = {0};
+					
+					// mapping for pat
+					for(int a=0; a<pat.size(); a++)
+						FreqPat[pat[a]-'a']++;
+					
+					int cnt=0;
+					int FreqTxt[26] = {0};
+
+					// mapping
+					string sub = txt.substr(0, pat.size());
+					for(int j=0; j<sub.size(); j++)
+						FreqTxt[sub[j]-'a']++;
+					
+					if(checkMapper(FreqPat, FreqTxt))
+							cnt++;
+					
+					for(int i=1; i<=(txt.size()-pat.size()); i++){
+						
+						// Sliding Window
+						FreqTxt[txt[(i-1)] - 'a']--;
+						FreqTxt[txt[i+pat.size()-1] - 'a']++;
+
+						if(checkMapper(FreqPat, FreqTxt))
+							cnt++;
+					}
+					return cnt;
+				}
+			};
+
+	495) Bag of Tokens:
+		Problem statement:
+			You start with an initial power of power, 
+			an initial score of 0, and a bag of tokens given as an integer array tokens, 
+			where each tokens[i] donates the value of tokeni.
+			Your goal is to maximize the total score by strategically playing these tokens.
+			In one move, you can play an unplayed token in one of the two ways (but not both for the same token):
+
+			Face-up: If your current power is at least tokens[i], you may play tokeni, losing tokens[i] power and gaining 1 score.
+			Face-down: If your current score is at least 1, you may play tokeni, gaining tokens[i] power and losing 1 score.
+			Return the maximum possible score you can achieve after playing any number of tokens.
+
+			Example 1:
+			Input: tokens = [100], power = 50
+			Output: 0
+			Explanation: Since your score is 0 initially, you cannot play the token face-down. You also cannot play it face-up since your power (50) is less than tokens[0] (100).
+			Example 2:
+			Input: tokens = [200,100], power = 150
+			Output: 1
+			Explanation: Play token1 (100) face-up, reducing your power to 50 and increasing your score to 1.
+			There is no need to play token0, since you cannot play it face-up to add to your score. The maximum score achievable is 1.
+			Example 3:
+			Input: tokens = [100,200,300,400], power = 200
+			Output: 2
+
+			Explanation: Play the tokens in this order to get a score of 2:
+			Play token0 (100) face-up, reducing power to 100 and increasing score to 1.
+			Play token3 (400) face-down, increasing power to 500 and reducing score to 0.
+			Play token1 (200) face-up, reducing power to 300 and increasing score to 1.
+			Play token2 (300) face-up, reducing power to 0 and increasing score to 2.
+			The maximum score achievable is 2.
+
+			Constraints:
+				0 <= tokens.length <= 1000
+				0 <= tokens[i], power < 10^4
 	
-	496)
-	
-	497)
-	
-	498)
+		class Solution {
+			public:
+			int bagOfTokensScore(vector<int>& tokens, int power) {
+				int mxScore=0;
+				sort(tokens.begin(), tokens.end());
+				int powerReducer=0, elementAdder=1, index=0;
+				for(int i=0; index < tokens.size()-powerReducer; i++){
+					if(power >= tokens[index]){
+						mxScore++;
+						power -= tokens[index++];
+					}else{
+						if(index == tokens.size() - elementAdder)
+							break;
+						power += tokens[tokens.size() - elementAdder];
+						mxScore--;
+						if(mxScore == -1)
+							break;
+						elementAdder++;
+						powerReducer++;
+					}
+				}
+				return (mxScore==-1) ? 0 : mxScore;
+			}
+		};
 
-	499)
+		// Clean Code:
+			class Solution {
+				public:
+				int bagOfTokensScore(vector<int>& tokens, int power) {
+					int mxScore=0, mainMX=0;
+					int right=0, left=tokens.size()-1;
+					sort(tokens.begin(), tokens.end());
 
-	500)
+					while(right <= left){
+						if(power >=  tokens[right]){
+							power -= tokens[right];
+							mxScore++;
+							mainMX = max(mxScore, mainMX);
+							right++;
+						}else if(mxScore > 0){
+							mxScore--;
+							power += tokens[left--];
+						}else{
+							break;
+						}
+					}
+					return mainMX;
+				}
+			};
+
+	496) Base Conversion:
+		Problem statement
+			You are given a number ‘N’ as a string in base ‘B’.
+			Your task is to convert ‘N’ in base 10.
+			If it’s impossible to convert ‘N’ into base 10, then you need to print -1.
+
+			Note :
+			1. ‘N’ contains only digits ‘0’ to ‘9’ and English letters ‘A’ to ‘F’.
+			2. Decimal equivalent of 0 is 0, 1 is 1, . . .9 is 9, A is 10, B is 11, . . . F is 15.
+			Constraints:
+				1 <= T <= 5
+				1 <= decimal( N ) <= 10 ^ 9
+				1 <= B  <= 16
+
+				Where ‘T’ is the number of test cases, decimal(N) is the decimal equivalent of ‘N’ and ‘B’ is the base of number ‘N’.
+			Note:
+				You do not need to print anything, it has already been taken care of. Just implement the given function.
+			Sample Input 1:
+				2
+				10 2
+				20 2
+				Sample Output 1:
+				2
+				-1
+				Explanation of Sample Input 1:
+				Test Case 1 :  
+				Given N = 10 and Base = 2. 
+				Decimal equivalent of 10 from base 2 = 2. 
+
+				Test Case 2 : 
+				Given N = 20 and Base = 2. 
+				We cannot have digit ‘2’ in a number of base 2. So, a decimal equivalent of this number is not possible. Hence, we need to print -1. 
+				Sample Input 2:
+				2
+				B 16 
+				A 11
+				Sample Output 2:
+				11
+				10
+				Explanation of Sample Input 2:
+				Test Case 1 :  
+				Given N = B and Base = 16. 
+				Decimal equivalent of B from base 16 = 11. 
+
+				Test Case 2 : 
+				Given N = A and Base = 16.  
+				Decimal equivalent of A from base 11 = 10
+
+		#include <bits/stdc++.h> 
+		int baseConversion(string &num, int base) {
+			try{
+				size_t pos=0;
+				int result = std::stoi(num, &pos, base);
+				if (pos != num.size()) {
+					// If there are characters remaining in the string after conversion
+					return -1;
+				}
+				return result;
+			}catch(invalid_argument e){
+				return -1;
+			}catch(out_of_range e){
+				return -1;
+			}
+		}
+
+		// or
+			/*
+			Time Complexity  : O(N)
+			Space Complexity : O(1)
+
+			Where N is the total number of digits in the given number.
+			*/
+
+			int baseConversion(string &num, int base){
+				int answer = 0;
+				int currentbase = 1;
+				int digit;
+				int n = num.size();
+
+				// Traverse all digits
+				for (int i = n - 1; i >= 0; i--){
+					if (num[i] >= '0' and num[i] <= '9'){
+						digit = num[i] - '0';
+					}else{
+						digit = num[i] - 'A' + 10;
+					}
+
+					// Check for invalid number
+					if (digit >= base)
+						return -1;
+
+					// Update answer and current base
+					answer += (digit * currentbase);
+					currentbase *= base;
+				}
+				return answer;
+			}
+
+	497) Swap the array elements:
+		Problem statement:
+			Given an array arr of n positive integers. The task is to swap every ith element of the array with (i+2)th element.
+			Example 1:
+				Input:
+				n = 3
+				arr[] = 1 2 3
+				Output:
+				3 2 1
+				Explanation:
+				Swapping 1 and 3, makes the array 3 2 1. There is only one swap possible in this array.
+
+			Example 2:
+				Input:
+				n = 5
+				arr[] = 1 2 3 4 5
+				Output:
+				3 4 5 2 1
+				Explanation:
+				Swapping 1 and 3, makes the array 3 2 1 4 5.
+				Now, swapping 2 and 4, makes the array 3 4 1 2 5. 
+				Again,swapping 1 and 5, makes the array 3 4 5 2 1.
+
+			Your Task:
+				Your task is to complete the function swapElements(), which should swap each ith element with (i+2)th element.
+
+			Expected Time Complexity: O(n)
+			Expected Auxilary Space: O(1)
+			Constraints:
+				1 <= n <= 10^6
+				0 <= arri <= 10^9
+
+		class Solution{
+			public:
+			void swapElements(int arr[], int n){
+				for(int i=0; i<n-2; i++){
+					swap(arr[i], arr[i+2]);
+				}
+			}
+		};
+
+	498) Print Anagrams Together:
+		Problem statement:
+			Given an array of strings, return all groups of strings that are anagrams. The groups must be created in order of their appearance in the original array. Look at the sample case for clarification.
+			Note: The final output will be in lexicographic order.
+
+			Example 1:
+			Input:
+			N = 5
+			words[] = {act,god,cat,dog,tac}
+			Output:
+			act cat tac 
+			god dog
+			Explanation:
+			There are 2 groups of
+			anagrams "god", "dog" make group 1.
+			"act", "cat", "tac" make group 2.
+
+			Example 2:
+			Input:
+			N = 3
+			words[] = {no,on,is}
+			Output: 
+			is
+			no on
+			Explanation:
+			There are 2 groups of
+			anagrams "is" makes group 1.
+			"no", "on" make group 2.
+
+			Your Task:
+			The task is to complete the function Anagrams() that takes a list of strings as input and returns a list of groups such that each group consists of all the strings that are anagrams.
+
+			Expected Time Complexity: O(N*|S|*log|S|), where |S| is the length of the strings.
+			Expected Auxiliary Space: O(N*|S|), where |S| is the length of the strings.
+
+			Constraints:
+				1<=N<=100
+				1<=|S|<=10
+
+		class Solution{
+			private:
+				bool areSame(int f1[], int s1[]){
+					for(int i=0; i<26; i++)
+						if(f1[i] != s1[i])
+							return 0;
+					return 1;
+				}
+			public:
+			vector<vector<string> > Anagrams(vector<string>& string_list) {
+				// sort(string_list.begin(), string_list.end());
+				vector<vector<string>> ans;
+				
+				for(int i=0; i<string_list.size(); i++) {
+					string crntStr = string_list[i];
+					if(crntStr == "0")
+						continue;
+						
+					vector<string> temp;
+					temp.push_back(crntStr);
+					// mapping for crntStr
+					int MapperCrntStr[26] = {0};
+					for(int z=0; z<crntStr.size(); z++)
+						MapperCrntStr[crntStr[z] - 'a']++;
+						
+					
+					// iterate over whole list check all crntStr's anagrams
+					for(int j=i+1; j<string_list.size(); j++){
+						string sample = string_list[j];
+						
+						if(sample == "0")
+							continue;
+						
+						// mapping for sample
+						int MapperSample[26] = {0};
+						for(int z=0; z<sample.size(); z++)
+							MapperSample[sample[z] - 'a']++;
+							
+						if(areSame(MapperCrntStr, MapperSample)){
+							temp.push_back(sample);
+							string_list[j] = "0";
+						}
+					}
+					// sort(temp.begin(), temp.end());
+					ans.push_back(temp);
+				}
+				
+				// sorting the inner vector of 2D vector's
+				// for(auto& inner : ans)
+				//     sort(inner.begin(), inner.end());
+				
+				return ans;
+			}
+		};
+
+		// Concise solution:
+			class Solution{
+				public:
+				vector<vector<string>> Anagrams(vector<string>& string_list) {
+					map<string, vector<string>> mp;
+					for(int i=0; i<string_list.size(); i++){
+						string s = string_list[i];
+						sort(s.begin(), s.end());
+						mp[s].push_back(string_list[i]);
+					}
+					
+					vector<vector<string>> ans;
+					for(auto it: mp)
+						ans.push_back(it.second);
+					
+					return ans;
+				}
+			};
+
+	499) Anagram:
+		Problem statement:
+			Given two strings a and b consisting of lowercase characters. The task is to check whether two given strings are an anagram of each other or not. An anagram of a string is another string that contains the same characters, only the order of characters can be different. For example, act and tac are an anagram of each other.
+			Note:-
+			If the strings are anagrams you have to return True or else return False
+			|s| represents the length of string s.
+
+			Example 1:
+			Input:a = geeksforgeeks, b = forgeeksgeeks
+			Output: YES
+			Explanation: Both the string have same characters with
+				same frequency. So, both are anagrams.
+
+			Example 2:
+			Input:a = allergy, b = allergic
+			Output: NO
+			Explanation: Characters in both the strings are 
+				not same, so they are not anagrams.
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function isAnagram() which takes the string a and string b as input parameter and check if the two strings are an anagram of each other. The function returns true if the strings are anagram else it returns false.
+
+			Expected Time Complexity:O(|a|+|b|).
+			Expected Auxiliary Space: O(Number of distinct characters).
+
+			Constraints:
+				1 ≤ |a|,|b| ≤ 10^5
+
+		// sorting approach:
+			class Solution {
+				public:
+				//Function is to check whether two strings are anagram of each other or not.
+				bool isAnagram(string a, string b){
+					sort(begin(a), end(a));
+					sort(begin(b), end(b));
+					if(a == b)
+						return 1;
+					return 0;
+				}
+			};
+
+		// mapping approach:
+			-using 2 maps:
+				class Solution {
+					private:
+						bool areSame(int *m1, int *m2){
+							for(int i=0; i<26; i++)
+								if(m1[i] != m2[i])
+									return 0;
+							return 1;
+						}
+					public:
+					//Function is to check whether two strings are anagram of each other or not.
+					bool isAnagram(string a, string b){
+						if(a.size() != b.size())
+							return 0;
+						
+						int mapperA[26] = {0}, mapperB[26] = {0};
+						for(int i=0; i<a.size(); i++)
+							mapperA[a[i] - 'a']++ , mapperB[b[i] - 'a']++;
+							
+						if(areSame(mapperA, mapperB))
+							return 1;
+						return 0;
+					}
+				};
+		
+			
+			-using 1 map:
+				class Solution {
+					public:
+					//Function is to check whether two strings are anagram of each other or not.
+					bool isAnagram(string a, string b){
+						if(a.size() != b.size())
+							return 0;
+						
+						int MAP[26] = {0};
+						for(int z=0; z<a.size(); z++)
+							MAP[a[z] - 'a']++, MAP[b[z] - 'a']--;
+							
+						for(int e=0; e<26; e++)
+							if(MAP[e] != 0)
+								return false;
+						return 1;
+					}
+				};
+
+	500) Anagram Strings:
+		Problem statement:
+			Given two strings S1 and S2 . Print "1" if both strings are anagrams otherwise print "0" .
+			Note: An anagram of a string is another string with exactly the same quantity of each character in it, in any order.
+
+			Example 1:
+				Input: S1 = "cdbkdub" , S2 = "dsbkcsdn"
+				Output: 0 
+				Explanation: Length of S1 is not same
+				as length of S2.
+
+			Example 2:
+				Input: S1 = "geeks" , S2 = "skgee"
+				Output: 1
+				Explanation: S1 has the same quantity 
+				of each character in it as S2.
+
+			Your Task:  
+				You don't need to read input or print anything. Your task is to complete the function areAnagram() which takes S1 and S2 as input and returns "1" if both strings are anagrams otherwise returns "0".
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(K) ,Where K= Contstant
+
+			Constraints:
+				1 <= |S1| <= 1000
+				1 <= |S2| <= 1000 
+
+		class Solution {
+			public:
+			int areAnagram(string S1, string S2) {
+				sort(S1.begin(), S1.end());
+				sort(begin(S2), end(S2));
+				return (S1 == S2) ? 1 : 0;
+			}
+		};
+
+		//or using map
+			class Solution {
+				public:
+				int areAnagram(string S1, string S2) {
+					if(S1.size() != S2.size())
+						return 0;
+						
+					int MAP[26] = {0};
+					for(int i=0; i<S1.size(); i++)
+						MAP[S1[i] - 'a']++, MAP[S2[i] - 'a']--;
+						
+					// all elements of map should be zero.
+					for(int i=0; i<26; i++)
+						if(MAP[i] != 0)
+							return 0;
+					return 1;
+				}
+			};
+
+	501) Min Manipulations to make Strings Anagram:
+		Problem statement:
+			Given two strings in lowercase, your task is to find minimum number of manipulations required to make two strings anagram without deleting any character. If two strings contains same data set in any order then strings are called Anagrams.
+
+			Example 1:
+			Input:
+			S1 = "aba", S2 = "baa", N = 3
+			Output: 0
+			Explanation: Both the strings are already
+			anagrams.
+			
+			Example 2:
+			Input: 
+			S1 = "ddcf", S2 = "cedk", N = 4
+			Output: 2
+			Explanation: We can change 'e' and 'k' in
+			S2 to 'd' and 'f' to make both the strings
+			anagram. 
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function minManipulation() which takes the strings S1 and S2 and their length N as inputs and returns the minimum number of manipulations required to make both the strings anagram.
+
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+			1<=N<=10^5
+			|S1| = |S2| = N
+			|S| represents the length of the string S.
+		
+		int minManipulation (int N, string S1, string S2) {
+			int cnt=0;
+			for(int i=0; i<N; i++){
+				char ch = S1[i];
+				if(S2.find(ch) != string::npos)
+					S2[S2.find(ch)] = '0';
+				else
+					cnt++;
+			}
+			return cnt;
+		}
+
+		//or
+			int minManipulation (int N, string S1, string S2) {
+				int MAP[26]={0};
+
+				for(int i=0; i<S1.size(); i++)
+					MAP[S1[i] - 'a']++, MAP[S2[i] - 'a']--;
+				
+				int cnt=0;
+				for(int a=0; a<26; a++)
+					cnt += abs(MAP[a]);
+					
+				return cnt/2;
+			}
+
+	502) String Permutations: (Lecture-39)
+		Problem statement:
+			Given a string S. The task is to find all permutations (need not be different) of a given string.
+			Note: return the permutations in lexicographically increasing order.
+
+			Example 1:
+			Input:
+			S = AAA
+			Output: AAA AAA AAA AAA AAA AAA
+			Explanation: There are total 6 permutations, as given in the output.
+
+			Example 2:
+			Input:
+			S = ABSG
+			Output: ABGS ABSG AGBS AGSB ASBG ASGB
+			BAGS BASG BGAS BGSA BSAG BSGA GABS
+			GASB GBAS GBSA GSAB GSBA SABG SAGB
+			SBAG SBGA SGAB SGBA
+			Explanation: There are total 24 permutations, as given in the output.
+
+			Your Task:
+				This is a function problem. You only need to complete the function permutation that takes S as parameter and returns the list of permutations in lexicographically increasing order. The newline is automatically added by driver code.
+
+			Constraints:
+				1 ≤ size of string ≤ 5
+
+			Expected Time Complexity: O(N * N!), N = length of string.
+			Expected Auxiliary Space: O(N!)
+
+		class Solution{
+			private:
+				void GenPermute(string main, vector<string> &ans, int i){
+					if(i >= main.size()){
+						ans.push_back(main);
+						return ;
+					}
+					
+					for(int j=i; j<main.size(); j++){
+						swap(main[i], main[j]);
+						GenPermute(main, ans, i+1);
+					}
+				}
+			
+			public:
+			//Complete this function
+			vector<string> permutation(string S) {
+				vector<string> res;
+				GenPermute(S, res, 0);
+				
+				sort(res.begin(), res.end());
+				return res;
+			}
+		};
+
+	503) Check if a string is Isogram or not:
+		Problem statement:
+			Given a string S of lowercase alphabets, check if it is isogram or not. An Isogram is a string in which no letter occurs more than once.
+
+			Example 1:
+			Input:
+			S = machine
+			Output: 1
+			Explanation: machine is an isogram
+			as no letter has appeared twice. Hence
+			we print 1.
+
+			Example 2:
+			Input:
+			S = geeks
+			Output: 0
+			Explanation: geeks is not an isogram
+			as 'e' appears twice. Hence we print 0.
+
+			Your Task:
+			This is a function problem. You only need to complete the function isIsogram() that takes a string as a parameter and returns either true or false.
+
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(Number of distinct characters).
+			Note: N = |S|
+
+			Constraints:
+				1 <= |s| <= 10^3
+
+		class Solution {
+			public:
+			bool isIsogram(string s) {
+				int j=0;
+				while(j<s.size()){
+					for(int i=j+1; i<s.size(); i++)
+						if(s[j] == s[i])
+							return 0;
+					j++;       
+				}
+				return 1;
+			}
+		};
+
+		// more Optimized: using map
+			class Solution {
+				public:
+				bool isIsogram(string s) {
+					map<char, int> Freq;
+					for(char c :  s){
+						Freq[c]++;
+						if(Freq[c] >=2)
+							return 0;
+					}
+					return 1;
+				}
+			};
+			
+	504) Find first repeated character:
+		Problem statement:
+			Given a string S. The task is to find the first repeated character in it. We need to find the character that occurs more than once and whose index of second occurrence is smallest. S contains only lowercase letters.
+
+			Example 1:
+			Input: S="geeksforgeeks"
+			Output: e
+			Explanation: 'e' repeats at third position.
+
+			Example 2:
+			Input: S="hellogeeks"
+			Output: l
+			Explanation: 'l' repeats at fourth position.
+
+			Example 3:
+			Input: S="abc"
+			Output: -1
+			Explanation: There is no repeated character.
+
+			Your Task:  
+				You don't need to read input or print anything. Your task is to complete the function firstRepChar() which accepts a string S as input parameter and returns a string containing first repeated character in it. If there is no repeated character in the string S then return "-1".
+
+			Expected Time Complexity: O(|S|) 
+			Expected Auxiliary Space: O(1)
+			where |S| denotes the length of string S.
+		
+		// using map:
+			string firstRepChar(string s) {
+				map<char, int> Freq;
+				
+				for(char ch: s){
+					Freq[ch]++;
+					if(Freq[ch] >= 2)
+						return string(1, ch);
+				}
+				return "-1";
+			}
+
+		// using set:
+			string firstRepChar(string s) {
+				set<char> holder;
+				
+				for(char ch: s){
+					if(holder.find(ch) != holder.end())         // means found
+						return string(1,ch);
+					else
+						holder.insert(ch);
+				}
+				return "-1";
+			}
+
+			//or
+				string firstRepChar(string s) {
+					set<char> holder;
+					
+					for(char ch: s){
+						if(holder.find(ch) != holder.end())         // means found
+							return string(1,ch);
+						holder.insert(ch);
+					}
+					return "-1";
+				}
+
+	505) Sum of numbers in string:
+		Problem statement:
+			Given a string str containing alphanumeric characters. The task is to calculate the sum of all the numbers present in the string.
+
+			Example 1:
+				Input:
+				str = 1abc23
+				Output: 24
+				Explanation: 1 and 23 are numbers in the
+				string which is added to get the sum as
+				24.
+
+			Example 2:
+				Input:
+				str = geeks4geeks
+				Output: 4
+				Explanation: 4 is the only number, so the
+				sum is 4.
+
+			Your Task:
+				The task is to complete the function findSum() which finds and returns the sum of numbers in the string.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(N)
+
+			Constraints:
+				1 <= length of the string <= 10^5
+				Sum of Numbers <= 10^5
+
+		class Solution {
+			public:
+			int findSum(string str){
+				int ttl=0;
+				for(int i=0; i<str.size(); i++){
+					if(isdigit(str[i])){
+						int temp = str[i] - '0', j=i+1;
+						for(j=i+1;j<str.length();j++){
+							if(isdigit(str[j])){
+								temp = temp*10 + (str[j]-'0');
+							}else{
+								break;
+							}
+						}
+						i = j;
+						ttl += temp;
+					}
+				}
+				return ttl;
+			}
+		};
+
+		// Simplified version:
+			class Solution {
+				public:
+				int findSum(string str) {
+					int ttl=0;
+					string temp ="";
+
+					for(int i=0; i<str.size(); i++){
+						if(isdigit(str[i]))
+							temp += str[i];
+						else{
+							if(!temp.empty())
+								ttl += stoi(temp);
+							temp = "";
+						}
+					}
+					
+					if(!temp.empty())
+						ttl += stoi(temp);
+
+					return ttl;
+				}
+			};
+	
+		// using advance for loop:
+			class Solution {
+				public:
+				int findSum(string str) {
+					int total=0;
+
+					string holder = "";
+					for(char ch: str){
+						if(isdigit(ch))
+							holder += ch;
+						else{
+							if(!holder.empty())
+								total += stoi(holder);
+							
+							holder="";
+						}
+					}
+					
+					if(!holder.empty())
+						total += stoi(holder);
+					
+					return total;
+				}
+			};
+	
+	506) Remove common characters and concatenate:
+		Problem statement:
+			Given two strings s1 and s2. Modify both the strings such that all the common characters of s1 and s2 are to be removed and the uncommon characters of s1 and s2 are to be concatenated.
+			Note: If all characters are removed print -1.
+
+			Example 1:
+			Input:
+			s1 = aacdb
+			s2 = gafd
+			Output: cbgf
+			Explanation: The common characters of s1
+			and s2 are: a, d. The uncommon characters
+			of s1 and s2 are c, b, g and f. Thus the
+			modified string with uncommon characters
+			concatenated is cbgf.
+
+			Example 2:
+			Input:
+			s1 = abcs
+			s2 = cxzca
+			Output: bsxz
+			Explanation: The common characters of s1
+			and s2 are: a,c. The uncommon characters
+			of s1 and s2 are b,s,x and z. Thus the
+			modified string with uncommon characters
+			concatenated is bsxz.
+
+			Your Task:
+				The task is to complete the function concatenatedString() which removes the common characters, concatenates, and returns the string. If all characters are removed then return -1.
+
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(Number of distinct characters).
+			Note: N = |Length of Strings|
+
+			Constraints: 
+				1 <= |Length of Strings| <= 10^4
+
+		class Solution {
+			public:
+			string concatenatedString(string s1, string s2) {
+				string ans;
+				for(int i=0; i< s1.size(); i++)
+					if(s2.find(s1[i]) == string::npos)
+						ans += s1[i];
+						
+				for(int i=0; i < s2.size(); i++)
+					if(s1.find(s2[i]) == string::npos)
+						ans += s2[i];
+
+				return (ans == "") ? "-1" :  ans;
+			}
+		};
+	
+	507) Binary String:
+		Problem statement:
+			Given a binary string S. The task is to count the number of substrings that start and end with 1. For example, if the input string is “00100101”, then there are three substrings “1001”, “100101” and “101”.
+
+			Example 1:
+				Input:
+				N = 4
+				S = 1111
+				Output: 6
+				Explanation: There are 6 substrings from
+				the given string. They are 11, 11, 11,
+				111, 111, 1111.
+
+			Example 2:
+				Input:
+				N = 5
+				S = 01101
+				Output: 3
+				Explanation: There 3 substrings from the
+				given string. They are 11, 101, 1101.
+
+			Your Task:
+				The task is to complete the function binarySubstring() which takes the length of binary string n and a binary string a as input parameter and counts the number of substrings starting and ending with 1 and returns the count.
+
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 ≤ |S| ≤ 10^4
+
+		// Not Optimized:
+			class Solution {
+				public:
+				long binarySubstring(int n, string a){
+					long cnt=0;
+					
+					for(int i=0; i<n; i++){
+						if(a[i] == '1')
+							for(int j=i+1; j<n; j++)
+								if(a[j] == '1')
+									cnt++;
+					}
+					return cnt;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				long binarySubstring(int n, string a){
+					int cnt=0;
+					for(char i: a)
+						if(i == '1')
+							cnt++;
+							
+					return 1l * ((cnt*(cnt-1))/2);         // type casting to long 1l or 1ll or 1LL anything you can use.
+				}
+			};
+
+	508) 
+	
+	509)
+	
+	510)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
