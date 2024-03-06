@@ -15759,8 +15759,115 @@ Lecture-39: Permutations of a String
 ---------------------------------------------------------------------------------------------------------
 	01/03/2024
 Lecture-40: Rat in a Maze Problem
-	
-	
+	Q. Rat in a Maze Problem - I:
+		Problem statement:
+			Consider a rat placed at (0, 0) in a square matrix of order N * N. It has to reach the destination at (N - 1, N - 1). Find all possible paths that the rat can take to reach from source to destination. The directions in which the rat can move are 'U'(up), 'D'(down), 'L' (left), 'R' (right). Value 0 at a cell in the matrix represents that it is blocked and rat cannot move to it while value 1 at a cell in the matrix represents that rat can be travel through it.
+			Note: In a path, no cell can be visited more than one time. If the source cell is 0, the rat cannot move to any other cell.
+
+			Example 1:
+			Input:
+			N = 4
+			m[][] = {{1, 0, 0, 0},
+				{1, 1, 0, 1}, 
+				{1, 1, 0, 0},
+				{0, 1, 1, 1}}
+			Output:
+			DDRDRR DRDDRR
+			Explanation:
+			The rat can reach the destination at 
+			(3, 3) from (0, 0) by two paths - DRDDRR 
+			and DDRDRR, when printed in sorted order 
+			we get DDRDRR DRDDRR.
+			Example 2:
+			Input:
+			N = 2
+			m[][] = {{1, 0},
+				{1, 0}}
+			Output:
+			-1
+			Explanation:
+			No path exists and destination cell is 
+			blocked.
+			Your Task:  
+			You don't need to read input or print anything. Complete the function printPath() which takes N and 2D array m[ ][ ] as input parameters and returns the list of paths in lexicographically increasing order. 
+			Note: In case of no path, return an empty list. The driver will output "-1" automatically.
+
+			Expected Time Complexity: O(3^(N^2)).
+			Expected Auxiliary Space: O(L * X), L = length of the path, X = number of paths.
+
+			Constraints:
+				2 ≤ N ≤ 5
+				0 ≤ m[i][j] ≤ 1
+		
+		class Solution{
+			private:
+				bool CanIVisit(int r, int c, vector<vector<int>> vis, vector<vector<int>> main){
+					if((r >= 0 && r < main.size()) && (c >= 0 && c < main.size()) && (!vis[r][c]) && main[r][c])
+						return 1;
+					return 0;
+				}
+			
+				void PathFinder(vector<vector<int>> main, int r, int c, vector<string> &ans, vector<vector<int>> vis, string holder){
+					if(r == main.size()-1 && c == main.size()-1){
+						ans.push_back(holder);
+						return ;
+					}
+					vis[r][c] = 1;
+					int newR, newC;
+					// for Down
+					newR = r+1, newC = c;
+					if(CanIVisit(newR, newC, vis, main)){
+						holder += "D";
+						PathFinder(main, newR, newC, ans, vis, holder);
+						holder.pop_back();
+					}
+					
+					// for Right
+					newR = r, newC = c+1;
+					if(CanIVisit(newR, newC, vis, main)){
+						holder += "R";
+						PathFinder(main, newR, newC, ans, vis, holder);
+						holder.pop_back();
+					}
+					
+					// for Up
+					newR = r-1, newC = c;
+					if(CanIVisit(newR, newC, vis, main)){
+						holder += "U";
+						PathFinder(main, newR, newC, ans, vis, holder);
+						holder.pop_back();
+					}
+					
+					// for Left
+					newR = r, newC = c-1;
+					if(CanIVisit(newR, newC, vis, main)){
+						holder += "L";
+						PathFinder(main, newR, newC, ans, vis, holder);
+						holder.pop_back();
+					}
+					
+					vis[r][c] = 0;
+				}
+			public:
+			vector<string> findPath(vector<vector<int>> &m, int n) {
+				vector<string> ans;
+				if(m[0][0] == 0 || m[n-1][n-1] == 0)
+					return ans;
+				
+				string holder;
+				vector<vector<int>> Visited (n, vector<int>(n, 0));
+				int row=0,col=0;
+				
+				PathFinder(m, row, col, ans, Visited, holder);
+				return ans;
+			}
+		};
+
+	// Dry Run ❌Pending
+---------------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -40047,7 +40154,7 @@ POTD:-[Problem of the Day]
 				1 ≤ R, C ≤ 10^3
 				0 ≤ matrix[i][j] ≤ 1
 
-		class Solution {   
+		class Solution {
 			public:
 			vector<int> repeatedRows(vector<vector<int>> &matrix, int M, int N) {
 				vector<string> holder;
@@ -40081,6 +40188,28 @@ POTD:-[Problem of the Day]
 				return ans;
 			} 
 		};
+
+		// or other approach:
+			class Solution {   
+				public:
+				vector<int> repeatedRows(vector<vector<int>> &matrix, int M, int N) {
+					vector<int> ans;
+					for(int row=0; row<M; row++){
+						for(int j=0; j<row; j++){
+							int z=0;
+							for(z=0; z<N; z++){
+								if(matrix[row][z] != matrix[j][z])
+								break;
+							}
+							if(z == N){
+								ans.push_back(row);
+								break;
+							}
+						}
+					}
+					return ans;
+				} 
+			};
 
 	287) Determine if Two Strings Are Close:
 		Problem Statement:
@@ -51295,6 +51424,23 @@ POTD:-[Problem of the Day]
 			return mxSize;
 		}
 
+		// Other approach:
+			#include <bits/stdc++.h> 
+			int lengthOfLongestSubstring(string &s) {
+				int mxLen=0;
+				for(int i=0; i<s.size(); i++){
+					int j=i+1;
+					string sample = string(1, s[i]);
+					while(j<s.size()){
+						if(sample.find(s[j]) != string::npos)
+							break;
+						sample += s[j++];
+					}
+					mxLen = fmax(mxLen, sample.size());
+				}
+				return mxLen;
+			}
+
 	424) Sum Of Zeroes:
 		Problem statement
 			You are given a binary matrix (it contains only 0s and 1s) with dimensions ‘N * M’. 
@@ -57472,11 +57618,646 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	508) 
+	508) Check If The String Is A Palindrome:
+		Problem statement
+			You are given a string 'S'. Your task is to check whether the string is palindrome or not. For checking palindrome, consider alphabets and numbers only and ignore the symbols and whitespaces.
+			Note :
+			String 'S' is NOT case sensitive.
+
+			Example :
+				Let S = “c1 O$d@eeD o1c”.
+				If we ignore the special characters, whitespaces and convert all uppercase letters to lowercase, we get S = “c1odeedo1c”, which is a palindrome. Hence, the given string is also a palindrome.
+			Constraints :
+				1 <= T <= 100 
+				1 <= Length(S) <= 10^4
+				Where 'T' denotes the number of test cases and 'S' denotes the given string.
+				Time Limit : 1 sec
+
+			Sample Input 1 :
+				2
+				N2 i&nJA?a& jnI2n
+				A1b22Ba
+				Sample Output 1 :
+				Yes
+				No
+				Explanation 1 :
+				For the first test case, S = “N2 i&nJA?a& jnI2n”. If we ignore the special characters, whitespaces and convert all uppercase letters to lowercase, we get S = “n2injaajni2n”, which is a palindrome. Hence, the given string is also a palindrome.
+
+				For the second test case, S = “A1b22Ba”. If we ignore the special characters, whitespaces and convert all uppercase letters to lowercase, we get S = “a1b22ba”, which is not a palindrome. Hence, the given string is not a palindrome.
+				Sample Input 2 :
+				3
+				codingninjassajNiNgNidoc
+				5?36@6?35
+				aaBBa@
+				Sample Output 2 :
+				Yes
+				Yes
+				No
+
+		#include <bits/stdc++.h> 
+		bool checkPalindrome(string s) {
+			string updated;
+			for(int i=0; i<s.size(); i++)
+				if(isalnum(s[i]))
+					updated += s[i];
+			
+			// convert it to lower case
+			transform(updated.begin(), updated.end(), updated.begin(), ::tolower);
+			for(int i=0; i<updated.size()/2; i++)
+				if(updated[i] != updated[updated.size()-i-1])
+					return 0;
+				
+			return 1;
+		}
 	
-	509)
+	509) Maximum Index:
+		Problem statement:
+			Given an array a of n positive integers. The task is to find the maximum of j - i subjected to the constraint of a[i] < a[j] and i < j.
+			Example 1:
+				Input:
+				n = 2
+				a[] = {1, 10}
+				Output:
+				1
+				Explanation:
+				a[0] < a[1] so (j-i) is 1-0 = 1.
+
+			Example 2:
+				Input:
+				n = 9
+				a[] = {34, 8, 10, 3, 2, 80, 30, 33, 1}
+				Output:
+				6
+				Explanation:
+				In the given array a[1] < a[7] satisfying the required condition(a[i] < a[j]) thus giving the maximum difference of j - i which is 6(7-1).
+
+			Your Task:
+				The task is to complete the function maxIndexDiff() which finds and returns maximum index difference. Printing the output will be handled by driver code. 
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(N)
+
+			Constraints:
+				1 ≤ n ≤ 10^6
+				0 ≤ a[i] ≤ 10^9
+
+		// Not Optimized:
+			class Solution{
+				public:
+				int maxIndexDiff(int a[], int n) {
+					int mxValue=0;
+					
+					for(int i=0; i<n; i++){
+						for(int j=i+1; j<n; j++){
+							if(a[i] <= a[j])
+								mxValue = max(mxValue, j-i);
+						}
+					}
+					return mxValue;
+				}
+			};
+
+		// Optimized:
+			❌Pending
 	
-	510)
+	510) Minimum Length of String After Deleting Similar Ends:
+		Problem statement:
+			Given a string s consisting only of characters 'a', 'b', and 'c'. You are asked to apply the following algorithm on the string any number of times:
+			Pick a non-empty prefix from the string s where all the characters in the prefix are equal.
+			Pick a non-empty suffix from the string s where all the characters in this suffix are equal.
+			The prefix and the suffix should not intersect at any index.
+			The characters from the prefix and suffix must be the same.
+			Delete both the prefix and the suffix.
+			Return the minimum length of s after performing the above operation any number of times (possibly zero times).
+
+			Example 1:
+				Input: s = "ca"
+				Output: 2
+				Explanation: You can't remove any characters, so the string stays as is.
+
+			Example 2:
+				Input: s = "cabaabac"
+				Output: 0
+				Explanation: An optimal sequence of operations is:
+				- Take prefix = "c" and suffix = "c" and remove them, s = "abaaba".
+				- Take prefix = "a" and suffix = "a" and remove them, s = "baab".
+				- Take prefix = "b" and suffix = "b" and remove them, s = "aa".
+				- Take prefix = "a" and suffix = "a" and remove them, s = "".
+
+			Example 3:
+				Input: s = "aabccabba"
+				Output: 3
+				Explanation: An optimal sequence of operations is:
+				- Take prefix = "aa" and suffix = "a" and remove them, s = "bccabb".
+				- Take prefix = "b" and suffix = "bb" and remove them, s = "cca".
+
+			Constraints:
+				1 <= s.length <= 10^5
+				s only consists of characters 'a', 'b', and 'c'.
+
+		class Solution {
+			public:
+			int minimumLength(string s) {
+				while(s.size()){
+					if(s[0] != s[s.size()-1] || s.size()==1)
+						break;
+					
+					char crntCh = s[0];
+					// check from starting
+					for(;;) {
+						if(!s.size())
+							break;
+						if(crntCh == s[0])
+							s.erase(s.begin());
+						else
+							break;
+					}
+
+					//check from ending
+					for(;;){
+						if(!s.size())
+							break;
+						if(crntCh == s[s.size()-1])
+							s.erase(s.end()-1);
+						else
+							break;
+					}
+				}
+				return s.size();
+			}
+		};
+
+		// Simplified version:
+			class Solution {
+				public:
+				int minimumLength(string s) {
+					ios_base::sync_with_stdio(false);
+					cin.tie(nullptr);
+					cout.tie(nullptr);
+					
+					int left, right;
+					left = 0, right = s.size()-1;
+
+					while(left < right && s[left] == s[right]){
+
+						char crntCh = s[left];
+						while(left <= right && s[left] == crntCh)
+							left++;
+						
+						while(right >= left && s[right] == crntCh)
+							right--;
+					}
+					return right-left+1;
+				}
+			};
+
+	511) Student Attendance Record I:
+		Problem statement:
+			You are given a string s representing an attendance record for a student where each character signifies whether the student was absent, late, or present on that day. The record only contains the following three characters:
+			'A': Absent.
+			'L': Late.
+			'P': Present.
+			The student is eligible for an attendance award if they meet both of the following criteria:
+			The student was absent ('A') for strictly fewer than 2 days total.
+			The student was never late ('L') for 3 or more consecutive days.
+			Return true if the student is eligible for an attendance award, or false otherwise.
+
+			Example 1:
+				Input: s = "PPALLP"
+				Output: true
+				Explanation: The student has fewer than 2 absences and was never late 3 or more consecutive days.
+
+			Example 2:
+				Input: s = "PPALLL"
+				Output: false
+				Explanation: The student was late 3 consecutive days in the last 3 days, so is not eligible for the award.
+			
+			Constraints:
+				1 <= s.length <= 1000
+				s[i] is either 'A', 'L', or 'P'.
+
+		class Solution {
+			public:
+			bool checkRecord(string s) {
+				if(s.find("LLL") != string::npos)
+					return 0;
+				
+				int cnt=0;
+				for(int i=0; i<s.size(); i++){
+					if(s[i] == 'A')
+						cnt++;
+					if(cnt >=2)
+						return 0;
+				}
+				return 1;
+			}
+		};
+	
+	512) Replace Spaces:
+		Problem statement
+			You have been given a string 'STR' of words. You need to replace all the spaces between words with “@40”.
+			Constraints:
+				1 <= T <= 50
+				0 <= |STR| <= 100
+				Where ‘|STR|’ is the length of a particular string including spaces.
+				Time limit: 1 sec
+
+			Sample Input 1:
+				2
+				Coding Ninjas Is A Coding Platform
+				Hello World
+				Sample Output 1:
+				Coding@40Ninjas@40Is@40A@40Coding@40Platform
+				Hello@40World
+				Explanation of Sample Output 1:
+				In test case 1, After replacing the spaces with “@40” string is: 
+
+				Coding@40Ninjas@40Is@40A@40Coding@40Platform
+
+				In test case 2, After replacing the spaces with “@40” string is: 
+
+				Hello@40World
+				Sample Input 2:
+				3
+				Hello
+				I love coding
+				Coding Ninjas India
+				Sample Output 2:
+				Hello
+				I@40love@40coding
+				Coding@40Ninjas@40India    
+				Explanation for Sample Output 2:
+				In test case 1, After replacing the spaces with “@40” string is: 
+
+				Hello
+				In test case 2, After replacing the spaces with “@40” string is: 
+				I@40love@40coding
+				In test case 3, After replacing the spaces with “@40” string is: 
+				Coding@40Ninjas@40India
+
+		// using extra space
+			#include <bits/stdc++.h> 
+			string replaceSpaces(string &str){
+				string ans;
+				for(int i=0; i<str.size(); i++){
+					if(str[i] == ' ')
+						ans += "@40";
+					else
+						ans += str[i];
+				}
+				return ans;
+			}
+	
+		// without using extra space:
+			#include <bits/stdc++.h> 
+			string replaceSpaces(string &str){
+				for(int i=0; i<str.size(); i++)
+					if(str[i] == ' '){
+						str.erase(str.begin()+i);
+						str.insert(i, "@40");
+					}
+				return str;
+			}
+
+	513) Search Pattern (Rabin-Karp Algorithm):
+		Problem statement:
+			Given two strings, one is a text string and other is a pattern string. The task is to print the indexes of all the occurences of pattern string in the text string. For printing, Starting Index of a string should be taken as 1. The strings will only contain lowercase English alphabets ('a' to 'z').
+
+			Example 1:
+			Input: 
+			text = "birthdayboy"
+			pattern = "birth"
+			Output: 
+			[1]
+			Explanation: 
+			The string "birth" occurs at index 1 in text.
+
+			Example 2:
+			Input:
+			text = "geeksforgeeks"
+			pattern = "geek"
+			Output: 
+			[1, 9]
+			Explanation: 
+			The string "geek" occurs twice in text, one starts are index 1 and the other at index 9.
+			Your Task:
+			You don't need to read input or print anything. Your task is to complete the function search() which takes the string text and the string pattern as input and returns an array denoting the start indices (1-based) of substring pattern in the string text. 
+
+			Expected Time Complexity: O(|text| + |pattern|).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1<=|text|<=5*10^5
+				1<=|pattern|<=|text|
+
+		class Solution {
+			public:
+			vector <int> search(string pattern, string text) {
+				vector<int> ans;
+				for(int i=0; i <= (text.size() - pattern.size()); i++){
+					string tester = text.substr(i, pattern.size());
+					if(tester == pattern)
+						ans.push_back(i+1);
+				}
+				return ans;
+			}
+		};
+	
+	514) Rat in a Maze Problem - I: (Lecture-40)
+		class Solution{
+			public:
+			bool checkPathClear(vector<vector<int>> maze, int r, int c){
+				if((r>=0 && r<maze.size()) && (c>=0 && c<maze.size()) && maze[r][c] == 1)
+					return 1;
+				return 0;
+			}
+			
+			void MultiPathFinder(vector<vector<int>> main, int r, int c, string way, vector<string> &ans) {
+				if((r == main.size()-1) && (c == main.size()-1)){
+					ans.push_back(way);
+					return ;
+				}
+				
+				main[r][c] = -1;            //this -1 indicates that the current point is visited.
+				// 4 choices will be there for rat
+				// make sure that these new co-ordinates which you generated now they should be unVisited & path should be open
+				// the co-ordinates must lies within main matrix/maze
+				int newRow, newCol;
+				
+				// for up
+				newRow = r-1, newCol = c;
+				if(checkPathClear(main, newRow, newCol)){
+					way += "U";
+					MultiPathFinder(main, newRow, newCol, way, ans);
+					way.pop_back();
+				}
+				
+				// for left
+				newRow = r, newCol = c-1;
+				if(checkPathClear(main, newRow, newCol)){
+					way += "L";
+					MultiPathFinder(main, newRow, newCol, way, ans);
+					way.pop_back();
+				}
+				
+				// for down
+				newRow = r+1, newCol = c;
+				if(checkPathClear(main, newRow, newCol)){
+					way += "D";
+					MultiPathFinder(main, newRow, newCol, way, ans);
+					way.pop_back();
+				}
+				
+				// for right
+				newRow = r, newCol = c+1;
+				if(checkPathClear(main, newRow, newCol)){
+					way += "R";
+					MultiPathFinder(main, newRow, newCol, way, ans);
+					way.pop_back();
+				}
+				
+				main[r][c] = 1;             // this making the current point as un-Visited again, for finding next new paths.
+			}
+			vector<string> findPath(vector<vector<int>> &m, int n) {
+				vector<string> ans;
+				if(m[0][0] == 0 || m[n-1][n-1] == 0)
+					return ans;
+				
+				string path;
+				int r,c;
+				r=c=0;
+				MultiPathFinder(m, r, c, path, ans);
+				return ans;
+			}
+		};
+	
+	515) Anagram of String:
+		Problem statement:
+			Given two strings S1 and S2 in lowercase, the task is to make them anagram. The only allowed operation is to remove a character from any string. Find the minimum number of characters to be deleted to make both the strings anagram. Two strings are called anagram of each other if one of them can be converted into another by rearranging its letters.
+
+			Example 1:
+				Input:
+				S1 = bcadeh
+				S2 = hea
+				Output: 3
+				Explanation: We need to remove b, c
+				and d from S1.
+
+			Example 2:
+				Input:
+				S1 = cddgk
+				S2 = gcd
+				Output: 2
+				Explanation: We need to remove d and
+				k from S1.
+			Your Task:
+				Complete the function remAnagram() which takes two strings S1, S2 as input parameter, and returns minimum characters needs to be deleted.
+
+			Expected Time Complexity: O(max(|S1|, |S2|)), where |S| = length of string S.
+			Expected Auxiliary Space: O(26)
+
+			Constraints:
+				1 <= |S1|, |S2| <= 10^5
+
+		// using single map
+			int remAnagram(string s1, string s2) {
+				int cnt=0, map[26]={0};
+
+				for(int i=0; i<s1.size(); i++)
+					map[s1[i] - 'a']++;
+				
+				for(int i=0; i<s2.size(); i++)
+					map[s2[i] - 'a']--;
+				
+				for(int i=0; i<26; i++)
+					cnt += abs(map[i]);
+
+				return cnt;
+			}
+		
+		// using 2 maps
+			int remAnagram(string s1, string s2) {
+				int cnt=0, map1[26]={0}, map2[26] = {0};
+				
+				for(int i=0; i<s1.size(); i++)
+					map1[s1[i] - 'a']++;
+					
+				for(int i=0; i<s2.size(); i++)
+					map2[s2[i] - 'a']++;
+				
+				for(int i=0; i<26; i++)
+					if(map1[i] != map2[i])
+						cnt += abs(map1[i] - map2[i]);
+				
+				return cnt;
+			}
+		
+		// using built-in map
+			int remAnagram(string s1, string s2) {
+				int cnt=0;
+				map<char, int> Freq;
+				
+				for(int i=0; i<s1.size(); i++)
+					Freq[s1[i] - 'a']++;
+					
+				for(int i=0; i<s2.size(); i++)
+					Freq[s2[i] - 'a']--;
+				
+				for(auto i: Freq)
+					cnt += abs(i.second);
+				
+				return cnt;
+			}
+
+	516) Check if two strings are k-anagrams or not:
+		Problem Statement:
+			Given two strings of lowercase alphabets and a value K, your task is to complete the given function which tells if  two strings are K-anagrams of each other or not.
+			Two strings are called K-anagrams if both of the below conditions are true.
+			1. Both have same number of characters.
+			2. Two strings can become anagram by changing at most K characters in a string.
+
+			Example:
+			Input:
+			str1 = "fodr", str2="gork"
+			k = 2
+			Output:
+			1
+			Explanation: Can change fd to gk
+
+			Your Task:
+				Since this is a function problem, you don't need to take any input. Just complete the given function areKAnagrams that returns true if the strings can be turned into K-anagrams, else return false.
+
+			Constraints:
+				1 ≤ length of String ≤ 10^5
+				1 ≤ K ≤ length of String
+
+		class Solution {
+			public:
+			bool areKAnagrams(string s1, string s2, int k) {
+				if(s1.size() != s2.size())
+					return 0;
+					
+				map<char, int> Freq;
+				for(int i=0; i<s1.size(); i++)
+					Freq[s1[i]]++;
+					
+				for(int i=0; i<s2.size(); i++)
+					Freq[s2[i]]--;
+				
+				int cnt=0;
+				for(auto i: Freq)
+					cnt += abs(i.second);
+				
+				return ((cnt/2) <= k) ? 1 : 0; 
+			}
+		};
+	
+	517) Search Pattern (Z-algorithm):
+		Problem statement:
+			Given two strings, one is a text string and the other is a pattern string. The task is to print the indexes of all the occurrences of the pattern string in the text string. For printing, Starting Index of a string should be taken as 1.
+
+			Example 1:
+				Input:
+				S = "batmanandrobinarebat", pat = "bat"
+				Output: 1 18
+				Explanation: The string "bat" occurs twice
+				in S, one starts are index 1 and the other
+				at index 18. 
+
+			Example 2:
+				Input: 
+				S = "abesdu", pat = "edu"
+				Output: -1
+				Explanation: There's not substring "edu"
+				present in S.
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function search() which takes the string S and the string pat as inputs and returns an array denoting the start indices (1-based) of substring pat in the string S. 
+			Note:
+				You don't need to return -1 yourself when there are no possible answers, just return an empty list.
+
+			Expected Time Complexity: O(|S|).
+			Expected Auxiliary Space: O(|S|).
+
+			Constraints:
+				1 ≤ |S| ≤ 10^5
+				1 ≤ |pat| ≤ |S|
+		
+		class Solution {
+			public:
+			vector <int> search(string pat, string txt) {
+				vector<int> ans;
+				for(int i=0; i <= (txt.size() - pat.size()); i++){
+					string check = txt.substr(i, pat.size());
+					if(check == pat)
+						ans.push_back(i+1);
+				}
+				return ans;
+			}		
+		};
+
+	518) Match specific pattern:
+		Problem statement:
+			Given a dictionary of words and a pattern. Every character in the pattern is uniquely mapped to a character in the dictionary. Find all such words in the dictionary that match the given pattern. 
+			Example 1:
+			Input:
+			N = 4
+			dict[] = {abb,abc,xyz,xyy}
+			pattern  = foo
+			Output: abb xyy
+			Explanation: xyy and abb have the same
+			character at index 1 and 2 like the
+			pattern.
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function findMatchedWords() which takes an array of strings dict[] consisting of the words in the dictionary and a string, Pattern and returns an array of strings consisting of all the words in the dict[] that match the given Pattern in lexicographical order.
+
+			Expected Time Complexity: O(N*K) (where K is the length of the pattern).
+			Expected Auxiliary Space: O(N).
+
+			Constraints:
+				1 <= N <= 10
+
+		vector<string> findMatchedWords(vector<string> dict,string pattern) {
+			vector<string> ans;
+			map<char, int> forPTRN;
+			for(int i=0; i<pattern.size(); i++)
+				forPTRN[pattern[i]]++;
+			
+			vector<int> of_PTRN;
+			for(auto i: forPTRN)
+				of_PTRN.push_back(i.second);
+				
+			sort(of_PTRN.begin(), of_PTRN.end());
+			for(int o=0; o<dict.size(); o++){
+				string crntString = dict[o];
+				
+				//map for crntString
+				map<char, int> mp_crntString;
+				for(int u=0; u<crntString.size(); u++)
+					mp_crntString[crntString[u]]++;
+					
+				vector<int> of_crnt_string;
+				for(auto i: mp_crntString)
+					of_crnt_string.push_back(i.second);
+				
+				sort(of_crnt_string.begin(), of_crnt_string.end());
+				
+				//Generation done now testing the both vector of_crnt_string & of_PTRN
+				if(of_PTRN.size() == of_crnt_string.size()){
+					int q;
+					for(q=0; q<of_crnt_string.size(); q++)
+						if(of_crnt_string[q] != of_PTRN[q]) 
+							break;
+					if(q == of_PTRN.size())
+						ans.push_back(crntString);
+				}
+			}
+			return ans;
+		}
+	
+	519)
+
+	520)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
