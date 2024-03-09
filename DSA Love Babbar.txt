@@ -15585,7 +15585,7 @@ Lecture-38: Phone Keypad Problem Recursion
 Lecture-39: Permutations of a String
 	-1st Approach:
 		using data structure & map something
-		❌Pendingg
+		❌Pending
 
 	-2nd Approach:
 		Permutations:
@@ -15865,8 +15865,367 @@ Lecture-40: Rat in a Maze Problem
 
 	// Dry Run ❌Pending
 ---------------------------------------------------------------------------------------------------------
+Lecture-41: Time & Space Complexity of Recursive Algorithms: ❌Pending
 
+	1) Factorial: 		TC- O(N)
+	2) BinarySearch: 	TC- O(log N)
+	3) mergeSort:	 	TC- O(N log N)
+	4) Fibonacci:		TC- O(2ⁿ)
 ---------------------------------------------------------------------------------------------------------
+Lecture-42: OOPs Concepts in C++ || Part-1
+	-Object Oriented Programming
+	eg.
+		class Hero{
+			// empty class, empty class have size is 1.
+		};
+
+		class Hero{
+			int Health;		// class have one attribute
+		};
+		-here the size of class is 4 bytes coz the size of int is 4 bytes.
+
+		class Hero{
+			string Name;
+			int Health;
+		}
+		-here the size is (int(4 bytes) string(32 bytes)) more than 36 bytes in total (considering padding added by compiler).
+		-we should arrange the data member of class either in increasing order or in decreasing order, or largest at first then all smaller in any order.
+
+		Padding & Greedy Alignment:
+			Padding and greedy alignment are two important concepts in computer programming that are used to optimize the memory usage and performance of programs. In this article, we will discuss these concepts in the context of C++ programming language using classes.
+			Padding is the technique of adding extra bytes to a structure or class to align its data members to specific boundaries. This is done to ensure that the data members are accessed efficiently by the processor, which typically fetches data from memory in chunks of fixed sizes, such as 4 or 8 bytes.
+			Consider the following example:
+			class Example {
+				char c;
+				int i;
+				short s;
+			};
+			In this example, the char data member requires only 1 byte of memory, while the int and short data members require 4 and 2 bytes, respectively. To align the int data member to a 4-byte boundary, the compiler will add 3 bytes of padding after the char data member, resulting in a total size of 8 bytes for the class.
+			Padding can have a significant impact on the memory usage and performance of a program, especially when dealing with large data structures or arrays. By understanding how padding works, we can optimize our code to minimize memory usage and improve performance.
+			Greedy Alignment in C++ using Classes
+			Greedy alignment is a technique used to minimize padding by ordering the data members of a class in decreasing order of size. This ensures that the largest data members are placed first in the class, minimizing the amount of padding required to align the subsequent data members.
+			Consider the following example:
+
+			class Example {
+				char c;
+				double d;
+				int i;
+				short s;
+			};
+			In this example, the double data member requires 8 bytes of memory, which is larger than any of the other data members. If we reorder the data members as follows:
+
+			class Example {
+				double d;
+				int i;
+				short s;
+				char c;
+			};
+			We can eliminate padding between the double and int data members, resulting in a smaller overall size for the class. In general, greedy alignment can help to minimize memory usage and improve the performance of our code.
+
+			Conclusion
+				Padding and greedy alignment are important concepts in computer programming, especially when dealing with large data structures or arrays. By understanding how padding works and applying greedy alignment techniques, we can optimize our code to minimize memory usage and improve performance. In C++, we can define data types with padding using classes, and order the data members of a class in decreasing order of size to minimize padding.
+
+		eg.
+			// char         1 byte 
+			// short int    2 bytes 
+			// int          4 bytes 
+			// double       8 bytes 
+			#include<iostream>
+			using namespace std;
+
+			class Example {
+			int i;
+			double d;
+			char c;
+			short s;
+			};
+			// the size of class should be int + double + char + short = 4+8+1+2 = 15
+			// but actual is 24, coz int is 4 bytes then double came, which is largest so whatever smaller data member comes after double,
+			// it will be given same size as double, if any member came after double which is more in size than double then that member's size will be consider for 
+			// upcoming small data member's size.
+
+			// in above case int < double, but char & short came after double so they given size of double which is 8
+			// int + double + double + double  = 4+8+8+8 = ~28
+
+			//here the data member is arranged properly
+			class Second {
+			char c;
+			short s;
+			int i;
+			double d;
+			};
+
+			// so the size is (actual + 1) = 15 + 1 = 16
+
+			int main() {
+			
+			Example e;
+			std::cout << sizeof(e) << std::endl;
+			
+			Second s;
+			std::cout << sizeof(s) << std::endl;
+			
+			return 0;
+			}
+
+	-Access Modifiers:
+		-by default in class the access modifier in class is private for all data members.
+		1) public
+		2) private
+		3) protected
+
+	-Getter/ Setter:
+		#include <iostream>
+		using namespace std;
+		class Hero {
+			
+			private:
+				int id;
+				string num;
+			
+			public:
+				string name;
+			
+				// getter/setters
+				// getters
+				int getID(){
+					return id;
+				}
+				
+				string getNum(){
+					return num;
+				}
+				
+				// setters
+				void setID(int n){
+					id = n;
+				}
+				
+				void setNum(string s){
+					num = s;
+				}
+			
+				// to display
+				void printer(){
+					std::cout << id << " Hello, My name is "<< name << ", My num : " << num << std::endl;
+				}
+		};
+
+		int main() {
+			Hero h1,h2;
+			
+			h1.name = "Vivek", h2.name="Nikate";
+			
+			h1.setID(1);
+			h2.setID(2);
+			
+			h1.setNum("12345");
+			h2.setNum("67890");
+			
+			h1.printer();
+			h2.printer();
+			return 0;
+		}
+	
+	-Static & Dynamic Memory Allocation:
+		#include <iostream>
+		class Example {
+			public:
+				double d = 89.234532d;
+				int i = 90;
+				float f = 77.3f;
+				char c = 'z';
+				short s = 2;
+		};
+
+		int main() {
+			
+			// static memory allocation
+			Example e;
+			std::cout << sizeof(e) << std::endl;
+			std::cout << e.i << std::endl;
+			std::cout << e.f << std::endl;
+			std::cout << e.d << std::endl;
+			std::cout << e.c << std::endl;
+			std::cout << e.s << std::endl;
+			
+			// dynamic memory allocation
+			std::cout << "DMA: " << std::endl;
+			Example *E = new Example;
+			std::cout << sizeof(*E) << std::endl;
+			std::cout << (*E).i << std::endl;
+			std::cout << (*E).f << std::endl;
+			std::cout << (*E).d << std::endl;
+			std::cout << (*E).c << std::endl;
+			std::cout << (*E).s << std::endl;
+		}
+
+	-Star Operator:
+		-we can use star operator(*) to get & set the value.
+		eg.
+			#include <iostream>
+			using namespace std;
+			class person{
+				public:
+					int id;
+					string name;
+				
+				void print(){
+					std::cout << endl << id << "\t" << name << std::endl;
+				}
+			};
+
+			int main() {
+				
+				person *p = new person;
+				
+				//setting the values
+				(*p).id = 10;
+				(*p).name = "Vivek";
+				
+				// getting the values
+				std::cout << (*p).id << std::endl;
+				std::cout << (*p).name << std::endl;
+				(*p).print();
+			}
+
+	-Arrow Operator:
+		-we can use this operator(->) to get & set the value.
+		eg.
+			#include <iostream>
+			using namespace std;
+			class person{
+				public:
+					int id;
+					string name;
+				
+				void print(){
+					std::cout << endl << id << "\t" << name << std::endl;
+				}
+			};
+
+			int main() {
+				person *a = new person;
+				
+				//setting the values
+				a->id = 1;
+				a->name = "Mahesh";
+				
+				// getting the values
+				std::cout << a->id << std::endl;
+				std::cout << a->name << std::endl;
+				a->print();
+			}
+
+	-Constructor:
+		-invokes at the time of  object creation.
+		-use it for initializing member variables
+		-Constructor don't have return type.
+		-if you don't create a constructor then behind the scene default constructor automatically generated.
+		-else if you create a constructor the default one will be deleted automatically.
+		1) Default constructor:
+			#include <iostream>
+			class Hero{
+				public:
+				Hero(){
+					std::cout << "Constructor called " << std::endl;
+				}  
+			};
+
+			int main() {
+				// static
+				Hero Vivek;
+
+				// dynamic
+				Hero * Mahesh = new Hero;
+				Hero * Nikate = new Hero();
+				
+				return 0;
+			}
+
+			-this keyword, 'this' stores the address of object, it means that 'this' is a pointer.
+			#include <iostream>
+			class Hero{
+				public:
+				Hero(){
+					std::cout << "Constructor called " << std::endl;
+					std::cout << "This: " << this << std::endl;
+				}  
+			};
+
+			int main() {
+				// static
+				Hero Vivek;
+
+				// dynamic
+				Hero * Mahesh = new Hero;
+				Hero * Nikate = new Hero();
+				
+				return 0;
+			}
+
+		2) Parameterized constructor:
+			#include <iostream>
+			using namespace std;
+
+			class Hero{
+				public:
+				int id;
+				string name;
+				
+				// default Constructor
+				Hero(){
+				std::cout << "default" << std::endl;
+				}
+				
+				// 1 parameter
+				Hero(int id){
+				std::cout << "1 parameter" << std::endl;
+				this-> id = id;
+				}
+				
+				// 2 parameter
+				Hero(int id, string name){
+					std::cout << "2 parameter " << std::endl;
+					std::cout << "This: " << this << std::endl;
+					
+				// you can use . operator or
+					(*this).id = id;
+				
+				// or you can use (arrow) -> operator also.
+				this->name = name;
+				}  
+				
+			};
+
+			int main() {
+				// static
+				Hero Vivek1;
+				
+				Hero Vivek2(44);
+				std::cout << Vivek2.id << std::endl;
+
+				Hero Vivek(3, "vivek");
+				std::cout << "Addres of Vivek : "<< &Vivek << std::endl;
+				std::cout << Vivek.id << "\t" << Vivek.name << std::endl;
+
+				// dynamic
+				Hero * Mahesh = new Hero(2, "mahesh");
+				
+				// this keyword address & Mahesh's Heap Addres are same
+				std::cout << "Addres of Mahesh in Heap : "<< &(*Mahesh) << std::endl;
+				std::cout << "Addres of Mahesh in static : "<< &Mahesh << std::endl;
+				std::cout << Mahesh->id << "\t" << Mahesh->name << std::endl;
+				std::cout << (*Mahesh).id << "\t" << (*Mahesh).name << std::endl;
+				
+				Hero * Nikate = new Hero(1, "nikate");
+				std::cout << "Addres of Nikate : "<< &(*Nikate) << std::endl;
+				std::cout << Nikate->id << "\t" << Nikate->name << std::endl;
+				
+				return 0;
+			}
+
+
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
@@ -22312,6 +22671,17 @@ POTD:-[Problem of the Day]
 				if(seen.find(i) != seen.end())
 					return i;
 				seen.insert(i);
+			}
+		}
+		
+		//Or
+		#include <bits/stdc++.h>
+		int findDuplicate(vector<int> &arr){
+			map<int, int> mp;
+			for(int o: arr){
+				mp[o]++;
+				if(mp[o] >=2)
+					return o;
 			}
 		}
 
@@ -41787,6 +42157,42 @@ POTD:-[Problem of the Day]
 			}
 			return ans;
 		}
+
+		// Simpler version:
+			#include <bits/stdc++.h> 
+			vector<vector<char>> constructMatrix(int n, int m) {
+				vector<vector<char>> ans (n, vector<char>(m, 'X'));
+
+				int sr, sc;
+				sr = sc = 1;
+
+				int er = n-2, ec = m-2;
+				char ch = '0';
+				while(sr <= er && sc <= ec) {
+					
+					// for start row
+					for(int i=sc; i<=ec; i++)
+						ans[sr][i] = ch;        
+
+					sr++;
+					// for end col
+					for(int i=sr; i<=er; i++)
+						ans[i][ec]=ch;
+
+					ec--;
+					// for end row
+					for(int i=ec; i>=sc; i--)
+						ans[er][i]=ch;
+
+					er--;
+					// for start col
+					for(int i=er; i>=sr; i--)
+						ans[i][sc]=ch;
+					sc++;
+					ch = (ch == 'X') ? '0' : 'X';
+				}
+				return ans;
+			}
 	
 	306) Magical Numbers:
 		Problem statement
@@ -54957,6 +55363,34 @@ POTD:-[Problem of the Day]
 				rotate(arr, arr+(n-d), arr+n);
 			}
 
+		// without using built in function:
+			#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+			void reverse(int arr[], int s, int e){
+				while(s<e)
+					swap(arr[s++],arr[e--]);
+			}
+
+			void printer(int arr[], int size){
+				for(int i=0; i<size; i++)
+					std::cout << arr[i] << "\t";
+				std::cout << std::endl;
+			}
+
+			int main() {
+				int arr[] = {1,2,3,4,5,6,7,8,9,0};
+				int n=10;
+				printer(arr,n);
+				
+				reverse(arr, 0, n-1);
+				reverse(arr, 5, n-1);
+				
+				printer(arr,n);
+
+				return 0;
+			}
+
 	468) Check if a number is divisible by 8
 		-if last three num are divisible by 8 then whole num is divisible by 8.
 		Problem statement:
@@ -58255,9 +58689,1083 @@ POTD:-[Problem of the Day]
 			return ans;
 		}
 	
-	519)
+	519) Teacher's Birthday:
+		Problem statement
+			Today is the teacher's birthday. She has purchased 'N' chocolates to distribute among 'K' students.
+			The teacher distributes the chocolates one at a time. She selects the student who has received the least number of chocolates so far. If there are multiple students with the least number of chocolates, she randomly chooses one of them to give the next chocolate.
+			What is the maximum quantity of chocolates a single student could potentially receive?
+			Example:
+			'N'= 5
+			'K'= 2
+			Let the students be A and B.
+			First chocolate is given to A. (randomly chosen between A and B)
+			Second chocolate is given to B.
+			Third chocolate is given to A. (randomly chosen between A and B)
+			Fourth chocolate is given to B.
+			Fifth chocolate is given to B. (randomly chosen between A and B)
+			Hence maximum quantity of chocolates a single student could potentially receive is 3.
+			Constraints:
+				1 <= ‘T’ <= 10
+				1 <= ‘N’ <= 10^5
+				1 <= ‘K’ <= 10^5
+				1 <= ‘A[i]’ <= 10^9
 
-	520)
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				21 7
+				26 7
+				Sample Output 1:
+				3
+				4
+				Explanation of sample input 1:
+				For test case 1:
+				Since the number of chocolates is divisible by the number of students, the maximum number of chocolates any student can receive is 3.
+
+				For test case 2:
+				Given the same number of students as the previous scenario but with an additional 5 chocolates, the teacher continues to randomly select the student with the fewest chocolates. As a result, 5 out of 7 students will receive an extra chocolate, leading to a maximum of 4 chocolates received by any one student.
+				Sample Input 2:
+				3
+				72 33
+				47 3
+				97 26
+				Sample Output 2:
+				3
+				16
+				4
+
+		int teacherBirthday(int n, int k) {
+			return (n%k == 0) ? n/k : (n/k)+1;
+		}
+
+		//or
+		int teacherBirthday(int n, int k) {
+			return (n%k) ? (n/k)+1 : n/k ;
+		}
+
+	520) Bag and Balls:
+		Problem statement
+			You are given the binary string 'S' of 'N' characters numbered from '0' to 'N - 1'.
+			There is an empty bag and some balls initially. You will perform the following procedure.
+			Start from the 'S[0]' and move through every character of the string in the given order.
+			If you find the character '1', put '1' ball in the bag, and if you find a '0', take out '1' ball from the bag if the bag is not empty.
+			You are required to find how many times you will remove the ball from the bag.
+			Example:
+				N = 4
+				S = '0110'
+				Initially, the bag is empty.
+				At 'S[0]', you will do nothing as the bag is empty.
+				At 'S[1]' and 'S[2]', you will add a '1' ball to the bag. So the bag has '2' balls.
+				At 'S[2]', you will remove the '1' ball from the bag.
+				As you have removed the ball once, the answer for this case is '1'.
+			Constraints:
+				1 <= 'N' <= 10^5
+				0 <= 'S[i]' <= 1
+				Time limit: 1 sec
+
+			Sample input 1:
+				2
+				3 
+				000
+				3
+				100
+				Sample output 1:
+				0
+				1
+				Explanation of sample input 1:
+				For test case 1:
+				As there is no character '1' in the string, you will not add or remove any balls from the bag.
+				So, the answer for this case is '0'.
+
+				For test case 2:
+				Initially, the bag is empty.
+				At 'S[0]', you will add a '1' ball to the bag. So the bag has '1' ball.
+				At 'S[1]', you will remove the '1' ball from the bag. So, the bag is empty again.
+				At 'S[2]', you will do nothing as the bag is empty.
+				As you have removed the ball once, the answer for this case is '1'.
+				Sample input 2:
+				2
+				5
+				10101
+				6
+				100110
+				Sample output 2:
+				2
+				2
+		
+		int numberOfRemovals(int n, string &s) {
+			int removerCount=0, balls=0;
+			for(int i=0; i<n; i++){
+				if(s[i] == '1')
+					balls++;
+				else{
+					if(balls >=1)
+						removerCount++, balls--;
+				}
+			}
+			return removerCount;
+		}
+
+	521) NINJA’S CALCULATOR
+		Problem Statement:
+			Ninja and his friends go to the park every day. But now, due to his homework, he wasn’t able to go to the park with his friends. So when he figures out, he notes that a lot of time is consumed in doing maths homework where he has to convert some real number to a binary string. So he is deciding to build a calculator which can convert real numbers to the binary string.
+			So help our Ninja to write a code for the calculator, which can convert the real numbers into a binary string and save his time to join his friends in the park.
+			So your task is to write a code that can convert real numbers between ‘0’ and ‘1’into a binary string.
+			For example, you have given a number “0.750” so you have to convert it in its binary form that is “0.110”
+			Sample Input 1 :
+				2
+				0.625
+				0.72
+				Sample Output 1 :
+				0.101
+				ERROR
+				Explanation Of Sample Input 1 :
+				Test Case 1:
+				In the first line, there is the number of test cases i.e., 1, and in the next line ‘0.625’ is the real number in a decimal form which we have to convert into a binary string.
+				Here, we have started with multiplying the number that is ‘N’with ‘2’ and hence write its binary number like 
+				String s= ‘0’+ ‘.’+ ‘1’+ ‘0’+ ‘1’   =[0.101].
+
+				Test case 2:
+				Here the number is “0.72” on multiplication with 2 we see we didn’t get its equivalent Binary number or we can say that we weren’t able to convert our number into binary form up to the 32 characters as 32 can be the maximum length of our string so we return our string as “ERROR”.
+				Sample Input 2 :
+				2
+				0.248
+				0.50
+				Sample Output 2 :
+				ERROR
+				0.1
+	
+		#include <bits/stdc++.h> 
+		string toBinaryCalculator(double num) {
+			string ans;
+			int flag=0, iteration=0;
+			while(num > 0){
+				if(iteration > 31){
+					flag = 1;
+					break;
+				}
+				int value = num  *= 2;
+				string s = to_string(value);
+				ans+=s;
+				
+				num -= value;
+				iteration++;
+			}
+			ans.insert(0, "0.");
+			return (flag) ? "ERROR" : ans;
+		}
+
+	522) Online Stock Span:
+		Problem statement
+			Ninja Coin is a famous crypto-currency in Ninja Land. Ninja has an array/list ‘PRICE’ of size ’N’ where ‘PRICE[i]’ is the price of a Ninja Coin on an ith day in INR, where 0 <= 'i' <= N-1.
+			The span of the Ninja Coin price on an ith day is defined as the maximum number of consecutive days (starting from the ith day and going backward) for which the price of a Ninja Coin was less than or equal to its price at ith day.
+			Your task is to return an array/list of size ‘N’ where the ith integer is the span of Ninja Coin price on an ith day. Go through the example for more clarity.
+			For Example :
+			Let the price of Ninja Coin for 5 consecutive days is [4, 2, 3, 3, 7].
+			Then the span of Ninja Coin on the 0th day is 1 because we cannot move backward from day 0.
+			The span of Ninja Coin on the 1st day is 1 because the price on day 0 is 4 which is greater than 2, so the only day 1 is counted.
+			The span of Ninja Coin on the 2nd day is 2 because the price on day 2 and day 1 is less than or equal to 3 and then on day 0 price is 4 which is greater than 3, so we count day 2 and day 1.
+			The span of Ninja Coin on the 3rd day is 3 because the price on day 3, day 2, and day 1 is less than or equal to 3, and on day 0 price is 4 which is greater than 3, so we count day 3, day 2, and day 1.
+			The span of Ninja Coin on the 4th day is 5 because its value is higher than all previous days values.    
+			Thus you should return an array/list [1, 1, 2, 3, 5].
+			Constraints :
+				1 <= T <= 50
+				1 <= N <= 10000
+				1 <= PRICE[i] <= 10^9
+
+				Where ‘T’ is the number of test cases, 'N' is the size of ‘PRICE’, ‘PRICE[i]’  is the price of a Ninja Coin on an ith day in INR.
+				Time limit: 1 sec.
+			Sample Input 1 :
+				2
+				3
+				1 1 1
+				5
+				4 2 3 3 6
+				Sample Output 1 :
+				1 2 3
+				1 1 2 3 5
+				Explanation of sample input 1 :
+				In the first test case, the price of Ninja Coin is the same for all three consecutive days, so its span at ith day will be the number of days till ‘i’.
+
+				For the second test case, refer to the problem statement for an explanation.
+				Sample Input 2 :
+				2
+				7
+				100 80 60 70 60 75 85
+				5
+				5 4 3 2 1
+				Sample Output 2 :
+				1 1 1 2 1 4 6
+				1 1 1 1 1
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			vector<int> findSpans(vector<int> &price) {
+				vector<int> ans;
+
+				for(int i=0; i<price.size(); i++){
+					int cnt=0;
+					for(int j=i; j>=0; j--) {
+						if(price[i] < price[j])
+							break;
+						cnt++;
+					}
+					ans.push_back(cnt);
+				}
+				return ans;
+			}
+
+	523) Cyclically rotate an array by one:	
+		Problem statement:
+			Given an array, rotate the array by one position in clock-wise direction.
+			Example 1:
+			Input:
+			N = 5
+			A[] = {1, 2, 3, 4, 5}
+			Output:
+			5 1 2 3 4
+
+			Example 2:
+			Input:
+			N = 8
+			A[] = {9, 8, 7, 6, 4, 2, 1, 3}
+			Output:
+			3 9 8 7 6 4 2 1
+
+			Your Task:  
+				You don't need to read input or print anything. Your task is to complete the function rotate() which takes the array A[] and its size N as inputs and modify the array in place.
+			
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1<=N<=105
+				0<=a[i]<=105
+
+		void reverser(int arr[], int s, int e){
+			while(s<e)
+				swap(arr[s++], arr[e--]);
+		}
+
+		void rotate(int arr[], int n) {
+			reverser(arr, 0, n-1);
+			reverser(arr, 1, n-1);
+		}
+
+	524) Rotate and delete:
+		Problem statement:
+			Given an array arr[] of N integers. Do the following operation n-1 times. For every Kth operation:
+			Right rotate the array clockwise by 1.
+			Delete the (n-k+1)th last element.
+			Now, find the element which is left at last.
+
+			Example:
+				Input:
+				2
+				4
+				1 2 3 4
+				6
+				1 2 3 4 5 6
+
+			Output:
+				2
+				3
+			Explanation:
+				A = {1, 2, 3, 4, 5, 6}. Rotate the array clockwise i.e. after rotation the array A = {6, 1, 2, 3, 4, 5} and delete the last element that is {5} that will be A = {6, 1, 2, 3, 4}.
+				Again rotate the array for the second time and deletes the second last element that is {2} that will be
+				A = {4, 6, 1, 3}, doing these steps when he reaches 4th time, 4th last element does not exist. Then he deletes 1st element ie {1} that will be A={3, 6}. So, continuing this procedure the last element in A is {3}.
+				So, the output will be 3.
+			Input:
+				The first line of input contains an integer T denoting the number of test cases. Then T test cases follow. Each test case contains two lines. The first line of each test case contains an integer N. Then in the next line are N space separated values of the array arr[].
+			Output:
+				For each test case in a new line print the required result.
+			Your task:
+				The task is to complete the function rotateDelete() which does operations as per the given query.
+			Constraints:
+				1 <= T <= 110
+				1 <= N <= 10^6
+				1 <= A[i] <= 10^7
+
+		class Solution{
+			public:
+			int rotateDelete(vector<long long> v, int n){
+				int move=1;
+				
+				while(v.size() >= 2){
+					rotate(v.begin(), v.begin()+(v.size()-1), v.end());
+					if(move >= v.size()){
+						v.erase(v.begin());
+					}else{
+						v.erase(v.end()-move);
+					}
+					move++;
+				}
+				return v[0];
+			}
+		};
+
+	#Weekly Contenst 116:
+		525) Compare Sums:
+			Problem statement:
+				You are given an array 'A' of 'N' integers which contains integers in ascending
+				order followed by integers in descending order.
+				For example in the array [1, 3, 5, 2, 1], the ascending part is [1, 3, 5], and the
+				descending part is [5, 2, 1].
+				You want to find out which part has the larger sum of the values.
+				Return 'O' if the sum of the values in the ascending part is greater than the
+				descending part, '1' if the sum of the values in the descending part is greater
+				than the ascending part, and '-1' if both the sums are equal.
+				Example:
+				N = 6
+				A = [1, 2, 5, 3, 2]
+				The ascending and descending parts of the array are ['1'. '2'. '5'] and ['5', '3', '2'].
+				The sum of the values in descending part i.e., '10' is greater than the ascending
+				part i.e., '8'.
+				So the answer for this case is '1'.
+
+				Constraints:
+					1 <= 'N' <= 10^5
+					1 <= A[i] <= 10^5
+					There is some fixed value 'j' ('0' <= j' <= 'N - 1') such that 'A[i - 1]' < 'A[i]" if 'i' <= 'j'
+					and 'A[i - 1]' > 'A[i]' otherwise.
+					Time limit: 1 sec
+
+				Sample input 1:
+					2
+					3
+					1 3 5
+					4
+					1 2 5 3
+					Sample output 1:
+					0
+					-1
+					Explanation of sample input 1:
+					For test case 1:
+					The ascending and descending parts of the array are ['1', '3', '5'] and ['5'].
+					The sum of the values in ascending part i.e.. '9' is greater than the
+					descending part i.e., '5'.
+					So the answer for this case is '0'.
+					For test case 2:
+					The ascending and descending parts of the array are ['1', '2', '5'] and ['5'
+					'3"].
+					The sum of the values in ascending part i.e., '8' is the same as the
+					descending part i.e., '8'.
+					So the answer for this case is '-1'.
+					Sample input 2:
+					2
+					6
+					1 2 3 4 2 1
+					3
+					5 2 1
+					Sample output 2:
+					0
+					1
+
+			int findTheLarger(int n, vector<int> &v) {
+				int ascend=v[0], descend=0;
+				int i=1;
+				for(i; i<v.size(); i++){
+					if(v[i-1] > v[i])
+						break;
+					ascend += v[i];
+				}
+
+				i--;
+				for(i; i<v.size(); i++)
+					descend += v[i];        
+
+				// cout<<ascend<<"\t"<<descend<<"\n";
+				if(ascend > descend)
+					return 0;
+				else if(descend > ascend)
+					return 1;
+				else
+					return -1;
+			}
+		
+		526) Slope:
+			Problem statement:
+				Given a string 'S' containing lowercase English alphabets, where each letter
+				represents the elevation of a land. Where 'a' has the lowest elevation, increasing gradually up to 'z'.
+				Find the maximum length of a substring with strictly increasing or strictly decreasing slopes.
+				Note: A substring Is a contiguous Sequence of characters in a string
+				Example:
+					‘S’ : “ninjas”
+				Return 3
+				The substring "nja" is longest strictly decreasing.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^6 where 'N' is the length of 'S.
+					Time Limit: 1 sec
+				Sample Input 1:
+					2
+					love
+					coding
+					Sample Output 1:
+					3
+					3
+					Explanation of sample input 1:
+					For 1st test case:
+					The substring "lov" is longest strictly increasing.
+					For 2nd test case:
+					The substring "din" is longest strictly increasing.
+				Sample Input 2:
+					3
+					g
+					kxkszhk
+					pphyki
+				Sample Output 2:
+					1
+					3
+					3				
+
+			int solve(string &s) {
+				int values[26] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26};
+				map<char, int> mapping;
+				
+				char ch='a';
+				for(int i=0; i<26; i++)
+					mapping[ch++] = values[i];
+				
+				vector<int> holder;
+				for(int i=0; i<s.size(); i++)
+					holder.push_back(mapping[s[i]]);
+
+				int mxLong=1, cnt=1;
+				// for increasing 
+				for(int i=1; i<holder.size(); i++){
+					if(holder[i-1] < holder[i])
+						cnt++;
+					else{
+						mxLong = max(cnt, mxLong);
+						cnt=1;
+					}
+				}
+
+				// for decreasing
+				cnt=1;
+				for(int i=1; i<holder.size(); i++){
+					if(holder[i-1] > holder[i])
+						cnt++;
+					else{
+						mxLong = max(cnt, mxLong);
+						cnt=1;
+					}
+				}
+				mxLong = max(mxLong, cnt);
+				return mxLong;
+			}
+	
+		527) Xor SubArray:
+			Problem statement:
+				You are given an array 'A' of 'N" integers numbered from '0' to 'N - 1. You are
+				also given another integer 'K. Your task is to find the bitwise 'XOR' of all the
+				subarrays having bitwise 'XOR' value less than or equal to 'K.
+
+				Let's say the bitwise 'XOR' values of the subarrays are 'X1', 'X2'... "Xj. You have
+				to choose only those subarrays whose bitwise 'XOR' value is less than or equal
+				to 'K. Let those values be 'X1, 'X2' and 'X3". You have to find the 'XOR' of all
+				these values.
+
+				Your task is to tell the bitwise 'XOR' of all the subarrays having bitwise 'XOR'
+				value less than or equal to 'K' and return it.
+				Note: Consider bitwise 'XOR' of an empty subarray as '0'.
+				Example:
+				'N' = 4
+				'K' = 4
+				'A' = [1, 2, 3. 4]
+
+				Let's find the bitwise 'XOR' values of all the subarrays:
+				For [1]: 'X1' = 1
+				For [1, 2]: 'X2' = (1 ^ 2) = 3
+				For [1, 2, 3]: 'X3' = (1 ^ 2 ^ 3) = 0
+				For [1, 2, 3, 4]: 'X4* = (1 ^ 2 ^ 3 ^ 4) = 4
+				For [2]: 'X5' = 2
+				For [2, 3]: 'X6' = (2 ^ 3) = 1
+				For [2, 3, 4]: 'X7' = (2 ^ 3 ^ 4) = 5
+				For [3]: 'X8' = 3
+				For [3, 4]: X9 = (3 ^ 4) = 7
+				For [4]: 'X10' = 4
+				Here, the 'XOR' values less than or equal to '4' are: 'X1', 'X2', 'X3'. 'X4', 'X5', 'X6',
+				'X8', and 'X10'.
+				The bitwise 'XOR' of all these values is: (1 ^ 3^0^ 4^2^1^3 ^ 4), which is
+				equal to '2'.
+				Constraints:
+					1 <= T' <= 10
+					1 <= 'N' <= 10^5
+					0 <= 'K' <= 10^9
+					0 <= 'A[i]' <= 10^9
+					Time Limit: 1 sec
+				Sample Input 1:
+					2
+					4 3
+					1 0 5 3
+					2 0
+					5 20
+					Sample Input 1:
+					3
+					0
+					Explanation of sample input 1:
+					For test case 1:
+					The subarrays with bitwise 'XOR' value less than or equal to '3' are: [1]. [0].
+					[1, 0]. [3].
+					The bitwise 'XOR' of all these subarrays is '3'.
+					For test case 2:
+					Here, only the empty subarray has a bitwise 'XOR' value less than or equal
+					to '0'. Hence, the answer for this test case is '0'.
+				Sample Input 2:
+					2
+					6 20
+					4 5 0 11 15 27
+					5 30
+					22 1 4 00
+					Sample Output 2:
+					31
+					18
+
+			// Not Optimized:
+				int xorSubarrays (int n, int k, vector <int> &a) {
+					vector<int> valueHolder;
+					for(int i=0; i<n; i++){
+						int crntXOR=a[i];
+						valueHolder.push_back(crntXOR);
+						for(int j=i+1; j<n; j++){
+							crntXOR ^= a[j];
+							valueHolder.push_back(crntXOR);
+						}
+					}
+
+					int ans=0;
+					for(int i=0; i<valueHolder.size(); i++)
+						if(valueHolder[i] <= k)
+							ans ^= valueHolder[i];
+
+					return ans;
+				}
+	
+	528) Count Elements With Maximum Frequency:
+		Problem statement:
+			You are given an array nums consisting of positive integers.
+			Return the total frequencies of elements in nums such that those elements all have the maximum frequency.
+			The frequency of an element is the number of occurrences of that element in the array.
+		
+			Example 1:
+				Input: nums = [1,2,2,3,1,4]
+				Output: 4
+				Explanation: The elements 1 and 2 have a frequency of 2 which is the maximum frequency in the array.
+				So the number of elements in the array with maximum frequency is 4.
+
+			Example 2:
+				Input: nums = [1,2,3,4,5]
+				Output: 5
+				Explanation: All elements of the array have a frequency of 1 which is the maximum.
+				So the number of elements in the array with maximum frequency is 5.
+			
+			Constraints:
+				1 <= nums.length <= 100
+				1 <= nums[i] <= 100
+		
+		class Solution {
+			public:
+			int maxFrequencyElements(vector<int>& nums) {
+				map<int, int> Freq;
+				for(int i=0; i<nums.size(); i++)
+					Freq[nums[i]]++;
+				
+				vector<int> holder;
+				for(auto i: Freq)
+					holder.push_back(i.second);
+
+				int mxValue = *max_element(holder.begin(), holder.end());
+				int cnt=0;
+				for(int i: holder)
+					if(i == mxValue)
+						cnt += i;
+
+				return cnt;
+			}
+		};
+	
+	529) Check if frequencies can be equal: 	❌Pending
+		Problem statement:
+			Given a string s which contains only lower alphabetic characters, check if it is possible to remove at most one character from this string in such a way that frequency of each distinct character becomes same in the string. Return true if it is possible to do else return false.
+			Note: The driver code print 1 if the value returned is true, otherwise 0.
+
+			Example 1:
+				Input:
+				s = "xyyz"
+				Output: 
+				1 
+				Explanation: 
+				Removing one 'y' will make frequency of each character to be 1.
+				Example 2:
+
+				Input:
+				s = "xxxxyyzz"
+				Output: 
+				0
+				Explanation: 
+				Frequency can not be made same by removing at most one character.
+				Your Task:  
+				You dont need to read input or print anything. Complete the function sameFreq() which takes a string as input parameter and returns a boolean value denoting if same frequency is possible or not.
+
+				Expected Time Complexity: O(|s|) 
+				Expected Auxiliary Space: O(1)
+
+				Constraints:
+				1 <= |s| <= 10^5
+
+		//User function template for C++
+		class Solution{
+			private:
+			bool checkAllEqual(map<char, int> F){
+				auto itr = F.begin();
+				int prev = itr->second;
+				itr++;
+				for(itr; itr!=F.end(); itr++){
+					int crnt = itr->second;
+					if(prev != crnt){
+						return 0;
+					}
+					prev = crnt;
+				}
+				return 1;
+			}
+			public:	
+			bool sameFreq(string s) {
+				map<char, int> Freq;
+				
+				for(char ch: s)
+					Freq[ch]++;
+					
+				// checking for every char, what happen if we remove the current char.
+				if(checkAllEqual(Freq))
+					return 1;
+				
+				for(int i=0; i<s.length(); i++){
+					string ch = string(1,s[i]);
+					
+					map<char, int> newMap;
+					s.erase(s.begin()+i);
+					
+					for(char c: s)
+						newMap[c]++;
+					
+					if(checkAllEqual(newMap))
+						return 1;
+						
+					s.insert(i,ch);
+				}
+				return 0;
+			}
+		};
+	
+	530) Find K Pairs with Smallest Sums:
+		Problem statement:
+			You are given two integer arrays nums1 and nums2 sorted in non-decreasing order and an integer k.
+			Define a pair (u, v) which consists of one element from the first array and one element from the second array.
+			Return the k pairs (u1, v1), (u2, v2), ..., (uk, vk) with the smallest sums.		
+
+			Example 1:
+				Input: nums1 = [1,7,11], nums2 = [2,4,6], k = 3
+				Output: [[1,2],[1,4],[1,6]]
+				Explanation: The first 3 pairs are returned from the sequence: [1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]
+
+			Example 2:
+				Input: nums1 = [1,1,2], nums2 = [1,2,3], k = 2
+				Output: [[1,1],[1,1]]
+				Explanation: The first 2 pairs are returned from the sequence: [1,1],[1,1],[1,2],[2,1],[1,2],[2,2],[1,3],[1,3],[2,3]
+		
+			Constraints:
+				1 <= nums1.length, nums2.length <= 105
+				-109 <= nums1[i], nums2[i] <= 109
+				nums1 and nums2 both are sorted in non-decreasing order.
+				1 <= k <= 104
+				k <= nums1.length * nums2.length
+
+		// MLE (Memory Limit Exceeded)
+		class Solution {
+			public:
+			static bool sortBySum(pair<pair<int, int>, int> a, pair<pair<int, int>, int> b){
+				if(a.second < b.second)
+					return 1;
+				return 0;
+			}
+			vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
+				ios_base::sync_with_stdio(false);
+				cin.tie(nullptr);
+				cout.tie(nullptr);
+				
+				vector<pair<pair<int, int>, int>> holder;
+				for(int a=0; a<nums1.size(); a++)
+					for(int b=0; b<nums2.size(); b++){
+						pair<int, int> p = {nums1[a], nums2[b]};
+						holder.push_back({p, (nums1[a]+nums2[b])});
+					}
+
+				sort(holder.begin(), holder.end(), sortBySum);
+
+				// for(auto i: holder){
+				//     cout<<i.first.first <<"\t"<< i.first.second<<"\t" <<i.second<<endl;
+				// }
+				// cout<<endl;
+			
+				vector<vector<int>> ans;
+			
+				int i=0;
+				while(k--){
+					// pair<int, int> temp = holder[i++].first;
+					// vector<int> pusher;
+					// pusher.push_back(temp.first);
+					// pusher.push_back(temp.second);
+					// ans.push_back(pusher);
+					
+					// or
+					vector<int> temp;
+					temp.push_back(holder[i].first.first);
+					temp.push_back(holder[i++].first.second);
+					ans.push_back(temp);
+				}
+				return ans;
+			}
+		};
+
+		// Space efficient ❌Pending (priority Queue)
+	
+	531) Find the N-th character:
+		Problem statement:
+			Given a binary string s. Perform r iterations on string s, where in each iteration 0 becomes 01 and 1 becomes 10. Find the nth character (considering 0 based indexing) of the string after performing these r iterations (see examples for better understanding).
+
+			Example 1:
+				Input:
+				s = "1100"
+				r = 2
+				n = 3
+				Output:
+				1
+			Explanation: 
+				After 1st iteration s becomes "10100101".
+				After 2nd iteration s becomes "1001100101100110".
+				Now, we can clearly see that the character at 3rd index is 1, and so the output.
+
+			Example 2:
+				Input:
+				s = "1010"
+				r = 1
+				n = 2
+				Output:
+				0
+			Explanation : 
+				After 1st iteration s becomes "10011001".
+				Now, we can clearly see that the character at 2nd index is 0, and so the output.
+			Your task:
+				You don't need to read input or print anything. 
+				Your task is to complete the function nthCharacter() which takes the string s and integers r and n as input parameters and returns the n-th character of the string after performing r operations on s.
+			
+			Expected Time Complexity: O(r*|s|)
+			Expected Auxilary Space: O(|s|)
+			
+			Constraints:
+				1 ≤ |s| ≤ 10^3
+				1 ≤ r ≤ 20
+				0 ≤ n < |s|
+
+		class Solution{
+			public:
+			char nthCharacter(string s, int r, int n) {
+				while(r){
+					string temp;
+					for(int i=0; i<s.size(); i++){
+						if(s[i] == '0'){
+							temp.push_back('0');
+							temp.push_back('1');
+						}else{
+							temp.push_back('1');
+							temp.push_back('0');
+						}
+						if(temp.size() > n)
+							break;
+					}
+					s = temp;
+					r--;
+				}
+				return s[n];
+			}
+		};
+	
+	532) Distribute Elements Into Two Arrays I:
+		Problem statement:
+			You are given a 1-indexed array of distinct integers nums of length n.
+			You need to distribute all the elements of nums between two arrays arr1 and arr2 using n operations. In the first operation, append nums[1] to arr1. In the second operation, append nums[2] to arr2. Afterwards, in the ith operation:
+			If the last element of arr1 is greater than the last element of arr2, append nums[i] to arr1. Otherwise, append nums[i] to arr2.
+			The array result is formed by concatenating the arrays arr1 and arr2. For example, if arr1 == [1,2,3] and arr2 == [4,5,6], then result = [1,2,3,4,5,6].
+			Return the array result.
+
+			Example 1:
+				Input: nums = [2,1,3]
+				Output: [2,3,1]
+				Explanation: After the first 2 operations, arr1 = [2] and arr2 = [1].
+				In the 3rd operation, as the last element of arr1 is greater than the last element of arr2 (2 > 1), append nums[3] to arr1.
+				After 3 operations, arr1 = [2,3] and arr2 = [1].
+				Hence, the array result formed by concatenation is [2,3,1].
+
+			Example 2:
+				Input: nums = [5,4,3,8]
+				Output: [5,3,4,8]
+				Explanation: After the first 2 operations, arr1 = [5] and arr2 = [4].
+				In the 3rd operation, as the last element of arr1 is greater than the last element of arr2 (5 > 4), append nums[3] to arr1, hence arr1 becomes [5,3].
+				In the 4th operation, as the last element of arr2 is greater than the last element of arr1 (4 > 3), append nums[4] to arr2, hence arr2 becomes [4,8].
+				After 4 operations, arr1 = [5,3] and arr2 = [4,8].
+				Hence, the array result formed by concatenation is [5,3,4,8].
+			Constraints:
+				3 <= n <= 50
+				1 <= nums[i] <= 100
+				All elements in nums are distinct.
+
+		class Solution {
+			public:
+			vector<int> resultArray(vector<int>& nums) {
+				ios_base::sync_with_stdio(false);
+				cin.tie(nullptr);
+				cout.tie(nullptr);
+
+				vector<int> arr1, arr2;
+				arr1.push_back(nums[0]);
+				arr2.push_back(nums[1]);
+				for(int i=2; i<nums.size(); i++){
+					if(arr1[arr1.size()-1] > arr2[arr2.size()-1])
+						arr1.push_back(nums[i]);
+					else
+						arr2.push_back(nums[i]);
+				}
+				vector<int> ans (arr1.begin(), arr1.end());
+				ans.insert(ans.end(), arr2.begin(), arr2.end());
+				return ans;
+			}
+		};
+	
+	533) Distribute Elements Into Two Arrays II: ❌Pending
+		Problem statement:
+			You are given a 1-indexed array of integers nums of length n.
+			We define a function greaterCount such that greaterCount(arr, val) returns the number of elements in arr that are strictly greater than val.
+			You need to distribute all the elements of nums between two arrays arr1 and arr2 using n operations. In the first operation, append nums[1] to arr1. In the second operation, append nums[2] to arr2. Afterwards, in the ith operation:
+
+			If greaterCount(arr1, nums[i]) > greaterCount(arr2, nums[i]), append nums[i] to arr1.
+			If greaterCount(arr1, nums[i]) < greaterCount(arr2, nums[i]), append nums[i] to arr2.
+			If greaterCount(arr1, nums[i]) == greaterCount(arr2, nums[i]), append nums[i] to the array with a lesser number of elements.
+			If there is still a tie, append nums[i] to arr1.
+			The array result is formed by concatenating the arrays arr1 and arr2. For example, if arr1 == [1,2,3] and arr2 == [4,5,6], then result = [1,2,3,4,5,6].
+			Return the integer array result.	
+
+			Example 1:
+				Input: nums = [2,1,3,3]
+				Output: [2,3,1,3]
+				Explanation: After the first 2 operations, arr1 = [2] and arr2 = [1].
+				In the 3rd operation, the number of elements greater than 3 is zero in both arrays. Also, the lengths are equal, hence, append nums[3] to arr1.
+				In the 4th operation, the number of elements greater than 3 is zero in both arrays. As the length of arr2 is lesser, hence, append nums[4] to arr2.
+				After 4 operations, arr1 = [2,3] and arr2 = [1,3].
+				Hence, the array result formed by concatenation is [2,3,1,3].
+
+			Example 2:
+				Input: nums = [5,14,3,1,2]
+				Output: [5,3,1,2,14]
+				Explanation: After the first 2 operations, arr1 = [5] and arr2 = [14].
+				In the 3rd operation, the number of elements greater than 3 is one in both arrays. Also, the lengths are equal, hence, append nums[3] to arr1.
+				In the 4th operation, the number of elements greater than 1 is greater in arr1 than arr2 (2 > 1). Hence, append nums[4] to arr1.
+				In the 5th operation, the number of elements greater than 2 is greater in arr1 than arr2 (2 > 1). Hence, append nums[5] to arr1.
+				After 5 operations, arr1 = [5,3,1,2] and arr2 = [14].
+				Hence, the array result formed by concatenation is [5,3,1,2,14].
+
+			Example 3:
+				Input: nums = [3,3,3,3]
+				Output: [3,3,3,3]
+				Explanation: At the end of 4 operations, arr1 = [3,3] and arr2 = [3,3].
+				Hence, the array result formed by concatenation is [3,3,3,3].
+
+			Constraints:
+				3 <= n <= 10^5
+				1 <= nums[i] <= 10^9
+
+		// Memory Limit Exceeded:
+			class Solution {
+				private:
+				int greaterCount(vector<int> a, int val){
+					int cnt=0;
+					for(int i=0; i<a.size(); i++)
+						if(a[i] > val)
+							cnt++;
+					return cnt;
+				}
+				public:
+				vector<int> resultArray(vector<int>& nums) {
+					vector<int> arr1, arr2;
+					arr1.push_back(nums[0]);
+					arr2.push_back(nums[1]);
+
+					for(int i=2; i<nums.size(); i++){
+						if(greaterCount(arr1, nums[i]) > greaterCount(arr2, nums[i]))
+							arr1.push_back(nums[i]);
+						else if(greaterCount(arr1, nums[i]) < greaterCount(arr2, nums[i]))
+							arr2.push_back(nums[i]);
+						else{
+							if(arr1.size() <= arr2.size())
+								arr1.push_back(nums[i]);
+							else
+								arr2.push_back(nums[i]);
+						}
+					}
+
+					vector<int> ans (arr1.begin(), arr1.end());
+					ans.insert(ans.end(), arr2.begin(), arr2.end());
+					return ans;
+				}
+			};
+		
+	534) Minimum Common Value:
+		Problem statement:
+			Given two integer arrays nums1 and nums2, sorted in non-decreasing order, return the minimum integer common to both arrays. If there is no common integer amongst nums1 and nums2, return -1.
+			Note that an integer is said to be common to nums1 and nums2 if both arrays have at least one occurrence of that integer.		
+
+			Example 1:
+				Input: nums1 = [1,2,3], nums2 = [2,4]
+				Output: 2
+				Explanation: The smallest element common to both arrays is 2, so we return 2.
+
+			Example 2:
+				Input: nums1 = [1,2,3,6], nums2 = [2,3,4,5]
+				Output: 2
+				Explanation: There are two common elements in the array 2 and 3 out of which 2 is the smallest, so 2 is returned.
+			
+			Constraints:
+				1 <= nums1.length, nums2.length <= 10^5
+				1 <= nums1[i], nums2[j] <= 109
+				Both nums1 and nums2 are sorted in non-decreasing order.
+
+		class Solution {
+			public:
+			int getCommon(vector<int>& nums1, vector<int>& nums2) {
+				ios_base::sync_with_stdio(false);
+				cin.tie(0);
+				cout.tie(0);
+				
+				int i,j;
+				i=j=0;
+
+				while(i<nums1.size() && j <nums2.size()){
+					if(nums1[i] == nums2[j])
+						return nums1[i];
+					else if(nums1[i] > nums2[j])
+						j++;
+					else
+						i++;
+				}
+				return -1;
+			}
+		};
+	
+	535) Who will become the CR?: (C language)
+		Problem statement
+			Vishal and Pankaj are contesting for the class representative elections. Pankaj wants to prove that he is much more intelligent than Vishal. So, he challenges Vishal for a guessing game.
+			In this game, Pankaj has three cups and a small ball. He puts three cups on a table, all upside down. Initially, the ball is kept in leftmost cup. He makes one of the following three swaps (for better comprehension, let us index leftmost cup as 1, middle cup as 2 and rightmost cup as 3):
+			1. Swap Strategy A: He swaps cups with index 1 and 2
+			2. Swap Strategy B: He swaps cups with index 2 and 3
+			3. Swap Strategy C: He swaps cups with index 1 and 3
+			Vishal needs your help. Can you predict the position of ball's cup, if you given all he swap movements made by Pankaj.
+
+			Constraints:
+				Time Limit: 1 second
+				Output Format:
+				The first and only line of output contains position of ball's cup, at the end. 
+			Sample Input 1:
+				CBABCACCC 
+				Sample Output 1:
+				1
+		
+		#include <stdio.h>
+		int main(){
+			char s[50];
+			scanf("%s", s);
+
+			int cups[3] = {1,2,3};
+			int i=0;
+			while(s[i] != '\0'){
+				if(s[i] == 'A'){
+					int temp = cups[0];
+					cups[0] = cups[1];
+					cups[1] = temp;
+				}else if(s[i] == 'B'){
+					int temp = cups[1];
+					cups[1] = cups[2];
+					cups[2] = temp;
+				}else{
+					int temp = cups[0];
+					cups[0] = cups[2];
+					cups[2] = temp;
+				}
+				i++;
+			}
+
+			for(int i=0; i<3; i++)
+				if(cups[i] == 1){
+					printf("%d", i+1);
+					return 0;
+				}
+		}
+
+	536) The First Salary:
+		Problem statement
+			Dac has received his first salary and has decided to buy a great thing - 2 dices.
+			He performed the following action N times: roll his newly bought two dices A and B simultaneously. The result of the i-th roll is A[i] and B[i]. He now wonders if there was a scenario such that doublets occurred at least three times in a row. Specifically, He wants you to help him in checking if there exists at least one i such that A[i] = B[i] and A[i+1] = B[i + 1] and A[i + 2] = B[i + 2] hold.
+			Sample Input 1
+				5
+				1 2
+				6 6
+				4 4
+				3 3
+				3 2
+				Sample Output 1
+				Yes
+				
+		#include<iostream>
+		#include<bits/stdc++.h>
+		using namespace std;
+		int main(){
+			int N;
+			cin>>N;
+			vector<pair<int, int>> diceser;
+
+			for(int i=0; i<N; i++){
+				int a,b;
+				cin>>a>>b;
+				diceser.push_back({a,b});
+			}
+
+			int cnt=0;
+			for(int i=0; i<diceser.size(); i++){
+				if(diceser[i].first == diceser[i].second)
+					cnt++;
+				else{
+					cnt=0;
+				}
+
+				if(cnt == 3){
+					cout<<"Yes";
+					return 0;
+				}
+			}
+			cout << "No"; // Output if the condition cnt == 3 is not met
+			return 0;
+		}
+	
+	537)
+	
+	538)
+	
+	539)
+
+	530)
+
+	540)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
