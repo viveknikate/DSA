@@ -59757,15 +59757,217 @@ POTD:-[Problem of the Day]
 			return 0;
 		}
 	
-	537)
-	
-	538)
-	
-	539)
+	537) Remove all duplicates from a given string:
+		Problem statement:
+			Given a string str which may contains lowercase and uppercase chracters. The task is to remove all duplicate characters from the string and find the resultant string. The order of remaining characters in the output should be same as in the original string.
+			Example 1:
+				Input:
+				str = "geEksforGEeks"
+				Output: 
+				"geEksforG"
+				Explanation: 
+				After removing duplicate characters such as E, e, k, s, we have string as "geEksforG".
 
-	530)
+			Example 2:
+				Input:
+				str = "HaPpyNewYear"
+				Output: 
+				"HaPpyNewYr"
+				Explanation: 
+				After removing duplicate characters such as e, a, we have string as "HaPpyNewYr".
 
-	540)
+			Your Task:
+				Complete the function removeDuplicates() which takes a string str, as input parameters and returns a string denoting the answer. You don't have to print answer or take inputs.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(N)
+
+			Constraints:
+				1 ≤ N ≤ 10^5
+				String contains uppercase and lowercase english letters.
+
+		class Solution{
+			public:
+			string removeDuplicates(string str) {
+				string ans;		
+				for(char ch: str)
+					if(ans.find(ch) == string::npos)
+						ans.push_back(ch);
+				
+				return ans;
+			}
+		};
+
+	538) Custom Sort String:
+		Problem statement:
+			You are given two strings order and s. All the characters of order are unique and were sorted in some custom order previously.
+			Permute the characters of s so that they match the order that order was sorted. More specifically, if a character x occurs before a character y in order, then x should occur before y in the permuted string.
+			Return any permutation of s that satisfies this property.
+
+			Example 1:
+			Input:  order = "cba", s = "abcd" 
+			Output:  "cbad" 
+			Explanation: "a", "b", "c" appear in order, so the order of "a", "b", "c" should be "c", "b", and "a".
+			Since "d" does not appear in order, it can be at any position in the returned string. "dcba", "cdba", "cbda" are also valid outputs.
+
+			Example 2:
+			Input:  order = "bcafg", s = "abcd" 
+			Output:  "bcad" 
+			Explanation: The characters "b", "c", and "a" from order dictate the order for the characters in s. The character "d" in s does not appear in order, so its position is flexible.
+			Following the order of appearance in order, "b", "c", and "a" from s should be arranged as "b", "c", "a". "d" can be placed at any position since it's not in order. The output "bcad" correctly follows this rule. Other arrangements like "bacd" or "bcda" would also be valid, as long as "b", "c", "a" maintain their order.			
+
+			Constraints:
+				1 <= order.length <= 26
+				1 <= s.length <= 200
+				order and s consist of lowercase English letters.
+				All the characters of order are unique.
+		
+		class Solution {
+			public:
+			string customSortString(string order, string s) {
+
+				// 3 Optimization lines
+				ios_base::sync_with_stdio(0);
+				cin.tie(0);
+				cout.tie(0);
+
+				for(int i=0; i<order.size(); i++){
+					if(s.find(order[i]) == string::npos){
+						order.erase(order.begin()+i);
+						i--;
+					}
+				}
+
+				for(int i=0; i<s.size(); i++){
+					if(order.find(s[i]) == string::npos)
+						order += s[i];
+				}
+
+				map<char, int> Fs, Fo;
+				for(char ch: s)
+					Fs[ch]++;
+
+				for(char ch: order)
+					Fo[ch]++;
+
+				for(int i=0; i<order.size(); i++){
+
+					checkAgain:
+					if(Fo[order[i]] != Fs[order[i]]){
+						string temp = string(1, order[i]);
+						order.insert(i, temp);
+						Fo[order[i]]++;
+						goto checkAgain;
+					}
+				}
+
+				return order;        
+			}
+		};
+
+	539) Count pairs Sum in matrices:
+		Problem statement:
+			Given two sorted matrices mat1 and mat2 of size n x n of elements. Each matrix contains numbers arranged in strictly ascending order, with each row sorted from left to right, and the last element of a row being smaller than the first element of the next row. You're given a target value, x, your task is to find and count all pairs {a, b} such that a is from mat1 and b is from mat2 where sum of a and b is equal to x.
+
+			Example 1:
+			Input: 
+			n = 3, x = 21
+			mat1 = {{1, 5, 6},
+				{8, 10, 11},
+				{15, 16, 18}}
+			mat2 = {{2, 4, 7},
+				{9, 10, 12},
+				{13, 16, 20}}
+			OUTPUT: 4
+			Explanation: The pairs whose sum is found to be 21 are (1, 20), (5, 16), (8, 13), (11, 10).
+
+			Example 2:
+
+			Input:
+			n = 2, x = 10
+			mat1 = {{1, 2},
+				{3, 4}}
+			mat2 = {{4, 5},
+				{6, 7}}
+			Output: 2
+			Explanation: The pairs whose sum found to be 10 are (4, 6), (3, 7).
+
+			User Task:
+				Your task is to complete the function countPairs() which takes 4 arguments mat1, mat2, n, x, and returns the count of pairs whose sum equals to x. You don't need to take any input or print anything.
+
+			Expected Time Complexity: O(n²).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 ≤ mat1[i][j] , mat2[i][j] ≤ 10^5
+				1 ≤ n ≤ 100
+				1 ≤ x ≤ 10^5
+
+		// Not Optimized:
+			class Solution{
+				public:	
+				int countPairs(vector<vector<int>> &mat1, vector<vector<int>> &mat2, int n, int x) {
+					int counts=0;
+					for(int i=0; i<mat1.size(); i++){
+						for(int j=0; j<mat1.size(); j++){
+							int r,c;
+							r=c=0;
+							
+							while(r<n && c<n){
+								if((mat1[i][j] + mat2[r][c]) == x)
+									counts++;
+
+								c++;
+								if(c == n){
+									c=0;
+									r++;
+								}
+							}
+						}
+					}
+					return counts;
+				}
+			};
+
+		// Optimized:
+			class Solution{
+				public:	
+				int countPairs(vector<vector<int>> &mat1, vector<vector<int>> &mat2, int n, int x) {
+					int cnt=0;
+					int sr,sc;
+					sr=sc=0;
+					
+					int er,ec;
+					er=ec=n-1;
+					
+					while(sr < n && er >=0){
+						if((mat1[sr][sc]+mat2[er][ec]) == x){
+							cnt++;
+							sc++, ec--;
+						}else if((mat1[sr][sc]+mat2[er][ec]) < x){
+							sc++;
+						}else{
+							ec--;
+						}
+						
+						if(sc == n){
+							sc=0;
+							sr++;
+						}
+						
+						if(ec < 0){
+							ec=n-1;
+							er--;
+						}
+					}
+					return cnt;
+				}
+			};
+
+	540) 
+
+	541) 
+
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
