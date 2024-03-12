@@ -16175,13 +16175,13 @@ Lecture-42: OOPs Concepts in C++ || Part-1
 				
 				// default Constructor
 				Hero(){
-				std::cout << "default" << std::endl;
+					std::cout << "default" << std::endl;
 				}
 				
 				// 1 parameter
 				Hero(int id){
-				std::cout << "1 parameter" << std::endl;
-				this-> id = id;
+					std::cout << "1 parameter" << std::endl;
+					this-> id = id;
 				}
 				
 				// 2 parameter
@@ -16189,11 +16189,11 @@ Lecture-42: OOPs Concepts in C++ || Part-1
 					std::cout << "2 parameter " << std::endl;
 					std::cout << "This: " << this << std::endl;
 					
-				// you can use . operator or
+					// you can use . operator or
 					(*this).id = id;
 				
-				// or you can use (arrow) -> operator also.
-				this->name = name;
+					// or you can use (arrow) -> operator also.
+					this->name = name;
 				}  
 				
 			};
@@ -16225,8 +16225,375 @@ Lecture-42: OOPs Concepts in C++ || Part-1
 				return 0;
 			}
 
+		3) Copy Constructor:
+			-it is created automatically, this is default copy constructor.
+			-if you create a copy constructor manually then the default copy constructor will be deleted automatically.
+				#include <iostream>
+				using namespace std;
+
+				class Hero {
+					int Health;
+					string name;
+					public:
+					// Default Constructor
+					Hero(){
+						std::cout << "Default Constructor!!" << std::endl;
+					}
+					
+					// parameterized Constructor
+					Hero(int Health, string name){
+						std::cout << "parameterized constructor: " << std::endl;
+						(*this).Health = Health;
+						this -> name = name;
+					}
+
+					void display(){
+						std::cout << "My name is "<< name <<" My Health is " << Health << "%." << std::endl;
+					}				
+				};
+
+				int main() {
+					// Default
+					Hero Vivek;
+
+					// parameterized
+					Hero Person(89, "System");
+					Person.display();
+					
+					// copy
+					Hero clone(Person);
+					clone.display();
+					
+					return 0;
+				}
+			
+			-we can create a copy constructor manually also.
+			-in copy constructor we should pass the object by pass by reference method
+			-if we pass object by pass by value method, it creates a new copy of object and then call the same function again.
+			-& we will get stuck in infinite loop of calling the same function itself, that why we should pass by reference.
+
+			#include <iostream>
+			using namespace std;
+
+			class Hero {			
+				int Health;
+				string name;
+				
+				public:
+				// parameterized Constructor
+				Hero(int Health, string name){
+					std::cout << "parameterized constructor: " << std::endl;
+					(*this).Health = Health;
+					this -> name = name;
+				}
+				
+				// copy constructor
+				Hero (Hero& temp){
+					std::cout << "Copy constructor called..." << std::endl;
+					Health = temp.Health;
+					name = "NA (HardCoded)";
+				}
+
+				void display(){
+					std::cout << "My name is "<< name <<" My Health is " << Health << "%." << std::endl;
+				}	
+			};
+
+			int main() {
+			
+				// parameterized
+				Hero Person(89, "System");
+				Person.display();
+				
+				// copy constructor (manually created which just copies the Health)
+				Hero clone(Person);
+				clone.display();
+				
+				return 0;
+			}
+
+	-Shallow Copy & Deep Copy:
+		-Shallow copy will copy the object reference, which will affect both objects if we modify one of them.
+		-Deep copy will create a new memory location for object
+		-for Shallow copy & Deep copy demonstration we need to use Dynamic memory, else on static memory it won't work.
+		-Default copy constructor makes Shallow copy
+		-in Shallow copy the original object and the copied objects point to same memory
+		-if we changes the value of new object, then it changes the value of original object also.
+		-To avoid this issue we can use concept of Deep copy.
+		eg.
+			Shallow copy on static memory doesn't work
+				#include <iostream>
+				class Example {
+					public:
+					int staticValue;
+				};
+
+				int main() {
+				
+					Example ex1;
+					ex1.staticValue = 1;
+					
+					std::cout << ex1.staticValue << std::endl;		//1
+					
+					Example ex2 = ex1;
+					ex2.staticValue = 40;				// this modification doesn't affect ex1.staticValue.
+					std::cout << ex2.staticValue << std::endl;		// 40
+					std::cout << ex1.staticValue << std::endl;		// 1
+
+					return 0;
+				}
+
+			Shallow copy affect on dyamic memory
+				#include <iostream>
+				using namespace std;
+
+				class one {
+					public:
+						string *name;	
+					void show(){
+						std::cout << *name << std::endl;
+					}
+				};
+
+				int main() {
+					one o1;
+					o1.name = new string("Vivek");
+					o1.show();									//Vivek
+					
+					std::cout << std::endl;
+					one o2 = o1;
+					o2.show();								//Vivek
+					o1.show();								//Vivek
+					
+					*o1.name = "Nikate";
+					std::cout << std::endl;
+					o1.show();								//Nikate
+					o2.show();								//Nikate
+					return 0;
+				}
+			
+		Deep Copy eg:
+			#include <iostream>
+			using namespace std;
+
+			class one {
+				public:
+					string *name;	
+				void show(){
+					std::cout << *name << std::endl;
+				}
+			};
+
+			int main() {
+				one o1;
+				o1.name = new string("Vivek");      
+				o1.show();                          //Vivek
+				
+				std::cout << std::endl;
+				one o2 = o1;
+				o2.show();                          //Vivek
+				o1.show();                          //Vivek
+				
+			// 	shallow copy
+				std::cout << std::endl;
+				*o1.name = "G-one";
+				o1.show();                  //affected to o2 also          //G-one
+				o2.show();                                  //G-one
+				
+				o2.name = new string("Nikate");         // new memory given to object2 ie. o2
+				std::cout << std::endl;
+				o1.show();                          //not affected to o1        //Vivek
+				o2.show();                          //Nikate
+				return 0;
+			}
+
+	-Copy Assignment Operator (=):
+		#include <iostream>
+		using namespace std;
+
+		class Example{
+			public:
+				int Level;
+				string Name;
+				float Health;
+			
+			void show(){
+				std::cout << "My Level : " << Level << ", My name: " << Name << ", Health: " << Health << "%" << std::endl;
+			}
+		};
+
+		int main() {
+			
+			// static allocation
+			Example ex1;
+			ex1.Level = 1, ex1.Name = "RED", ex1.Health = 89.8f;
+			ex1.show();
+			
+			// assignment operator
+			Example ex2 = ex1;
+			ex2.show();
+			
+			// dynamic allocation
+			Example * D_ex1 = new Example;              // or new Example();
+			D_ex1 = &ex1;
+			
+			std::cout << "D_ex1 : " << "\t";
+			(*D_ex1).show();
+			
+			
+			std::cout << "D_ex2 : " << "\t";
+			Example *D_ex2 = new Example();
+			D_ex2 -> Level = 100;
+			D_ex2 -> Name = "POWER";
+			D_ex2 -> Health = 95.85f;
+			D_ex2->show();
+			
+			
+			std::cout << "D_ex3 : " << "\t";
+			// assignment operator
+			Example *D_ex3 = D_ex2;
+			(*D_ex3).show();
+			return 0;
+		}
+
+	-Destructor:
+		-Destructor destroy the object of Class.
+		-Destructor is created automatically when class is created.
+		-but we can manually also create Destructor.
+		-It is a special member function that gets called when an object goes out of scope. 
+		It's used to clean up any resources the object may hold, (free up the memory space taken by that obiect).
+		-Destructor don't have return type.
+		-Destructor is same name as that of class name
+		-Destructor don't need parameter/ arguments
+		-Constructor (at the time of object creation) & Destructor(at the time of object destruction) both are called once only.
+		
+		-for static object(static allocation) Destructor will be called Automatically
+		-for dyamic object(dyamic allocation) Destructor should be called Manually.
+		eg.
+
+			#include <iostream>
+			class Example {
+				public:
+					// constructor
+					Example(){
+						std::cout << "Constructor called.." << std::endl;
+					}
+					
+					// destrutor
+					~Example(){
+						std::cout << "De-structor called.." << std::endl;
+					}	
+			};
+
+			int main() {
+				// static object
+				Example ex;
+				
+				// dynamic object
+				Example *D_ex = new Example;
+				delete D_ex;                             // if we don't write this delete statement then De-structor will not be called for dynamic object
+				
+				return 0;
+			}
+
+	-HomeWork:
+		1) const keyword:
+			-object creation ❌Pending
+			-const functions
+			-initialization list
+			-Whenever const keyword is attached with any method(), variable, pointer variable, 
+			and with the object of a class it prevents that specific object/method()/variable to modify its data items value.
+
+			-The const variable cannot be left un-initialized at the time of the assignment.
+				const int var;		❌
+
+			-It cannot be assigned value anywhere in the program.					
+				const int var;		
+				var = 5;			❌	
+
+			-Explicit value needed to be provided to the constant variable at the time of declaration of the constant variable.
+				const int var;		✔
+		eg.
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int x = 90;
+				const int *p = &x;
+				
+				std::cout << *p << std::endl;
+				std::cout << x << std::endl;
+				
+				std::cout << "After modification: " << std::endl;
+				// *p = 12;            //Error coz *p is pointer of const type, but we can change value of p
+				
+				x=12;           //in-directly
+				std::cout << *p << std::endl;
+				std::cout << x << std::endl;
+				return 0;
+			}
+
+	-Static keyword:
+		-A static member belongs to a class rather than an object of that class.
+		-To access the static member of class you don't need a object of that class, you can access them by using class name.
+		-Initialization of static member variable of class outside of class
+			syntax:
+				dataType ClassName :: varName = value;
+				where,
+					dataType is datatype of varName
+					:: is a scope resolution operator
+		eg.
+			#include <iostream>
+			class Person{
+				public:
+					static int a;
+			};
+
+			int Person :: a = 10;
+
+			int main() {
+				
+				// static member accessing without creating object of class
+				std::cout << Person::a << std::endl;
+				
+				// with object of class
+				Person per;
+				std::cout << per.a << std::endl;                //NOT recommended, coz its belongs to class, not object of class
+				
+				return 0;
+			}
+
+	-Static Functions:
+		-For Static function no need to create object, we can call them using class name.
+		-static functions don't have 'this' keyword, coz 'this' keyword is a pointer, which is holding the address of current object.
+			& static functions doesn't belongs to object of class.
+
+		-Static functions can access the static members only. if tried accessing non-static variable, error will occur.
+		#include <iostream>
+		using namespace std;
+
+		class Person{
+			public:
+				static int a;
+				int c=90;
+				string name = "Vivek";
+				
+				static int random() {
+					// std::cout << name << std::endl;         // Error
+					// std::cout << c << std::endl;          // Error
+					std::cout << a << std::endl;
+					return a;
+				}
+		};
+
+		int Person :: a = 10;
+		int main() {	
+			std::cout << "The Value of static int a : " << Person::random() << std::endl;
+			return 0;
+		}
+---------------------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------------------
+
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous
 	//Ternary Operator
@@ -59964,10 +60331,139 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	540) 
+	#Leetcode Weekly Contenst 388:
+		540) Maximize Happiness of Selected Children:
+			Problem statement:
+				You are given an array happiness of length n, and a positive integer k.
+				There are n children standing in a queue, where the ith child has happiness value happiness[i]. You want to select k children from these n children in k turns.
+				In each turn, when you select a child, the happiness value of all the children that have not been selected till now decreases by 1. Note that the happiness value cannot become negative and gets decremented only if it is positive.
+				Return the maximum sum of the happiness values of the selected children you can achieve by selecting k children.			
 
-	541) 
+				Example 1:
+					Input: happiness = [1,2,3], k = 2
+					Output: 4
+					Explanation: We can pick 2 children in the following way:
+					- Pick the child with the happiness value == 3. The happiness value of the remaining children becomes [0,1].
+					- Pick the child with the happiness value == 1. The happiness value of the remaining child becomes [0]. Note that the happiness value cannot become less than 0.
+					The sum of the happiness values of the selected children is 3 + 1 = 4.
 
+				Example 2:
+					Input: happiness = [1,1,1,1], k = 2
+					Output: 1
+					Explanation: We can pick 2 children in the following way:
+					- Pick any child with the happiness value == 1. The happiness value of the remaining children becomes [0,0,0].
+					- Pick the child with the happiness value == 0. The happiness value of the remaining child becomes [0,0].
+					The sum of the happiness values of the selected children is 1 + 0 = 1.
+
+				Example 3:
+					Input: happiness = [2,3,4,5], k = 1
+					Output: 5
+					Explanation: We can pick 1 child in the following way:
+					- Pick the child with the happiness value == 5. The happiness value of the remaining children becomes [1,2,3].
+					The sum of the happiness values of the selected children is 5.
+
+				Constraints:
+					1 <= n == happiness.length <= 2 * 105
+					1 <= happiness[i] <= 108
+					1 <= k <= n
+			
+			// Not Optimized:
+				class Solution {
+					public:
+					long long maximumHappinessSum(vector<int>& happiness, int k) {
+						long long ans=0;
+						
+						//first sort array in descending order
+						sort(happiness.begin(), happiness.end(), greater<int>());
+						
+						int decrementor = 1;
+						while(k-- && happiness.size() >0){
+							if(happiness[0] > 0)
+								ans += happiness[0];
+							
+							// delete first element of array
+							happiness.erase(happiness.begin());
+							for(int i=0; i<happiness.size(); i++)
+								happiness[i]--;
+							
+							sort(happiness.begin(), happiness.end(), greater<int>());
+						}
+						return ans;
+					}
+				};
+			
+			// Optimized:
+				class Solution {
+					public:
+					long long maximumHappinessSum(vector<int>& happiness, int k) {
+						ios_base::sync_with_stdio(0);
+						cin.tie(0);
+						cout.tie(0);
+						
+						//first sort array in descending order
+						sort(happiness.begin(), happiness.end(), greater<int>());
+						long long ans=0;
+						int decrementor = 0;
+						
+						for(int i=0; i<k; i++){
+							if(decrementor < happiness[i])
+								ans += (happiness[i]-decrementor);
+							decrementor++;
+						}
+						return ans;
+					}
+				};
+				
+		541) Apple Redistribution into Boxes:
+			Problem statement:
+				You are given an array apple of size n and an array capacity of size m.
+				There are n packs where the ith pack contains apple[i] apples. There are m boxes as well, and the ith box has a capacity of capacity[i] apples.
+				Return the minimum number of boxes you need to select to redistribute these n packs of apples into boxes.
+				Note that, apples from the same pack can be distributed into different boxes.
+
+				Example 1:
+					Input: apple = [1,3,2], capacity = [4,3,1,5,2]
+					Output: 2
+					Explanation: We will use boxes with capacities 4 and 5.
+					It is possible to distribute the apples as the total capacity is greater than or equal to the total number of apples.
+
+				Example 2:
+					Input: apple = [5,5,5], capacity = [2,4,2,7]
+					Output: 4
+					Explanation: We will need to use all the boxes.
+				
+				Constraints:
+					1 <= n == apple.length <= 50
+					1 <= m == capacity.length <= 50
+					1 <= apple[i], capacity[i] <= 50
+					The input is generated such that it's possible to redistribute packs of apples into boxes.
+			
+			class Solution {
+				public:
+				int minimumBoxes(vector<int>& apple, vector<int>& capacity) {
+					ios_base::sync_with_stdio(0);
+					cin.tie(0);
+					cin.tie(0);
+					
+					sort(capacity.begin(), capacity.end(), greater<int>());
+					int totalNumOfApp = accumulate(apple.begin(), apple.end(), 0);
+					
+					int cnt=0, BoxNeedCnt=0;
+					for(int i=0; i<capacity.size(); i++){
+						cnt += capacity[i];
+						BoxNeedCnt++;
+						if(cnt >= totalNumOfApp)
+								break;
+					}
+					return BoxNeedCnt;
+				}
+			};
+
+	542) 
+	
+	543)
+	
+	544)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
