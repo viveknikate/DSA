@@ -53668,6 +53668,42 @@ POTD:-[Problem of the Day]
 			return ans;
 		}
 
+		// or
+			#include <bits/stdc++.h>
+			map<char, string> Mapper = {
+										{'2', "abc"},
+										{'3', "def"},
+										{'4', "ghi"},
+										{'5', "jkl"},
+										{'6', "mno"},
+										{'7', "pqrs"},
+										{'8', "tuv"},
+										{'9', "wxyz"},
+									};
+
+			vector<string> findPossibleWords(string s){
+				vector<string> ans;
+
+				string temp = Mapper[s[0]];
+				for(char ch: temp){
+					ans.push_back(string(1, ch));
+				}
+
+				for(int i=1; i<s.size(); i++){
+					string crntS = Mapper[s[i]];
+					vector<string> temp;
+					for(int z=0; z<ans.size(); z++){
+						for(int x=0; x<crntS.size(); x++){
+							temp.push_back(ans[z]+crntS[x]);
+						}
+					}
+					ans = temp;
+				}
+
+				sort(ans.begin(), ans.end());
+				return ans;
+			}
+
 		// Another Approach:
 			#include <bits/stdc++.h> 
 			map<int, string> mapper = {	{2,"abc"},
@@ -60459,12 +60495,409 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	542) 
-	
-	543)
-	
-	544)
+	542) Find the Pivot Integer:
+		Problem statement:
+			Given a positive integer n, find the pivot integer x such that:
+			The sum of all elements between 1 and x inclusively equals the sum of all elements between x and n inclusively.
+			Return the pivot integer x. If no such integer exists, return -1. It is guaranteed that there will be at most one pivot index for the given input.
 
+			Example 1:
+			Input: n = 8
+			Output: 6
+			Explanation: 6 is the pivot integer since: 1 + 2 + 3 + 4 + 5 + 6 = 6 + 7 + 8 = 21.
+
+			Example 2:
+			Input: n = 1
+			Output: 1
+			Explanation: 1 is the pivot integer since: 1 = 1.
+
+			Example 3:
+			Input: n = 4
+			Output: -1
+			Explanation: It can be proved that no such integer exist.
+			
+			Constraints:
+				1 <= n <= 1000
+
+		// Brute Force:
+			class Solution {
+				public:
+				int pivotInteger(int n) {
+					int LSum,RSum;
+					LSum=RSum=0;
+
+					int i=1;
+					while(i<=n){
+						for(int a=1; a<=i; a++)
+							LSum += a;
+						
+						for(int a=i; a<=n; a++)
+							RSum += a;
+
+						if(LSum == RSum)
+							return i;
+						LSum=RSum=0;
+						i++;
+					}
+					return -1;
+				}
+			};
+		
+		// More optimized:
+			class Solution {
+				public:
+				int pivotInteger(int n) {
+					int LSum,RSum;
+					LSum=RSum=0;
+
+					int i=1;
+					while(i<=n){
+						LSum = (i*(i+1))/2;
+						RSum = (n*(n+1)/2) - ((i-1)*(i)/2);
+						if(LSum == RSum)
+							return i;
+						i++;
+					}
+					return -1;
+				}
+			};
+
+			//or
+			class Solution {
+				public:
+				int pivotInteger(int n) {
+					int LSum,RSum;
+					LSum=RSum=0;
+
+					int i=1;
+					while(i<=n){
+						LSum = (i*(i+1))/2;
+						
+						// formula to find the sum of a to b = (n)*(firstTerm+lastTerm)/2;
+						// where, n is no.of terms suppose 6 to 10 total elements are 5, formula will = 5*(6+10)/2;
+						RSum = ((n-i+1) * (i+n)/2);
+						if(LSum == RSum)
+							return i;
+						i++;
+					}
+					return -1;
+				}
+			};
+	
+	543) Number Pattern:
+		Problem statement:
+			Ninja is given a pattern. Now he is asked to print the same pattern for any given 'N' number of rows.
+			For example Pattern for 'N' = 4 will be-
+			1234
+			123
+			12
+			1
+			Sample Input1 :
+			1 
+			5
+			Sample Output1 :
+			12345
+			1234
+			123
+			12
+			1
+			Explanation of Sample Input 1 :
+			For test case 1:
+			We print the given pattern for the given 5 rows where the first row prints from column number 1 to 5 and no of columns reduces by 1 for each consecutive row.
+			Sample Input2 :
+			1
+			3
+			Sample Output2 :
+			123
+			12
+			1
+			Explanation of Sample Input 2 :
+			For test case 1:
+			We print the given pattern for the given 3 rows where the first row prints from column number 1 to 3 and no of columns reduces by 1 for each consecutive row.
+
+		#include <bits/stdc++.h> 
+		vector<string> NumberPattern(int N) {
+			vector<string> ans;
+
+			for(int i=0; i<N; i++){
+				int cnt=1;
+				string s;
+				for(int j=0; j<N-i; j++){
+					string temp = to_string(cnt++);
+					s += temp;
+				}
+				ans.push_back(s);
+			}
+			return ans;
+		}
+
+	544) Number Pattern:
+		Problem statement
+			Ninja wants to build a number pattern for the given integer.
+			For example, If the given integer ‘N’ is 4
+			Pattern:
+				1
+				23
+				345
+				4567
+			Sample Input 1:
+				2
+				3
+				5
+				Sample Output 1:
+				1
+				23
+				345
+				1
+				23
+				345
+				4567
+				56789
+				Explanation of Sample Input 1:
+				Test case 1:
+
+				In the first test case, as ‘N’ is equal to 3, We will have to print three lines. Each line starts with its row number and prints next (row number - 1) numbers.
+
+				As in this example:
+				The first row starts with “1” as the row number is one and print only “1” as “row number - 1“ is 0
+				For the second row, it starts with two and prints one more number that is 3.Similarly, the third line starts with 3 and ends at 5.
+
+				Test case 2:
+
+				In the second test case, as “N” is equal to “5”, We will have to print five lines. Each line starts with its row number and prints next (row number - 1) numbers.
+
+				As in this example:
+				The first row starts with 1 as the row number is one and print only 1 as “row number - 1“ is 0
+				The second row starts with two and prints one more number that is “3”.
+				Similarly, the 5th row starts with “5” and ends at “9”.
+				Sample Input 2:
+				1
+				1
+				Sample Output 2:
+				1
+				Explanation of Sample Input 2:
+				Test case 1:
+				As ‘N’ is equal to ‘1’, we just need to print one line i.e 1. 
+
+		#include <bits/stdc++.h> 
+		vector<string> numberPattern(int n) {
+			vector<string> ans;
+
+			for(int i=0; i<n; i++){
+				string s;
+				int cnt = i+1;
+				for(int j=0; j<=i; j++){
+					string temp = to_string(cnt++);
+					s += temp;
+				}
+				ans.push_back(s);
+			}
+			return ans;
+		}
+
+	545) Equal Candies:
+		Problem statement:
+			On Christmas Eve, all people at coding ninjas are given some candies but due to some error all people do not get the same number of candies.
+			You are given an array of size ‘N’ that represents the number of candies given to ‘N’ people. You have to divide candies among all people such that each person receives the same number of candies. For this You can either increase or decrease the number of candies for any person by any amount. Your task is to minimise total increase/decrease for each person i.e. If you increase or decrease ‘Xi’ number of candies for the person ‘i’ ( 1 <= ‘i’ <= ‘N’), then the sum of all ‘Xi’ should be minimum.
+
+			Sample Input 1:
+				2
+				5
+				4 5 1 2 3
+				4
+				1 1 1 2
+				Sample Output 1:
+				6
+				1
+				Explanation of Sample Input 1:
+				Test case 1:
+				We can make the final number of candies equal to [3, 3, 3, 3, 3 ] with total changes equal to 6, which is the minimum possible.
+
+				Test case 2:
+				We can make the last element ‘2’ to ‘1’ by decreasing it one time. Hence the minimum changes is 1.
+				Sample Input 2:
+				1
+				1
+				10
+				Sample Output 2:
+				0
+				Explanation of Sample Input 2:
+				Test case 1:
+				As there is only one element, we don't need to change anything.
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			long long int equalCandies (vector<int> &candies, int n) {
+				long long ans= INT_MAX;
+
+				for(int i=0; i<n; i++){
+					long long cnt=0;
+					for(int j=0; j<n; j++){
+						if(i==j || candies[i] == candies[j])
+							continue;
+						cnt += abs(candies[i]-candies[j]);
+					}
+					ans = min(ans, cnt);
+				}
+				return ans;
+			}
+		
+		// Optimized:
+			#include <bits/stdc++.h> 
+			long long int equalCandies (vector<int> &candies, int n) {
+				long long ans=0;
+
+				sort(candies.begin(), candies.end());
+				int value = candies[n/2];
+
+				for(int i=0; i<n; i++)
+					ans += abs(value-candies[i]);
+
+				return ans;
+			}
+
+	546) Stock Span:
+		Problem statement
+			Afzal has been working with an organization called 'Money Traders for the past few years. The organization is in the money trading business. His manager assigned him a task.
+			Given an array ’prices’ which denotes stock prices for ’n’ days, e.g., 'prices[ i ]' = price of the stock at ‘ith’ day, Find the stock's span for each day.
+			The span of the stock's price today is defined as the maximum number of consecutive days(starting from today and going backward) for which the price of the stock was less than today's price.
+
+			Example:
+				Input: ‘n’ = 7,  ‘prices’ = [100, 80, 60, 70, 60, 75, 85]
+				Output: [1, 1, 1, 2, 1, 4, 6]
+
+			Explanation:
+			On the sixth day, when the stock price was 75, 
+			The span came out to be 4 because the last three prices(plus today) were less than the current or the sixth day's price.
+			Similarly, we can deduce the remaining results.
+			Note:
+			You don’t need to print anything. Just implement the given function
+			Sample Input 1:
+			4
+			2 1 2 4
+			Sample Output 1:
+			1 1 2 4
+			Explanation Of Sample Input 1:
+			Number of consecutive days with price smaller than 0th day(starting from 0th day) = 1
+			Number of consecutive days with price smaller than 1st day(starting from 1st day) = 1
+			Number of consecutive days with price smaller than 2nd day(starting from 2nd day) = 2
+			Number of consecutive days with price smaller than 3rd day(starting from 3rd day) = 4 
+			Sample Input 2:
+			6
+			20 12 1 28 16 20 
+			Sample Output 2:
+			1 1 1 4 1 2 
+			Explanation Of Sample Input 2:
+			Number of consecutive days with price smaller than 0th day(starting from 0th day) = 1
+			Number of consecutive days with price smaller than 1st day(starting from 1st day) = 1
+			Number of consecutive days with price smaller than 2nd day(starting from 2nd day) = 1
+			Number of consecutive days with price smaller than 3rd day(starting from 3rd day) = 4 
+			Number of consecutive days with price smaller than 3rd day(starting from 4th day) = 1
+			Number of consecutive days with price smaller than 3rd day(starting from 5th day) = 2 
+			Expected time complexity:
+			The expected time complexity is O(n).
+			Constraints :
+				1 <= n <= 10^6
+				1 <= prices[i] <= 10^9
+				Time Limit: 1 sec
+
+		// Not Optimized:
+			vector<int> findStockSpans(vector<int>& prices) {
+				vector<int> ans;
+
+				for(int i=0; i<prices.size(); i++){
+					int cnt=1;
+					for(int j=i-1; j>=0; j--){
+						if(prices[j] >= prices[i])
+							break;
+						cnt++;
+					}
+					ans.push_back(cnt);
+				}
+				return ans;
+			}
+
+		// Optimized: ❌Pending
+	
+	547) Next Greater Element II: (Q.30)
+		Problem statement
+			You are given a circular array 'a' of length 'n'.
+			A circular array is an array in which we consider the first element is next of the last element. That is, the next element of 'a[n - 1]' is 'a[0]'.
+			Find the Next Greater Element(NGE) for every element.
+			The Next Greater Element for an element 'x' is the first element on the right side of 'x' in the array, which is greater than 'x'.
+			If no greater elements exist to the right of 'x', consider the next greater element as -1.
+
+			Example:
+			Input: 'a' = [1, 5, 3, 4, 2]
+			Output: NGE = [5, -1, 4, 5, 5]
+			Explanation: For the given array,
+			- The next greater element for 1 is 5.
+			- There is no greater element for 5 on the right side. So we consider NGE as -1.
+			- The next greater element for 3 is 4.
+			- The next greater element for 4 is 5, when we consider the next elements as 4 -> 2 -> 1 -> 5.
+			- The next greater element for 2 is 5, when we consider the next elements as 2 -> 1 -> 5.
+			Sample Input 1 :
+				5
+				1 5 3 4 2
+
+			Sample Output 1 :
+				5 -1 4 5 5
+
+			Explanation Of Sample Input 1 :
+			For the given array,
+			- The next greater element for 1 is 5.
+			- There is no greater element for 5 on the right side. So we consider NGE as -1.
+			- The next greater element for 3 is 4.
+			- The next greater element for 4 is 5, when we consider the next elements as 4 -> 2 -> 1 -> 5.
+			- The next greater element for 2 is 5, when we consider the next elements as 2 -> 1 -> 5.
+
+			Sample Input 2:
+				5
+				5 5 5 5 5
+
+			Sample Output 2:
+				-1 -1 -1 -1 -1
+
+			Expected time complexity :
+			The expected time complexity is O(n).
+
+			Constraints :
+				1 <= 'n' <= 10^5
+				1 <= 'a[i]' <= 10^9
+				Time Limit: 1 sec
+
+		// Not Optimized:
+			vector<int> nextGreaterElementII(vector<int>& a) {
+				vector<int> ans(a.size(),-1);
+				for(int i=0; i<a.size(); i++){
+					int flag = 1;
+					for(int j=i+1; j<a.size(); j++){
+						if(a[i] < a[j]){
+							flag = 0;
+							ans[i] = a[j];
+							break;
+						}
+					}
+
+					if(flag){
+						for(int j=0; j<i; j++)
+							if(a[i] < a[j]){
+								ans[i] = a[j];
+								break;
+							}
+					}
+				}
+				return ans;
+			}
+		
+		// Optimized:	 ❌Pending
+
+	548)
+	
+	549)
+	
+	550)
+	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
