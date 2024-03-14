@@ -15876,7 +15876,7 @@ Lecture-42: OOPs Concepts in C++ || Part-1
 	-Object Oriented Programming
 	eg.
 		class Hero{
-			// empty class, empty class have size is 1.
+			// empty class, empty class have size is 1byte.
 		};
 
 		class Hero{
@@ -20211,6 +20211,27 @@ Lecture-42: OOPs Concepts in C++ || Part-1
 				}
 				return 0;
 			}
+
+	// vector string, printing the first char of every string
+		#include <iostream>
+		#include<vector>
+		using  namespace std;
+		int main() {
+			
+			// printing the first letter of all strings
+			vector<string> s = {"+1A","+3E","-1A","+4F","+1A","-3E"};
+			
+			// using advance for loop
+			for(string str: s)
+				std::cout << str[0] << "\t";
+			std::cout << std::endl;
+			
+			// using tradition for loop
+			for(int i=0; i<s.size(); i++)
+				std::cout << s[i][0] << "\t";
+			std::cout << std::endl;
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array
@@ -20611,6 +20632,48 @@ POTD:-[Problem of the Day]
 					return 0;
 			}
 		}
+
+		//or
+			int checkSequence(int a, int d, int x) {
+				if(a == x || (d==1 && a<x))
+					return 1;
+				
+				if((a > x && d>0) || (a < x && d<0))
+					return 0;
+
+				if(d==0){
+					if(a==x)
+						return 1;
+					else
+						return 0;
+				}
+
+
+				while(a <= x){
+					if(a == x)
+						return 1;
+					else if(a < x){
+						if(a+d < a)
+							break;
+						a += d;
+					}
+					else
+						break;        
+				}
+
+				while(a >= x){
+					if(a == x)
+						return 1;
+					else if (a > x){
+						if(a+d > a)
+							break;
+						a += d;
+					}else{
+						break;
+					}
+				}
+				return 0;
+			}
 
 	12) min & max:
 		without using conditional operator, ternary operator
@@ -60892,12 +60955,644 @@ POTD:-[Problem of the Day]
 		
 		// Optimized:	 ❌Pending
 
-	548)
+	548) Maximum Even Two Sum
+		Problem statement
+			You are given a sorted array ‘A’ of ‘N’ integers. Find the maximum number in the array that satisfies the following conditions -
+			-The number is even.
+			-The number can be represented as a sum of two even numbers 'A[i]' and 'A[j]' (0 <= i, j < N) in the array.
+			If there is no such number then return -1.
+			Example :
+				Input: A = [2, 4, 6, 8, 10, 20]
+				Output: 20
+				The maximum even number in the array is 20. And it can be represented as a sum of two even numbers in the array (10 + 10). So, the output is 20.
+			Constraints:
+				1 ≤ T ≤ 10
+				1 ≤ N ≤ 10^3
+				0 ≤ A[i] ≤ 10^9
+				It is guaranteed that the sum of 'N' is ≤ 10^5 over all test cases.
+				Time limit: 1 sec
+
+			Sample Input 1:
+				2
+				6
+				1 2 2 4 5 10
+				5
+				1 3 5 7 9
+				Sample Output 1 :
+				4
+				-1
+				Explanation For Sample Input 1:
+				For test case 1:
+				The maximum even number in the array is 10 but it cannot be represented as a sum of two even numbers in the array. The next largest even number is 4 and it can be represented as a sum of two even numbers in the array (2 + 2). So, the output is 4.
+
+				For test case 2:
+				The array does not contain any even numbers, so the output is -1.
+				Sample Input 2:
+				2
+				5
+				4 6 8 12 14
+				3
+				2 4 6
+				Sample Output 2 :
+				14
+				6
+
+		int maxEvenSum(int n, vector<int> a) {
+			for(int i=n-1; i>=0; i--){
+				if(a[i] % 2 == 0 && a[i] != 0){
+					for(int j=i; j>=0; j--){
+						if(a[j] % 2 == 0){
+							for(int z=j; z>=0; z--){
+							if(a[z] % 2 == 0){
+								if((a[z]+a[j]) == a[i])
+									return a[i];
+								}
+							}
+						}
+					}
+				}
+			}
+			return -1;
+		}
 	
-	549)
+	549) Binary Subarrays With Sum:
+		Problem statement:
+			Given a binary array nums and an integer goal, return the number of non-empty subarrays with a sum goal.
+			A subarray is a contiguous part of the array.
+
+			Example 1:
+			Input: nums = [1,0,1,0,1], goal = 2
+			Output: 4
+			Explanation: The 4 subarrays are bolded and underlined below:
+			[1,0,1,0,1]
+			[1,0,1,0,1]
+			[1,0,1,0,1]
+			[1,0,1,0,1]
+
+			Example 2:
+			Input: nums = [0,0,0,0,0], goal = 0
+			Output: 15
+
+			Constraints:
+				1 <= nums.length <= 3 * 10^4
+				nums[i] is either 0 or 1.
+				0 <= goal <= nums.length
+
+		// Not Optimized:
+			class Solution {
+				public:
+				int numSubarraysWithSum(vector<int>& nums, int goal) {
+					int cnt=0;
+					for(int i=0; i<nums.size(); i++){
+						int sum=0;
+
+						for(int j=i; j<nums.size(); j++){
+							sum += nums[j];
+							if(sum == goal){
+								cnt++;
+							}else if(sum > goal)
+								break;
+						}
+					}
+					return cnt;   
+				}
+			};
+
+		// Optimized:
+			❌Pending
 	
-	550)
+	550) Non-Decreasing Array:
+		Problem statement:
+			You have been given an integer array/list 'ARR' of size 'N'. Write a solution to check if it could become non-decreasing by modifying at most 1 element.
+			We define an array as non-decreasing, if ARR[i] <= ARR[i + 1] holds for every i (0-based) such that (0 <= i <= N - 2).
+			Constraints :
+				1 <= T <= 50
+				1 <= N <= 10 ^ 4
+				- 10 ^ 9 <= ARR[i] <= 10 ^ 9
+			Where 'N' is the size of the given array/list.
+			And, ARR[i] denotes the i-th element in the array/list 'ARR'.
+			Time Limit: 1sec
+
+			Sample Input 1 :
+				2
+				3
+				8 4 6
+				3
+				8 4 2
+				Sample Output 1 :
+				true
+				false
+				Explanation to Sample Input 1 :
+				For Test Case 1 we can have a possible non-decreasing array : 2 4 6
+				Where only the element at index 0 has been modified.
+
+				For Test Case 2 there is no possible way to make the array non-decreasing by modifying at most 1 element.
+				Sample Input 2 :
+				2
+				6
+				-2 7 -1 0 1 2
+				5
+				-10 10 0 10 3
+				Sample Output 2 :
+				true
+				false
+				Explanation to Sample Input 2 :
+				For Test Case 1 we can have a possible non-decreasing array : -2 -2 -1 0 1 2
+				Where only the element at index 1 has been modified
+				For Test Case 2 there is no possible way to make the array non-decreasing by modifying at most 1 element.
+		
+		#include <bits/stdc++.h> 
+		bool isPossible(int *arr, int n) {
+			int cnt=0;
+			for(int i=1; i<n; i++){
+				if(arr[i-1] > arr[i]){
+					int val = arr[i];
+					arr[i] = arr[i-1];
+
+					if(is_sorted(arr, arr+n)){
+						return 1;
+					}
+					else{
+						arr[i] = val;
+						arr[i-1] = arr[i];
+						if(is_sorted(arr, arr+n))
+							return 1;
+						else
+							return 0;
+					}
+				}
+			}
+			return 1;
+		}
+
+	551) Hotel Floors:
+		Problem statement
+			You are the receptionist at a hotel which has 10 floors, numbered from 0 to 9 and each floor has 26 rooms named from ‘A’ to ‘Z’. Being a receptionist your task is to handle booking queries.
+			You get booking queries in the form of strings of size 3 where 1st character is ‘+’ means room is booked, or ‘-’ means room is freed. Second character represents the floor of the room i.e, ‘0’ to ‘9’. Third character represents the room name i.e, ‘A’ to ‘Z’.
+			On booking of each room you collect 1 coin from the customer. After the end of all the booking queries you have to count the number of coins you collected.
+			You may assume that the list describes a correct sequence of bookings in chronological order i.e., only free rooms can be booked, and only booked rooms can be freed.
+
+			For Example:-
+				Consider booking queries to be ["+1A", "+3E", "-1A", "+4F", "+1A", "-3E"]
+				+1A: Room A on the 1st floor is booked and you collected 1 coin.
+				+3E: Room E on the 3rd floor is booked and you collected 1 coin.
+				-1A: Room A on the 1st floor is freed.
+				+4F: Room F on the 4th floor is booked and you collected 1 coin.
+				+1A: Room A on the 1st floor is booked and you collected 1 coin.
+				-3E: Room E on the 3rd floor is freed.
+				So you collected 4 coins.
+			
+			Constraints:
+				1 <= T <= 10^2
+				0 <= N <= 6*10^2
+				|query.length| = 3
+				Time Limit: 1 sec
+
+			Sample Input 1:
+				2
+				6
+				+1A +3E -1A +4F +1A -3E
+				3
+				+0A +0B +0C
+				Sample Output 1:
+				4
+				3
+				Explanation For Sample Input 1:
+				Test Case 1: Please refer to the example above.
+
+				Test Case 2: Room 0A, 0B & 0C is booked so we collected 3 coins.
+				Sample Input 2:
+				2
+				4
+				+8D -8D +8D -8D
+				7
+				+3C +2B +7K -2B +6C -3C +5S
+				Sample Output 2:
+				2
+				5
+
+		#include <bits/stdc++.h> 
+		int hotelBookings(vector<string> queries) {
+			int cnt=0;
+			for(int i=0; i<queries.size(); i++){
+				// need to check the first letter odf every string, if + then increment cnt by 1 else go forward.
+				if(queries[i][0] == '+')
+					cnt++;
+			}
+			return cnt;
+		}
+
+	552) Split the Array:
+		Problem statement:
+			You are given an integer array nums of even length. You have to split the array into two parts nums1 and nums2 such that:
+				nums1.length == nums2.length == nums.length / 2.
+				nums1 should contain distinct elements.
+				nums2 should also contain distinct elements.
+				Return true if it is possible to split the array, and false otherwise.
+
+			Example 1:
+			Input: nums = [1,1,2,2,3,4]
+			Output: true
+			Explanation: One of the possible ways to split nums is nums1 = [1,2,3] and nums2 = [1,2,4].
+
+			Example 2:
+			Input: nums = [1,1,1,1]
+			Output: false
+			Explanation: The only possible way to split nums is nums1 = [1,1] and nums2 = [1,1]. Both nums1 and nums2 do not contain distinct elements. Therefore, we return false.
+		
+			Constraints:
+				1 <= nums.length <= 100
+				nums.length % 2 == 0 
+				1 <= nums[i] <= 100
+
+		class Solution {
+			public:
+			bool isPossibleToSplit(vector<int>& nums) {
+				ios_base::sync_with_stdio(0);
+				cin.tie(0);
+				cout.tie(0);
+
+				map<int, int> F;
+				for(int i: nums){
+					F[i]++;
+					if(F[i] > 2)
+						return 0;
+				}
+				return 1;
+			}
+		};
+
+		//or keeping constraints in mind:
+			class Solution {
+				public:
+				bool isPossibleToSplit(vector<int>& nums) {
+					int arr[100] = {0};
+					for(int n: nums)
+						if(++arr[n-1] > 2) return 0;
+					return 1;
+				}
+			};
 	
+	553) Overspeeding
+		Problem statement:
+			Alice is going for a drive. During her drive, she reached a maximum speed of S km/hr.
+			As per the rules of the government, the speed of the vehicle must not exceed 40 km/hr, otherwise the person will be fined.
+			You need to tell whether Alice will be fined or not.
+			Input Format
+				The only line of input will contain a single integer S - denoting the maximum speed Alice reached while driving.
+			Output Format
+				Print YES if Alice will be fined , otherwise print NO.
+
+			You may print each character of the string in uppercase or lowercase (for example, the strings YES, yEs, yes, and yeS will all be treated as identical).
+
+			Constraints
+				1 ≤ S ≤ 50
+			Sample 1:
+				Input
+				40
+				Output
+				NO
+				Explanation:
+				Since Alice's speed does not exceed 
+				40
+				40, she will not be fined.
+
+				Sample 2:
+				Input
+				41
+				Output
+				YES
+				Explanation:
+				Since Alice's speed exceeds 40, she will be fined.
+		
+		#include <bits/stdc++.h>
+		using namespace std;
+
+		int main() {
+			int n;
+			cin>>n;
+			if(n>40)
+				cout<<"YES";
+			else
+				cout<<"NO";
+			return 0;
+		}
+
+	554) 50-50 Rule:
+		Problem statement:
+			Schools of Chefland use the 50−50 rule to grade their students. As per the rule, students are awarded :
+			Z grade, if their attendance is strictly less than 50%.
+			F grade, if they score strictly less than 50% marks, given that their attendance is greater than or equal to 50% .
+			A grade, otherwise. 
+			You are given two integers, X and Y, denoting the percentage of attendance and percentage of marks obtained by Alice. What grade will Alice get?
+
+			Input Format
+				The first line of input will contain a single integer T, denoting the number of test cases.
+				Each test case consists of two space-separated integers 
+				X and Y — the percentage of attendance and percentage of marks obtained by Alice.
+			Output Format
+				For each test case, output on a new line, the grade awarded to Alice.
+				Note that you may print the grade in lowercase or uppercase.
+
+			Constraints
+				1≤T≤10^4
+				1 ≤ X ,Y ≤ 100
+			Sample 1:
+			Input
+			4
+			49 100
+			49 49
+			50 49
+			50 50
+			Output
+			Z
+			Z
+			F
+			A
+			Explanation:
+			Test case 
+				1: Alice's attendance is less than 50%
+				50% so she will be awarded Z grade.
+				Test case 3
+				3: Alice's attendance is equal to 50 and her marks are less than 50%, so she will be awarded F grade.
+				Test case 4: Alice's attendance is equal to 50% and her marks are also equal to 50%, so she will be awarded A grade.
+
+		#include <bits/stdc++.h>
+		using namespace std;
+
+		int main() {
+			int T;
+			cin>>T;
+			
+			while(T--){
+				int PA, PM;
+				cin>>PA>>PM;
+				
+				if(PA>=50 && PM >=50)
+					cout<<"A\n";
+				else if(PA<50)
+					cout<<"Z\n";
+				else
+					cout<<"F\n";
+			}
+			return 0;
+		}
+
+	555) Minimise Z:
+		Problem statement
+			Given an array ‘A’. Your task is to choose any two different elements of the array say ‘X’ and ‘Y’, such that ‘Z’ is minimum possible. Where ‘Z’ = ‘X’ × ’Y’.
+			Return the minimum possible value of ‘Z’.
+
+			Example:
+				‘N’ = [5, 3, 9, 6, 3]
+				‘X’ can be chosen as 3(index 1) and ‘Y’ can be chosen as 3(index 4). 'Z' = 3*3 = 9.
+				No other combination can have a smaller value of ‘Z’.
+			Constraints:
+				1 <= ‘T’ <= 10
+				2 <= ‘N’ <= 10^5
+				-10^4 <= ‘A[i]’ <= 10^4
+				Time Limit: 1 sec
+
+			Sample Input 1:
+				2
+				6
+				-6 10 -1 2 10 -1 
+				7
+				-7 5 -1 -4 -10 -8 10 
+				Sample Output 1:
+				-60
+				-100
+				Explanation of sample input 1:
+				For 1st Testcase :
+				‘X’ can be chosen as -6(index 0)  and ‘Y’ can be chosen as 10(index 1). 'Z' = -6*10 = -60.
+				No other combination can have a smaller value of ‘Z’.
+
+				For 2nd Testcase :
+				‘X’ can be chosen as -10(index 4) and ‘Y’ can be chosen as 10(index 6). 'Z' = -10*10 = -100.
+				No other combination can have a smaller value of ‘Z’.
+				Sample Input 2:
+				3
+				6
+				-5 -10 5 7 -8 -8 
+				6
+				-10 6 1 -6 7 5 
+				8
+				0 0 3 -8 -10 -7 4 -5 
+				Sample Output 2:
+				-70
+				-70
+				-40
+
+		int minimiseZ(vector<int> &a){
+			sort(a.begin(), a.end());
+
+			if(a[0] < 0 && a[a.size()-1] < 0)
+				return a[a.size()-2]*a[a.size()-1];
+			else if(a[0]<0)
+				return a[0]*a[a.size()-1];
+			
+			return a[0]*a[1];
+		}
+	
+	556) Min Cost Flip:
+		Problem statement
+			You are given an array ‘A’ of ‘N’ integers numbered from ‘0’ to ‘N - 1’. You are also given another binary array ‘B’ of length ‘N’ containing only ‘0s’ and ‘1s’.
+			You can do the following operation at most once:
+			Choose any index ‘i’ and replace the value of ‘B[i]’ to ‘(1 - B[i])’.
+			The cost of this operation will be equal to ‘A[i]’.
+			The beauty of an array is equal to the maximum consecutive length of ‘0s’ in the array ‘B’. You have to maximise the beauty of the array by minimising the cost.
+			If there are multiple ways to maximise the beauty of the array, you have to find a way which involves the minimum cost operation.
+			Your task is to tell the minimum cost to maximise the beauty of an array ‘B’ and return it.
+
+			Example:
+			‘N’ = 4
+			‘A’ = [2, 1, 10, 5]
+			‘B’ = [0, 1, 1, 0]
+
+			If you replace the ‘1st’ element to ‘0’, you’ll get ‘B’ as: [0, 0, 1, 0]. Here, the beauty of an array ‘B’ is ‘2’ and the cost of this operation is ‘1’.
+
+			If you replace the ‘2nd; element to ‘0’, you’ll get ‘B’ as: [0, 1, 0, 0]. Here, the beauty of an array ‘B’ is ‘2’ and the cost of this operation is ‘10’.
+			As you can see, both of the above operations are giving beauty ‘2’ but the minimum cost is given by the ‘1st’ operation. So, the answer for this test case is ‘1.
+			Constraints:
+				1 <= ‘T’ <= 10
+				1 <= ‘N’ <= 10^5
+				0 <= ‘A[i]’ <= 10^9
+				‘B[i]’ belongs to the set {‘0’, ‘1’}
+				Time limit: 1 sec
+				
+			Sample Input 1:
+				2
+				3
+				5 10 1
+				0 1 0
+				5
+				1 1 2 1 1
+				0 1 0 1 0 
+				Sample Output 1:
+				10
+				1
+				Explanation of sample input 1:
+				For test case 1:    
+				If you replace the ‘1st’ element of the array ‘B’, you’ll get ‘B’ as: [0, 0, 0]. 
+				This is the maximum beauty you can achieve and the cost of this operation is ‘10’. 
+				There is no other way to achieve the above beauty value. Hence, the answer for this test case is ‘10’.
+
+				For test case 2:
+				There are two ways to achieve the maximum beauty value by either flipping the ‘1st’ value or ‘3rd’ value.
+				Both of these operations are taking cost ‘1’. Hence, the answer for this test case is ‘1’.
+				Sample Input 2:
+				2
+				4
+				1 10 11 2 
+				0 0 0 0
+				2
+				11 6
+				1 1
+				Sample Output 2:
+				0
+				6
+	
+		// Not Optimized:
+			int Lcount(vector<int> sample, int s, int e){
+				int cnt=0;
+				for (int z = s; z >= e; z--) {
+					if(sample[z] == 0)
+					cnt++;
+					else
+					break;
+				}
+				return cnt;
+			}
+
+			int Rcount(vector<int> sample, int s, int e) {
+				int cnt=0;
+
+				for(int i=s; i<=e; i++){
+					if(sample[i] == 0)
+					cnt++;
+					else
+					break;
+				}
+				return cnt;
+			}
+
+			int minCostFlip (int n, vector <int> &a, vector <int> &b) {
+				int minCost=0, total=0;
+
+				for(int i=0; i<n; i++){
+					if(b[i] == 1){
+					int Lside = Lcount(b, i-1, 0);
+					int Rside = Rcount(b, i+1, n-1);
+
+					if(total <= Lside+Rside+1){
+						if(total < Lside+Rside+1){
+							total = Lside+Rside+1;
+							minCost = a[i];
+						}else{
+							if(minCost !=0 )
+							minCost = min(minCost, a[i]);
+							else
+							minCost = a[i];
+						}
+					}
+					}
+				}
+				return minCost;
+			}
+
+		// Optimized:
+			❌Pending
+	
+	557) Min Sum Beautiful Subarray:
+		Problem statement
+			You are given an array ‘A’ of ‘N’ integers numbered from ‘0’ to ‘N - 1’. You are also given an integer ‘K’. A subarray is considered to be a beautiful subarray if the length of the subarray is '1', else if absolute difference between any two elements in the subarray is even.
+			Let’s say we have a subarray from ‘i’ to ‘j’, where ‘i’ <= ‘j’. For any two integers ‘p’, ‘q’ where ‘i’ <= ‘p’, ‘q’ <= ‘j’, ‘|A[p] - A[q]|’ should be even. You have to find the minimum sum of a beautiful subarray having length less than or equal to ‘K’.
+			You have to tell the minimum sum of a beautiful subarray having length less than or equal to ‘K’.
+			Example:
+			‘N’ = 4
+			‘K’ = 2
+			‘A’ = [-2, -6, 0,  4]
+
+			Here, the beautiful subarrays with length less than or equal to ‘2’ are:
+			[-2], [-2, -6], [-6], [-6, 0], [0], [0, 4], [4].
+
+			The subarray having minimum sum is: [-2, -6].
+			So, the answer for this example is ‘-8’.
+			Constraints:
+				1 <= 'T' <= 10
+				1 <= 'N' <= 10^5
+				1 <= 'K' <= 'N'
+				-10^9 <= A[i] <= 10^9
+
+				Time Limit: 1 sec 
+			Sample Input 1:
+				2
+				4 3
+				0 1 -4 2
+				3 1
+				1 2 0
+				Sample Output 1:
+				-4
+				0
+				Explanation of sample input 1:
+				For test case 1:
+				Here, the beautiful subarrays with length less than or equal to ‘3’ are: [0], [1], [-4], [-4, 2], [2].
+				The minimum sum among these subarrays is given by a subarray ‘[-4]’. So, the answer for this test case is -’4’.
+
+				For test case 2:
+				Here, the beautiful subarrays with length less than or equal to ‘1’ are: [1], [2]. [0].
+				The minimum sum is given by a subarray ‘[0]’. So, the answer for this test case is ‘0’.
+
+				Sample Input 2:
+				2
+				5 4
+				-10 0 4 -10 2
+				3 2
+				1 1 1
+				Sample Output 2:
+				-16
+				1
+
+		// Not Optimized:
+			#include<bits/stdc++.h>
+			long long minSumBeautifulSubarray (int n, int k, vector <int> &a) {
+				long long ans = *min_element(a.begin(), a.end());
+
+				vector<vector<int>> holder;
+
+				for(int i=0; i<n; i++){
+					vector<int> temp;
+					temp.push_back(a[i]);
+					for(int j=i+1; j<n; j++){
+						if(abs(a[j-1] - a[j])% 2 == 0 && temp.size() < k){
+							temp.push_back(a[j]);
+							holder.push_back(temp);
+						}else{
+							break;
+						}
+					}
+				}
+
+				for(auto& outer: holder){
+					long long crntSum=0;
+					for(int inner: outer)
+							crntSum += inner;            
+
+					ans = min(ans, crntSum);
+				}
+
+				return ans;
+			}
+
+		// Optimized:
+		 	❌Pending
+	
+	558)
+	
+	559)
+	
+	560)
+
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
