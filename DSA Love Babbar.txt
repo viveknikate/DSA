@@ -16591,7 +16591,108 @@ Lecture-42: OOPs Concepts in C++ || Part-1
 			return 0;
 		}
 ---------------------------------------------------------------------------------------------------------
+Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation & Abstraction
+	Encapsulation:
+		Encapsulation in C++ is defined as the wrapping up of data and information in a single unit.
+		In Object Oriented Programming, Encapsulation is defined as binding together the data and the functions that manipulate them.
 
+		-Fully Encapsulated class:
+			the class where all data-member are private.
+
+		- Encapsulation used for Information Hiding / Data Hiding
+		- Encapsulation enhances security.
+		- using Encapsulation we can mark our class as read-only.
+		- Increases Code Resuability
+		- Encapsulated code is better for Unit testing.
+		eg.
+			#include <iostream>
+			using namespace std;
+
+			class Student{
+				// by default the member are private only
+				int id;
+				string name;
+				
+				public:
+					int getID(){
+						return id;
+					}
+				
+					string getName(){
+						return name;
+					}
+			};
+
+			int main() {
+				Student s;
+				
+				std::cout << s.getID() << std::endl;
+				std::cout << s.getName() << std::endl;
+				return 0;
+			}
+
+	Inheritance:
+		The capability of a class to derive properties and characteristics from another class is called Inheritance. 
+		Inheritance is one of the most important features of Object-Oriented Programming. 
+		syntax:
+			class ClassName : accessModifire parentClassName{
+
+			}
+									Human	----> parent class/ super class
+									 ↙   ↘
+			chlid class/ sub class ---> Male 	Female
+		eg.
+			#include <iostream>
+			using namespace std;
+			class Human{
+				int weight;
+				public:
+					string name;
+				
+					void setWeight(int w){
+						weight = w;
+					}
+					
+					int getWeight(){
+						return weight;
+					}
+				};
+
+			class Male: public Human{
+				char gender = 'M';
+				public:
+				char getGender(){
+					return gender;
+				}
+			};
+
+			int main() {
+				
+				Male m;
+				// m.weight = 90;          // Error private variable
+				m.setWeight(80);
+				std::cout << m.getWeight() << std::endl;
+				m.name = "Shree";
+				std::cout << "name : "<< m.name << std::endl;
+				std::cout << "Gender: " << m.getGender() << std::endl;
+				
+				return 0;
+			}
+
+		attribute is in SuperClass			inheriting into Subclass as			then inSubClass that attribute is
+			public		--------->			public								public
+			public		--------->			protected								protected
+			public		--------->			private								private
+			
+			protected		--------->			public								protected
+			protected		--------->			protected								protected
+			protected		--------->			private								private
+
+			private		--------->			public								Not-accessible
+			private		--------->			protected								Not-accessible
+			private		--------->			private								Not-accessible
+
+			
 ---------------------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------------------
@@ -61587,12 +61688,277 @@ POTD:-[Problem of the Day]
 		// Optimized:
 		 	❌Pending
 	
-	558)
-	
-	559)
-	
-	560)
+	558) Product of Array Except Self:
+		Problem statement:
+			Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
+			The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+			You must write an algorithm that runs in O(n) time and without using the division operation.		
 
+			Example 1:
+			Input: nums = [1,2,3,4]
+			Output: [24,12,8,6]
+
+			Example 2:
+			Input: nums = [-1,1,0,-3,3]
+			Output: [0,0,9,0,0]
+			
+			Constraints:
+				2 <= nums.length <= 10^5
+				-30 <= nums[i] <= 30
+				The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+	
+			Follow up: Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)
+
+		// Not Optimized:
+			class Solution {
+				public:
+				vector<int> productExceptSelf(vector<int>& nums) {
+					vector<int> res;
+					for(int i=0; i<nums.size(); i++){
+						int prod = 1;
+						for(int j=0; j<nums.size(); j++){
+							if(i==j)
+								continue;
+							prod *= nums[j];
+						}
+						res.push_back(prod);
+					}
+					return res;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				vector<int> productExceptSelf(vector<int>& nums) {
+					int n = nums.size();
+					vector<int> prefix, suffix;
+					
+					int prod=1;
+					for(int i=0; i<n; i++){
+						prefix.push_back(prod);
+						prod *= nums[i];
+					}
+
+					prod=1;
+					for(int i=n-1; i>=0; i--){
+						suffix.push_back(prod);
+						prod *= nums[i];
+					}
+					reverse(suffix.begin(), suffix.end());
+
+					vector<int> res;
+					for(int i=0; i<n; i++)
+						res.push_back(prefix[i]*suffix[i]);
+					return res;
+				}
+			};
+
+			// using single vector
+				class Solution {
+					public:
+					vector<int> productExceptSelf(vector<int>& nums) {
+						vector<int> holder;
+						int n = nums.size();
+
+						// first storing the prefix prod
+						int prod=1;
+						for(int i=0; i<n; i++){
+							holder.push_back(prod);
+							prod *= nums[i];
+						}
+
+						// secondly storing suffix prod
+						prod=1;
+						for(int i=n-1; i>=0; i--){
+							holder[i] *= prod;
+							prod *= nums[i];
+						}
+						return holder;
+					}
+				};
+	
+	559) Find Integer:
+		Problem statement
+			You are given two integers, ‘N’ and ‘K’. Assume numbers from 1 to ‘N’ are arranged such that all odd numbers (in ascending order) are present first and then come to all even numbers (also in ascending order).
+			You need to find the integer at position ‘K’ (numbering of positions starts from 1).
+			For example:
+			You are given ‘N’ as 7 and ‘K’ as 4.  Numbers from 1 to 7 are arranged as [1, 3, 5, 7, 2, 4, 6], and the number at position 4 is 7. So, the answer is 7.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^12
+				1 <= K <= N
+				Time Limit: 1 sec
+
+			Sample Input 1:
+				2
+				7 4
+				5 3
+				Sample Output 1:
+				7
+				5
+				Explanation:
+				For the first test case, the numbers from 1 to 7 are arranged as [1, 3, 5, 7, 2, 4, 6], and the number at position 4 is 7. Hence the answer is 7.
+				For the second test case, the numbers from 1 to 5 are arranged as [1, 3, 5, 2, 4], and the number at position 3 is 5. Hence the answer is 5.
+				Sample Input 2:
+				2
+				6 2
+				7 3
+				Sample Output 2:
+				3
+				5
+
+		// Not Optimized
+			#include <bits/stdc++.h> 
+			int findInteger(int n, int k) {
+				vector<int> holder, odds, evens;
+				for(int i=1; i<=n; i++){
+					if(i&1)
+						odds.push_back(i);
+					else
+						evens.push_back(i);
+				}
+				
+				holder.insert(holder.end(), odds.begin(), odds.end());
+				holder.insert(holder.end(), evens.begin(), evens.end());
+				
+				// or
+				// holder.assign(odds.begin(), odds.end());
+				// holder.insert(holder.end(), evens.begin(), evens.end());
+				return holder[k-1];
+			}
+		
+		// Optimized:
+			#include <bits/stdc++.h> 
+			int findInteger(int n, int k) {
+				int numOfOdds = (n+1)/2;
+				if(k <= numOfOdds)
+					return 2 * (k-1) + 1;
+				return 2*(k-numOfOdds);
+			}
+	
+	560) Set the rightmost unset bit:
+		Problem statement:
+			Given a non-negative number N. The problem is to set the rightmost unset bit in the binary representation of N. If there are no unset bits, then just leave the number as it is.
+
+			Example 1:
+			Input:
+			N = 6
+			Output:
+			7
+			Explanation:
+			The binary representation of 6 is 110.
+			After setting right most bit it becomes
+			111 which is 7.
+			Example 2:
+
+			Input:
+			N = 15
+			Output:
+			15
+			Explanation:
+			The binary representation of 15 is 1111.
+			As there is no unset bit it remains the
+			same.
+			
+			Your Task:  
+				You don't need to read input or print anything. Your task is to complete the function setBit() which takes an integer N as input parameter and returns the integer after setting a rightmost unset bit.
+
+			Expected Time Complexity: O(LogN)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+			1 <= N <= 10^9
+
+		class Solution {
+			public:
+			int setBit(int N) {
+				string s = bitset<32>(N).to_string();
+				int i=31;
+				
+				// cout<<s<<endl;
+				while(i>=0)
+					if(s[i] == '0'){
+						s[i] = '1';
+						break;
+					}else{
+						i--;
+					}
+				
+				// cout<<s<<endl;
+				return stoi(s, 0, 2);
+			}
+		};
+	
+	561) Set kth bit:
+		Problem statement:
+			Given a number N and a value K. From the right, set the Kth bit in the binary representation of N. The position of Least Significant Bit(or last bit) is 0, the second last bit is 1 and so on. 
+			Example 1:
+			Input:
+			N = 10 
+			K = 2
+			Output:
+			14
+			Explanation:
+			Binary representation of the given number
+			10 is: 1 0 1 0, number of bits in the 
+			binary reprsentation is 4. Thus 2nd bit
+			from right is 0. The number after changing
+			this bit to 1 is: 14(1 1 1 0).
+			Example 2:
+
+			Input:
+			N = 15 
+			K = 3
+			Output:
+			15
+			Explanation:
+			The binary representation of the given
+			number 15 is: 1 1 1 1, number of bits
+			in the binary representation is 4. Thus
+			3rd bit from the right is 1. The number
+			after changing this bit to 1 is
+			15(1 1 1 1).
+
+			Your Task:  
+				You don't need to read input or print anything. Your task is to complete the function setKthBit() which takes two integer N and K as input parameter and returns an integer after setting the K'th bit in N.
+
+			Expected Time Complexity: O(1)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= N <= 10^9
+				0 <= K < X, where X is the number of bits in the binary representation of N.
+
+		class Solution {
+			public:
+			int setKthBit(int N, int K) {
+				string s = bitset<32>(N).to_string();
+				
+				// cout<<s<<endl;
+				s[31-K] = '1';
+				// cout<<s<<endl;
+				return stoi(s, 0, 2);
+			}	
+		};
+
+	562) 
+	
+	563)
+	
+	564)
+	
+	565)
+	
+	566)
+	
+	567)
+	
+	568)
+	
+	569)
+	
+	570)
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
