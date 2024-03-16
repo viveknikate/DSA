@@ -20333,6 +20333,33 @@ Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation 
 			std::cout << std::endl;
 			return 0;
 		}
+
+	// sort function passing extra parameter:
+		// this is the syntax for passing extra parameter to DESCbyValues function
+		// usually in sort function the last argument which is function, takes only 2 parameter for comparison.
+
+		[&] this represents that we are passing extra parameter (here nums) by pass by reference method, use [&]
+			sort(holder.begin(), holder.end(), [&](pair<int, int> a, pair<int, int> b){
+				return DESCbyValues(a, b, nums);
+			});
+		
+		// [=] this represents that we are passing extra parameter (here nums) by pass by value method
+		//to pass more than 2 arguments by pass by value method, use [=]
+			sort(holder.begin(), holder.end(), [=](pair<int, int> a, pair<int, int> b){
+				return DESCbyValues(a, b, nums);
+			});
+
+
+		// if we use just [] (empty brackets) its represents that we are not passing any extra parameter
+		//just to pass 2 argument
+			sort(holder.begin(), holder.end(), [](pair<int, int> a, pair<int, int> b){
+				return DESCbyValues(a, b);
+			});
+
+		eg.
+			sort(holder.begin(), holder.end(), [=](pair<int, int> a, pair<int, int> b){
+				return DESCbyValues(a, b, nums);
+			});
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array
@@ -61942,17 +61969,395 @@ POTD:-[Problem of the Day]
 			}	
 		};
 
-	562) 
+	562) Contiguous Array:
+		Problem statement:
+			Given a binary array nums, return the maximum length of a contiguous subarray with an equal number of 0 and 1.
+
+			Example 1:
+			Input: nums = [0,1]
+			Output: 2
+			Explanation: [0, 1] is the longest contiguous subarray with an equal number of 0 and 1.
+			
+			Example 2:
+			Input: nums = [0,1,0]
+			Output: 2
+			Explanation: [0, 1] (or [1, 0]) is a longest contiguous subarray with equal number of 0 and 1.
+			
+			Constraints:
+				1 <= nums.length <= 10^5
+				nums[i] is either 0 or 1.
+
+		// Not Optimized:
+			class Solution {
+				bool counts(vector<int> arr, int s, int e){
+					int ones, zeros;
+					ones=zeros=0;
+
+					for(int i=s; i<=e; i++)
+						if(arr[i] == 1)
+							ones++;
+						else
+							zeros++;
+						
+					if(ones == zeros)
+						return 1;
+					return 0;
+				}
+				public:
+				int findMaxLength(vector<int>& nums) {
+					int mxLen = 0;
+					
+					// Generating subarray
+					for(int i=0; i<nums.size(); i++){
+						for(int j=i+1; j<nums.size(); j++){
+							// count the no.of ones & zeros between i & j as start and end.
+							if(counts(nums, i, j))
+								mxLen = max(mxLen, j-i+1);
+						}
+					}
+					return mxLen;
+				}
+			};
 	
-	563)
+		// Not Optimized (little optimized):
+			class Solution {
+				public:
+				int findMaxLength(vector<int>& nums) {
+					int mxLen = 0;
+					int ones, zeros;
+
+					// Generating subarray
+					for(int i=0; i<nums.size(); i++){
+						ones=zeros=0;
+						if(nums[i] == 1)
+							ones++;
+						else
+							zeros++;
+						
+
+						for(int j=i+1; j<nums.size(); j++){
+							// count the no.of ones & zeros between i & j as start and end.
+							if(nums[j] == 1)
+								ones++;
+							else
+								zeros++;
+							
+							if(ones == zeros)
+								mxLen = max(mxLen, j-i+1);                                
+						}
+					}
+					return mxLen;
+				}
+			};
+
+		// Optimized:
+			❌Pending
+
+	563) String Reverse:
+		Problem statement
+			You are having a string ‘S’ containing ASCII characters.
+			You are required to reverse the input string.
+			Output the reverse of the string ‘S’.
+			Example :
+				S = “hello”
+
+			Explanation : 
+				The reverse of the string ‘S’ is “olleh”.
+			Constraints :
+				1 <= T <= 5
+				1 <= S.length <= 10^5
+
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				ninja
+				MoM
+				Sample Output 1 :
+				ajnin
+				MoM
+				Explanation Of Sample Input 1 :
+				For test case 1 we have, 
+				The reverse of “ninja” is “ajnin”.
+				So, we output “ajnin” ( without quotes ).
+				For test case 2 we have, 
+				The reverse of “MoM” is “MoM” as it is a palindrome.
+				So, we output “MoM”.
+				Sample Input 2 :
+				2
+				ggUM
+				Kzk
+				Sample Output 2 :
+				MUgg
+				kzK
+
+		#include <bits/stdc++.h> 
+		string stringReverse(string S) {
+			// reverse(S.begin(), end(S));
+			// return S; 
+
+			//or
+			// for(int i=0; i<S.size()/2; i++)
+			//     swap(S[i], S[S.size()-1-i]);
+			// return S;
+
+			//or
+			for(int i=0; i<S.size()/2; i++){
+				char ch = S[i];
+				S[i] = S[S.size()-1-i];
+				S[S.size()-1-i] = ch;
+			}
+			return S;
+		}
 	
-	564)
+	564) Search In A Row Wise And Column Wise Sorted Matrix:
+		Problem statement
+			You are given an 'N * N' matrix of integers where each row and each column is sorted in increasing order. You are given a target integer 'X'.
+			Find the position of 'X' in the matrix. If it exists then return the pair {i, j} where 'i' represents the row and 'j' represents the column of the array, otherwise return {-1,-1}
+			For example:
+				If the given matrix is:
+				[ [1, 2, 5],
+				[3, 4, 9],
+				[6, 7, 10]] 
+				We have to find the position of 4. We will return {1,1} since A[1][1] = 4.
+			Sample Input 1:
+				2
+				3 4
+				1 2 5
+				3 4 9
+				6 7 10
+				2 5
+				4 5
+				8 6
+				Sample Output 1:
+				1 1
+				0 1
+				Constraints:
+				1 ≤ T ≤ 10
+				1 ≤ N ≤ 10^3
+				1 ≤ X ≤ 10^6
+				1 ≤ A[i][j] ≤ 10^6
+
+				where 'T' is the number of test cases, 'N' is the number of rows and columns, 'X' is the target value, and Aij is the elements of the matrix.
+				Time Limit : 1 sec 
+				Explanation of Input 1:
+				The first test case is already explained in the problem statement.
+				The second test case,  the given matrix is:
+				[[4, 5],
+				[5, 6]] 
+				We have to find the position of 5. So we return {0,1}.
+				Sample Input 2:
+				2
+				3 16
+				2 4 8
+				3 6 9
+				4 7 16
+				1 10
+				4
+				Sample Output 2
+				2 2
+				-1 -1
 	
-	565)
+		#include <bits/stdc++.h> 
+		pair<int, int> search(vector<vector<int>> matrix, int x) {
+			pair<int, int> ans = {-1,-1};
+
+			for(int i=0; i<matrix.size(); i++){
+				for(int j=0; j<matrix.size(); j++){
+					if(x == matrix[i][j])
+						return {i,j};
+				}
+			}
+
+			return ans;
+		}
+
+		// More Optimized
+			#include <bits/stdc++.h> 
+			pair<int, int> search(vector<vector<int>> matrix, int x) {
+
+				// if x is largest than last element (mat[n-1][n-1]) of matrix then definitely the x will not be present in matrix
+				// if x is smaller than first element (mat[0][0]) of matrix then definitely the x will not be present in matrix
+				if(x > matrix[matrix.size()-1][matrix[0].size()-1] || x < matrix[0][0])
+					return {-1,-1};
+
+				int row=0, col=matrix[0].size()-1;
+
+				while(row < matrix.size() && col >= 0){
+					if(matrix[row][col] == x)
+						return {row, col};
+					else if(matrix[row][col] < x)
+						row++;
+					else
+						col--;
+				}
+
+				return  {-1,-1};
+			}
+
+	565) Sort Elements By Frequency:
+		Problem statement
+			You are given a list of a repeated set of integers. Your task for the problem is to return a list of the given elements in decreasing sorted order of their frequency of repetition in the given list with the element with the highest frequency of repetition first and so on.
+			Note :
+			If two numbers have the same frequency then keep the one that was present before the other in the original given list (array) first.
+			For Example :
+			Input:  arr[] = {2, 5, 2, 8, 5, 6, 8, 8}
+			Output: arr[] = {8, 8, 8, 2, 2, 5, 5, 6}
+
+			Explanation :
+				When you sort the array based on the decreasing order of the frequency of repetition of integers in the original array, 
+				you’ll find that the element ‘8’ is the integer with the most repeated values therefore it would be arranged first after which since both 2 and 5 have the same number of repeated 
+				values in the original array but since the 2 arrived first so we will first arrange 2 and then 5 in our resultant array, while would be the last element after sorting here.
+			
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 3000
+				1 <= NUMS[i] <= 10^6
+
+				Where 'NUMS[i]' denotes the 'ith' element of the given array.
+				Time Limit: 1sec
+
+			Sample Input 1 :
+				2
+				7
+				1 2 3 3 2 1 1
+				9
+				1 3 2 2 2 3 4 3 1
+				Sample Output 1 :
+				1 1 1 2 2 3 3
+				3 3 3 2 2 2 1 1 4
+				Explanation For Sample Input 1 :
+				When you sort the array based on the decreasing order of the frequency of repetition of integers in the original array, 
+				you’ll find that all different elements ‘1’, ‘2’ and ‘3’ have the same frequency of repetition in the given list of integers but since the order of their arrival in the original array is different 
+				therefore, we arrange them according to that. Hence, the resultant sorted list will become 1 1 2 2 3 3.
+
+
+				When you sort the array based on the decreasing order of the frequency of repetition of integers in the original array, 
+				you’ll find that both elements ‘2’ and ‘3’ have the same frequency of repetition in the given list of integers but since the order of 
+				their arrival in the original array is different therefore we arrange them according to that. While the remaining elements ‘1’ and ‘4’ have different frequencies in the decreasing order of which they can be easily arranged. 
+				Therefore the resultant sorted list will become 3 3 3 2 2 2 1 1 4.
+				Sample Input 2 :
+				1
+				9
+				2 5 2 6 9999999 5 8 8 8
+				Sample Output 2 :
+				8 8 8 2 2 5 5 6 9999999
+
+		// Not Optimized:
+			#include <bits/stdc++.h>
+			bool DESCbyValues(pair<int, int> a, pair<int, int> b, vector<int> n){
+				if(a.second == b.second)
+					return (find(n.begin(), n.end(), a.first) < find(n.begin(), n.end(), b.first));
+				return a.second > b.second;
+			}
+
+			vector<int> sortByFrequency(vector<int>& nums){
+				vector<int> ans;
+
+				map<int, int> F;
+				for(int i: nums)
+					F[i]++;
+
+				vector<pair<int, int>> holder;
+				for(auto itr: F)
+					holder.push_back(itr);
+
+				// this is the syntax for passing extra parameter to DESCbyValues function
+				// usually in sort function the last argument which is function, takes only 2 parameter for comparison.
+
+				// [&] this represents that we are passing extra parameter (here nums) by pass by reference method, use [&]
+				/*
+					sort(holder.begin(), holder.end(), [&](pair<int, int> a, pair<int, int> b){
+						return DESCbyValues(a, b, nums);
+					});
+				*/
+				
+				// [=] this represents that we are passing extra parameter (here nums) by pass by value method
+					/*
+						to pass more than 2 arguments by pass by value method, use [=]
+						sort(holder.begin(), holder.end(), [=](pair<int, int> a, pair<int, int> b){
+							return DESCbyValues(a, b, nums);
+						});
+					*/
+
+				// if we use just [] (empty brackets) its represents that we are not passing any extra parameter
+					/*
+						just to pass 2 argument
+						sort(holder.begin(), holder.end(), [](pair<int, int> a, pair<int, int> b){
+							return DESCbyValues(a, b);
+						});
+					*/
+
+				sort(holder.begin(), holder.end(), [=](pair<int, int> a, pair<int, int> b){
+					return DESCbyValues(a, b, nums);
+				});
+
+				for(auto i: holder){
+					int repeat = i.second;
+					while(repeat--){
+						ans.push_back(i.first);
+					}
+				}
+				return  ans;
+			}
 	
-	566)
-	
-	567)
+		// Optimized:
+			❌Pending
+
+	#LeetCode Biweekly Contest-126
+		566) Find the Sum of Encrypted Integers:
+			Problem statement:
+				You are given an integer array nums containing positive integers. We define a function encrypt such that encrypt(x) replaces every digit in x with the largest digit in x. For example, encrypt(523) = 555 and encrypt(213) = 333.
+				Return the sum of encrypted elements.
+
+				Example 1:
+				Input: nums = [1,2,3]
+				Output: 6
+				Explanation: The encrypted elements are [1,2,3]. The sum of encrypted elements is 1 + 2 + 3 == 6.
+
+				Example 2:
+				Input: nums = [10,21,31]
+				Output: 66
+
+				Explanation: The encrypted elements are [11,22,33]. The sum of encrypted elements is 11 + 22 + 33 == 66.
+
+				Constraints:
+					1 <= nums.length <= 50
+					1 <= nums[i] <= 1000
+		
+			class Solution {
+				public:
+				int sumOfEncryptedInt(vector<int>& nums) {
+					
+					vector<int> holder;
+					for(int i: nums){
+						string s = to_string(i);
+						int mxVal = 0;
+						for(char ch : s)
+							mxVal = max(mxVal, ch-'0');
+						
+						int len = s.size();
+						char mxChar = mxVal + '0';
+						s.clear();
+						while(len--){
+							s += string(1, mxChar);
+						}
+						
+						mxVal = stoi(s);
+						holder.push_back(mxVal);
+					}
+					
+					int sum=0;
+					for(int i: holder)
+						sum += i;
+					return sum;
+
+					//or
+					// return accumulate(holder.begin(), holder.end(), 0);
+
+				}
+			};
+
+	567) 
 	
 	568)
 	
