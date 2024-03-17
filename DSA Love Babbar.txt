@@ -37585,6 +37585,18 @@ POTD:-[Problem of the Day]
 				return mxXOR;
 			}
 
+		// or
+			#include <bits/stdc++.h> 
+			int maxXor(int L, int R) {
+				int mx=0;
+				for(int i=L; i<R; i++){
+					for(int j=i+1; j<=R; j++){
+						mx = max(mx, i^j);
+					}
+				}
+				return mx;
+			}
+
 		//Optimized:
 			#include <bits/stdc++.h> 
 			int maxXor(int L, int R){
@@ -62357,13 +62369,181 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	567) 
+	567) Sum of Two Integers:
+		Problem statement:
+			Given two integers a and b, return the sum of the two integers without using the operators + and -.
+
+			Example 1:
+			Input: a = 1, b = 2
+			Output: 3
+
+			Example 2:
+			Input: a = 2, b = 3
+			Output: 5
+
+			Constraints:
+				-1000 <= a, b <= 1000
+
+		class Solution {
+			public:
+			int getSum(int a, int b) {
+				int value=0;
+				
+				for(int i=0; i<a; i++)
+					value++;
+				
+				for(int i=0; i<b; i++)
+					value++;
+			
+				for(int i=0; i>a; i--)
+					value--;
+				
+				for(int i=0; i>b; i--)
+					value--;
+				
+				return value;
+				// return a+b;
+			}
+		};
 	
-	568)
-	
-	569)
-	
-	570)
+	#LeetCode Weekly Contenst-389
+		568) Existence of a Substring in a String and Its Reverse:
+			Problem statement:
+				Given a string s, find any substring of length 2 which is also present in the reverse of s.
+				Return true if such a substring exists, and false otherwise.
+
+				Example 1:
+				Input: s = "leetcode"
+				Output: true
+				Explanation: Substring "ee" is of length 2 which is also present in reverse(s) == "edocteel".
+
+				Example 2:
+				Input: s = "abcba"
+				Output: true
+				Explanation: All of the substrings of length 2 "ab", "bc", "cb", "ba" are also present in reverse(s) == "abcba".
+
+				Example 3:
+				Input: s = "abcd"
+				Output: false
+				Explanation: There is no substring of length 2 in s, which is also present in the reverse of s.	
+
+				Constraints:
+					1 <= s.length <= 100
+					s consists only of lowercase English letters.
+		
+			class Solution {
+				public:
+				bool isSubstringPresent(string s) {
+					string test = s;
+					reverse(test.begin(), test.end());
+					
+					for(int i=0; i<s.size()-1; i++){
+						string sub = test.substr(i,2);
+						if(s.find(sub) != string::npos)
+							return 1;
+					}
+					return 0;
+				}
+			};
+
+		569) Count Substrings Starting and Ending with Given Character:
+			Problem statement:
+				You are given a string s and a character c. Return the total number of 
+				substrings
+				of s that start and end with c.
+
+				Example 1:
+				Input: s = "abada", c = "a"
+				Output: 6
+				Explanation: Substrings starting and ending with "a" are: "abada", "abada", "abada", "abada", "abada", "abada".
+
+				Example 2:
+				Input: s = "zzz", c = "z"
+				Output: 6
+				Explanation: There are a total of 6 substrings in s and all start and end with "z".
+
+				Constraints:
+				1 <= s.length <= 10^5
+				s and c consist only of lowercase English letters.
+
+			// Not Optimized:
+				class Solution {
+					public:
+					long long countSubstrings(string s, char c) {
+						long long cnt=0;
+						for(int i=0; i<s.size(); i++){
+							int chars=1;
+							for(int j=i; j<s.size(); j++){
+								string test = s.substr(i,chars++);
+								if(test[0] == c && test[test.size()-1] == c)
+									cnt++;
+							}
+						}
+						return cnt;
+					}
+				};
+			
+			// little Optimized:
+				class Solution {
+					public:
+					long long countSubstrings(string s, char c) {
+						long long cnt=0;
+						for(int i=0; i<s.size(); i++){
+							int chars=1;
+							for(int j=i; j<s.size(); j++){
+								if(s[i] != c)
+									break;
+									
+								if(s[j] == c)
+									cnt++;
+							}
+						}
+						return cnt;
+					}
+				};
+
+			// Optimized:
+				class Solution {
+					public:
+					long long countSubstrings(string s, char c) {
+						ios_base::sync_with_stdio(0);
+						cin.tie(0);
+						cout.tie(0);
+						
+						long long cnt=0;
+						map<char, int> F;
+						for(char ch: s)
+							F[ch]++;
+
+						int val = F[c];
+						cnt += val;
+						while(val--){
+							cnt += val;
+						}        
+						return cnt;
+					}
+				};
+			
+			// More Optimized:
+				class Solution {
+					public:
+					long long countSubstrings(string s, char c) {
+						ios_base::sync_with_stdio(0);
+						cin.tie(0);
+						cout.tie(0);
+
+						long long cnt=0;
+						int crntCount=0;
+
+						for(char ch: s)
+							if(ch == c)
+								cnt += ++crntCount;
+						
+						return cnt;
+					}
+				};
+		
+	570) 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
