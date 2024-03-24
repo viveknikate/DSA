@@ -17182,11 +17182,11 @@ Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation 
 			1) Compile-time Polymorphism
 			2) Runtime Polymorphism
 
-		1) Compile-time Polymorphism:
+		1) Compile-time Polymorphism (static or early binding polymorphism):
 			i) Function overloading
 			ii) Operator overloading
 			
-			i) Function overloading:-
+			i) Function overloading:
 				Function signature: no.of parameter & type of parameter.
 
 				function overloading means, a function with same name, must have different no.of parameter or
@@ -17285,7 +17285,7 @@ Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation 
 					}
 
 			ii) Operator Overloading:
-
+				is a compile-time polymorphism. It is an idea of giving special meaning to an existing operator in C++ without changing its original meaning.				
 				You can overload any of the following operators:
 					+		-		*		⁄		%		‸		&		|		~
 					!		=		<		>		+=		-=		*=		⁄=		%=
@@ -17298,12 +17298,217 @@ Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation 
 
 				You cannot overload the preprocessor symbols # and ##.
 				-All operators except the = operator are inherited.
+					returntype operator-- () {
+						// task
+					}
+					-- in this place you can put any operator which we can overload.
 
+					void operator^ (){
+						//....
+					}
 
+				eg.
 
+					#include <iostream>
+					using namespace std;
 
-		
+					class A{
+						public:
+						int a=10;
+						
+						// operator overloading
+						// overloading % operator
+						void operator% (A obj1) {
+							std::cout << "This is MOD operator..! working as decrementor" << std::endl;
+							std::cout << --obj1.a << std::endl;
+						}
+						
+						void operator* (A obj1) {
+							cout<<"This is multiplication operator, working as incrementor" << endl;
+							std::cout << ++obj1.a << std::endl;
+						}
+						
+						void operator& (A o){
+							std::cout << "Hi Vivek!" << std::endl;
+						}
+					};
+
+					int main() {
+					
+						A a;
+						a.a = 90;
+						
+						A b;
+						b.a = 100;
+						
+						b%a;
+						a*b;
+						
+						// this is & operator whenever program see this operator with class obj then it will print the statement
+						a&b;
+						
+						return 0;
+					}
+
+				//or
+					#include <iostream>
+					using namespace std;
+
+					class A {
+						public:
+						int a;
+
+						// Overloaded [] brackets
+						void operator[](int index) {
+							std::cout << "I'm Brackets... " << (this->a + index) << std::endl;
+						}
+						
+						void operator() (){
+							std::cout << "parenthesis... " << ++(this->a) << std::endl;
+						}
+					};
+
+					int main() {
+
+						A a, b;
+						a.a = 90;
+						b.a = 100;
+
+						b[5]; // Example usage of operator[]
+						a[10]; // Example usage of operator[]
+						
+						b();
+						a();
+						
+						return 0;
+					}
+
+		2) Run-Time Polymorphism (Dynamic or late binding polymorphism):
+			-Method Overriding
+			This type of polymorphism is achieved by Function Overriding. Late binding and dynamic polymorphism are other names for runtime polymorphism. The function call is resolved at runtime in runtime polymorphism.
+			-Rules:
+				-method in parent class & method in child class must have the same name
+				-method in parent class & method in child class must have the same parameter
+				-this is possible in inheritance only.
+
+			eg.
+				#include <bits/stdc++.h>
+				using namespace std;
+
+				// base class declaration.
+				class Animal {
+					public:
+						string color = "Black";
+				};
+
+				// inheriting Animal class.
+				class Dog : public Animal {
+					public:
+						string color = "Grey";
+				};
+
+				// Driver code
+				int main(void) {
+					// valid
+					Dog d;	
+					cout << d.color<<endl;
+					
+					Animal a;
+					std::cout << a.color << std::endl;
+					
+					Animal ab = Dog();
+					std::cout << ab.color << std::endl;
+					
+					// invalid
+					// child class calling parent class constructor which is not valid
+					// Dog ddd = Animal();		
+				}
 			
+			eg.
+				#include <bits/stdc++.h>
+				using namespace std;
+
+				class Animal {
+					public:
+					void speak(){
+						std::cout << "Speaking...!" << std::endl;
+					}
+				
+				};
+
+				class Dog : public Animal {
+					public:
+					void speak(){
+						std::cout << "Barking..." << std::endl;
+					}
+				};
+
+				int main() {
+				
+					Dog d;
+					d.speak();          // Barking
+					
+					Animal a;
+					a.speak();          // Speaking
+					
+					Animal ad = Dog();
+					ad.speak();          // Speaking
+				}
+
+	Abstraction:
+		-Implementation Hiding
+		-Abstraction means displaying only essential information and hiding the details. Data abstraction refers to providing only essential information about the data to the outside world, hiding the background details or implementation. 
+		-Abstraction refers to revealing only the most essential information while hiding the details. Data abstraction refers to exposing only the most essential aspects of the data to the outside world while hiding the implementation details.
+		eg 1.
+			Consider a real-life example of a man driving a car. The man only knows that pressing the accelerator will increase the speed of the car or applying brakes will stop the car but he does not know how on pressing the accelerator the speed is actually increasing, he does not know about the inner mechanism of the car or the implementation of the accelerator, brakes, etc in the car. This is what abstraction is.
+		   2.
+		     After writing the mail when you click on send button, email will sent, but you don't know the behind functionality of that send button that's what the abstraction is.
+		Advantages:
+			-Helps the user to avoid writing the low-level code
+			-Avoids code duplication and increases reusability.
+			-Can change the internal implementation of the class independently without affecting the user.
+			-Helps to increase the security of an application or program as only important details are provided to the user.
+			-It reduces the complexity as well as the redundancy of the code, therefore increasing the readability.
+
+		#include <iostream>
+		class car{
+			void Piston(){
+				std::cout << "Powered by 8 Piston" << std::endl;
+			}
+			
+			void Brakes(){
+				std::cout << "Special Disk+Air brakes" << std::endl;
+			}
+			
+			public:
+			void color(){
+				std::cout << "Black" << std::endl;
+			}
+			
+			void Model(){
+				std::cout << "Xi7" << std::endl;
+			}
+			
+			void Brand(){
+				std::cout << "BMW" << std::endl;
+			}
+			
+			void price(){
+				std::cout << "8M" << std::endl;
+			}
+		};
+
+		int main() {
+			car c;
+			c.color();
+			c.Model();
+			c.Brand();
+			c.price();
+			
+			// not accessible
+			// c.Piston();
+			// c.Brakes();	
+		}
 ---------------------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------------------
@@ -21331,6 +21536,17 @@ POTD:-[Problem of the Day]
 				}
 
 				return ttl;
+			}
+
+			//or
+			int stringCount(int n, string &s) {
+				int cnt=0;
+				for(int i=1; i<n; i++){
+					string str = s.substr(i-1, 2);
+					if(str == "#*" || str == "*#")
+						cnt++;
+				}
+				return cnt;
 			}
 
 	11) Sequence Query:
@@ -27344,6 +27560,29 @@ POTD:-[Problem of the Day]
 						atLeastOneSpecialChar=1;	
 				}
 				return atLeastOneSpecialChar && atLeastOneDigit && atLeastOneLowercase && atLeastOneUppercase;
+			}
+
+		// Or
+			bool isValid(string &str) {
+				// constains space
+				if((str.find(' ') !=  string::npos) || str.size() < 8 || str.size() >15)
+					return false;
+
+				int flagUpper=0, flagLower=0, flagSpecial=0, flagDigit=0;
+				for(int i=0; i<str.size(); i++)
+					if(islower(str[i]))
+						flagLower=1;
+					else if(isupper(str[i]))
+						flagUpper = 1;
+					else if(isdigit(str[i]))
+						flagDigit=1;
+					else if(ispunct(str[i]))
+						flagSpecial=1;
+					else{
+						// default
+					}
+
+				return flagLower && flagUpper && flagSpecial && flagDigit;
 			}
 
 	97) Pascal's Triangle II:
@@ -63921,29 +64160,760 @@ POTD:-[Problem of the Day]
 			return ans;
 		}
 
-	580) 
+	580) Account Balance After Rounded Purchase:
+		Problem statement:
+			Initially, you have a bank account balance of 100 dollars.
+			You are given an integer purchaseAmount representing the amount you will spend on a purchase in dollars.
+			At the store where you will make the purchase, the purchase amount is rounded to the nearest multiple of 10. In other words, you pay a non-negative amount, roundedAmount, such that roundedAmount is a multiple of 10 and abs(roundedAmount - purchaseAmount) is minimized.
+			If there is more than one nearest multiple of 10, the largest multiple is chosen.
+			Return an integer denoting your account balance after making a purchase worth purchaseAmount dollars from the store.
+			Note: 0 is considered to be a multiple of 10 in this problem.
+			Example 1:
+				Input: purchaseAmount = 9
+				Output: 90
+				Explanation: In this example, the nearest multiple of 10 to 9 is 10. Hence, your account balance becomes 100 - 10 = 90.
+
+			Example 2:
+				Input: purchaseAmount = 15
+				Output: 80
+				Explanation: In this example, there are two nearest multiples of 10 to 15: 10 and 20. So, the larger multiple, 20, is chosen.
+				Hence, your account balance becomes 100 - 20 = 80.
+
+			Constraints:
+				0 <= purchaseAmount <= 100
+
+		class Solution {
+			public:
+			int accountBalanceAfterPurchase(int purchaseAmount) {
+				int val = purchaseAmount % 10;
+				if(val >= 5){
+					if(val == 5)
+						purchaseAmount += 5;
+					else if(val == 6)
+						purchaseAmount += 4;
+					else if(val == 7)
+						purchaseAmount += 3;
+					else if(val == 8)
+						purchaseAmount += 2;
+					else
+						purchaseAmount += 1;
+				}else{
+					if(val == 0)
+						purchaseAmount -= 0;
+					else if(val == 1)
+						purchaseAmount -= 1;
+					else if(val == 2)
+						purchaseAmount -= 2;
+					else if(val == 3)
+						purchaseAmount -= 3;
+					else
+						purchaseAmount -= 4;
+				}
+
+				return 100 - purchaseAmount;
+			}
+		};
 	
-	581) 
+	581) Fibonacci series up to Nth term:
+		Problem statement:
+			You are given an integer n, return the fibonacci series till the nth(0-based indexing) term. Since the terms can become very large return the terms modulo 109+7.
+
+			Example 1:
+			Input:
+			n = 5
+			Output:
+			0 1 1 2 3 5
+			Explanation:
+			0 1 1 2 3 5 is the Fibonacci series up to the 5th term.
+
+			Example 2:
+			Input:
+			n = 10
+			Output:
+			0 1 1 2 3 5 8 13 21 34 55
+			Explanation:
+			0 1 1 2 3 5 8 13 21 34 55 is the Fibonacci series up to the 10th term.
+			
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function Series() which takes an Integer n as input and returns a Fibonacci series up to the nth term.
+
+			Expected Time Complexity: O(n)
+			Expected Space Complexity: O(n)
+			Constraint:
+				1 <= n <= 10^5
+
+		class Solution {
+			public:
+			vector<int> Series(int n) {
+				vector<int> ans;
+				
+				if(n==1)
+					return {0,1};
+					
+				int prev=0, cur=1;
+				ans.push_back(0);
+				ans.push_back(1);
+				
+				int MOD = 1e9+7;
+				
+				for(int i=2; i<=n; i++){
+					int val = (prev + cur) % MOD;
+					ans.push_back(val);
+					prev = cur % MOD;
+					cur = val % MOD;
+				}
+				return ans;
+			}
+		};
+
+	582) Alice and Marks:
+		Problem statement:
+			Alice has scored X marks in her test and Bob has scored Y marks in the same test. Alice is happy if she scored at least twice the marks of Bob’s score. Determine whether she is happy or not.
+			Input Format
+				The first and only line of input contains two space-separated integers, X,Y — the marks of Alice and Bob respectively.
+			Output Format
+				For each testcase, print Yes if Alice is happy and No if she is not, according to the problem statement.
+			The judge is case insensitive so you may output the answer in any case. In particular YES, yes, yEsare all considered equivalent to Yes.
+			Constraints
+			1 ≤ X,Y ≤ 100
+			Sample 1:
+			Input
+			2 1
+			Output
+			Yes
+			Explanation:
+			Alice has scored X=2 marks whereas Bob has scored Y=1 mark. As Alice has scored twice as much as Bob (i.e.X ≥ 2Y), the answer is Yes.
+
+			Sample 2:
+			Input
+			1 2
+			Output
+			No
+			Explanation:
+			Alice has scored X=1 mark whereas Bob has scored Y=2 marks. As Alice has not scored twice as much as Bob (i.e. X<2Y), the answer is No.
+			
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			int x,y;
+			cin>>x>>y;
+			
+			if(x >= (2*y))
+				cout<<"YES";
+			else
+				cout<<"NO";
+				return 0;
+		}
 	
-	582) 
+	583) Chef and Brain Speed:
+		Problem Statement:
+			In ChefLand, human brain speed is measured in bits per second (bps). Chef has a threshold limit of X bits per second above which his calculations are prone to errors. If Chef is currently working at Y bits per second, is he prone to errors?
+			If Chef is prone to errors print YES, otherwise print NO.
+
+			Input Format
+				The only line of input contains two space separated integers X and Y — the threshold limit and the rate at which Chef is currently working at.
+
+			Output Format
+				If Chef is prone to errors print YES, otherwise print NO.
+			You may print each character of the string in uppercase or lowercase (for example, the strings yes, Yes, yEs, and YES will all be treated as identical).
+			Constraints
+				1 ≤ X,Y ≤ 100
+			Sample 1:
+				Input
+				7 9
+				Output
+				YES
+				Explanation:
+					Chef's current brain speed of 9bps is greater than the threshold of 7 bps, hence Chef is prone to errors.
+
+			Sample 2:
+				Input
+				6 6
+				Output
+				NO
+				Explanation:
+				Chef's current brain speed of 6 bps is not greater than the threshold of 6 bps, hence Chef is not prone to errors.
+
+			Sample 3:
+				Input
+				31 53
+				Output
+				YES
+				Explanation:
+				Chef's current brain speed of 53 bps is greater than the threshold of 31 bps, hence Chef is prone to errors.
+
+			Sample 4:
+				Input
+				53 8
+				Output
+				NO
+				Explanation:
+				Chef's current brain speed of 8 bps is not greater than the threshold of 53 bps, hence Chef is not prone to errors.
+
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			int x,y;
+			cin>>x>>y;
+			
+			if(x >= y)
+				cout<<"NO";
+			else
+				cout<<"YES";		
+			return 0;
+		}
 	
-	583) 
+	584) Oneful Pairs:
+		Problem statement:
+			Chef defines a pair of positive integers (a,b) to be a Oneful Pair a+b+(a⋅b)=111
+			For example, (1,55) is a Oneful Pair, since 
+			1+55+(1⋅55)=56+55=111.
+			But (1,56) is not a Oneful Pair, since 1+56+(1⋅56)=57+56= 113 ≠ 111.
+
+			Given two positive integers a and b, output Yes if they are a Oneful Pair. And No otherwise.
+			Input Format
+			The only line of input contains two space-separated integers a and b.
+			Output Format
+				Output Yes, if (a,b) form a Oneful Pair. Output No if they do not.
+			You may print each character of Yes and No in uppercase or lowercase (for example, yes, yEs, Yes will be considered identical).
+
+			Constraints
+				1 ≤ a,b ≤ 1000
+			Sample 1:
+				Input
+				1 55
+				Output
+				Yes
+				Explanation:
+				(1,55) is a Oneful Pair, since 
+				1+55+(1⋅55)=56+55=111.
+
+			Sample 2:
+				Input
+				1 56
+				Output
+				No
+				Explanation: (1,56) is not a Oneful Pair, since 
+				1+56+(1⋅56)=57+56=113≠111
+
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			int a,b;
+			cin>>a>>b;
+			if((a+b+(a*b)) == 111)
+				cout<<"YES";
+			else
+				cout<<"NO";
+			return 0;
+		}
 	
-	584) 
+	585) AC Please:
+		Problem statement:
+			Chef is feeling the heat this summer and wants to switch on the Air Conditioning all the time, but since he doesn't want to harm the environment much, he only switches it on when the room temperature is strictly greater than 30 degrees celsius.
+			Given the room temperature, you need to find whether Chef will switch on the air conditioning or not.
+
+			Input Format
+				The only line of input will contain a single integer T - denoting the room temperature.
+			Output Format
+				Print YES if Chef will turn the Air Conditioning on, otherwise print NO.
+			You may print each character of the string in uppercase or lowercase (for example, the strings YES, yEs, yes, and yeS will all be treated as identical).
+
+			Constraints
+				1 ≤ T ≤ 50
+			Sample 1:
+				Input
+				30
+				Output
+				NO
+				Explanation:
+				Since the temperature is not more than 30 degrees Celsius Chef won't turn on the Air Conditioning.
+
+			Sample 2:
+				Input
+				41
+				Output
+				YES
+				Explanation:
+				Since the temperature is more than 30 degrees Celsius Chef will turn on the Air Conditioning.
+
+		#include <bits/stdc++.h>
+		using namespace std;
+
+		int main() {
+			int T;
+			int temp;
+			cin>>temp;
+			if(temp > 30)
+				cout<<"YES"<< endl;
+			else
+				cout<<"NO"<< endl;
+			return 0;
+		}
+		
+	586) Minimum Wage:
+		Problem statement:
+			The minimum wage in Chefland is 11 dollars per hour.
+			Given that Chef earns X dollars per hour, find whether his income is strictly above the minimum wage.
+
+			Input Format
+				The first and only line contains an integer X, denoting the income of Chef per hour.
+			Output Format
+				Output on a new line, YES, if Chef's income is strictly above the minimum wage. Otherwise, output NO.
+			You may print each character of the string in uppercase or lowercase (for example, the strings YES, yEs, yes, and yeS will all be treated as identical).
+
+			Constraints
+				1 ≤ X ≤ 20
+			Sample 1:
+			Input
+			20
+			Output
+			YES
+			Explanation:
+			Chef's income is 20 dollars per hour, which is strictly higher than the minimum wage.
+
+			Sample 2:
+			Input
+			11
+			Output
+			NO
+			Explanation:
+			Chef's income is 11 dollars per hour, which is not higher than the minimum wage.
+
+		#include <bits/stdc++.h>
+		using namespace std;
+
+		int main() {
+			int M;
+			cin>>M;
+			
+			if(M > 11)
+				cout<<"YES";
+			else
+				cout<<"NO";
+			return 0;
+		}
+
+	587) Strange Numbers:
+		Problem statement
+			Alice is very fond of digits. While she was playing with digits from 0 to 9, she noticed that when digits 0, 1, 6, 8, 9 are rotated 180 degrees, they become 0, 1, 9, 8, 6, respectively, and when digits 2, 3, 4, 5, and 7 are rotated 180 degrees, they become invalid.
+			After noticing such a property of digits, she started considering some numbers as strange numbers. According to her, a strange number is a number that, when rotated 180 degrees in a clockwise fashion, becomes a different number with each digit valid. As she is busy playing with digits, she gave you an integer ‘N’ and asked you to find the number of strange numbers from 1 to ‘N’ inclusive.
+			Note :
+			The rotated number can be greater(or smaller) than the original number.
+			Sample Input 1 :
+				2
+				5
+				10
+				Sample Output 1 :
+				0
+				3
+				Explanation For Sample Input 1 :
+				Test case 1:
+				Numbers from 1 to 5 are 1, 2, 3, 4, 5. 
+				1, when rotated 180 degrees, remains the same.
+				2, 3, 4, 5, when rotated 180 degrees, becomes invalid.
+				Therefore there are 0 strange numbers from 1 to 5.
+
+				Test case 2:
+				Strange numbers from 1 to 10 inclusive are 6, 9, and 10.
+				6, when rotated 180 degrees, becomes 9.
+				9, when rotated 180 degrees, becomes 6.
+				10, when rotated 180 degrees, becomes 01, which is the same as 1.
+				Sample Input 2 :
+				1
+				16
+				Sample Output 2:
+				4
+				Explanation For Sample Input 2 :
+				Test case 1:
+				Strange numbers from 1 to 16 inclusive are 6, 9, 10, and 16.
+				6, when rotated 180 degrees, becomes 9.
+				9, when rotated 180 degrees, becomes 6.
+				10, when rotated 180 degrees, becomes 01, which is the same as 1.
+				16, when rotated 180 degrees, becomes 91.
+
+		#include <bits/stdc++.h> 
+		int strangeNumbers(int n) {
+			int cnt=0;
+			for(int i=6; i<=n; i++){
+				int temp = i, flag =1;
+				while(temp){
+					if(temp%10 == 2 || temp%10 == 3 || temp%10 == 4 || temp%10 == 5 || temp%10 == 7){
+						flag =0;
+						break;
+					}
+					temp /= 10;
+				}
+				if(flag){
+					string s1, s2;
+					s1=s2= to_string(i);
+
+					for(int z=0; z<s2.size(); z++)
+						if(s2[z] == '6')
+							s2[z] = '9';
+						else if(s2[z] == '9')
+							s2[z] = '6';
+
+					reverse(begin(s2), end(s2));
+					
+					if(s2 != s1)
+						cnt++;
+				}
+			}
+			return cnt;
+		}
 	
-	585) 
+	588) Chocolate Removal Challenge:
+		Problem statement
+			You are given an array 'A' of size 'N'. Each element 'A[i]' represents the number of chocolates in the 'i-th' pile. In a single move, you are allowed to perform the following operation: If a pile contains more than 23 chocolates, you can take out all the chocolates leaving only 23 in the pile.
+			Your task is to calculate and return the total number of chocolates you will remove from the piles.
+			Example :
+				Input: A = [25, 24, 29, 15]
+				Output: 9
+
+				First pile: Contains 25 chocolates, remove 2 to leave 23. Chocolates removed = 2.
+				Second pile: Contains 24 chocolates, remove 1 to leave 23. Chocolates removed = 1.
+				Third pile: Contains 29 chocolates, remove 6 to leave 23. Choclates removed = 6
+				Fourth pile: Contains 15 chocolates, no chocolates removed as the pile already has less than or equal to 23 chocolates.
+				Total chocolates removed = 2 + 1 + 6 = 9.
+			Constraints:
+				1 ≤ T ≤ 10
+				1 ≤ N  ≤ 10^5
+				1 ≤ A[i] ≤ 10^9
+
+			Time limit: 1 sec
+			Sample Input 1:
+				2
+				4
+				25 24 10 15
+				3
+				30 20 40
+				Sample Output 1 :
+				3
+				24
+				Explanation For Sample Input 1:
+				For test case 1:
+				We remove 2 chocolates from the first pile and 1 from the second pile. Hence the total chocolates removed = 2 + 1 = 3.
+
+				For test case 2:
+				We remove 7 chocolates from the first pile, none from the second pile and 17 from the third pile. Hence the total chocolates removed = 7 + 17 = 24.
+				Sample Input 2:
+				2
+				5
+				100 200 300 400 500
+				1
+				23
+				Sample Output 2 :
+				1385
+				0
+
+		long long totalChocolates(vector<int> a, int n) {
+			long long ttl_cnt=0;
+			for(int i=0; i<n; i++)
+				if(a[i] >23)
+					ttl_cnt += a[i] -23;
+
+			return ttl_cnt;
+		}
+
+	589) Coin Game:
+		Problem statement
+			Alice and Bob are playing a game of coins. Initially, they have a set of coins containing 'X' 10 rupees coins and 'Y' 75 rupees coins.
+			In each turn, they should pick coins with a total value of 105 rupees, which will then be discarded from the set. If any player cannot choose coins to make the total value of 105, that player is declared the loser.
+			Alice goes first. Return 1 if Alice wins; else, return 0.
+
+			Example :
+				Input: 'X’ = 15, ‘Y’ = 1
+				Output: 1
+
+				Alice starts the game and picks one 75 rupees coin and three 10 rupees coins making a total of 105. 
+				Now, Bob cannot make 105 with the remaining coins (12 ten rupees coins). Hence Alice wins.
+			Constraints:
+				1 ≤ X, Y ≤ 10^9
+
+			Time limit: 1 sec
+			Sample Input 1:
+				50 1
+				Sample Output 1 :
+				1
+				Explanation For Sample Input 1:
+				Alice starts the game and picks one 75 rupees coin and three 10 rupees coins making a total of 105. Now, Bob cannot make 105 with the remaining coins (47 ten rupees coins). Hence Alice wins. Therefore, the output is 1.
+				Sample Input 2:
+				1 1
+				Sample Output 2 :
+				0
+				Explanation For Sample Input 2:
+				Alice starts the game but is not able to make sum 105. Hence Bob wins. Therefore, the output is 0.
+
+		// Not optimized:
+			int coinGame(int x, int y) {
+				int turn = 0;
+				while(y > 0){
+					if(x >= 3){
+						x -= 3;
+					}
+					else{
+						break;            
+					}
+					y--;
+					turn = (turn == 0) ? 1 : 0;
+				}
+				if(turn)
+					return 1;
+				return 0;
+			}
+		
+		// Optimized
+			❌Pending
 	
-	586) 
+	590) Find the Duplicate Number:
+		Problem statement:
+			Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive.
+			There is only one repeated number in nums, return this repeated number.
+			You must solve the problem without modifying the array nums and uses only constant extra space.			
+
+			Example 1:
+			Input: nums = [1,3,4,2,2]
+			Output: 2
+
+			Example 2:
+			Input: nums = [3,1,3,4,2]
+			Output: 3
+
+			Example 3:
+			Input: nums = [3,3,3,3,3]
+			Output: 3
+		
+			Constraints:
+			1 <= n <= 10^5
+			nums.length == n + 1
+			1 <= nums[i] <= n
+			All the integers in nums appear only once except for precisely one integer which appears two or more times.
+
+			Follow up:
+				How can we prove that at least one duplicate number must exist in nums?
+				Can you solve the problem in linear runtime complexity?
+
+		#define faster                 \
+		ios::sync_with_stdio(false); 	 \
+		cin.tie(nullptr);            	 \
+		cout.tie(nullptr);
+
+		class Solution {
+			public:
+			int findDuplicate(vector<int>& nums) {
+				faster              			// Macro
+				sort(nums.begin(), end(nums));
+
+				for(int i=0; i<nums.size()-1; i++)
+					if(nums[i] == nums[i+1])
+						return nums[i];        
+
+				throw ;
+			}
+		};
 	
-	587) 
+	591) Insert an Element at the Bottom of a Stack:
+		Problem Statement:
+			You are given a stack st of n integers and an element x. You have to insert x at the bottom of the given stack. 
+			Note: Everywhere in this problem, the bottommost element of the stack is shown first while priniting the stack.
+
+			Example 1:
+			Input:
+			n = 5
+			x = 2
+			st = {4,3,2,1,8}
+			Output:
+			{2,4,3,2,1,8}
+			Explanation:
+			After insertion of 2, the final stack will be {2,4,3,2,1,8}.
+
+			Example 2:
+			Input:
+			n = 3
+			x = 4
+			st = {5,3,1}
+			Output:
+			{4,5,3,1}
+			Explanation:
+			After insertion of 4, the final stack will be {4,5,3,1}.
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function insertAtBottom() which takes a stack st and an integer x as inputs and returns the modified stack after insertion.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+
+			Constraints:
+				1 <= n <= 10^5
+				0 <= x, elements of stack <= 10^9
+
+		class Solution{
+			public:
+			stack<int> insertAtBottom(stack<int> st,int x){
+				stack<int> reversal;
+				while(!st.empty()){
+					reversal.push(st.top());
+					st.pop();
+				}
+				
+				reversal.push(x);
+				while(!reversal.empty()){
+					st.push(reversal.top());
+					reversal.pop();
+				}
+				return st;
+			}
+		};
+
+	592) Find The Repeating And Missing Number:
+		Problem statement:
+			You are given an array 'nums' consisting of first N positive integers. But from the N integers, one of the integers occurs twice in the array, and one of the integers is missing. You need to determine the repeating and the missing integer.
+			Example:
+			Let the array be [1, 2, 3, 4, 4, 5]. In the given array ‘4’ occurs twice and the number ‘6’ is missing.
+			Constraints:
+				1 <= T <= 100 
+				2 <= N <= 10^4
+				1 <= nums[i] <= N
+
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				5
+				1 4 2 5 2
+				2
+				2 2    
+				Sample Output 1:
+				2 3
+				2 1
+				Explanation For Sample Input 1:
+				For the first test case we have, array: [1, 4, 2, 5, 2] and N = 5.
+				In the given array ‘2’ occurs twice and the number ‘3’ is missing. Hence, we output 2 and 3 for the repeating and the missing number, respectively.
+				For the second test case we have, array: [2, 2] and N = 2.
+				In the given array ‘2’ occurs twice and the number ‘1’ is missing. Hence, we output 2 and 1 for the repeating and the missing number, respectively.
+				Sample Input 2:
+				3
+				4
+				1 2 2 3
+				10
+				1 3 4 5 5 6 7 8 9 10
+				3
+				1 2 2
+				Sample Output 2:
+				2 4 
+				2 5 
+				2 3
+
+		// Not Optimized:
+			#include<bits/stdc++.h>
+			vector<int> findRepeatingAndMissingNumbers(vector<int> arr) {
+				int n = arr.size();
+
+				sort(arr.begin(), arr.end());
+				int num=1;
+				while(find(arr.begin(), arr.end(), num) != arr.end())
+					num++;
+				
+				int repeated=0;
+				for(int i=0; i<n-1; i++)
+					if(arr[i] == arr[i+1]){
+						repeated = arr[i];
+						break;
+					}
+
+				return {repeated, num};
+			}
 	
-	588) 
+		// Optimized:
+			#include<bits/stdc++.h>
+			vector<int> findRepeatingAndMissingNumbers(vector<int> arr) {
+				int n = arr.size();
+				sort(arr.begin(), arr.end());
+
+				int num=1;
+				int repeated=0;
+				for(int i=0; i<n-1; i++)
+					if(arr[i] == arr[i+1]){
+						repeated = arr[i];
+						arr.erase(arr.begin()+i);
+						break;
+					}
+
+				for(int i=0; i<n; i++)
+					if(num == arr[i]){
+						num++;
+					}
+					else
+						break;
+				return {repeated, num};
+			}
 	
-	589) 
+	593) Maximum Length Substring With Two Occurrences:
+		Problem statement:
+			Given a string s, return the maximum length of a substring
+			such that it contains at most two occurrences of each character.
+			
+			Example 1:
+			Input: s = "bcbbbcba"
+			Output: 4
+			Explanation:
+			The following substring has a length of 4 and contains at most two occurrences of each character: "bcbbbcba".
+
+			Example 2:
+			Input: s = "aaaa"
+			Output: 2
+			Explanation:
+			The following substring has a length of 2 and contains at most two occurrences of each character: "aaaa".
+			
+			Constraints:
+				2 <= s.length <= 100
+				s consists only of lowercase English letters.
+
+		#define Faster \
+		ios_base::sync_with_stdio(false);   \
+		cin.tie(0);                         \
+		cout.tie(0);                         \
+
+		class Solution {
+			public:
+			int maximumLengthSubstring(string s) {
+				Faster
+				int mxLen=0;
+				for(int i=0; i<s.size(); i++) {
+					string test;
+					map<char, int> F;
+					for(int j=i; j<s.size(); j++){
+						F[s[j]]++;
+						if(F[s[j]] <= 2){
+							test += s[j];
+							mxLen = max(mxLen, static_cast<int>(test.size()));			//or mxLen = max(mxLen, (int)test.size());
+																				//or mxLen = fmax(mxLen, test.size());
+
+						}
+						else
+							break;
+					}
+				}
+				return mxLen;
+			}
+		};
+
+	594)
+
+	595)
 	
-	590) 
+	596)
 	
-	591) 
+	597)
+	
+	598)
+	
+	599)
+	
+	600)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
