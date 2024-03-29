@@ -61481,6 +61481,23 @@ POTD:-[Problem of the Day]
 					}
 				};
 			
+			// Little bit optimized:
+				class Solution {
+					public:
+					long long maximumHappinessSum(vector<int>& happiness, int k) {
+						long long ans=0;
+						sort(happiness.begin(), happiness.end(), greater<int>());
+						int val=1;
+						while(k--){
+							if(happiness[0] > 0)
+								ans += happiness[0];
+							happiness.erase(happiness.begin());
+							happiness[0] -= val++;
+						}
+						return ans;
+					}
+				};
+			
 			// Optimized:
 				class Solution {
 					public:
@@ -65307,23 +65324,1427 @@ POTD:-[Problem of the Day]
 			for(int i=0; i<arr.size(); i++) arr[i].pop_back();
 		}
 	
-	602)
-	
-	603)
-	
-	604)
-	
-	605)
-	
-	606)
-	
-	607)
-	
-	608)
-	
-	609)
+	602) Rotate Matrix K times: ❌Pending
+		Problem statement
+			Given a matrix, clockwise rotate elements in it K times. Rotating the matrix by 90 degrees clockwise will be counted as 1.
+			See the sample input.
+			Constraints :
+				1 <= M <= 10^5
+				1 <= N <= 10^5
+				1 <= K <= 10^5
+			Sample Input :
+				3 4
+				2 3 8 8 
+				8 4 8 1 
+				7 6 0 5 
+				1
+				Sample Output :
+				8 2 3 8 
+				7 4 8 8 
+				6 0 5 1 
 
-	610)
+		void RotateMatrixByK(int **arr, int row, int col, int k) {
+			/*
+				*Write your code here. 
+				*Don't write main().
+				*Don't take input, it is passed as function argument.
+				*Don't print output.
+				*Taking input and printing output is handled automatically.
+			*/
+			if(row == 1 || col ==1)
+				return ;
+			
+			while(k--){
+				// this all for k=1
+				int sr, sc, er, ec;
+				sr = sc = 0;
+				er=row-1;
+				ec=col-1;
+
+				while(sr < er && sc < ec){
+					int temp = arr[sr][sc];
+
+					// for start row
+					for(int i=sc; i<=ec; i++)
+						swap(arr[sr][i], temp);
+
+					sr++;
+					// for end col
+					for(int i=sr; i<=er; i++)	
+						swap(arr[i][ec], temp);
+					
+					ec--;
+					// for end row
+					for(int i=ec; i>=sc; i--)
+						swap(arr[er][i], temp);
+
+					er--;
+					// for start col
+					for(int i=er; i>=sr-1; i--)
+						swap(arr[i][sc], temp);
+					sc++;
+				}
+			}
+		}
+	
+	603)	Subarray Product Less Than K:
+		Problem statement:
+			Given an array of integers nums and an integer k, return the number of contiguous subarrays where the product of all the elements in the subarray is strictly less than k.
+			Example 1:
+				Input: nums = [10,5,2,6], k = 100
+				Output: 8
+				Explanation: The 8 subarrays that have product less than 100 are:
+				[10], [5], [2], [6], [10, 5], [5, 2], [2, 6], [5, 2, 6]
+				Note that [10, 5, 2] is not included as the product of 100 is not strictly less than k.
+
+			Example 2:
+				Input: nums = [1,2,3], k = 0
+				Output: 0
+			
+			Constraints:
+				1 <= nums.length <= 3 * 10^4
+				1 <= nums[i] <= 1000
+				0 <= k <= 10^6
+					
+		int speeUp = [](){
+			ios_base::sync_with_stdio(0);
+			cin.tie(0);
+			cout.tie(0);
+			return 0;
+		}();
+
+		class Solution {
+			public:
+			int numSubarrayProductLessThanK(vector<int>& nums, int k) {
+				int cnt=0;
+
+				for(int i=0; i<nums.size(); i++){
+					int prod=1;
+					for(int j=i; j<nums.size(); j++){
+						prod *= nums[j];
+						if(prod < k)
+							cnt++;
+						else
+							break;
+					}
+				}
+				return cnt;
+			}
+		};
+	
+	604) Most Cost Efficient Car:
+		Problem statement
+			You are given the price of ‘Petrol’ cars, the maintenance cost of the car per month, number of kilometers a car runs in one liter, amount of Petrol per liter, and number of kilometers a car can run per month. Similar details are also given for ‘Diesel’ cars.
+			Your task is to find which car ( ‘Petrol’ or ‘Diesel’ ) is efficient to use for an exact 6 month period. If your answer is ‘Petrol’ car then print ‘0’, if your answer is ‘Diesel’ car then print ‘1’, if both the cars ( ‘Petrol’ and ‘Diesel’) are efficient then print ‘-1’.
+			For example, consider both the cars:
+
+			Price of ‘Petrol’ car = ‘780000’, the maintenance cost of ‘Petrol’ car per month = ‘500’, number of kilometers a ‘Petrol’ car can run in one liter  = ’35’, price of ‘Petrol’ per liter = ‘75’ and number of kilometers a ‘Petrol’ car can run in a month = ‘145’.
+			Similar details are given for ‘Diesel’ car, price of ‘Diesel’ car = ‘850000’, the maintenance cost of ‘Diesel’ car per month = ‘1000’, number of kilometers a ‘Diesel’ car can run in a one-liter = ’30’, price of ‘Diesel’ per liter = ‘80’ and number of kilometers a ‘Diesel’ car can run in a month = ‘200’.
+			Then the ‘Petrol’ car will be more efficient, so we will print the integer ‘0’.
+			Constraints:
+				1 <= T <= 10^5
+				1 <= priceOfCar, maintenanceCostPerMonth, numberOfkilemeterCarRunInOneLiter, pricePerLiter, numberOfKilometerCarRunInaMonth <= 10^9
+
+				Where ‘T’ is the total number of test cases.
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				100000 1200 30 60 150
+				200000 1300 10 20 120
+				80000 1000 20 40 150
+				60000 1300 20 100 50
+				Sample Output 1:
+				0
+				1
+				Explanation For Sample Input 1:
+				In the first test case:
+
+				Cost if we use ‘Petrol’ car = 100000 ( price of ‘Petrol’ car ) + 1200 * 6 ( maintenance cost of ‘Petrol’ car for 6 months ) + 60/30 * 150 * 6 ( cost of ‘Petrol’ for 6 month).
+				Total cost = ‘100000+ 7200 + 1800 = 109000’.
+				Cost if we use ‘Diesel’ car = 200000 ( price of ‘Diesel’ car ) + 1300 * 6 ( maintenance cost of ‘Diesel’ car for 6 months ) + 20/10 * 120 * 6 ( cost of ‘Diesel’ for 6 month).
+				Total cost = ‘200000+ 7800 + 1440 = 209240’.
+				The cost of a ‘Diesel’ car (209240) is more than a ‘Petrol’ (109000) car than a ‘Petrol’ car is more cost-efficient, print ‘0’.
+
+				In the second test case:
+				Cost if we use ‘Petrol’ car = 80000 ( price of ‘Petrol’ car ) + 1000 * 6 ( maintenance cost of ‘Petrol’ car for 6 months ) + 40/20 * 150 * 6 ( cost of ‘Petrol’ for 6 month).
+				Total cost = ‘80000+ 6000 + 1800 = 87800’
+				Cost if we use ‘Diesel’ car = 60000 ( price of ‘Diesel’ car ) + 1300 * 6 ( maintenance cost of ‘Diesel’ car for 6 months ) + 100/20 * 50 * 6 ( cost of ‘Diesel’ for 6 month).
+				Total cost = ‘60000+ 7800 + 1500 = 69300’
+				The cost of ‘Petrol’ car (87800)  is more than ‘Diesel’ (67500) car than ‘Diesel’ car is more cost-efficient, print ‘1’.
+
+				Sample Input 2:
+				2
+				500000 1100 40 120 200
+				200000 1200 20 120 120
+				207120 1500 20 40 120
+				210000 1000 10 20 130
+				Sample Output 2:
+				1
+				-1
+				Explanation For Sample Input 2:
+				In the first test case:
+
+				Cost if we use ‘Petrol’ car = 500000 ( price of ‘Petrol’ car ) + 1100 * 6 ( maintenance cost of ‘Petrol’ car for 6 months ) + 120/40 * 200 * 6 ( cost of ‘Petrol’ for 6 month).
+				Total cost = ‘500000+ 6600 + 3600 = 510200’.
+				Cost if we use ‘Diesel’ car = 200000 ( price of ‘Diesel’ car ) + 1200 * 6 ( maintenance cost of ‘Diesel’ car for 6 months ) + 120/20 * 120 * 6 ( cost of ‘Diesel’ for 6 month).
+				Total cost = ‘200000+ 7200 + 4320 = 211520’.
+				The cost of a ‘Diesel’ car (211520) is less than a ‘Petrol’ (510200) car so a ‘Diesel’ car is more cost-efficient, print ‘1’.
+
+				In the second test case:
+				Cost if we use ‘Petrol’ car = 207120 ( price of ‘Petrol’ car ) + 1500 * 6 ( maintenance cost of ‘Petrol’ car for 6 months ) + 40/20 * 120 * 6 ( cost of ‘Petrol’ for 6 month).
+				Total cost = ‘207120 + 9000 + 1440 = 217560’
+				Cost if we use ‘Diesel’ car = 210000 ( price of ‘Diesel’ car ) + 1000 * 6 ( maintenance cost of ‘Diesel’ car for 6 months ) + 20/10 * 130 * 6 ( cost of ‘Diesel’ for 6 month).
+				Total cost = ‘210000 + 6000 + 1560 = 217560’
+				The cost of ‘Petrol’ car (217560)  is the same as ‘Diesel’ (217560) car thus both cars are more cost-efficient, print ‘-1’.
+
+		#include <bits/stdc++.h> 
+		/*
+		--------------------------- Car class for reference ---------------------------
+		
+		class Car {
+			public:
+				int priceOfCar;
+				int maintenanceCostPerMonth;
+				int numberOfkilometerCarRunInOneLiter;
+				int pricePerLiter;
+				int numberOfKilometerCarRunInaMonth;
+
+				Car(int priceOfCar, int maintenanceCostPerMonth, int numberOfkilometerCarRunInOneLiter,
+					int pricePerLiter, int numberOfKilometerCarRunInaMonth) {
+					
+					this->priceOfCar = priceOfCar;
+					this->maintenanceCostPerMonth = maintenanceCostPerMonth;
+					this->numberOfkilometerCarRunInOneLiter = numberOfkilometerCarRunInOneLiter;
+					this->numberOfKilometerCarRunInaMonth = numberOfKilometerCarRunInaMonth;
+					this->pricePerLiter = pricePerLiter;
+					
+				}
+		};
+		*/
+
+		int mostCostEfficientCar(Car petrolCar, Car dieselCar) {
+			int totalCostPetrol = petrolCar.priceOfCar + (petrolCar.maintenanceCostPerMonth*6) + (petrolCar.pricePerLiter/petrolCar.numberOfkilometerCarRunInOneLiter) * petrolCar.numberOfKilometerCarRunInaMonth * 6;
+			int totalCostDiesel = dieselCar.priceOfCar + (dieselCar.maintenanceCostPerMonth*6) +(dieselCar.pricePerLiter/dieselCar.numberOfkilometerCarRunInOneLiter) * dieselCar.numberOfKilometerCarRunInaMonth * 6;
+
+			if(totalCostPetrol > totalCostDiesel)
+				return 1;
+			else if(totalCostDiesel > totalCostPetrol)
+				return 0;
+			else
+				return -1;
+		}
+
+	605) Count Of 3s (Refer Question 72):
+		Problem statement:
+			You are given an integer ‘N’. You simply need to find out the number of occurrences of 3 as a digit in the range of numbers from [0, N].
+			Note:
+				You need to count occurrences at every place of the number.
+				For example :
+				You are given N = 13, then the number of occurrences of 3 in range [0, 13] = 2 (3, 13), you need to return 2.
+			Constraints:
+				1 <= T <= 10^2
+				0 <= N <= 10^5
+				where ‘T’ is the number of test cases and 'N' is the given integer.
+				Time Limit: 1 sec
+
+			Sample Input 1:
+				2
+				13
+				24
+				Sample Output 1:
+				2
+				3
+				Explanation For Sample Input 1:
+				In the first test case, 
+				Number of occurrences of 3 in range [0, 13] = 2 (3, 13). Return 2
+
+				In the second test case, 
+				Number of occurrences of 3 in range [0, 24] = 3 (3, 13, 23). Return 3
+				Sample Input 2:
+				2
+				10
+				33
+				Sample Output 2:
+				1
+				8
+				Explanation For Sample Input 2:
+				In the first test case, 
+				Number of occurrences of 3 in range [0, 10] = 1 (3). Return 1
+				In the second test case, 
+				Number of occurrences of 3 in range [0, 33] = 8 (3, 13, 23, 30, 31, 32, 33). Return 8
+
+		#include <bits/stdc++.h> 
+		long long int countOf3(int x) {
+			long long cnt=0;
+
+			int i=0;
+			while(i <= x){
+				int crntNum = i;
+
+				while(crntNum){
+					if(crntNum%10 == 3) cnt++;
+					crntNum /= 10;
+				}
+				i++;
+			}
+			return cnt;
+		}	
+	
+	606) Return Keypad (Refer Q.441):
+		Problem statement
+			Given an integer n, using phone keypad find out and return all the possible strings that can be made using digits of input n.
+			Note : The order of strings are not important.
+			Constraints :
+				1 <= n <= 10^6
+
+			Sample Input:
+				23
+			Sample Output:
+				ad
+				ae
+				af
+				bd
+				be
+				bf
+				cd
+				ce
+				cf
+
+		/***
+			You need to save all the strings in the given 2D output array. And return the number of strings(i.e. number of rows filled in output) from the given function.
+
+			Don’t print the strings, just save them in output.
+		***/
+		#include<bits/stdc++.h>
+		using namespace std;
+
+		int keyPad(int n, char output[][100]) {
+			map<int, string> mapper = {
+				{2,"abc"},
+				{3,"def"},
+				{4,"ghi"},
+				{5,"jkl"},
+				{6,"mno"},
+				{7,"pqrs"},
+				{8,"tuv"},
+				{9,"wxyz"}
+			};
+
+			string s = to_string(n);
+			vector<string> ans;
+			string s1 = mapper[s[0] - '0'];
+			for(char ch : s1)
+				ans.push_back(string(1, ch));
+
+			for(int i = 1; i < s.length(); i++) {
+				string s2 = mapper[s[i] - '0'];
+				vector<string> temp;
+				for(int z = 0; z < ans.size(); z++) {
+					for(int traversS2 = 0; traversS2 < s2.size(); traversS2++)
+						temp.push_back(ans[z] + s2[traversS2]);
+				}
+				ans = temp;
+			}
+
+			for(int i = 0; i < ans.size(); i++)
+				strcpy(output[i], ans[i].c_str()); // Copy string contents to char array
+
+			return ans.size();
+		}
+	
+	607) Highest Occuring Character:
+		Problem statement
+			For a given a string(str), find and return the highest occurring character.
+			Example:
+				Input String: "abcdeapapqarr"
+				Expected Output: 'a'
+				Since 'a' has appeared four times in the string which happens to be the highest frequency character, the answer would be 'a'.
+				If there are two characters in the input string with the same frequency, return the character which comes first.
+				Consider:Assume all the characters in the given string to be in lowercase always.
+			Constraints:
+				0 <= N <= 10^6
+				Where N is the length of the input string.
+
+			Time Limit: 1 second
+			Sample Input 1:
+			abdefgbabfba
+			Sample Output 1:
+			b
+			Sample Input 2:
+			xy
+			Sample Output 2:
+			x
+
+		#include<bits/stdc++.h>
+		using namespace std;
+
+		char highestOccurringChar(char input[]) {
+			map<char, int> F;
+			int i=0;
+			while(input[i] != '\0')
+				F[input[i++]]++;
+
+			int mxN=0;
+			char ans;
+			for(auto i=F.begin(); i!=F.end(); i++)
+				if(i->second > mxN){
+					ans = i->first;
+					mxN = i->second;
+				}
+				
+			return ans;
+		}
+	❌Pending 
+	608) Binary Search (Recursive):
+		Problem statement
+			Given an integer sorted array (sorted in increasing order) and an element x, find the x in given array using binary search. Return the index of x.
+			Return -1 if x is not present in the given array. Note : If given array size is even, take first mid.
+			Input format :
+			Line 1 : Array size
+			Line 2 : Array elements (separated by space)
+			Line 3 : x (element to be searched)
+			Sample Input :
+				6
+				2 3 4 5 6 8 
+				5 
+				Sample Output:
+				3 
+				Hint : Use helper function to solve this question.
+
+		// input - input array
+		// size - length of input array
+		// element - value to be searched
+		int binarySearch(int input[], int size, int element) {
+		
+			int s=0, e=size-1;
+			while(s <= e){
+				int mid = (s+e)/2;
+				
+				if(input[mid] == element)
+					return mid;
+				else if(input[mid] > element)
+					e = mid-1;
+				else
+					s = mid +1;
+			}
+			return -1;
+		}
+	
+	609) Print 2D Array:
+		Problem statement
+			Given a 2D integer array with n rows and m columns. Print the 0th row from input n times, 1st row n-1 times…..(n-1)th row will be printed 1 time.
+			Sample Input 1:
+				3 3
+				1 2 3
+				4 5 6
+				7 8 9
+				Sample Output 1 :
+				1 2 3
+				1 2 3
+				1 2 3
+				4 5 6
+				4 5 6
+				7 8 9
+	
+		#include <iostream>
+		#include <bits/stdc++.h>
+		using namespace std;
+
+		void print2DArray(int input[][1000], int row, int col) {
+			int cnt = row;
+			for(int i=0; i<row; i++){
+				vector<int> temp;
+				int tempCnt=cnt--;
+				for(int j=0; j<col; j++)
+					temp.push_back(input[i][j]);
+
+				while(tempCnt){
+					for(int a=0; a<temp.size(); a++)
+						cout<<temp[a]<<" ";
+					cout<<"\n";
+					tempCnt--;
+				}
+			}
+		}
+
+	610) Min Value:
+		Problem statement:
+			You are given two integers, ’A’ and ‘B’.
+			Your task is to find the integer ‘C’ which does not contain any leading zeroes, has at least ‘A’ digits and it must be divisible by ‘B’.
+			If there are multiple possible solutions, print the smallest one.
+
+			For Example:
+				Let's say, 'A' = 2 and 'B' = 5,
+				Then all the multiples of '5' are:- 5, 10, 15, 20...
+				The smallest number which has '2' digits is 10.
+				Hence the answer is 10.
+			Constraints :
+			1 <= T <= 10
+			1 <= A < 18
+			1 <= B <= 10^A -1
+
+			Time Limit: 1 sec
+			Sample Input 1 :
+			2
+			2 99
+			4 55
+			Sample Output 1 :
+			99
+			1045
+			Sample Input 2 :
+			2
+			5 3
+			1 1
+			Sample Output 2 :
+			10002
+			1
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			long long minValue(int &a, long long &b) {
+				long long val = b;
+
+				do {
+					string s = to_string(b);
+					if(s.size() >= a)
+						return b;
+					b += val;
+				} while(1);
+			}
+
+	611) Vowels:
+		Problem statement
+			Ninja has been studying vowels recently. The vowels are 'a', 'e', I 'o', and 'u,' as we all know. So his teacher Hathori has given him a homework assignment in which he must divide a given string 'S' of length 'N' into two non-empty parts. But these parts must satisfy the equality property, that is, to have the same value of the sum of counts of ‘a’, ‘e’, ‘i’, ‘o’, and ‘u’. Because the ninja is currently preoccupied with his life, he requests your assistance. If this string can be divided into two non-empty parts that satisfy the above criteria, you must answer 'Yes' or 'No.'
+			For example:
+			Let’s say S = ‘xayyqez’.
+			There are multiple ways in which we can divide all the characters of string ‘S’ into two parts such that each part has the same number of vowels. Some of them are {‘a’, ‘xyyqez’}, {‘axyy’, ‘qez’} and many more. So the answer for this case is ‘Yes’.
+			Constraints -
+				1 <= ‘T’ <= 10
+				1 <= ‘N’ <= 10^5
+				Time Limit: 1 sec
+
+			Sample Input-1
+				2
+				xayyqez
+				ssty
+				Sample Output-1
+				Yes
+				Yes
+				Explanation for Sample Input 1:
+				For test case 1:    
+				There are multiple ways in which we can divide all the characters of string ‘S’ into two parts such that each part has the same number of vowels. Some of them are {‘a’, ‘xyyqez’}, {‘axyy’, ‘qez’} and many more. So the answer for this case is ‘Yes’.
+
+				For test case 2:
+				There are no vowels in the string, so we can divide it into two parts in any of the possible ways. So the answer for this case is ‘Yes’.
+				Sample Input -2
+				2
+				aae
+				abeec
+				Sample Output -2
+				No
+				No
+
+		#include <bits/stdc++.h> 
+		string vowels(string s) {
+			map<char, int> F;
+			for(char ch: s)
+				F[ch]++;
+
+			int sum = F['a'] + F['e'] + F['i'] + F['o'] + F['u'];
+
+			if(sum&1)
+				return "No";
+			return "Yes";
+
+			// return (((F['a'] + F['e'] + F['i'] + F['o'] + F['u']) & 1) == 0)? "Yes" : "No" ;
+		}
+
+	612) Length of Longest Subarray With at Most K Frequency:
+		Problem statement:
+			You are given an integer array nums and an integer k.
+			The frequency of an element x is the number of times it occurs in an array.
+			An array is called good if the frequency of each element in this array is less than or equal to k.
+			Return the length of the longest good subarray of nums.
+			A subarray is a contiguous non-empty sequence of elements within an array.		
+
+			Example 1:
+				Input: nums = [1,2,3,1,2,3,1,2], k = 2
+				Output: 6
+				Explanation: The longest possible good subarray is [1,2,3,1,2,3] since the values 1, 2, and 3 occur at most twice in this subarray. Note that the subarrays [2,3,1,2,3,1] and [3,1,2,3,1,2] are also good.
+				It can be shown that there are no good subarrays with length more than 6.
+			
+			Example 2:
+				Input: nums = [1,2,1,2,1,2,1,2], k = 1
+				Output: 2
+				Explanation: The longest possible good subarray is [1,2] since the values 1 and 2 occur at most once in this subarray. Note that the subarray [2,1] is also good.
+				It can be shown that there are no good subarrays with length more than 2.
+
+			Example 3:
+				Input: nums = [5,5,5,5,5,5,5], k = 4
+				Output: 4
+				Explanation: The longest possible good subarray is [5,5,5,5] since the value 5 occurs 4 times in this subarray.
+				It can be shown that there are no good subarrays with length more than 4.
+			
+			Constraints:
+				1 <= nums.length <= 10^5
+				1 <= nums[i] <= 10^9
+				1 <= k <= nums.length
+
+		// Not Optimized:
+			class Solution {
+				public:
+				int maxSubarrayLength(vector<int>& nums, int k) {
+					int mxLen=0;
+					for(int i=0; i<nums.size(); i++){
+						map<int, int> F;
+						int crntLen=0;
+						for(int j=i; j<nums.size(); j++){
+							F[nums[j]]++;
+							if(F[nums[j]] > k)
+								break;
+							crntLen++;
+						}
+						mxLen = max(crntLen, mxLen);
+					}
+					return mxLen;
+				}
+			};
+		
+		// Optimized:
+			int speedUp = []{
+				ios_base::sync_with_stdio(0);
+				cin.tie(0);
+				cout.tie(0);
+				return 0;
+			}();
+
+			class Solution {
+				public:
+				int maxSubarrayLength(vector<int>& nums, int k) {
+					int mxLen=0, crntLen=0, sIndex=0;
+					map<int, int> F;
+					
+					for(int l=0, r=0; r<nums.size(); r++){
+						F[nums[r]]++;
+
+						if(F[nums[r]] > k){
+
+							while(F[nums[l]] != F[nums[r]]){
+								F[nums[l]]--;
+								l++;
+							}
+							
+							F[nums[l]]--;
+							l++;
+						}
+						mxLen = max(mxLen, r-l+1);
+					}
+					return mxLen;
+				}
+			};
+	
+	613) The Ides of March:
+		Problem statement:
+			Julius Caesar was warned by a soothsayer to be wary of the ides of March — namely, the 15-th of March.
+			Today is the N-th day of March. Your task is to tell Caesar whether it is the ides of March, so that he can take extra safety precautions if necessary.
+			Input Format
+				The only line of input will contain a single integer N, today's date in March.
+			Output Format
+				Print "Yes" if today is the ides of March, and "No" otherwise (without quotes).
+			Each letter of the output may be printed in either uppercase or lowercase, i.e, the strings NO, no, nO, and No will all be treated as equivalent.
+
+			Constraints
+				1 ≤ N ≤ 15
+			Sample 1:
+			Input
+			14
+			Output
+			No
+			Explanation:
+			The 
+			14
+			14-th of March is not the ides of March, so Caesar doesn't need to take any extra care.
+
+			Sample 2:
+			Input
+			15
+			Output
+			Yes
+			Explanation:
+			15
+			15-th is the ides of March, so Caesar should take extra safety precautions.
+
+		#include <bits/stdc++.h>
+		using namespace std;
+		int main() {
+			int date;
+			cin >> date;
+
+			if (date == 15)
+				cout << "Yes";
+			else
+				cout << "NO";
+			return 0;
+		}
+
+	614) Extreme Basketball:
+		Problem statement:
+			Alice and Bob are playing a game of basketball against each other, one-versus-one.Currently, Alice has A points, and Bob has B points.
+			Each shot of a player can score either 2 or 3 points.
+
+			Alice isn't just out to win - she wants to win in dominant fashion.
+			Alice believes that her win is dominant if she ends the game with at least 10 points more than Bob.
+			If Alice is able to prevent Bob from scoring any more points, what's the minimum number of shots she further needs to get a dominant victory?
+
+			Input Format
+				The first line of input will contain a single integer T, denoting the number of test cases.
+				Each test case consists of a single line of input, containing two space-separated integers A and B — the initial scores of Alice and Bob.
+			Output Format
+				For each test case, output on a new line the minimum number of shots Alice needs to win a dominant victory.
+
+			Constraints
+				1 ≤ T ≤ 10^4
+				2 ≤ A,B ≤ 100
+			Sample 1:
+			Input
+			3
+			11 2
+			100 23
+			3 5
+			Output
+			1
+			0
+			4
+			Explanation:
+			Test case 1: Alice can shoot a single 2 2-pointer and move to 13 points, which is 11 more than Bob's score of 2 - hence earning her a dominant victory.
+			Test case 2: Alice has way more points than Bob already, so no more shots are needed.
+			Test case 3: Alice can shoot 4 three-pointers, bringing her score to 15.
+
+		#include <bits/stdc++.h>
+		using namespace std;
+
+		int main() {
+			int T;
+			cin>>T;
+			
+			while(T--){
+				int a, b;
+				cin>>a>>b;
+				
+				int OpsCnt=0, var = a;
+				int res = b + 10;
+				while(a < res){
+					OpsCnt++;
+					a += 3;
+				}
+				cout<<OpsCnt<<"\n";
+			}
+			return 0;
+		}
+
+	615) Queue Using Two Stacks
+		Problem statement
+			You will be given ‘Q’ queries. You need to implement a queue using two stacks according to those queries. Each query will belong to one of these three types:
+			1 ‘X’: Enqueue element ‘X’  into the end of the nth queue. Returns true after the element is enqueued.
+			2: Dequeue the element at the front of the nth queue. Returns -1 if the queue is empty, otherwise, returns the dequeued element.
+			Note:
+			Enqueue means adding an element to the end of the queue, while Dequeue means removing the element from the front of the queue.
+			Constraints:
+				1 <= Q <= 10^5 
+				1 <= P <= 2
+				1 <= X <= 10^5
+
+			Time limit: 1 sec
+			Sample Input 1:
+				7
+				1 2 
+				1 3 
+				2 
+				1 4 
+				1 6 
+				1 7 
+				2
+				Sample Output 1:
+				True 
+				True
+				2
+				True
+				True
+				True
+				3
+				Explanation of Sample Output 1:
+				For this input, we have the number of queries, 'Q' = 7.
+
+				Operations performed on the queue are as follows:
+
+				push(2): Push element ‘2’ into the queue. This returns true.
+				push(3): Push element ‘3’ into the queue. This returns true.
+				pop(): Pop the top element from the queue. This returns 2.
+				push(4): Push element ‘4’ into the queue. This returns true.
+				push(6): Push element ‘6’ into the queue. This returns true.
+				push(7): Push element ‘7’ into the queue. This returns true.
+				pop(): Pop the top element from the queue. This returns 3.
+				Sample Input 2:
+				7
+				1 11 
+				1 51 
+				1 26 
+				2 
+				1 6
+				2
+				2 
+				Sample Output 2:
+				True
+				True
+				True
+				11
+				True
+				51
+				26
+				Explanation for Sample Output 2:
+				For this input, we have the number of queries, Q = 7.
+				Operations performed on the queue are as follows:
+				push(11): Push element ‘11’ into the queue. This returns true.
+				push(51): Push element ‘51’ into the queue. This returns true.
+				push(26): Push element ‘26’ into the queue. This returns true.
+				pop(): Pop the top element from the queue. This returns 11.
+				push(6): Push element ‘6’ into the queue. This returns true.
+				pop(): Pop the top element from the queue. This returns 51.
+				pop(): Pop the top element from the queue. This returns 26.
+
+		#include <bits/stdc++.h> 
+		class Queue{
+			// Stacks to be used in the operations.
+			stack<int> st1, st2;
+			
+			public:
+			// Enqueues 'X' into the queue. Returns true after enqueuing.
+			bool enqueue(int X){
+				st1.push(X);
+				return 1;
+			}
+
+			/*
+				Dequeues top element from queue. Returns -1 if the queue is empty, 
+				otherwise returns the popped element.
+			*/
+			int dequeue(){
+				if(st1.empty() && st2.empty())
+					return -1;
+
+				if(st2.empty()){
+					while(!st1.empty()){
+						st2.push(st1.top());
+						st1.pop();
+					}
+				}
+
+				int val = st2.top();
+				st2.pop();
+				return val;
+			}
+		};
+		
+	616) Median of Three:
+		int numberOfElement(int n, vector<int> &v) {
+			int elementCnt=0;
+			if(n==1)
+				return 0;
+			
+			for(int i=0; i<n; i++){
+				int median;
+				vector<int> mid;
+				if(i == 0 || i == n-1){
+					if(i==0){
+						mid.push_back(0);
+						mid.push_back(v[i]);
+						mid.push_back(v[i+1]);
+						sort(begin(mid), end(mid));
+						median = mid[1];
+					}else{
+						mid.push_back(0);
+						mid.push_back(v[i-1]);
+						mid.push_back(v[i]);
+						sort(begin(mid), end(mid));
+						median = mid[1];
+					}
+				}else{
+					mid.push_back(v[i-1]);
+					mid.push_back(v[i]);
+					mid.push_back(v[i+1]);
+					sort(begin(mid), end(mid));
+					median = mid[1];
+				}
+				
+				if(median == v[i])
+					elementCnt++;
+			}
+			return elementCnt;
+		}
+
+	617) Count Subarrays Where Max Element Appears at Least K Times:
+		Problem Statement:
+			You are given an integer array nums and a positive integer k.
+			Return the number of subarrays where the maximum element of nums appears at least k times in that subarray.
+			A subarray is a contiguous sequence of elements within an array.		
+
+			Example 1:
+				Input: nums = [1,3,2,3,3], k = 2
+				Output: 6
+				Explanation: The subarrays that contain the element 3 at least 2 times are: [1,3,2,3], [1,3,2,3,3], [3,2,3], [3,2,3,3], [2,3,3] and [3,3].
+
+			Example 2:
+				Input: nums = [1,4,2,1], k = 3
+				Output: 0
+				Explanation: No subarray contains the element 4 at least 3 times.
+
+			Constraints:
+				1 <= nums.length <= 10^5
+				1 <= nums[i] <= 10^6
+				1 <= k <= 10^5
+
+		// Not Optimized:
+			class Solution {
+				public:
+				long long countSubarrays(vector<int>& nums, int k) {
+					long long mxCnt=0;
+
+					if(k > nums.size())
+						return mxCnt;
+
+					int mxEle = *max_element(nums.begin(), nums.end());
+
+					for(int i=0; i <= nums.size()-k; i++){
+						map<int, int> cntHolder;
+						for(int j=i; j<nums.size(); j++){
+							cntHolder[nums[j]]++;
+							if(cntHolder[mxEle] >= k)
+								mxCnt++;
+						}
+					}
+					return mxCnt;
+				}
+			};
+
+			// Little bit optimized:
+				class Solution {
+					public:
+					long long countSubarrays(vector<int>& nums, int k) {
+						long long mxCnt=0;
+
+						if(k > nums.size())
+							return mxCnt;
+
+						int mxEle = *max_element(nums.begin(), nums.end());
+
+						for(int i=0; i <= nums.size()-k; i++){
+							map<int, int> cntHolder;
+
+							// generating window of min size k
+							int iterator=k, index = i;
+							while(index < nums.size() && iterator--)
+								cntHolder[nums[index++]]++;
+							
+							if(cntHolder[mxEle] >= k)
+								mxCnt++;
+
+							for(int j=i+k; j<nums.size(); j++){
+								cntHolder[nums[j]]++;
+								if(cntHolder[mxEle] >= k)
+									mxCnt++;
+							}
+						}
+						return mxCnt;
+					}
+				};
+
+		// Little more optimized (counting the rest subarray that definitely holds mxEle at least k times):
+			class Solution {
+				public:
+				long long countSubarrays(vector<int>& nums, int k) {
+					long long mxCnt=0;
+
+					if(k > nums.size())
+						return mxCnt;
+
+					int mxEle = *max_element(nums.begin(), nums.end());
+
+					for(int i=0; i <= nums.size()-k; i++){
+						map<int, int> cntHolder;
+
+						// generating window of min size k
+						int iterator=k, index = i;
+						while(iterator--)
+							cntHolder[nums[index++]]++;
+						
+						if(cntHolder[mxEle] == k){
+							mxCnt += (nums.size() - index) + 1;
+							continue;
+						}
+
+						for(int j=i+k; j<nums.size(); j++){
+							cntHolder[nums[j]]++;
+							if(cntHolder[mxEle] >= k){
+								mxCnt += (nums.size() - j);
+								break;
+							}
+						}
+					}
+					return mxCnt;
+				}
+			};
+
+		// Optimized:
+			int speedUp = [](){
+				ios_base::sync_with_stdio(0);
+				cin.tie(0);
+				cout.tie(0);
+				return 0;
+			}();
+
+			class Solution {
+				public:
+				long long countSubarrays(vector<int>& nums, int k) {
+					long long res=0;
+
+					int mx = *max_element(nums.begin(), nums.end());
+					int r=0, l=0, n = nums.size(), cnt=0;
+
+					while(r < n){
+						if(nums[r] == mx) cnt++;
+						while(cnt == k){
+							if(nums[l] == mx) cnt--;
+
+							l++;
+							res += (n - r);             // this line says add all rest subarray after index r (which is no.of elements remaining after r index)
+						}
+						r++;
+					}
+					return res;
+				}
+			};
+
+	618) Day 25 : Queue Using Stack:
+		Problem statement
+			Implement a queue data structure which follows FIFO(First In First Out) property, using only the instances of the stack data structure.
+			Note:
+			1. To implement means you need to complete some predefined functions, which are supported by a normal queue such that it can efficiently handle the given input queries which are defined below.
+			2. The implemented queue must support the following operations of a normal queue:
+			a. enQueue(data) : This function should take one argument of type integer and place the integer to the back of the queue.
+			b. deQueue(): This function should remove an integer from the front of the queue and also return that integer. If the queue is empty, it should return -1.
+			c. peek(): This function returns the element present in the front of the queue. If the queue is empty, it should return -1.
+			d. isEmpty(): This function should return true if the queue is empty and false otherwise.
+			3. You will be given q queries of 4 types:
+			a. 1 val - For this type of query, you need to insert the integer val to the back of the queue.
+			b. 2 - For this type of query, you need to remove the element from the front of the queue, and also return it.
+			c. 3 - For this type of query, you need to return the element present at the front of the queue(No need to remove it from the queue).
+			d. 4 - For this type of query, you need to return true if the queue is empty and false otherwise.
+			4. For every query of type:
+			a. 1, you do not need to return anything.
+			b. 2, return the integer being deQueued from the queue.
+			c. 3, return the integer present in the front of the queue.
+			d. 4, return “true” if the queue is empty, “false” otherwise.
+			Example
+			Operations: 
+			1 5
+			1 10
+			2
+			3
+			4
+
+			Enqueue operation 1 5: We insert 5 at the back of the queue.
+			Queue: [5]
+
+			Enqueue operation 1 10: We insert 10 at the back of the queue.
+			Queue: [5, 10]
+
+			Dequeue operation 2: We remove the element from the front of the queue, which is 5, and print it.
+			Output: 5
+			Queue: [10]
+
+			Peek operation 3: We return the element present at the front of the queue, which is 10, without removing it.
+			Output: 10
+			Queue: [10]
+
+			IsEmpty operation 4: We check if the queue is empty.
+			Output: False
+			Queue: [10]
+			Detailed explanation ( Input/output format, Notes, Images )
+			Sample Input 1:
+			7
+			1 1
+			1 2
+			1 3
+			2
+			2
+			2
+			3
+			Sample Output 1:
+			1 
+			2 
+			3
+			-1
+			Explanation of the Sample Output 1:
+			Here we have seven queries in total.
+
+			Query 1: Insert 1 to the back of the queue. The queue: 1 
+			Query 2: Insert 2 to the back of the queue. The queue: 1 2
+			Query 3: Insert 3 to the back of the queue. The queue: 1 2 3
+			Query 4: Remove element from the front:  The queue: 2 3
+			Query 5: Remove the element from the front:  The queue: 2 
+			Query 6: Remove the element from the front:  The queue : 
+			Query 7: As the queue is empty, returned -1.
+			Sample Input 2:
+			2
+			1 2
+			4
+			Sample Output 2:
+			false
+			Explanation of the Sample Output 2:
+			Here we have two queries in total.
+
+			Query 1: Insert 2 to the back of the queue. The queue: 2 
+			Query 2: IsEmpty() function returns 'false' as currently the queue is not empty.
+			Constraints:
+			1 <= Q <= 1000
+			1 <= type <= 4
+			1<= data <= 10^9 
+
+			Where 'type' represents the type of query and 'data' represents the integer to be enQueued. 
+			Time limit: 1 sec
+
+		// #include<bits/stdc++.h>
+		class Queue {    
+			stack<int> st1, st2;
+
+			public:
+			Queue() {}
+
+			void enQueue(int val) {
+				st1.push(val);
+			}
+
+			int deQueue() {
+				if(st1.empty() && st2.empty())
+					return -1;
+
+				if(st2.empty()){
+					while(!st1.empty()){
+						st2.push(st1.top());
+						st1.pop();
+					}
+				}
+
+				int poped = st2.top();
+				st2.pop();
+				return poped;
+			}
+
+			int peek() {
+				if(st1.empty() && st2.empty())
+					return -1;
+
+				if(st2.empty()){
+					while(!st1.empty()){
+						st2.push(st1.top());
+						st1.pop();
+					}
+				}
+				return st2.top();
+			}
+
+			bool isEmpty() {
+				if(st1.empty() && st2.empty())
+					return 1;
+				return 0;
+			}
+		};
+
+	619) Minimum Difference in an Array (Same Q.1):
+		Problem statement
+			Given an array of integers, print the minimum of the absolute difference of all possible pairs of elements.
+
+			Example :
+			N = 5
+			ARR = [ 3, -6, 7, -7, 0 ]
+			Out of all pairs, (-7,-6) have a difference of ‘1’, and no other pair has less difference. So ‘ANS’ is ‘1’.    
+			Detailed explanation ( Input/output format, Notes, Images )
+			Constraints :
+			1 <= T <= 10
+			2 <= N  <= 10^5
+			-10^8 <= ARR[i] <= 10^8
+			Sum of N <= 10^5
+
+			Time Limit: 1 sec
+			Sample Input 1 :
+			2
+			4
+			1 8 3 10   
+			2
+			5 5
+			Sample Output 1 :
+			2
+			0
+			Explanation Of Sample Input 1 :
+			For test case 1, 
+			Out of all pairs (1,3) and (8,10) have the minimum difference ‘2’ so the answer is ‘2’.
+			For test case 2,
+			There is only one possible pair (5,5) so the answer is ‘0’.
+			Sample Input 2 :
+			2
+			3
+			8 1 8
+			2
+			-3 3
+			Sample Output 2 :
+			0
+			6
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			int minDiff(int n, vector < int > arr) {
+				int minAbsDiff=INT_MAX;
+				for(int i=0; i<n-1; i++)
+					for(int j=i+1; j<n; j++)
+					minAbsDiff = min(minAbsDiff, abs(arr[i] - arr[j]));
+				
+				return minAbsDiff;
+			}
+		
+		// Optimized:
+			#include <bits/stdc++.h> 
+			int minDiff(int n, vector < int > arr) {
+				sort(begin(arr), end(arr));
+				
+				int minAbsDiff=INT_MAX;
+				for(int i=0; i<n-1; i++)
+					minAbsDiff = min(minAbsDiff, abs(arr[i] - arr[i+1]));
+				
+				return minAbsDiff;
+			}
+	
+	620) Quality Array:
+		Problem statement
+			You are given an array ‘A’ containing ‘N’ positive integers. You consider an integer is good if at least one even number divides it and at least one odd number greater than 1 divides it.
+			If all the elements of an array are good integers, then the array is declared a quality array. You can remove some (possibly 0) elements to make the given array quality.
+			Your task is to find the minimum number of elements to be removed from the given array to make it a quality array. An empty array is a quality array.
+			Example :
+			‘N’ = 5, ‘A’ = [3, 7, 6].
+			Only the third element of the given array is good. As 6 is divisible by 2 and 3. So we can remove the first and the second elements.
+			Hence, the answer is 2.
+			Constraints :
+				1 ≤ T ≤ 10
+				1 ≤ N ≤ 10^5
+				2 ≤ A[i] ≤ 100
+				It’s guaranteed that sum of ‘N’ overall test cases doesn’t exceed 10^5.
+				Time limit: 1 sec
+
+			Sample Input 1 :
+			2
+			5
+			6 6 9 5 2 
+			4
+			7 5 2 6 
+			Sample Output 1 :
+			3
+			3
+			Explanation For Sample Input 1 :
+			For test case 1: 
+			‘A’ = [6, 6, 9, 5, 2]. Only 6 is a good integer from the given array because it has both even and odd divisors. Every other integer either lacks an even divisor or an odd divisor. So we need to remove 3 elements.
+			Hence, the answer is 3.
+
+			For test case 2:
+			Like the previous case, only 6 is a good integer from the given array, and we must remove every other element.
+			Hence, the answer is 3.
+			Sample Input 2 :
+			2
+			4
+			5 7 3 9 
+			3
+			10 2 3     
+			Sample Output 2 :
+			4
+			2
+
+		int makeQualityArray(vector<int> &a) {
+			int good_Int_Cnt=0;
+
+			for(int i: a){
+				
+				int flag1=0, flag2=0;
+
+				// checking for even divisibility
+				for(int z=2; z <= (i/2); z += 2){
+					if(i % z == 0){
+						flag1 = 1;
+						break;
+					}
+				}
+
+				// checking for odd divisibility
+				for(int z=3; z <= (i/2); z += 2){
+					if(i % z == 0){
+						flag2 = 1;
+						break;
+					}
+				}
+
+				if(flag1 && flag2)
+					good_Int_Cnt++;
+			}
+			
+			int n = a.size();
+			// elements to be removed is size - good_Int_Cnt
+			return abs(good_Int_Cnt - n);
+		}
+
+	621) Count Prefix and Suffix Pairs I:
+		Problem statement:
+			You are given a 0-indexed string array words.
+			Let's define a boolean function isPrefixAndSuffix that takes two strings, str1 and str2:
+			isPrefixAndSuffix(str1, str2) returns true if str1 is both a prefix and a suffix of str2, and false otherwise.
+			For example, isPrefixAndSuffix("aba", "ababa") is true because "aba" is a prefix of "ababa" and also a suffix, but isPrefixAndSuffix("abc", "abcd") is false.
+			Return an integer denoting the number of index pairs (i, j) such that i < j, and isPrefixAndSuffix(words[i], words[j]) is true.
+
+			Example 1:
+				Input: words = ["a","aba","ababa","aa"]
+				Output: 4
+				Explanation: In this example, the counted index pairs are:
+				i = 0 and j = 1 because isPrefixAndSuffix("a", "aba") is true.
+				i = 0 and j = 2 because isPrefixAndSuffix("a", "ababa") is true.
+				i = 0 and j = 3 because isPrefixAndSuffix("a", "aa") is true.
+				i = 1 and j = 2 because isPrefixAndSuffix("aba", "ababa") is true.
+				Therefore, the answer is 4.
+
+			Example 2:
+				Input: words = ["pa","papa","ma","mama"]
+				Output: 2
+				Explanation: In this example, the counted index pairs are:
+				i = 0 and j = 1 because isPrefixAndSuffix("pa", "papa") is true.
+				i = 2 and j = 3 because isPrefixAndSuffix("ma", "mama") is true.
+				Therefore, the answer is 2.  
+
+			Example 3:
+				Input: words = ["abab","ab"]
+				Output: 0
+				Explanation: In this example, the only valid index pair is i = 0 and j = 1, and isPrefixAndSuffix("abab", "ab") is false.
+				Therefore, the answer is 0.
+
+			Constraints:
+				1 <= words.length <= 50
+				1 <= words[i].length <= 10
+				words[i] consists only of lowercase English letters.
+
+		int SpeedUp = [](){
+			ios_base::sync_with_stdio(0);
+			cin.tie(0);
+			cout.tie(0);
+			return 0;
+			}();
+
+		class Solution {
+			public:
+			bool isPrefixAndSuffix(string &s1, string &s2){
+				if(s1.size() > s2.size())
+					return 0;
+
+				// going for prefix
+				for(int i=0; i<s1.size(); i++)
+					if(s1[i] != s2[i])
+						return 0;
+				
+				// going for suffix
+				int index = 1;
+				for(int i=s1.size()-1; i >=0; i--)
+					if(s1[i] != s2[s2.size()-index++])
+						return 0;
+
+				return 1;
+			}
+			int countPrefixSuffixPairs(vector<string>& words) {
+				int total=0;
+
+				for(int i=0; i<words.size()-1; i++)
+					for(int j=i+1; j<words.size(); j++)
+						if(isPrefixAndSuffix(words[i], words[j]))
+							total++;
+						
+				return total;
+			}
+		};
+
+	622) Find the Length of the Longest Common Prefix:
+		Problem statement:
+			You are given two arrays with positive integers arr1 and arr2.
+			A prefix of a positive integer is an integer formed by one or more of its digits, starting from its leftmost digit. For example, 123 is a prefix of the integer 12345, while 234 is not.
+			A common prefix of two integers a and b is an integer c, such that c is a prefix of both a and b. For example, 5655359 and 56554 have a common prefix 565 while 1223 and 43456 do not have a common prefix.
+			You need to find the length of the longest common prefix between all pairs of integers (x, y) such that x belongs to arr1 and y belongs to arr2.
+			Return the length of the longest common prefix among all pairs. If no common prefix exists among them, return 0.		
+			Example 1:
+				Input: arr1 = [1,10,100], arr2 = [1000]
+				Output: 3
+				Explanation: There are 3 pairs (arr1[i], arr2[j]):
+				- The longest common prefix of (1, 1000) is 1.
+				- The longest common prefix of (10, 1000) is 10.
+				- The longest common prefix of (100, 1000) is 100.
+				The longest common prefix is 100 with a length of 3.
+
+			Example 2:
+				Input: arr1 = [1,2,3], arr2 = [4,4,4]
+				Output: 0
+				Explanation: There exists no common prefix for any pair (arr1[i], arr2[j]), hence we return 0.
+				Note that common prefixes between elements of the same array do not count.
+
+			Constraints:
+				1 <= arr1.length, arr2.length <= 5 * 10^4
+				1 <= arr1[i], arr2[i] <= 10^8
+		
+		// Not optimized:
+			class Solution {
+				public:
+				int checkNewLen(int n1, int n2){
+					string s1 = to_string(n1);
+					string s2 = to_string(n2);
+
+					int len=0, i=0, j=0;
+
+					while(i < s1.size() && j < s2.size()){
+						if(s1[i++] != s2[j++])
+							break;
+						len++;
+					}
+
+					return len;
+				}
+				int longestCommonPrefix(vector<int>& arr1, vector<int>& arr2) {
+					int mxLen = 0;
+
+					for(int i=0; i<arr1.size(); i++)
+						for(int j=0; j<arr2.size(); j++)
+							mxLen = max(mxLen, checkNewLen(arr1[i], arr2[j]));
+					return mxLen;
+				}
+			};
+	
+		// Optimized:
+			❌Pending
+
+	623)
+	
+	624)
+	
+	625)
+	
+	626)
+	
+	627)
+	
+	628)
+	
+	629)
+	
+	630)
+
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
