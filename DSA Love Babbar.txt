@@ -17382,6 +17382,27 @@ Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation 
 						
 						return 0;
 					}
+				
+				// Practice:
+					#include <iostream>
+					using namespace std;
+					class A{
+						public:
+						void operator() (){
+							cout<<"Parenthesis called"<< endl;        
+						}
+						
+						void operator! (){
+							std::cout << "Not operator called" << std::endl;
+						}
+					};
+
+					int main() {
+						A a;
+						a();
+						!a;
+						return 0;
+					}
 
 		2) Run-Time Polymorphism (Dynamic or late binding polymorphism):
 			-Method Overriding
@@ -17389,7 +17410,7 @@ Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation 
 			-Rules:
 				-method in parent class & method in child class must have the same name
 				-method in parent class & method in child class must have the same parameter
-				-this is possible in inheritance only.
+				-this is possible through inheritance only.
 
 			eg.
 				#include <bits/stdc++.h>
@@ -17509,10 +17530,210 @@ Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation 
 			// c.Piston();
 			// c.Brakes();	
 		}
+	
+	❌Pending:
+		-Interface, Friend keyword
+		-dedicated OOPs course by Love Babbar
 ---------------------------------------------------------------------------------------------------------
+Lecture-44: Linked List & its types- Singly, Doubly, Circular
+	Linked List:
+		-A linked list is a fundamental data structure in computer science. 
+		-It consists of nodes. where each node contains data and a reference (link) to the next node in the sequence. 
+		-This allows for dynamic memory allocation and efficient insertion and deletion operations compared to arrays.
+		-it is dynamic in nature, so we can increase/decrease its size at runtime so no memory wastage.
+
+		- Instead of Linked List we can use vector but if vector has some specified size [vector<int> v(5,0)], then
+		  when we exhaust the size of vector then new vector is created with size doubled, and copies all the element into new vector
+		  this operation takes times, to reduce this time we can use linked list,
+
+		- in case of array/ vector when we want to insert any element into middle then rest element we have to shift by 1,
+		  or if we delete any middle element in array, then we have shift all element forward by 1. this is time consuming operation
+		- but in case of Linked List we don't need shifting etc. insertion/ deletion is efficient in linked list.
+
+  		  Node Structure: A node in a linked list typically consists of two components:
+  		  Data: It holds the actual value or data associated with the node.
+  		  Next Pointer: It stores the memory address (reference) of the next node in the sequence.
+  		  Head and Tail: The linked list is accessed through the head node, which points to the first node in the list. The last node in the list points to NULL or nullptr, indicating the end of the list. This node is known as the tail node.
+
+		- Linked list is not contiguous.
+		-Difference:
+				Linked List:								Array:
+			Data Structure: Non-contiguous			Data Structure: Contiguous
+			Memory Allocation: Dynamic 				Memory Allocation: Static 
+			Insertion/Deletion: Efficient				Insertion/Deletion: Inefficient
+			Access: Sequential						Access: Random
+
+		#Types:
+			1) Singly LL
+			2) Doubly LL
+			3) Circular LL
+			4) Circular Doubly LL
+
+		1) Singly LL:
+			Head --> [ Data: 10 | Next: ] --> [ Data: 20 | Next: ] --> [ Data: 30 | Next: ] --> NULL
+			eg.
+				#include <iostream>
+				class LL_Node{
+					public:
+						int data;
+						LL_Node *next;
+						
+						LL_Node(){}
+						
+						LL_Node(int data){
+							this->data = data;
+							next = NULL;
+						}	
+				};
+				int main() {
+				
+					// dynamic allocation
+					LL_Node * node1 = new LL_Node();
+					std::cout << node1 -> data << std::endl;
+					std::cout << node1 -> next << std::endl;
+						
+					LL_Node *node2 = new LL_Node(20);
+					std::cout << node2 -> data << std::endl;
+					std::cout << node2 -> next << std::endl;
+					
+						
+					return 0;
+				}
+
+		// Inserting data at start & at end:
+			-Using Static Memory Allocation:
+				Note: here Memory is Limited.
+				#include <iostream>
+				using namespace std;
+
+				class Node {
+					public:
+						int data;
+						Node* next;
+					
+					Node(int data){
+						this->data = data;
+						this->next = NULL;
+					}
+				};
+
+				// inserting at start of Node
+				void insertAtStart(Node* &Head, int val) {         // passing references, to avoid making more copies of same LL
+					Node * temp = new Node(val);
+					temp -> next = Head;
+					Head = temp;
+				}
+
+				// printing all Node elements
+				void printLL(Node* &Head){
+					Node* T = Head;
+					while(T != NULL){					// while(T){
+						std::cout << T->data << "\t";
+						T = T->next;
+					}
+				}
+
+				// inserting at end of Node
+				void insertAtEnd(Node * &Tail, int val){
+					Node * currentNode = new Node(val);
+					Tail->next = currentNode;
+					Tail = currentNode;
+				}
+
+				int main() {
+					// Static memory allocation
+					Node n(10);
+					
+					Node *Starter=0, *Ender=0;
+					Starter = Ender = &n;				// this line differ in Static & in Dynamic Memory allocation.
+		
+					insertAtStart(Starter, 12);
+					insertAtStart(Starter, 13);
+					insertAtStart(Starter, 14);
+					insertAtStart(Starter, 15);
+					printLL(Starter);                 // 15      14      13      12      10
+					
+					std::cout << std::endl;
+					
+					// Ender is pointing to Node n which has data 10 then all below values will be inserted after 10
+					insertAtEnd(Ender, 90);
+					insertAtEnd(Ender, 99);
+					insertAtEnd(Ender, 909);
+					insertAtEnd(Ender, 901);
+					insertAtEnd(Ender, 904);
+					
+					printLL(Starter);       //15      14      13      12      10      90      99      909     901     904
+					return 0;
+				}
+
+			-Using Dynamic Memory Allocation
+				#include <iostream>
+				using namespace std;
+				class Node {
+					public:
+						int data;
+						Node* next;
+					
+					Node(int data){
+						this->data = data;
+						this->next = nullptr;
+					}
+				};
+
+				// inserting at start of Node
+				void insertAtStart(Node* &Head, int val) {         // passing references, to avoid making more copies of same LL
+					Node * temp = new Node(val);
+					temp -> next = Head;
+					Head = temp;
+				}
+
+				// printing all Node elements
+				void printLL(Node* &Head){
+					Node* T = Head;
+					while(T != NULL){					// while(T){
+						std::cout << T->data << "\t";
+						T = T->next;
+					}
+				}
+
+				// inserting at end of Node
+				void insertAtEnd(Node * &Tail, int val){
+					Node * currentNode = new Node(val);
+					Tail->next = currentNode;
+					Tail = currentNode;
+				}
+
+				int main() {
+					// dynamic memory allocation
+					Node * n = new Node(10);
+
+					// this 2 pointer for traversing the Linked List
+					Node *Starter=0, *Ender=0;
+					Starter = Ender = n;
+					
+					insertAtStart(Starter, 12);
+					insertAtStart(Starter, 13);
+					insertAtStart(Starter, 14);
+					insertAtStart(Starter, 15);
+					printLL(Starter);                 // 15      14      13      12      10
+					
+					std::cout << std::endl;
+					
+					// Ender is pointing to Node n which has data 10 then all below values will be inserted after 10
+					insertAtEnd(Ender, 90);
+					insertAtEnd(Ender, 99);
+					insertAtEnd(Ender, 909);
+					insertAtEnd(Ender, 901);
+					insertAtEnd(Ender, 904);
+					
+					printLL(Starter);       //15      14      13      12      10      90      99      909     901     904
+					return 0;
+				}
+
+		
 
 ---------------------------------------------------------------------------------------------------------
-#miscellaneous
+#miscellaneous:
 	//Ternary Operator
 		#include <iostream>
 		using namespace std;
@@ -17571,7 +17792,6 @@ Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation 
 			now!
 
 	//Curly braces related..
-
 		#include <iostream>
 		using namespace std;
 
@@ -36271,6 +36491,42 @@ POTD:-[Problem of the Day]
 					}
 				}
 				return ans;	
+			}
+
+		// Optimized:
+			vector<int> query(vector<vector<int> > &mat, int m, int n, vector<string> &q){
+				vector<int> ans;
+
+				for(int i=0; i<q.size(); i++){
+					if(q[i][0] == '1'){
+						// flipping
+						if(q[i][1] == 'R'){
+							// in row
+							for(int z=0; z<n; z++)
+								mat[q[i][2]-'0'][z] = (mat[q[i][2]-'0'][z] == 0) ? 1 : 0;
+						}else{
+							// in col
+							for(int z=0; z<m; z++)
+								mat[z][q[i][2]-'0'] = (mat[z][q[i][2]-'0'] == 0) ? 1 : 0;
+						}
+					}else{
+						// counting
+						int numOfZ=0;
+						if(q[i][1] == 'R'){
+							// in row
+							for(int z=0; z<n; z++)
+								if(mat[q[i][2]-'0'][z] == 0)
+									numOfZ++;
+						}else{
+							// in col
+							for(int z=0; z<m; z++)
+								if(mat[z][q[i][2]-'0'] == 0)
+									numOfZ++;
+						}
+						ans.push_back(numOfZ);
+					}
+				}
+				return ans;
 			}
 
 	212) Mailing Problem: ❌Pending
@@ -66729,21 +66985,1046 @@ POTD:-[Problem of the Day]
 		// Optimized:
 			❌Pending
 
-	623)
+	623) Minimum element in BST:
+		Problem statement:
+			Given the root of a Binary Search Tree. The task is to find the minimum valued element in this given BST.
+			Example 1:
+			Input:
+			   	   5
+				 /    \
+				4      6
+			    /        \
+			   3          7
+  			 /
+			1
+			Output: 1
+			
+			Example 2:
+				Input:
+					9
+					 \
+					  10
+					    \
+						11
+				Output: 9
+			Your Task:
+				The task is to complete the function minValue() which takes root as the argument and returns the minimum element of BST. If the tree is empty, there is no minimum element, so return -1 in that case.
+
+			Expected Time Complexity: O(Height of the BST)
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				0 <= n <= 10^4
+
+
+		/* struct Node {
+			int data;
+			struct Node* left;
+			struct Node* right;
+		};
+		// Utility function to create a new Tree Node
+		Node* newNode(int val) {
+			Node* temp = new Node;
+			temp->data = val;
+			temp->left = NULL;
+			temp->right = NULL;
+
+			return temp;
+		}
+		*/
+
+		class Solution {
+			public:
+			int minValue(Node* root) {
+				if(root == NULL)
+					return -1;
+					
+				if(root->left == NULL)
+					return root->data;
+				
+				return minValue(root->left);
+			}
+		};
 	
-	624)
+	624) Subarrays with K Different Integers:
+		Problem statement:
+			Given an integer array nums and an integer k, return the number of good subarrays of nums.
+			A good array is an array where the number of different integers in that array is exactly k.
+			For example, [1,2,3,1,2] has 3 different integers: 1, 2, and 3.
+			A subarray is a contiguous part of an array.
+
+			Example 1:
+				Input: nums = [1,2,1,2,3], k = 2
+				Output: 7
+				Explanation: Subarrays formed with exactly 2 different integers: [1,2], [2,1], [1,2], [2,3], [1,2,1], [2,1,2], [1,2,1,2]
+
+			Example 2:
+				Input: nums = [1,2,1,3,4], k = 3
+				Output: 3
+				Explanation: Subarrays formed with exactly 3 different integers: [1,2,1,3], [2,1,3], [1,3,4].
 	
-	625)
+			Constraints:
+				1 <= nums.length <= 2 * 10^4
+				1 <= nums[i], k <= nums.length
+
+		// Not Optimized:
+			class Solution {
+				public:
+				int subarraysWithKDistinct(vector<int>& nums, int k) {
+					int goodCnt=0;
+
+					for(int i=0; i<nums.size(); i++){
+						map<int, int> F;
+						for(int j=i; j<nums.size(); j++){
+							F[nums[j]]++;
+							if(F.size() == k)
+								goodCnt++;
+							else if(F.size() > k)
+								break;
+						}
+					}
+					return goodCnt;
+				}
+			};
+
+		// Optimized:
+			❌Pending
+
+	625) Three in one:
+		Problem statement
+			Given a sequence of queries of insertion and deletion from 3 stacks, you need to implement three stacks using a single array such that the size of the array doesn’t exceed the number of queries.
+			In each query, the input is of two types :
+			Id 0: where ‘id’ is the index of the stack ( out of the three ) in which we have to work on, 0 means we have to pop a top element from the stack.
+			Id 1 ele: where ‘id’ is the index of the stack ( out of the three ) in which we have to work on, 1 means we have to push ‘ele’ element on top of the stack.
+			After each pop operation, you have to print the element which is removed.
+			Note: If a pop operation is used in an empty stack nothing happens to the stack, but you have to print -1.
+			Constraints :
+				1 <= T <= 3
+				0 <= Q, ele  <= 10^5
+				0 <= id <= 2  , denoting one of the three stack
+				Time Limit : 1 sec
+			Sample Input 1 :
+				1
+				6
+				0 0
+				0 1 5
+				0 1 4
+				1 1 9
+				1 0
+				0 0
+				Sample Output 1 :
+				-1
+				9
+				4
+				Explanation for Sample Input 1 :
+				Initially stack_0= {} , stack_1 ={} , stack_2={} , i.e. all are empty
+
+				1st query: pop  from stack 0
+				Since stack 0 is empty : print -1
+				stack_0= {} , stack_1 ={} , stack_2={}
+
+				2st query: push 5 in stack 0
+				stack_0= {5} , stack_1 ={} , stack_2={}
+
+				3st query: push 4 in stack 0
+				stack_0= {5,4} , stack_1 ={} , stack_2={}
+
+				4st query: push 9 in stack 1
+				stack_0= {5,4} , stack_1 ={9} , stack_2={}
+
+				5st query: pop from stack 1
+				Tos of stack_1 is 9 : print 9
+				stack_0= {5,4} , stack_1 ={)  , stack_2={}
+
+				6st query: pop from stack 0
+				Tos of stack_0 is 4 : print 4
+				stack_0= {5} , stack_1 ={} , stack_2={}
+
+				Therefore the output is: -1, 9, 4
+				Sample Input 2 :
+				1
+				3
+				0 0
+				1 0
+				2 0
+				Sample Output 2 :
+				-1
+				-1
+				-1
+
+		#include <bits/stdc++.h> 
+		void solve( int q, vector<vector<int>> queries ) {
+			stack<int> st1, st2, st3;
+			for(int i=0; i<q; i++){
+				if(queries[i][0] == 0){
+					if(queries[i][1] == 0){
+						if(st1.empty()){
+							cout<<"-1"<<"\n";
+							continue;
+						}
+						cout<<st1.top()<<"\n";
+						st1.pop();
+					}else{
+						st1.push(queries[i][2]);
+					}
+				}else if(queries[i][0] == 1){
+					if(queries[i][1] == 0){
+						if(st2.empty()){
+							cout<<"-1"<<"\n";
+							continue;
+						}
+						cout<<st2.top()<<"\n";
+						st2.pop();
+					}else{
+						st2.push(queries[i][2]);
+					}
+				}else{
+					if(queries[i][1] == 0){
+						if(st3.empty()){
+							cout<<"-1"<<"\n";
+							continue;
+						}
+						cout<<st3.top()<<"\n";
+						st3.pop();
+					}else{
+						st3.push(queries[i][2]);
+					}
+				}
+			}
+		}
+
+		// using array: ❌Pending
+			/*
+				Time Complexity: O(Q^2)
+				Space Complexity: O(Q)
+				where Q is number of Queries
+			*/
+
+			int findEmptyIndex(int q,int *arr){	
+				for(int i=0;i<q;i++){
+					if( arr[i] == -1 ){
+						return i;
+					}
+				}
+				return -1;
+			}
+
+			void solve( int q, vector<vector<int>> query ) {
+				
+				int tos[3]= {-1,-1,-1}; // denotes position of top of stack of 3 stacks
+				int arr[q] , prev[q];
+				fill(arr,arr+q,-1);
+				
+				for(int i=0;i<q;i++) prev[i]=i-1;
+				
+				for(auto x:query){
+					int id= x[0] ,t= x[1];
+					if(t==0){	// pop
+						
+						if(tos[id]==-1){
+							cout<<"-1\n";
+						}
+						else{
+							int cur= tos[id];
+							cout<< arr[cur] <<"\n";
+							arr[cur]=-1;
+							tos[id]= prev[cur];
+						}
+						
+					}else{	// push
+						int nxt = findEmptyIndex(q, arr); 
+						int cur= tos[id];
+						
+						prev[nxt]= cur;
+						tos[id]=nxt;
+						arr[nxt]= x[2];
+					}
+				}				
+			}
+
+	626) Decryption:
+		Problem statement
+			You are given a string, 'MESSAGE'. The receiver of this ‘MESSAGE’ has a set of instructions on how to decrypt the message. In order to decrypt the message, we need to perform some rotation operations on the string.
+			These rotations can either be left rotations or right rotations. The set of instructions contains information about which type of rotation is to be performed and how many times. Your task is to determine the decrypted message.
+			Note:
+			Performing a 'left rotation' means deleting the first character of the string and appending it to the end of the string.
+			Performing a 'right rotation' means deleting the last character of the string and appending it to the beginning of the string.
+			For example, if we perform a left rotation on the string “coding”, it will become “odingc”. If we perform a right rotation on the string “ninja”, it will become “aninj”.
+			Constraints:
+				1 <= T <= 10
+				1 <= |MESSAGE| <= 500
+				1 <= N <= 1000
+				N is always even
+				Time Limit: 1sec
+
+			Sample Input 1:
+				1
+				abcde 
+				4
+				-1 2
+				1 1
+				-1 2
+				-1 1
+				Sample Output 1:
+				eabcd
+				Explanation for sample input 1:
+				Initially, the given string is “abcde”. After performing the left rotation on it two times, we will get “cdeab”. After performing the right rotation on this string once, we will get “bcdea”. Next time, the string will become “deabc”. And finally, the string will become “eabcd”. Hence, we print the final result.
+				Sample Input 2:
+				1
+				babb 
+				3
+				-1 1
+				1 2
+				1 3
+				Sample Output 2:
+				babb
+				Explanation for sample input 2:
+				Initially, the given string is “babb”. After performing the left rotation on it once, we will get “abbb”. After performing the right rotation on this string two times, we will get “bbab”. And finally, the string will become “babb”. Hence, we print the final result.
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			string decrypt(string& message, vector<vector<int>>& operations) {
+				for(int i=0; i<operations.size(); i++){
+					operations[i][1] %= message.size();
+
+					if(operations[i][0] == -1){
+						// on left side rotation which is default one
+						rotate(begin(message), message.begin()+operations[i][1], message.end());
+					}else{
+						// on right side rotation
+						rotate(begin(message), message.begin()+(message.size() - operations[i][1]), message.end());			
+					}
+				}
+				return message;
+			}
+
+		// Optimized:
+			#include <bits/stdc++.h> 
+			string decrypt(string& message, vector<vector<int>>& operations) {
+				for(int i=0; i<operations.size(); i++){
+					operations[i][1] %= message.size();
+
+					if(operations[i][0] == -1){
+						// on left side rotation which is default one
+						message = message.substr(operations[i][1]) + message.substr(0, operations[i][1]);
+					}else{
+						// on right side rotation
+						message = message.substr(message.size()-operations[i][1]) + message.substr(0, message.size()-operations[i][1]);
+					}
+				}
+				return message;
+			}
 	
-	626)
+	#LeetCode BiWeeklyContest-127:
+		627) Shortest Subarray With OR at Least K I:
+			Problem statement:
+				You are given an array nums of non-negative integers and an integer k.
+				An array is called special if the bitwise OR of all of its elements is at least k.
+				Return the length of the shortest special non-empty subarray
+				of nums, or return -1 if no special subarray exists.
+
+				Example 1:
+					Input: nums = [1,2,3], k = 2
+					Output: 1
+					Explanation:
+					The subarray [3] has OR value of 3. Hence, we return 1.
+
+				Example 2:
+					Input: nums = [2,1,8], k = 10
+					Output: 3
+					Explanation:
+					The subarray [2,1,8] has OR value of 11. Hence, we return 3.
+
+				Example 3:
+					Input: nums = [1,2], k = 0
+					Output: 1
+					Explanation:
+					The subarray [1] has OR value of 1. Hence, we return 1.
+
+				Constraints:
+					1 <= nums.length <= 50
+					0 <= nums[i] <= 50
+					0 <= k < 64
+				
+			class Solution {
+				public:
+				int minimumSubarrayLength(vector<int>& nums, int k) {
+					int size=INT_MAX;
+					for(int i=0; i<nums.size(); i++){            
+						int val = nums[i], cnt=1;
+						for(int j=i; j<nums.size(); j++){
+							val |= nums[j];
+							if(val >= k)
+								size = min(size, cnt);
+						
+							if(cnt > size)
+								break;
+							cnt++;                
+						}
+					}
+					if(size == INT_MAX)
+						return -1;
+						
+					return size;
+				}
+			};
+
+		628) Shortest Subarray With OR at Least K II:
+			// Not Optimized:
+				class Solution {
+					public:
+					int minimumSubarrayLength(vector<int>& nums, int k) {
+						int size = INT_MAX;
+						
+						for(int i=0; i<nums.size(); i++){
+							int res = nums[i], cnt=1;
+							for(int j=i; j<nums.size(); j++){
+								res |= nums[j];
+								
+								if(res >= k)
+									size= min(size, cnt);
+								
+								if(cnt > size)
+									break;
+								
+								cnt++;
+							}
+						}						
+						return (size == INT_MAX) ? -1 : size;
+					}
+				};
+			
+			// Optimized:
+				❌Pending
 	
-	627)
+		629) Minimum Levels to Gain More Points:
+			Problem statement:
+				You are given a binary array possible of length n.
+				Danielchandg and Bob are playing a game that consists of n levels. Some of the levels in the game are impossible to clear while others can always be cleared. In particular, if possible[i] == 0, then the ith level is impossible to clear for both the players. A player gains 1 point on clearing a level and loses 1 point if the player fails to clear it.
+				At the start of the game, Danielchandg will play some levels in the given order starting from the 0th level, after which Bob will play for the rest of the levels.
+				Danielchandg wants to know the minimum number of levels he should play to gain more points than Bob, if both players play optimally to maximize their points.
+				Return the minimum number of levels danielchandg should play to gain more points. If this is not possible, return -1.
+				Note that each player must play at least 1 level.
+
+				Example 1:
+				Input: possible = [1,0,1,0]
+				Output: 1
+				Explanation:
+					Let's look at all the levels that Danielchandg can play up to:
+					If Danielchandg plays only level 0 and Bob plays the rest of the levels, Danielchandg has 1 point, while Bob has -1 + 1 - 1 = -1 point.
+					If Danielchandg plays till level 1 and Bob plays the rest of the levels, Danielchandg has 1 - 1 = 0 points, while Bob has 1 - 1 = 0 points.
+					If Danielchandg plays till level 2 and Bob plays the rest of the levels, Danielchandg has 1 - 1 + 1 = 1 point, while Bob has -1 point.
+					Danielchandg must play a minimum of 1 level to gain more points.
+
+				Example 2:
+				Input: possible = [1,1,1,1,1]
+				Output: 3
+				Explanation:
+					Let's look at all the levels that Danielchandg can play up to:
+					If Danielchandg plays only level 0 and Bob plays the rest of the levels, Danielchandg has 1 point, while Bob has 4 points.
+					If Danielchandg plays till level 1 and Bob plays the rest of the levels, Danielchandg has 2 points, while Bob has 3 points.
+					If Danielchandg plays till level 2 and Bob plays the rest of the levels, Danielchandg has 3 points, while Bob has 2 points.
+					If Danielchandg plays till level 3 and Bob plays the rest of the levels, Danielchandg has 4 points, while Bob has 1 point.
+					Danielchandg must play a minimum of 3 levels to gain more points.
+
+				Example 3:
+				Input: possible = [0,0]
+				Output: -1
+				Explanation:
+					The only possible way is for both players to play 1 level each. Danielchandg plays level 0 and loses 1 point. Bob plays level 1 and loses 1 point. As both players have equal points, Danielchandg can't gain more points than Bob.
+
+				Constraints:
+					2 <= n == possible.length <= 10^5
+					possible[i] is either 0 or 1.
+
+			// Not Optimized:
+				class Solution {
+					public:
+					int minimumLevels(vector<int>& possible) {
+						int minLvl = -1;
+						
+						for(int i=0; i<possible.size()-1; i++){
+							
+							// D Score
+							int j = 0, Dscore=0;
+							while(j <= i){
+								if(possible[j++] == 1)
+									Dscore++;
+								else
+									Dscore--;
+							}
+							
+							// B Score
+							int Bscore=0;
+							while(j < possible.size()){
+								if(possible[j++] == 1)
+									Bscore++;
+								else
+									Bscore--;                    
+							}
+							
+							if(Dscore > Bscore){
+								minLvl = i+1;
+								break;            
+							}
+						}
+						return minLvl;
+					}
+				};
+			
+			// Optimized:
+				class Solution {
+					public:
+					int minimumLevels(vector<int>& possible) {
+						int minLvl = -1, Bscore=0;
+						
+						int totalScore=0;
+						for(int i: possible)
+							if(i == 1)
+								totalScore++;
+							else
+								totalScore--;
+						
+						for(int i=0; i<possible.size()-1; i++){
+							if(possible[i] == 1){
+								Bscore++;
+								totalScore--;
+							}else{
+								Bscore--;
+								totalScore++;
+							}
+							
+							
+							if(Bscore > totalScore){
+								minLvl = i+1;
+								break;            
+							}
+						}
+						return minLvl;
+					}
+				};
+
+	#LeetCode WeeklyContest-391:
+		630) Harshad Number:
+			Problem statement:
+				An integer divisible by the sum of its digits is said to be a Harshad number. You are given an integer x. Return the sum of the digits of x if x is a Harshad number, otherwise, return -1.
+				
+				Example 1:
+					Input: x = 18
+					Output: 9
+					Explanation:
+					The sum of digits of x is 9. 18 is divisible by 9. So 18 is a Harshad number and the answer is 9.
+
+				Example 2:
+					Input: x = 23
+					Output: -1
+					Explanation:
+					The sum of digits of x is 5. 23 is not divisible by 5. So 23 is not a Harshad number and the answer is -1.			
+
+				Constraints:
+					1 <= x <= 100
+			class Solution {
+				public:
+				int sumOfTheDigitsOfHarshadNumber(int x) {
+					int sum=0;
+					int temp = x;
+					while(temp){
+						sum += temp % 10;
+						temp /= 10;
+					}
+					if(x % sum == 0)
+						return sum;
+					return -1;
+				}
+			};
+
+		631) Count Alternating Subarrays:
+			Problem statement:
+				You are given a binary array nums. We call a 
+				subarray alternating if no two adjacent elements in the subarray have the same value.
+				Return the number of alternating subarrays in nums.	
+
+				Example 1:
+					Input: nums = [0,1,1,1]
+					Output: 5
+					Explanation:
+					The following subarrays are alternating: [0], [1], [1], [1], and [0,1].
+
+				Example 2:
+					Input: nums = [1,0,1,0]
+					Output: 10
+					Explanation:
+					Every subarray of the array is alternating. There are 10 possible subarrays that we can choose.		
+
+				Constraints:
+					1 <= nums.length <= 10^5
+					nums[i] is either 0 or 1.
+
+			// Not Optimized:
+				class Solution {
+					public:
+					long long countAlternatingSubarrays(vector<int>& nums) {
+						long long cnt=0;
+						
+						for(int i=0; i<nums.size(); i++){
+							for(int j=i; j<nums.size(); j++){
+								int flag=1;
+								for(int a=i; a < j; a++){
+									if(nums[a] == nums[a+1]){
+									flag=0;
+									break;
+									}
+								}
+								if(flag)
+									cnt++;
+							}
+						}
+						return cnt;
+					}
+				};
+
+			// Optimized:
+				❌Pending		
 	
-	628)
+	633) Count Subarrays With Fixed Bounds:
+		Problem statement:
+			You are given an integer array nums and two integers minK and maxK.
+			A fixed-bound subarray of nums is a subarray that satisfies the following conditions:
+				The minimum value in the subarray is equal to minK.
+				The maximum value in the subarray is equal to maxK.
+				Return the number of fixed-bound subarrays.
+			A subarray is a contiguous part of an array.
+
+			Example 1:
+				Input: nums = [1,3,5,2,7,5], minK = 1, maxK = 5
+				Output: 2
+				Explanation: The fixed-bound subarrays are [1,3,5] and [1,3,5,2].
+
+			Example 2:
+				Input: nums = [1,1,1,1], minK = 1, maxK = 1
+				Output: 10
+				Explanation: Every subarray of nums is a fixed-bound subarray. There are 10 possible subarrays.
+
+			Constraints:
+				2 <= nums.length <= 10^5
+				1 <= nums[i], minK, maxK <= 10^6
+
+		// Not Optimized:
+			class Solution {
+				public:
+				long long countSubarrays(vector<int>& nums, int minK, int maxK) {
+					long long cnt=0;
+
+					for(int i=0; i<nums.size(); i++){
+						int crntMin = INT_MAX, crntMax = INT_MIN;
+						for(int j=i; j<nums.size(); j++){
+							if(crntMin >= nums[j])
+								crntMin = nums[j];
+
+							if(crntMax <= nums[j])
+								crntMax = nums[j];
+
+							if(crntMin==minK && crntMax == maxK)
+								cnt++;
+							
+							if(crntMin < minK || crntMax > maxK)
+								break;
+						}
+					}
+					return cnt;
+				}
+			};
+		
+		// Optimized:
+			❌Pending
 	
-	629)
+	634) Closest Neighbour in BST:
+		Problem statement:
+			Given the root of a binary search tree and a number n, find the greatest number in the binary search tree that is less than or equal to n. 
+			
+			Example 1 :
+			Input : 
+				 5
+				/\
+			   2   12
+			  /\   /\
+			 1  3 9 21
+			 	   /\
+				 19	25
+
+			n = 24
+			Output : 21
+			Explanation : The greatest element in the tree which is less than or equal to 24, is 21. (Searching will be like 5->12->21)
+
+			Example 2 :
+			Input : 
+				 5
+				/\
+			   2   12
+			  /\   /\
+			 1  3 9 21
+			 	   /\
+				 19	25
+
+			n = 4
+			Output : 
+			3
+			Explanation : The greatest element in the tree which 
+					is less than or equal to 4, is 3. 
+					(Searching will be like 5->2->3)
+			Your task :
+				You don't need to read input or print anything. Your task is to complete the function findMaxForN() which takes the root of the BST, and the integer n as input paramters and returns the greatest element less than or equal to n in the given BST.
+
+				Expected Time Complexity: O(Height of the BST)
+				Expected Auxiliary Space: O(Height of the BST).
+		
+			Constraints:
+				1 <= n <= 10^3
+
+		struct Node {
+			int key;
+			Node* left, *right;
+		};
+
+
+		'N' is the element
+		'size' is the total element in BST
+		*/
+
+		class Solution {
+			public:
+			int findMaxForN(Node* root, int n) {
+				int val=-1;
+				while(root){
+					if(root->key <= n){
+						val = max(val, root->key);
+						root = root->right;
+					}else{
+						root = root->left;
+					}
+				}
+				return val;
+			}
+		};
+
+	635) Middle Of Three:
+		Problem statement
+			You have been given three distinct integers ‘X’, ‘Y’ and ‘Z’. You need to find the number with a value in the middle.
+			For example :
+			X = 4, Y = 6, Z = 2
+			Here the element with value in the middle is 4, because 2 < 4 < 6.
+			Note :
+			You need to try doing it using minimum comparisons.
+			Constraints :
+				1 <= T <= 50
+				1 <= X, Y, Z <= 10^9
+
+			Where ‘T’ is the number of test cases.
+			Where ‘X’, ‘Y’, and ‘Z’ denote the distinct numbers.
+
+			Time limit: 1 sec
+			Sample Input 1 :
+				2
+				2 3 1
+				6 8 9   
+				Sample Output 1 :
+				2 
+				8
+				Explanation of sample input 1 :
+				In the first test case, the three numbers are 2, 3 and 1. The middle element is 2, as 1 < 2 < 3
+
+				In the second test case, the three numbers are 6, 8 and 9. The middle element is 8, as 6 < 8 < 9
+				Sample Input 2 :
+				2
+				15 2 3
+				2 3 4
+				Sample Output 2 :
+				3
+				3
+				Explanation for sample input 2 :
+				In the first test case, the three numbers are 15, 2 and 3. The middle element is 3, as 2 < 3 < 15
+
+				In the second test case, the three numbers are 2, 3 and 4. The middle element is 3, as 2 < 3 < 4
+
+		#include <bits/stdc++.h> 
+		int middleOfThree(int x, int y, int z) {
+			int arr[3] = {x, y, z};
+			sort(arr, arr+3);
+			return arr[1];
+		}
+
+		// or
+			#include <bits/stdc++.h> 
+			int middleOfThree(int x, int y, int z) {
+				// Checking for x
+				if ((y < x && x < z) || (z < x && x < y)) {
+					// x is the middle value hence return x
+					return x;
+				}// Checking for y
+				else if ((x < y && y < z) || (z < y && y < x)) {
+
+					// y is the middle value hence return y
+					return y;
+				}else {
+					// Neither x nor y is middle value, means z is the middle value, hence return z
+					return z;
+				}
+			}
 	
-	630)
+	636) Length of Last Word:
+		Problem statement:
+			Given a string s consisting of words and spaces, return the length of the last word in the string.
+			A word is a maximal substring consisting of non-space characters only.
+
+			Example 1:
+				Input: s = "Hello World"
+				Output: 5
+				Explanation: The last word is "World" with length 5.
+
+			Example 2:
+				Input: s = "   fly me   to   the moon  "
+				Output: 4
+				Explanation: The last word is "moon" with length 4.
+
+			Example 3:
+				Input: s = "luffy is still joyboy"
+				Output: 6
+				Explanation: The last word is "joyboy" with length 6.
+	
+			Constraints:
+				1 <= s.length <= 10^4
+				s consists of only English letters and spaces ' '.
+				There will be at least one word in s.
+
+		// Optimized:
+			class Solution {
+				public:
+				int lengthOfLastWord(string s) {
+					int i=s.length()-1;
+					while(i>=0){
+						if(isblank(s[i]))
+							s.erase(i,1);
+						else 
+							break;
+						i--;
+					}
+						
+					i = s.size()-1;
+					string temp;
+					while(i>=0){
+						if(isblank(s[i]))
+							break;
+						temp += s[i];
+						i--;
+					}
+					return temp.length();
+				}
+			};
+
+		// More Optimized:
+			class Solution {
+				public:
+				int lengthOfLastWord(string s) {
+					// ignoring lagging spaces
+					int i=s.size()-1;
+					while(s[i] == ' '){
+						i--;
+					}
+
+					int len=0;
+					while(i >=0 && s[i--] != ' ')
+						len++;
+
+					return len;
+				}
+			};
+
+			// or
+				class Solution {
+					public:
+					int lengthOfLastWord(string s) {
+						// deleting lagging spaces
+						int i=s.size()-1;
+						while(s[s.size()-1] == ' '){
+							s.erase(s.begin()+(s.size()-1));
+						}
+
+						int len=0;
+						i = s.size()-1;
+						while(i >=0 && s[i--] != ' ')
+							len++;
+
+						return len;
+					}
+				};
+	
+	637) Add Two Numbers:
+		Problem statement:
+			Your task is very simple: given two integers A and B, write a program to add these two numbers and output the sum.
+			Input Format
+			The first line contains an integer T, the total number of test cases. Then follow T lines, each line contains two integers, A and B.
+			Output Format
+			For each test case, add A and B and display the sum in a new line.
+
+			Constraints
+				1 ≤ T ≤ 1000
+				0 ≤ A,B ≤10000
+			Sample 1:
+			Input
+			3
+			1 2
+			100 200
+			10 40
+			Output
+			3
+			300
+			50
+			Explanation:
+			Testcase 1: 
+				1+2=3. Hence the first output is 3.
+
+			Testcase 2: 
+				100+200=300. Hence the second output is 300.
+
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			int t;
+			cin>>t;
+			while(t--){
+				int a,b;
+				cin>>a>>b;
+				cout<<a+b<<endl;
+			}	
+			return 0;
+		}
+	
+	638) Missing number in Arithmetic progression:
+		Problem statement
+			You are given a sorted array of ‘N’ distinct integers that are in the Arithmetic Progression sequence except for one element which is missing from the sequence. You have to find that missing number from the given sequence.
+			Note:
+				1. A sequence [arr0, arr1,…, arr(n-1)] is called an Arithmetic progression if for each 'i' ( 0 ≤ i < n - 1) the value arr[i+1] − arr[i] is the same. 
+				2. There is exactly one missing number in the given sequence.
+				3. All the numbers present in the sequence are distinct.
+				4. It is the guarantee that the first and last elements of the sequence are not missing elements.
+			Follow Up
+			The overall run time complexity should be O(log(N)).
+			Constraints:
+				1 <= T <= 50
+				3 <= N <= 10 ^ 4   
+				-10 ^ 9 <= Arr[i] <= 10 ^ 9 
+
+			Where ‘T’ is the number of test cases, ‘N’ is the size of the array and ‘Arr[i]’ is the size of the array elements.
+
+			Time Limit: 1 sec
+			Sample Input 1:
+				2
+				3
+				1 4 10
+				4
+				5 10 20 25 
+				Sample Output 1:
+				7
+				15
+				Explanation for sample input 1:
+				Test case 1:
+
+				The arithmetic sequence present in the first test case will have its first term as 4 and common difference as 3. So, the complete sequence will look like this ....- 1 4 7 10... Hence 7 is the missing element in the given sequence.
+
+				Test case 2:
+
+				The first term and common difference will be 5. The complete sequence will be ...5 10 15 20 25.... Hence 15 is the missing element from the given sequence.
+				Sample Input 2:
+				3
+				3
+				-1 0 2
+				5 
+				10 20 30 50 60
+				4
+				12 18 21 24
+				Sample Output 2:
+				1
+				40
+				15
+
+		#include <bits/stdc++.h> 
+		int missingNumber(vector<int> &arr, int n)  {
+			int d;
+			int d1= arr[1]-arr[0];
+			int d2 = arr[2]-arr[1];
+
+			if(d1 < d2) d = d1;
+			else d = d2;
+
+			// or common difference is     int d = (arr[n-1] - arr[0]) / n;
+			// (last element - first element) / sizeOfarr
+
+			int miss;
+			for(int i=1; i<n; i++){
+				miss = arr[i-1] + d;
+				if(miss != arr[i])
+					break;
+			}
+			return miss;
+		}
+
+	639) Isomorphic Strings:
+		Problem statement:
+			Given two strings s and t, determine if they are isomorphic.
+			Two strings s and t are isomorphic if the characters in s can be replaced to get t.
+			All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.
+
+			Example 1:
+				Input: s = "egg", t = "add"
+				Output: true
+
+			Example 2:
+				Input: s = "foo", t = "bar"
+				Output: false
+
+			Example 3:
+				Input: s = "paper", t = "title"
+				Output: true
+
+			Constraints:
+				1 <= s.length <= 5 * 10^4
+				t.length == s.length
+				s and t consist of any valid ascii character.
+
+		class Solution {
+			public:
+			bool isIsomorphic(string s, string t) {
+				if(s.size() != t.size())
+					return 0;
+
+				map<char, int> F1, F2;
+				for(char c: s)
+					F1[c]++;
+
+				for(char c: t)
+					F2[c]++;
+					
+				if(F1.size() != F2.size())
+					return 0;
+
+				map<char, char> Mapper;
+				for(int i=0; i<s.size(); i++)
+					Mapper[s[i]] = t[i];
+
+				string checker;
+				for(char ch: s)
+					checker += Mapper[ch];
+				
+				if(checker == t)
+					return 1;
+				return 0;
+			}
+		};
+	
+	640)
+	
+	641) 
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
