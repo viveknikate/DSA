@@ -17730,7 +17730,155 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 					return 0;
 				}
 
-		
+		// Practice:
+			-With class:
+				#include <iostream>
+				using namespace std;
+
+				class Node{
+					public:
+						int data;
+						Node *next;
+						
+					Node(int data){
+						this->data = data;
+						this->next = NULL;
+					}
+				};
+
+				void insertAtHead(Node* &H, int val){
+					Node *newNode = new Node(val);
+					newNode->next = H;
+					H = newNode;
+				}
+
+				void insertAtTail(Node* &T, int val){
+					Node *newNode = new Node(val);
+					T->next = newNode;
+					T = newNode;
+				}
+
+				void printLL(Node * &L){
+					Node *H = L;
+					while(H){
+						std::cout << H->data << "\t";
+						H = H->next;
+					}
+					std::cout << std::endl;
+				}
+				int main() {
+					
+					Node * n = new Node(10);
+					printLL(n);
+					
+					Node *Header, *Tailer;
+					Header =Tailer =n;
+					
+					insertAtHead(Header, 9);
+					insertAtHead(Header, 8);
+					insertAtHead(Header, 7);
+					insertAtHead(Header, 6);
+					insertAtHead(Header, 5);
+					
+					// passing Header coz we want to print complete LL, if we pass n, then LL will be printed from n to till end.
+					printLL(Header);
+					
+					insertAtTail(Tailer, 11);
+					insertAtTail(Tailer, 12);
+					insertAtTail(Tailer, 13);
+					insertAtTail(Tailer, 14);
+					insertAtTail(Tailer, 15);
+					insertAtTail(Tailer, 16);
+					printLL(n);
+					printLL(Header);
+					return 0;
+				}
+
+			-With struct: (using static & dyamic memory allocation)
+			 in case of static memory allocation the memory is limited, but in dynamic memory allocation we have large memory
+				#include <iostream>
+				using namespace std;
+
+				struct NODE{
+					int data;
+					NODE *next;
+					
+					NODE(int data){
+						(*this).data = data;
+						next = NULL;
+					}
+				};
+
+
+				void PrintLL(NODE * &traverser){
+					NODE *temp = traverser;
+					while(temp){
+						std::cout << (*temp).data << "\t";
+						temp = (*temp).next;
+					}
+					std::cout << std::endl;
+				}
+
+				void insertAtHead(NODE* &H, int val){
+					NODE *n = new NODE(val);
+					(*n).next = H;
+					H = n;
+				}
+
+
+				void insertAtTail(NODE* &T, int val){
+					NODE *n = new NODE(val);
+					(*T).next = n;
+					T = n;
+				}
+
+				int main() {
+					
+					// static allocation with structure
+					NODE n(10);
+					
+					NODE *Head = &n;
+					NODE *Tail = &n;
+					
+					PrintLL(Head);
+					
+					insertAtHead(Head, 80);
+					insertAtHead(Head, 1);
+					insertAtHead(Head, 2);
+					insertAtHead(Head, 3);
+					PrintLL(Head);
+					
+					insertAtTail(Tail, 90);
+					insertAtTail(Tail, 100);
+					insertAtTail(Tail, 200);
+					insertAtTail(Tail, 300);
+					insertAtTail(Tail, 400);
+					PrintLL(Head);
+					
+					
+					// dynamic memory allocation
+					NODE * nn = new NODE(1000);
+					
+					NODE *H1, *T1;
+					
+					H1 = T1 = nn;
+					
+					insertAtHead(H1, 900);
+					insertAtHead(H1, 800);
+					insertAtHead(H1, 700);
+					insertAtHead(H1, 600);
+					PrintLL(H1);
+					
+					insertAtTail(T1, 1100);
+					insertAtTail(T1, 1200);
+					insertAtTail(T1, 1300);
+					insertAtTail(T1, 1400);
+					insertAtTail(T1, 1500);
+					PrintLL(H1);
+					
+					return 0;
+				}
+
 
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
@@ -68022,9 +68170,781 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	640)
+	640) Longest Sub-string With K Distinct Characters: (Easy)
+		Problem statement
+			You are given a string 'S' of length 'N' consisting of lowercase English alphabet letters. You are also given a positive integer 'K'.
+			Now, a substring of this string is good if it contains at most 'K' distinct characters. A string 'X' is a substring of string 'Y' if it can be obtained by deletion of several continuous elements(possibly zero) from the beginning and the end from the string 'Y'.
+			Your task is to return the maximum size of any good substring of the string 'S'.
+
+			Example:
+				‘S’ = “bacda” and ‘K’ = 3.
+				So, the substrings having at most ‘3’ distinct characters are called good substrings. Some possible good substrings are:
+				1. “bac”
+				2. “acd”
+				3. “acda”
+
+				The substring “acda” is the largest possible good substring, as we cannot get any other substring of length 5 or more having distinct characters less than or equal to ‘3’. Thus, you should return ‘4’ as the answer.
+			Constraints:
+				1 <= T <= 10
+				1 <= K <= 26
+				1 <= N <= 10^4
+
+				All the characters of the string are lowercase English alphabet letters.
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				2
+				abcbc
+				1
+				abccc
+				Sample Output 1:
+				4
+				3
+				Explanation For Sample Input 1:
+				For the first test case :
+				K = 2, so we can choose substring “bcbc” having 2 distinct character which is less than or equal to K = 2. 
+
+				We cannot get any other substring of length 5 or more having distinct characters less than or equal to 2. Thus, you should return ‘4’ as the answer.
+
+				For the second test case :
+				K = 1, so we can choose substring “ccc” having only 1 distinct character which is less than or equal to K = 1. 
+
+				We cannot get any other substring of length 4 or more having distinct characters less than or equal to 1. Thus, you should return ‘3’ as the answer.
+				Sample Input 2:
+				1
+				6
+				abcba
+				3
+				acbdab
+				Sample Output 2:
+				5
+				4
 	
-	641) 
+		// Not optimized:
+			#include <bits/stdc++.h> 
+			int getLengthofLongestSubstring(string s, int k) {
+				int mxLen=0;
+				for(int i=0; i<s.size(); i++) {
+
+					/* if below lines is not there then it will be partially accepted*/
+					// if((s.size()-i) < mxLen)
+					//	break;
+					
+					int cnt=0;
+					map<char, int> F;
+
+					for(int j=i; j<s.length(); j++){
+						F[s[j]]++;
+						if(F.size() > k)
+							break;
+						cnt++;
+					}
+					mxLen = max(mxLen, cnt);
+				}
+				return mxLen;
+			}
+
+		// Optimized:
+			#include <bits/stdc++.h> 
+			int getLengthofLongestSubstring(string s, int k) {
+				int mx=0, left=0;
+				map<char, int> F;
+				for(int i=0; i<s.size(); i++){
+					F[s[i]]++;
+
+					while(F.size() > k){
+						F[s[left]]--;
+
+						if(F[s[left]] <= 0)
+							F.erase(s[left]);
+
+						left++;
+					}
+					mx = max(mx, i-left+1);
+				}
+				return mx;
+			}
+
+	641) Longest Sub-string with at most K Distinct Characters: (Moderate)
+		Problem statement
+			You are given string S of length N, and an integer K. Your task is to find the length of the longest substring that contains at most K distinct characters.
+			Constraints:
+				1 <= T <= 10
+				1 <= K <= 26
+				1 <= N <= 10^4
+				Time Limit: 1sec
+
+			Sample Input 1:
+				2
+				2
+				abcba
+				1
+				abccc
+				Sample Output 1:
+				3
+				3
+				Explanation of the Sample Input1:
+				Test Case 1:
+				K = 2 in the first test case so we can choose substring ‘bcb’ having 2 distinct characters which are less than equal to K=2. 
+				We cannot get any other substring of length 4 or greater having distinct characters less than equal to 2.
+				Test Case 2:
+				K = 1 in the second test case so we can choose substring ‘ccc’ having only 1 distinct character which is less than equal to K=1. 
+				We cannot get any other substring of length 4 or greater having distinct characters less than equal to 1.
+
+		// Not Optimized:
+			#include <map>
+			int getLengthofLongestSubstring(int k, string s) {
+				int mxLen=0;
+				for(int i=0; i<s.size(); i++){
+					map<char, int> F;
+					int cnt=0;
+					for(int j=i; j<s.size(); j++){
+						F[s[j]]++;
+						if(F.size() > k)
+							break;
+						cnt++;
+					}
+					mxLen = max(mxLen, cnt);
+				}
+				return mxLen;
+			}
+
+		// Optimized:
+			#include <map>
+			int getLengthofLongestSubstring(int k, string s) {
+				int mx=0, left=0;
+				map<char, int> F;
+				for(int i=0; i<s.size(); i++){
+					F[s[i]]++;
+
+					while(F.size() > k){
+						F[s[left]]--;
+						if(F[s[left]] <= 0)
+							F.erase(s[left]);
+						left++;
+					}
+					mx = max(mx, i-left+1);
+				}
+				return mx;
+			}
+		
+	642) Look-And-Say Sequence
+		Problem statement
+			The Look-And-Say sequence is a sequence of positive integers. The sequence is as follows:
+			1, 11, 21, 1211, 111221, 312211, 13112221,...
+			This sequence is constructed in the following way:
+			The first number is 1.
+			This is read as “One 1”. 
+			Hence, the second number will be 11.
+
+			The second number is read as “Two 1s”. 
+			Hence, the third number will be 21.
+
+			The third number is read as “One 2, One 1”. 
+			Hence, the fourth number will be 1211. And so on.
+
+			The fourth term is read as “One 1, One 2, Two 1s”.
+
+			Hence, the fifth term will be 111221. And so on.
+			Given an integer N, find the Nth term of the sequence.
+
+			Constraints:
+				1 <= T <= 30
+				1 <= N <= 40
+
+				Where 'T' is the number of test cases and 'N' is the given sequence index.
+				Time Limit: 1 sec
+			Sample Input 1:
+				3
+				1
+				2
+				3
+				Sample Output 1:
+				1
+				11
+				21
+				Explanation for Sample 1:
+				The first term is 1.
+
+				The second term is 11.
+
+				The third term is 21.
+				Sample Input 2:
+				1
+				6
+				Sample Output 2:
+				312211
+
+		#include <vector>
+		string lookAndSaySequence(int n)  {
+			vector<string> holder = {"1"};
+
+			while(holder.size() < n) {
+				string test = holder[holder.size()-1];
+				int cnt=1;
+				int i=0;
+				string ans;
+				while(i<test.size()){
+					if((i+1) < test.size() && test[i] == test[i+1])
+						cnt++;
+					else{
+						ans += to_string(cnt);
+						ans += test[i];
+						cnt=1;
+					}
+					i++;
+				}
+				holder.push_back(ans);
+			}
+
+			return holder[n-1];
+		}
+
+	643) Minimum Sorted Groups:
+		Problem statement
+			You are given an array ‘ARR’ containing ‘N’ integers.
+			You have a simple task, you need to split the elements of this array into different groups, inside each group the relative order between elements must be maintained.
+			You need to find the minimum number of groups that are required to be formed such that elements inside each group are sorted in ascending order.
+			For Example :
+				If ‘N’ = 7 and ‘ARR’ = { 1, 5, 2, 3, 4, 6, 7 }
+			Then, we can split the array elements into two groups: { 1, 2, 3, 4 } and { 5, 6, 7 }, this splitting is valid as it maintains the relative ordering of the elements of the original array and after splitting all the groups contain elements in sorted order. Therefore we will print 2.
+			Note that a group like { 1, 2, 3, 5 } can’t be formed as it doesn’t have relative ordering the same as the input array.
+			Detailed explanation ( Input/output format, Notes, Images )
+			Constraints :
+				1 ≤ T ≤ 10      
+				1 ≤ N ≤ 5000
+				-10^9 ≤ ARR[i] ≤ 10^9
+				Time limit: 1 sec
+
+			Sample Input 1 :
+				2
+				7
+				1 5 2 3 4 6 7
+				6
+				-1 0 2 3 4 6
+				Sample Output 1 :
+				2
+				1
+				Explanation For Sample Input 1 :
+				For test case 1 :
+				We will print 2 because:
+				We can split the array elements into two groups: { 1, 2, 3, 4 } and { 5, 6, 7 }, this splitting is valid as it maintains the relative ordering of the elements of the original array and after splitting all the groups contain elements in sorted order.
+
+				For test case 2 : 
+				We will print 1 because:
+				The given array is itself sorted, so all the elements can be grouped together and this will result in the formation of a sorted group while maintaining the relative order of the array elements.
+				Sample Input 2 :
+				2
+				4
+				3 1 2 0
+				3
+				1 1 0
+				Sample Output 2 :
+				3
+				2
+
+		#include <bits/stdc++.h> 
+		int minimumSortedGroups(int n, vector<int> arr) {
+			vector<vector<int>> holder {{arr[0]}};
+			int i=0;
+			for(int j=1; j<arr.size(); j++){
+				if(holder[i][holder[i].size()-1] <= arr[j])
+					holder[i].push_back(arr[j]);
+				else{
+					incremental:
+						i++;
+						if(i >= holder.size())
+							holder.push_back({arr[j]});
+						else{
+							if(holder[i][holder[i].size()-1] < arr[j])
+							holder[i].push_back(arr[j]);
+							else
+							goto incremental;
+						}
+					i=0;
+				}
+			}
+			return holder.size();
+		}
+
+		// or
+			#include <bits/stdc++.h> 
+			int minimumSortedGroups(int n, vector<int> arr) {
+				std::vector<std::vector<int>> holder {{arr[0]}};
+				
+				for (int j = 1; j < arr.size(); j++) {
+					bool placed = true; // Flag to indicate if the current element has been placed in any group
+					
+					for (int i = 0; i < holder.size(); i++) {
+						if (holder[i].back() <= arr[j]) {
+							holder[i].push_back(arr[j]);
+							placed = false; // Mark element as placed
+							break;
+						}
+					}
+					
+					// If the element couldn't be placed in any existing group, create a new group
+					if (placed) {
+						holder.push_back({arr[j]});
+					}
+				}
+				return holder.size();
+			}
+	
+	644) Alien Weekday:
+		Problem statement
+			In a planetary system where a week spans 'N' days, numbered from 1 to 'N', today is denoted as day 'D'. What day will it be 'K' days from now?
+			Example:
+				‘N’ = 4
+				‘D’ = 2
+				‘K’ = 3
+
+				Return 1
+				Today is 2.
+				After 1 day it is 3.
+				After another day it is 4
+				And finally after another day it is 1.
+			Constraints:
+				1 <= ‘T’ <= 10^6
+				1 <= ‘N’, ‘K’ <= 10^9
+				1 <= ‘D’ <= N
+
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				2 1 6
+				5 2 1
+				Sample Output 1:
+				1
+				3
+				Explanation of sample input 1:
+				For Test Case 1:
+				Today is 1
+				After 1 day it is 2.
+				After 2 days it is 1.
+				After 3 days it is 2.
+				After 4 days it is 1.
+				After 5 days it is 2.
+				After 6 days it is 1.
+				For Test Case 2:
+				Today is 2
+				After 1 day it is 3.
+				Sample Input 2:
+				3
+				7 4 7
+				2 1 5
+				2 2 7
+				Sample Output 2:
+				4
+				2
+				1
+
+		//Not Optimized:
+			int alienWeekday(int n,int d,int k){
+				int currentDay=d;
+				while(k--){
+					currentDay++;
+					if(currentDay > n)
+						currentDay = 1;
+				}
+				return currentDay;
+			}
+
+		// Optimized:
+			int alienWeekday(int n,int d,int k){
+				int currentDay=d;
+				k %= n;
+				currentDay += k;
+				if(currentDay > n)
+					currentDay %= n;
+					
+				return currentDay;
+			}
+	
+	645) Reach 5 Star:
+		Problem Statement:
+			Chef loves giving contests on Codechef. Chef wants to become 5 star rated. Currently his rating on Codechef is X.
+			After today's contest, his rating will increase by Y. Note that Y can be negative which means that Chef's rating will decrease.
+			Find whether Chef will become 5 star rated after today's contest.Chef will be considered 5 star rated if his rating is greater than or equal to 2000.
+
+			Input Format
+			The first line contains two space-separated integers X and Y — chef's initial rating and the amount by which his rating will increase, respectively.
+			Output Format
+				Output YES if chef will become 
+			5 star rated, and NO otherwise.
+
+			You may print each character of the string in uppercase or lowercase (for example, the strings YES, yEs, yes, and yeS will all be treated as identical).
+			Constraints
+				0≤X<2000
+				−2000≤Y<2000
+			Sample 1:
+				Input
+				1900 100
+				Output
+				YES
+				Explanation:
+				Chef's current rating is 
+				1900
+				1900, his rating increases by 
+				100
+				100. So his new rating becomes 
+				2000
+				2000. Hence chef becomes 
+				5
+				5 star rated.
+
+				Sample 2:
+				Input
+				1999 -10
+				Output
+				NO
+				Explanation:
+				Chef's current rating is 
+				1999
+				1999, and his rating decreases by 
+				10
+				10. So, his new rating becomes 
+				1989
+				1989. Hence, Chef is unable to become 
+				5
+				5 star rated.	
+
+		#include <bits/stdc++.h>
+		using namespace std;
+
+		int main() {
+			int A,B;
+			cin>>A>>B;
+			
+			if(A+B >= 2000)
+				cout<<"Yes";
+			else
+				cout<<"No";
+
+			return 0;
+		}
+		
+	646) Maximum Nesting Depth of the Parentheses:
+		Problem statement:
+			A string is a valid parentheses string (denoted VPS) if it meets one of the following:
+			It is an empty string "", or a single character not equal to "(" or ")",
+			It can be written as AB (A concatenated with B), where A and B are VPS's, or
+			It can be written as (A), where A is a VPS.
+			We can similarly define the nesting depth depth(S) of any VPS S as follows:
+
+			depth("") = 0
+			depth(C) = 0, where C is a string with a single character not equal to "(" or ")".
+			depth(A + B) = max(depth(A), depth(B)), where A and B are VPS's.
+			depth("(" + A + ")") = 1 + depth(A), where A is a VPS.
+			For example, "", "()()", and "()(()())" are VPS's (with nesting depths 0, 1, and 2), and ")(" and "(()" are not VPS's.
+			Given a VPS represented as string s, return the nesting depth of s.
+
+			Example 1:
+				Input: s = "(1+(2*3)+((8)/4))+1"
+				Output: 3
+				Explanation: Digit 8 is inside of 3 nested parentheses in the string.
+
+			Example 2:
+				Input: s = "(1)+((2))+(((3)))"
+				Output: 3			
+
+			Constraints:
+				1 <= s.length <= 100
+				s consists of digits 0-9 and characters '+', '-', '*', '/', '(', and ')'.
+				It is guaranteed that parentheses expression s is a VPS.
+	
+		class Solution {
+			public:
+			int maxDepth(string s) {
+				int mxPara=0, cnt=0;
+				for(char c: s){
+					if(c == '('){
+						cnt++;
+						mxPara = max(mxPara, cnt);
+					}
+					else if(c == ')')
+						cnt--;
+				}
+				return mxPara;
+			}
+		};
+
+	647) 3Sum: (with sum equals to K)
+		Problem statement
+			You are given an array/list ARR consisting of N integers. Your task is to find all the distinct triplets present in the array which adds up to a given number K.
+			An array is said to have a triplet {ARR[i], ARR[j], ARR[k]} with sum = 'K' if there exists three indices i, j and k such that i!=j, j!=k and i!=j and ARR[i] + ARR[j] + ARR[k] = 'K'.
+			Note:
+			1. You can return the list of values in any order. For example, if a valid triplet is {1, 2, -3}, then {2, -3, 1}, {-3, 2, 1} etc is also valid triplet. Also, the ordering of different triplets can be random i.e if there are more than one valid triplets, you can return them in any order.
+			2. The elements in the array need not be distinct.
+			3. If no such triplet is present in the array, then return an empty list, and the output printed for such a test case will be "-1".
+			Constraints:
+				1 <= T <=  50
+				1 <= N <= 10^3  
+				-10^6 <= ARR[i] <= 10^6
+				-10^9 <= K <= 10^9
+				Time Limit: 1 sec
+
+			Sample Input 1:
+				1
+				5
+				10 5 5 5 2
+				12
+				Sample Output 1:
+				5 5 2
+				Explanation for Sample Input 1:
+				5 5 2 is the only triplet that adds up to 12. Note that the order of the output doesn’t matter, so 5 2 5 or 2 5 5 is also acceptable.
+				Sample Input 2:
+				3
+				6
+				1 2 3 1 2 3
+				6
+				4
+				1 2 3 4 
+				11
+				6
+				1 1 2 2 1 1
+				4
+				Sample Output 2:
+				1 2 3
+				-1
+				1 1 2
+				Explanation for Sample Input 2:
+				In the first input, (1, 2, 3) is the only unique triplet that adds up to six.
+				In the second input, since there are no such triplets, we print -1.
+				For the third input, the only distinct triplet is (1, 1, 2), so just print 1 1 2.
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			vector<vector<int>> findTriplets(vector<int>arr, int n, int K) {
+				set<vector<int>> s;
+
+				for(int i=0; i<arr.size()-2; i++){
+					for(int j=i+1; j<arr.size()-1; j++){
+						for(int k=j+1; k<arr.size(); k++){
+							if(arr[i]+arr[j]+arr[k] == K){
+								vector<int> v;
+								v.push_back(arr[i]);
+								v.push_back(arr[j]);
+								v.push_back(arr[k]);
+								sort(begin(v), end(v));
+								s.insert(v);
+							}
+						}
+					}
+				}
+				
+				vector<vector<int>> ans (s.begin(), end(s));
+				return ans;
+			}
+	
+		// Optimized:
+			❌Pending
+
+	648) Three Sum:
+		Problem statement
+			You are given an array ‘ARR’ containing ‘N’ integers.
+			Return all the unique triplets [ARR[i], ARR[j], ARR[k]] such that i != j, j != k and k != i and their sum is equal to zero.
+			Example:
+				Input: ‘N’ = 5 
+				'ARR' =  [-1, -1, 2, 0, 1] 
+
+			Output: 
+				-1 -1 2
+				-1 0 1
+
+			Explanation:
+				(-1 -1 +2) = (-1 +0 +1) = 0.
+			Sample Input 1:
+				5 
+				-1 -1 2 0 1
+				Sample Output 1 :
+				-1 -1 2
+				-1 0 1
+				Explanation Of Sample Input 1:
+				(-1 -1 +2) = (-1 +0 +1) = 0.
+				Sample Input 2:
+				4 
+				0 0 0 0
+				Sample Output 2 :
+				0 0 0
+			Constraints:
+				1  <= N <= 1000
+				1 <= ARR[i] <= 1000
+				Time Limit: 1 sec
+
+		// Not Optimized:
+			#include<set>
+			vector<vector<int>> triplet(int n, vector<int> &arr) {
+				set<vector<int>> s;
+				for(int i=0; i<arr.size()-2; i++){
+					for(int j=i+1; j<arr.size()-1; j++){
+						for(int k=j+1; k<arr.size(); k++){
+							if(arr[i]+arr[j]+arr[k] == 0){
+								vector<int> v;
+								v.push_back(arr[i]);
+								v.push_back(arr[j]);
+								v.push_back(arr[k]);
+								sort(begin(v), end(v));
+								s.insert(v);
+							}
+						}
+					}
+				}
+				vector<vector<int>> ans (s.begin(), s.end());
+				return ans;
+			}
+
+		// Optimized:
+			❌Pending
+
+	649) Sum of Big integers:
+		Problem statement
+			You have been given two integers ‘NUM1’ and ‘NUM2’ as a string. Your task is to print the sum of both the numbers.
+			Constraints:
+				1 <= T <= 10000
+				1 <= NUM1 <= 10^50
+				1 <= NUM2 <= 10^50
+				Where ‘T’ is the number of test cases. ‘NUM1’ and ‘NUM2’ are the numbers whose sum you have to compute.  
+				Time Limit: 1sec
+			Sample Input 1:
+				4
+				1 1
+				2 1
+				17 13
+				11 24
+				Sample Output 1:
+				2
+				3
+				30
+				35
+				Explanation For Sample Input 1:
+				In the first test case, 2 is the sum of the two numbers. Therefore the answer is 2.
+				In the second test case, 3 is the sum of the two numbers. Therefore the answer is 3.
+				In the third test case, 30 is the sum of the two numbers. Therefore the answer is 30.
+				In the fourth test case, 35 is the sum of the two numbers. Therefore the answer is 35.
+				Sample Input 2:
+				2
+				1555555555555555555500 20
+				4 3
+				Sample Output 2:
+				1555555555555555555520
+				7
+				Explanation For Sample Input 2:
+				In the first test case, 1555555555555555555520 is the sum of the two numbers. Therefore the answer is 1555555555555555555520.
+				In the second test case, 7 is the sum of the two numbers. Therefore the answer is 7.
+		
+		#include <bits/stdc++.h> 
+		string findSum(string num1 , string num2) {
+			string ans;
+			int s1 = num1.size()-1, s2 = num2.size()-1;
+			int itr = min(num1.size(), num2.size());
+			int carry = 0;
+			while(itr--){
+				int sum = carry + (num1[s1--] - '0') + (num2[s2--] - '0');
+				ans += to_string(sum % 10);
+				carry = sum / 10;
+			}
+
+			if(num1.size() > num2.size()){
+				while(s1 >=0){
+					int sum = carry + (num1[s1--] - '0');
+					carry = sum / 10;
+					ans += to_string(sum % 10);
+				}
+				if(carry != 0)
+					ans += to_string(carry);
+			}else if(num1.size() < num2.size()){
+				while(s2 >=0){
+					int sum = carry + (num2[s2--] - '0');
+					carry = sum / 10;
+					
+					ans += to_string(sum % 10);
+				}
+				if(carry != 0)
+					ans += to_string(carry);
+			}else{
+				if(carry != 0)
+					ans += to_string(carry);
+			}
+			reverse(begin(ans), end(ans));
+			return ans;
+		}
+	
+	#CN WeeklyContest-120:
+		650) Spell Casting:
+			int spellCasting (int n, int k, string &s) {
+				int vist=0, i=0;
+
+				while(k > 0 && i < s.size()){
+					vist++;
+					if(s[i++] == '*')
+						k -=2;
+					else
+						k++;
+				}
+				return vist;
+			}
+		
+		651) Find Triplets:
+			// Not Optimized:
+				long long numberOfGood(int n, vector<int> &v) {
+					long long cnt=0;
+					
+					for(int i=0; i<n; i++)
+						for(int j=0; j<n; j++){
+							for(int k=0; k<n; k++){
+								if(v[i] < v[j] && v[j] > v[k])
+									cnt++;
+							}       
+						}
+					return cnt;
+				}
+
+			// Optimized:
+				❌Pending
+
+		652) Sum Of Digits:
+		// Not Optimized:
+			long findSum(long long n){
+				long S=0;
+				while(n){
+					S += (n %10);
+					n /= 10;
+				}
+				return S;
+			}
+
+			long long countGoodNumbers(long long n, long long m) {
+				int MOD = 1e9+7;
+				long long cntGN = 0;
+
+				for(long long i = 1; i<=n; i++){
+					long long s = findSum(i);
+					if((i - s) <= m)
+						cntGN++;
+				}
+				return (cntGN * abs(n-cntGN)) % MOD;
+			}
+		
+		// Optimized:
+			❌Pending
+		❌Pending
+
+	653) 
+
+	654)
+
+	655)
+	
+	656)
+	
+	657)
+	
+	658)
+	
+	659)
+	
+	660)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
