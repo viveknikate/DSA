@@ -70043,13 +70043,270 @@ POTD:-[Problem of the Day]
 					}
 				};
 
-	665) 
+	665) Find the lone set bit:
+		Problem statement:
+			You are given a single non-negative integer ‘N’ who’s binary representation consists of a single ‘1’ digit and the rest of the digits are ‘0’s. Your task is to find the position of the only ‘1’ digit. In other words, your task is to find the position of the only set bit in the binary representation of the input integer ‘N’.
+			The position of the set bit must be counted from the LSB (Least Significant Bit) end of the Binary number. If the count of set bits in the Binary number is not equal to 1, then your function should return ‘-1’ as output.
+			Example:-
+			INPUT   : N = 4
+			OUTPUT  : 3
+			In the above example, N = 4, whose Binary representation is “0100”. It is clearly visible that the binary number contains a single set bit, at a position 3 from the LSB end. Hence the output is 3
+
+			INPUT : N = 8
+			OUTPUT: 4
+			In the above example, N = 8, whose Binary representation is “1000”. It is clearly visible that the binary number contains a single set bit, at a position 4 from the LSB end. Hence the output is 4
+
+			INPUT   : N = 9
+			OUTPUT  : -1
+			In the above example, N = 9, whose Binary representation is “1001”.  Now, the binary number contains 2 set bits, at a position 4 and 1 from LSB end. Hence the output is -1.
+
+			INPUT   : N = 0
+			OUTPUT  : -1
+			In the above example, N = 0, whose Binary representation is “0000”.  Now, the binary number contains no set bits at all. Hence the output will be -1.
+			Constraints:
+				1 <= T <= 100    
+				0 <= N <= 10^5
+
+			Time limit: 1 second
+			Sample Input 1:
+				4
+				2
+				8
+				11
+				0
+				Sample Output 1:
+				2
+				4
+				-1
+				-1
+				Explanation For Sample Input 1:
+				In the first test case, N = 2, whose Binary equivalent is “10”. The set bit is at position 2 from the LSB end. Hence the output is 2
+				In the second test case, N = 8, whose Binary equivalent is “1000”. The set bit is at position 4 from the LSB end. Hence the output is 4
+				In the third test case, K = 11, whose Binary equivalent is “1011”. The count of the total number of set bits is 3 which is not equal to 1. Hence the output is -1
+
+				In the fourth test case, K = 0, whose Binary equivalent is “0000”, which contains no set bits at all. Hence the output is -1.
+				Sample Input 2:
+				5
+				16
+				21
+				32
+				58
+				64
+				Sample Output 2:
+				5
+				-1
+				6
+				-1
+				7  
+
+		#include <bits/stdc++.h> 
+		int findSetBit(int N) {
+			int cnt=0, nBits=0, m;
+			while(N){
+				cnt++;
+				if(N&1){
+					nBits++;
+					m = cnt;
+				}
+				N >>=1;
+			}
+
+			if(nBits == 1)
+				return m;
+			return -1;
+		}
 	
-	666)
+	666) Palindrome Linked List:
+		Problem statement
+			You have been given a head to a singly linked list of integers. Write a function check to whether the list given is a 'Palindrome' or not.
+			Constraints :
+				1 <= t <= 10^2
+				0 <= M <= 10^5
+				Time Limit: 1sec
+
+			Where 'M' is the size of the singly linked list.
+			Sample Input 1 :
+				1
+				9 2 3 3 2 9 -1
+				Sample Output 1 :
+				true
+				Sample Input 2 :
+				2
+				0 2 3 2 5 -1
+				-1
+				Sample Output 2 :
+				false
+				true
+				Explanation for the Sample Input 2 :
+				For the first query, it is pretty intuitive that the the given list is not a palindrome, hence the output is 'false'.
+				For the second query, the list is empty. An empty list is always a palindrome , hence the output is 'true'.
+			
+		/****************************************************************	
+		Following is the class structure of the Node class:
+
+			class Node {
+			public:
+				int data;
+				Node *next;
+				Node(int data) {
+					this->data = data;
+					this->next = NULL;
+				}
+			};
+		*****************************************************************/
+		#include<bits/stdc++.h>
+		bool isPalindrome(Node *H) {
+			vector<string> s1;
+			while(H){
+				s1.push_back(to_string(H->data));
+				H = H->next;
+			}
+
+			for(int i=0; i < s1.size()/2; i++)
+				if(s1[i] != s1[s1.size()-1-i])
+					return 0;
+			return 1;
+		}
+
+	667) Check If Linked List Is Palindrome:
+		Problem statement
+			You are given a Singly Linked List of integers. You have to return true if the linked list is palindrome, else return false.
+			A Linked List is a palindrome if it reads the same from left to right and from right to left.
+			Example:
+				The lists (1 -> 2 -> 1), (3 -> 4 -> 4-> 3), and (1) are palindromes, while the lists (1 -> 2 -> 3) and (3 -> 4) are not.
+			Sample Input 1:
+				1 2 2 1 -1
+				Sample Output 1:
+				True
+				Explanation for Sample Input 1:
+				The given list is a palindrome.
+				Sample Input 2:
+				3 2 1 -1
+				Sample Output 2:
+				False
+				Constraints :
+				1 <= 'N' <= 5 * 10^4
+				-10^9 <= 'data' <= 10^9 and 'data' != -1
+				Where 'N' is the number of nodes in the linked list and ‘data’ represents the value of the list's nodes.
+				Time Limit: 1sec
+
+		// Solution using vector
+		/****************************************************************
+			Following is the class structure of the Node class:
+			class Node {
+				public:
+				int data;
+				Node *next;
+				Node(){
+					this->data = 0;
+					next = NULL;
+				}
+				Node(int data) {
+					this->data = data;
+					this->next = NULL;
+				}
+				Node(int data, Node* next) {
+					this->data = data;
+					this->next = next;
+				}
+			};
+		*****************************************************************/
+
+		bool isPalindrome(Node *H) {
+			vector<string> s1;
+			while(H){
+				s1.push_back(to_string(H->data));
+				H = H->next;
+			}
+
+			for(int i=0; i < s1.size()/2; i++)
+				if(s1[i] != s1[s1.size()-1-i])
+					return 0;
+			return 1;
+		}
+
+		// Solution using stack:
+			#include<bits/stdc++.h>
+			bool isPalindrome(Node *H1) {
+				stack<int> holder;
+				Node *H = H1;
+
+				while(H){
+					holder.push(H->data);
+					H = H->next;
+				}
+
+				while(!holder.empty()){
+					if(holder.top() != H1->data)
+							return 0;
+					holder.pop();
+					H1 = H1->next;
+				}
+				return 1;
+			}
 	
-	667)
-	
-	668)
+	668) Find a Node in Linked List:
+		Problem statement
+			You have been given a singly linked list of integers. Write a function that returns the index/position of integer data denoted by 'N' (if it exists). Return -1 otherwise.
+			Note :
+			Assume that the Indexing for the singly linked list always starts from 0.
+			Constraints :
+				1 <= T <= 10^2
+				0 <= M <= 10^5
+				Where 'M' is the size of the singly linked list.
+				Time Limit: 1 sec
+
+			Sample Input 1 :
+				2
+				3 4 5 2 6 1 9 -1
+				5
+				10 20 30 40 50 60 70 -1
+				6
+				Sample Output 1 :
+				2
+				-1
+				Explanation for Sample Output 1:
+				In test case 1, 'N' = 5 appears at position 2 (0-based indexing) in the given linked list.
+
+				In test case 2, we can see that 'N' = 6 is not present in the given linked list.
+				Sample Input 2 :
+				2
+				1 -1
+				2
+				3 4 5 2 6 1 9 -1
+				6
+				Sample Output 2 :
+				-1
+				4
+				Explanation for Sample Output 2:
+				In test case 1, we can see that 'N' = 2 is not present in the given linked list.
+				In test case 2, 'N' = 6 appears at position 4 (0-based indexing) in the given linked list.
+
+		/****************************************************************
+			Following is the class structure of the Node class:
+
+			class Node {
+				public:
+				int data;
+				Node *next;
+				Node(int data) {
+					this->data = data;
+					this->next = NULL;
+				}
+			};
+		*****************************************************************/
+
+		int findNode(Node *head, int n){
+			Node* Traverse = head;
+			int cnt=0;
+			while(Traverse){
+				if(n == (*Traverse).data)
+					return cnt;
+				cnt++;
+				Traverse = Traverse ->next;
+			}
+			return -1;
+		}
 	
 	669)
 	
