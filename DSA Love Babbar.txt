@@ -17570,6 +17570,7 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 			4) Circular Doubly LL
 
 		1) Singly LL:
+			singly LL consist of data & one pointer, pointing to next element.
 			Head --> [ Data: 10 | Next: ] --> [ Data: 20 | Next: ] --> [ Data: 30 | Next: ] --> NULL
 			eg.
 				#include <iostream>
@@ -17878,7 +17879,307 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 					
 					return 0;
 				}
+		
+		// Insertion at Middle:
+			#include <iostream>
+			using namespace std;
+			class NODE{
+				public:
+					int data;
+					NODE *next;
+				
+				NODE(int data){
+					(*this).data = data;
+					next = NULL;
+				}
+			};
 
+			// if we don't pass this node as ref, then for creating a copy it consume time, 
+			// so to avoid time consumption we used & sign here.
+			void printLL(NODE* &Head){
+				NODE *T = Head;
+				
+				while(T)
+					std::cout << (*T).data << "\t", T = (*T).next;
+					
+				/*
+					instead of above while loop you can use below simpler to understand loop.
+					while(T != NULL){
+						std::cout << T -> data << "\t";
+						T = T->next;
+					}
+				*/
+					
+				std::cout << std::endl;
+			}
+
+			void insertAtHead(NODE * &Head, int val){
+				NODE *newNode = new NODE(val);
+				newNode->next = Head;
+				Head = newNode;
+			}
+
+			void insertAtTail(NODE* &Tail, int val){
+				NODE *newNode = new NODE(val);
+				Tail->next = newNode;
+				Tail = newNode;
+			}
+
+			void insertAt(NODE* &Head, NODE* &Tail, int pos, int val){			
+				// handling case of insertion at 1
+				if(pos == 1){
+					insertAtHead(Head, val);
+					return ;
+				}
+				
+				NODE *prev = NULL;
+				NODE *cur = Head;
+				
+				while(--pos){
+					// handling case of insertion at end
+					// if(!cur)             // if(cur == NULL)
+					//     break;
+					
+					prev = cur;
+					cur = cur -> next;
+				}
+				
+				if(!cur){
+					insertAtTail(Tail, val);
+					return ;
+				}
+				
+				NODE *newNode = new NODE(val);
+				newNode->next = cur;
+				prev->next = newNode;
+			}
+
+			int main() {
+				NODE * n = new NODE(1);
+				NODE *Head, *Tail;
+				Head = Tail = n;
+				printLL(Head);
+				
+				// inserting at Head function
+				insertAtHead(Head, 0);
+				insertAtHead(Head, -1);
+				insertAtHead(Head, -2);
+				insertAtHead(Head, -3);
+				insertAtHead(Head, -4);
+				printLL(Head);
+				
+				// inserting at Tail function
+				insertAtTail(Tail, 2);
+				insertAtTail(Tail, 3);
+				insertAtTail(Tail, 4);
+				insertAtTail(Tail, 5);
+				printLL(Head);
+				
+				// to verify is tail pointing to last value here i.e. 5
+				std::cout << Tail->data << std::endl;
+				
+				// position must be in between start to end of linked list;
+				// inserting in middle
+				int position = 4;
+				insertAt(Head, Tail, position, 44);
+				insertAt(Head, Tail, position, 45);
+				printLL(Head);
+				
+				// inserting at start
+				position = 1;
+				insertAt(Head, Tail, position, 99);
+				insertAt(Head, Tail, position, 100);
+				printLL(Head);
+				
+				position=15;
+				insertAt(Head, Tail, position, 800);
+				insertAt(Head, Tail, position, 844);
+				insertAt(Head, Tail, position, 888);
+				// insertAtTail(Tail, 89);
+				printLL(Head);
+				
+				cout<< Head->data <<endl;
+				cout<< Tail->data <<endl;
+				
+				return 0;
+			}
+
+		// Deletion in Singly LL by Position & by Value:
+			
+			#include <iostream>
+			using namespace std;
+
+			class NODE{
+				public:
+					int data;
+					NODE *next;
+				
+				NODE(int data){
+					(*this).data = data;
+					next = NULL;
+				}
+				
+				// custome destructor, there is default destructor is also present
+				~NODE(){
+					int value = (*this).data;
+					if(this->next != NULL){
+						delete next;
+						next = NULL;
+					}
+					std::cout << "Memory freed up for node: " << value << std::endl;
+				}
+			};
+
+			// if we don't pass this node as ref, then for creating a copy it consume time, 
+			// so to avoid time consumption we used & sign here.
+			void printLL(NODE* &Head){
+				NODE *T = Head;
+				
+				while(T)
+					std::cout << (*T).data << "\t", T = (*T).next;
+					
+				/*
+					instead of above while loop you can use below simpler to understand loop.
+					while(T != NULL){
+						std::cout << T -> data << "\t";
+						T = T->next;
+					}
+				*/
+					
+				std::cout << std::endl;
+			}
+
+			void insertAtHead(NODE * &Head, int val){
+				NODE *newNode = new NODE(val);
+				newNode->next = Head;
+				Head = newNode;
+			}
+
+			void insertAtTail(NODE* &Tail, int val){
+				NODE *newNode = new NODE(val);
+				Tail->next = newNode;
+				Tail = newNode;
+			}
+
+			void deleteAtpos(NODE * &Head, NODE * &Tail, int pos){
+				NODE* cur = Head;
+				NODE* prev = nullptr;
+				
+				if(pos == 1){
+					Head = cur->next;
+					cur->next = nullptr;
+					delete cur;
+					return ;
+				}
+				
+				while(--pos && cur->next != nullptr){
+					prev = cur;
+					cur = cur->next;
+				}
+				
+				if(pos != 0){
+					std::cout << "position limit Exceeded" << std::endl;
+					return ;
+				}
+				
+				if(cur->next == nullptr)
+					Tail = prev;
+					
+				prev-> next = cur->next;
+				cur->next = nullptr;
+				delete cur;
+			}
+
+			// HomeWork
+			void deleteByValue(NODE * &Head, NODE * &Tail, int val){
+				NODE *cur = Head;
+				NODE *pre = nullptr;
+				
+				// considering the starting Element
+				if(cur->data == val && pre == nullptr){     // update Head
+					Head = cur->next;
+					cur->next = nullptr;
+					
+					delete cur;
+					return ;
+				}
+				
+				while(cur->next != nullptr and cur->data != val){
+					pre = cur;
+					cur = cur->next;
+				}
+				
+				if(cur->data != val){
+					std::cout << "Element "<< val <<" not found." << std::endl;
+					return ;
+				}
+				
+				// handling the last element case
+				if(cur->next == nullptr)                // just to update the Tail.
+					Tail = pre;
+				
+				pre->next = cur->next;
+				cur->next = nullptr;
+				delete cur;
+			}
+
+			int main() {
+				
+				NODE * n = new NODE(1);
+				NODE *Head, *Tail;
+				Head = Tail = n;
+				printLL(Head);
+				
+				// inserting at Head function
+				insertAtHead(Head, 0);
+				insertAtHead(Head, -1);
+				insertAtHead(Head, -2); 
+				insertAtHead(Head, -3);
+				insertAtHead(Head, -4);
+				insertAtHead(Head, -5);
+				insertAtHead(Head, -6);
+				insertAtHead(Head, -7);
+				insertAtHead(Head, -8);
+				printLL(Head);
+				
+				// inserting at Tail function
+				insertAtTail(Tail, 2);
+				insertAtTail(Tail, 3);
+				insertAtTail(Tail, 4);
+				insertAtTail(Tail, 5);
+				insertAtTail(Tail, 6);
+				insertAtTail(Tail, 7);
+				printLL(Head);
+				
+				// by position
+				deleteAtpos(Head, Tail, 3);
+				deleteAtpos(Head, Tail,8);
+				
+				printLL(Head);
+				deleteAtpos(Head, Tail, 1);
+				printLL(Head);
+				deleteAtpos(Head, Tail, 14);
+				deleteAtpos(Head, Tail, 13);
+				printLL(Head);
+				
+				// by value
+				deleteByValue(Head, Tail, 1);
+				deleteByValue(Head, Tail, 6);
+				deleteByValue(Head, Tail, 7);
+				deleteByValue(Head, Tail, 70);
+				printLL(Head);
+				
+				deleteByValue(Head, Tail, -8);
+				deleteByValue(Head, Tail, -7);
+				printLL(Head);
+				
+				cout<< "Head "<< Head->data <<endl;
+				cout<< "Tail "<< Tail->data <<endl;
+				return 0;
+			}	
+
+		2) Doubly LL:
+			Doubly LL consist of data & 2  pointers (one for previous node and one for next).
 
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
@@ -68930,21 +69231,839 @@ POTD:-[Problem of the Day]
 			❌Pending
 		❌Pending
 
-	653) 
+	653) Make The String Great:
+		Problem statement:
+			Given a string s of lower and upper case English letters.
+			A good string is a string which doesn't have two adjacent characters s[i] and s[i + 1] where:
+			0 <= i <= s.length - 2
+			s[i] is a lower-case letter and s[i + 1] is the same letter but in upper-case or vice-versa.
+			To make the string good, you can choose two adjacent characters that make the string bad and remove them. You can keep doing this until the string becomes good.
+			Return the string after making it good. The answer is guaranteed to be unique under the given constraints.
+			Notice that an empty string is also good.
+			Example 1:
+				Input: s = "leEeetcode"
+				Output: "leetcode"
+				Explanation: In the first step, either you choose i = 1 or i = 2, both will result "leEeetcode" to be reduced to "leetcode".
 
-	654)
+			Example 2:
+				Input: s = "abBAcC"
+				Output: ""
+				Explanation: We have many possible scenarios, and all lead to the same answer. For example:
+				"abBAcC" --> "aAcC" --> "cC" --> ""
+				"abBAcC" --> "abBA" --> "aA" --> ""
 
-	655)
+			Example 3:
+				Input: s = "s"
+				Output: "s"
+			
+			Constraints:
+				1 <= s.length <= 100
+				s contains only lower and upper case English letters.
+
+		int SpeedUp =[](){
+			ios_base::sync_with_stdio(0);
+			cin.tie(0);
+			cout.tie(0);
+			return 0;
+		}();
+
+		class Solution {
+			public:
+			string makeGood(string s) {
+				while(s.size()){
+					int flag=1;
+					for(int i=0; i<s.size()-1; i++){
+						char cur = tolower(s[i+1]);
+						char prev = tolower(s[i]);
+						if(cur == prev && ((islower(s[i]) && isupper(s[i+1])) || ((islower(s[i+1]) && isupper(s[i]))))){
+							flag=0;
+							s.erase(s.begin()+i, s.begin()+i+2);
+							// or
+							// s.erase(i, 2);
+							break;
+						}
+					}
+					if(flag)
+						break;
+				}
+				return s;
+			}
+		};
+
+	654) Number of Good Ways to Split a String:
+		Problem statement:
+			You are given a string s.
+			A split is called good if you can split s into two non-empty strings sleft and sright where their concatenation is equal to s (i.e., sleft + sright = s) and the number of distinct letters in sleft and sright is the same.
+			Return the number of good splits you can make in s.	
+			Example 1:
+				Input: s = "aacaba"
+				Output: 2
+				Explanation: There are 5 ways to split "aacaba" and 2 of them are good. 
+				("a", "acaba") Left string and right string contains 1 and 3 different letters respectively.
+				("aa", "caba") Left string and right string contains 1 and 3 different letters respectively.
+				("aac", "aba") Left string and right string contains 2 and 2 different letters respectively (good split).
+				("aaca", "ba") Left string and right string contains 2 and 2 different letters respectively (good split).
+				("aacab", "a") Left string and right string contains 3 and 1 different letters respectively.
+
+			Example 2:
+				Input: s = "abcd"
+				Output: 1
+				Explanation: Split the string as follows ("ab", "cd").
+
+			Constraints:
+				1 <= s.length <= 105
+				s consists of only lowercase English letters.
+
+		// Not Optimized:
+			class Solution {
+				public:
+				int numSplits(string s) {
+					int Gsplit=0;
+
+					for(int i=0; i<s.size(); i++){
+						string a = s.substr(0,i+1);
+						string b = s.substr(i+1);
+						
+						set<char> s1 (a.begin(), a.end());
+						set<char> s2 (b.begin(), b.end());
+
+						if(s1.size() == s2.size())
+							Gsplit++;
+					}
+					return Gsplit;
+				}
+			};
+
+		// Optimized:
+			int SpeedUp =[](){
+				ios_base::sync_with_stdio(0);
+				cin.tie(0);
+				coutd.tie(0);
+				return 0;
+			}();
+
+			class Solution {
+				public:
+				int numSplits(string s) {
+					int Gsplit=0;
+					map<char, int> F1, F2;
+					F1[s[0]]++;
+					int z=1;
+
+					while(z < s.size())
+						F2[s[z++]]++;
+					
+					if(F1.size() == F2.size())
+							Gsplit++;
+				
+					for(int i=1; i<s.size(); i++){
+						F1[s[i]]++;
+						F2[s[i]]--;
+
+						if(F2[s[i]] <= 0)
+							F2.erase(s[i]);
+						
+						if(F1.size() == F2.size())
+							Gsplit++;
+					}
+					return Gsplit;
+				}
+			};
+
+	655) Vowels of All Substrings:
+		Problem statement:
+			Given a string word, return the sum of the number of vowels ('a', 'e', 'i', 'o', and 'u') in every substring of word.
+			A substring is a contiguous (non-empty) sequence of characters within a string.
+			Note: Due to the large constraints, the answer may not fit in a signed 32-bit integer. Please be careful during the calculations.
+
+			Example 1:
+			Input: word = "aba"
+			Output: 6
+			Explanation: 
+			All possible substrings are: "a", "ab", "aba", "b", "ba", and "a".
+			- "b" has 0 vowels in it
+			- "a", "ab", "ba", and "a" have 1 vowel each
+			- "aba" has 2 vowels in it
+			Hence, the total sum of vowels = 0 + 1 + 1 + 1 + 1 + 2 = 6. 
+
+			Example 2:
+				Input: word = "abc"
+				Output: 3
+				Explanation: 
+				All possible substrings are: "a", "ab", "abc", "b", "bc", and "c".
+				- "a", "ab", and "abc" have 1 vowel each
+				- "b", "bc", and "c" have 0 vowels each
+				Hence, the total sum of vowels = 1 + 1 + 1 + 0 + 0 + 0 = 3.
+
+			Example 3:
+				Input: word = "ltcd"
+				Output: 0
+				Explanation: There are no vowels in any substring of "ltcd".
+		
+			Constraints:
+				1 <= word.length <= 10^5
+				word consists of lowercase English letters.
+		
+		// Not Optimized:
+			class Solution {
+				public:
+				long long countVowels(string word) {
+					long long Vcnt=0;
+
+					for(int i=0; i<word.size(); i++){
+						int cnt=1;
+						for(int j=i; j<word.size(); j++){
+							string s = word.substr(i, cnt++);
+
+							for(char c: s){
+								if(c == 'a' || c == 'i' || c == 'e' || c == 'o' || c == 'u')
+								Vcnt++;
+							}
+						}
+					}
+					return Vcnt;
+				}
+			};
+
+		// Little Optimized:
+			class Solution {
+				public:
+				long long countVowels(string s) {
+					long long Vcnt=0;
+
+					for(int i=0; i<s.size(); i++){
+						int cnt=0;
+						for(int j=i; j<s.size(); j++){
+							if(s[j] == 'a' || s[j] == 'e' || s[j] == 'i' || s[j] == 'o' || s[j] == 'u')
+								cnt++;
+
+							Vcnt += cnt;
+						}
+					}
+					return Vcnt;
+				}
+			};
+
+		// Optimized:
+			❌Pending
+
+	656) Merge Two Sorted Lists:
+		Problem statement:
+			You are given the heads of two sorted linked lists list1 and list2.
+			Merge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.
+			Return the head of the merged linked list.		
+
+			Example 1:
+				Input: list1 = [1,2,4], list2 = [1,3,4]
+				Output: [1,1,2,3,4,4]
+
+			Example 2:
+				Input: list1 = [], list2 = []
+				Output: []
+
+			Example 3:
+				Input: list1 = [], list2 = [0]
+				Output: [0]
+			
+			Constraints:
+				The number of nodes in both lists is in the range [0, 50].
+				-100 <= Node.val <= 100
+				Both list1 and list2 are sorted in non-decreasing order.
+
+		/**
+			* Definition for singly-linked list.
+			* struct ListNode {
+			*     int val;
+			*     ListNode *next;
+			*     ListNode() : val(0), next(nullptr) {}
+			*     ListNode(int x) : val(x), next(nullptr) {}
+			*     ListNode(int x, ListNode *next) : val(x), next(next) {}
+			* };
+		*/
+
+		class Solution {
+			public:
+			ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+				ListNode* ans = NULL;
+				ListNode* Tail = NULL;
+
+				// Combine check
+				while(list1 && list2){
+					if(list1->val <= list2->val){
+						ListNode * newNode = new ListNode(list1->val);
+						if(!ans){
+							ans = newNode;
+							Tail = newNode;
+						}else{
+							Tail -> next = newNode;
+							Tail = newNode;
+						}
+						list1 = list1 -> next;
+					}else{
+						ListNode * newNode = new ListNode(list2->val);
+						if(!ans){
+							ans = newNode;
+							Tail = newNode;
+						}else{
+							Tail -> next = newNode;
+							Tail = newNode;
+						}
+						list2 = list2->next;
+					}
+				}
+
+				// Individual check list1
+				while(list1) {
+					ListNode * newNode = new ListNode(list1->val);
+					if(!ans){
+						ans = newNode;
+						Tail = newNode;
+					}else{
+						Tail -> next = newNode;
+						Tail = newNode;
+					}
+					list1 = list1 -> next;
+				}
+
+				// List2
+				while(list2) {
+					ListNode * newNode = new ListNode(list2->val);
+					if(!ans){
+						ans = newNode;
+						Tail = newNode;
+					}else{
+						Tail -> next = newNode;
+						Tail = newNode;
+					}
+					list2 = list2 -> next;
+				}
+
+				/*
+					// instead of above 2 while loops, you can use below simple code
+					if(!list1)
+						Tail -> next = list2;
+					else
+						Tail -> next = list1;				
+				*/
+
+				return ans;
+			}
+		};
 	
-	656)
+	657) Linked List Cycle:
+		Problem statement:
+			Given head, the head of a linked list, determine if the linked list has a cycle in it.
+			There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer is connected to. Note that pos is not passed as a parameter.
+			Return true if there is a cycle in the linked list. Otherwise, return false.
+
+			Example 1:
+				Input: head = [3,2,0,-4], pos = 1
+				Output: true
+				Explanation: There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed).
+
+			Example 2:
+				Input: head = [1,2], pos = 0
+				Output: true
+				Explanation: There is a cycle in the linked list, where the tail connects to the 0th node.
+
+			Example 3:
+				Input: head = [1], pos = -1
+				Output: false
+				Explanation: There is no cycle in the linked list.
+			
+			Constraints:
+				The number of the nodes in the list is in the range [0, 104].
+				-10^5 <= Node.val <= 10^5
+				pos is -1 or a valid index in the linked-list.
+			Follow up: Can you solve it using O(1) (i.e. constant) memory?
+				
+		/**
+		* Definition for singly-linked list.
+		* struct ListNode {
+		*     int val;
+		*     ListNode *next;
+		*     ListNode(int x) : val(x), next(NULL) {}
+		* };
+		*/
+		class Solution {
+			public:
+			bool hasCycle(ListNode *head) {
+				vector<ListNode*> holder;
+
+				while(head){
+					if(find(holder.begin(), holder.end(), head) != holder.end())
+						return 1;
+
+					holder.push_back(head);
+					head = head->next;
+				}
+				return 0;
+			}
+		};
 	
-	657)
+	658) Delete Node in a Linked List:
+		Problem statement:
+			There is a singly-linked list head and we want to delete a node node in it.
+			You are given the node to be deleted node. You will not be given access to the first node of head.
+			All the values of the linked list are unique, and it is guaranteed that the given node node is not the last node in the linked list.
+			Delete the given node. Note that by deleting the node, we do not mean removing it from memory. We mean:
+
+			The value of the given node should not exist in the linked list.
+			The number of nodes in the linked list should decrease by one.
+			All the values before node should be in the same order.
+			All the values after node should be in the same order.
+			Custom testing:
+				For the input, you should provide the entire linked list head and the node to be given node. node should not be the last node of the list and should be an actual node in the list.
+				We will build the linked list and pass the node to your function.
+				The output will be the entire list after calling your function.
+			
+			Example 1:
+				Input: head = [4,5,1,9], node = 5
+				Output: [4,1,9]
+				Explanation: You are given the second node with value 5, the linked list should become 4 -> 1 -> 9 after calling your function.
+
+			Example 2:
+				Input: head = [4,5,1,9], node = 1
+				Output: [4,5,9]
+				Explanation: You are given the third node with value 1, the linked list should become 4 -> 5 -> 9 after calling your function.
+			
+			Constraints:
+				The number of the nodes in the given list is in the range [2, 1000].
+				-1000 <= Node.val <= 1000
+				The value of each node in the list is unique.
+				The node to be deleted is in the list and is not a tail node.
+
+		/**
+		* Definition for singly-linked list.
+		* struct ListNode {
+		*     int val;
+		*     ListNode *next;
+		*     ListNode(int x) : val(x), next(NULL) {}
+		* };
+		*/
+		class Solution {
+			public:
+			void deleteNode(ListNode* node) {
+				node->val = node->next->val;
+				node->next = node->next->next;
+				return ;
+			}
+		};
 	
-	658)
+	659) Middle of the Linked List:
+		Problem statement:
+			Given the head of a singly linked list, return the middle node of the linked list.
+			If there are two middle nodes, return the second middle node.
+			Example 1:
+				Input: head = [1,2,3,4,5]
+				Output: [3,4,5]
+				Explanation: The middle node of the list is node 3.
+				
+			Example 2:
+				Input: head = [1,2,3,4,5,6]
+				Output: [4,5,6]
+				Explanation: Since the list has two middle nodes with values 3 and 4, we return the second one.
+			Constraints:
+				The number of nodes in the list is in the range [1, 100].
+				1 <= Node.val <= 100
+		
+		/**
+		* Definition for singly-linked list.
+		* struct ListNode {
+		*     int val;
+		*     ListNode *next;
+		*     ListNode() : val(0), next(nullptr) {}
+		*     ListNode(int x) : val(x), next(nullptr) {}
+		*     ListNode(int x, ListNode *next) : val(x), next(next) {}
+		* };
+		*/
+		class Solution {
+			public:
+			int getLenLL(ListNode* &H){
+				ListNode* T = H;
+				int L=0;
+				while(T){
+					L++;
+					T = T->next;
+				}
+				return L;
+			}
+			ListNode* middleNode(ListNode* head) {
+				int len = getLenLL(head) / 2;
+				ListNode* ans = nullptr;
+				while(len--)
+					head = head->next;
+
+				ans = head;f
+				return ans;
+			}
+		};
+
+		// Or
+			class Solution {
+				public:
+				ListNode* middleNode(ListNode* head) {
+					ListNode* ans = head;
+					int len=1, mid =1;
+					
+					while(head){
+						len++;
+
+						if(len > 2*mid){
+							mid++;
+							ans=ans->next;
+						}
+
+						head = head->next;
+					}
+
+					return ans;        
+				}
+			};
 	
-	659)
+	660) Game of Stones:
+		Problem statement
+			Given the count of total stones in a game. Two-player ‘Ale’ and ‘Bob’ are playing the game. Your task is to find who will win the game if both the players are playing optimally.
+			Rules of the game.
+			1. In a single turn, a player can choose a single stone or ‘even’ number of stones.
+			2. They will play alternatively, which means in the first chance ‘Ale’ will collect the stones, in second-chance ‘Bob’ will collect the stones. And always ‘Ale’ will start the game.
+			3. If any player is not able to take any stones then another player will win the game.
+			Constraints:
+				1 <= T <= 10^5
+				1 <= number of stones <= 10^9
+
+				Where ‘T’ is the total number of test cases.
+				Time limit: 1 second
+			Sample Input 1:
+				2
+				2
+				3
+				Sample Output 1:
+				Ale
+				Bob
+				Explanation of sample input 1:
+				Test Case 1:
+
+				Given the number of stones is ‘2’.
+				Then first player ‘Ale’ can choose both the stones because 2 is an even number.
+				So ‘Ale’ will the game.
+				Return ‘Ale’.
+
+				Test Case 2:
+
+				Given the number of stones is ‘3’.
+				In the first turn ‘Ale’ can choose ‘1’ stone or ‘2’ store, but not ‘3’ stone because ‘3’ is neither ‘1’ or even number.
+				If ‘Ale’ chooses ‘1’ in the first turn. Then in the second turn, ‘Bob’ will collect the remaining ‘2’ stone, so ‘Bob’ will win.
+				If ‘Ale’ chooses ‘2’ stones in the first turn. Then in the second turn, ‘Bob’ will collect the remaining ‘1’ stone, again ‘Bob’ will win the game.
+				So in both cases ‘Bob’ is winning the game. Hence Return ‘Bob’. 
+				Sample Input 2:
+				2
+				4
+				6
+				Sample Output 2:
+				Ale
+				Ale
+
+		string gameOfStones(int num) {
+			if(num ==1)
+				return "Ale";
+				
+			if(num&1){
+				if(num > 3)
+					return "Ale";
+				return "Bob";
+			}
+			return "Ale";
+		}
+
+	661) Remove Duplicates from Sorted List:
+		Problem statement:
+			Given the head of a sorted linked list, delete all duplicates such that each element appears only once. Return the linked list sorted as well.	
+			Example 1:
+				Input: head = [1,1,2]
+				Output: [1,2]
+
+			Example 2:
+				Input: head = [1,1,2,3,3]
+				Output: [1,2,3]
+				
+			Constraints:
+				The number of nodes in the list is in the range [0, 300].
+				-100 <= Node.val <= 100
+				The list is guaranteed to be sorted in ascending order.
+
+		/**
+		* Definition for singly-linked list.
+		* struct ListNode {
+		*     int val;
+		*     ListNode *next;
+		*     ListNode() : val(0), next(nullptr) {}
+		*     ListNode(int x) : val(x), next(nullptr) {}
+		*     ListNode(int x, ListNode *next) : val(x), next(next) {}
+		* };
+		*/
+		class Solution {
+			public:
+			ListNode* deleteDuplicates(ListNode* head) {
+				if(!head || head->next == NULL)
+					return head;
+
+				ListNode* cur = head->next;
+				ListNode* pre = head;
+
+				while(cur){
+					if(pre->val == cur->val){
+						cur= cur->next;
+						pre->next = cur;
+					}else{
+						pre=pre->next;
+						cur=cur->next;
+					}
+				}
+				return head;
+			}
+		};
+
+	662) Remove Linked List Elements:
+		Problem statement:
+			Given the head of a linked list and an integer val, remove all the nodes of the linked list that has Node.val == val, and return the new head.			
+			Example 1:
+				Input: head = [1,2,6,3,4,5,6], val = 6
+				Output: [1,2,3,4,5]
+
+			Example 2:
+				Input: head = [], val = 1
+				Output: []
+
+			Example 3:
+				Input: head = [7,7,7,7], val = 7
+				Output: []
+			
+			Constraints:
+				The number of nodes in the list is in the range [0, 104].
+				1 <= Node.val <= 50
+				0 <= val <= 50
+		/**
+		* Definition for singly-linked list.
+		* struct ListNode {
+		*     int val;
+		*     ListNode *next;
+		*     ListNode() : val(0), next(nullptr) {}
+		*     ListNode(int x) : val(x), next(nullptr) {}
+		*     ListNode(int x, ListNode *next) : val(x), next(next) {}
+		* };
+		*/
+		class Solution {
+			public:
+			ListNode* removeElements(ListNode* head, int val) {
+				ListNode* T = head;
+				ListNode* pre = nullptr;
+
+				while(T) {
+					if(T->val == val && pre != NULL){
+						pre->next = T->next;
+						T = T->next;
+					}else if(T->val == val && pre == NULL){
+						head = head->next;
+						T = head;
+					}else{
+						pre = T;
+						T = T->next;
+					}
+				}
+				return head;
+			}
+		};
+
+	#LeetCode WeeklyContest-392
+		663) Longest Strictly Increasing or Strictly Decreasing Subarray:
+			Problem statement:
+				You are given an array of integers nums. Return the length of the longest subarray of nums which is either strictly increasing or strictly decreasing.
+
+				Example 1:
+				Input: nums = [1,4,3,3,2]
+				Output: 2
+				Explanation:
+				The strictly increasing subarrays of nums are [1], [2], [3], [3], [4], and [1,4].
+				The strictly decreasing subarrays of nums are [1], [2], [3], [3], [4], [3,2], and [4,3].
+				Hence, we return 2.
+
+				Example 2:
+				Input: nums = [3,3,3,3]
+				Output: 1
+				Explanation:
+				The strictly increasing subarrays of nums are [3], [3], [3], and [3].
+				The strictly decreasing subarrays of nums are [3], [3], [3], and [3].
+				Hence, we return 1.
+
+				Example 3:
+				Input: nums = [3,2,1]
+				Output: 3
+				Explanation:
+				The strictly increasing subarrays of nums are [3], [2], and [1].
+				The strictly decreasing subarrays of nums are [3], [2], [1], [3,2], [2,1], and [3,2,1].
+				Hence, we return 3.
+				
+				Constraints:
+					1 <= nums.length <= 50
+					1 <= nums[i] <= 50
+		
+			class Solution {
+				public:
+				int longestMonotonicSubarray(vector<int>& nums) {
+					int mxCnt=1;
+					
+					// increasing check
+					for(int i=0; i<nums.size()-1; i++){
+						int cnt=1;
+						for(int j=i+1; j<nums.size(); j++){
+							if(nums[j-1] >= nums[j])
+								break;
+							
+							cnt++;
+							mxCnt = max(mxCnt, cnt);
+						}
+					} 
+					
+					// decreasing check
+					for(int i=0; i<nums.size()-1; i++){
+						int cnt=1;
+						for(int j=i+1; j<nums.size(); j++){
+							if(nums[j-1] <= nums[j])
+								break;
+							
+							cnt++;
+							mxCnt = max(mxCnt, cnt);
+						}
+					} 
+					
+					return mxCnt;
+				}
+			};
+
+		664) Minimum Operations to Make Median of Array Equal to K:
+			Problem statement:
+				You are given an integer array nums and a non-negative integer k. In one operation, you can increase or decrease any element by 1.
+				Return the minimum number of operations needed to make the median of nums equal to k.		
+				Example 1:
+				Input: nums = [2,5,6,8,5], k = 4
+				Output: 2
+				Explanation:
+				We can subtract one from nums[1] and nums[4] to obtain [2, 4, 6, 8, 4]. The median of the resulting array is equal to k.
+
+				Example 2:
+				Input: nums = [2,5,6,8,5], k = 7
+				Output: 3
+				Explanation:
+				We can add one to nums[1] twice and add one to nums[2] once to obtain [2, 7, 7, 8, 5].
+
+				Example 3:
+				Input: nums = [1,2,3,4,5,6], k = 4
+				Output: 0
+				Explanation:
+				The median of the array is already equal to k.
+		
+				Constraints:
+					1 <= nums.length <= 2 * 10^5
+					1 <= nums[i] <= 10^9
+					1 <= k <= 10^9
+
+			// Not Optimized:
+				class Solution {
+					public:
+					long long minOperationsToMakeMedianK(vector<int>& nums, int k) {
+						long long MinOps=0;
+						sort(begin(nums), end(nums));
+						int median = nums.size()/2;
+						
+						while(nums[median] != k){
+							if(nums[median] > k)
+								nums[median]--;
+							else
+								nums[median]++;
+							sort(begin(nums), end(nums));
+							MinOps++;
+						}
+						return MinOps;        
+					}
+				};
+
+			// Little bit optimized:
+				class Solution {
+					public:
+					long long minOperationsToMakeMedianK(vector<int>& nums, int k) {
+						long long MinOps=0;
+						sort(begin(nums), end(nums));
+						int median = nums.size()/2;
+						
+						while(nums[median] != k){
+							MinOps += abs(nums[median]-k);
+							nums[median] = k;
+							sort(begin(nums), end(nums));
+						}
+						return MinOps;        
+					}
+				};
+		
+			// Optimized:
+				int speedUp = [](){
+					ios_base::sync_with_stdio(0);
+					cin.tie(0);
+					cout.tie(0);
+					return 0;
+				}();
+				class Solution {
+					public:
+					long long minOperationsToMakeMedianK(vector<int>& nums, int k) {
+						long long MinOps=0;
+						// ranges::sort(nums);
+						sort(nums.begin(), nums.end());
+						int m = nums.size()/2;
+						MinOps += abs(nums[nums.size()/2] - k);
+						nums[m] = k;
+
+						// checking for m+1 till n elements
+						for(int i=m+1; i<nums.size(); i++){
+							if(nums[i] >= k)
+								break;
+
+							MinOps += abs(nums[i] - k);
+							nums[i] = k;
+						}
+
+						// checking for m-1 till 0 elements
+						for(int i=m-1; i>=0; i--){
+							if(nums[i] <= k)
+								break;
+
+							MinOps += abs(nums[i] - k);
+							nums[i] = k;
+						}
+						return MinOps;
+					}
+				};
+
+	665) 
 	
-	660)
+	666)
+	
+	667)
+	
+	668)
+	
+	669)
+	
+	670)
+	
+	671)
+	
+	672)
+	
+	673)
+	
+	674)
+	
+	675)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
