@@ -17536,7 +17536,7 @@ Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation 
 		-dedicated OOPs course by Love Babbar
 ---------------------------------------------------------------------------------------------------------
 Lecture-44: Linked List & its types- Singly, Doubly, Circular
-	Linked List:
+	Linked List (LL):
 		-A linked list is a fundamental data structure in computer science. 
 		-It consists of nodes. where each node contains data and a reference (link) to the next node in the sequence. 
 		-This allows for dynamic memory allocation and efficient insertion and deletion operations compared to arrays.
@@ -17880,6 +17880,83 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 					return 0;
 				}
 		
+			- in previous/ above example we already created one node before passing calling insertAtHead/insertAtTail function
+			- in below example creating LL directly by passing them to function.
+				#include <iostream>
+				using namespace std;
+
+				class Node{
+					public:
+						int data;
+						Node* next;
+					
+					Node(int val){
+						data = val;
+						next = NULL;
+					}
+				};
+
+				void insertAtHead(Node* &H, Node* &T, int val){
+					Node * n = new Node(val);
+					
+					if(H == NULL){
+						H = T = n;
+					}else{
+						n->next = H;
+						H = n;
+					}
+				}
+
+				void insertAtTail(Node* &T, Node* &H, int val){
+					Node * n = new Node(val);
+					
+					if(T == NULL){
+						H = T = n;
+					}else{
+						T->next = n;
+						T = n;
+					}
+				}
+
+				void printLL(Node * H){
+					while(H){
+						std::cout << H->data << "\t";
+						H = H->next;
+					}
+					std::cout << std::endl;
+				}
+
+				int main() {
+					Node *H, *T;
+					H = T = NULL;
+
+					insertAtHead(H, T, 12);
+					printLL(H);
+					
+					insertAtTail(T, H, 13);
+					printLL(H);
+					
+					insertAtHead(H, T, 5);
+					insertAtHead(H, T, 4);
+					insertAtHead(H, T, 3);
+					insertAtHead(H, T, 2);
+					insertAtHead(H, T, 1);
+					printLL(H);
+					
+					insertAtTail(T, H, 22);
+					insertAtTail(T, H, 23);
+					insertAtTail(T, H, 24);
+					insertAtTail(T, H, 25);
+					insertAtTail(T, H, 26);
+					insertAtTail(T, H, 27);
+					insertAtTail(T, H, 28);
+					insertAtTail(T, H, 29);
+					insertAtTail(T, H, 30);
+					printLL(H);
+					
+					return 0;
+				}
+
 		// Insertion at Middle:
 			#include <iostream>
 			using namespace std;
@@ -18005,7 +18082,6 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 			}
 
 		// Deletion in Singly LL by Position & by Value:
-			
 			#include <iostream>
 			using namespace std;
 
@@ -18178,8 +18254,445 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 				return 0;
 			}	
 
-		2) Doubly LL:
-			Doubly LL consist of data & 2  pointers (one for previous node and one for next).
+		2) Doubly LL (DLL):
+			Doubly LL consist of data & 2 pointers (one for previous node and one for next).
+			Structure:
+				class NODE{
+					public:
+						int data;
+						NODE* next;
+						NODE* prev;
+					
+					NODE(int val){
+						data =val;
+						next = NULL;
+						prev = NULL;
+					}
+				};
+
+			// Insertion in DLL
+				#include <iostream>
+				using namespace std;
+
+				class NODE{
+					public:
+						int data;
+						NODE* next;
+						NODE* prev;
+					
+					NODE(int val){
+						data =val;
+						next = NULL;
+						prev = NULL;
+					}
+				};
+
+				int length_LL(NODE *H){
+					int len=0;
+					
+					while(H){
+						len++;
+						H = H->next;
+					}
+					return len;
+				}
+
+				void print_D_LL(NODE *H){
+				
+					while(H){
+						cout<< H->data <<"\t";
+						H = H->next;
+					}
+					std::cout << std::endl;
+				}
+
+				void insertAtHead_D_LL(NODE * &H, int val){
+					NODE * n = new NODE(val);
+					n->next = H;
+					H->prev = n;
+					H = n;
+				}
+
+				void insertAtTail_D_LL(NODE * &T, int val){
+					NODE * n = new NODE(val);
+					
+					n->prev = T;
+					T->next = n;
+					T = n;
+				}
+
+				// we can write this below function without using extra NODE name back
+				void insertAt_pos(NODE * &H, NODE * &T, int position, int val){
+					
+					// handling start element case
+					if(position == 1){
+						insertAtHead_D_LL(H, val);
+						return ;
+					}
+					
+					NODE * cur = H;
+					NODE * back = NULL;
+					
+					while(--position && cur){         // or while(--position && cur != NULL)
+						back = cur;
+						cur = cur -> next;
+					}
+					
+					// this means trying to insert element at the end of list
+					// handling end element case
+					if(!cur){                // or if(cur == NULL)
+						insertAtTail_D_LL(T, val);
+						return ;
+					}
+					
+					NODE * n = new NODE(val);
+					
+					n->next = cur;
+					n->prev = back;
+					
+					back->next = n;
+					cur->prev = n;
+				}
+
+				void insertAt_pos_no_extra_back(NODE * &H, NODE * &T, int position, int val){
+				
+					// handling start element case
+					if(position == 1){
+						insertAtHead_D_LL(H, val);
+						return ;
+					}
+					
+					NODE * cur = H;
+					
+					while(--position && cur)       // or while(--position && cur != NULL)
+						cur = cur -> next;
+					
+					// this means trying to insert element at the end of list
+					// handling end element case
+					if(!cur){                // or if(cur == NULL)
+						insertAtTail_D_LL(T, val);
+						return ;
+					}
+					
+					NODE * n = new NODE(val);
+					
+					n->next = cur;
+					n->prev = cur->prev;
+					
+					cur-> prev -> next = n;
+					cur-> prev = n;
+				}
+
+				int main() {
+					
+					NODE * n = new NODE(90);
+					
+					NODE *H = n;
+					NODE *T = n;
+					
+					print_D_LL(H);
+					std::cout << "Length: " << length_LL(H) << std::endl;
+					std::cout << "/*********************************************************/" << std::endl;
+					
+					insertAtHead_D_LL(H, 11);
+					insertAtHead_D_LL(H, 10);
+					insertAtHead_D_LL(H, 9);
+					insertAtHead_D_LL(H, 8);
+					print_D_LL(H);
+					
+					insertAtTail_D_LL(T, 101);
+					insertAtTail_D_LL(T, 102);
+					insertAtTail_D_LL(T, 103);
+					insertAtTail_D_LL(T, 104);
+					print_D_LL(H);
+					std::cout << "Length: " << length_LL(H) << std::endl;
+					std::cout << "/*********************************************************/" << std::endl;
+
+					
+					insertAt_pos(H, T, 2, 7);
+					print_D_LL(H);
+					
+					insertAt_pos(H, T, 6, 45);
+					print_D_LL(H);
+					
+					// edge cases
+					insertAt_pos(H, T, 1, -8);
+					print_D_LL(H);
+					
+					insertAt_pos(H, T, 1, -9);
+					print_D_LL(H);
+					
+					insertAt_pos(H, T, 20, 107);
+					print_D_LL(H);
+					
+					insertAt_pos(H, T, 30, 110);
+					print_D_LL(H);
+					
+					insertAt_pos(H, T, 15, 56);
+					print_D_LL(H);
+					
+					insertAt_pos_no_extra_back(H, T, 2, -7);
+					print_D_LL(H);
+					
+					std::cout << "Length: " << length_LL(H) << std::endl;
+					// verification for Head & Tail
+					std::cout << "/*********************************************************/" << "\n";
+					std::cout << "Head: " <<  H->data << std::endl;
+					std::cout << "Tail: " << T->data << std::endl;
+					return 0;
+				}
+
+			// Deletion in DLL:
+				#include <iostream>
+				using namespace std;
+
+				class Node {
+					public:
+						int data;
+						Node *prev;
+						Node *next;
+						
+					Node(int data){
+						this->data = data;
+						prev = NULL;
+						next = NULL;
+					}
+
+					~Node(){
+						std::cout << "Memory Freed up for "<< data << std::endl;
+						delete next;
+					}
+				};
+
+				void insertAtHead_DLL(Node * &H, Node * &T, int val){
+					Node * n = new Node(val);
+					
+					if(H == NULL){
+						H = n;
+						T = n;
+					}else{
+						n->next = H;
+						H->prev = n;
+						H = n;
+					}
+				}
+
+				void insertAtTail_DLL(Node * &T, Node * &H, int val){
+					Node * n = new Node(val);
+					
+					if(H == NULL){
+						H = n;
+						T = n;
+					}else{
+						n->prev = T;
+						T->next = n;
+						T = n;
+					}
+				}
+
+				void printLL(Node *H){
+					if(!H)
+						std::cout << "LL is empty" << std::endl;
+						
+					while(H != NULL){
+						std::cout << H->data << "\t";
+						H = H->next;
+					}
+					std::cout << std::endl;
+				}
+
+				void printingByTail(Node *T){
+					while(T){
+						std::cout << T->data << "\t";
+						T = T->prev;
+					}
+					std::cout << std::endl;
+				}
+
+				void deleteBy_position_DLL(Node * &H, Node * &T, int pos) {
+					// H != NULL means LL contains some data, its not empty
+					if(H == NULL) {
+						std::cout << "LL is empty" << std::endl;
+					}
+					else if(pos == 1) {
+						Node *curr = H;
+						H = H->next;
+						
+						// this means the LL contains only one element & that element also we are deleting, so we can't access the curr elements prev address.
+						if(H != NULL)               //  if(H)
+							H->prev = NULL;
+						
+						curr->next = NULL;
+						delete curr;
+					} else {
+						Node * curr = H;
+						
+						// middle element
+						while(--pos && curr != NULL)            // or while(--pos && curr)
+							curr = curr->next;
+							
+						if(curr == NULL)         // if(!curr)
+							std::cout << "Position is greater than length of LL" << std::endl;
+							
+						// it means curr is standing on last element
+						// need to update Tail
+						else if(curr -> next == NULL){
+							T = T -> prev;
+							
+							// handling edge case contains only one element in LL.
+							if(T != NULL)
+								T -> next = NULL;
+							
+							curr -> prev = NULL;
+							delete curr;
+						}else{
+							// middle element case
+							
+							curr -> prev -> next = curr -> next;
+							curr -> next -> prev = curr -> prev;
+							
+							curr -> next = NULL;
+							curr -> prev = NULL;
+							delete curr;
+						}
+					}
+				}
+
+				void deleteBy_NODE_Value(Node * &H, Node * &T, int val){
+					// this means the LL is empty we can't delete anything
+					if(H == NULL)               // if(!H)
+						std::cout << "LL is empty, value not found" << std::endl;
+					
+					Node * temp = H;
+					
+					while(temp != NULL && temp->data != val)
+						temp = temp->next;
+					
+					if(temp == NULL)
+						std::cout << "Node with value "<< val << " is not exist in LL" << std::endl;
+					else{
+						// this means this is the first element, need to update the Head
+						if(temp -> prev == NULL){
+							H = H ->next;
+							
+							// handling only one element case in LL
+							if(H != NULL)
+								H -> prev = NULL;
+							
+							temp -> next = NULL;
+							delete temp;
+							
+						}   // this means this is the last element need to update Tail
+						else if(temp -> next == NULL){
+							
+							T = T -> prev;
+							// handling only one element case in LL
+							if(T != NULL)
+								T -> next = NULL;
+							
+							temp -> prev = NULL;
+							delete temp;
+						}   // this indicate this is the middle element just need to delete it
+						else{
+							temp -> prev -> next = temp -> next;
+							temp -> next -> prev = temp -> prev;
+							
+							temp -> next = temp -> prev = NULL;
+							delete temp;
+						}
+					}
+				}
+
+				int main() {
+				
+					Node *H = NULL, *T = NULL;
+					
+					insertAtHead_DLL(H, T, 1);
+					insertAtHead_DLL(H, T, 0);
+					insertAtHead_DLL(H, T, -1);
+					insertAtHead_DLL(H, T, -2);
+					insertAtHead_DLL(H, T, -3);
+					insertAtHead_DLL(H, T, -4);
+					insertAtHead_DLL(H, T, -5);
+					insertAtHead_DLL(H, T, -6);
+					printLL(H);
+					
+					insertAtTail_DLL(T, H, 2);
+					insertAtTail_DLL(T, H, 3);
+					insertAtTail_DLL(T, H, 4);
+					insertAtTail_DLL(T, H, 5);
+					insertAtTail_DLL(T, H, 6);
+					insertAtTail_DLL(T, H, 7);
+					cout<<"LL using Head: \t";
+					printLL(H);
+					
+					// By position
+						// start position
+						// -in case of deleting node at start should update Head
+						deleteBy_position_DLL(H, T, 1);
+						printLL(H);
+						deleteBy_position_DLL(H, T, 1);
+						printLL(H);
+						
+						// // middle position
+						deleteBy_position_DLL(H, T, 2);
+						printLL(H);
+						
+						deleteBy_position_DLL(H, T, 3);
+						printLL(H);
+						
+						// end position
+						// -in case of deleting node at end should update Tail
+						deleteBy_position_DLL(H, T, 10);
+						printLL(H);
+						
+						deleteBy_position_DLL(H, T, 9);
+						printLL(H);
+						
+						// position is greater than total length of LL, means cur is pointing to NULL
+						deleteBy_position_DLL(H, T, 9);
+					
+					// By value
+						deleteBy_NODE_Value(H, T, -4);
+						printLL(H);
+						
+						deleteBy_NODE_Value(H, T, 5);
+						printLL(H);
+					
+						deleteBy_NODE_Value(H, T, 3);
+						printLL(H);
+						
+						deleteBy_NODE_Value(H, T, 3);
+						printLL(H);
+					
+					
+					// verifying Head & Tail are at right place
+					std::cout << "Head: " << H->data << endl;
+					std::cout << "Tail: " << T->data << std::endl;
+					
+					// // using tail printing LL
+					cout<<"Reverse Order LL using Tail: \t";
+					printingByTail(T);
+					return 0;
+				}
+
+		3) Circular Singly LL (C_LL):
+			The circular linked list is a linked list where all nodes are connected to form a circle. 
+			In a circular linked list, the first node and the last node are connected to each other which forms a circle. 
+			There is no NULL at the end.
+
+			-Circular linked lists are similar to single Linked Lists with the exception of connecting the last node to the first node.
+
+			-In a circular Singly linked list, the last node of the list contains a pointer to the first node of the list. We traverse the circular singly linked list until we reach the same node where we started. 
+			The circular singly linked list has no beginning or end. No null value is present in the next part of any of the nodes.
+			
+			-insertion in front of other element (assuming that the element we are searching is always present in C_LL)
+			
+			-deletion by value
+			
+		4) Circular Doubly LL:
+			Circular Doubly Linked List has properties of both doubly linked list and circular linked list in which two consecutive elements are linked or connected by the previous and next pointer and the last node points to the first node by the next pointer and also the first node points to the last node by the previous pointer.
+
 
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
@@ -68840,7 +69353,7 @@ POTD:-[Problem of the Day]
 				2
 				1
 
-		//Not Optimized:
+		// Not Optimized:
 			int alienWeekday(int n,int d,int k){
 				int currentDay=d;
 				while(k--){
@@ -69173,6 +69686,70 @@ POTD:-[Problem of the Day]
 	
 	#CN WeeklyContest-120:
 		650) Spell Casting:
+			Problem statement
+				You are given a string ‘S’ of length ‘N’ where each character can be either ‘.’ or ‘*’ and are numbered from ‘1’ to ‘N’. The current health value of the player is given by an integer constant ‘K’.
+				The player begins the journey from the first character of the string. The character ‘*’ decreases the player's health by ‘2’, while ‘.’ increases the player’s health by ‘1’. If the player’s health drops to ‘0’ or below at any point, the game ends immediately. Your objective is to find the number of characters visited by the player during the game.
+				Your task is to tell the number of characters visited by the player during the game and return it.
+				NOTE: The characters of the string are given in one-based indexing order.
+				Example:
+					‘N’ = 4
+					‘K’ = 3
+					‘S’ = ‘*.**’
+
+				For index ‘1’:
+				Here, the health value of the player drops from ‘3’ to ‘1’.
+				For index ‘2’
+				Here, the current character is ‘.’. So, the health value of the player increases from ‘1’ to ‘2’.
+				For index ‘3’: Here, the health value of the player drops from ‘2’ to ‘0’. Now, the player will be unable to move further and the game ends.
+				In the example, the number of characters visited by the player is ‘3’.
+
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= ‘N’ <= 10^5
+					1 <= ‘K’ <= 10^9
+					‘S[i]’ can be either ‘*’ or ‘.’     
+					Time Limit: 1 sec 
+				Sample Input 1:
+					2
+					4 1
+					..**
+					3 1
+					*.. 
+					Sample Output 1:
+					4   
+					1
+					Explanation of sample input 1:
+					For test case 1:
+					For index 1:
+					The health of the player increases from ‘1’ to ‘2’.
+
+					For index 2:
+					The health of the player increases from ‘2’ to ‘3’.
+
+					For index ‘3’:
+					The health of the player drops from ‘3’ to ‘1’.
+
+					For index ‘4’:
+					The health of the player drops from ‘1’ to ‘-1’ and the game ends.
+
+					Hence, the number of characters visited by the player is ‘4’.
+
+
+					For test case 2:
+
+					For index 1:
+					The health of the player drops from ‘1’ to ‘-1’ and he’ll be unable to move further.
+
+					Hence, the number of characters visited by the player is ‘1’.
+					Sample Input 2:
+					2
+					5 2
+					***..
+					5 1
+					.....
+					Sample Output 2:
+					1
+					5
 			int spellCasting (int n, int k, string &s) {
 				int vist=0, i=0;
 
@@ -69187,6 +69764,47 @@ POTD:-[Problem of the Day]
 			}
 		
 		651) Find Triplets:
+			Problem statement
+				You are given an array 'A' of 'N' integers indexed from '0' to 'N - 1'.
+				Let's define the triplet ('i', 'j', 'k') good, if 'A[i]' < 'A[j]' > 'A[k]'.
+				You are required to find a total number of good triplets.
+				Example:
+					N = 3
+					A = [1, 3, 1]
+					There are total '4' good triplets ('0', '1', '2'), ('0', '1', '0'), ('2', '1', '2') and ('2', '1', '0').
+					So the answer for this case is '4'.
+				Constraints:
+					1 <= 'N' <= 10^5
+					1 <= A[i] <= N
+
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					3
+					1 1 1
+					4
+					1 1 1 4
+					Sample output 1:
+					0
+					9
+					Explanation of sample input 1:
+					For test case 1:
+					As all the elements are equal, there is no good triplet.
+					So, the answer for this case is '0'.
+
+					For test case 2:
+					We can see that all the triplets where 'j' equal to '3' and 'i' and 'j' have values from '0', '1' and '2' are good.
+					As there are '9' such triplets, the answer for this case is '9'.
+					Sample input 2:
+					2
+					4
+					1 2 3 4
+					5
+					1 2 1 2 1
+					Sample output 2:
+					14
+					18
+
 			// Not Optimized:
 				long long numberOfGood(int n, vector<int> &v) {
 					long long cnt=0;
@@ -69203,34 +69821,171 @@ POTD:-[Problem of the Day]
 
 			// Optimized:
 				❌Pending
+				/*
+					Time Complexity: O(n)
+					Space Complexity: O(n)
 
+					Where 'n' denotes the length of the vector 'v'.
+				*/
+
+				long long numberOfGood(int n, vector<int> &v) {
+
+					// Initialize a vector 'frequency' to store the frequency of each element.
+					vector<int> frequency(n + 1);
+
+					// Store the frequency of each element.
+					for (int i = 0; i < n; i++) {
+						frequency[v[i]]++;
+					}
+
+					// Initialize the integers 'answer' and 'less' equal to '0'.
+					long long answer = 0, less = 0;
+
+					// Iterate through each value from '0' to 'n'.
+					for (int i = 0; i <= n; i++) {
+
+						// Find and add the number of good triplets considering the middle element 'j' such that 'v[j] = i'.
+						answer += less * less * frequency[i];
+						less += frequency[i];
+					}
+					// Return the 'answer'.
+					return answer;
+				}
+			
 		652) Sum Of Digits:
-		// Not Optimized:
-			long findSum(long long n){
-				long S=0;
-				while(n){
-					S += (n %10);
-					n /= 10;
-				}
-				return S;
-			}
+			Problem statement
+				Ninja has the number 'M'. Any number 'X' is called good if the difference between 'X' and its sum of digits is less than or equal to 'M'.
+				Bob gave the 'N' to the Ninja and asked him to count all good numbers less than or equal to 'N' and greater than or equal to '1'. Ninja is busy with his training, so he asked for your help.
+				The score the Ninja will get is equal to 'count of good numbers * count of not good number' modulo '10^9 + 7' (1000000007).
+				Your task is to find the score the Ninja will get.
+				Example:
+					'N' = 11
+					'M' = 2
+					The numbers '10' and '11' are not good numbers. 
+					The sum of digits of '10' is equal to '1', and the difference is '10 - 1 = 9' which is greater than '2'(M). 
+					The sum of digits of '11' is equal to '2', and the difference is '11 - 2 = 9' which is greater than '2'(M). 
+					Every other number in the range '1' to '9' are good number.
+					So, the answer is '9 * 2 = 18'.
+				Constraints:
+					1 <= T <= 10
+					1 <= N <= 10^18
+					2 <= M <= 10^18
+					Time Limit: 1 second
 
-			long long countGoodNumbers(long long n, long long m) {
-				int MOD = 1e9+7;
-				long long cntGN = 0;
+				Sample Input 1:
+					2
+					7 3
+					15 1
+					Sample Output 1:
+					0
+					54
+					Explanation Of Sample Input 1:
+					For test case 1:
+					Every numbers in the range '[1, 7]' are good numbers.
+					So, there are total '7' good numbers and '0' not good numbers.
+					So, the answer will be '7 * 0 = 0'.
 
-				for(long long i = 1; i<=n; i++){
-					long long s = findSum(i);
-					if((i - s) <= m)
-						cntGN++;
+					For test case 2:
+					Every numbers in the range '[1, 9]' are good numbers.
+					So, there are total '9' good numbers and '6' not good numbers.
+					So, the answer will be '9 * 6 = 54'.
+					Sample Input 2:
+					2
+					22 10
+					21 6
+					Sample Output 2:
+					57
+					108
+
+			// Not Optimized:
+				long findSum(long long n){
+					long S=0;
+					while(n){
+						S += (n %10);
+						n /= 10;
+					}
+					return S;
 				}
-				return (cntGN * abs(n-cntGN)) % MOD;
-			}
+
+				long long countGoodNumbers(long long n, long long m) {
+					int MOD = 1e9+7;
+					long long cntGN = 0;
+
+					for(long long i = 1; i<=n; i++){
+						long long s = findSum(i);
+						if((i - s) <= m)
+							cntGN++;
+					}
+					return (cntGN * abs(n-cntGN)) % MOD;
+				}
+			
+			// Optimized:
+				❌Pending
+				/*
+					Time Complexity: O(logN * log10(N)). 
+					Space Complexity: O(1).
+
+					Where 'N' is the constant described in the statement.
+				*/
+
+				bool isGood(long long x, long long m) {
+
+					// Initialize an integer variable 'temp' with 'X', and 'sum' with '0'.
+					long long temp = x, sum = 0;
+
+					// While 'temp' is greater than '0':
+					while (temp > 0) {
+
+						// Add 'temp % 10' into the 'sum'.
+						sum += (temp % 10);
+
+						// Set 'temp' equal to 'temp / 10'.
+						temp = (temp / 10);
+					}
+
+					// If 'X - sum' is greater than 'M', then return 'false'.
+					if (x - sum > m) {
+						return false;
+					}
+
+					// Return 'true'.
+					return true;
+				}
+
+				long long countGoodNumbers(long long n, long long m) {
+
+					// Initialize an integer variable 'L' with '1', and 'R' with 'N'.
+					long long l = 1, r = n;
+
+					// Initialize an integer variable 'answer' with '0'.
+					long long answer = 0;
+
+					// While 'L' is not equal to 'R':
+					while (l <= r) {
+
+						// Initialize an integer variable 'mid' with '(L + R) / 2'.
+						long long mid = (l + r) / 2;
+
+						// If 'isGood(mid, M)' is equal to 'true':
+						if (isGood(mid, m) == true) {
+
+							// Set 'answer' equal to 'mid'.
+							answer = mid;
+
+							// Set 'L' equal to 'mid+1'.
+							l = mid + 1;
+						}
+						else {
+							
+							// Set 'R' equal to 'mid-1'.
+							r = mid - 1;
+						}
+					}
+
+					// Return '(answer * (n - answer)) modulo (10^9 + 7)'.
+					return (answer * (n - answer)) % (1000000007);
+				}
 		
-		// Optimized:
-			❌Pending
-		❌Pending
-
 	653) Make The String Great:
 		Problem statement:
 			Given a string s of lower and upper case English letters.
@@ -70308,20 +71063,826 @@ POTD:-[Problem of the Day]
 			return -1;
 		}
 	
-	669)
-	
-	670)
-	
-	671)
-	
-	672)
-	
-	673)
-	
-	674)
-	
-	675)
+	669) Number of Students Unable to Eat Lunch:
+		Problem statement:
+			The school cafeteria offers circular and square sandwiches at lunch break, referred to by numbers 0 and 1 respectively. All students stand in a queue. Each student either prefers square or circular sandwiches.
+			The number of sandwiches in the cafeteria is equal to the number of students. The sandwiches are placed in a stack. At each step:
+			If the student at the front of the queue prefers the sandwich on the top of the stack, they will take it and leave the queue.
+			Otherwise, they will leave it and go to the queue's end.
+			This continues until none of the queue students want to take the top sandwich and are thus unable to eat.
+			You are given two integer arrays students and sandwiches where sandwiches[i] is the type of the i​​​​​​th sandwich in the stack (i = 0 is the top of the stack) and students[j] is the preference of the j​​​​​​th student in the initial queue (j = 0 is the front of the queue). Return the number of students that are unable to eat.
 
+			Example 1:
+				Input: students = [1,1,0,0], sandwiches = [0,1,0,1]
+				Output: 0 
+				Explanation:
+				- Front student leaves the top sandwich and returns to the end of the line making students = [1,0,0,1].
+				- Front student leaves the top sandwich and returns to the end of the line making students = [0,0,1,1].
+				- Front student takes the top sandwich and leaves the line making students = [0,1,1] and sandwiches = [1,0,1].
+				- Front student leaves the top sandwich and returns to the end of the line making students = [1,1,0].
+				- Front student takes the top sandwich and leaves the line making students = [1,0] and sandwiches = [0,1].
+				- Front student leaves the top sandwich and returns to the end of the line making students = [0,1].
+				- Front student takes the top sandwich and leaves the line making students = [1] and sandwiches = [1].
+				- Front student takes the top sandwich and leaves the line making students = [] and sandwiches = [].
+				Hence all students are able to eat.
+
+			Example 2:
+				Input: students = [1,1,1,0,0,1], sandwiches = [1,0,0,0,1,1]
+				Output: 3
+			
+			Constraints:
+				1 <= students.length, sandwiches.length <= 100
+				students.length == sandwiches.length
+				sandwiches[i] is 0 or 1.
+				students[i] is 0 or 1.
+
+		class Solution {
+			public:
+			int countStudents(vector<int>& students, vector<int>& sandwiches) {
+
+				while(sandwiches.size() > 0){
+					int i, found=1;
+					for(i=0; i<students.size(); i++){
+						if(students[i] == sandwiches[0]){
+							students.erase(students.begin()+i);
+							sandwiches.erase(sandwiches.begin());
+							found=0;
+							break;
+						}
+					}
+					
+					// this means students don't have sandwiches of their type
+					if(found)
+						break;
+				}
+				return students.size();
+			}
+		};
+
+		// or using Queue
+			class Solution {
+				public:
+				int countStudents(vector<int>& students, vector<int>& sandwiches) {
+					queue<int> q;
+					for(int i: students)
+						q.push(i);
+
+					int itr=0, cnt=0;
+					while(q.size() > 0){
+						if(q.front() == sandwiches[itr]){
+							itr++;
+							q.pop();
+							cnt=0;
+						}else{
+							q.push(q.front());
+							q.pop();
+							cnt++;
+
+							if(cnt >= q.size())
+								break;
+						}
+					}
+					return q.size();
+				}
+			};
+	
+	670) Time Needed to Buy Tickets:
+		Problem statement:
+			There are n people in a line queuing to buy tickets, where the 0th person is at the front of the line and the (n - 1)th person is at the back of the line.
+			You are given a 0-indexed integer array tickets of length n where the number of tickets that the ith person would like to buy is tickets[i].
+			Each person takes exactly 1 second to buy a ticket. A person can only buy 1 ticket at a time and has to go back to the end of the line (which happens instantaneously) in order to buy more tickets. If a person does not have any tickets left to buy, the person will leave the line.
+			Return the time taken for the person at position k (0-indexed) to finish buying tickets.
+		
+			Example 1:
+				Input: tickets = [2,3,2], k = 2
+				Output: 6
+				Explanation: 
+				- In the first pass, everyone in the line buys a ticket and the line becomes [1, 2, 1].
+				- In the second pass, everyone in the line buys a ticket and the line becomes [0, 1, 0].
+				The person at position 2 has successfully bought 2 tickets and it took 3 + 3 = 6 seconds.
+
+			Example 2:
+				Input: tickets = [5,1,1,1], k = 0
+				Output: 8
+				Explanation:
+				- In the first pass, everyone in the line buys a ticket and the line becomes [4, 0, 0, 0].
+				- In the next 4 passes, only the person in position 0 is buying tickets.
+				The person at position 0 has successfully bought 5 tickets and it took 4 + 1 + 1 + 1 + 1 = 8 seconds.
+		
+			Constraints:
+				n == tickets.length
+				1 <= n <= 100
+				1 <= tickets[i] <= 100
+				0 <= k < n
+		
+		class Solution {
+			public:
+			int timeRequiredToBuy(vector<int>& tickets, int k) {
+				int time=0;
+
+				while(tickets[k] != 0){
+					for(int i=0; i<tickets.size(); i++){
+						if(tickets[i] > 0) time++;
+						
+						tickets[i]--;
+						if(tickets[k] == 0) break;
+					}
+				}
+				return time;    
+			}
+		};
+
+	671) Cubic Square:
+		Problem statement
+			You are given three positive integers ‘A’, ‘B’, and ‘M’. Your task is to find out the result of ‘A^B’ mod ‘M’.
+			This task was too easy for Ninja, and being a top-class ninja, he likes to make things a little difficult in order to enjoy solving them. So he converted B into base 3 and is now trying to find the answer.
+			But it seems like he made the task a little too difficult for himself. Being a good friend of Ninja, can you help find him ‘A^B mod M’ when ‘A’, ‘M’ is given in base 10 and ‘B’ is in base 3?
+
+			Sample Input 1 :
+				1
+				2 11 6
+				Sample Output 1 :
+				4
+				Explanation for sample input 1 :
+				‘B’ is ‘10’ in base 3 which is equal to 4 in base 10. Hence the answer is 2^4 mod 6 which is equal to 4.
+				Sample Input 2 :
+				2
+				5 201 7
+				6 120 9
+				Sample Output 2 :
+				5
+				0
+				Explanation for sample input 2 :
+				For test case 1, ‘B’ equals 19 in base 10. 5^19 mod 7 = 5.
+				For test case 1, ‘B’ equals 15 in base 10. 6^15 mod 9 = 0.
+	
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			int cubicSquare(int m, int a, string &b) {
+				int B = stoi(b, 0, 3);          // this line will convert string b from base 3 to decimal
+				// cout<<B<<endl;
+				
+				int holder = 1;
+				for(int i=0; i<B; i++){
+					holder *= a;
+					holder %= m;
+				}
+				return holder%m;
+			}
+
+		// Optimized:
+			❌Pending
+
+	672) Robot moves:
+		Problem statement
+			On an infinite plane, a robot initially stands at (0, 0) and faces north.
+			Note that:
+			The north direction is the positive direction of the y-axis.
+			The south direction is the negative direction of the y-axis.
+			The east direction is the positive direction of the x-axis.
+			The west direction is the negative direction of the x-axis.
+
+			The robot can receive one of three instructions:
+			'G': go straight 1 unit.
+			'L': turn 90 degrees to the left (i.e., anti-clockwise direction).
+			'R': turn 90 degrees to the right (i.e., clockwise direction).
+			You are given the 'N' instruction as a string containing characters 'G', 'L', and 'R'. The robot performs the instructions given in order.
+			You are required to find the number of indices 'i' ('0' <= 'i' <= 'N - 2'') such that if we swap the 'S[i]' and 'S[i + 1], the robot will end on the same point after performing all the instructions.
+			Example:
+			N = 3
+			S = 'GGL'
+			If we don't swap any characters, then the robot will end on ('0', '2').
+			For 'i' equal to '0', by swapping 'S[i]' and 'S[i + 1]', the robot will end on the same point i.e. ('0', '2').
+			For 'i' equal to '1', by swapping 'S[i]' and 'S[i + 1]', the robot will end on a different point i.e. ('-1', '1').
+			So, the answer for this case is '1'.
+			Detailed explanation ( Input/output format, Notes, Images )
+			Constraints:
+			2 <= 'N' <= 10^5
+			'S[i]' belongs to {'G', 'L', 'R'}.
+
+			Time limit: 1 sec
+			Sample input 1:
+				2
+				3
+				GGG
+				4
+				GRGL
+				Sample output 1:
+				2
+				0
+				Explanation of sample input 1:
+				For test case 1:
+				If we don't swap any characters, then the robot will end on ('0', '3').
+				For 'i' equal to '0', '1' and '2', by swapping 'S[i]' and 'S[i + 1]', the robot will end on the same point i.e. ('0', '3').
+				So, the answer for this case is '3'.
+
+
+			For test case 2:
+			If we don't swap any characters, then the robot will end on ('1', '1').
+			For 'i' equal to '0', by swapping 'S[i]' and 'S[i + 1]', the robot will end on a different point i.e. ('2', '0').
+			For 'i' equal to '1', by swapping 'S[i]' and 'S[i + 1]', the robot will end on a different point i.e. ('0', '2').
+			For 'i' equal to '2', by swapping 'S[i]' and 'S[i + 1]', the robot will end on a different point i.e. ('0', '2').
+			So, the answer for this case is '0'.
+			Sample input 2:
+			2
+			6
+			GGLLRR
+			5
+			GLRGL
+			Sample output 2:
+			4
+			1
+
+		string indexfinder(string s){
+			int x,y, Lcnt, Rcnt;
+			x=y=0;
+			string ans;
+
+			char Directions[] = {'N', 'E', 'S', 'W'};
+			int directIndex=0;
+			char FacingDir = Directions[directIndex];
+
+			for(char ch: s){
+				if(ch == 'G' && FacingDir == 'N')
+					y++;
+				else if(ch == 'G' && FacingDir == 'W')
+					x--;
+				else if(ch == 'G' && FacingDir == 'E')
+					x++;
+				else if(ch == 'G' && FacingDir == 'S')
+					y--;
+				else if(ch == 'L'){
+					directIndex--;
+					if(directIndex <0)
+						directIndex = 3;
+					FacingDir = Directions[directIndex];
+				}else if(ch == 'R'){
+					directIndex++;
+					if(directIndex > 3)
+						directIndex = 0;
+					FacingDir = Directions[directIndex];
+				}
+			}
+
+			ans += to_string(x);
+			ans += to_string(y);
+			return ans;
+		}
+		int numberOfIndices(int n, string &s) {
+			int cnt=0;
+			string mainIndexes = indexfinder(s);
+
+			for(int i=0; i<n-1; i++){
+				string test = s;
+				swap(test[i], test[i+1]);
+				string currIndex = indexfinder(test);
+				if(currIndex == mainIndexes)
+					cnt++;
+			}
+
+			return cnt;
+		}
+
+		// Simpler:
+			int numberOfIndices(int n, string &s) {
+				int cnt=0;
+				
+				for(int i=0; i<n-1; i++)
+					if(s[i] == s[i+1] || (s[i] != 'G'  && s[i+1] != 'G'))
+						cnt++;
+
+				return cnt;
+			}
+	
+	673) Party of Couples
+		Problem statement:
+			You are given an integer array arr[] of size n, representing n number of people in a party, each person is denoted by an integer. Couples are represented by the same number ie: two people have the same integer value, it means they are a couple. Find out the only single person in the party of couples.
+			NOTE: It is guarantee that there exist only one single person in the party.
+
+			Example 1:
+				Input:
+				n = 5
+				arr = {1, 2, 3, 2, 1}
+			Output: 
+				3
+			Explaination: Only the number 3 is single.
+			Example 2:
+
+			Input: 
+			n = 11 
+			arr = {1, 2, 3, 5, 3, 2, 1, 4, 5, 6, 6} 
+			Output: 
+			4 
+			Explaination: 4 is the only single.
+			Your Task:
+				You do not need to read input or print anything. Your task is to complete the function findSingle() which takes the size of the array n and the array arr[] as input parameters and returns the only single person.
+
+				Expected Time Complexity: O(n)
+				Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ n ≤ 10^4
+				1 ≤ arr[i] ≤ 10^6
+
+		class Solution{
+			public:
+			int findSingle(int n, int arr[]){
+				int ans=0;
+				for(int i=0; i<n; i++)
+					ans ^= arr[i];
+					
+				return ans;
+			}
+		};
+
+	674) Missing number in shuffled array:
+		Problem statement:
+			Given an array A of size N. The contents of A are copied into another array B and numbers are shuffled. Also, one element is removed from B. The task is to find the missing element.
+			Example 1:
+			Input : 
+			A[] = {4, 8, 1, 3, 7}
+			B[] = {7, 4, 3, 1}
+			Output : 8
+			Explanation:
+			8 is the only element missing from B.
+			
+			Example 2:
+			Input : 
+			A[] = {12, 10, 15, 23, 11, 30}
+			B[] = {15, 12, 23, 11, 30}
+			Output : 10
+
+			Your Task:  
+				You don't need to read input or print anything. Your task is to complete the function findMissing() which takes the array A[], B[] and its size N and N-1, respectively as inputs and returns the missing number.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+			
+
+			Constraints:
+				2 <= N <= 10^6
+				1 <= A, B <= 10^18
+				Array may also contain duplicates.
+
+		class Solution{
+			public:
+			long long findMissing(long long a[], long long b[], int n) {
+				long long ans;
+				sort(a, a+n);
+				sort(b, b+(n-1));
+				
+				for(int i=0; i<(n-1); i++){
+					if(a[i] != b[i])
+						return a[i];
+				}
+				
+				ans = a[n-1];
+				return ans;
+			}
+		};
+	
+	675) Sum Of Digits:	
+		Problem statement:
+			Given a number, N. Find the sum of all the digits of N
+			Example 1:
+			Input:
+			N = 12
+			Output:
+			3
+			Explanation:
+			Sum of 12's digits:
+			1 + 2 = 3
+			Example 2:
+			Input:
+			N = 23
+			Output
+			5
+			Explanation:
+			Sum of 23's digits:
+			2 + 3 = 5
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function sumOfDigits() which takes an integer N as input parameters and returns an integer, total sum of digits of N.
+
+			Expected Time Complexity: O(log10N)
+			Expected Space Complexity: O(1)
+			
+			Constraints:
+				1<=N<=10^5
+
+		class Solution{
+			public:
+			int sumOfDigits(int N){
+				int s=0;
+				
+				while(N){
+					s += N%10;
+					N /= 10;
+				}
+				return s;
+			}
+		};
+	
+	#CN WeeklyContest-121
+		676) Candies Distribution:
+			Problem statement
+				You have ‘N’ candies that need to be distributed among ‘3’ children, ‘c1’, ‘c2’, and ‘c3’. The distribution must follow the given rules:
+
+				Each candy should be given to exactly one student.
+				Each student should receive at least one candy.
+				The number of candies given to ‘c2’ must be greater than the candies given to ‘c1’.
+				The number of candies given to ‘c3’ must be greater than the candies given to ‘c2’.
+				You have to tell whether it is possible to distribute ‘N’ candies among ‘3’ children by following the given rules.
+
+				Your task is to tell whether it is possible to distribute ‘N’ candies among ‘3’ children and return ‘1’, if possible, otherwise return ‘0’.
+
+				Example:
+				‘N’ = 12
+
+				One of the possible ways is to distribute first ‘2’ candies to ‘c1’, then next ‘4’ candies to ‘c2’, and the last ‘6’ candies to ‘c3’. The distribution is following all the given rules.
+				So, the answer for this example is ‘1’.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^9
+
+				Time Limit: 1 sec 
+				Sample Input 1:
+				2
+				15
+				2
+				Sample Output 1:
+				1
+				0
+				Explanation of sample input 1:
+				For test case 1:
+				One of the possible ways is to distribute first ‘3’ candies to ‘c1’, then next ‘5’ candies to ‘c2’, and the last ‘7’ candies to ‘c3’. The distribution is following all the given rules.
+
+				For test case 2:
+				It is impossible to distribute ‘2’ candies among ‘3’ children by following the given rules. So, the answer for this test case is ‘0.
+				Sample Input 2:
+				2
+				9
+				3
+				Sample Output 2:
+				1
+				0
+
+			int candiesDistribution (int n) {
+				return (n >= 6) ? 1 : 0;  
+			}
+
+		677) Swap Function:
+			Problem statement
+				Given two strings of lowercase English letters 'A' and 'B', each of length 'N',
+				The function 'F(A, B)' efficiently checks whether making both strings equal by performing a single swap operation is possible. The operation entails choosing indices 'i' and 'j', and swapping the characters 'A[i]' and 'B[j]'.
+				Your task is to write the function 'F', which should return '1' if it's possible to make the strings equal using this operation exactly once, and '0' otherwise.
+
+				Example:
+				'N' = 4
+				'A' = 'accd'
+				'B' = 'abbd'
+				Choose 'i = 2' and 'j = 3', the new strings will be as follows:
+				'A' = 'accd' → 'abcd'
+				'B' = 'abbd' → 'abcd'
+
+				So, the answer is '1'.
+				Constraints:
+					1 <= T <= 10
+					1 <= N <= 10^5
+					'a' <= A[i] <= 'z'
+					'a' <= B[i] <= 'z'
+
+					It is guaranteed that the sum of 'N' overall test cases won't exceed '10^5'.
+					Time Limit: 1 second
+				Sample Input 1:
+					2
+					3
+					sdv
+					kiv
+					3
+					nnz
+					mmz
+					Sample Output 1:
+					0
+					1
+					Explanation Of Sample Input 1:
+					For test case 1:
+					There is no way we can make both strings equal by doing an operation.
+					So, the answer is '0'.
+
+					For test case 2:
+					Choose 'i = 1' and 'j = 2', the new strings will be as follows:
+					'A' = 'nnz' → 'mnz'
+					'B' = 'mmz' → 'mnz'
+
+					So, the answer is '1'.
+					Sample Input 2:
+					2
+					6
+					emgpwp
+					pgemwp
+					5
+					sqrpz
+					asgvr
+					Sample Output 2:
+					0
+					0
+
+
+			// Not Optimized:
+				int isEqualPossible(int n, string a, string b) {
+					sort(begin(a), end(a));
+					sort(begin(b), end(b));
+					if(a == b)
+						return 0;
+
+					map<char, int> F;
+					// if F contains only even Frequencies then it will return 1 else 0;
+					for(char ch: a)
+						F[ch]++;
+					
+					for(char ch: b)
+						F[ch]++;
+
+					// if the item count is odd then it is not possible, even after swap function.
+					for(auto itr: F)
+						if(itr.second % 2 != 0)
+							return 0;
+
+					return 1;    
+				}
+			
+			// Optimized:
+				❌Pending
+
+	678) Sum of Products:
+		Problem statement:
+			Given an array arr[] of size n. Calculate the sum of Bitwise ANDs ie: calculate sum of arr[i] & arr[j] for all the pairs in the given array arr[] where i < j.
+			Example 1:
+			Input:
+			n = 3
+			arr = {5, 10, 15}
+			Output:
+			15
+			Explanation:
+			The bitwise Ands of all pairs where i<j are (5&10) = 0, (5&15) = 5 and (10&15) = 10.
+			Therefore, the total sum = (0+5+10) = 15.
+
+			Example 2:
+			Input:
+			n = 4
+			arr = {10, 20, 30, 40}
+			Output:
+			46
+			Explanation:
+			The sum of bitwise Ands 
+			of all pairs = (0+10+8+20+0+8) = 46.
+			Your Task:
+			You don't need to read input or print anything.Your Task is to complete the function pairAndSum() which takes an Integer n and an array arr[]  of size n as input parameters and returns the sum of bitwise Ands of all pairs.
+
+			Expected Time Complexity:O(n)
+			Expected Auxillary Space:O(1)
+
+			Constraints:
+				1 <= n <= 10^5
+				1 <= arr[i] <= 10^8
+
+		// Not Optimized:
+			class Solution {
+				public:
+				long long pairAndSum(int n, long long arr[]) {
+					long long sum=0;
+				
+					for(int i=0; i<n; i++)
+						for(int j=i+1; j<n; j++)
+							sum += (arr[i]&arr[j]);
+					
+					return sum;
+				}
+			};
+		
+		// Optimized:
+			❌Pending
+
+	679) Complete Sum:
+		Problem statement
+			Ninja has an array ‘A’ of size ‘N’. He recently created a topic ‘Complete Sum’ and defined the term ‘completeSum[i]’ = Sum ( A[0] … A[i] ).
+			Output the complete sum array of array ‘A’.
+			Example :
+			N = 3
+			A = [ 1, 2, 3 ] 
+
+			Explanation : 
+			Complete sum for index 0 is ‘A[0]=1’.
+			Complete sum for index 1 is ‘A[0] + A[1]’ = 3.
+			Complete sum for index 2 is ‘A[0] + A[1] + A[2]’ = 6.
+			So, we output [ 1, 3, 6 ].
+			Constraints :
+				1 <= T <= 5
+				1 <= N <= 10^5
+				0 <= A[i] <= 10^4
+
+				Time Limit : 1 sec
+			Sample Input 1 :
+				2
+				3
+				3 1 2
+				4
+				1 1 1 1
+				Sample Output 1 :
+				3 4 6
+				1 2 3 4
+				Explanation Of Sample Input 1 :
+				For test case 1 we have, 
+				Complete sum for index 0 is ‘A[0]=3’.
+				Complete sum for index 1 is ‘A[0] + A[1]’ = 4.
+				Complete sum for index 2 is ‘A[0] + A[1] + A[2]’ = 6.
+				So, we output [ 3, 4, 6 ].
+
+				For test case 2 we have, 
+				Complete sum for index 0 is ‘A[0]=1’.
+				Complete sum for index 1 is ‘A[0] + A[1]’ = 2.
+				Complete sum for index 2 is ‘A[0] + A[1] + A[2]’ = 3
+				Complete sum for index 3 is ‘A[0] + A[1] + A[2] + A[3]’ = 4.
+
+				So, we output [ 1, 2, 3, 4 ].
+				Sample Input 2 :
+				2
+				2
+				7 2 
+				5
+				4 1 7 5 1     
+				Sample Output 2 :
+				7 9
+				4 5 12 17 18
+
+		#include <bits/stdc++.h> 
+		vector<int> completeSum(vector<int> &a, int n) {
+			vector<int> ans(n);
+			int sum=0;
+			for(int i=0; i<n; i++){
+				sum += a[i];
+				ans[i] = sum;
+			}
+			return ans;
+		}
+
+		// or
+			#include <bits/stdc++.h> 
+			vector<int> completeSum(vector<int> &a, int n) {
+				vector<int> ans(n);
+				ans[0] = a[0];
+
+				for(int i=1; i<n; i++)
+					ans[i] = ans[i-1] + a[i];
+
+				return ans;
+			}
+
+	680) Print all Divisors of a number:
+		Problem statement
+			Given an integer ‘N’, your task is to write a program that returns all the divisors of ‘N’ in ascending order.
+			For example:
+			'N' = 5.
+			The divisors of 5 are 1, 5.
+			Sample Input 1 :
+			10
+			Sample Output 1 :
+			1 2 5 10
+			Explanation of Sample Input 1:
+			The divisors of 10 are 1,2,5,10.
+			Sample Input 2 :
+			6
+			Sample Output 2 :
+			1 2 3 6
+			Explanation of Sample Input 2:
+			The divisors of 6 are 1, 2, 3, and 6.
+			Constraints :
+			1 <= 'N' <= 10^5 
+
+		int* printDivisors(int n, int &size){
+			vector<int> holder;
+
+			for(int i=1; i<=n; i++)
+				if(n % i == 0)
+					holder.push_back(i);
+
+			size = holder.size();
+			int  *divisors = new int[size];
+
+			for(int i=0; i<size; i++)
+				divisors[i] = holder[i];
+
+			return divisors;
+		}
+
+	681) Super score of Array
+		Problem statement
+			Ninja is in search of happiness.
+			Ninja has 'N' integers in an array 'ARR', he wants to find the super score of the
+			array 'ARR' to find happiness.
+			The super score of the array is defined as the sum of the scores of all subarrays
+			in the array.
+			The score of a subarray is defined as the square of the minimum element in the
+			array.
+			Can you find the Super score for the given array and help Ninja in finding
+			happiness?
+			Example :
+			N = 3
+			ARR = [1,2, 3]
+			The six subarrays and their respective scores are
+			[1]1.1
+			[1.2]1,
+			[1,2,3]1,
+			[2]4.
+			[2, 3]4.
+			[3]9
+			The score of the array 'ARR' is '1 + 1 + 1 + 4 + 4 + 9' = 20.
+
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^5
+				1 <= ARR[i] <= 1e3
+				Sum of N <= 10^5
+				Time Limit: 1 sec
+			Sample Input 1:
+			2
+			4
+			1 2 3 4
+			1
+			5
+			Sample Output 1 :
+			50
+			25
+			Explanation Of Sample Input 1 :
+			For test case 1,
+			We will get, '1 * 1' as '1' from subarrays { [ 1]. [ 1, 2]. [ 1, 2, 3 ]. [ 1, 2, 3. 4]}
+			, '2 * 2' as '4' from { [ 2]. [2, 3]. [2, 3, 4]}. '3 * 3' as '9' { [3]. [ 3, 4] } and '4
+			* 4' ( [4]). so answer is 4 * 1 + 3 * 4 + 2 * 9 + 1 * 16 = 50.
+			For test case 2,
+			There is only one subarray '5 * 5' so the answer is '25.
+			Sample Input 2:
+			2
+			2
+			4 4
+			3
+			0 3 0
+			Sample Output 2 :
+			48
+			9
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			long long int superScore(int n, vector < int > arr) {
+				long long sum=0;
+
+				for(int i=0; i<n; i++){
+					vector<int> holder;
+					for(int j=i; j<n; j++){
+					holder.push_back(arr[j]);
+					int minE = *min_element(holder.begin(), holder.end());
+					minE *= minE;
+					sum += minE;
+					}
+				}
+				return sum;
+			}
+
+			// Little bit optimized:
+				#include <bits/stdc++.h> 
+				long long int superScore(int n, vector < int > arr) {
+					long long sum=0;
+
+					for(int i=0; i<n; i++){
+						int minE = arr[i];
+						for(int j=i; j<n; j++){
+							minE = min(minE, arr[j]);
+							sum += (minE*minE);
+						}
+					}
+					return sum;
+				}
+	
+		// Optimized:
+			❌Pending
+
+	682)
+
+	683)
+	
+	684)
+	
+	685)
+	
+	686)
+	
+	687)
+	
+	688)
+	
+	689)
+	
+	690)
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
