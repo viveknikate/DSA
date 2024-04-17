@@ -17795,6 +17795,137 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 					return 0;
 				}
 
+			-insertion & deletion:
+				#include <iostream>
+				class NODE{
+					public:
+					int data;
+					NODE *next = NULL;
+					
+					// constructor
+					NODE(int val){
+						data = val;
+					}
+					
+					//de-structor
+					~NODE(){
+						std::cout << "Releasing Memory for " << data << std::endl;
+						delete next;
+					}
+				};
+
+				void printLL(NODE *H){
+					while(H != NULL){
+						std::cout << H->data << "\t";
+						H = H ->next;
+					}
+					std::cout << std::endl;
+				}
+
+				void insertAtHead(NODE * &H, NODE * &T, int val){
+					NODE * n = new NODE(val);
+					
+					if(H == NULL){
+						H = n;
+						T = n;
+					}else{
+						n->next = H;
+						H = n;
+					}
+				}
+
+				void insertAtTail (NODE * &H, NODE * &T, int val){
+					NODE * n = new NODE(val);
+					
+					if(H == NULL){
+						H = n;
+						T = n;
+					}else{
+						T->next = n;
+						T = n;
+					}
+				}
+
+				void deleteNode(NODE* &H1, NODE* &T, int val){
+					NODE *prev = NULL;
+					NODE *H = H1;
+					
+					if(H == NULL){
+						std::cout << "LL is empty" << std::endl;
+						return ;
+					}
+					
+					while(H != NULL && H->data != val){
+						prev = H;
+						H = H -> next;
+					}
+					
+					if(!H){
+						std::cout << "value " << val <<" not found" << std::endl;
+						return ;
+					}
+					
+					// this indicates the element is first element, update Head.
+					if(prev == NULL){
+						prev = H;
+						H1 = H1 -> next;
+						
+						prev -> next = NULL;
+						delete prev;
+						return ;
+					}
+					
+					if(prev == NULL && H->next == NULL) {
+						// LL contains only one element & we are deleting that one element so LL becomes empty
+						H = NULL;
+						delete H1;
+						return ;
+					}
+					
+					// this indicates the pointer is pointing to last element
+						if(H->next == NULL)
+						T = prev;
+					
+					prev->next = H->next;
+					H->next = NULL;
+					delete H;
+				}
+
+
+				int main() {
+					NODE *H, *T;
+					H=T= NULL;
+					
+					insertAtHead(H, T, 0);
+					insertAtHead(H, T, 100);
+					insertAtHead(H, T, -1);
+					printLL(H);
+					
+					// insertAtTail(H, T, 1);
+					// insertAtTail(H, T, 2);
+					// insertAtTail(H, T, 3);
+					// insertAtTail(H, T, 4);
+					printLL(H);
+					
+					deleteNode(H, T, -11);         // value not found
+					deleteNode(H, T, -1);
+					printLL(H);
+					
+					deleteNode(H, T, 44);         // value not found
+					deleteNode(H, T, 4);
+					printLL(H);
+					
+					deleteNode(H, T, 2);
+					printLL(H);
+					
+					if(H){
+						std::cout << "Head : " << H->data << std::endl;
+						std::cout << "Tail : " << T->data << std::endl;
+					}
+					std::cout << "Workig fine" << std::endl;
+					return 0;
+				}
+
 			-With struct: (using static & dyamic memory allocation)
 			 in case of static memory allocation the memory is limited, but in dynamic memory allocation we have large memory
 				#include <iostream>
@@ -18676,7 +18807,7 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 					return 0;
 				}
 
-		3) Circular Singly LL (C_LL):
+		3) Circular Singly LL (C_S_LL):
 			The circular linked list is a linked list where all nodes are connected to form a circle. 
 			In a circular linked list, the first node and the last node are connected to each other which forms a circle. 
 			There is no NULL at the end.
@@ -18685,15 +18816,414 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 
 			-In a circular Singly linked list, the last node of the list contains a pointer to the first node of the list. We traverse the circular singly linked list until we reach the same node where we started. 
 			The circular singly linked list has no beginning or end. No null value is present in the next part of any of the nodes.
-			
-			-insertion in front of other element (assuming that the element we are searching is always present in C_LL)
-			
-			-deletion by value
-			
-		4) Circular Doubly LL:
+
+			- there is no Head in Cicular LL
+				#include <iostream>
+
+				class C_S_LL {
+					public:
+						int data;
+						C_S_LL *next = NULL;
+					
+					C_S_LL(int val){
+						data = val;
+					}
+					
+					~C_S_LL(){
+						std::cout << "Releasing memory for "<< data << std::endl;
+						delete next;
+						next = NULL;
+					}
+				};
+
+				//- insertion in after specific element(assuming that the element we are searching is always present in C_S_LL)
+				void insertNode_NextToVal(C_S_LL * &trvrs, int val, int newVal){
+					
+					C_S_LL * n = new C_S_LL(newVal);
+					
+					if(trvrs == NULL){
+						trvrs = n;
+						trvrs ->next = trvrs;
+					}else{
+						C_S_LL *temp = trvrs;
+						
+						do{
+							if(temp -> data == val){
+								n -> next = temp -> next;
+								temp -> next = n;
+								break;
+							}
+							temp = temp -> next;
+						}while(temp != trvrs);
+					}
+				}
+
+				void print_C_S_LL(C_S_LL *traversal){
+					
+					if(!traversal){
+						std::cout << "LL is empty" << std::endl;
+						return ;
+					}
+					
+					C_S_LL *curr_Addr = traversal;
+					
+					if(!traversal){
+						std::cout << "Cicular Singlly LL is empty" << std::endl;
+						return ;
+					}
+					
+					do{
+						std::cout << traversal -> data << "\t";
+						traversal = traversal -> next;
+					}while(traversal != curr_Addr);
+					
+					std::cout << std::endl;
+				}
+
+				//- deletion by value
+				void delete_C_S_LL_Node(C_S_LL * &Tail, int val){
+					if(Tail == NULL){
+						std::cout << "LL is empty" << std::endl;
+						return ;
+					}
+					
+					C_S_LL *cur = Tail -> next;
+					C_S_LL *prev = Tail;
+					
+					do{
+						if(cur -> data == val)
+							break;
+						prev = cur;
+						cur = cur -> next;
+					}while(cur -> data != val && prev != Tail);
+					
+					if(prev == Tail && cur->data != val)
+						std::cout << "Node " << val << " Doesn't Exist" << std::endl;
+					else {
+						
+						// handling the one element case
+						if(prev == cur)
+							Tail = NULL;
+						
+						prev -> next = cur -> next;
+						// updating the Tail pointer if both item to be deleted(cur pointer) & Tail are pointing to same value
+						if(Tail == cur)
+							Tail = prev;
+						cur -> next = NULL;
+						delete cur;
+					}
+				}
+
+				int main() {
+					C_S_LL *Tail = NULL;
+					print_C_S_LL(Tail);
+
+					insertNode_NextToVal(Tail, 5, 1);
+					print_C_S_LL(Tail);
+					
+					insertNode_NextToVal(Tail, 1, 2);
+					insertNode_NextToVal(Tail, 2, 3);
+					insertNode_NextToVal(Tail, 3, 4);
+					insertNode_NextToVal(Tail, 4, 5);
+					insertNode_NextToVal(Tail, 5, 6);
+					print_C_S_LL(Tail);
+					
+					insertNode_NextToVal(Tail, 2, 33);
+					print_C_S_LL(Tail);
+					
+					delete_C_S_LL_Node(Tail, 45);
+					print_C_S_LL(Tail);
+					
+					delete_C_S_LL_Node(Tail, 1);
+					print_C_S_LL(Tail);
+					
+					delete_C_S_LL_Node(Tail, 2);
+					print_C_S_LL(Tail);
+					
+					delete_C_S_LL_Node(Tail, 5);
+					print_C_S_LL(Tail);
+					
+					delete_C_S_LL_Node(Tail, 4);
+					print_C_S_LL(Tail);
+					
+					delete_C_S_LL_Node(Tail, 33);
+					print_C_S_LL(Tail);
+					
+					delete_C_S_LL_Node(Tail, 3);
+					print_C_S_LL(Tail);
+					
+					delete_C_S_LL_Node(Tail, 6);
+					print_C_S_LL(Tail);
+					
+					std::cout << "Completion fine" << std::endl;
+					return 0;
+				}
+
+		4) Circular Doubly LL (C_D_LL):
 			Circular Doubly Linked List has properties of both doubly linked list and circular linked list in which two consecutive elements are linked or connected by the previous and next pointer and the last node points to the first node by the next pointer and also the first node points to the last node by the previous pointer.
+			- insertion/ deletion
+				#include<iostream>
 
+				class C_D_LL_NODE {
+					public:
+						int data;
+						C_D_LL_NODE *next = NULL;
+						C_D_LL_NODE *prev = NULL;
+					
+					C_D_LL_NODE(int data){
+						(*this).data = data;
+					}
+					
+					// de-structor
+					~C_D_LL_NODE(){
+						std::cout << "Releasing Memory for " << data << std::endl;
+						delete next;
+						delete prev;
+						next = NULL;
+						prev = NULL;
+					}
+				};
 
+				// inserting newVal after val element, (assuming that val is always present in LL)
+				void insertNode(C_D_LL_NODE * &T, int val, int newVal){
+					
+					C_D_LL_NODE * n = new C_D_LL_NODE(newVal);
+					
+					if(T == NULL){
+						// it means LL is empty
+						T = n;
+						
+						T -> next = T;
+						T -> prev = T;
+					}else{
+						// it means it has some elements previously, insert new node after val
+						C_D_LL_NODE * temp = T;
+						
+						// while(temp -> data != val)
+						//     temp = temp -> next;
+						
+						// or other while loop
+						C_D_LL_NODE * Addr_holder = T;
+						
+						do{
+							if(temp -> data == val)
+								break;
+							temp = temp -> next;
+						}while(temp != Addr_holder);
+						
+						// this line indicates that the val you entered is doesn't exist in the LL
+						if(temp == Addr_holder && temp -> data != val){
+							std::cout << "New node "<< newVal <<" can't be inserted" << std::endl;
+							delete n;
+							return ;
+						}
+
+						// the sequence of below lines are important, if we change the sequence we won't gets expected result    
+						n -> next = temp -> next;
+						n -> prev = temp -> next -> prev;
+						
+						temp -> next -> prev = n;
+						temp -> next = n;
+					}
+				}
+
+				void print_LL(C_D_LL_NODE *itr){
+					// C_D_LL_NODE * temp = itr;
+					// std::cout << itr -> data << "\t";
+					// itr = itr -> next;
+					
+					// while(itr != temp){
+					//     std::cout << itr -> data << "\t";
+					//     itr = itr -> next;
+					// }
+					// std::cout << std::endl;
+					
+					// or
+					
+					if(!itr){           // if(itr == NULL)
+						std::cout << "LL is empty" << std::endl;
+						return ;
+					}
+					C_D_LL_NODE * Addr_holder = itr;
+					do{
+						std::cout << itr -> data << "\t";
+						itr = itr -> next;
+					}while(itr != Addr_holder);
+					std::cout << std::endl;
+				}
+
+				void deleteNode_With_Val(C_D_LL_NODE * &T, int val){
+					if(T == NULL){
+						std::cout << "LL is empty, can't delete anything" << std::endl;
+						return ;
+					}else{
+						// LL  contains one element & we are deleting it
+						if(T -> next == T){           // or if((T -> prev == T))
+							C_D_LL_NODE * temp = T;
+							T = NULL;
+							
+							temp -> next = NULL;
+							temp -> prev = NULL;
+							
+							delete temp;
+						}else{
+							C_D_LL_NODE * trvrs = T;
+							
+							// (trvrs != T) this says we are not came again to same address to check data, if we came then break the loop.
+							do{
+								if(trvrs -> data == val)
+									break;
+								trvrs = trvrs -> next;
+							}while(trvrs != T);
+							
+							// this states that we came to same address again, so the element we are searching to delete is not exist
+							if(trvrs == T && trvrs -> data != val)
+								std::cout << "the Node with value "<< val << " doesn't exist." << std::endl;
+							else{
+								// this block indicates that element with given value found, and we need to delete it.
+								if(T == trvrs)
+									T = T -> next;
+									
+								trvrs -> prev -> next = trvrs -> next;
+								trvrs -> next -> prev = trvrs -> prev;
+								
+								trvrs -> next = trvrs -> prev = NULL;
+								delete trvrs;
+							}
+						}
+					}
+				}
+
+				int main(){
+				
+					C_D_LL_NODE *Tail = NULL;
+					
+					insertNode(Tail, 12, 1);
+					insertNode(Tail, 1, 2);
+					insertNode(Tail, 2, 3);
+					insertNode(Tail, 3, 4);
+					insertNode(Tail, 4, 5);
+					insertNode(Tail, 4, 12);
+					print_LL(Tail);
+					
+					insertNode(Tail, 12, 34);
+					print_LL(Tail);
+					
+					deleteNode_With_Val(Tail, 0);   // value not present in LL
+					print_LL(Tail);
+					
+					deleteNode_With_Val(Tail, 1);   // deleting first element, updating Tail along with
+					print_LL(Tail);
+					
+					deleteNode_With_Val(Tail, 43);   // value not present in LL
+					deleteNode_With_Val(Tail, 12);   // middle element
+					print_LL(Tail);
+					
+					
+					std::cout << "Tail :"<< Tail->data << std::endl;
+					deleteNode_With_Val(Tail, 5);
+					deleteNode_With_Val(Tail, 3);
+					deleteNode_With_Val(Tail, 4);
+					deleteNode_With_Val(Tail, 34);
+					print_LL(Tail);
+					
+					// deleting last element
+					deleteNode_With_Val(Tail, 2);
+					print_LL(Tail);
+					
+					std::cout << std::endl;
+					
+					if(Tail)            // if(Tail != NULL)
+						std::cout << "Tail :"<< Tail->data << std::endl;
+						
+					std::cout << "Done." << std::endl;
+					return 0;
+				}
+---------------------------------------------------------------------------------------------------------
+Lecture-45: Linked List Questions: Reverse LL and find Middle of LL
+	Reverse LL:
+		Refer Q.693, Q.694 in POTD section.
+
+	HomeWork:
+		Reverse a Doubly Linked List:
+			Problem statement:
+				Given a doubly linked list of n elements. Your task is to reverse the doubly linked list in-place.
+				Example 1:
+				Input:
+				LinkedList: 3 <--> 4 <--> 5
+				Output: 5 4 3
+
+				Example 2:
+				Input:
+				LinkedList: 75 <--> 122 <--> 59 <--> 196
+				Output: 196 59 122 75
+
+				Your Task:
+					Your task is to complete the given function reverseDLL(), which takes head reference as argument and this function should reverse the elements such that the tail becomes the new head and all pointers are pointing in the right order. You need to return the new head of the reversed list. The printing and verification is done by the driver code.
+
+				Expected Time Complexity: O(n).
+				Expected Auxiliary Space: O(1).
+
+				Constraints:
+					1 <= number of nodes <= 10^4
+					0 <= value of nodes <= 10^4
+				
+			/*
+				struct Node {
+					int data;
+					Node * next;
+					Node * prev;
+
+					Node (int x) {
+						data=x;
+						next=NULL;
+						prev=NULL;
+					}
+					
+				};
+			*/
+			class Solution {
+				public:
+				Node* reverseDLL(Node * head) {
+					Node* last = NULL;
+					Node* cur = head;
+					
+					while(cur){
+						head = head -> next;
+						cur -> prev = cur -> next;
+						cur -> next = last;
+						
+						last = cur;
+						cur = head;
+					}
+					return last;
+				}
+			};
+
+			// or
+				class Solution {
+					public:
+					Node* reverseDLL(Node * head) {
+						Node* cur = head, *last = NULL;
+						
+						while(head){
+							head = head -> next;
+							
+							cur -> next = last;
+							cur -> prev = head;
+							
+							last = cur;
+							cur = head;
+						}
+						return last;
+					}
+				};
+
+	Middle of LL:
+		Refer Q.695 in POTD section
+---------------------------------------------------------------------------------------------------------
+Lecture-46: Linked List Questions: Reverse LL in "K group" && Check LL is Circular or not
+	
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
 	//Ternary Operator
@@ -29250,33 +29780,83 @@ POTD:-[Problem of the Day]
 					1 2 3 4 5 6 7 8 9 11
 					1 2 3 4 5 6 7 8 9 11 22
 
-		#include <bits/stdc++.h> 
-		vector<int> getPalindromes(int n){
-			vector<int> palidromes;
-
-			for(int i=1; i<=n; i++) {
-				//this will work we used so many built in fuction,
-				//so TLE will be there.
-				// string s = to_string(i);
-				// reverse(s.begin(), s.end());
-				// int rev = stoi(s);
-				// if(rev == i){
-				// 	palidromes.push_back(i);
-				// }
-				int num = i;
-				int reversed = 0;
-
-				while (num > 0) {
-					reversed = reversed * 10 + num % 10;
-					num /= 10;
-				}
-
-				if (reversed == i) {
-					palidromes.push_back(i);
-				}
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			bool isPalin(string s){
+				for(int i=0; i<s.size()/2; i++)
+					if(s[i] != s[s.size()-1-i])
+						return 0;
+				return 1;
 			}
-			return palidromes;
-		}
+
+			vector<int> getPalindromes(int n) {
+				vector<int> ans;
+
+				int i=1;
+				while(i <= n){
+					if(i < 10)
+						ans.push_back(i);
+					else{
+						string s = to_string(i);
+						if(isPalin(s))
+							ans.push_back(i);
+					}
+					i++;
+				}
+				return ans;
+			}
+
+		// Optimized:
+			#include <bits/stdc++.h> 
+			vector<int> getPalindromes(int n){
+				vector<int> palidromes;
+
+				for(int i=1; i<=n; i++) {
+					//this will work we used so many built in fuction,
+					//so TLE will be there.
+					// string s = to_string(i);
+					// reverse(s.begin(), s.end());
+					// int rev = stoi(s);
+					// if(rev == i){
+					// 	palidromes.push_back(i);
+					// }
+					int num = i;
+					int reversed = 0;
+
+					while (num > 0) {
+						reversed = reversed * 10 + num % 10;
+						num /= 10;
+					}
+
+					if (reversed == i) {
+						palidromes.push_back(i);
+					}
+				}
+				return palidromes;
+			}
+
+			// or
+				#include <bits/stdc++.h> 
+				vector<int> getPalindromes(int n) {
+					vector<int> ans;
+					int i=1;
+					while(i <= n){
+						if(i < 10)
+							ans.push_back(i);
+						else{
+							int reverse = 0, temp = i;
+							while(temp){
+								reverse = reverse * 10 + temp % 10;
+								temp /= 10;
+							}
+
+							if(reverse == i)
+								ans.push_back(i);
+						}
+						i++;
+					}
+					return ans;
+				}
 
 	105) Mindbending Product:
 		Problem Statement
@@ -45255,6 +45835,25 @@ POTD:-[Problem of the Day]
 				
 			return ans;
 		}
+
+		// or
+			#include <bits/stdc++.h> 
+			#include <vector>
+
+			vector < int > termsOfAP(int x) {
+				int n=5;
+				vector <int> ans = {n};
+
+				while(--x){
+					n += 3;
+					if(n % 4 ==0){
+						++x;
+						continue;
+					}
+					ans.push_back(n);        
+				}
+				return ans;
+			}
 
 	312) Squares of a Sorted Array:
 		Problem Statement:
@@ -72344,7 +72943,528 @@ POTD:-[Problem of the Day]
 			copy(evens.begin(), evens.end(), back_inserter(nums));
 		}
 	
-	690) 
+	690) Minimize the Difference:
+		Problem statement:
+			You are given an array arr of size n. You have to remove a subarray of size k , such that the difference between the maximum and minimum values of the remaining array is minimized.
+			Find the minimum value obtained after performing the operation of the removal of the subarray and return it.
+
+			Example 1:
+			Input:
+			n = 5
+			k = 3
+			arr = {1, 2, 3, 4, 5}
+			Output: 
+			1
+			Explanation: 
+			We can remove first subarray of length 3(i.e. {1, 2, 3}) then remaining array will be {4,5} and the difference of maximum and minimum element will be 1 i.e 5 - 4 = 1
+
+			Example 2:
+			Input:
+			n = 6
+			k = 3
+			arr = {2, 3, 1, 4, 6, 7}
+			Output: 
+			2
+			Explanation:
+			If we remove the subarray {2,3,1} then remaining array will be {4,6,7} and the difference  = 7-4 = 3
+			If we remove the subarray {3,1,4} then remaining array will be {2,6,7} and the difference  = 7-2 = 5
+			If we remove the subarray {1,4,6} then remaining array will be {2,3,7} and the difference  = 7-2 = 5
+			If we remove the subarray {4,6,7} then remaining array will be {2,3,1} and the difference  = 3-1 = 2
+			So the answer will be min(3,5,5,2) = 2
+
+			Your Task: 
+				You have to complete the function minimizeDifference( ), which takes two integers n and k and an integer array arr of size n. You have to return the minimum difference of maximum and minimum elements of the remaining array after removing one k length subarray of it.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+
+			Constraints:
+				2 <= n <= 10^5
+				1 <= k <= n-1
+				0 <= arr[i] <= 10^9
+
+		// Not Optimized:
+			class Solution {
+				public:
+				int minimizeDifference(int n, int k, vector<int> &arr) {
+					int minValue = INT_MAX;
+					
+					int itr = 0;
+					while(itr <= (n-k)){
+						vector<int> holder;
+						int i=0;
+						
+						
+						for(; i<n; i++){
+							if(itr == i)
+								i += k;
+							if(i < n)
+								holder.push_back(arr[i]);
+						}
+						
+						// for(int z: holder)
+						//     cout<<z<<"\t";
+						// cout<<endl;
+						
+						minValue = min(minValue, (*max_element(holder.begin(), holder.end()) - *min_element(holder.begin(), holder.end())));
+						itr++;
+					}
+					return minValue;
+				}
+			};
+
+		// Optimized:
+			❌Pending
+
+	691) Make Friends:
+		Problem statement
+			Ninja A meets with Ninja B at a party organized by coding ninjas, Both Ninjas Have eaten lots of sweets (sweet ids are from ‘a’ to ‘z’) that are in the represented in form of a string, Ninja ‘A’ becomes happy if they both eaten at least one common sweets.
+			Your task is to tell whether ninjas A is happy or not.
+
+			Example :
+			A = hraems
+			B = siamvh
+			Sweet of id ‘a’ is eaten by both the ninjas so the answer is “Yes”. 
+			Constraints :
+				1 <= T <= 10
+				1 <= Length of strings <= 10^5
+				Time Limit: 1 sec
+
+			Sample Input 1 :
+			2
+			hraems siamvh
+			maih setww
+			Sample Output 1 :
+			Yes
+			No
+			Explanation Of Sample Input 1 :
+			For test case 1, 
+			Sweet of id ‘a’ is eaten by both the ninjas so the answer is “Yes”. 
+			For test case 2,
+			None of the sweet is eaten by both the ninjas so the answer is ‘No’.
+			Sample Input 2 :
+			2
+			killer trigger 
+			a bcd   
+			Sample Output 2 :
+			Yes
+			No
+
+		#include <bits/stdc++.h> 
+		string IsFriend( string s1, string s2 ) {
+			bool flag = 0;
+			for(int i=0; i<s1.size(); i++)
+				if(s2.find(s1[i]) != string::npos)
+				return "Yes";
+
+			return "No";
+		}
+
+		// More Optimized:
+			#include <bits/stdc++.h> 
+			string IsFriend( string s1, string s2 ) {
+				vector<int> holder (26, 0);
+				for(int i=0; i<s1.size(); i++)
+				holder[s1[i]-'a'] = 1;
+
+				for(int i=0; i<s2.size(); i++)
+				if(holder[s2[i] - 'a'] == 1)
+					return "Yes";
+
+				return "No";
+			}
+	
+	692) Count Pairs in an Array:
+		Problem statement:
+			Given an array arr of n integers, count all pairs (arr[i], arr[j]) in it such that i*arr[i] > j*arr[j] and 0 ≤ i < j < n.
+			Note: 0-based Indexing is followed.
+
+			Example 1:
+				Input :
+				n = 4
+				arr[] = {8, 4, 2, 1}
+				Output :
+				2
+				Explanation:
+				If we see the array after operations
+				[0*8, 1*4, 2*2, 3*1] => [0, 4, 4, 3]
+				Pairs which hold the condition i*arr[i] > j*arr[j] are (4,1) and (2,1), so in total 2 pairs are available.
+
+			Example 2:
+				Input :
+				n = 7
+				arr[] = {5, 0, 10, 2, 4, 1, 6}
+				Output:
+				5
+				Explanation :
+				Pairs which hold the condition i*arr[i] > j*arr[j] are (10,2), (10,4), (10,1), (2,1) and (4,1), so in total 5 pairs are there.
+				Your Task:  
+				You don't need to read input or print anything. Your task is to complete the function countPairs() which takes the array arr[] and its size n as inputs and returns the required result.
+
+			Expected Time Complexity: O(n*log(n))
+			Expected Auxiliary Space: O(n*log(n))
+
+			Constraints:
+				1 ≤ n ≤ 10^4
+				0 ≤ arr[i] ≤ 10^4
+
+		// Not Optimized:
+			class Solution{
+				public:
+				int countPairs(int arr[] , int n ) {
+					
+					vector<int> holder;
+					for(int i=0; i<n; i++)
+						holder.push_back(i*arr[i]);
+						
+					
+					int cnt=0;
+					
+					for(int i=0; i<n; i++)
+						for(int j=i+1; j<n; j++)
+							if(holder[i] > holder[j])
+								cnt++;
+								
+					return cnt;
+				}
+			};
+		
+		// Optimized:
+			❌Pending
+
+	693) Reverse Linked List:
+		Problem statement:
+			Given the head of a singly linked list, reverse the list, and return the reversed list.
+			Example 1:
+			Input: head = [1,2,3,4,5]
+			Output: [5,4,3,2,1]
+
+			Example 2:
+			Input: head = [1,2]
+			Output: [2,1]
+
+			Example 3:
+			Input: head = []
+			Output: []
+			
+			Constraints:
+				The number of nodes in the list is the range [0, 5000].
+				-5000 <= Node.val <= 5000
+			
+			Follow up: A linked list can be reversed either iteratively or recursively. Could you implement both?
+
+		/**
+		* Definition for singly-linked list.
+		* struct ListNode {
+		*     int val;
+		*     ListNode *next;
+		*     ListNode() : val(0), next(nullptr) {}
+		*     ListNode(int x) : val(x), next(nullptr) {}
+		*     ListNode(int x, ListNode *next) : val(x), next(next) {}
+		* };
+		*/
+		class Solution {
+			public:
+			ListNode* reverseList(ListNode* head) {
+				ListNode* cur = head;
+				ListNode* prev = NULL;
+
+				while(cur != NULL){
+					head = head -> next;
+					cur-> next = prev;
+					prev = cur;
+					cur = head;
+				}
+				return prev;
+			}
+		};
+
+	694) Reverse Linked List:
+		Problem statement
+			You are given a Singly Linked List of integers. You need to reverse the Linked List by changing the links between nodes.
+
+			Example:
+			Input:
+			2 4 5 -1
+			Output:
+			5 4 2 -1
+
+			Explanation: 2->4->5 is the initial linked list. If we reverse this, we get 5->4->2.
+			Sample Input 1 :
+			1 2 4 -1
+			Sample Output 1 :
+			4 2 1 -1
+			Explanation for Sample Input 1 :
+			1->2->4 is the initial linked list. If we reverse this, we get 4->2->1.
+			Sample Input 2 :
+			1
+			1 1 1 -1
+			Sample Output 2 :
+			1 1 1 -1
+			Constraints :
+				1 <= 'N' <= 10^4
+				0 <= 'data' <= 10^9
+				Where 'N' is the number of nodes in the linked list.
+				Time Limit: 1 sec
+
+		/****************************************************************
+			Following is the class structure of the Node class:
+
+				class Node {
+					public:
+					int data;
+					Node *next;
+					Node() {
+						this->data = 0;
+						next = NULL;
+					}
+					Node(int data) {
+						this->data = data;
+						this->next = NULL;
+					}
+					Node(int data, Node* next) {
+						this->data = data;
+						this->next = next;
+					}
+				};
+		*****************************************************************/
+
+		Node* reverseLinkedList(Node *head) {
+			Node * cur = head;
+			Node * prev = nullptr;
+
+			while(cur != nullptr){
+				head = head -> next;
+				cur -> next = prev;
+				
+				prev = cur;
+				cur = head;
+			}
+			return  prev;
+		}
+
+		// recursive solution:
+			void solve(Node * &H, Node *cur, Node *prev) {
+
+				if(cur == nullptr){
+					H = prev;
+					return;
+				}
+
+				Node * temp = cur -> next;
+				cur -> next = prev;
+				prev = cur;
+				cur = temp;
+				
+				solve(H, cur, prev);
+			}
+
+			Node* reverseLinkedList(Node *head) {
+
+				// if LL contains 1 element or empty
+				if(head == NULL  || head -> next == nullptr)
+					return head;
+
+				Node *cur = head, *prev = nullptr;
+				
+				solve(head, cur, prev);
+				return head;
+			}
+	
+	695) Middle Of Linked List:
+		Problem statement
+			Given a singly linked list of 'N' nodes. The objective is to determine the middle node of a singly linked list. However, if the list has an even number of nodes, we return the second middle node.
+			Sample Input 1 :
+			5
+			1 2 3 4 5
+			Sample Output 1 :
+			3 4 5
+			Explanation Of Sample Input 1 :
+			We can clearly see that there are 5 elements in the linked list therefore the middle node is the node with value '3'.
+
+			Sample Input 2 :
+			6
+			1 2 3 4 5 6
+			Sample Output 2 :
+			4 5 6
+			Explanation Of Sample Input 2 :
+
+			We can clearly see that there are 6 elements in the linked list and the middle nodes are  nodes with values 3 and 4 hence we return a second middle node having value '4'.
+			Constraints :
+				1 <= 'N' <= 10^4
+				0 <= 'data' <= 10^3
+			Where 'N' is the length of the linked list.
+			Time Limit: 1 sec
+
+		/*
+			Following is the class structure of the Node class:
+			class Node {
+				public:
+				int data;
+				Node *next;
+				Node() {
+					this->data = 0;
+					next = NULL;
+				}
+				Node(int data) {
+					this->data = data; 
+					this->next = NULL;
+				}
+				Node(int data, Node* next) {
+					this->data = data;
+					this->next = next;
+				}
+			};
+		*/
+
+		Node *findMiddle(Node *head) {
+			Node * mid = nullptr;
+			Node * temp = head;
+			
+			int fastCnt=0, slowCnt=0;
+			while(head != nullptr){
+				fastCnt++;
+				if(fastCnt >= slowCnt*2 ){
+					slowCnt++;
+					if(mid == nullptr)
+						mid = temp;
+					else{
+						mid = mid -> next;
+					}
+				}
+				head = head -> next;
+			}
+			return mid;
+		}
+
+		// or Simpler:
+			Node *findMiddle(Node *head) {
+				int fastCnt=0, slowCnt=0;
+				Node * mid = head;
+
+				while(head != nullptr){
+					if(fastCnt > slowCnt * 2){
+						slowCnt ++ ;
+						mid = mid -> next;
+					}
+					fastCnt++;
+					head = head ->next;
+				}
+				return mid;
+			}
+
+		// or
+			Node* Middle(Node *head){
+				Node *slow = head, *fast = head;
+				while(fast){
+					fast = fast -> next;
+					if(fast){
+						fast = fast -> next;
+						slow = slow -> next;
+					}
+				}
+				return slow;
+			}
+	
+		// Brute force:
+			Node *findMiddle(Node *head) {
+				Node * temp = head;
+
+				// finding the length of LL
+				int L =0;
+				while(head){
+					L++;
+					head = head -> next;
+				}
+
+				int mid = L/2;
+				while(mid--)
+					temp = temp -> next;
+
+				return temp;
+			}
+
+	696) Add One To Number: (Refer Q. 41)
+		Problem statement
+			Given a non-negative number represented as an array of digits, you have to add 1 to the number, i.e, increment the given number by one.
+			The digits are stored such that the most significant digit is at the starting of the array and the least significant digit is at the end of the array.
+			For Example
+			If the given array is {1,5,2}, the returned array should be {1,5,3}.
+			Note
+			Input array can contain leading zeros, but the output array should not contain any leading zeros (even if the input array contains leading zeroes).
+			For Example: 
+			If the given array is {0,2}, the returned array should be {3}.
+			Constraints
+				1 <= T <= 10
+				1 <= N <= 5 * 10^4
+				0 <= Arr[i] <= 9
+
+				Where Arr[i] is the i-th digit in the number.
+			Sample Input 1
+				3
+				3
+				1 2 3
+				2
+				9 9
+				1
+				4
+				Sample Output 1
+				1 2 4
+				1 0 0
+				5
+				Explanation For Sample Input 1
+				In the 1st test case, the number is 123 after adding 1 number becomes 124, hence the output will be {1,2,4}.
+
+				In the 2nd test case, the number is 99 after adding 1 number becomes 100, hence the output will be {1,0,0}.
+
+				In the 3rd test case, the number is 4 after adding 1 number becomes 5, hence the output will be {5}.
+				Sample Input 2
+				3
+				4
+				2 4 6 8 
+				1
+				0
+				2
+				0 2
+				Sample Output 2
+				2 4 6 9
+				1
+				3
+
+		#include <bits/stdc++.h> 
+		vector<int> addOneToNumber(vector<int> arr) {
+			arr[arr.size()-1]++;
+
+			int i=arr.size()-1, c=0;
+			
+			while(i >=0) {
+				arr[i] += c;
+				c =0;
+				if(arr[i] < 10)
+					break;
+				
+				c = arr[i] / 10;
+				arr[i] %= 10;
+				i--;
+			}
+
+			if(c != 0)
+				arr.insert(arr.begin(), c);
+
+			// removo leading zeros
+			while(arr[0] == 0)
+				arr.erase(arr.begin());
+				
+			return arr;
+		}
+		
+	697) 
+	
+	698)
+	
+	699)
+	
+	700)
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
