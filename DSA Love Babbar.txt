@@ -17542,6 +17542,12 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 		-This allows for dynamic memory allocation and efficient insertion and deletion operations compared to arrays.
 		-it is dynamic in nature, so we can increase/decrease its size at runtime so no memory wastage.
 
+		-We already know that the data in Array is stored in contiguous address spots inside the memory.
+		 But what if we don't have enough contiguous space to store a large number of elements together?
+		 To overcome this problem, we define another data structure which is called Linked List.
+		-a linked list is also called dynamic data structure.
+		-
+
 		- Instead of Linked List we can use vector but if vector has some specified size [vector<int> v(5,0)], then
 		  when we exhaust the size of vector then new vector is created with size doubled, and copies all the element into new vector
 		  this operation takes times, to reduce this time we can use linked list,
@@ -17557,11 +17563,24 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 
 		- Linked list is not contiguous.
 		-Difference:
-				Linked List:								Array:
-			Data Structure: Non-contiguous			Data Structure: Contiguous
-			Memory Allocation: Dynamic 				Memory Allocation: Static 
-			Insertion/Deletion: Efficient				Insertion/Deletion: Inefficient
-			Access: Sequential						Access: Random
+				Linked List:											Array:
+			Data Structure: Non-contiguous							Data Structure: Contiguous
+			Memory Allocation: Dynamic 								Memory Allocation: Static 
+			Insertion/Deletion: Efficient								Insertion/Deletion: Inefficient
+			Access: Sequential										Access: Random
+			Access Time Complexity: O(n)								Access Time Complexity: O(1)
+			Insertion Time Complexity: at start O(1) , not at start O(n)	Insertion Time Complexity: O(n)			
+			Deletion Time Complexity: at start O(1) , not at start O(n)		Deletion Time Complexity: O(n)
+		
+		#Real Life applications of Linked List:
+			-Navigation in Browsers:
+				The forward and backward navigation in any browser can be implemented by a Doubly Linked List. Here the webpages are taken as a data value, the forward navigation takes us to the next node, the backward navigation takes us to the previous node. Eg - Chrome, Safari, Brave etc.
+
+			-Music and Video Players:
+				Most of the video or music playing apps use linked lists to create a playlist, play songs, add to favourite etc. Each song is represented as a node. Users can easily insert, delete any song from the favourites list. Eg - Spotify, Youtube Music, Saavn etc.
+
+			-Undo/Redo Functionality:
+				Linked lists are used in applications that require undo/redo functionality, such as text editors and graphic design software. Each node in the list stores the state of the document at a specific point in time. Eg - Google Docs, MS Paint, WhiteBoard etc.
 
 		#Types:
 			1) Singly LL
@@ -19223,7 +19242,189 @@ Lecture-45: Linked List Questions: Reverse LL and find Middle of LL
 		Refer Q.695 in POTD section
 ---------------------------------------------------------------------------------------------------------
 Lecture-46: Linked List Questions: Reverse LL in "K group" && Check LL is Circular or not
-	
+	Q. Reverse List In K Groups:
+		Problem statement
+			You are given a linked list of 'n' nodes and an integer 'k', where 'k' is less than or equal to 'n'.
+			Your task is to reverse the order of each group of 'k' consecutive nodes, if 'n' is not divisible by 'k', then the last group of nodes should remain unchanged.
+			For example, if the linked list is 1->2->3->4->5, and 'k' is 3, we have to reverse the first three elements, and leave the last two elements unchanged. Thus, the final linked list being 3->2->1->4->5.
+			Implement a function that performs this reversal, and returns the head of the modified linked list.
+
+			Example:
+				Input: 'list' = [1, 2, 3, 4], 'k' = 2
+				Output: 2 1 4 3
+
+			Explanation:
+				We have to reverse the given list 'k' at a time, which is 2 in this case. So we reverse the first 2 elements then the next 2 elements, giving us 2->1->4->3.
+
+			Note:
+				All the node values will be distinct.
+
+			Sample Input 1:
+			6
+			5 4 3 7 9 2
+			4 
+			Sample Output 1:
+			7 3 4 5 9 2
+
+			Explanation of the Sample Input 1:
+			For the given test case, we reverse the nodes in groups of four. But for the last 2 elements, we cannot form a group of four, so leave them as they are. The linked list becomes 7->3->4->5->9->2. Hence the output is 7 3 4 5 9 2
+			Sample Input 2:
+			4
+			4 3 2 8
+			4 
+			Sample Output 2:
+			8 2 3 4
+
+			Expected Time Complexity:
+				Try to solve this in O(n). 
+
+			Expected Space Complexity:
+				Try to solve this using O(1) extra space.    
+
+			Constraints:
+				1 <= n <= 10^4
+				1 <= k <= n
+				Time Limit: 1 sec
+
+		/**
+		* Definition for singly-linked list.
+		* class Node {
+		* public:
+		*     int data;
+		*     Node *next;
+		*     Node() : data(0), next(nullptr) {}
+		*     Node(int x) : data(x), next(nullptr) {}
+		*     Node(int x, Node *next) : data(x), next(next) {}
+		* };
+		*/
+		int getLength(Node* head) {
+			int length  = 0;
+			while(head != NULL) {
+				length ++;
+				head = head -> next;
+			}
+			return length;
+		}  
+
+		Node* kReverse(Node* head, int k) {
+			if(head == NULL  || head -> next == NULL) {
+				return head;
+			}
+			
+			if(getLength(head) < k) {
+				return head;
+			}
+
+			Node* prev = NULL;
+			Node* curr = head;
+			int count = k;
+
+
+			while(curr != NULL  && count--) {
+				Node* next = curr -> next;
+				curr -> next = prev;
+				prev = curr;
+				curr = next;
+			}
+
+
+			head -> next = kReverse(curr, k);
+			return prev;
+		}
+
+		// Little Complex:
+			int len(Node *temp, int k){
+				int l =0;
+				while(temp){
+					temp = temp -> next;
+					l++;
+					if(l >= k)
+						return 1;
+				}
+				return 0;
+			}
+
+			Node* kReverse(Node* head, int k) {
+				if(head == nullptr || head->next == nullptr)
+					return head;
+				
+				if(!len(head, k))
+					return head;
+
+				// reversing the k elements
+
+				Node *cur = head;
+				Node *prev = nullptr;
+
+				int cnt = k;
+				while(cnt-- && cur){
+					Node *hold = cur -> next;
+
+					cur -> next = prev;
+					prev = cur;
+
+					cur = hold;
+				}
+
+				if(cur != nullptr)
+					head -> next = kReverse(cur, k);
+				return prev;   
+			}
+
+	Q. LL is Circular or not:
+		#include <bits/stdc++.h> 
+		/*************************************************
+			Following is the structure of class Node:
+			
+			class Node{
+				public:
+					int data;
+					Node* next;
+				
+				Node(int data){
+					this->data = data;
+					this->next = NULL;
+				}
+			}
+		**************************************************/
+		bool isCircular(Node* head) {
+			// empty list is considered as circular LL
+			if (head == NULL)
+				return 1;
+
+			Node* temp = head -> next; 
+			while(temp) {
+				if(temp == head)
+					return 1;
+				temp = temp -> next;
+			}
+			return 0;
+		}
+
+		//or
+			bool isCircular(Node* head){
+				if (head == nullptr)
+					return true;
+
+				Node* slow = head;
+				Node* fast = head->next;
+
+				while (fast != nullptr && fast->next != nullptr) {
+					if (slow == fast)
+						return true;
+
+					slow = slow->next;
+					fast = fast->next->next;
+				}
+				return false;
+			}
+---------------------------------------------------------------------------------------------------------
+Lecture47: Detect & Remove Loop in Linked List [Approach Discussion + Optimised Implementation]
+	-Refer Q.704 & Q.705 Floyd’s Cycle Detection Algorithm in POTD section 
+	- Detect Cycle in LinkedList.
+	- Return the node from where cycle starts.
+	- Remove cycle from LinkedList.
+
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
 	//Ternary Operator
@@ -27420,6 +27621,26 @@ POTD:-[Problem of the Day]
 			}
 		};
 
+		// or 
+			class Solution {
+				public:
+				//Function to find two repeated elements.
+				vector<int> twoRepeated (int arr[], int n) {
+					vector<int> ans;
+					
+					map<int, int> F;
+					for(int i=0; i<n+2; i++){
+						F[arr[i]]++;
+						if(F[arr[i]] == 2)
+							ans.push_back(arr[i]);
+						
+						if(ans.size()==2)
+							break;
+					}
+					return ans;
+				}
+			};
+
 	71) String Mania
 		Rohit love strings. But he has many strings with him,
 			and he is confused about which one he loves more. So
@@ -27783,6 +28004,35 @@ POTD:-[Problem of the Day]
 			}
 			return ans;
 		}
+
+		// or
+			#include <bits/stdc++.h> 
+			vector <int> findAllSelfDividingNumbers(int lower, int upper) {
+				vector <int> ans;
+
+				for(int i=lower; i <= upper; i++){
+					string s = to_string(i);
+					if(s.find('0') != string::npos)
+						continue;
+					
+					int flag = 1;
+
+					int z=0;
+					while(z < s.size()){
+						int val = s[z] - '0';
+						if(i % val != 0){
+							flag=0;
+							break;
+						}
+						z++;
+					}
+
+					if(flag)
+						ans.push_back(i);
+				}
+
+				return ans;
+			}
 
 	76) Rearrange in Zig-Zag Order:
 		https://www.codingninjas.com/studio/problems/zig-zag-array_1698577
@@ -72212,7 +72462,21 @@ POTD:-[Problem of the Day]
 				}
 			
 			// Optimized:
-				❌Pending
+				int isEqualPossible(int n, string a, string b) {
+					vector<int> diffPos;
+					for(int i=0; i<n; i++)
+						if(a[i] != b[i])
+							diffPos.push_back(i);
+						
+					if(diffPos.size() == 0)
+						return 0;
+
+					if(diffPos.size() == 2)
+						if(a[diffPos[0]] == a[diffPos[1]] && b[diffPos[0]] == b[diffPos[1]])
+							return 1;
+					
+					return 0;
+				}
 
 	678) Sum of Products:
 		Problem statement:
@@ -73458,13 +73722,1032 @@ POTD:-[Problem of the Day]
 			return arr;
 		}
 		
-	697) 
+	#CN BeginnerConstest-58
+		697) Maximum books:
+			Problem statement
+				You are given 'N' boxes numbered from '0' to 'N - 1' containing a different number of books in each box. More specifically there are 'A[i]' books in the box 'i'.
+				As you don't like odd numbers you want to collect the maximum number of books from the boxes such that every box has an even number of books.
+				Also keep in mind that no box should be empty (with a '0' number of books) after collecting the books.
+				Return an integer denoting the maximum number of books you can collect and return '-1' if there doesn't exist a way to collect books such that conditions are satisfied.
+
+				Example:
+					N = 3
+					A = [2, 5, 3]
+					You can take '3' books from box '1' and '1' book from the box '2'. So every box has at least '1' book and all the boxes have an even number of books.
+					It can be proved that you can not collect more than '4' books according to the given conditions.
+					So, the answer for this case is '4'.
+				Constraints:
+					1 <= 'N' <= 10^5
+					'0' <= A[i] <= '10^9'
+
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					3
+					0 2 3
+					2
+					2 3
+					Sample output 1:
+					-1
+					1
+					Explanation of sample input 1:
+					For test case 1:
+					It can be proved that there doesn't exist a way to collect books such that conditions are satisfied.
+					So, the answer for this case is '-1'.
+
+					For test case 2:
+					You can take the '1' book from box '1'. So every box has at least '1' book and all the boxes have an even number of books.
+					It can be proved that you can not collect more than '1' book according to the given conditions.
+					So, the answer for this case is '1'.
+					Sample input 2:
+					2
+					6
+					4 2 5 4 3 2
+					6
+					2 3 4 3 2 3
+					Sample output 2:
+					8
+					5
+			
+			int maximumBooks(int n, vector<int> &v) {
+				int mxBooksTaken =0;
+
+				for(int i=0; i<n; i++){
+					if(v[i] == 0 || v[i] == 1)
+						return -1;
+
+					int val=0;
+					if(v[i] > 2)
+						val = v[i] - 2;
+					mxBooksTaken += val;
+				}
+				return mxBooksTaken;
+			}
+
+		699) Equations:
+			Problem statement
+				You are given three numbers 'A', 'B' and 'C'.
+				You have to find an array 'P' of size 3 such that:
+
+				P[0] + P[1] = A
+				P[0] + P[2] = B
+				P[1] + P[2] = C
+				It is guaranteed that an array P exists and all the elements of this array are integers.
+
+				Example:
+				'A' = 4
+				'B' = 3
+				'C' = 5
+
+				'P' can be {1, 3, 2} as
+				1 + 3 = 4 = A
+				1 + 2 = 3 = B
+				3 + 2 = 5 = C
+
+
+				Constraints:
+					1 <= 'T' <= 1000
+					1 <= 'A','B' & 'C' <= 10^9
+					Time Limit: 1 sec
+					
+				Sample Input 1:
+					2
+					7 8 11
+					7 6 3
+					Sample Output 1:
+					2 5 6
+					5 2 1
+					Explanation of sample input 1:
+					For test case 1:
+					'P' can be {2, 3, 6} as
+					2 + 5 = 7 = A
+					2 + 6 = 8 = B
+					5 + 6 = 11 = C
+
+					For test case 2:
+					'P' can be {5, 2, 1} as
+					5 + 2 = 7 = A
+					5 + 1 = 6 = B
+					2 + 1 = 3 = C
+					Sample Input 2:
+					3
+					16 14 16
+					7 7 10
+					6 9 11
+					Sample Output 2:
+					7 9 7
+					2 5 5
+					2 4 7
+
+
+			vector<int> solve(int a,int b,int c) {
+				int x,y,z;
+				y = b - (a+c);
+				y /= -2;
+
+				// should take abs() of y that's why divided with -2, coz we want answer in +ve.
+				x = a - y;
+				z = c- y;
+
+				vector<int> ans {x, y, z};
+				
+				return ans;
+			}
+
+		698) Duel Counter:
+			Problem statement
+				There are 'N' participants registered for an event on Coding Ninjas. The organizers decided to organize a duel and assigned random numbers to every participant. An array 'A' represents these numbers, where the 'i'-th element denotes the number provided by the Coding Ninjas team. This numbering is not unique and can be negative as well.
+				In the event, there is a round of duels. To form a duel, the team decided to pair two participants with opposite numbers as opponents. Opposite numbering means if there is a duel between the participants 'i' and 'j', then 'A[i] + A[j]' needs to be equal to '0'.
+				Your task is to find the count of possible duels.
+				Example:
+					'N' = 4
+					'A' = [1, -1, 0, 1]
+
+					The possible duels are as follows
+					A Duel between participants '1' and '2'. A Duel between participants '2' and '3'. So, the answer is '2'.
+
+				Constraints:
+					1 <= T <= 10
+					1 <= N <= 10^5
+					-10^5 <= A[i] <= 10^5
+					It is guaranteed that the sum of 'N' over all test cases won't exceed '10^5'.
+					Time Limit: 1 second
+
+				Sample Input 1:
+					2
+					4
+					7 -7 3 -3 
+					3
+					5 -5 4 
+					Sample Output 1:
+					2
+					1
+					Explanation Of Sample Input 1:
+					For test case 1:
+					The possible duels are as follows
+					- A Duel between participants '1' and '2'.
+					- A Duel between participants '3' and '4'.
+					So, the answer is '2'.
+
+					For test case 2:
+					The possible duels are as follows
+					- A Duel between participants '1' and '2'.
+					So, the answer is '1'.
+					Sample Input 2:
+					2
+					6
+					-12 2 12 -5 -2 5 
+					5
+					-3 -7 3 -6 6 
+					Sample Output 2:
+					3
+					2
+
+
+			// Not Optimized:
+				long long countDuels(int n, vector<int> a) {
+					long long pairCnt=0;
+
+					for(int i=0; i<n ; i++)
+						for(int j=i+1; j<n; j++)
+							if(a[i] + a[j] == 0)
+								pairCnt++;
+
+					return pairCnt;
+				}
+			
+			// Optimized:
+				long long countDuels(int n, vector<int> a) {
+					long long pairCnt=0;
+
+					map<int, int> F_pos_holder;  
+					map<int, int> F_neg_holder;
+
+					for(int i=0; i<n ; i++){
+						if(a[i] > 0)
+							F_pos_holder[a[i]]++;
+						else if(a[i] < 0)
+							F_neg_holder[a[i]]++;
+					}
+
+					for(auto i: F_pos_holder){
+						int val = -i.first, reps = i.second;
+						if(F_neg_holder[val] != 0)
+							pairCnt += reps * F_neg_holder[val];
+					}		
+					return pairCnt;
+				}
+			
+		700) XORing the XORs:
+				Problem statement
+					You are given an array 'A' containing 'N' numbers and a two dimensional array 'Q' with 'M' queries. Each query is represented as a pair of indices ( ‘L’, ‘R’ ) indicating a subarray of 'A'.
+					Your task is to find the XOR of XORs for all subarrays within each query range. In other words, you need to calculate the XOR of all elements in each subarray within the given query range and then XORing all these calculated XOR values together.
+					Return an array of size ‘M’ which contains the answer for each query respectively.
+					Example:
+						‘N’ = [4, 1, 2, 3, 5]
+						‘Q’ = [[2,4]]
+
+						Return [2]
+					The Query is on the subarray [1, 2, 3].
+					All subarrays of the subarray are listed below with their XOR of elements.
+						[1] -> 1
+						[2] -> 2
+						[3] -> 3
+						[1, 2] -> 3
+						[2, 3] -> 1
+						[1, 2, 3] -> 0
+						Finally, 1 ⊕ 2 ⊕ 3 ⊕ 3 ⊕ 1 ⊕ 0 = 2
+					Constraints:
+						1 <= ‘T’ <= 10
+						1 <= ‘N’ <= 10^5
+						1 <= ‘M’ <= 10^5
+						1 <= ‘A[i]’ <= 10^9
+						1 <= L[i],R[i] <= N
+
+						Time Limit: 1 sec
+					Sample Input 1:
+						2
+						9 1
+						6 5 2 1 7 9 7 2 5 
+						3 9
+						6 1
+						6 2 2 8 7 7 
+						3 5
+						Sample Output 1:
+						7
+						5
+						Explanation of sample input 1:
+						For both test cases:
+						After calculating the XOR of XORs of all subarrays in the query subarray, we get these answers.
+						For in depth explanation refer to the example above.
+						Sample Input 2:
+						3
+						4 1
+						6 10 8 8 
+						4 4
+						7 1
+						9 1 10 5 8 1 10 
+						5 7
+						5 2
+						6 5 1 10 2 
+						5 5
+						2 4
+						Sample Output 2:
+						8 
+						2 
+						2 15 
+
+				// Not Optimized:
+					int GenerateXOR(vector<int> temp){
+						int val = 0;
+						vector<int> holder;
+						for(int i=0; i<temp.size(); i++){
+							for(int j=i; j<temp.size(); j++){
+								val ^= temp[j];
+								holder.push_back(val);
+							}
+							val =0;
+						}
+
+						val = 0;
+						for(int i=0; i<holder.size(); i++)
+							val ^= holder[i];
+
+						return val;
+					}
+
+					vector<int> xoRage(vector<int> &a, vector<vector<int>> &q){
+						vector<int> subArr;
+						for(int i=0; i<q.size(); i++){
+							int s  = q[i][0], e = q[i][1];
+							vector<int> holder;
+							for(int z = s-1; z < e; z++)
+								holder.push_back(a[z]);
+
+							int val = GenerateXOR(holder);
+							subArr.push_back(val);
+						}
+						return  subArr;
+					}
+				
+				// Optimized:
+					❌Pending
+
+	701) Reverse Nodes in k-Group:
+		Problem statement:
+			Given the head of a linked list, reverse the nodes of the list k at a time, and return the modified list.
+			k is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of k then left-out nodes, in the end, should remain as it is.
+			You may not alter the values in the list's nodes, only nodes themselves may be changed.
+
+			Example 1:
+			Input: head = [1,2,3,4,5], k = 2
+			Output: [2,1,4,3,5]
+
+			Example 2:
+			Input: head = [1,2,3,4,5], k = 3
+			Output: [3,2,1,4,5]
+			
+			Constraints:
+			The number of nodes in the list is n.
+			1 <= k <= n <= 5000
+			0 <= Node.val <= 1000
+			
+			Follow-up: Can you solve the problem in O(1) extra memory space?
+
+		/**
+		* Definition for singly-linked list.
+		* struct ListNode {
+		*     int val;
+		*     ListNode *next;
+		*     ListNode() : val(0), next(nullptr) {}
+		*     ListNode(int x) : val(x), next(nullptr) {}
+		*     ListNode(int x, ListNode *next) : val(x), next(next) {}
+		* };
+		*/
+		class Solution {
+			public:
+			int LL_len(ListNode* H){
+				int l=0;
+				while(H){
+					l++;
+					H = H -> next;
+				}
+				return l;
+			}
+			ListNode* reverseKGroup(ListNode* head, int k) {
+				if(head == NULL || head->next == NULL)
+					return head;
+
+				if(LL_len(head) < k)
+					return head;
+
+				int cnt = k;
+				ListNode* cur = head;
+				ListNode* prev = NULL;
+
+				while(cnt-- && cur){
+					ListNode* temp = cur -> next;
+
+					cur -> next = prev;
+					prev = cur;
+
+					cur = temp;
+				}
+
+				if(cur != NULL)
+					head -> next = reverseKGroup(cur, k);
+				
+				return prev;
+			}
+		};
 	
-	698)
+	702) Reverse a Linked List in groups of given size:
+		Problem statement:
+			Given a linked list of size N. The task is to reverse every k nodes (where k is an input to the function) in the linked list. If the number of nodes is not a multiple of k then left-out nodes, in the end, should be considered as a group and must be reversed (See Example 2 for clarification).
+			Example 1:
+			Input:
+			LinkedList: 1->2->2->4->5->6->7->8
+			K = 4
+			Output: 4 2 2 1 8 7 6 5 
+			Explanation: 
+			The first 4 elements 1,2,2,4 are reversed first 
+			and then the next 4 elements 5,6,7,8. Hence, the 
+			resultant linked list is 4->2->2->1->8->7->6->5.
+
+			Example 2:
+			Input:
+			LinkedList: 1->2->3->4->5
+			K = 3
+			Output: 3 2 1 5 4 
+			Explanation: 
+			The first 3 elements are 1,2,3 are reversed 
+			first and then elements 4,5 are reversed.Hence, 
+			the resultant linked list is 3->2->1->5->4.
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function reverse() which should reverse the linked list in group of size k and return the head of the modified linked list.
+
+			Expected Time Complexity : O(N)
+			Expected Auxilliary Space : O(1)
+
+			Constraints:
+				1 <= N <= 10^5
+				1 <= k <= N
+		
+		/*
+			Reverse a linked list
+			The input list will have at least one element  
+			Return the node which points to the head of the new LinkedList
+			Node is defined as 
+			struct node {
+				int data; 
+				struct node* next;
+			
+				node(int x){
+					data = x;
+					next = NULL;
+				}
+			
+			}*head;
+		*/
+
+		class Solution {
+			public:
+			struct node *reverseIt (struct node *head, int k) {
+				if(head == NULL || head -> next == NULL)
+					return head;
+					
+				int cnt = k;
+				node* cur = head;
+				node* prev = NULL;
+				
+				while(cnt-- && cur){
+					node* temp = cur -> next;
+					
+					cur -> next = prev;
+					prev = cur;
+					cur = temp;
+				}
+				
+				if(cur != NULL)
+					head -> next = reverseIt(cur, k);
+				
+				return prev;
+			}
+		};
 	
-	699)
+	703) Search in a Linked List:
+		Problem statement
+			You are given a Singly Linked List of integers with a head pointer. Every node of the Linked List has a value written on it.
+			A sample Linked List:
+			Now you have been given an integer value, 'K'. Your task is to check whether a node with a value equal to 'K' exists in the given linked list. Return 1 if node exists else return 0.
+
+			Sample Input 1:
+				3 6 2 7 9 -1
+				2
+				Sample Output 1:
+				1
+				Explanation for Sample Input 1:
+				As value 2 exists in the given linked list. So we will return 1 in this case.
+
+				Sample Input 2:
+				1 2 3 7 -1
+				7
+				Sample Output 2:
+				1
+				Explanation for Sample Input 2:
+				As the value 7 exists in the Linked List, our answer is 1.
+
+				Expected Time Complexity:
+				Try solving this in O(L).
+
+
+			Constraints:
+				1 <= 'L' <= 10^5
+				1 <= 'data' <= 10^9 and 'data' != -1
+				1 <= 'K' <= 10^9   
+
+			Where 'L' represents the total number of nodes in the Linked List, 'data' represents the value at each node, and 'K' is the given integer.
+			Time Limit: 1 sec.
+
+		/****************************************************************
+			Following is the class structure of the Node class:
+			template <typename T>
+			class Node {
+			public:
+				T data;
+				Node<T> *next;
+				Node() {
+					this->data = 0;
+					this->next = NULL;
+				}
+				Node(T data) {
+					this->data = data;
+					this->next = NULL;
+				}
+				Node(T data, T* next) {
+					this->data = data;
+					this->next = next;
+				}
+			};
+		*****************************************************************/
+
+		int searchInLinkedList(Node<int> *head, int k) {
+			while(head){
+				if(head -> data == k)
+					return 1;
+				head = head ->next;
+			}
+			return  0;
+		}
 	
-	700)
+	# Floyd’s Cycle Detection Algorithm:
+		Floyd’s cycle detection algorithm is a pointer algorithm that uses only two pointers, moving through the sequence at different speeds. 
+		Floyd's Cycle Detection Algorithm, well known as the ‘tortoise-hare’ algorithm. 
+		704) Cycle Detection in a Singly Linked List: (Check If A Linked List Is Circular Linked List)
+			Problem statement
+				You are given a Singly Linked List of integers. Return true if it has a cycle, else return false.
+				A cycle occurs when a node's next points back to a previous node in the list.
+				Example:
+				In the given linked list, there is a cycle, hence we return true.
+				Sample Input 1 :
+				1 2 3 4 -1
+				1
+
+				Sample Output 1 :
+				true
+
+				Explanation of Sample Input 1:
+				The linked list given in the input is as follows:
+
+				Sample Input 2 :
+				1 2 3 4 -1
+				0
+
+				Sample Output 2 :
+				true
+
+				Explanation of Sample Input 2:
+				The linked list given in the input is as follows:
+
+				Sample Input 3 :
+				5 -1
+				-1
+
+				Sample Output 3 :
+				false
+
+				Explanation of Sample Input 3:
+				The linked list given in the input is as follows:
+
+				Expected Time Complexity:
+				Try to solve this problem in O(n).
+
+				Expected Space Complexity:
+				Try to solve this problem in O(1).
+
+				Constraints :
+					0 <= n <= 10^6
+					-1 <= pos < n
+					-10^9 <= data <= 10^9 and data != -1
+
+				Where 'n' is the size of the singly linked list, 'pos' represents the position (0-indexed) in the linked list where the tail connects to, and 'data' is the Integer data of the singly linked list.
+				Time Limit: 1 sec
+
+			/****************************************************************
+				Following is the class structure of the Node class:
+				class Node {
+					public:
+						int data;
+						Node *next;
+						Node() {
+							this->data = 0;
+							next = NULL;
+						}
+						Node(int data) {
+							this->data = data;
+							this->next = NULL;
+						}
+						
+						Node(int data, Node* next) {
+							this->data = data;
+							this->next = next;
+						}
+					};
+			*****************************************************************/
+
+			bool detectCycle(Node *head) {
+				Node* hare = head;
+				Node* tortoise = head;
+
+				while(hare){
+					hare = hare -> next;
+					if(hare != NULL)
+						hare = hare -> next;
+
+					tortoise = tortoise -> next;
+					
+					if(tortoise == hare && hare != NULL)
+						return 1;
+				}
+				return 0;
+			}
+
+			// OR using Map
+				#include<bits/stdc++.h>
+				bool detectCycle(Node *head) {
+					map<Node*, bool> Vis;
+
+					while(head) {
+						Vis[head] = true;
+						head = head -> next;
+						if(Vis[head])
+							return 1;
+					}
+					return 0;
+				}
+			
+			// or not optimized: using vector & find function
+				#include<bits/stdc++.h>
+				bool detectCycle(Node *head) {
+					vector<Node*> holder;
+					while(head){
+						if(find(holder.begin(), holder.end(), head) != holder.end())
+							return 1;
+							
+						holder.push_back(head);
+						head = head ->next;
+					}
+
+					return 0;
+				}
+
+		705) Linked List Cycle II:
+			Problem statement
+				You are given a singly linked list that may or may not contain a cycle. You are supposed to return the node where the cycle begins, if a cycle exists, else return 'NULL'.
+				A cycle occurs when a node's next pointer returns to a previous node in the list.
+
+				Example:
+				In the given linked list, there is a cycle starting at position 0, hence we return 0.
+				Sample Input 1 :
+				1 2 3 4 -1
+				1
+				Sample Output 1 :
+				1
+
+				Explanation For Sample Input 1 :
+				For the first test case,
+
+				Sample Input 2 :
+				1 2 3 4 -1
+				0
+
+				Sample Output 2 :
+				0
+				Explanation For Sample Input 2 :
+				For the first test case,
+
+				Follow-Up:
+				Can you do this in O(n) time and using constant space?
+				Constraints :
+					-10^4 <= n <= 10^4
+					-1 <= pos < n
+					-10^9 <= data <= 10^9 and data != -1
+					Time Limit: 1 sec
+
+			/****************************************************************
+				Following is the class structure of the Node class:
+					class Node {
+					public:
+						int data;
+						Node *next;
+						Node() {
+							this->data = 0;
+							next = NULL;
+						}
+						Node(int data) {
+							this->data = data;
+							this->next = NULL;
+						}
+						Node(int data, Node* next) {
+							this->data = data;
+							this->next = next;
+						}
+					};
+			*****************************************************************/
+
+			Node *firstNode(Node *head) {
+
+				// checking the LL contains a cycle or not
+				Node *fast = head, *slow = head;
+
+				while(fast) {
+					fast = fast -> next;
+					if(fast != nullptr)
+						fast = fast -> next;
+					
+					// this condition states that cycle is not exist in LL
+					if(fast == nullptr)
+						return  nullptr;
+
+					slow = slow -> next;
+
+					// this stats that cycle is exist in LL
+					if(slow == fast)
+						break;
+				}
+
+				slow = head;		// followed the tutorial
+
+				// if cycle found in LL 
+				// set slow pointer back to head & check are slow and fast are same
+				// if they are same then return slow/fast else increment both by one
+				while(slow != fast){
+					if(slow == fast)
+						return slow;
+					slow = slow -> next;
+					fast = fast -> next;
+				}
+			}
+	
+	#CN Weekly-Contest-122:
+		706) Team Score:
+			Problem statement
+				There are ‘4’ rangers labelled from ‘0’ to ‘3’, each with a unique power denoted by integers ‘A’, ‘B’, ‘C’, and ‘D’. Your goal is to form ‘2’ teams, each consisting of ‘2’ rangers, with each ranger belonging to only one team.
+				The score of the team is calculated by multiplying the powers of the rangers in that team.Your objective is to maximise the total score achieved by both teams.
+				Your task is to tell the maximum total score of the two teams and return it.
+
+				Example:
+				‘A’ = 2
+				‘B’ = 1
+				‘C’ = 5
+				‘D’ = 3
+
+				‘1st way’: Put rangers with the powers ‘A’, ‘B’ in one team and ‘C’, ‘D’ in another team.
+				Here, the total score will be equal to ‘((2 * 1) + (5 * 3))’ that is ‘17’.
+
+				‘2nd way’: Put rangers with the powers ‘A’, ‘C’ in one team and ‘B’, ‘D’ in another team.
+				Here, the total score will be equal to ‘((2 * 5) + (1 * 3))’ that is ‘13’.
+
+				‘3rd way’: Put rangers with the powers ‘A’, ‘D’ in one team and ‘B’, ‘C’ in another team.
+				Here, the total score will be equal to ‘((2 * 3) + (1 * 5))’ that is ‘11’.
+
+				So, the maximum total score we can achieve is ‘17’.
+				Constraints:
+					1 <= 'T' <= 10
+					0 <= ‘A’, ‘B’, ‘C’, ‘D’ <= 10^4
+
+				Time Limit: 1 sec 
+				Sample Input 1:
+					2
+					1 0 5 8
+					0 1 0 2
+					Sample Output 1:
+					40
+					2
+					Explanation of sample input 1:
+					For test case 1:
+					Here, the most optimal way is to put rangers with the powers ‘A’, ‘B’ in one team and ‘C’, ‘D’ in another team. The score in this case will be equal to ‘((1 * 0) + (5 * 8))’ that is ‘40’.
+
+					For test case 2:
+					Here, the most optimal way is to put rangers with the powers ‘A’, ‘C’ in one team and ‘B’, ‘D’ in another team. The score in this case will be equal to ‘((0 * 0) + (2 * 2))’ that is ‘2’.
+					Sample Input 2:
+					2
+					1 5 7 2
+					0 1 0 0
+					Sample Output 2:
+					37
+					0
+
+			int teamScore (int a, int b, int c, int d) {
+				int mxScore=0;
+				mxScore = max(mxScore, (a*b)+(c*d));
+				mxScore = max(mxScore, (a*c)+(b*d));
+				mxScore = max(mxScore, (a*d)+(c*b));
+				return mxScore;
+			}
+			
+		707) Two cities:
+			Problem statement
+				You are given three integers 'X', 'Y', and 'Z' representing the coordinates of the location of three different cities. Also, you are given an integer 'S' representing your location. (Note that the coordinate system is '1'-dimensional)
+				To travel from the coordinate 'A' to 'B', you need '| A - B |' units of time.
+				You want to explore any two different cities in the minimum time. You can assume that the time for exploring the city is negligible.
+				Find the minimum traveling time to travel to at least two different cities.
+				Note that '| N |' represents the absolute value of 'N'.
+				Example:
+				X = -2
+				Y = 0
+				Z = 8
+				S = 5
+				You can use the path 'S' -> 'Y' -> 'X'. Traveling time for the same is '| 5 - 0 | + | 0 - (-2) |' = '7'.
+				It can be proved that you can not explore two cities in less than '7' units of time.
+				So, the answer for this case is '7'.
+				Constraints:
+					1 <= 'N' <= 10^5
+					-10^8 <= 'X', 'Y', 'Z', 'S' <= 10^8
+					It is guaranteed that given '4' integers are distinct.
+
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					0 1 2 3 
+					0 11 13 12
+					Sample output 1:
+					2
+					3
+					Explanation of sample input 1:
+					For test case 1:
+					You can use the path 'S' -> 'Z' -> 'Y'. Traveling time for the same is '| 3 - 2 | + | 2 - 1 |' = '2'.
+					It can be proved that you can not explore two cities in less than '2' units of time.
+					So, the answer for this case is '2'.
+
+
+					For test case 2:
+					You can use the path 'S' -> 'Y' -> 'Z'. Traveling time for the same is '| 12 - 11 | + | 11 - 13 |' = '3'.
+					It can be proved that you can not explore two cities in less than '3' units of time.
+					So, the answer for this case is '3'.
+					Sample input 2:
+					2
+					-5 0 8 -4
+					0 10 11 3
+					Sample output 2:
+					6
+					8
+
+			int minimumTime(int x, int y, int z, int s) {
+				int ans = INT_MAX;
+
+				ans = min(ans, abs(s-x)+abs(x-y));
+				ans = min(ans, abs(s-y)+abs(y-x));
+				
+				ans = min(ans, abs(s-x)+abs(x-z));
+				ans = min(ans, abs(s-z)+abs(z-x));
+
+				ans = min(ans, abs(s-y)+abs(y-z));
+				ans = min(ans, abs(s-z)+abs(z-y));   
+
+				return ans;
+			}
+			
+		708) String Maker:
+			Problem statement
+				A string 'S' is called a good string if there is no such 'S[i]' which is equal to 'S[i + 1]' and has 'M' distinct characters.
+				You are given the number 'N', and your task is to find the lexicographically smallest string 'S'.
+				A string 'a' is called lexicographically smaller than a string 'b' if and only if one of the following holds:
+				'a' is a prefix of 'b', but 'a ≠ b'.
+				in the first position where 'a' and 'b' differ, the string 'a' has a letter that appears earlier in the alphabet than the corresponding letter in 'b'.
+
+				Example:
+				'N' = 3
+				'M' = 2
+
+				The all possible good strings 'S' are:
+				'S' = 'aba' 
+				'S' = 'bab'
+
+				The string 'S' = 'aba' is the lexicographically smallest string.
+				So, the answer is 'aba'.
+				Constraints:
+					1 <= T <= 10
+					1 <= N <= 10^5
+					2 <= M <= min(26, N)
+				It is guaranteed that the sum of 'N' over all test cases won't exceed '10^5'.
+				Time Limit: 1 second
+
+				Sample Input 1:
+					2
+					6 3
+					7 2
+					Sample Output 1:
+					abababc
+					ababab
+					Explanation Of Sample Input 1:
+					For test case 1:
+					There are many possible good strings of length '7'(N), that contain '3'(M) distinct characters, but the string 'abababc' is the lexicographically smallest among them.
+					So, the answer is 'abababc'.
+
+					For test case 2:
+					There are many possible good strings of length '6'(N), that contain '2(M) distinct characters, but the string 'ababab' is the lexicographically smallest among them.
+					So, the answer is 'ababab'.
+					Sample Input 2:
+					2
+					8 4
+					8 3
+					Sample Output 2:
+					abababcd
+					abababac
+
+			string generateString(int n, int m) {
+				vector<char> chars;
+				char ch = 'a';
+
+				int temp = m;
+				while(temp--)
+					chars.push_back(ch++);
+
+				string ans;
+
+				int val = m - 2, i=0;
+				int looper = n - val;
+
+				int flag = 0;
+				while(looper--){
+					ans += chars[i];
+					(flag == 0) ? (flag =1, i++) : (flag =0, i--);
+				}
+
+				i = 2;
+				while(val--)
+					ans += chars[i++];
+
+				return ans;
+			}
+
+		709) Score sum:
+			Problem statement
+				You are given an array ‘A’ of ‘N’ integers numbered from ‘0’ to ‘N - 1’. The score of some element ‘i’ is given by the minimum value of ‘(A[i] * A[j])’ where, ‘j’ <= ‘i’ and ‘(j | i)’ should be equal to ‘i’.
+				Here ‘|’ denotes the bitwise ‘OR’ operation. You have to calculate the score of all the elements from ‘0’ to ‘N - 1’.
+				Your task is to tell the sum of scores of all the elements from ‘0’ to ‘N - 1’ and return it.
+
+				Example:
+				‘N’ = 4
+				‘A’ = [4, 10, 6, 2]
+
+				For element ‘i’ = ‘0’:
+				Only ‘j’ = ‘0’ follows the given condition which gives the score of ‘(A[0] * A[0])’ that is ‘16’.
+
+				For element ‘i’ = ‘1’:
+				Here, the score is given by taking ‘j’ = ‘0’, (as ‘0’ OR ‘1’ is ‘1’), which is ‘40’. We can also take ‘j’ = ‘1’ but it is not giving us a minimum value.
+
+				For element ‘i’ = ‘2’:
+				Here, the score is given by taking ‘j’ = ‘0’, which is ‘(4 * 6 = 24)’.
+
+				For element ‘i’ = ‘3’:
+				We can choose any value of ‘j’ from ‘0’ to ‘3’, all are following the given condition but the minimum value is given by  ‘j’ = ‘3’. So, the score of this element is ‘4’.
+
+				The sum of scores of all the elements is: ‘84’.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^5
+					0 <= A[i] <= 10^5
+
+					Time Limit: 1 sec 
+				Sample Input 1:
+					2
+					3
+					1 5 0
+					2
+					2 4
+					Sample Output 1:
+					6
+					12
+					Explanation of sample input 1:
+					For test case 1:
+					For element ‘i’ = 0:
+					Only ‘j’ = ‘0’ follows the given condition which gives the score of ‘(A[0] * A[0])’ that is ‘1’.
+
+					For element ‘i’ = 1:
+					Here, the score is given by taking ‘j’ = 0, which is ‘(1 * 5 = 5)’.
+
+					For element ‘i’ = 2:
+					Here, the score is given by taking ‘j’ = 2, which is ‘0’.
+					Hence, the sum of scores of all the elements is ‘6’.
+
+					For test case 2:
+					For element ‘i’ = 0:
+					Only ‘j’ = ‘0’ follows the given condition which gives the score of ‘(A[0] * A[0])’ that is ‘4’.
+
+					For element ‘i’ = 1:
+					Here, the score is given by taking ‘j’ = 0, which is ‘(2 * 4 = 8)’.
+
+					Hence, the sum of scores of all the elements is ‘12’.
+					Sample Input 2:
+					2
+					7
+					11 2 0 12 4 30 11
+					4
+					12 1 1 0
+					Sample Output 2:
+					201
+					146
+
+			// Says Wrong:
+				#include <bits/stdc++.h>
+				long long scoreSum (int n, vector <int> &a) {
+					long long total=0;
+					for(int i=0; i<n; i++){
+						long long curMin = INT_MAX;
+						for(int j=0; j<=i; j++)
+							if(i == (j|i))
+								curMin = min(curMin, a[i]*a[j]*1LL);
+								
+						total += curMin;
+					}
+					return total;
+				}
+		
+	710)
+
+	711)
+	
+	712)
+
+	713)
+
+	714)
+
+	715)
+	
+	716)
+	
+	717)
+	
+	718)
+	
+	719)
+	
+	720)
+
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
