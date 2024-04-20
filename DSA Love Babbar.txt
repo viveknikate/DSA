@@ -19425,6 +19425,60 @@ Lecture47: Detect & Remove Loop in Linked List [Approach Discussion + Optimised 
 	- Return the node from where cycle starts.
 	- Remove cycle from LinkedList.
 
+	Q. Detect and Remove Loop:
+		Problem statement
+			Given a singly linked list, you have to detect the loop and remove the loop from the linked list, if present. You have to make changes in the given linked list itself and return the updated linked list.
+			Expected Complexity: Try doing it in O(n) time complexity and O(1) space complexity. Here, n is the number of nodes in the linked list.
+			Constraints:
+				1 <= N <= 100000.
+				1 <= ‘VAL’ <= 1000.
+				Time limit: 1 sec
+
+			Sample Input:
+			6 2
+			1 2 3 4 5 6 
+			Sample Output:
+			1 2 3 4 5 6
+			Explanation:
+			For the given input linked list, the last node is connected to the second node as:
+			Now, after detecting and removing this loop the linked list will be:
+
+		Node *removeLoop(Node *head) {
+			if(head == nullptr)
+				return head;
+
+			Node *slow = head, *fast = head;
+			// this loop confirms the cycle in LL.
+			while(fast){
+				fast =  fast -> next;
+				if(fast == nullptr)
+					return head;
+				fast = fast -> next;
+				slow = slow -> next;
+				if(slow == fast)
+					break;
+			}
+
+			if(fast == nullptr)
+				return head;
+
+			// this loop finds the starting point of that loop
+			slow = head;
+			while(slow != fast){
+				slow = slow -> next;
+				fast = fast  -> next;
+			}
+			
+			while(fast -> next != slow )
+				fast = fast -> next;
+
+			fast -> next = nullptr;
+			return head;
+		}	
+---------------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
 	//Ternary Operator
@@ -74726,13 +74780,223 @@ POTD:-[Problem of the Day]
 					return total;
 				}
 		
-	710)
+	710) Find missing in second array:
+		Problem statement:
+			Given two arrays a of size n and b of size m, the task is to find numbers which are present in the first array, but not present in the second array.
+			Example 1:
+			Input: 
+			n = 6, m = 5
+			a[] = {1, 2, 3, 4, 5, 10}
+			b[] = {2, 3, 1, 0, 5}
+			Output: 
+			4 10
+			Explanation: 
+			4 and 10 are present in first array, but not in second array.
+			
+			Example 2:
+			Input: 
+			n = 5, m = 5
+			a[] = {4, 3, 5, 9, 11}
+			b[] = {4, 9, 3, 11, 10}
+			Output: 
+			5  
+			Explanation: 
+			Second array does not contain element 5.
 
-	711)
+			Your Task:
+				This is a function problem. You don't need to take any input, as it is already accomplished by the driver code. You just need to complete the function findMissing() that takes array a, array b, integer n, and integer m as parameters and returns an array that contains the missing elements and the order of the elements should be the same as they are in array a.
+
+			Expected Time Complexity: O(n+m).
+			Expected Auxiliary Space: O(m).
+
+			Constraints:
+				1 ≤ n, m ≤ 10^5
+				-10^9 ≤ A[i], B[i] ≤ 10^9
+
+		// Not Optimized
+			class Solution{
+				public:
+				vector<int> findMissing(int a[], int b[], int n, int m) {
+					vector<int> res;				
+					for(int i=0; i<n; i++)
+						if(find(b, b+m, a[i]) == b+m)
+							res.push_back(a[i]);
+					
+					return res;
+				} 
+			};
+		
+		// Optimized:
+			class Solution{
+				public:
+				vector<int> findMissing(int a[], int b[], int n, int m) {
+					vector<int> res;
+					set<int> temp (b, b+m);
+					
+					for(int i=0; i<n; i++)
+						if(temp.find(a[i]) == temp.end())
+							res.push_back(a[i]);
+					
+					return res;
+				} 
+			};
+
+	711) Zig-Zag String: (Easy)
+		Problem statement
+			You are given a string ‘STR’ of size ‘N’ and an integer ‘M’ (the number of rows in the zig-zag pattern of ‘STR’). Your task is to return the string formed by concatenating all ‘M’ rows when string ‘STR’ is written in a row-wise zig-zag pattern.
+			Example:
+			N = 12, M = 3 and STR = ‘CODINGNINJAS’
+			There are three rows (‘M = 3’) in the zig-zag pattern. Row one contains ‘CNN’, row two contains ‘OIGIJS’, and row three contains ‘DNA’. After concatenating the three rows, we get the string ‘CNNOIGIJSDNA’. So, the answer is ‘CNNOIGIJSDNA’.
+			Note:
+			1. The string ‘STR’ consists of capital letters only (i.e., characters from ‘A-Z’).
+			Constraints:
+				1 <= T <= 10^2
+				1 <= N <= 10^3
+				1 <= M <= N
+				‘STR’ contains only ‘A-Z’ characters.
+				Time Limit: 1 second
+
+			Sample Input 1:
+				2
+				7 3
+				ABCDEFG
+				5 2
+				NINJA
+				Sample Output 1:
+				AEBDFCG
+				NNAIJ
+				Explanation For Sample Input 1:
+				Test Case 1:
+				There are three rows (‘m = 3’) in the zig-zag pattern. Row one contains ‘AE’, row two contains ‘BDF’, and row three contains ‘CG’. After concatenating the three rows, we get the string ‘AEBDFCG’. So, the answer is ‘AEBDFCG’.
+
+				Test Case 2:
+				There are two rows (‘m = 2’) in the zig-zag pattern. Row one contains ‘NNA’, and row two contains ‘IJ’. After concatenating the two rows, we get the string ‘NNAIJ’. So, the answer is ‘NNAIJ’.
+				Sample Input 2:
+				2
+				4 2
+				PQRS
+				6 6
+				ZIGZAG
+				Sample Output 2:
+				PRQS
+				ZIGZAG
+
+		#include <bits/stdc++.h> 
+		string zigZagString(string str, int n, int m) {
+			if(str.length() < 3 || m == 1)
+				return str;
+			
+			vector<vector<char>> holder(m);
+			int i=0, row=0, flag=1;
+
+			while(i < str.size()){
+				if(flag){
+					holder[row++].push_back(str[i]);
+					if(row >= m){
+						row = m-2;
+						flag =0;
+					}
+				}else{
+					holder[row--].push_back(str[i]);
+					if(row < 0){
+						flag =1;
+						row = 1;
+					}
+				}
+				i++;
+			}
+
+			string res;
+			for(int i=0; i<holder.size(); i++)
+				for(int j =0; j < holder[i].size(); j++)
+					res += holder[i][j];
+			return res;
+		}
 	
-	712)
+	712) Zig-Zag Conversion: (Medium)
+		Problem statement
+			You are given a string ‘S’ and an integer ‘ROW’, convert the row into a zig-zag pattern with rows equal to ‘ROW’ and output it row-wise. You may refer to the example below to better understand what the zig-zag pattern means.
+			Example :
+			If ‘S’ = “beaninjacoder” and ‘ROW’ = 4
+			Then the zig-zag pattern is:
+				b         j        r
+				e     n   a     e
+				a   i     c   d
+				n         o
 
-	713)
+			Therefore, we will print “bjrenaeaicdno”.
+			Constraints :
+			1 ≤ ‘T’ ≤ 10      
+			1 ≤ |S| ≤ 10000
+			1 ≤ ‘ROW’ ≤ 10000
+			S only contains lower case English alphabets
+			Time limit: 1 sec
+			Sample Input 1 :
+			2
+			beaninjacoder
+			4
+			codingninjas
+			2
+			Sample Output 1 :
+			bjrenaeaicdno
+			cdnnnaoigijs
+			Explanation For Sample Input 1 :
+			For test case 1 :
+			We will print “bjrenaeaicdno” because the zig-zag pattern is:
+			b         j        r
+			e     n   a     e
+			a   i     c   d
+			n         o
+			And, we will now row-wise output the letters from this pattern formed.
+
+			For test case 2 : 
+			We will print “cdnnnaoigijs” because the zig-zag pattern is:
+			c  d  n  n  n  a     
+			o  i  g  i  j  s
+			Sample Input 2 :
+				2
+				canyousolvethisproblem
+				5
+				canyousolvethisproblem
+				3
+				Sample Output 2 :
+				clraovponsesbyutilmohe
+				colhreayuovtipolmnsesb
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			string zigzagConversion(string s, int row) {
+				if(s.size() < 3 || row == 1)
+					return s;
+
+				vector<vector<char>> V(row);
+				int i=0, flag=1, m=0;
+				while(i < s.size()){
+					if(flag){
+						V[m++].push_back(s[i]);
+						if(m >= row){
+							flag =0;
+							m -=2;
+						}
+					}else{
+						V[m--].push_back(s[i]);
+						if(m < 0){
+							flag =1;
+							m += 2;
+						}
+					}
+					i++;
+				}
+				
+				string res;
+				for(int i=0; i<row; i++)
+					for(int j=0; j<V[i].size(); j++)
+						res += V[i][j];
+						
+				return res;
+			}
+
+	713) 
 
 	714)
 
