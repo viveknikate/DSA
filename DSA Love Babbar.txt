@@ -19475,6 +19475,10 @@ Lecture47: Detect & Remove Loop in Linked List [Approach Discussion + Optimised 
 			fast -> next = nullptr;
 			return head;
 		}	
+
+	HomeWork:
+		5 ways to remove loop from linked list:
+		3 ways to detect loop in linked list:
 ---------------------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------------------
@@ -33305,7 +33309,7 @@ POTD:-[Problem of the Day]
 			Expected Auxiliary Space: O(1).
 
 			Constraints:
-				1 ≤ N ≤ 109
+				1 ≤ N ≤ 10^9
 				0 ≤ K ≤ 31
 
 		class Solution {
@@ -53615,6 +53619,8 @@ POTD:-[Problem of the Day]
 		-creating a mask till (k-1)th index, & checking if the kth index is 1 or 0, if 1 then returing true else false.
 		bool isKthBitSet(int n, int k) {
 			return (n & (1 << (k-1))) ? 1 : false;
+			// return (n & (1 << (k-1))) ? 1 : 0;
+
 		}
 
 	398) K largest elements:
@@ -74996,18 +75002,416 @@ POTD:-[Problem of the Day]
 				return res;
 			}
 
-	713) 
+	713) Union of Two Sorted Arrays:
+		Problem Statement:
+			Given two sorted arrays of size n and m respectively, find their union. The Union of two arrays can be defined as the common and distinct elements in the two arrays. 
+			Example 1:
+			Input: 
+			n = 5, arr1[] = {1, 2, 3, 4, 5}  
+			m = 5, arr2 [] = {1, 2, 3, 6, 7}
+			Output: 
+			1 2 3 4 5 6 7
+			Explanation: 
+			Distinct elements including both the arrays are: 1 2 3 4 5 6 7.
 
-	714)
+			Example 2:
+			Input: 
+			n = 5, arr1[] = {2, 2, 3, 4, 5}  
+			m = 5, arr2[] = {1, 1, 2, 3, 4}
+			Output: 
+			1 2 3 4 5
+			Explanation: 
+			Distinct elements including both the arrays are: 1 2 3 4 5.
 
-	715)
+			Example 3:
+			Input:
+			n = 5, arr1[] = {1, 1, 1, 1, 1}
+			m = 5, arr2[] = {2, 2, 2, 2, 2}
+			Output: 
+			1 2
+			Explanation: 
+			Distinct elements including both the arrays are: 1 2.
+
+			Your Task: 
+				You do not need to read input or print anything. Complete the function findUnion() that takes two arrays arr1[], arr2[], and their size n and m as input parameters and returns a list containing the union of the two arrays.
+
+			Expected Time Complexity: O(n+m).
+			Expected Auxiliary Space: O(n+m).
+
+			Constraints:
+				1 <= n, m <= 10^5
+				-10^9 <= arr1[i], arr2[i] <= 10^9
+
+		class Solution{
+			public:
+			//arr1,arr2 : the arrays
+			// n, m: size of arrays
+			//Function to return a list containing the union of the two arrays. 
+			vector<int> findUnion(int arr1[], int arr2[], int n, int m) {
+				set<int> s (arr1, arr1+n);
+				s.insert(arr2, arr2+m);
+				
+				vector<int> v (s.begin(), s.end());
+				return v;
+			}
+		};
+
+	714) Reverse The Array:
+		Problem statement
+			Given an array/list 'ARR' of integers and a position ‘M’. You have to reverse the array after that position.
+
+			Example:
+			We have an array ARR = {1, 2, 3, 4, 5, 6} and M = 3 , considering 0 
+			based indexing so the subarray {5, 6} will be reversed and our 
+			output array will be {1, 2, 3, 4, 6, 5}.
+			Constraints:
+				1 <= T <= 10
+				0 <= M <= N <= 5*10^4
+				-10^9 <= ARR[i] <= 10^9
+
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				6 3
+				1 2 3 4 5 6
+				5 2
+				10 9 8 7 6
+				Sample Output 1:
+				1 2 3 4 6 5
+				10 9 8 6 7
+				Explanation 1:
+				For the first test case, 
+				Considering 0-based indexing we have M = 3 so the 
+				subarray[M+1 … N-1] has to be reversed.
+				Therefore the required output will be {1, 2, 3, 4, 6, 5}.
+
+				For the second test case, 
+				Considering 0-based indexing we have M = 2 so the 
+				subarray[M+1 … N-1] has to be reversed.
+				Therefore the required output will be {10, 9, 8, 6, 7}.
+				Sample Input 2:
+				2
+				7 3
+				1 4 5 6 6 7 7 
+				9 3
+				10 4 5 2 3 6 1 3 6
+				Sample Output 2:
+				1 4 5 6 7 7 6
+				10 4 5 2 6 3 1 6 3 
+
+			Hints:
+				1. Try to think by creating another array
+				2. Try to think which elements are beign swapped.
+
+		void reverseArray(vector<int> &arr , int m){
+			if(arr.size() == 1 || arr.size() <= m)
+				return ;
+
+			int i = m + 1, j = arr.size()-1;
+			while(i < j)
+				swap(arr[i++], arr[j--]);
+		}
+
+	715) Replace The Linked List:
+		Problem statement
+			Given a linked list containing a series of numbers that are separated by ‘0’. You need to find the sum of the series and replace the series’s elements with its sum.
+			For Example :
+			If the given linked list is 3 ->4 ->0 ->5 ->0, you should return linked list as - 7 -> 5.
+			Note :
+			You need to replace the sum values in the linked list without using any extra space.
+
+			It is guaranteed that there will be no two consecutive zeroes in the linked list.
+			Constraints :
+				1 <= T <= 50
+				1 <= N <= 10^5
+				-10^9 <= data <= 10^9
+				data ≠ -1.
+
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				2 5 7 0 3 4 0 -1
+				1 2 3 0 -1
+				Sample Output 1 :
+				14 7
+				6
+				Explanation For Sample Input 1 :
+				Test Case 1: In the given linked list sum of series 2, 5, 7 is 14, and the sum of series 3,4 is 7. So the modified, linked list will be 14 -> 7.
+
+				Test Case 2: The only series formed in the linked list 1,2,3 have sum = 6. Therefore modified linked list will be 6.
+				Sample Input 2 :
+				2
+				5 3 8 2 -1
+				0 6 0 4 0 -1
+				Sample Output 2 :
+				5 3 8 2
+				6 4
+
+		#include <bits/stdc++.h> 
+		/*
+			Following is the Node Structure written below	
+			class Node {
+				public:
+					int data;
+					Node * next;
+				Node(int x) {
+					data=x;
+					next=NULL;
+				}
+			};
+		*/
+
+		Node* replaceWithSum(Node *head) {
+			if(head -> data == 0)
+				head = head -> next;
+
+			if(!head)
+				return head;
+
+			int flag, firstTimeFlag, sum=0;
+			flag = firstTimeFlag = 1;
+			
+			Node* trvrs = head, *temp = NULL;	
+
+			while(trvrs){
+				if(firstTimeFlag && trvrs -> data == 0){
+					head = trvrs;
+					firstTimeFlag = 0;
+					trvrs -> data = sum;
+					sum=0;
+					trvrs = trvrs -> next;
+					continue;
+				}
+
+				if(trvrs -> data == 0){
+					if(flag){
+						flag = 0;
+						temp = trvrs;
+						head -> next = temp;
+						trvrs -> data = sum;
+					}else{
+						temp -> next = trvrs;
+						temp = trvrs;
+						trvrs -> data = sum;
+					}
+					sum =0;
+				}else{
+					sum += trvrs -> data;
+				}
+				trvrs = trvrs -> next;
+			}
+
+			if(firstTimeFlag)
+				return head;	
+			return head;
+		}
 	
-	716)
-	
-	717)
-	
-	718)
-	
+	#LeetCode Weekly Contest-394
+		716) Count the Number of Special Characters I:
+			Problem Statement:
+				You are given a string word. A letter is called special if it appears both in lowercase and uppercase in word.
+				Return the number of special letters in word.		
+
+				Example 1:
+				Input: word = "aaAbcBC"
+				Output: 3
+				Explanation:
+				The special characters in word are 'a', 'b', and 'c'.
+
+				Example 2:
+				Input: word = "abc"
+				Output: 0
+				Explanation:
+				No character in word appears in uppercase.
+
+				Example 3:
+				Input: word = "abBCab"
+				Output: 1
+				Explanation:
+				The only special character in word is 'b'.
+				Constraints:
+					1 <= word.length <= 50
+					word consists of only lowercase and uppercase English letters.
+
+			class Solution {
+				public:
+				int numberOfSpecialChars(string word) {
+					int cnt=0;
+					set<char> s (word.begin(), word.end());
+					word.clear();
+					word.insert(word.end(), s.begin(), s.end());
+					
+					for(int i=0; i < word.size(); i++){
+						if(islower(word[i])){
+							char ch = toupper(word[i]);
+							if(word.find(ch) != string::npos)
+								cnt++;
+						}
+					}        
+					return cnt;
+				}
+			};	
+		
+		717) Count the Number of Special Characters II:
+			Problem Statement:
+				You are given a string word. A letter c is called special if it appears both in lowercase and uppercase in word, and every lowercase occurrence of c appears before the first uppercase occurrence of c.
+				Return the number of special letters in word.		
+
+				Example 1:
+				Input: word = "aaAbcBC"
+				Output: 3
+				Explanation:
+				The special characters are 'a', 'b', and 'c'.
+
+				Example 2:
+				Input: word = "abc"
+				Output: 0
+				Explanation:
+				There are no special characters in word.
+
+				Example 3:
+				Input: word = "AbBCab"
+				Output: 0
+				Explanation:
+				There are no special characters in word.		
+
+				Constraints:
+					1 <= word.length <= 2 * 10^5
+					word consists of only lowercase and uppercase English letters.
+
+			class Solution {
+				public:
+				int numberOfSpecialChars(string word) {
+					int cnt=0;
+					
+					set<char> holder;
+					
+					for(int i=0; i<word.size(); i++){
+						if(islower(word[i]) && holder.find(word[i]) == holder.end()){
+
+							// finding upperversion
+							int flag_Up_present = 0, flag_again_not = 1;
+							int j;
+							for(j=i+1; j<word.size(); j++){
+								if(toupper(word[i]) == word[j]){
+								flag_Up_present = 1;
+								break;
+								}
+							}
+							
+							// checking lower version should not be there after upper version
+							j++;
+							for(j; j<word.size(); j++)
+								if(word[i] == word[j])
+								flag_again_not = 0;
+							
+							if(flag_Up_present && flag_again_not)
+								cnt++;
+						}
+						holder.insert(tolower(word[i]));
+					}
+					
+					return cnt;
+				}
+			};
+
+	718) Three way partitioning:
+		Problem Statement:
+			Given an array of size n and a range [a, b]. The task is to partition the array around the range such that the array is divided into three parts.
+			1) All elements smaller than a come first.
+			2) All elements in range a to b come next.
+			3) All elements greater than b appear in the end.
+			The individual elements of three sets can appear in any order. You are required to return the modified array.
+			Note: The generated output is 1 if you modify the given array successfully.
+			Geeky Challenge: Solve this problem in O(n) time complexity.
+
+			Example 1:
+			Input: 
+			n = 5
+			array[] = {1, 2, 3, 3, 4}
+			[a, b] = [1, 2]
+			Output: 
+			1
+
+			Explanation: 
+			One possible arrangement is: {1, 2, 3, 3, 4}. If you return a valid arrangement, output will be 1.
+
+			Example 2:
+			Input: 
+			n = 6 
+			array[] = {1, 4, 3, 6, 2, 1}
+			[a, b] = [1, 3]
+			Output: 
+			1
+
+			Explanation: 
+			One possible arrangement is: {1, 3, 2, 1, 4, 6}. If you return a valid arrangement, output will be 1.
+
+			Your Task:
+				You don't need to read input or print anything. The task is to complete the function threeWayPartition() which takes the array array, a, and b as input parameters and modifies the array in place according to the given conditions.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= n <= 10^6
+				1 <= array[i], a, b <= 10^9
+
+		/* TC: O(n) & SC: O(n)*/
+		class Solution{   
+			public:
+			//Function to partition the array around the range such 
+			//that array is divided into three parts.
+			void threeWayPartition(vector<int>& array,int a, int b) {
+				vector<int> smaller, middle, last;
+				
+				int start, mid, end;
+				start = mid = end = 0;
+				
+				for(int i=0; i<array.size(); i++){
+					if(array[i] < a){
+						smaller.push_back(array[i]);
+					}else if(array[i] > b){
+						last.push_back(array[i]);
+					}else{
+						middle.push_back(array[i]);
+					}
+				}
+				array = smaller;
+				array.insert(array.end(), middle.begin(), middle.end());
+				array.insert(array.end(), last.begin(), last.end());
+
+				//for(auto i: array)
+				//	cout<<i <<"\t";
+			}
+		};
+
+		/* TC: O(n) & SC: O(1)*/
+			void threeWayPartition(vector<int>& array,int a, int b) {
+				int low, mid, high;
+				
+				low = mid = 0;
+				high = array.size()-1;
+				
+				while(mid <= high){
+					if(array[mid] < a){
+						swap(array[low], array[mid]);
+						low++;
+						mid++;
+					}else if(array[mid] > b){
+						swap(array[mid], array[high]);
+						high--;
+					}else{
+						mid++;
+					}
+				}
+			}
+
+		/* TC: O(n log(n)) & SC: O(1) (call stack space will be O(log n) */
+			void threeWayPartition(vector<int>& array,int a, int b) {
+				sort(array.begin(), array.end());
+			}
+		
 	719)
 	
 	720)
