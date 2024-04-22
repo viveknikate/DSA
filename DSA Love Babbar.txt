@@ -19478,9 +19478,32 @@ Lecture47: Detect & Remove Loop in Linked List [Approach Discussion + Optimised 
 
 	HomeWork:
 		5 ways to remove loop from linked list:
-		3 ways to detect loop in linked list:
----------------------------------------------------------------------------------------------------------
+			1) Floyd’s cycle detection algorithm (hare & tortoise algorithm)
+			2)
+			3)
+			4)
+			5)
+			❌Pending
 
+		3 ways to detect loop in linked list:
+			1) Floyd’s Cycle Detection Algorithm (hare & tortoise algorithm)/(two pointer algorithm)/(slow, fast pointer algorithm)
+			2) Using hashMap Refer Q.723 (marking true to visited elements, if we found true again then considering the loop present).
+				map<Node*, bool> Vis;
+			
+			3) using vector & find function				
+				vector<Node*> holder;
+				-storing the address of every Node, if we found the address of Node which is already present in vector, then we can say that loop present.
+			
+			4) by changing the structure of Node, keeping a flag=0 element in NODE.
+				-firstly checking the flag, if flag = 1, then loop present, else continue iterating over list till NULL.
+				-as we visit each element setting that flag=1.
+---------------------------------------------------------------------------------------------------------
+Lecture-48: Remove Duplicates from a Sorted/UnSorted Linked List
+	Q.1. Remove Duplicates from a Sorted LL:
+		-> Refer Q.727 & Q.728 from POTD section
+	
+	Q.2. Remove Duplicates from a Unsorted LL:
+		-> Refer Q.- from POTD section
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
@@ -57683,7 +57706,7 @@ POTD:-[Problem of the Day]
 				You don't need to read or print anything. 
 				Your task is to complete the function rotate() 
 				which takes matrix as input parameter and rotate 
-				the matrix by 180 degree wihtout using extra memory. 
+				the matrix by 180 degree without using extra memory. 
 				You have to rotate the matrix in-place which means you have to modify the input matrix directly.
 			
 
@@ -75250,7 +75273,27 @@ POTD:-[Problem of the Day]
 					}        
 					return cnt;
 				}
-			};	
+			};
+
+			//or 
+			class Solution {
+				public:
+				int numberOfSpecialChars(string word) {
+					set<char> s (word.begin(), word.end());
+					string str (s.begin(), s.end());
+					// or
+					// word.assign(s.begin(), s.end());
+
+					int cnt=0;
+					for(int i=0; i<str.size(); i++){
+						if(islower(str[i])){
+							if((str.find(str[i]) != string::npos) && (str.find(toupper(str[i])) != string::npos))
+								cnt++;
+						}            
+					}
+					return cnt;
+				}
+			};
 		
 		717) Count the Number of Special Characters II:
 			Problem Statement:
@@ -75387,6 +75430,7 @@ POTD:-[Problem of the Day]
 		};
 
 		/* TC: O(n) & SC: O(1)*/
+			-Based on DNF (Dutch Nation Flag) Algorithm:
 			void threeWayPartition(vector<int>& array,int a, int b) {
 				int low, mid, high;
 				
@@ -75412,10 +75456,921 @@ POTD:-[Problem of the Day]
 				sort(array.begin(), array.end());
 			}
 		
-	719)
-	
-	720)
+	719) Interleave The First Half Of The Queue With The Second Half:
+		Problem statement
+			You have been given a queue of integers. You need to rearrange the elements of the queue by interleaving the elements of the first half of the queue with the second half.
+			Note :
+			The given queue will always be of even length.
+			For example :
+			If N= 10
+			and Q = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+			then the output will be
+			Q = [10, 60, 20, 70, 30, 80, 40, 90, 50, 100]
+			Constraints:
+				1 <= T <= 10^2
+				2 <= N <= 10^3
+				0 <= data <= 10^4
+				Where ‘T’ is the number of test cases, “data” is the value of the element of the queue.
+			Sample Input 1:
+				1
+				10
+				10 20 30 40 50 60 70 80 90 100
+				Sample Output 1:
+				10 60 20 70 30 80 40 90 50 100
+				Sample Input 2:
+				1
+				6
+				10 20 30 40 50 60 
+				Sample Output 2:
+				10 40 20 50 30 60 
 
+		#include <bits/stdc++.h> 
+		void interLeaveQueue(queue < int > & q) {
+			queue<int> clearedQueue, temp1, temp2;
+			int cnt=0;
+
+			swap(q, clearedQueue);			// this statement is to delete all elements from queue 'q'.
+
+			while(!clearedQueue.empty()){
+				cnt++;
+				temp2.push(clearedQueue.front());
+				clearedQueue.pop();
+			}
+
+			int half = cnt / 2;
+
+			while(half--){
+				temp1.push(temp2.front());
+				temp2.pop();
+			}
+
+			int altering=1;
+
+			while(cnt--){
+				if(altering){
+					altering=0;
+
+					q.push(temp1.front());
+					temp1.pop();
+					
+				}else{
+					altering=1;
+
+					q.push(temp2.front());
+					temp2.pop();
+				}
+			}
+		}
+	
+	720) Rearrange Linked List:
+		Problem statement
+			You have been given a singly Linked List in the form of 'L1' -> 'L2' -> 'L3' -> ... 'Ln'. Your task is to rearrange the nodes of this list to make it in the form of 'L1' -> 'Ln' -> 'L2' -> 'Ln-1' and so on. You are not allowed to alter the data of the nodes of the given linked list.
+			For example:
+			If the given linked list is 1 -> 2 -> 3 -> 4 -> 5 -> NULL.
+			Then rearrange it into 1 -> 5 -> 2 -> 4 -> 3 -> NULL. 
+			Constraints :
+				1 <= 'T' <= 10
+				0 <= 'L' <= 1000
+				1 <= data <= 10 ^ 9 and data != -1
+				Where ‘T’ is the number of test-cases and ‘L’ is the number of nodes in the Linked List, and ‘data’ is the data in each node of the list.
+				Time Limit: 1 sec.
+
+			Sample Input 1 :
+				2
+				1 2 3 4 5 6 -1
+				1 2 -1
+				Sample Output 1 :
+				1 6 2 5 3 4 -1
+				1 2 -1
+				Explanation for sample 1:
+				For the first test case, we have 1 as the starting element followed by 6, 2, 5, 3 and 4 respectively in the linked list after rearrangement.
+
+				For the second test case, we will get the same linked list after rearrangement, Therefore 1 2.
+				Sample Input 2 :
+				2
+				2 4 6 8 10 -1
+				-1
+				Sample Output 2 :
+				2 10 4 8 6 -1
+				-1
+
+		#include <bits/stdc++.h> 
+		/************************************************************
+			Following is the linked list node structure
+
+			template <typename T>
+			class Node {
+				public:
+				T data;
+				Node* next;
+
+				Node(T data) {
+					next = NULL;
+					this->data = data;
+				}
+
+				~Node() {
+					if (next != NULL) {
+						delete next;
+					}
+				}
+			};
+		************************************************************/
+		Node<int>* rearrangeList(Node<int>* head) {
+			Node<int>*  ans = head;
+
+			vector<int> holder;
+			while(ans){
+				holder.push_back(ans->data);
+				ans = ans -> next;
+			}
+
+			if(holder.size() <= 2)
+				return head;
+
+			int i=0, j= holder.size()-1, flag=1;
+			Node<int>* n = new Node(holder[i++]);
+			
+			ans = n;
+			Node<int>* temp = n;
+
+			while(i <= j){
+				if(flag){
+					Node<int>* n2 = new Node(holder[j--]);
+					temp -> next = n2;
+					temp = n2;
+					flag=0;
+				}else{
+					Node<int>* n2 = new Node(holder[i++]);
+					temp -> next = n2;
+					temp = n2;
+					flag=1;
+				}
+			}
+			return ans;
+		}
+
+	721) Maximum Difference:
+		Problem statement
+			You are given an array 'ARR' of the 'N' element. Your task is to find the maximum difference between any of the two elements from 'ARR'.
+			If the maximum difference is even print “EVEN” without quotes. If the maximum difference is odd print “ODD” without quotes.
+
+			For example:
+			Given 'ARR' = [1, 10, 5, 2, 8, 1 ] , answer is "ODD".
+			Here the maximum difference is between 10 and 1, 10 - 1 = 9
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 5000 
+				1 <= ARR[i] <= 10 ^ 9
+			where ‘N’ is the length of the array 'ARR', and 'ARR[i]' is an element of the 'ARR' respectively.
+			Time limit: 1 sec.
+
+			Sample Input 1:
+				2
+				4
+				2 9 3 4
+				6
+				1 1 1 1 1 1 
+				Sample Output 1:
+				ODD
+				EVEN
+				Explanation of Sample Input 1:
+				For the first test case, the maximum difference is 7, between 9 and 2.
+
+				For the second test case, all elements are the same, the maximum difference is 0.
+				Sample Input 2:
+				2
+				2
+				567 11
+				1
+				28
+				Sample Output 2:
+				EVEN
+				EVEN 
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			string maximumDifference(int n, vector<int>& arr) {
+				sort(arr.begin(), arr.end());
+				return ((arr.back() - arr[0]) & 1) ? "ODD" : "EVEN";
+			}
+
+		// Optimized:
+			#include <bits/stdc++.h> 
+			string maximumDifference(int n, vector<int>& arr) {
+				int mn = *min_element(arr.begin(), arr.end());
+				int mx = *max_element(arr.begin(), arr.end());
+				return ((mx-mn) & 1) ? "ODD" : "EVEN";
+			}
+	
+	722) Row with minimum number of 1's:
+		Problem Statement:
+			Given a 2D binary matrix(1-based indexed) a of dimensions nxm , determine the row that contains the minimum number of 1's.
+			Note: The matrix contains only 1's and 0's. Also, if two or more rows contain the minimum number of 1's, the answer is the lowest of those indices.
+
+			Example 1:
+			Input:
+			n = 4,m = 4
+			a = [[1, 1, 1, 1],
+				[1, 1, 0, 0], 
+				[0, 0, 1, 1],
+				[1, 1, 1, 1]]
+			Output:
+			2
+			Explanation:
+			Rows 2 and 3 contain the minimum number 
+			of 1's(2 each).Since,row 2 is less than row 3.
+			Thus, the answer is 2.
+			
+			Example 2:
+			Input:
+			n = 3,m = 3
+			a = [[0, 0, 0],
+				[0, 0, 0],
+				[0, 0, 0]]
+			Output:
+			1
+			Explanation:
+			All the rows contain the same number 
+			of 1's(0 each).Among them, index 1 
+			is the smallest, so the answer is 1.
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function minRow() which takes the two integers n, m as well as the 2D binary matrix a as input parameters and returns the minimum index of the row which contains the least number of 1's.
+
+			Expected Time Complexity:O(n*m)
+			Expected Auxillary Space:O(1)
+
+			Constraints:
+				1 <= n,m <= 1000
+				0 <= a[i][j] <= 1
+
+		class Solution {
+			public:
+			int minRow(int n, int m, vector<vector<int>> a) {
+				int minAns = 1, prev=0;;
+				
+				for(int i=0; i<1; i++)
+					for(int j=0; j<m; j++)
+						if(a[i][j] == 1)
+							prev++;
+				
+				for(int i=1; i<a.size(); i++){
+					int cnt =0;
+					
+					for(int j=0; j<m; j++)
+						if(a[i][j] == 1)
+							cnt++;
+							
+					if(cnt < prev){
+						prev = cnt;
+						minAns = i+1;
+					}
+				}
+
+				return minAns;
+			}
+		};
+
+	723) Detect Loop in linked list:
+		Problem Statement:
+			Given a linked list of N nodes. The task is to check if the linked list has a loop. Linked list can contain self loop.
+			Example 1:
+			Input:
+			N = 3
+			value[] = {1,3,4}
+			x(position at which tail is connected) = 2
+			Output: True
+			Explanation: In above test case N = 3.
+			The linked list with nodes N = 3 is
+			given. Then value of x=2 is given which
+			means last node is connected with xth
+			node of linked list. Therefore, there
+			exists a loop.
+
+			Example 2:
+			Input:
+			N = 4
+			value[] = {1,8,3,4}
+			x = 0
+			Output: False
+			Explanation: For N = 4 ,x = 0 means
+			then lastNode->next = NULL, then
+			the Linked list does not contains
+			any loop.
+
+			Your Task:
+				The task is to complete the function detectloop() which contains reference to the head as only argument.  This function should return true if linked list contains loop, else return false.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ N ≤ 10^4
+				1 ≤ Data on Node ≤ 10^3
+		
+		/*
+			struct Node {
+			int data;
+			struct Node *next;
+			Node(int x) {
+				data = x;
+				next = NULL;
+			}   
+		*/
+		class Solution {
+			public:
+			//Function to check if the linked list has a loop.
+			bool detectLoop(Node* head) {
+				map<Node*, bool> isPresent;
+				while(head){
+					if(isPresent[head])
+						return 1;
+					isPresent[head] = 1;
+					head = head -> next;
+				}
+				return 0;
+			}
+		};
+
+		// or
+			class Solution {
+				public:
+				//Function to check if the linked list has a loop.
+				bool detectLoop(Node* head) {
+					Node *fast, *slow;
+					fast = slow = head;
+					while(fast){
+						fast = fast -> next;
+						if(!fast)
+							break;
+						fast = fast -> next;
+						slow = slow -> next;
+						if(slow == fast)
+							return 1;
+					}
+					return 0;
+				}
+			};
+	
+	724) Remove Duplicates from Sorted Array:
+		Problem statement
+			You are given a sorted integer array 'arr' of size 'n'.
+			You need to remove the duplicates from the array such that each element appears only once.
+			Return the length of this new array.
+			Note:
+			Do not allocate extra space for another array. You need to do this by modifying the given input array in place with O(1) extra memory. 
+			For example:
+			'n' = 5, 'arr' = [1 2 2 2 3].
+			The new array will be [1 2 3].
+			So our answer is 3.
+			Sample input 1:
+				10
+				1 2 2 3 3 3 4 4 5 5 
+				Sample output 1:
+				5
+				Explanation of sample input 1:
+				The new array will be [1 2 3 4 5].
+				So our answer is 5.
+				Sample input 2:
+				9
+				1 1 2 3 3 4 5 5 5 
+				Sample output 2:
+				5
+				Expected time complexity:
+				The expected time complexity is O(n).
+				Constraints :
+					1 <= 'n' <= 10^6
+					-10^9 <= 'arr[i]' <=10^9
+					Where ‘arr[i]’ is the value of elements of the array.
+					Time limit: 1 sec
+
+		// Using set:
+			#include<bits/stdc++.h>
+			int removeDuplicates(vector<int> &arr, int n) {
+				set<int> s (arr.begin(), arr.end());
+				// arr.assign(s.begin(), s.end())
+				return s.size();
+			}
+
+		// without using set or hashMap:
+			#include<bits/stdc++.h>
+			int removeDuplicates(vector<int> &arr, int n) {
+				vector<int> holder = {arr[0]};
+				for(int i=1; i<arr.size(); i++)
+					if(holder.back() != arr[i])
+						holder.push_back(arr[i]);
+
+				arr.assign(holder.begin(), holder.end());
+				return holder.size();
+			}
+	
+	725) Remove duplicate elements from sorted Array:
+		Problem Statement:
+			Given a sorted array a[] of size n, delete all the duplicated elements from a[] & modify the array such that only distinct elements should be present there.
+			Note:
+				1. Don't use set or HashMap to solve the problem.
+				2. You must return the modified array size where only distinct elements are present in the array, the driver code will print all the elements of the modified array.
+
+			Example 1:
+				Input:
+				N = 5
+				Array = {2, 2, 2, 2, 2}
+				Output: 
+				1
+				Explanation: After removing all the duplicates only one instance of 2 will remain i.e. {2} so modify array will contains 2 at first position and you should return 1 after modify the array.
+
+			Example 2:
+				Input:
+				N = 4
+				Array = {1, 2, 2, 4}
+				Output: 3
+				Explation: After removing all duplicates modify array will contains {1, 2, 4} at first 3 positions so you should return 3 after modify the array.
+
+			Your Task:  
+				You don't need to read input or print anything. Complete the function remove_duplicate() which takes the array a[] and its size n as input parameters and modifies it in place to delete all the duplicates. The function must return an integer X denoting the no. of distinct elements in the array keeping the first X elements of an array in increasing order. 
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ N ≤ 10^4
+				1 ≤ A[i] ≤ 10^6
+
+		class Solution{
+			public:
+			int remove_duplicate(int a[],int n){
+				vector<int> holder = {a[0]};
+				
+				for(int i=1; i<n; i++)
+					if(holder.back() != a[i])
+						holder.push_back(a[i]);
+				
+				for(int i=0; i<holder.size(); i++)
+					a[i] = holder[i];
+
+				return holder.size();
+			}
+		};
+
+	726)	Remove Duplicates:
+		Problem statement
+			Ninja is playing with numbers but hates when he gets duplicate numbers. Ninja is provided an array, and he wants to remove all duplicate elements and return the array, but he has to maintain the order in which the elements were supplied to him.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 5*10^3
+				-10^5 <= arr[i] <= 10^5
+				Time Limit: 1 sec
+
+			Sample Input 1 :
+				2
+				5
+				1 2 2 3 4
+				5
+				10 11 23 23 23 
+				Sample Output 1:
+				1 2 3 4
+				10 11 23
+				Explanation for Sample Input 1:
+				In the first test case, ‘2’ is a duplicate element, and there are two occurrences of ‘2’, so one ‘2’ is removed, and the resultant array becomes [1 2 3 4].
+
+				In the second test case, ‘23’ is a duplicate element, and there are three occurrences of ‘23’, so two occurrences of ‘23’ must be removed, and the resultant array becomes [10 11 23].
+				Sample Input 2 :
+				2
+				10
+				1 3 3 3 3 3 4 9 23 35
+				5
+				10 10 10 10 10 
+				Sample Output 2:
+				1 3 4 9 23 35
+				10 
+
+		#include <bits/stdc++.h> 
+		vector<int> removeDuplicates(vector<int> arr) {
+			vector<int> ans;
+
+			for(int i : arr)
+				if(find(ans.begin(), ans.end(), i) == ans.end())
+					ans.push_back(i);
+			
+			return ans;
+		}
+	
+	727) Remove duplicate element from sorted Linked List:
+		Problem Statement:
+			Given a singly linked list consisting of N nodes. The task is to remove duplicates (nodes with duplicate values) from the given list (if exists).
+			Note: Try not to use extra space. The nodes are arranged in a sorted way.
+			
+			Example 1:
+			Input:
+			LinkedList: 2->2->4->5
+			Output: 2 4 5
+			Explanation: In the given linked list 
+			2 ->2 -> 4-> 5, only 2 occurs more 
+			than 1 time. So we need to remove it once.
+
+			Example 2:
+			Input:
+			LinkedList: 2->2->2->2->2
+			Output: 2
+			Explanation: In the given linked list 
+			2 ->2 ->2 ->2 ->2, 2 is the only element
+			and is repeated 5 times. So we need to remove
+			any four 2.
+
+			Your Task:
+				The task is to complete the function removeDuplicates() which takes the head of input linked list as input. The function should remove the duplicates from linked list and return the head of the linkedlist.
+
+			Expected Time Complexity : O(N)
+			Expected Auxilliary Space : O(1)
+
+			Constraints:
+				1 <= Number of nodes <= 10^5
+
+		/*
+			struct Node {
+				int data;
+				struct Node *next;
+				Node(int x) {
+					data = x;
+					next = NULL;
+				}
+			};
+		*/
+
+		//Function to remove duplicates from sorted linked list.
+		Node *removeDuplicates(Node *head) {
+			Node *cur = head -> next;
+			Node *prev = head;
+			
+			while(cur){
+				if(prev -> data == cur -> data){
+					Node *removeNODE = cur;
+					
+					cur = cur -> next;
+					prev -> next = cur;
+					
+					delete removeNODE;
+				}else{
+					prev = cur;
+					cur = cur -> next;
+				}
+			}
+			return head;
+		}
+
+		// using single pointer:
+			Node *removeDuplicates(Node *head) {			
+				Node *cur = head;
+				
+				while(cur -> next){         // while(cur -> next != NULL)
+					if(cur -> data == cur -> next -> data){
+						Node *NodeToBeDeleted = cur -> next;
+						cur -> next = cur -> next -> next;
+						delete NodeToBeDeleted;
+					}else{
+						cur = cur -> next;
+					}
+				}
+				return head;
+			}
+	
+		// using extra space: (not recommended)
+			Node *removeDuplicates(Node *head) {
+				set<int> s;
+				Node *temp = head;
+				while(temp){
+					s.insert(temp -> data);
+					Node *cur = temp;
+					temp = temp -> next;
+					
+					delete cur;
+				}
+				
+				Node *H1;
+				int flag=1;
+				
+				for(int i: s){
+					Node * n = new Node(i);
+					if(flag){
+						flag=0;
+						temp = n;
+						H1 = n;
+					}else{
+						temp -> next = n;
+						temp = n;
+					}
+				}
+				
+				return H1;
+			}
+
+	728) Remove duplicates from a sorted Doubly Linked List:
+		Problem statement
+			A doubly-linked list is a data structure that consists of sequentially linked nodes, and the nodes have reference to both the previous and the next nodes in the sequence of nodes.
+			You are given a sorted doubly linked list of size 'n'.
+			Remove all the duplicate nodes present in the linked list.
+			Example :
+			Input: Linked List: 1 <-> 2 <-> 2 <-> 2 <-> 3
+			Output: Modified Linked List: 1 <-> 2 <-> 3
+			Explanation: We will delete the duplicate values ‘2’ present in the linked list.
+
+			Sample Input 1 :
+			5
+			1 2 2 2 3
+
+			Sample Output 1 :
+			1 2 3
+
+			Explanation For Sample Input 1 :
+			We will delete the duplicate values ‘2’ present in the linked list.
+
+			Sample Input 2 :
+			4
+			1 2 3 4
+
+			Sample Output 2 :
+			1 2 3 4
+
+			Explanation For Sample Input 2 :
+			The list contains no duplicates, so the final list is unchanged.
+
+			Expected time complexity :
+				The expected time complexity is O('n').
+
+			Constraints :
+				1 <= 'n' <= 10^5
+				1 <= 'data' in any node <= 10^6
+				Time limit: 1 sec
+
+		/**
+		* Definition of doubly linked list:
+		* class Node {
+		* public:
+		*      int data;
+		*      Node *prev;
+		*      Node *next;
+		*      Node() {
+		*          this->data = 0;
+		*          this->prev = NULL;
+		*          this->next = NULL;
+		*      }
+		*      Node(int data) {
+		*          this->data = data;
+		*          this->prev = NULL;
+		*          this->next = NULL;
+		*      }
+		*      Node (int data, Node *next, Node *prev) {
+		*          this->data = data;
+		*          this->prev = prev;
+		*          this->next = next;
+		*      }
+		* };
+		*
+		*************************************************************************/
+
+		Node * removeDuplicates(Node *head) {
+			Node *cur = head;
+
+			while(cur -> next){
+				if(cur -> data == cur -> next -> data){
+					Node * NodeToBeDeleted = cur -> next;
+
+					if(NodeToBeDeleted -> next == nullptr){
+						cur -> next = nullptr;
+					}else{
+						Node *temp = cur -> next -> next;
+						cur -> next = cur -> next -> next;
+						temp -> prev = cur;
+					}
+					NodeToBeDeleted -> next = nullptr;
+					NodeToBeDeleted -> prev = nullptr;
+					delete NodeToBeDeleted;
+				}else
+					cur = cur -> next;
+			}
+
+			return head;
+		}
+
+	729) Finding middle element in a linked list:
+		Problem Statement:
+			Given a singly linked list of N nodes.
+			The task is to find the middle of the linked list. For example, if the linked list is
+			1-> 2->3->4->5, then the middle node of the list is 3.
+			If there are two middle nodes(in case, when N is even), print the second middle element.
+			For example, if the linked list given is 1->2->3->4->5->6, then the middle node of the list is 4.
+
+			Example 1:
+				Input:
+				LinkedList: 1->2->3->4->5
+				Output: 3 
+				Explanation: 
+				Middle of linked list is 3.
+			Example 2: 
+				Input:
+				LinkedList: 2->4->6->7->5->1
+				Output: 7 
+				Explanation: 
+				Middle of linked list is 7.
+
+			Your Task:
+				The task is to complete the function getMiddle() which takes a head reference as the only argument and should return the data at the middle node of the linked list.
+
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 <= N <= 5000
+
+		/* Link list Node 
+			struct Node {
+				int data;
+				Node* next;
+				
+				Node(int x){
+					data = x;
+					next = NULL;
+				}
+			}; 
+		*/
+		class Solution{
+			public:
+			/* Should return data of middle node. If linked list is empty, then  -1*/
+			int getMiddle(Node *head) {
+				// if(head == NULL)
+				//     return -1;
+					
+				Node *slow, *fast;
+				slow = fast = head;
+				
+				while(fast){
+					fast = fast -> next;
+					
+					if(fast == NULL)
+						break;
+					
+					fast = fast -> next;
+					slow = slow -> next;
+				}
+				return slow -> data;
+			}
+		};
+
+		// using extra space:
+			class Solution{
+				public:
+				/* Should return data of middle node. If linked list is empty, then  -1*/
+				int getMiddle(Node *head) {
+					// if(head == NULL)
+					//     return -1;
+						
+					vector<int> v;
+					int cnt=0;
+					while(head){
+						cnt++;
+						v.push_back(head -> data);
+						head = head -> next;
+					}
+					return v[cnt/2];
+				}
+			};
+	
+	730) Reverse a linked list (Refer Q.693):
+		Problem Statement:
+			Given a linked list of N nodes. The task is to reverse this list.
+			Example 1:
+				Input:
+				LinkedList: 1->2->3->4->5->6
+				Output: 6 5 4 3 2 1
+				Explanation: After reversing the list, 
+				elements are 6->5->4->3->2->1.
+
+			Example 2:
+				Input:
+				LinkedList: 2->7->8->9->10
+				Output: 10 9 8 7 2
+				Explanation: After reversing the list,
+				elements are 10->9->8->7->2.
+
+			Your Task:
+				The task is to complete the function reverseList() with head reference as the only argument and should return new head after reversing the list.
+
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 <= N <= 10^4
+
+		/* Linked List Node structure:
+			struct Node {
+				int data;
+				struct Node *next;
+			}
+		*/
+
+		class Solution {
+			public:
+			//Function to reverse a linked list.
+			struct Node* reverseList(struct Node *head) {
+				Node* cur = head;
+				Node* prev = NULL;
+				
+				while(cur){
+					Node* temp = cur -> next;
+					
+					cur -> next = prev;
+					prev = cur;
+					cur = temp;
+				}
+				
+				return prev;
+			}
+		};
+	
+	731) Nth node from end of linked list:
+		Problem Statement:
+			Given a linked list consisting of L nodes and given a number N. The task is to find the Nth node from the end of the linked list.
+			Example 1:
+				Input:
+				N = 2
+				LinkedList: 1->2->3->4->5->6->7->8->9
+				Output: 8
+				Explanation: In the first example, there
+				are 9 nodes in linked list and we need
+				to find 2nd node from end. 2nd node
+				from end is 8.  
+			
+			Example 2:
+				Input:
+				N = 5
+				LinkedList: 10->5->100->5
+				Output: -1
+				Explanation: In the second example, there
+				are 4 nodes in the linked list and we
+				need to find 5th from the end. Since 'n'
+				is more than the number of nodes in the
+				linked list, the output is -1.
+
+			Your Task:
+				The task is to complete the function getNthFromLast() which takes two arguments: reference to head and N and you need to return Nth from the end or -1 in case node doesn't exist.
+
+			Note:
+				Try to solve in a single traversal.
+				Expected Time Complexity: O(N).
+				Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 <= L <= 10^6
+				1 <= N <= 10^6
+
+		/*
+			struct Node {
+				int data;
+				struct Node *next;
+				Node(int x) {
+					data = x;
+					next = NULL;
+				}
+			};
+		*/
+
+		//Function to find the data of nth node from the end of a linked list.
+		class Solution{
+			public:
+			int getNthFromLast(Node *head, int n) {
+				Node *N_index_prev = head;
+				int cnt = 0;
+				while(head){
+					cnt++;
+					if(cnt > n)
+						N_index_prev = N_index_prev -> next;
+					head = head -> next;
+				}
+				if(cnt < n)
+					return -1;
+				return N_index_prev -> data;
+			}
+		};
+	
+	732) 
+
+	733)
+	
+	734)
+	
+	735)
+	
+	736)
+	
+	737)
+	
+	738)
+	
+	739)
+	
+	740)
+	
+	741)
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
