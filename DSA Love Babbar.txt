@@ -19503,7 +19503,12 @@ Lecture-48: Remove Duplicates from a Sorted/UnSorted Linked List
 		-> Refer Q.727 & Q.728 from POTD section
 	
 	Q.2. Remove Duplicates from a Unsorted LL:
-		-> Refer Q.- from POTD section
+		-> Refer Q.737 from POTD section
+	
+	HomeWork:
+		Q.1. Circular LL split into 2 halves
+			Refer Q.738 & Q.739 from POTD section
+		
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
@@ -19860,7 +19865,7 @@ Lecture-48: Remove Duplicates from a Sorted/UnSorted Linked List
 				return v;
 			}
 		
-		-Refere few programs from here also...
+		-Refer few programs from here also...
 			https://auth.geeksforgeeks.org/user/viveknikate/practice
 
 	//Char extraction & string addition:
@@ -75844,7 +75849,7 @@ POTD:-[Problem of the Day]
 					Where ‘arr[i]’ is the value of elements of the array.
 					Time limit: 1 sec
 
-		// Using set:
+		// Using set: Not Optimized
 			#include<bits/stdc++.h>
 			int removeDuplicates(vector<int> &arr, int n) {
 				set<int> s (arr.begin(), arr.end());
@@ -75944,16 +75949,35 @@ POTD:-[Problem of the Day]
 				1 3 4 9 23 35
 				10 
 
-		#include <bits/stdc++.h> 
-		vector<int> removeDuplicates(vector<int> arr) {
-			vector<int> ans;
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			vector<int> removeDuplicates(vector<int> arr) {
+				vector<int> ans;
 
-			for(int i : arr)
-				if(find(ans.begin(), ans.end(), i) == ans.end())
-					ans.push_back(i);
-			
-			return ans;
-		}
+				for(int i : arr)
+					if(find(ans.begin(), ans.end(), i) == ans.end())
+						ans.push_back(i);
+				
+				return ans;
+			}
+		
+		// Optimized:
+			#include <bits/stdc++.h> 
+			vector<int> removeDuplicates(vector<int> arr) {
+				vector<int> ans;
+				unordered_map<int, int> mp;
+
+				for(int i : arr)
+					mp[i]++;
+
+				for(int i: arr){
+					if(mp.find(i) != mp.end()){
+						ans.push_back(i);
+						mp.erase(i);
+					}
+				}
+				return ans;
+			}
 	
 	727) Remove duplicate element from sorted Linked List:
 		Problem Statement:
@@ -76140,7 +76164,7 @@ POTD:-[Problem of the Day]
 					}else{
 						Node *temp = cur -> next -> next;
 						cur -> next = cur -> next -> next;
-						temp -> prev = cur;
+						temp -> prev = cur;				// this line is not necessary.
 					}
 					NodeToBeDeleted -> next = nullptr;
 					NodeToBeDeleted -> prev = nullptr;
@@ -76352,23 +76376,672 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	732) 
+	732) Multiply 2 matrices:
+		Problem Statement:
+			For 2 given matrices of size n x n. Your task is to multiply them.	
+			Example 1:
+			Input: 
+			matrixA = {{1, 1, 1}, {1, 1, 1}, 
+					{1, 1, 1}}
+			matrixB = {{1, 1, 1}, {1, 1, 1},
+					{1, 1, 1}}
+			Output: {{3, 3, 3}, {3, 3, 3}, {3, 3, 3}}
+			
+			Example 2:
+			Input: 
+			matrixA = {{1, 2}, {3, 4}},
+			matrixB = {{4, 3}, {2, 1}}
+			Output: {{8, 5}, {20, 13}}
+			
+			Your Task:
+				You don't need to read or print anything. Your task is to complete the function Multiply() which takes two matrices matrixA amd matrixB as input parameter and multiply the two matrices. You don't have to return anything. Copy the values of output matrix into matrixA.
+			
+			Expected Time Compelxity: O(n^3)
+			Expected Space Complexity: O(n^2)
+			
 
-	733)
+			Constraints:
+				1 <= n <= 100
+				1 <= elements of matrices <= 100
+
+		class Solution {
+			public:
+			void Multiply(vector<vector<int>>& matrixA, vector<vector<int>>&matrixB) {
+				vector<vector<int>> ans;
+				
+				for(int i=0; i<matrixA.size(); i++){
+					vector<int> temp;
+					for(int j=0; j<matrixA.size(); j++){
+						int c=0, sum=0;
+						while(c < matrixA.size()){
+							sum += (matrixA[i][c] * matrixB[c][j]);
+							c++;
+						}
+						temp.push_back(sum);
+					}
+					ans.push_back(temp);
+				}
+				matrixA = ans;
+			}
+		};
+
+	733) Rohan's Love for Matrix:
+		Problem Statement:
+			Rohan has a special love for the matrices especially for the first element of the matrix. Being good at Mathematics, he also loves to solve the different problem on the matrices. So one day he started to multiply the matrix with the original matrix.  The elements of the original matrix a are given by [a00=1 , a01=1, a10=1, a11=0].
+			Given the power of the matrix, n calculate the an and return the a10 element mod 1000000007.
+
+			Example 1:
+			Input: 
+			n = 3
+			Output: 
+			2 
+			Explanation: Take the cube of the original matrix 
+			i.e a3 and the (a10)th element is 2.
+
+			Example 2:
+			Input: 
+			n = 4
+			Output: 
+			3
+			Explanation: Take the cube of the original matrix 
+			i.e a4 and the (a10)th element is 3.
+			Your Task:  
+				You dont need to read input or print anything. Complete the function firstElement() which takes n as input parameter and returns the a10 element mod 1000000007 of an.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1<= n <=10^6
+
+		class Solution {
+			public:
+			int firstElement(int n) {
+				if(n == 1 || n == 2)
+					return 1;
+				
+				int MOD = 1e9+7;
+				int matx[2][2] = {{1,1}, {1,0}};
+				int newMtx[2][2] = {{2,1}, {1,1}};
+				
+				int i = 3;
+				while(i <= n){
+					// multiplication logic
+					int tempMtx[2][2] ={{0,0}, {0,0}};
+					for(int x=0; x<2; x++){
+						for(int y=0; y<2; y++){
+							int sum = 0, change=0;
+							
+							while(change < 2){
+							sum += (newMtx[x][change] * matx[change][y]);
+							change++;
+							}
+							
+							tempMtx[x][y] = sum % MOD;
+						}
+					}
+					
+					for(int x=0; x<2; x++)
+						for(int y=0; y<2; y++)
+							newMtx[x][y] = tempMtx[x][y];
+					
+					i++;
+				}
+				
+				return newMtx[1][0] % MOD;
+			}
+		};
 	
-	734)
+	734) Merge LinkedList:
+		Problem statement
+			You are given two LinkedList of length ‘N’. Your task is to insert the elements of the second LinkedList in the first LinkedList at the alternate positions.
+			For example: Let 1 -> 3 -> 5 be the first LinkedList and 2 -> 4 -> 6 be the second LinkedList. Then after merging the first LinkedList will look like 1 -> 2 -> 3 -> 4 -> 5 -> 6.
+			Constraints -
+				1 <= ‘T’ <= 10
+				1 <= ‘N’ <= 10^5
+				All the elements in both of the LinkedList lie in the range [-10^9, 10^9] - {1}.
+				Note- the sum of ‘N’ over all test cases does not exceed 10^5.
+				Time Limit: 1 sec
+
+			Sample Input-1
+				2
+				3 
+				1 3 5 -1 
+				2 4 6 -1
+				1 
+				3 -1
+				6 -1
+				Sample Output-1
+				1 2 3 4 5 6
+				3 6
+				Explanation for Sample Input 1:
+				For test case 1: 
+				It is explained above.
+				For test case 2: 
+				We added the first element of the second LinkedList next to the first element of the first LinkedList. Hence the first LinkedList will look like 3 -> 6. 
+				Sample Input -2
+				2
+				3 
+				1 2 3 -1
+				-5 -2 -3 -1
+				3 
+				24 42 13 -1
+				91 42 13 -1
+				Sample Output -2
+				1 -5 2 -2 3 -3
+				24 91 42 42 13 13
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			/************************************************************
+				Following is the linkedList class structure:
+				class Node {
+					public:
+					int data;
+					Node *next;
+
+					Node(int val) {
+						this->data = val;
+						next = NULL;
+					}
+					~Node() {
+						if (next != NULL) {
+							delete next;
+						}
+					}
+				};
+			************************************************************/
+			void merge(Node* head1, Node* head2) {
+				Node *cur1 = head1 -> next;
+				Node *cur2 = head2;
+				head1 -> next = cur2;
+
+				int flag = 1;
+				while(cur1){
+					if(flag){
+						Node * temp = cur2;
+						
+						cur2 = cur2 -> next;
+
+						temp -> next = cur1;
+						flag=0;
+					}else{
+						Node *temp = cur1;
+						
+						cur1 = cur1 -> next;
+
+						temp -> next = cur2;
+						flag=1;
+					}
+				}
+			}
+
+			// or
+
+	735) Yet another Pattern:
+		Problem statement
+			Ninja was playing with her sister to solve a puzzle pattern. However, even after taking several hours, they could not solve the problem.
+			A value of N is given to them, and they are asked to solve the problem. Since they are stuck for a while, they ask you to solve the problem. Can you help solve this problem?
+			Example : Pattern for N = 4
+			****
+ 			 ***
+			  **
+			   *
+			Constraints:
+				1 <= T <= 50
+				1 <= N <= 300
+				Time Limit: 1 sec
+
+			Sample Input 1:
+			2
+			3
+			2
+			Sample Output 1:
+			***
+			 **     
+			  *
+
+			**
+			 *     
+			Explanation for Sample Input 1:
+			In the first test case, the value of ‘N’ is 3, so three rows are to be printed from 1 to 3 where each row starts from 3, which goes on till 1. Hence the answer is [“***”,”**”,”*”].
+
+			In the second test case, the value of ‘N’ is 2, so the two rows are to be printed from 1 to 3 where each row starts from 3, which goes on till 1. Hence the answer is [“**”,”*”].
+			Sample Input 2:
+			2
+			4
+			5
+			Sample Output 2:
+			****
+			 ***
+			  **
+			   *
+
+			*****
+			 ****     
+			  ***
+			   **
+			    *
+
+		#include <bits/stdc++.h> 
+		void ninjaPuzzle(int n) {
+			for(int i=0; i<n; i++){
+				// spacing
+				for(int j=0; j<i; j++)
+					cout<<" ";
+				
+				string s = string(n-i, '*');
+				cout<<s<<"\n";
+			}
+		}
 	
-	735)
+	736) Monotone Increasing Digits:
+		Problem statement
+			You are given a non-negative integer ‘N’. Your task is to find the largest number that is less than or equal to ‘N’ with monotone increasing digits.
+			Note:
+			An integer has a monotone increasing digits if and only if each pair of adjacent digits x and y satisfy x <= y.
+			For example:
+			Given ‘N’ = 987
+			The answer is 899 because that is the greatest monotone increasing number possible that is less than ‘N’.
+			Sample Input 1:
+				2
+				789
+				987
+				Sample Output 1:
+				789
+				899
+				Explanation of the Sample Input 1:
+				For the first test case:
+				The answer is 789 because that is the greatest monotone increasing number possible that is equal to ‘N’.
+
+				For the second test case:
+				The answer is 899 because that is the greatest monotone increasing number possible.
+				Sample Input 2:
+				2
+				10
+				11
+				Sample Output 2:
+				9
+				11
+		
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			int monotoneIncreasingDigits(int n) {
+				while(n){
+					string temp = to_string(n);
+
+					int flag=1;
+					for(int i=1; i<temp.size(); i++){
+						if(temp[i-1] > temp[i]){
+							flag = 0;
+							break;
+						}
+					}
+
+					if(flag)
+						return n;
+
+					n--;
+				}
+				// return 0;	
+			}
 	
-	736)
+		// Optimized:
+			❌Pending
+
+	737) Remove Duplicates From an Unsorted Linked List:
+		Problem statement
+			You are given a linked list of N nodes. Your task is to remove the duplicate nodes from the linked list such that every element in the linked list occurs only once i.e. in case an element occurs more than once, only keep its first occurrence in the list.
+			For example :
+			Assuming the linked list is 3 -> 2 -> 3 -> 4 -> 2 -> 3 -> NULL.
+			Number ‘2’ and ‘3’ occurs more than once. Hence we remove the duplicates and keep only their first occurrence. So, our list becomes : 3 -> 2 -> 4 -> NULL.
+			Constraints :
+				1 <= T <= 100   
+				1 <= N <= 10 ^ 4
+				1 <= data <= 10 ^ 5 
+				Where ‘N’ is the number of nodes in the list and 'data' is the value of list nodes.
+				Time Limit: 1sec
+			Sample Input 1 :
+				2
+				4 2 5 4 2 2 -1
+				1 2 1 2 2 2 7 7 -1
+				Sample Output 1 :
+				4 2 5 -1
+				1 2 7 -1
+				Explanation of Sample Input1 :
+				For the first test case, the linked list is 4 -> 2 -> 5 -> 4 -> 2 -> 2 -> NULL. Number ‘4’ and ‘2’ occurs more than once. Hence, we remove the duplicates and keep only their first occurrence. So, our list becomes : 4 -> 2 -> 5 -> NULL.
+
+				For the second test case, the linked list is 1 -> 2 -> 1 -> 2 -> 2 -> 2 -> 7 -> 7 -> NULL. Number ‘1’, ‘2’ and ‘7’ occurs more than once. Hence, we remove the duplicates and keep only their first occurrence. So, our list becomes : 1 -> 2 -> 7 -> NULL.
+				Sample Input 2 :
+				2
+				3 3 3 3 3 -1
+				10 20 10 20 30 10 20 30 -1
+				Sample Output 2 :
+				3 -1
+				10 20 30 -1
+
+		// Not Optimized: using map
+			#include <bits/stdc++.h> 
+			/****************************************************************
+				Following is the class structure of the Node class:
+				class Node {
+				public:
+					int data;
+					Node *next;
+					Node(int data) {
+						this->data = data;
+						this->next = NULL;
+					}
+				};
+			*****************************************************************/
+			Node *removeDuplicates(Node *head) {
+				Node *cur = head;
+				Node *prev = NULL;
+				map<int, bool> vis;
+				
+				while(cur){
+					if(vis[cur -> data]){
+						Node *temp = cur;
+
+						prev -> next = cur -> next;
+						cur = cur -> next;
+
+						delete temp;
+					}else{
+						vis[cur -> data] = 1;
+						prev = cur;
+						cur =cur -> next;
+					}
+				}
+				return head;
+			}
+
+			// or TC: O(N²) & SC: O(1), Using loop
+				Node *removeDuplicates(Node *head){
+					Node *i, *j;
+					i = head;
+					while(i){
+						j = i -> next;
+						Node *prev = i;
+
+						while(j){
+							if(i -> data == j -> data){
+								prev -> next = j -> next;
+
+								delete j;
+
+								j = prev -> next;
+							}else{
+								prev = j;        
+								j= j-> next;
+							}
+						}
+						i = i-> next;
+					}
+					return head;
+				}
+		
+		// Optimized: using Map
+			Node *removeDuplicates(Node *head){
+				unordered_map<int, bool> vis;
+				if(!head)
+					return head;
+
+				vis[head -> data] = 1;
+				Node *cur = head;
+
+				while(cur -> next){
+					if(vis[cur -> next -> data]){
+						cur -> next = cur -> next -> next;
+					}else{
+						vis[cur -> next -> data] = 1;
+						cur = cur -> next;
+					}
+				}
+				return head;
+			}
 	
-	737)
+	738) Split A Circular Linked List:
+		Problem statement
+			You are given a circular linked list having N number of nodes, where N is even. You have to split this linked list into two equal-sized circular linked lists.
+			Here splitting means you have to make two separate circular linked lists, one for the first N/2 nodes and one for the last N/2 nodes.
+			For Example :
+			Let the circular linked list be 1, 2, 3, 4. We have to split this into two equal-sized circular linked lists.
+			Constraints :
+				1 <= T <= 10
+				2 <= N <= 10000, N is even
+				-10 ^ 9 <= node data <= 10 ^ 9
+
+			Where  ‘node data’ is the value of nodes of the list. 
+			Time limit: 1 sec
+			Sample Input 1 :
+				2
+				4
+				1 2 3 4
+				2
+				1 2
+				Sample Output 1 :
+				1 2
+				3 4
+				1
+				2
+				Explanation for sample input 1 :
+				Test Case 1: Refer to the example described above.
+
+				Test Case 2:
+				The given circular linked list will be splitted as follows:
+
+				Here 1 and 2 will point to themselves as they are the only nodes in the circular linked list.
+				Sample Input 2 :
+				2
+				6
+				2 4 3 5 2 1
+				4
+				1 1 1 1
+				Sample Output 2 :
+				2 4 3
+				5 2 1
+				1 1
+				1 1
+
+		#include <bits/stdc++.h> 
+		/********************************
+			class Node {
+				public:
+				int data;
+				Node *next;
+				Node(int data) {
+					this->data = data;
+					this->next = NULL;
+				}
+			};
+		********************************/
+		void splitCircularList(Node *head) {
+			if(head == NULL)
+				return ;
+			
+			Node *slow, *fast;
+			slow = fast = head;
+
+			while(fast -> next != head){
+				fast = fast -> next;
+				if(fast -> next == head)
+					break;
+
+				fast = fast -> next;
+				slow = slow -> next;
+			}
+			fast -> next = slow -> next;
+			slow -> next = head;
+		}
+
+		// Brute Force:
+		int getLen(Node *h){
+			int l=0;
+			Node *Same = h;
+			
+			while(h){
+				l++;
+				h = h-> next;
+
+				if(Same == h)
+					break;
+			}
+			return l;
+		}
+		void splitCircularList(Node *head) {
+			if(!head)
+				return ;
+			int len = getLen(head) / 2;
+			Node *first = head;
+
+			while(--len)
+				first = first -> next;
+
+			Node *second = first -> next;
+			Node *temp = second;
+
+			while(second -> next != head)
+				second = second -> next;
+
+			first -> next = head;
+			second -> next = temp;
+		}	
 	
-	738)
-	
-	739)
-	
-	740)
+	739) Split a Circular Linked List into two halves:
+		Problem Statement:
+			Given a Cirular Linked List of size N, split it into two halves circular lists. If there are odd number of nodes in the given circular linked list then out of the resulting two halved lists, first list should have one node more than the second list. The resultant lists should also be circular lists and not linear lists.
+			Example 1:
+			Input:
+			Circular LinkedList: 1->5->7
+			Output:
+			1 5
+			7
+
+			Example 2:
+			Input:
+			Circular LinkedList: 2->6->1->5
+			Output:
+			2 6
+			1 5
+
+			Your Task:
+				Your task is to complete the given function splitList(), which takes 3 input parameters: The address of the head of the linked list, addresses of the head of the first and second halved resultant lists and Set the head1_ref and head2_ref to the first resultant list and second resultant list respectively.
+
+			Expected Time Complexity: O(N)
+			Expected Auxilliary Space: O(1)
+			Constraints:
+				2 <= N <= 100
+
+		void splitList(Node *head, Node **head1_ref, Node **head2_ref) {
+			Node *slow = head;
+			Node *fast = head;
+
+			while(fast -> next != head){
+				fast = fast -> next;
+				if(fast -> next == head)
+					break;
+					
+				fast = fast -> next;
+				slow = slow -> next;
+			}
+			
+			fast -> next = slow -> next;
+			slow -> next = head;
+			
+			*head1_ref = head;
+			*head2_ref = (fast -> next);
+		}
+
+	740) Add One to Linked List:
+		Problem statement
+			Ninja has been given a number that is represented in the form of a linked list such that each digit corresponds to a node. He has been asked to add 1 to it and return the updated list.
+			For Example:
+			1234 is represented as (1 -> 2 -> 3 -> 4) and adding 1 to it should change it to (1 -> 2 -> 3 -> 5).
+			Note:
+			The input Linked list does not have any trailing zeros.
+			Constraints:
+				1 <= T <= 5
+				1 <= N <= 10000
+				0 <= |nodeValue| <= 9
+				Where ‘N’ denotes the size of the linked list.
+				Time Limit: 1 sec
+			Sample Input 1:
+				1
+				4 2 9 -1 
+				Sample Output 1:
+				4 3 0 -1
+				Explanation of Sample Input 1:
+				Test case 1:
+				For the first test case of sample output 1, our input number is ‘429’. On adding ‘1’ to it, we get output as ‘430’.
+				Sample Input 2:
+				2 
+				9 -1
+				9 5 6 5 4 3 5 -1
+				Sample Output 2:
+				1 0 -1
+				9 5 6 5 4 3 6 -1
+				Explanation of Sample Input 2:
+				Test case 1:
+				For the first test case of sample output 2, our given input is ‘9’. On adding 1 to it, we get ‘10’ for which we will have to create a new node and the number of digits has increased from ‘1’ to’2’.
+
+		#include <bits/stdc++.h> 
+		/*****************************************************************
+			Following is the Linked list node structure already written
+			template <typename T>
+			class LinkedListNode {
+				public:
+				T data;
+				LinkedListNode<T>* next;
+				LinkedListNode(T data) { 
+					this->data = data;
+					next = NULL;
+				}
+			};
+		*****************************************************************/
+		LinkedListNode<int>* addOneToList(LinkedListNode<int> *head) {
+			vector<int> v;
+			LinkedListNode<int>* T = head;
+			while(T){
+				v.push_back(T->data);
+				T = T -> next;
+			}
+
+			v.pop_back();
+			v[v.size()-1]++;
+			reverse(v.begin(), v.end());
+
+			int c=0;
+			for(int i=0; i<v.size(); i++){
+				v[i] += c;
+				if (v[i] > 9) {
+					c = v[i] / 10;
+					v[i] %= 10;
+				}else{
+					c=0;
+				}
+			}
+
+			if(c!=0)
+				v.push_back(c);
+			reverse(v.begin(), v.end());
+
+			v.push_back(-1);			
+			// for(int i: v)
+			//     cout<< i<<"\t";
+
+			int i=0;
+			LinkedListNode<int>* nt = new LinkedListNode<int>(v[i++]);
+			T = nt;
+			LinkedListNode<int>* prev =nt;
+			while(i < v.size()){
+				LinkedListNode<int>* n = new LinkedListNode<int>(v[i++]);
+				prev -> next = n;
+				prev = n;        
+			}
+			prev-> next = nullptr;
+			return T;
+		}
 	
 	741)
 POTD-END
