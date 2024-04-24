@@ -3276,6 +3276,66 @@ Lecture-4: Solving Pattern Questions (Part-2)
 			*           * 
 			*           * 
 			*  *  *  *  * 
+	
+	31) Pattern:
+		for n = 5
+			1
+			2 9
+			3 8 10
+			4 7 11 14
+			5 6 12 13 15
+		->
+			#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+
+			int main() {
+				// n = 5
+				// 1
+				// 2 9
+				// 3 8 10
+				// 4 7 11 14
+				// 5 6 12 13 15
+				
+				int n;
+				cin>>n;
+				vector<vector<int>> holder(n);
+				
+				int j=0,cnt=1, f=1;
+				for(int i=0; i<n; i++) {
+					int rEnd = n - i;
+					
+					while(rEnd--){
+						if(f){
+							holder[j++].push_back(cnt++);
+						}else{
+							holder[j--].push_back(cnt++);
+						}
+					}
+
+					(f) ? j-- : j+=2;
+					
+					f = (f) ? 0 : 1;
+				}
+				//or complex
+				/*
+					for(int i=0; i<n; i++) {
+						int rEnd = n - i;
+						while(rEnd--)
+							(f) ? holder[j++].push_back(cnt++) : holder[j--].push_back(cnt++);
+						(f) ? j-- : j+=2;
+						f = (f) ? 0 : 1;
+					}
+					
+				*/				
+				
+				for(auto &v : holder){
+					for(int i: v)
+						cout<< i <<" ";
+					std::cout << std::endl;
+				}
+				return 0;
+			}
 ---------------------------------------------------------------------------------------------------------
 	04/08/2023
 Lecture-5: Bitwise Operators, For Loops, Operator Precedence & Variable Scoping
@@ -15865,6 +15925,7 @@ Lecture-40: Rat in a Maze Problem
 
 	// Dry Run ❌Pending
 ---------------------------------------------------------------------------------------------------------
+	09/03/2024
 Lecture-41: Time & Space Complexity of Recursive Algorithms: ❌Pending
 
 	1) Factorial: 		TC- O(N)
@@ -19508,9 +19569,15 @@ Lecture-48: Remove Duplicates from a Sorted/UnSorted Linked List
 	HomeWork:
 		Q.1. Circular LL split into 2 halves
 			Refer Q.738 & Q.739 from POTD section
-		
 ---------------------------------------------------------------------------------------------------------
+Lecture-49: Merge 2 Sorted Linked Lists || Sort 0s, 1s and 2s in Linked List
+	Q.1. Sort linked list of 0s 1s 2s
+		-> Refer Q.743 from POTD section
+
+	Q.2. Merge two sorted linked lists
+		-> Refer Q.744 from POTD section
 ---------------------------------------------------------------------------------------------------------
+
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
 	//Ternary Operator
@@ -77043,7 +77110,432 @@ POTD:-[Problem of the Day]
 			return T;
 		}
 	
-	741)
+	741) N-th Tribonacci Number:
+		Problem Statement:
+			The Tribonacci sequence Tn is defined as follows: 
+			T0 = 0, T1 = 1, T2 = 1, and Tn+3 = Tn + Tn+1 + Tn+2 for n >= 0.
+			Given n, return the value of Tn.		
+
+			Example 1:
+				Input: n = 4
+				Output: 4
+				Explanation:
+				T_3 = 0 + 1 + 1 = 2
+				T_4 = 1 + 1 + 2 = 4
+
+			Example 2:
+				Input: n = 25
+				Output: 1389537
+			
+			Constraints:
+				0 <= n <= 37
+				The answer is guaranteed to fit within a 32-bit integer, ie. answer <= 2^31 - 1.
+				
+		// Not Optimized:
+			class Solution {
+				public:
+				int calculate(int n){
+					if(n <= 0)
+						return 0;
+					else if(n == 1 || n == 2)
+						return 1;
+					return calculate(n-1) + calculate(n-2) + calculate(n-3);      
+				}
+
+				int tribonacci(int n) {
+					if(n == 0)
+						return 0;
+					else if(n == 1 || n == 2)
+						return 1;
+					return calculate(n-1) + calculate(n-2) + calculate(n-3);
+				}
+			};
+
+		// Optimized:
+			auto init = [](){
+				ios_base::sync_with_stdio(0);
+				cin.tie(0);
+				cout.tie(0);
+				return 0;
+			}();
+
+			class Solution {
+				public:
+				int tribonacci(int n) {
+					vector<int> v = {0, 1, 1};
+
+					while(v.size() <= n){
+						int ans = v[v.size()-1] + v[v.size()-2] + v[v.size()-3];
+						v.push_back(ans);
+					}
+					return v[n];
+				}
+			};
+
+	742) Fish Eater:
+		Problem statement
+			There is a river which flows in one direction. One day, the river has 'N' number of fishes. You are given an array 'FISHES' of integers representing the size of 'N' fishes. The fishes are present in the river from left to right(0th index represents the size of the leftmost fish). As the river flows from left to right so the fishes also swim from left to right. The fishes are of different sizes and have different speeds. The larger fishes are faster than the smaller fishes. Also, larger fishes can eat smaller fishes but can’t eat fishes of the same size.
+			Can you find the number of fishes that survive at the end of the day?
+			Example:
+			Let the size of fishes present in the river from left to right be{ 4, 2, 3, 1, 5 }.
+			1. As fish 4 is faster and bigger than fish 2, so fish 4 will eat fish 2.
+			Remaining fishes: { 4, 3, 1, 5 }
+			2. As fish 3 is faster and bigger than fish 1, so fish 3 will eat fish 1.
+			Remaining fishes: { 4, 3, 5 }
+			3. As fish 4 is faster and bigger than fish 3, so fish 4 will eat fish 3.
+			Remaining fishes: { 4, 5 }
+			Now fish 5 cannot eat fish 4, as fish 5 is faster than fish 4 and they swim from left to right. Thus, fish 4 will never reach fish 5.
+			Finally, we are left with only 2 fishes.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^4
+				1 <= FISHES[i] <= 10^9
+				Where 'FISHS[i]' denotes the size of the ith fish in the river.
+				Time limit: 1 sec
+
+			Sample Input 1:
+				2
+				5
+				4 2 3 1 5
+				3
+				8 1 3
+				Sample Output 1:
+				2
+				1
+				Explanation of Sample Output 1:
+				In test case 1, Refer to the example in problem description.
+
+				In test case 2,
+				Fishes: { 8, 1, 3 }
+				As fish 8 is faster and bigger than fish 1, so fish 8 will eat fish 1.
+					Remaining fishes: { 8, 3 }
+				As fish 8 is faster and bigger than fish 3, so fish 8 will eat fish 3.
+					Remaining fishes: { 8 }
+
+				Here, only 1 fish is left at last.
+				Sample Input 2:
+				2
+				4
+				1 2 3 4
+				4
+				4 4 2 4
+				Sample Output 2:
+				4
+				3
+				Explanation of Sample Output 2:
+				In test case 1, As eachfish on the left side is smaller than fish on its right side and thus no fish can eat any other fish and the number of surviving fishes will be 4.
+
+				In test case 2,
+				Fishes: { 4, 4, 2, 4}
+				As fish with equal size cannot eat each other as having the same speed, All the Fishes with size 4 will survive.
+				Fish 2 with size 4 will eat the fish 3 with size 2.
+					Remaining fishes: { 4, 4, 4 }
+				Here, 3 fishes is left at last.
+
+		#include <bits/stdc++.h> 
+		int fishEater(vector<int> &fishes) {
+		
+			int i=0;
+			int val = fishes[i++];
+
+			while(i < fishes.size()){
+				if(val > fishes[i]){
+					fishes.erase(fishes.begin()+i);
+				}else{
+					val = fishes[i++];
+				}
+			}
+
+			return fishes.size();
+		}
+
+	743) Sort linked list of 0s 1s 2s:
+		Problem statement
+			Given a linked list of 'N' nodes, where each node has an integer value that can be 0, 1, or 2. You need to sort the linked list in non-decreasing order and the return the head of the sorted list.
+			Example:
+			Given linked list is 1 -> 0 -> 2 -> 1 -> 2. 
+			The sorted list for the given linked list will be 0 -> 1 -> 1 -> 2 -> 2.
+			Sample Input 1:
+				7
+				1 0 2 1 0 2 1
+
+			Sample Output 1:
+				0 0 1 1 1 2 2
+			Explanation Of Sample Input 1:
+				Input: 1 -> 0 -> 2 -> 1 -> 0 -> 2 -> 1
+				Output: 0 -> 0 -> 1 -> 1 -> 1 -> 2 -> 2
+			Explanation: 
+				In this example, the original linked list contains two 0s, three 1s, and two 2s. The sorted linked list has all the 0s at the beginning, followed by all the 1s, and finally, all the 2s at the end.
+			Sample Input 2:
+				8
+				2 1 0 2 1 0 0 2
+
+			Sample Output 2:
+				0 0 0 1 1 2 2 2
+
+			Follow Up:
+				Can you solve this without updating the Nodes of the given linked list?
+
+
+			Constraints :
+				1 <= N <= 10^3
+				0 <= data <= 2 
+				Where 'N' is the length of the linked list.
+				Time Limit: 1 sec
+
+		/*
+			Following is the class structure of the Node class:
+			class Node {
+				public:
+					int data;
+					Node *next;
+				Node() {
+					this->data = 0;
+					next = NULL;
+				}
+				Node(int data) {
+					this->data = data; 
+					this->next = NULL;
+				}
+				Node(int data, Node* next) {
+					this->data = data;
+					this->next = next;
+				}
+			};
+		*/
+		// Approach-1: storing the counts of 0s, 1s, & 2s. then replacing the data of LinkedList based on counts
+			Node* sortList(Node *head){
+				int zeroCnt, oneCnt, twoCnt;
+				zeroCnt = oneCnt = twoCnt = 0;
+				Node *cur = head;
+
+				while(cur){
+					if(cur -> data == 0)
+						zeroCnt++;
+					else if(cur -> data == 1)
+						oneCnt++;
+					else
+						twoCnt++;
+					
+					cur = cur -> next;
+				}
+
+				cur = head;
+				while(zeroCnt--){
+					cur -> data = 0;
+					cur = cur -> next;
+				}
+				
+				while(oneCnt--){
+					cur -> data = 1;
+					cur = cur -> next;
+				}
+				
+				while(twoCnt--){
+					cur -> data = 2;
+					cur = cur -> next;
+				}
+				return head;
+			}
+		
+			// or using just one loop to replace the data in LL:			
+				Node* sortList(Node *head){
+					int zeroCnt, oneCnt, twoCnt;
+					zeroCnt = oneCnt = twoCnt = 0;
+					Node *cur = head;
+
+					while(cur){
+						if(cur -> data == 0)
+							zeroCnt++;
+						else if(cur -> data == 1)
+							oneCnt++;
+						else
+							twoCnt++;
+						
+						cur = cur -> next;
+					}
+					cur = head;
+
+					// or using just one loop to replace the data
+					while(cur){
+						if(zeroCnt){                // if(zeroCnt != 0)
+							cur -> data = 0;
+							zeroCnt--;
+						}else if(oneCnt){              //else if(oneCnt != 0)
+							cur -> data = 1;
+							oneCnt--;
+						}else{
+							cur -> data = 2;
+							twoCnt--;
+						}        
+						cur = cur -> next;
+					}
+					return head;
+				}
+
+		// Approach-2: Creating 3 separate LinkedList for storing zero's nodes, ones nodes & 2's nodes & then merging them back	
+			Node* sortList(Node *head){
+				Node* zeroH = new Node(-1);
+				Node* oneH = new Node(-1);
+				Node* twoH = new Node(-1);
+
+				// creating Tails for every Node to insert new upcoming node after it
+				Node *zeroT = zeroH;
+				Node *oneT = oneH;
+				Node *twoT = twoH;
+
+				Node *cur = head;
+				while(cur){
+					if(cur -> data == 0){
+						zeroT -> next = cur;
+						zeroT = cur;
+					}else if(cur -> data == 1){
+						oneT -> next = cur;
+						oneT = cur;
+					}else{
+						twoT -> next = cur;
+						twoT = cur;
+					}
+					cur = cur -> next;
+				}
+
+				// merging logic
+				if(zeroH -> next != nullptr){
+					head = zeroH -> next;
+
+					if(oneH -> next != nullptr){
+						zeroT -> next = oneH -> next;
+						oneT -> next = twoH -> next;
+
+						twoT -> next = nullptr;
+					}else{
+						zeroT -> next = twoH -> next;
+						twoT -> next = nullptr;
+					}
+				}else if(oneH -> next != nullptr){
+					head = oneH -> next;
+
+					oneT -> next = twoH -> next;
+					twoT -> next = nullptr;
+				}else{
+					head =twoH -> next;
+					twoT -> next = nullptr;
+				}
+
+				// deleting the starting extra/dummy -1 node
+				delete zeroH;
+				delete oneH;
+				delete twoH;
+
+				return head; 
+			}
+
+	744) Merge Two Sorted Linked Lists:
+		Problem statement
+			You are given two sorted linked lists. You have to merge them to produce a combined sorted linked list. You need to return the head of the final linked list.
+			Note:
+			The given linked lists may or may not be null.
+			For example:
+			If the first list is: 1 -> 4 -> 5 -> NULL and the second list is: 2 -> 3 -> 5 -> NULL
+			The final list would be: 1 -> 2 -> 3 -> 4 -> 5 -> 5 -> NULL
+			Constraints:
+				1 <= L <= 10^5
+				1 ≤ data ≤ 10^6 and data != -1
+				Where L is the number of nodes in either of the two Linked List.
+				Time Limit: 1 sec 
+
+			Follow-up:
+				Try to solve this problem in linear time complexity and constant space complexity.
+			Sample Input 1:
+				7 8 -1
+				1 3 4 6 -1
+				Sample Output 1:
+				1 3 4 6 7 8 -1
+				Explanation of Input 1:
+				In this testcase, the first list is: 7 -> 8 -> NULL
+				The second list is: 1 -> 3 -> 4 -> 6 -> NULL
+				The final list would be: 1 -> 3 -> 4 -> 6 -> 7 -> 8 -> NULL
+				Sample Input 2:
+				5 -1
+				1 3 6 10 -1
+				Sample Output 2
+				1 3 5 6 10 -1
+
+		#include <bits/stdc++.h>
+		/************************************************************
+			Following is the linked list node structure.
+			template <typename T>
+			class Node {
+				public:
+					T data;
+					Node* next;
+				Node(T data) {
+					next = NULL;
+					this->data = data;
+				}
+
+				~Node() {
+					if (next != NULL) {
+						delete next;
+					}
+				}
+			};
+		************************************************************/
+		
+		Node<int>* sortTwoLists(Node<int>* first, Node<int>* second) {
+			if(first == NULL)
+				return second;
+			else if(second == nullptr)
+				return first;
+			else{
+				// checking first smaller element from both list
+				Node<int> * ansH = nullptr;
+
+				if(first -> data <= second ->data){
+					ansH = first;
+					first = first -> next;
+				}else{
+					ansH = second;
+					second = second -> next;
+				}
+
+				Node<int>* curTail = ansH;
+
+				while(first && second){
+					if(first -> data <= second -> data){
+						curTail -> next = first;
+						curTail = first;
+
+						first = first -> next;
+					}else{
+						curTail -> next = second;
+						curTail = second;
+						
+						second = second -> next;
+					}
+				}
+
+				if(second == nullptr)
+					curTail -> next = first;
+				else
+					curTail -> next = second;
+				
+				return ansH;
+			}
+		}
+
+	745)
+	
+	746)
+	
+	747)
+	
+	748)
+	
+	749)
+
+	750)
+
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
