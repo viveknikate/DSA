@@ -8545,6 +8545,18 @@ Lecture-21: Solving LeetCode/CodeStudio Questions [Arrays]
 					nums = temp;
 				}
 			};
+
+			// or
+				 class Solution {
+					public:
+					void rotate(vector<int>& nums, int k) {
+						if(k >= nums.size())
+							k %= nums.size();
+						reverse(nums.begin(), nums.end());
+						reverse(nums.begin(), nums.begin()+k);
+						reverse(nums.begin()+k, nums.end());
+					}
+				};
 		
 		2) Check if Array Is Sorted and Rotated:
 			https://leetcode.com/problems/check-if-array-is-sorted-and-rotated/
@@ -23242,6 +23254,16 @@ Lecture-49: Merge 2 Sorted Linked Lists || Sort 0s, 1s and 2s in Linked List
 			sort(holder.begin(), holder.end(), [=](pair<int, int> a, pair<int, int> b){
 				return DESCbyValues(a, b, nums);
 			});
+
+	// To count the no.of digits in N use log10() function
+		#include <iostream>
+		#include <cmath>
+		int main() {
+			int n = 909;
+			std::cout << int(log10(n)+1) << std::endl;
+			std::cout << (int)log10(n)+1 << std::endl;			// you can (int) or int() both works to typecast.
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array
@@ -25280,19 +25302,21 @@ POTD:-[Problem of the Day]
 		}
 	
 	38) Rotate array
-		Given an array 'arr' with 'n' elements, the task is to rotate the array to the left by 'k' steps, where 'k' is non-negative
-		'arr '= [1,2,3,4,5]
-			'k' = 1 rotated array = [2,3,4,5,1] 
-			'k' = 2 rotated array = [3,4,5,1,2]
-			'k' = 3 rotated array = [4,5,1,2,3] and so on.
-
-		Sample Input 1:
+		Problem Statement:
+			Given an array 'arr' with 'n' elements, the task is to rotate the array to the left by 'k' steps, where 'k' is non-negative.
+			Example:
+			'arr '= [1,2,3,4,5]
+			'k' = 1  rotated array = [2,3,4,5,1]
+			'k' = 2  rotated array = [3,4,5,1,2]
+			'k' = 3  rotated array = [4,5,1,2,3] and so on.
+			Detailed explanation ( Input/output format, Notes, Images )
+			Sample Input 1:
 			8
 			7 5 2 11 2 43 1 1
 			2
 			Sample Output 1:
 			2 11 2 43 1 1 7 5
-			Explanation Of Sample Input 1:
+			Explanation of Sample Input 1:
 			Rotate 1 steps to the left: 5 2 11 2 43 1 1 7
 			Rotate 2 steps to the left: 2 11 2 43 1 1 7 5
 			Sample Input 2:
@@ -25301,10 +25325,19 @@ POTD:-[Problem of the Day]
 			3
 			Sample Output 2:
 			8 5 6 7
-			Explanation Of Sample Input 2:
+			Explanation of Sample Input 2:
 			Rotate 1 steps to the left: 6 7 8 5
 			Rotate 2 steps to the left: 7 8 5 6
 			Rotate 2 steps to the left: 8 5 6 7
+			Expected Time Complexity:
+			O(n), where ‘n’ is the size of the array ‘arr’ and ‘k’ is the number of rotations.
+			Constraints:
+			1 <= 'n' <= 10^3
+			1 <= 'arr'[i] <= 10^9
+			1 <= 'k' < 'n'
+			Hints:
+				1. For an index ‘i’, find where it lands after k swaps.
+				2. When performing rotation once observe how the positions of all elements change.
 
 		vector<int> rotateArray(vector<int>arr, int k) {
 			vector<int> ans;
@@ -25316,6 +25349,18 @@ POTD:-[Problem of the Day]
 			
 			return ans;
 		}
+
+		// or
+			vector<int> rotateArray(vector<int>arr, int k) {
+				int n = arr.size();
+				if(k == n)
+					return arr;
+				
+				reverse(arr.begin(), arr.end());
+				reverse(arr.begin(), arr.begin()+(n-k));
+				reverse(arr.begin()+(n-k), arr.end());
+				return arr;
+			}
 
 	39) Generate Binary Numbers:
 		Sample Input 1:
@@ -31224,6 +31269,23 @@ POTD:-[Problem of the Day]
 				Sample Output 2 :
 				1
 				2 1
+
+		// Not Optimized:
+			int *getProductArrayExceptSelf(int *arr, int n) {
+				int MOD = 1e9+7;
+				int *newArr = new int[n];
+				for(int i=0; i<n; i++){
+					int prod = 1;
+					for(int j =0; j<n; j++){
+						if(i == j)
+							continue;
+						prod = (prod*arr[j]) %MOD;
+					}
+					newArr[i] = prod;
+				}
+
+				return newArr;
+			}
 
 		int *getProductArrayExceptSelf(int *arr, int n) {
 			int *ans = new int[n];
@@ -48886,6 +48948,51 @@ POTD:-[Problem of the Day]
 				
 			return ans;
 		}
+
+		// or
+			#include <bits/stdc++.h> 
+			vector<vector<int>> solve(vector<vector<int>> &arr, int k) {
+				// if(k == arr[0].size())
+				//     return arr;
+
+				// if(k > arr[0].size())
+				//     k %= arr[0].size();
+
+				// here MainArr holds a complete 1D array (holds complete row at each iteration)
+				for(auto &MainArr: arr){
+					vector<int> temp = MainArr;
+
+					reverse(temp.begin(), temp.end());
+
+					int val = arr[0].size() - k;
+					val = arr[0].size() - val;
+
+					reverse(temp.begin(), temp.begin()+val);
+					reverse(temp.begin()+val, temp.end());    
+
+					MainArr = temp;
+				}
+				return arr;
+			}
+
+		// or
+			#include <bits/stdc++.h> 
+			vector<vector<int>> solve(vector<vector<int>> &arr, int k) {
+				// if(k == arr[0].size())
+				//     return arr;
+				
+				// if(k > arr[0].size())
+				//     k %= arr[0].size();
+
+				// here MainArr holds a complete 1D array (holds complete row at each iteration)
+				for(int i=0; i<arr.size(); i++) {
+					reverse(arr[i].begin(), arr[i].end());
+					reverse(arr[i].begin(), arr[i].begin()+k);
+					reverse(arr[i].begin()+k, arr[i].end());
+				}
+
+				return arr;
+			}
 	
 	342) Sequential Digits:
 		Problem statement:
@@ -57745,7 +57852,7 @@ POTD:-[Problem of the Day]
 						while(K--){
 							temp.push_back(temp[f++]);
 						}
-						
+
 						temp.erase(temp.begin(), temp.begin()+f);
 						ans.push_back(temp);
 					}
@@ -68034,6 +68141,19 @@ POTD:-[Problem of the Day]
 				} while(1);
 			}
 
+			//or
+				#include <bits/stdc++.h> 
+				long long minValue(int &a, long long &b) {
+					long long ans = b;
+
+					while(1){
+					int n = (int)log10(b) + 1;
+					if(n == a)
+						return b;
+					b += ans;
+					}
+				}
+
 	611) Vowels:
 		Problem statement
 			Ninja has been studying vowels recently. The vowels are 'a', 'e', I 'o', and 'u,' as we all know. So his teacher Hathori has given him a homework assignment in which he must divide a given string 'S' of length 'N' into two non-empty parts. But these parts must satisfy the equality property, that is, to have the same value of the sum of counts of ‘a’, ‘e’, ‘i’, ‘o’, and ‘u’. Because the ninja is currently preoccupied with his life, he requests your assistance. If this string can be divided into two non-empty parts that satisfy the above criteria, you must answer 'Yes' or 'No.'
@@ -68080,6 +68200,20 @@ POTD:-[Problem of the Day]
 
 			// return (((F['a'] + F['e'] + F['i'] + F['o'] + F['u']) & 1) == 0)? "Yes" : "No" ;
 		}
+		
+		// or
+			#include <bits/stdc++.h> 
+			string vowels(string s) {
+				int vowelCnt=0;
+
+				for(char ch: s)
+					if(ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u')
+						vowelCnt++;
+
+				if(vowelCnt&1)				// if odd then we can't distribute vowels into 2 groups equally.
+					return "No";
+				return "Yes";
+			}
 
 	612) Length of Longest Subarray With at Most K Frequency:
 		Problem statement:
@@ -74880,6 +75014,23 @@ POTD:-[Problem of the Day]
 					}
 					return total;
 				}
+			
+			// Optimized Working:
+				#include <bits/stdc++.h>
+				long long scoreSum (int n, vector <int> &a) {
+					long long total=0;
+					for(int i=0; i<n; i++){
+						int small = a[i];
+						for(int j=1; j<=i;j *= 2){
+							if((i&j) == 0)
+								continue;
+							small = min(small, a[i^j]);
+						}
+						total += a[i] * small * 1LL;
+						a[i] = small;
+					}
+					return total;
+				}
 		
 	710) Find missing in second array:
 		Problem statement:
@@ -77338,7 +77489,7 @@ POTD:-[Problem of the Day]
 				return head;
 			}
 		
-			// or using just one loop to replace the data in LL:			
+			// or using just one loop to replace the data in LL:
 				Node* sortList(Node *head){
 					int zeroCnt, oneCnt, twoCnt;
 					zeroCnt = oneCnt = twoCnt = 0;
@@ -77524,15 +77675,350 @@ POTD:-[Problem of the Day]
 			}
 		}
 
-	745)
+		// or
+			
+			Node<int>* solve(Node<int>* first, Node<int>* second){
+				if(first -> next == nullptr){
+					first -> next = second;
+					return first;
+				}
+
+				Node<int>* cur1 = first, *next1 = first -> next;
+				Node<int>* cur2 = second, *next2 = second -> next;
+
+				while(next1 && cur2) {
+					if ((cur2->data) >= (cur1->data) && (cur2->data) <= (next1->data)) { 
+						next2 = cur2->next; 
+						cur1->next = cur2; 
+						cur2->next = next1; 
+				
+						// Let cur1 and cur2 to point to their immediate next pointers.
+						cur1 = cur2; 
+						cur2 = next2; 
+					} 
+					else { 
+						// if there are more nodes in first list.
+						if (next1->next) { 
+							next1 = next1->next; 
+							cur1 = cur1->next;
+						}
+
+						// else point the last node of first list to the remaining nodes of
+						// second list.
+						else {
+							next1->next = cur2;
+							return first;
+						}
+					}
+				}
+
+				return first;
+			}
+
+			Node<int>* sortTwoLists(Node<int>* first, Node<int>* second) {
+				if(first == NULL)
+					return second;
+				else if(second == nullptr)
+					return first;
+				else{
+					if(first -> data <= second -> data){
+						return solve(first, second);
+					}else{
+						return solve(second, first);
+					}
+				}
+			}
+
+	745) Maximum sum of hour glass:
+		Problem Statement:
+			Given two integers n, m and a 2D matrix mat of dimensions nxm, the task is to find the maximum sum of an hourglass.
+			An hourglass is defined as a part of the matrix with the following form:
+				A B C
+				  D
+				E F G
+			Return -1 if any hourglass is not found.
+			Example 1:
+			Input:
+				n = 3, m = 3
+				mat = [[1, 2, 3],
+					[4, 5, 6],
+					[7, 8, 9]]
+				Output: 35
+			Explanation:
+			There is only one hour glass which is
+			1 2 3
+			  5
+			7 8 9   
+			and its sum is 35.
+			
+			Example 2:
+			Input:
+			n = 2, m = 3
+			mat = [[1, 2, 3],
+				[4, 5, 6]]
+			Output:
+			-1
+			Explanation:
+			There are no hour glasses in this matrix.
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function findMaxSum() which takes the two integers n, m, and the 2D matrix mat as input parameters and returns the maximum sum of an hourglass in the matrix. If there are no hourglasses, it returns -1.
+
+			Expected Time Complexity: O(n*m)
+			Expected Auxillary Space: O(1)
+
+			Constraints:
+				1 <= n <= 150
+				3 <= m <= 150
+				0 <= mat[i][j] <= 10^6
+
+		class Solution {
+			public:
+			int findMaxSum(int n, int m, vector<vector<int>> mat) {
+				if(n <=2 || m <=2)
+					return -1;
+
+				int mxSum = 0;
+				for(int i=0; i < n-2; i++){
+					for(int j=0; j < m-2; j++){
+						int tempSum =0;
+						tempSum += mat[i][j] + mat[i][j+1] + mat[i][j+2];
+						tempSum += mat[i+1][(j + (j+2))/2];
+						tempSum += mat[i+2][j] + mat[i+2][j+1] + mat[i+2][j+2];
+						
+						mxSum = max(tempSum, mxSum);
+						// cout<< tempSum << "\t";
+					}
+				}
+				// cout<<"\n";
+				return mxSum;
+			}
+		};
+
+	746) Rotate array:
+		Problem statement
+			Given an array 'arr' with 'n' elements, the task is to rotate the array to the left by 'k' steps, where 'k' is non-negative.
+			Example:
+			'arr '= [1,2,3,4,5]
+			'k' = 1  rotated array = [2,3,4,5,1]
+			'k' = 2  rotated array = [3,4,5,1,2]
+			'k' = 3  rotated array = [4,5,1,2,3] and so on.
+			Detailed explanation ( Input/output format, Notes, Images )
+			Sample Input 1:
+			8
+			7 5 2 11 2 43 1 1
+			2
+			Sample Output 1:
+			2 11 2 43 1 1 7 5
+			Explanation of Sample Input 1:
+			Rotate 1 steps to the left: 5 2 11 2 43 1 1 7
+			Rotate 2 steps to the left: 2 11 2 43 1 1 7 5
+			Sample Input 2:
+			4
+			5 6 7 8
+			3
+			Sample Output 2:
+			8 5 6 7
+			Explanation of Sample Input 2:
+			Rotate 1 steps to the left: 6 7 8 5
+			Rotate 2 steps to the left: 7 8 5 6
+			Rotate 2 steps to the left: 8 5 6 7
+			Expected Time Complexity:
+			O(n), where ‘n’ is the size of the array ‘arr’ and ‘k’ is the number of rotations.
+			Constraints:
+				1 <= 'n' <= 10^3
+				1 <= 'arr'[i] <= 10^9
+				1 <= 'k' < 'n'
+			Hints:
+				1. For an index ‘i’, find where it lands after k swaps.
+				2. When performing rotation once observe how the positions of all elements change.
+
+		vector<int> rotateArray(vector<int>arr, int k) {
+			int n = arr.size();
+
+			if(n == k)
+				return arr;
+			
+			reverse(arr.begin(), arr.end());
+			reverse(arr.begin(), arr.begin()+(n-k));
+			reverse(arr.begin()+(n-k), arr.end());
+			
+			return arr;
+		}
 	
-	746)
+	747) Check if Linked List is Palindrome:
+		Problem Statement:
+			Given a singly linked list of size N of integers. The task is to check if the given linked list is palindrome or not.
+			Example 1:
+			Input:
+			N = 3
+			value[] = {1,2,1}
+			Output: 1
+			Explanation: The given linked list is
+			1 2 1 , which is a palindrome and
+			Hence, the output is 1.
+
+			Example 2:
+			Input:
+			N = 4
+			value[] = {1,2,3,4}
+			Output: 0
+			Explanation: The given linked list
+			is 1 2 3 4 , which is not a palindrome
+			and Hence, the output is 0.
+
+			Your Task:
+				The task is to complete the function isPalindrome() which takes head as reference as the only parameter and returns true or false if linked list is palindrome or not respectively.
+
+			Expected Time Complexity: O(N)
+			Expected Auxialliary Space Usage: O(1)  (ie, you should not use the recursive stack space as well)
+
+			Constraints:
+				1 <= N <= 10^5
+
+		/*
+			struct Node {
+				int data;
+				struct Node *next;
+				Node(int x) {
+					data = x;
+					next = NULL;
+				}
+			};
+		*/
+
+		/* TC: O(N) & SC: O(N)*/
+			#include<bits/stdc++.h>
+			class Solution{
+				public:
+				//Function to check whether the list is palindrome.
+				bool isPalindrome(Node *head) {
+					vector<int> v;
+					Node *temp = head;
+					while(temp){
+						v.push_back(temp -> data);
+						temp = temp -> next;
+					}
+					
+					// checking reverse
+					int s = 0, e = v.size()-1;
+					
+					while(s < e)
+						if(v[s++] != v[e--])
+							return 0;
+							
+					return 1;
+				}
+			};
+		
+		/* TC: O(N) & SC: O(1)*/
+			-find out the middle node
+			-reverse all the nodes after that middle node
+			-compare both head & next of middle node's data
+			❌Pending
+
+	748) Majority Element (Refer Q.352)
+		Problem Statement:
+			Given an array A of N elements. Find the majority element in the array. A majority element in an array A of size N is an element that appears strictly more than N/2 times in the array. 
+			Example 1:
+			Input:
+			N = 3 
+			A[] = {1,2,3} 
+			Output:
+			-1
+			Explanation:
+			Since, each element in 
+			{1,2,3} appears only once so there 
+			is no majority element.
+
+			Example 2:
+			Input:
+			N = 5 
+			A[] = {3,1,3,3,2} 
+			Output:
+			3
+			Explanation:
+			Since, 3 is present more
+			than N/2 times, so it is 
+			the majority element.
+
+			Your Task:
+				The task is to complete the function majorityElement() which returns the majority element in the array. If no majority exists, return -1.
+			
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 ≤ N ≤ 10^7
+				0 ≤ Ai ≤ 10^6
+
+		// Not Optimized 		/*TC: O(N²) & SC:O(1)*/
+			class Solution{
+				public:
+				int majorityElement(int a[], int size) {
+					for(int i=0; i<size; i++){
+						int cnt=0;
+						for(int j=i; j<size; j++)
+							if(a[i] == a[j])
+								cnt++;
+							
+						if(cnt > size/2)
+							return a[i];
+					}
+					return -1;
+				}
+			};
+
+		/*TC: O(N) & SC:O(N)*/
+			class Solution{
+				public:
+				// Function to find majority element in the array
+				// a: input array
+				// size: size of input array
+				int majorityElement(int a[], int size) {
+					map<int, int> mp;
+					for(int i=0; i<size; i++)
+						mp[a[i]]++;
+						
+					for(auto i: mp)
+						if(i.second > (size/2))
+							return i.first;
+					
+					return -1;
+				}
+			};
+
+		/*TC: O(N) & SC:O(1)*/
+			class Solution{
+				public:
+				int majorityElement(int nums[], int size) {
+					int count = 0;    
+					int element = 0; 
+					
+					for (int i = 0; i < size; i++) {
+						if (count == 0) {
+							element = nums[i];
+							count = 1;
+						} else if (element == nums[i]) {
+							count++;
+						} else {
+							count--;
+						}
+					}
+
+					int cnt=0;
+					for(int i=0; i<size; i++)
+						if(nums[i] == element)
+							cnt++;
+					
+					if(cnt > size/2)
+						return element;
+						
+					return -1;
+				}
+			};
 	
-	747)
-	
-	748)
-	
-	749)
+	749) 
 
 	750)
 
