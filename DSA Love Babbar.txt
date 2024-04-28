@@ -19593,8 +19593,10 @@ Lecture-50: Check Palindrome in Linked List
 	-> Refer Q.747 from POTD section
 ---------------------------------------------------------------------------------------------------------
 Lecture 51: Add 2 Numbers represented by Linked Lists
-	
+	-> Refer Q.759 from POTD section
 ---------------------------------------------------------------------------------------------------------
+Lecture 52: Clone a Linked List with Random Pointers
+	-> Refer Q.760 from POTD section
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
@@ -78670,7 +78672,6 @@ POTD:-[Problem of the Day]
 				2 6 -1
 				2 5 10 -1
 
-
 		#include <bits/stdc++.h> 
 		/************************************************
 			Following is the linkedList class structure:
@@ -78740,6 +78741,55 @@ POTD:-[Problem of the Day]
 			holder -> next = n;
 			return head;
 		}
+
+		// Simpler:
+			int length(List* h){
+				int l=0;
+
+				while(h){
+					l++;
+					h = h -> next;
+				}
+				return l;
+			}
+
+			List* finder(List* h, int n){
+				while(--n)
+					h = h-> next;
+				return h;
+			}
+
+			List* reverse(List* h, List* midNext){
+				List* cur = h;
+				List* pre = nullptr;
+				List* next =0;
+
+				while(cur != midNext){
+					next = cur -> next;
+					cur -> next = pre;
+					pre =cur;
+					cur = next;
+				}
+				return pre;
+			}
+
+			List* foldAndMerge(List *head) {
+				// firstly find the length of LL
+				int len = length(head);
+				List* mid = finder(head, len/2);
+
+				// reverse the LL from mid Node
+				List* itr2 = mid -> next;
+				List* itr1 = reverse(head, mid->next);
+				
+				head = itr2;
+				while(itr2 && itr1){
+					itr2 -> data = itr1 -> data * itr2 ->data;
+					itr2 = itr2 -> next;
+					itr1 = itr1 -> next;
+				}
+				return head;
+			}
 	
 	756) Fahrenheit to Celsius:
 		Problem statement
@@ -78837,7 +78887,7 @@ POTD:-[Problem of the Day]
 			int maximumXor(vector<int> A) {
 				int mxNum = 0;
 				
-				for(int i=0; i<A.size(); i++)
+				for(int i=0; i<A.size(); i++)					// instead of using this A.size(), assign it to some variable & used that variable it reduces time complexity	
 					for(int j=i+1; j<A.size(); j++)
 						mxNum = max(mxNum, (A[i] ^ A[j]));
 
@@ -78845,7 +78895,15 @@ POTD:-[Problem of the Day]
 			}
 
 		// Optimized:
-			❌Pending
+			int maximumXor(vector<int> A) {
+				int mxN = 0, n = A.size();
+
+				for(int i=0; i<n; i++)
+					for(int j=i+1; j<n;j++)
+						mxN = max(mxN, (A[i]^A[j]));
+
+				return mxN;
+			}
 	
 	758) Delete Middle of Linked List:
 		Problem Statement:
@@ -78915,7 +78973,210 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	759)
+	759) Add two numbers represented by linked lists:
+		Problem Statement:
+			Given two decimal numbers, num1 and num2, represented by linked lists of size n and m respectively. The task is to return a linked list that represents the sum of these two numbers.
+			For example, the number 190 will be represented by the linked list, 1->9->0->null, similarly 25 by 2->5->null. Sum of these two numbers is 190 + 25 = 215, which will be represented by 2->1->5->null. You are required to return the head of the linked list 2->1->5->null.
+			Note: There can be leading zeros in the input lists, but there should not be any leading zeros in the output list.
+			Example 1:
+			Input:
+			n = 2
+			num1 = 45 (4->5->null)
+			m = 3
+			num2 = 345 (3->4->5->null)
+			Output: 
+			3->9->0->null  
+			Explanation: 
+			For the given two linked list (4 5) and (3 4 5), after adding the two linked list resultant linked list will be (3 9 0).
+
+			Example 2:
+			Input:
+			n = 4
+			num1 = 0063 (0->0->6->3->null)
+			m = 2
+			num2 = 07 (0->7->null)
+			Output: 
+			7->0->null
+			Explanation: 
+			For the given two linked list (0 0 6 3) and (0 7), after adding the two linked list resultant linked list will be (7 0).
+
+			Your Task:
+				The task is to complete the function addTwoLists() which has node reference of both the linked lists and returns the head of the sum list.   
+
+			Expected Time Complexity: O(n+m)
+			Expected Auxiliary Space: O(max(n,m)) for the resultant list.
+
+			Constraints:
+				1 <= n, m <= 10^4
+
+		/* node for linked list:
+			struct Node {
+				int data;
+				struct Node* next;
+				Node(int x) {
+					data = x;
+					next = NULL;
+				}
+			};
+		*/
+
+		class Solution {
+			Node* reverse(Node* &h){
+				Node* cur = h;
+				Node* prev = nullptr;
+				
+				while(cur){
+					Node* upcoming = cur -> next;
+					cur -> next = prev;
+					prev = cur;
+					cur = upcoming;
+				}
+				return prev;
+			}
+			
+			Node* addLL(Node* &a, Node* &b){
+				Node* h = nullptr;
+				Node* tail = nullptr;
+				int c=0;
+				
+				while(a && b){
+					int sum = a->data + b->data + c;
+					
+					c = sum / 10;
+					Node * n = new Node(sum%10);
+					
+					if(h == nullptr){
+						h = n;
+						tail = n;
+					}else{
+						tail -> next = n;
+						tail = n;
+					}
+					
+					a = a-> next;
+					b = b-> next;
+				}
+				
+				while(a){
+					int sum = c + a->data;
+					
+					c = sum / 10;
+					
+					Node* n = new Node(sum%10);
+					
+					tail -> next = n;
+					tail = n;
+					
+					a = a -> next;
+				}
+				
+				while(b){
+					int sum = c + b->data;
+					
+					c = sum / 10;
+					
+					Node* n = new Node(sum%10);
+					
+					tail -> next = n;
+					tail = n;
+					
+					b = b -> next;
+				}
+				
+				if(c != 0) {
+					Node* n = new Node(c % 10);
+					tail -> next = n;
+					tail = n;
+				}
+				return h;
+			}
+			
+			public:
+			//Function to add two numbers represented by linked list.
+			Node* addTwoLists(struct Node* num1, struct Node* num2) {
+				Node* first = reverse(num1);
+				Node* second = reverse(num2);
+				
+				Node* main = addLL(first, second);
+				main = reverse(main);
+				
+				// "main -> next != nullptr" this condition is to handle the addition of 0's only
+				while(main -> next != nullptr && main -> data == 0)
+					main = main -> next;
+				
+				return main;
+			}
+		};
+
+		// Or using single loop
+			class Solution {
+				Node* reverse(Node* &h){
+					Node* cur = h;
+					Node* prev = nullptr;
+					
+					while(cur){
+						Node* upcoming = cur -> next;
+						cur -> next = prev;
+						prev = cur;
+						cur = upcoming;
+					}
+					return prev;
+				}
+				
+				Node* addLL(Node* &a, Node* &b){
+					Node* h = nullptr;
+					Node* tail = nullptr;
+					int c=0;
+					
+					while(a || b || c){                      //while(a != NULL || b != NULL || c != 0){
+					
+						int v1 = 0;
+						if(a != NULL)
+							v1 = a->data;
+						
+						int v2 = 0;
+						if(b != NULL)
+							v2 = b->data;
+							
+						int sum = v1 + v2 + c;
+						
+						c = sum / 10;
+						Node * n = new Node(sum%10);
+						
+						if(h == nullptr){
+							h = n;
+							tail = n;
+						}else{
+							tail -> next = n;
+							tail = n;
+						}
+						
+						if(a != NULL)
+							a = a-> next;
+						
+						if(b != NULL)
+							b = b-> next;
+					}
+
+					return h;
+				}
+				
+				public:
+				//Function to add two numbers represented by linked list.
+				Node* addTwoLists(struct Node* num1, struct Node* num2) {
+					Node* first = reverse(num1);
+					Node* second = reverse(num2);
+					
+					Node* main = addLL(first, second);
+					main = reverse(main);
+					
+					// "main -> next != nullptr" this condition is to handle the addition of 0's only
+					while(main -> next != nullptr && main -> data == 0)
+						main = main -> next;
+					
+					return main;
+				}
+			};
 	
 	760)
 	
