@@ -19589,7 +19589,13 @@ Lecture-49: Merge 2 Sorted Linked Lists || Sort 0s, 1s and 2s in Linked List
 	Q.2. Merge two sorted linked lists
 		-> Refer Q.744 from POTD section
 ---------------------------------------------------------------------------------------------------------
-
+Lecture-50: Check Palindrome in Linked List
+	-> Refer Q.747 from POTD section
+---------------------------------------------------------------------------------------------------------
+Lecture 51: Add 2 Numbers represented by Linked Lists
+	
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
 	//Ternary Operator
@@ -25538,6 +25544,32 @@ POTD:-[Problem of the Day]
 
 				return arr;
 			}
+
+			//or
+				#include <bits/stdc++.h> 
+				vector<int> addOneToNumber(vector<int> arr) {
+					arr[arr.size()-1]++;
+					reverse(arr.begin(), arr.end());
+
+					int c = 0, i=0;
+					while(i < arr.size()){
+						arr[i] += c;
+						c = arr[i] / 10;
+						if(c == 0)
+							break;
+						arr[i] %= 10;
+						i++;
+					}
+					if(c != 0)
+						arr.push_back(c);
+					reverse(arr.begin(), arr.end());
+
+					// removing leading zeros
+					while(arr[0] == 0)
+						arr.erase(arr.begin());
+						
+					return arr;
+				}
 		
 		//or
 			#include <bits/stdc++.h> 
@@ -48187,6 +48219,43 @@ POTD:-[Problem of the Day]
 				for(int i=1; i<str.length(); i++)
 					if(str[i] == ' ')
 						str[i+1] = toupper(str[i+1]);
+				return str;
+			}
+		// Or
+			#include <bits/stdc++.h> 
+			string convertString(string str) {
+				std::string ans;
+				std::string s;
+				for (int i = 0; i < str.size(); i++) {
+					if (str[i] == ' ' && !(s.empty())) {
+						ans += toupper(s[0]);
+						s.erase(s.begin());
+							s += " ";
+						ans += s;
+						s.clear();
+					} else {
+						s += str[i]; // Append character from str to s
+					}
+				}
+
+				if (!s.empty()) {
+					ans += toupper(s[0]);
+					s.erase(s.begin());
+					ans += s;
+				}
+				return ans;
+			}
+	
+		// Or
+			#include <bits/stdc++.h> 
+			string convertString(string str) {
+				int f =1;
+				for(int i=0; i<str.size(); i++){
+					if(f && islower(str[i]))
+						str[i] = toupper(str[i]);
+		
+					f = (str[i] == ' ') ? 1 : 0;
+				}
 				return str;
 			}
 
@@ -77906,7 +77975,6 @@ POTD:-[Problem of the Day]
 					while(s < e)
 						if(v[s++] != v[e--])
 							return 0;
-							
 					return 1;
 				}
 			};
@@ -77915,7 +77983,64 @@ POTD:-[Problem of the Day]
 			-find out the middle node
 			-reverse all the nodes after that middle node
 			-compare both head & next of middle node's data
-			❌Pending
+			class Solution{
+				Node* getMid(Node *head){
+					// for odd length both slow & fast pointer you can keep on head, it will work
+					// but in case of even length you need to keep the fast pointer one step ahead of slow pointer at start
+					
+					Node* slow = head, *fast = head -> next;
+					while(fast && fast -> next){
+						fast = fast -> next -> next;
+						slow = slow -> next;
+					}
+					return slow;
+				}
+				
+				Node* reverse(Node* &temp){
+					Node* cur = temp;
+					Node* prev = nullptr;
+					Node* next;
+					
+					while(cur){
+						next = cur -> next;
+						cur -> next = prev;
+						prev = cur;
+						
+						cur = next;
+					}
+					
+					return prev;
+				}
+				
+				public:
+				//Function to check whether the list is palindrome.
+				bool isPalindrome(Node *head) {
+					if(head == nullptr || head -> next == nullptr)
+						return 1;
+						
+					Node *mid = getMid(head);
+					
+					// this lines reversing the LL after mid point.
+					mid -> next = reverse(mid -> next);
+					
+					// checking palindrome or not
+					Node* h1 = head;
+					Node* h2 = mid -> next;
+					
+					while(h2){
+						if(h1 -> data != h2 ->data){
+							mid -> next = reverse(mid -> next);
+							return 0;
+						}
+						h2 = h2 -> next;
+						h1 = h1 -> next;
+					}
+					
+					// this lines makes the LL as it is previously
+					mid -> next = reverse(mid -> next);
+					return 1;
+				}
+			};
 
 	748) Majority Element (Refer Q.352)
 		Problem Statement:
@@ -78018,10 +78143,782 @@ POTD:-[Problem of the Day]
 				}
 			};
 	
-	749) 
+	749) Delete Node In A Linked List:
+		Problem statement
+			You are given a Singly Linked List of integers and a reference to the node to be deleted. Every node of the Linked List has a unique value written on it. Your task is to delete that node from the linked list.
+			A singly linked list is a linear data structure in which we can traverse only in one direction i.e. from Head to Tail. It consists of several nodes where each node contains some data and a reference to the next node.
+			Note:
+			• The reference to the head of the linked list is not given.
+			• The node to be deleted is not a tail node.
+			• The value of each node in the Linked List is unique.
+			• It is guaranteed that the node to be deleted is present in the linked list.
+			A sample Linked List-
+			Constraints:
+				1 <= T <= 100
+				2 <= N <= 5000
+				-10 ^ 9 <= NODE.DATA <= 10 ^ 9 and node.data != -1
+				Where 'N' denotes the total number of nodes in the Linked List and 'NODE.DATA' is the value of the node present.
+				Time limit: 1 sec.
 
-	750)
+			Sample Input 1:
+			2
+			2 5 7 10 -1
+			7
+			-8 3 4 -2 1 -1
+			4
+			Sample Output 1:
+			2 5 10 -1
+			-8 3 -2 1 -1
+			Explanation for sample input 1:
+			For the first test case, the given Linked List is
+			So, after deleting the node 7, the Linked List becomes 2 → 5 → 10 → NULL, which is shown in the below figure.
+			For the second test case, the given Linked List is
+			So, after deleting the node 4, the Linked List becomes  -8 → 3 → -2 → 1 → NULL.
+			Sample Input 2:
+			2
+			4 9 10 -1
+			4
+			-7 7 -1
+			-7
+			Sample Output 2:
+			9 10 -1
+			7 -1
+			Explanation for sample input 2:
+			For the first test case, the given Linked List is
+			So, after deleting the node 4, the Linked List becomes 9 → 10 → NULL.
+			For the second test case, the given Linked List is
+			So, after deleting the node -7, the Linked List becomes 7 → NULL.
 
+		#include <bits/stdc++.h>
+		/****************************************************************
+			Following is the class structure of the LinkedListNode class:
+			template <typename T>
+			class LinkedListNode {
+			public:
+				T data;
+				LinkedListNode<T> *next;
+				LinkedListNode(T data)
+				{
+					this->data = data;
+					this->next = NULL;
+				}
+			};
+		*****************************************************************/
+		void deleteNode(LinkedListNode<int> * node) {
+			node -> data = node -> next -> data;
+			node -> next = node -> next -> next;
+		}
+	
+	#CN Weekly-Contest-123:
+		750) Alice's Nickname:
+			Problem statement
+				As Alice is bored with her original name, she wants a nickname for her, so she asks Bob to give her a nickname.
+				Bob also has a nickname which can be represented by a string of 'N' lowercase English letters. He thinks new name for Alice which contains 'N' lowercase English letters and tells her the name.
+				As Alice loves Bob's nickname she wants every letter of her nickname must be there in Bob's nickname. Also, she wants her name to be unique, so she wants that for each 'i', the 'i-th' character of her nickname must be different from the 'i-th' character of Bob's nickname.
+				You are given strings 'A' and 'B' representing Bob's nickname and the nickname Bob thought for Alice. Determine whether the nickname Bob thought follows the conditions given by Alice or not.
+				Return '1' if Alice's conditions for her nickname are fulfilled and return '0' otherwise.
+				Example:
+				N = 3
+				A = 'aab'
+				B = 'bba
+				We can see that every character ('a' and 'b') in Alice's name is there in Bob's name and for each 'i', 'A[i]' is different from 'B[i]'. So the conditions are fulfilled.
+				So, the answer for this case is '1'.
+				Detailed explanation ( Input/output format, Notes, Images )
+				Constraints:
+					1 <= 'N' <= 100
+					'a' <= 'A[i]' <= 'z'
+					'a' <= 'B[i]' <= 'z'
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					3
+					aaa
+					bbb
+					2
+					ab
+					ba
+					Sample output 1:
+					0
+					1
+					Explanation of sample input 1:
+					For test case 1:
+					You can see there is character 'a' in Alice's nickname which is not in Bob's nickname.
+					So, the answer for this case is '0'.
+
+					For test case 2:
+					We can see that every character ('a' and 'b') in Alice's name is there in Bob's name and for each 'i', 'A[i]' is different from 'B[i]'. So the conditions are fulfilled.
+					So, the answer for this case is '1'.
+					Sample input 2:
+					2
+					6
+					acbbcd
+					bacdef
+					1
+					a
+					a
+					Sample output 2:
+					1
+				0
+
+			// Own Solution:
+				int isNicknameGood(int n, string a, string b) {
+					for(int i=0; i<n; i++)
+						if(a[i] == b[i])
+							return 0;
+
+					set<char> sa (a.begin(), a.end());
+					set<char> sb (b.begin(), b.end());
+
+					string s1 (sa.begin(), sa.end());
+					string s2 (sb.begin(), sb.end());
+					
+					if(s1 == s2)
+						return 1;
+
+					int i=0;
+					while(i < s1.size()){
+						if(s2.find(s1[i]) == string::npos)
+							return 0;
+						i++;
+					}
+					return 1;
+				}
+			
+			// Main Solution:
+				int isNicknameGood(int n, string a, string b) {
+					for(int i=0; i<a.size(); i++){
+						int p = 1;
+
+						for(int j=0; j<b.size(); j++){
+							if(b[j] == a[i]){               // every char of b should be present in a
+								p = 0;
+								break;
+							}
+						}
+						
+						if (p || a[i] == b[i]) return 0;
+					}
+					return 1;
+				}
+
+		751) Maximum Number:
+			Problem statement
+				You are given an array ‘A’ of ‘N’ integers numbered from ‘0’ to ‘N - 1’ You can apply the following operation at most once.
+				Select any element ‘A[i]’ in the array and change any digit within it to a digit ‘D’.
+				The digit ‘D’ should be in between ‘1’ and ‘9’, and ‘(D & (D - 1))’ should be equal to ‘0’.
+				Here, ‘&’ denotes the bitwise ‘AND’ operation.
+				You have to find the maximum possible integer you can make after applying this operation no more than one time.
+				Your task is to tell the maximum possible integer you can make after applying the given operation no more than one time and return it.
+				Example:
+				‘N’ = 3
+				‘A’ = [92, 939, 61]
+				Here, the best possible way is to choose the ‘1st’ element and replace ‘3’ to ‘8’, as ‘(8 & (8 - 1))’ is equal to ‘0’.
+				Now, the integer ‘939’ will be converted to ‘989’, which is the best possible answer we can make.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^5
+					1 <= A[i] <= 10^8
+					Time Limit: 1 sec 
+				Sample Input 1:
+					2
+					4
+					217 9999 10 233
+					2
+					87 9
+					Sample Output 1:
+					9999
+					88
+					Explanation of sample input 1:
+					For test case 1:
+					Here, the ‘1st’ element is the best possible answer we can make. There is no need to apply the given operation. 
+
+					For test case 2:
+					The most optimal way is to select the ‘0th’ element and replace its digit ‘7’ to ‘8’. Now, the element ‘87’ will be converted to ‘88’, which is the best possible answer we can make.
+					Sample Input 2:
+					2
+					3
+					89 899 99
+					2
+					10 17
+					Sample Output 2:
+					899
+					87
+
+			int maximumNumber (int n, vector <int> &a) {
+				sort(a.begin(), a.end(), greater<int>());
+
+				int z = 0;
+				int mxINT = a[0];
+
+				while(z < a.size()) {
+					int f = a[z];
+					string s = to_string(f);
+
+					for(int i=0; i<s.size(); i++)
+					if(s[i] != '9' && s[i] != '8'){
+						s[i] = '8';
+						break;
+					}
+					mxINT = max(mxINT, stoi(s));
+					z++;
+				}
+				return mxINT;
+			}
+		
+		752) Even minus Odd:
+			Problem statement
+				You are given an array 'A' of 'N' integers from '0' to 'N - 1' and an integer 'K'.
+				Good subarray is a subarray of 'A' in which 'number of even elements - number of odd elements' is equal to 'K'.
+				You are required to find the number of good subarrays of the array 'A'.
+				Example:
+				N = 4
+				K = 1
+				A = [1, 4, 6, 3]
+				There are total '4' good subarrays ['1', '4', '6'], ['4', '6', '3'], ['4'], and ['6'].
+				It can be proved that there is no other good subarray of the array 'A'.
+				So, the answer for this case is '4'.
+				Constraints:
+					1 <= 'N' <= 10^5
+					'1' <= A[i] <= '10^9'
+
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					2 0
+					1 1
+					3 1
+					1 2 2
+					Sample output 1:
+					0
+					3
+					Explanation of sample input 1:
+					For test case 1:
+					It can be proved that there is no good subarray in the array 'A'.
+					So, the answer for this case is '0'.
+
+					For test case 2:
+					There are total '3' good subarrays ['1', '2', '2'], ['2'], and ['2']. (Note that ['2'] is counted two times as there are two different subarrays ['2'] in the given array.)
+					It can be proved that there is no other good subarray of the array 'A'.
+					So, the answer for this case is '3'.
+					Sample input 2:
+					2
+					4 2
+					1 2 2 4
+					5 2
+					1 4 1 4 4
+					Sample output 2:
+					3
+					2
+
+			// Not Optimized:
+				bool areEqualToK(int s, int e, vector<int> &v, int k){
+					int even, odd;
+					
+					even = odd = 0;
+					for(int i=s; i<=e; i++)
+						if(v[i] & 1)
+							odd++;
+						else
+							even++;
+					
+					if((even - odd) == k)
+						return 1;
+					return 0;
+				}
+				int numberOfsubarrays(int n, int k, vector<int> &v) {
+					int ttlCnt=0;
+
+					for(int i=0; i<n; i++)
+						for(int j=i; j<n; j++)
+							if(areEqualToK(i, j, v, k))
+								ttlCnt++;
+
+					return ttlCnt;
+				}
+
+			// Optimized: ❌Pending
+				int numberOfsubarrays(int n, int k, vector<int> &v) {
+					int diff=0, ttlCnt = 0;
+
+					map<int, int> fr;
+					fr[diff]++;
+
+					for(int i=0; i<n; i++){
+						if(v[i] & 1)
+							diff--;
+						else
+							diff++;
+
+						if(fr.find(diff - k) != fr.end())
+							ttlCnt += fr[diff-k];
+						
+						fr[diff]++;
+					}
+
+					return ttlCnt;
+				}
+
+	753) Intersection of Multiple Arrays:
+		Problem Statement:
+			Given a 2D integer array nums where nums[i] is a non-empty array of distinct positive integers, return the list of integers that are present in each array of nums sorted in ascending order.
+			Example 1:
+			Input: nums = [[3,1,2,4,5],[1,2,3,4],[3,4,5,6]]
+			Output: [3,4]
+
+			Explanation: 
+			The only integers present in each of nums[0] = [3,1,2,4,5], nums[1] = [1,2,3,4], and nums[2] = [3,4,5,6] are 3 and 4, so we return [3,4].
+
+			Example 2:
+			Input: nums = [[1,2,3],[4,5,6]]
+			Output: []
+			Explanation: 
+			There does not exist any integer present both in nums[0] and nums[1], so we return an empty list [].
+			
+			Constraints:
+				1 <= nums.length <= 1000
+				1 <= sum(nums[i].length) <= 1000
+				1 <= nums[i][j] <= 1000
+				All the values of nums[i] are unique.
+		
+		class Solution {
+			public:
+			vector<int> intersection(vector<vector<int>>& nums) {
+				vector<int> ans;
+
+				vector<int> temp = nums[0];
+
+				if(nums.size() == 1){
+					sort(temp.begin(), temp.end());
+					return temp;
+				}
+				
+				for(int i=0; i<temp.size(); i++){
+					int p = 0;
+					for(int j = 1; j< nums.size(); j++){
+						p=0;
+						if(find(nums[j].begin(), nums[j].end(), temp[i]) != nums[j].end())
+							p=1;
+
+						if(p == 0)
+							break;
+					}
+					if(p)
+						ans.push_back(temp[i]);
+				}
+				
+				sort(begin(ans), end(ans));
+				return ans;
+			}
+		};
+	
+	754) Make a Square with the Same Color:
+		https://leetcode.com/problems/make-a-square-with-the-same-color/description/
+		Problem Statement:
+			You are given a 2D matrix grid of size 3 x 3 consisting only of characters 'B' and 'W'. Character 'W' represents the white color, and character 'B' represents the black color.
+			Your task is to change the color of at most one cell so that the matrix has a 2 x 2 square where all cells are of the same color.
+			Return true if it is possible to create a 2 x 2 square of the same color, otherwise, return false.	
+			Example 1:			
+				Input: grid = [
+							["B","W","B"],
+							["B","W","W"],
+							["B","W","B"]
+						    ]
+
+				Output: true
+				Explanation:
+				It can be done by changing the color of the grid[0][2].
+
+			Example 2: 
+				Input: grid = [
+							["B","W","B"],
+							["W","B","W"],
+							["B","W","B"]
+						    ]
+				Output: false
+				Explanation:
+				It cannot be done by changing at most one cell.
+			Example 3:
+				Input: grid = [
+							["B","W","B"],
+							["B","W","W"],
+							["B","W","W"]
+						    ]
+				Output: true
+				Explanation:
+				The grid already contains a 2 x 2 square of the same color.
+
+			Constraints:
+				grid.length == 3
+				grid[i].length == 3
+				grid[i][j] is either 'W' or 'B'.
+
+		// Brute Force:
+			-for 3x3 matrix only.
+			class Solution {
+				public:
+				bool canMakeSquare(vector<vector<char>>& grid) {
+					int cnt = 0;
+					
+					for(int i=0; i<2; i++){
+						for(int j=0; j<2; j++){
+							if(grid[i][j] == 'B')
+								cnt++;
+						}
+					}
+					
+					if(cnt == 3 || cnt == 1 || cnt == 4 || cnt == 0)
+							return 1;
+					
+					cnt =0;
+					for(int i=0; i<2; i++){
+						for(int j=1; j<3; j++){
+							if(grid[i][j] == 'B')
+								cnt++;
+						}
+					}
+					
+					if(cnt == 3 || cnt == 1 || cnt == 4 || cnt == 0)
+							return 1;
+					
+					cnt =0;
+					for(int i=1; i<3; i++){
+						for(int j=0; j<2; j++){
+							if(grid[i][j] == 'B')
+								cnt++;
+						}
+					}
+					
+					if(cnt == 3 || cnt == 1 || cnt == 4 || cnt == 0)
+							return 1;
+					
+					cnt =0;
+					for(int i=1; i<3; i++){
+						for(int j=1; j<3; j++){
+							if(grid[i][j] == 'B')
+								cnt++;
+						}
+					}
+					
+					if(cnt == 3 || cnt == 1 || cnt == 4 || cnt == 0)
+							return 1;
+					return 0;
+				}
+			};
+
+		// Generic Code:
+			-for larger input:
+			class Solution {
+				public:
+				bool isPossible(vector<vector<char>>& grid, int i, int j){
+					int W = 0, B = 0;
+					for(int x = i; x < i + 2; x++){
+						for(int y = j; y < j + 2; y++){
+							if(grid[x][y] == 'W') W++;
+							else B++;
+						}
+					}
+					if(W > 2 || B > 2) return 1;
+					return 0;
+				}
+				bool canMakeSquare(vector<vector<char>>& grid){
+					int n = grid.size();
+					for(int i = 0; i <= n - 2; i++){ // n- 2 since square size is 2
+						for(int j = 0; j <= n - 2; j++){
+							if(isPossible(grid, i, j)) return 1;
+						}
+					}
+					return 0;
+				}
+			};
+	
+	755) Fold and Merge Linked List:
+		Problem statement
+			You are given a singly linked list containing ‘N’ nodes (‘N’ is even), where every node in the linked list contains a pointer ‘NEXT’, which points to the next node in the list and has an integer value associated with it.
+			Your task is to break LinkedList into two halves and then take the first half, fold it over the second half and merge all the intersecting nodes by taking their product.
+			Note :
+			You will apply this operation only once, check example for better understanding.
+			Example :
+			N = 4
+			NODE = 1 -> 2 -> 3 -> 4
+			In the following example, first, you break your List into two equal half, [ 1 -> 2 ] and [ 3 -> 4 ], 
+			Now you will fold the first half over the second half and merge them with their product.
+			So the answer is [ 3 * 2 -> 4 * 1 ] i.e. [ 6 -> 4 ].
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 1e5
+				Sum of N <= 10^5
+
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				2 2 2 2 -1
+				4 5 3 1 2 6 -1
+				Sample Output 1 :
+				4 4 -1
+				3 10 24 -1
+				Explanation Of Sample Input 1 :
+				For test case 1, 
+				First, we will break into two equal halves, [ 2 -> 2 ] and [ 2 -> 2 ], now folding and merging with the product, so the result is [ 2 * 2 -> 2 * 2 ] i.e. [ 4 -> 4 ].
+
+				For test case 2,
+				For this case the two halves are [ 4 -> 5 -> 3 ] and [ 1 -> 2 -> 6 ], now folding and merging with product [ 3 * 1 -> 5 * 2 -> 6 * 4 ] i.e [ 3 -> 10 -> 24 ] 
+				Sample Input 2 :
+				2
+				3 1 2 2 -1
+				5 5 1 2 1 2 -1
+				Sample Output 2 :
+				2 6 -1
+				2 5 10 -1
+
+
+		#include <bits/stdc++.h> 
+		/************************************************
+			Following is the linkedList class structure:
+			class List {
+				public:
+					int data;
+					List *next;
+
+				List(int val) {
+					this->data = val;
+					next = NULL;
+				}
+				~List() {
+					if (next != NULL) {
+						delete next;
+					}
+				}
+			};
+		*************************************************/
+		List* reverse(List* h, List* mid){
+			List* prev = nullptr;
+			List* cur = h;
+
+			List* T;
+
+			while(cur != mid){
+				T = cur -> next;
+
+				cur -> next = prev;
+				prev = cur;
+				cur = T;
+			}
+			return prev;
+		}
+
+		List* getMid(List* temp){
+			List* fast = temp -> next;
+			while(fast && fast -> next){
+				fast = fast -> next -> next;
+				temp = temp -> next;
+			}
+			return temp;
+		}
+
+		List* foldAndMerge(List *head) {
+			List* mid = getMid(head);
+			List* itr2 = mid;
+
+			// reverse the first half
+			List* itr1 = reverse(head, mid);
+
+			// cout<<itr1 -> data << "\t"<< itr2 ->data << "\t\t";
+
+			head = itr1;
+			List* holder = nullptr;
+			while(itr1){
+				itr1 -> data =(itr1 -> data *  itr2->data);
+				// cout<<itr1 -> data <<"\t"<<itr2->data<<"\n";
+
+				holder = itr1;
+
+				itr1 = itr1 -> next;
+				itr2 = itr2 -> next;   
+			}
+			
+			List * n = new List(-1);
+			holder -> next = n;
+			return head;
+		}
+	
+	756) Fahrenheit to Celsius:
+		Problem statement
+			Ninja has been assigned to convert temperature from Fahrenheit to Celsius. He has been given a starting Fahrenheit Value (S), ending Fahrenheit value (E), and step size (W). Unfortunately, he does not know how to convert from Fahrenheit to Celsius. Please help him to find the result.
+			Constraints:
+				1 <= T <= 5
+				1 <= S <= E <= 10000
+				1 <= W <= 50
+
+				Time limit: 1 sec.
+			Sample Input 1:
+				2
+				0 100 20
+				25 50 25
+				Sample Output 1:
+				0 -17
+				20 -6
+				40 4
+				60 15
+				80 26
+				100 37
+				25 -3
+				50 10
+				Explanation Of Sample Input 1:
+				Test case 1:
+				For the first test case of sample output 1, we start from Fahrenheit temperature 0 and move up to 100 with a step size of 20 units. For every temperature, we have a corresponding celsius temperature present in the output table.
+
+				Test case 2:   
+				For the second test case of sample output 1, we start from Fahrenheit temperature 25 and move up to 50 with a step size of 25 units. For every temperature, we have a corresponding celsius temperature present in the output table.
+				Sample Input 2:
+				2
+				50 150 15
+				600 650 7
+				Sample Output 2:
+				50 10
+				65 18
+				80 26
+				95 35
+				110 43
+				125 51
+				140 60
+				600 315
+				607 319
+				614 323
+				621 327
+				628 331
+				635 335
+				642 338
+				649 342
+				Explanation Of Sample Input 2:
+				Test case 1:
+				For the first test case of sample output 2, we have all celsius temperatures for the Fahrenheit range of 50 to 150.
+		
+		#include <bits/stdc++.h> 
+		vector<vector<int>> fahrenheitToCelsius(int s, int e, int w) {
+			vector<vector<int>> ans;
+
+			for(int i=s; i<=e; i += w){
+				vector<int> temp;
+				temp.push_back(i);
+				temp.push_back((i-32) * 5/9);
+				ans.push_back(temp);
+			}
+			return ans;
+		}
+	
+	757) Maximum XOR of Two Numbers in an Array:
+		Problem statement
+			An array ‘A’ of ‘N’ integers is provided. Return the maximum possible number which can be created by taking bitwise XOR of any 2 integers of the array.
+			Example:
+			If the array is 2,5 and 6
+			2 XOR 5 is 7
+			2 XOR 6 is 4
+			5 XOR 6 is 3
+			Hence the answer is 7.
+			Sample Input 1:
+				3
+				2 1 4
+				Sample Output 1:
+				6
+				Explanation for Sample Input 1:
+				Select the 1st and 3rd element leading to a xor value of 6.
+				Sample Input 2:
+				2
+				3 2
+				Sample Output 2:
+				1
+				Constraints:
+				1 <= N <= 10^4
+				1 <= A[i] <= 10^9 
+
+				Time Limit: 1 sec
+
+		//Not Optimized:
+			int maximumXor(vector<int> A) {
+				int mxNum = 0;
+				
+				for(int i=0; i<A.size(); i++)
+					for(int j=i+1; j<A.size(); j++)
+						mxNum = max(mxNum, (A[i] ^ A[j]));
+
+				return mxNum;
+			}
+
+		// Optimized:
+			❌Pending
+	
+	758) Delete Middle of Linked List:
+		Problem Statement:
+			Given a singly linked list, delete middle of the linked list. For example, if given linked list is 1->2->3->4->5 then linked list should be modified to 1->2->4->5.
+			If there are even nodes, then there would be two middle nodes, we need to delete the second middle element. For example, if given linked list is 1->2->3->4->5->6 then it should be modified to 1->2->3->5->6.
+			If the input linked list has single node, then it should return NULL.
+
+			Example 1:
+				Input:
+				LinkedList: 1->2->3->4->5
+				Output: 
+				1 2 4 5
+
+			Example 2:
+				Input:
+				LinkedList: 2->4->6->7->5->1
+				Output: 
+				2 4 6 5 1
+			Your Task:
+				The task is to complete the function deleteMid() which takes head of the linkedlist  and return head of the linkedlist with middle element deleted from the linked list. If the linked list is empty or contains single element then it should return NULL.
+			Expected Time Complexity: O(n).
+			Expected Auxiliary Space: O(1).
+			Constraints:
+				1 <= n <= 10^5
+				1 <= value[i] <= 10^9
+
+		/* Link list Node:
+			struct Node {
+				int data;
+				struct Node* next;
+
+				Node(int x){
+					data = x;
+					next = NULL;
+				}
+			};
+		*/
+
+		// Deletes middle of linked list and returns head of the modified list
+		class Solution{
+			public:
+			Node* deleteMid(Node* head) {
+				
+				// handling edge cases where one element in LL
+				if(head -> next == nullptr)
+					return nullptr;
+				
+				// edge cases where 2 element in LL
+				if(head -> next -> next == nullptr){
+					head -> next = nullptr;
+					return head;
+				}
+				
+				// cases where more than 2 element in LL
+				Node* mid = head;
+				Node* fast = head;
+				
+				while(fast && fast -> next){
+					fast = fast -> next-> next;
+					mid = mid -> next;
+				}
+				
+				mid -> data = mid -> next -> data;
+				mid -> next = mid -> next -> next;
+				
+				return head;
+			}
+		};
+
+	759)
+	
+	760)
+	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
