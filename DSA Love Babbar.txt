@@ -1,6 +1,7 @@
 -When you start reading/ revising notes, read problem statement properly & think logical,
  if you don't understand the program, Google the question.
 -VISIT ALL ❌Pending THINGS ONCE YOU COMPLETE WHOLE PLAYLIST.
+-If you don't understand the codes, observe it clearly, try to visualize/ imagine the things, how they are working.
 -----------------------------------------------------------------------------------------------------------
 	01/08/2023
 Lecture-1: Intro to Programming & Flowcharts
@@ -19593,10 +19594,34 @@ Lecture-50: Check Palindrome in Linked List
 	-> Refer Q.747 from POTD section
 ---------------------------------------------------------------------------------------------------------
 Lecture 51: Add 2 Numbers represented by Linked Lists
-	-> Refer Q.759 from POTD section
+	-> Refer Q.759 && Q.763 from POTD section
 ---------------------------------------------------------------------------------------------------------
 Lecture 52: Clone a Linked List with Random Pointers
 	-> Refer Q.760 from POTD section
+---------------------------------------------------------------------------------------------------------
+Lecture-53: Merge Sort in Linked List
+	Q.1 Merge Sort in Linked List
+		Steps:
+		0. find mid of LL.
+		1. break LL into 2 halves.
+		2. point the first parts end to null ie. mid -> next = null.
+		3. do again step 1. till LL contains 0 or 1 element
+		4. sort the 2 LL recursively
+		5. merge them back.
+		-> Refer Q.769 from POTD section
+
+	HomeWork:
+		Why Quick Sort preferred for Arrays and Merge Sort for Linked Lists?
+		->❌Pending
+			https://www.geeksforgeeks.org/why-quick-sort-preferred-for-arrays-and-merge-sort-for-linked-lists/
+
+	Q.2 Flatten A Linked List
+		-> Refer Q.770 from POTD section
+---------------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
@@ -24704,6 +24729,32 @@ POTD:-[Problem of the Day]
 				}
 				return distinctCount;	
 			}
+		
+		// Simpler: (Sliding Window)
+			#include <bits/stdc++.h> 
+			vector<int> countDistinctElements(vector<int> &arr, int k)  {
+				vector<int> ans;
+					
+				int temp  = k, i=0;
+				map<int, int> mp;
+
+				while(temp--)
+					mp[arr[i++]]++;
+				
+				ans.push_back(mp.size());
+
+				int j = 0;
+				for(; i < arr.size(); i++){
+					mp[arr[i]]++;
+					mp[arr[j]]--;
+					if(mp[arr[j]] == 0)
+						mp.erase(arr[j]);
+
+					j++;     
+					ans.push_back(mp.size());
+				}
+				return ans;
+			}
 
 	26) Tweaked Array:
 		Sample Input 1 :
@@ -28673,6 +28724,22 @@ POTD:-[Problem of the Day]
 						swap(arr[i], arr[nonZeroPos]);
 						nonZeroPos++;
 					}
+			}
+		
+		//or
+			void pushZerosAtEnd(vector<int> &arr)  {
+				int cnt =0;
+				for(int i: arr)
+					if(i == 0)
+						cnt++;
+
+				int j=0;
+				for(int i=0; i<arr.size(); i++)
+					if(arr[i] != 0)
+						arr[j++] = arr[i];
+
+				while(cnt--)
+					arr[j++] = 0;
 			}
 
 	83) Minimum and Maximum Cost to buy N Candies:
@@ -79178,8 +79245,1577 @@ POTD:-[Problem of the Day]
 				}
 			};
 	
-	760)
+	760) Clone a linked list with next and random pointer:
+		https://www.geeksforgeeks.org/problems/clone-a-linked-list-with-next-and-random-pointer/1
+		Problem Statement:
+			You are given a special linked list with N nodes where each node has a next pointer pointing to its next node. You are also given M random pointers, where you will be given M number of pairs denoting two nodes a and b  i.e. a->arb = b (arb is pointer to random node).
+			Construct a copy of the given list. The copy should consist of exactly N new nodes, where each new node has its value set to the value of its corresponding original node. Both the next and random pointer of the new nodes should point to new nodes in the copied list such that the pointers in the original list and copied list represent the same list state. None of the pointers in the new list should point to nodes in the original list.
+			For example, if there are two nodes X and Y in the original list, where X.arb --> Y, then for the corresponding two nodes x and y in the copied list, x.arb --> y.
+			Return the head of the copied linked list.
+			ArbitLinked List1
+			Note :- The diagram isn't part of any example, it just depicts an example of how the linked list may look like.
+			Example 1:
+			Input:
+				N = 4, M = 2
+				value = {1,2,3,4}
+				pairs = {{1,2},{2,4}}
+				Output: 1
+				Explanation: In this test case, there
+				are 4 nodes in linked list.  Among these
+				4 nodes,  2 nodes have arbitrary pointer
+				set, rest two nodes have arbitrary pointer
+				as NULL. Second line tells us the value
+				of four nodes. The third line gives the
+				information about arbitrary pointers.
+				The first node arbitrary pointer is set to
+				node 2.  The second node arbitrary pointer
+				is set to node 4.
+			Example 2:
+				Input:
+				N = 4, M = 2
+				value[] = {1,3,5,9}
+				pairs[] = {{1,1},{3,4}}
+				Output: 1
+				Explanation: In the given testcase ,
+				applying the method as stated in the
+				above example, the output will be 1.
+
+			Your Task:
+				The task is to complete the function copyList() which takes one argument the head of the linked list to be cloned and should return the head of the cloned linked list.
+
+			NOTE : 
+				1. If there is any node whose arbitrary pointer is not given then it's by default NULL. 
+				2. Your solution return an output 1 if your clone linked list is correct, else it returns 0.
+				3. Don't make any changes to the original linked list.
+
+			Expected Time Complexity : O(n)
+			Expected Auxilliary Space : O(1)
+
+			Constraints:
+				1 <= N <= 100
+				1 <= M <= N
+				1 <= a, b <= 100
+
+		/* TC: O(n) & SC: O(n) used map*/
+			#include <bits/stdc++.h>
+			using namespace std;
+			/* Link list Node */
+			struct Node {
+				int data;
+				Node *next;
+				Node *arb;
+
+				Node(int x) {
+					data = x;
+					next = NULL;
+					arb = NULL;
+				}
+			};
+
+			class Solution {
+				public:
+				Node* copyList(Node *head) {
+					Node* ans = NULL;
+					Node* temp = head;
+					Node* tail = NULL;
+					map<Node*, Node*>   oldLL_ClonedLL;		// to extract the random pointers
+					
+					while(temp){
+						Node* n = new Node(temp->data);
+						if(ans == NULL){
+							ans = n;
+							tail = n;
+						}else{
+							tail -> next = n;
+							tail = n;
+						}
+						
+						// storing the mappings to extract the random links arb
+						oldLL_ClonedLL[temp] = tail;
+						
+						temp = temp -> next;
+					}
+					
+					Node* cloned = ans;
+					Node* original = head;
+					
+					while(original){
+						cloned -> arb = oldLL_ClonedLL[original -> arb];
+						cloned = cloned -> next;
+						original = original -> next;
+					}
+					return ans;
+				}
+			};
+
+		/* TC: O(n) & SC: O(1)*/
+			class Solution {
+				public:
+				Node* copyList(Node *head) {
+					//1. create clone of main list
+						Node* cloned = NULL;
+						Node* Tail = NULL;
+						
+						Node* temp = head;
+						
+						while(temp){
+							Node* n = new Node(temp -> data);
+							
+							if(Tail == NULL){
+								cloned = n;
+								Tail = n;
+							}else{
+								Tail -> next = n;
+								Tail = n;
+							}
+							
+							temp = temp -> next;
+						}
+						
+					// 2. add cloned Nodes inbetween original LL nodes
+						Node* original = head;
+						Node* copied = cloned;
+						
+						while(copied && original){                                  // or while(original){
+							Node* next = original -> next;
+							
+							original -> next = copied;
+							original = next;
+							
+							next = copied -> next;
+							copied -> next = original;
+							copied = next;
+						}
+					
+					// 3. copy random pointers / arb
+						temp = head;
+						while(temp){
+							temp -> next -> arb = temp -> arb ? temp -> arb -> next : temp -> arb; 
+							temp = temp -> next -> next;
+						}
+					
+					// 4. undo the step 2
+						original = head;
+						copied = cloned;
+						
+						while(copied && original){							// or while(original)   or while(copied)
+							original -> next = copied -> next;					// you can keep both or if you want keep any one of it in copied or original inside while loop.
+							original = original -> next;
+							
+							if(original != NULL)
+								copied -> next = original -> next;
+							
+							copied = copied -> next;
+						}
+
+					// return cloned LL
+						return cloned;
+				}
+			};
+
+	761) Find the Integer Added to Array I:
+		Problem Statement:
+			You are given two arrays of equal length, nums1 and nums2.
+			Each element in nums1 has been increased (or decreased in the case of negative) by an integer, represented by the variable x.
+			As a result, nums1 becomes equal to nums2. Two arrays are considered equal when they contain the same integers with the same frequencies.
+			Return the integer x.
+		
+			Example 1:
+			Input: nums1 = [2,6,4], nums2 = [9,7,5]
+			Output: 3
+			Explanation:
+			The integer added to each element of nums1 is 3.
+
+			Example 2:
+			Input: nums1 = [10], nums2 = [5]
+			Output: -5
+			Explanation:
+			The integer added to each element of nums1 is -5.
+
+			Example 3:
+			Input: nums1 = [1,1,1,1], nums2 = [1,1,1,1]
+			Output: 0
+			Explanation:
+			The integer added to each element of nums1 is 0.
+			
+			Constraints:
+				1 <= nums1.length == nums2.length <= 100
+				0 <= nums1[i], nums2[i] <= 1000
+				The test cases are generated in a way that there is an integer x such that nums1 can become equal to nums2 by adding x to each element of nums1.
+
+		class Solution {
+			public:
+			int addedInteger(vector<int>& nums1, vector<int>& nums2) {
+				int x;
+				
+				// int i = 0;
+				// for(i=0; i<nums1.size(); i++)
+				//     if(nums1[i] != nums2[i])
+				//         break;
+
+				// if(i == nums1.size())
+				//     return 0;
+
+				// if(nums1.size() == 1)
+				//     return nums2[0] - nums1[0];
+				
+				for(int i=0; i<nums1.size(); i++){
+					for(int j=0; j<nums2.size(); j++){
+						x = nums2[j] - nums1[i];
+						
+						int f=1;
+						for(int z=0; z<nums1.size(); z++)
+							if(find(nums2.begin(), nums2.end(), nums1[z]+x) == nums2.end()){
+							f = 0;
+							break;
+							}
+						
+						if(f)
+							return x;
+					}
+				} 
+				return x;
+			}
+		};
+
+		// Simpler:
+			class Solution {
+				public:
+				int addedInteger(vector<int>& nums1, vector<int>& nums2) {
+					sort(nums1.begin(), nums1.end());
+					sort(nums2.begin(), nums2.end());
+					
+					return nums2[0] - nums1[0];
+				}
+			};
+
+	762) Ninja And Editor:
+		Problem statement
+			Ninja wants to print a book of stories. He created a doc file and sent it to his editor to make some edits. But the file got corrupted due to some reasons and made changes in the original file. Ninja did not have a duplicate file of the same, so he wants to correct the same file. He found that the file has been changed in such a way that all the spaces have been removed from the file and the first letter after each space that used to be has been changed to the equivalent uppercase characters.
+			Example:
+			If the corrupted file looks like “CodingNinjasIsACodingPlatform”, then the original file was: “coding ninjas is a coding platform”.
+			Ninja needs to change the corrupted file to the original file.
+			Note:
+			You need to convert all the uppercase characters to lowercase characters, and you need to add a single space between every two words.
+			Constraints:
+				1 <= T <= 50
+				0 <= size of S <= 10000
+
+				where ‘T’ is the number of test cases.
+				where 'S’ is the corrupted string that you need to to change.
+				Time limit: 1 sec
+
+			Sample Input 1:
+			2
+			CodingNinjasIsACodingPlatform
+			Hello
+			Sample Output 1:
+			coding ninjas is a coding platform
+			hello
+			Explanation of sample input 1:
+			In the first test case, 
+			After replacing the uppercase characters with a space followed by the lowercase conversion of the character we get: 
+			coding ninjas is a coding platform
+
+			In the second test case, 
+			After replacing the uppercase characters with a space followed by the lowercase conversion of the character we get: 
+			hello
+			Sample Input 2:
+			3
+			HelloWorld
+			ILoveCoding
+			YouCanPracticeCodingOnCodezen
+			Sample Output 2:
+			hello world
+			i love coding
+			you can practice coding on codezen
+
+		#include <bits/stdc++.h> 
+		string editSentence(string &s) {
+			if(s.size() == 0)
+				return s;
+			
+			s[0] = tolower(s[0]);
+			
+			for(int i=1; i<s.size(); i++){
+				if(isupper(s[i])){
+					s[i] = tolower(s[i]);
+					s.insert(s.begin()+i, ' ');
+				}
+			}
+
+			// transform(s.begin(), s.end(), s.begin(), ::tolower);
+			return s;
+		}
 	
+	763) Add Two Numbers:
+		Problem statement
+			You are given two non-negative numbers 'num1' and 'num2' represented in the form of linked lists.
+			The digits in the linked lists are stored in reverse order, i.e. starting from least significant digit (LSD) to the most significant digit (MSD), and each of their nodes contains a single digit.
+			Calculate the sum of the two numbers and return the head of the sum list.
+
+			Example :
+			Input:
+			'num1' : 1 -> 2 -> 3 -> NULL
+			'num2' : 4 -> 5 -> 6 -> NULL
+			Output: 5 -> 7 -> 9 -> NULL
+			Explanation: 'num1' represents the number 321 and 'num2' represents 654. Their sum is 975.
+			Sample Input 1 :
+			3
+			1 2 3
+			3
+			4 5 6
+
+			Sample Output 1 :
+			5 7 9
+			Explanation for Sample Input 1 :
+			'num1' represents the number 321 and 'num2' represents 654. Their sum is 975.
+			Sample Input 2 :
+			2
+			0 1
+			1
+			0
+
+			Sample Output 2 :
+			0 1
+
+			Explanation for Sample Input 2 :
+			'num1' represents 10 and 'num2' represents 0. Their sum is 10.
+
+			Sample Input 3 :
+			1
+			2
+			2
+			9 9
+
+			Sample Output 3 :
+			1 0 1
+
+			Explanation for Sample Input 3 :
+			'num1' represents 2 and 'num2' represents 99. Their sum is 101.
+
+			Expected Time Complexity :
+			The expected time complexity is O('m' + 'n').
+
+			Constraints :
+				1 <= 'm', 'n' <= 5 * 10^4
+				0 <= 'data' in any Linked List node <= 9
+				The numbers do not contain any leading zeros.
+				If the number is zero, then there is one node having 'data' = 0.
+				Time Limit: 1 sec
+		/**************************************************************************
+			* Definition of linked list:
+			*
+			* class Node {
+			* public:
+			*      int data;
+			*      Node *next;
+			*      Node() {
+			*          this->data = 0;
+			*          this->next = NULL;
+			*      }
+			*      Node(int data) {
+			*          this->data = data;
+			*          this->next = NULL;
+			*      }
+			*      Node (int data, Node *next) {
+			*          this->data = data;
+			*          this->next = next;
+			*      }
+			* };
+		*************************************************************************/
+
+		Node *addTwoNumbers(Node *n1, Node *n2){
+			int c=0;
+			Node* ans = n1;
+			Node* Tail = n1;
+			while(n1 || n2 || c) {
+
+				int v1, v2;
+				v1 = v2 = 0;
+				if(n1)
+					v1 = n1 -> data;
+				
+				if(n2)
+					v2 = n2 -> data;
+
+				int sum = v1 + v2  + c;
+				c = sum / 10;
+
+				if(n1){
+					n1 -> data = sum % 10;
+				}else{
+					Node *newNode = new Node(sum % 10);                             // here inserting newNodes at the ends of n1 LL
+					Tail -> next = newNode;
+					Tail = newNode;
+				}
+
+				if(n1){
+					Tail = n1;                  // passing n1 as answer, if the length of n1 < n2 then inserting new nodes at the end of LL
+					n1 = n1 -> next;
+				}
+
+				if(n2)
+					n2 = n2 -> next;
+			}
+			return ans;                 
+		}
+
+	764) Container with Maximum Water/ Container With Most Water:
+		Refer Q.92 Also
+		Problem statement
+			You have been given an array/list ‘ARR‘ of length ‘N’ consisting of non-negative integers ARR1, ARR2, ..., ARRN. The i’th integer denotes a point with coordinates (i, ARR[i]). ‘N’ vertical lines are drawn such that the two endpoints of the i’th line are at (i, arr[i]) and (i,0).
+			Your task is to find two lines, which, together with the x-axis, form a container, such that the container contains the most water. Return the maximum area of the container.
+			Note:
+			1. Consider the container to be 2-dimensional for simplicity. 
+			2. For any pair of sides ignore all the lines that lie inside that pair of sides. 
+			3. You are not allowed to slant the container.
+
+			Example:
+			Consider 'ARR'= {1,8,6,2,5,4,8,3,7} then the vertical lines are represented by the above image. The blue section denotes the maximum water than a container can contain.
+			Constraints:
+				1 <= T <= 100
+				2 <= N <= 5000
+				1 <= ARR[i] <= 10^5
+
+				Where 'ARR[i]' denotes the elements of the given array/list.
+
+				Time limit: 1 sec
+			Sample Input 1 :
+				2
+				5
+				2 4 7 1 3
+				3
+				7 5 9
+				Sample Output 1:
+				9
+				14
+				Explanation of Sample Input 1:
+				In the first test case, we will get the maximum area if we choose the container coloured blue in the above image. The length of the base of the container is 3, and the height of the container is min(4, 3) which is 3. Thus, the area of the container is 3 * 3 = 9.
+				In the second test case, we will get the maximum area if we choose the container coloured blue in the above image. The length of the base of the container is 2, and the height of the container is min(7, 9) which is 7. Thus, the area of the container is 2 * 7 = 14.
+				Sample Input 2:
+				2
+				5
+				1 5 12 2 1
+				5
+				7 12 9 20 8
+				Sample Output 2:
+				5
+				28
+				Explanation of Sample Input 2:
+				In the first test case, we will get the maximum area if we choose the container coloured blue in the above image. The length of the base of the container is 1, and the height of the container is min(5, 12) which is 5. Thus, the area of the container is 1 * 5 = 5.
+				In the second test case, we will get the maximum area if we choose the container coloured blue in the above image. The length of the base of the container is 4, and the height of the container is min(7, 8) which is 7. Thus, the area of the container is 4 * 7 = 28.
+
+		#include <bits/stdc++.h> 
+		int maxAreaContainer(vector<int> &arr) {
+			int mxCover=0;
+			int s = 0, e = arr.size()-1;
+
+			while(s < e){
+				int dist = e - s;
+				int index = min(arr[s], arr[e]);
+
+				int val = dist * index;
+				mxCover = max(mxCover , val);
+				
+				if(arr[s] < arr[e])
+					s++;
+				else
+					e--;
+			}
+
+			return mxCover;
+		}
+
+	765) Funny Divisors:
+		Problem statement
+			Ninja is bored with his previous game of numbers, so now he is playing with divisors.
+			He is given 'N' numbers, and his task is to return the sum of all numbers which is divisible by 2 or 3.
+			Let the number given to him be - 1, 2, 3, 5, 6. As 2, 3, and 6 is divisible by either 2 or 3 we return 2 + 3 + 6 = 11.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^3
+				0 <= input[i] <= 10^3
+
+				Where ‘T’ denotes the number of test cases and ‘N’ is the elements given to Ninja and input[i] denotes theith input.
+				Time Limit: 1 sec  
+			Sample Input 1 :
+				2
+				3
+				1 2 3
+				4
+				5 6 9 8
+				Sample Output 1 :
+				5
+				23  
+				Explanation for Sample Input 1 :
+				In the first test case, 1 is neither divisible by 2 or 3. 2 is divisible by 2, and 3 is divisible by 3. So here we return the sum of 2 + 3 which is equal to 5.
+
+				In the second test case, 5 is divisible by neither 5 nor 6.6 is divisible by 2, 9 is divisible by 3, and 8 is divisible by 2. So here we return 6 + 9 + 8 = 23. 
+				Sample Input 2 :
+				2
+				7
+				7 5 11 3 5 2 9
+				2
+				3 4
+				Sample Output 2 :
+				14
+				7
+
+		#include <bits/stdc++.h> 
+		int findSum(int n, vector<int>& arr) {
+			int ans=0;
+			for(int i: arr)
+				if(i % 2 == 0 || i%3 == 0)
+					ans += i;
+			return ans;
+		}
+	
+	766) Frequency of every Element: (GFG WeeklyContest-152)
+		Problem Statement:
+			You are given an array a of size n. For every i (0<=i<=n-1) you need to find the frequency of a[i] from index i to
+			n-1. Finally you need to return an array of size n.
+			Example 1:
+			Input:
+			n = 5
+			all = {1, 1, 1, 2, 2}
+			Output:
+			3 2 1 2 1
+			Explanation:
+			For i=0, a[i] i.e. 1 have frequency 3 from index 0 to 4.
+			For i=1, ali] i.e. 1 have frequency 2 from index 1 to 4.
+			Example 2:
+			Input:
+			n = 7
+			al] = {1, 1, 2, 2, 3, 3, 1}
+			Output:
+			3 2 2 1 2 1 1
+		
+			Explanation:
+				For i=0, a[i] i.e. 1 have frequency 3 from index 0 to 6.
+				For i=2, ali] i.e. 2 have frequency 2 from index 2 to 6.
+			
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function frequency) which take
+				integer n and array a as input and returns an array containing the frequencies of ith element of the array from
+				from index i to n-1.
+			Constraints:
+				1 <=n <= 10^5
+				-10^3 <= a[i] <= 10^3
+			
+		class Solution{
+			public:
+			vector<int> frequency(int n, vector<int> &a){
+				vector<int> ans(n);
+				
+				map<int, int> Fr;
+				for(int i: a)
+					Fr[i]++;
+					
+				for(int i=0; i<n; i++){
+					ans[i] = Fr[a[i]]--;
+				}
+				return ans;
+			}
+		};
+	
+	767) Number of Wonderful Substrings:
+		Problem Statement:
+			A wonderful string is a string where at most one letter appears an odd number of times.
+			For example, "ccjjc" and "abab" are wonderful, but "ab" is not.
+			Given a string word that consists of the first ten lowercase English letters ('a' through 'j'), return the number of wonderful non-empty substrings in word. If the same substring appears multiple times in word, then count each occurrence separately.
+			A substring is a contiguous sequence of characters in a string.
+
+			Example 1:
+			Input: word = "aba"
+			Output: 4
+			Explanation: The four wonderful substrings are underlined below:
+			- "aba" -> "a"
+			- "aba" -> "b"
+			- "aba" -> "a"
+			- "aba" -> "aba"
+
+			Example 2:
+			Input: word = "aabb"
+			Output: 9
+			Explanation: The nine wonderful substrings are underlined below:
+			- "aabb" -> "a"
+			- "aabb" -> "aa"
+			- "aabb" -> "aab"
+			- "aabb" -> "aabb"
+			- "aabb" -> "a"
+			- "aabb" -> "abb"
+			- "aabb" -> "b"
+			- "aabb" -> "bb"
+			- "aabb" -> "b"
+
+			Example 3:
+			Input: word = "he"
+			Output: 2
+			Explanation: The two wonderful substrings are underlined below:
+			- "he" -> "h"
+			- "he" -> "e"
+			
+			Constraints:
+				1 <= word.length <= 10^5
+				word consists of lowercase English letters from 'a' to 'j'.
+
+		// Not Optimized:
+			class Solution {
+				public:
+				long long wonderfulSubstrings(string word) {
+					long long ans = word.size();
+					for(int i = 0; i < word.size()-1; i++) {
+						for(int j = i+1; j < word.size(); j++) {
+							map<int, int> Fr;
+
+							for(int z=i; z<=j; z++)
+								Fr[word[z]]++;
+							
+							int cnt = 0;
+							for(auto i: Fr)
+								if(i.second & 1)
+								cnt++;
+								
+							if(cnt == 1 || Fr.size() == 1 || cnt == 0)
+								ans++;
+						}
+					}
+					return ans;
+				}
+			};
+
+			// Little Bit Optimization:
+				class Solution {
+					public:
+					long long wonderfulSubstrings(string word) {
+						long long ans = word.size();
+
+						for(int i = 0; i < word.size()-1; i++) {
+							map<int, int> Fr;
+							Fr[word[i]]++;
+
+							for(int j = i+1; j < word.size(); j++) {                
+								int cnt = 0;
+								Fr[word[j]]++;
+
+								for(auto i: Fr)
+									if(i.second & 1)
+									cnt++;
+
+								if(cnt == 1 || Fr.size() == 1 || cnt == 0)
+									ans++;
+							}
+						}
+						return ans;
+					}
+				};
+		
+		// Optimized: ❌Pending
+
+	768) The Chunin Ninja:
+		Problem statement
+			You are the Supreme Ninja Warrior on a visit to Ninja Class, and class can be represented as a rectangular matrix ‘ARR’ of ‘N’ rows and ‘M’ columns.
+			Each Ninja has a skill level, and each element in matrix ‘ARR’ represents the skill level of the Ninja present in the class. More formally, ‘ARR[i][j]’ represents the skill level of Ninja sitting in the ‘jth’ column of the ‘ith’ row.
+			A ninja is said to be ‘Chunin’ if he has maximum skill among all Ninjas in his column and minimum skill level among all Ninjas in his row.
+			Can you find all the ‘Chunin’ Ninjas present in the class?
+			Example :
+			N = 3 M = 3
+			ARR = [ [3, 4, 5], [2, 7, 6] , [1, 2, 4] ]
+			Ninja at Position (0,0) has maximum skill in ‘0th’ column and minimum skill in ‘0th’ row, it is the only Chunin Ninja.
+			So, we return [ 3 ] as our ‘ANS’. 
+			Constraints :
+				1 <= T <= 10
+				1 <= N , M <= 10^5
+				0 <= ARR[i][j] <= 10^9
+				Sum of N*M over all Test cases <= 10^5
+				Time Limit: 1 sec
+
+			Sample Input 1 :
+			2
+			2 2
+			3 4 
+			2 5 
+			2 3
+			3 4 5
+			4 5 6
+			Sample Output 1 :
+			3 
+			4
+			Explanation Of Sample Input 1 :
+			For test case 1, 
+			With skill level '3' at position (0,0), the Ninja is the only 'Chunin' Ninja as it has maximum skill level in its column and minimum skill level in its row.
+
+			For test case 2,
+			With skill level '4' at position (1,0), the Ninja is the only 'Chunin' Ninja as it has maximum skill level in its column and minimum skill level in its row.
+			Sample Input 2 :
+			1
+			1 1
+			1
+			Sample Output 2 :
+			1 
+
+		#include <bits/stdc++.h> 
+		vector <int> chuninNinja(int n , int m , vector < vector < int > > arr){
+
+			// we need to return the min_element when there is one row only
+			/*
+				if(n == 1)
+				return {*min_element(arr[0].begin(), arr[0].end())};
+			*/
+			if(n == 1){
+				int val = *min_element(arr[0].begin(), arr[0].end());
+				return {val};
+			}
+
+			// we need to return the max_element when there is one column only
+			if(m == 1){
+				int mxVal = arr[0][0];
+				for(int i=1; i<n; i++)
+				mxVal = max(mxVal, arr[i][0]);
+				return {mxVal};
+			}
+
+			vector <int> ans;
+
+			// need to find the min element in the row (going through every row)
+			// & then confirm that the same element is max element for that column
+			for(int i=0; i<n; i++){
+				for(int j=0; j<m; j++){
+				int f = 1;
+				int cur = arr[i][j];
+
+				// checking mini-mality in row
+				for(int z=0; z<m; z++)
+					if(cur > arr[i][z]){
+						f=0;
+						break;
+					}
+				
+				if(f){
+					// checking maxi-mality in col
+					for(int z=0; z<n; z++)
+					if(cur < arr[z][j]){
+						f=0;
+						break;
+					}
+				}
+
+				if(f)
+					ans.push_back(cur);
+				}   
+			}
+			return ans;
+		}
+	
+	769) MergeSort Linked List:
+		Problem statement
+			For a given Singly Linked List of integers, sort the list using the 'Merge Sort' algorithm.
+			Constraints :
+				1 <= N <= 10^5
+				1 <= DATA <= 10^9
+				Where 'DATA' denotes the value of node of Linked List.
+				Time Limit: 1sec
+
+			Sample Input 1 :
+				1 4 5 2 -1
+			Sample Output 1 :
+				1 2 4 5
+			Sample Input 2 :
+				10 9 8 7 6 5 4 -1
+			Sample Output 2 :
+				4 5 6 7 8 9 10
+
+		/********************************************************************
+			Following is the representation of the Singly Linked List Node:
+			class node{
+				public:
+					int data;
+					node * next;
+				node(int data){
+					this->data=data;
+					this->next=NULL;
+				}
+			};    
+		********************************************************************/
+		/* TC: O(N logN) & SC: O(N), Used extra space */
+			#include <vector>
+			#include <algorithm>
+			node* mergeSort(node *head) {
+				vector<int> v;
+				node* temp = head;
+
+				while(temp){
+					v.push_back(temp -> data);
+					temp = temp -> next;
+				}
+
+				sort(v.begin(), v.end());
+				
+				int i=0;
+				temp = head;
+				while(temp){
+					temp ->data = v[i++];
+					temp = temp -> next;
+				}
+				return head;
+			}
+
+		/* Expected:- TC: O(N logN) & SC: O(log n)  */
+			node* getMid(node* head){
+				node* fast = head -> next;
+				node* slow = head;
+
+				while(fast && fast -> next){                                    //or while(fast != NULL && fast -> next != NULL )
+					fast = fast -> next -> next;
+					slow = slow -> next;
+				}
+				return slow;
+			}
+
+			node* merge(node* f, node* s) {
+
+				if(!f)                               // if(f == nullptr)
+					return s;
+				
+				if(s == nullptr)                // if(!s)
+					return f;
+
+				node* h = new node(-1);
+				node* temp = h;
+
+				while(f && s){
+					if(f->data < s->data){
+						temp -> next = f;
+						temp = f;
+						f = f -> next;
+					}else{
+						temp -> next = s;
+						temp = s;
+						s = s-> next;
+					}
+				}
+
+				// while(f){
+				//     temp -> next = f;
+				//     temp = f;
+				//     f = f -> next;
+				// }
+
+				// while(s){
+				//     temp -> next = s;
+				//     temp = s;
+				//     s = s -> next;
+				// }
+
+				// instead of above 2 while loops you can use this below if conditions
+				if(f)
+					temp -> next = f;
+
+				if(s)
+					temp -> next = s;
+
+				temp = h -> next;
+				// deleting that dummy node which is there at start (-1).
+				delete h;
+
+				return temp;
+			}
+
+			node* mergeSort(node *head) {
+				// if(!head) it means head == NULL, if(!NULL) == if(1) then if block will gets executed.
+				// if(!head -> next) it means head -> next == NULL, means LL contains one element better to use parenthesis like this !(head -> next)
+				
+				if(!head || !(head -> next))
+					return head;
+
+				// breaking LL into 2 halves
+				node* mid = getMid(head);
+
+				node* left = head;
+				node* right = mid -> next;
+				mid -> next = nullptr;
+
+				left = mergeSort(left);
+				right = mergeSort(right);
+
+				// merge left & right half back
+				node* res = merge(left, right);
+				return res;
+			}
+	
+	770) Flatten A Linked List:
+		Problem statement
+			You are given a linked list containing 'n' 'head' nodes, where every node in the linked list contains two pointers:
+			(1) ‘next’ which points to the next node in the list
+			(2) ‘child’ pointer to a linked list where the current node is the head.
+			Each of these child linked lists is in sorted order and connected by 'child' pointer.
+			Your task is to flatten this linked such that all nodes appear in a single layer or level in a 'sorted order'.
+			Example:
+			Input: Given linked list is:
+			Output:
+			1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 12 → 20 → null.
+			Explanation:
+			The returned linked list should be in a sorted order. All the elements in this returned linked list are connected by 'child' pointers and 'next' pointers point to null.
+
+			Sample Input 1 :
+				4
+				3
+				1 2 3
+				3
+				8 10 15
+				2
+				18 22
+				1
+				29
+				Sample Output 1 :
+				1 2 3 8 10 15 18 22 29
+
+				Explanation For Sample Input 1:
+				The given linked list is 
+
+				Therefore after flattening the list will become-
+				1 -> 2 -> 3 -> 8 -> 10 -> 15 -> 18 -> 22 -> 29 ->null
+
+			Sample Input 2 :
+				5
+				2
+				4 6
+				2
+				5 71
+				3
+				7 8 9
+				3 
+				11 12 19
+				3
+				14 15 17
+
+
+				Sample Output 2 :
+				4 5 6 7 8 9 11 12 14 15 17 19 71
+
+				Expected Time Complexity:
+				Try solving this in O(n*n*k), where ‘n’ denotes the number of head nodes and ‘k’ is the average number of child nodes in all 'n' sub-lists.     
+
+				Expected Space Complexity:
+				Try solving this without using any extra space.   
+
+				Constraints:
+					1 <= n <= 100
+					1 <= k <= 20
+					1 <= Node.data <= 10^9
+					Time Limit: 1 sec
+
+		/*
+		* Definition for linked list.
+		* class Node {
+		*  public:
+		*		int data;
+		*		Node *next;
+		* 		Node *child;
+		*		Node() : data(0), next(nullptr), child(nullptr){};
+		*		Node(int x) : data(x), next(nullptr), child(nullptr) {}
+		*		Node(int x, Node *next, Node *child) : data(x), next(next), child(child) {}
+		* };
+		*/
+		#include <algorithm>
+		Node* flattenLinkedList(Node* head) {
+			Node* ans = new Node(1);
+			Node* temp = head;
+			vector<int> v;
+
+			while(head){
+				head = head -> next;
+
+				while(temp){
+					v.push_back(temp -> data);
+					temp = temp -> child;
+				}
+				temp = head;
+			}
+
+			sort(v.begin(), v.end());
+			int i=0;
+			temp = ans;
+			while(i < v.size()){
+				Node* n = new Node(v[i++]);
+
+				temp -> child = n;
+				temp = n;
+			}			
+			ans = ans -> child;
+			return ans;
+		}
+
+	771) Flattening a Linked List:
+		Problem Statement:
+			Given a Linked List of size N, where every node represents a sub-linked-list and contains two pointers:
+			(i) a next pointer to the next node,
+			(ii) a bottom pointer to a linked list where this node is head.
+			Each of the sub-linked-list is in sorted order.
+			Flatten the Link List such that all the nodes appear in a single level while maintaining the sorted order. 
+
+			Note: The flattened list will be printed using the bottom pointer instead of the next pointer.
+			For more clarity have a look at the printList() function in the driver code.
+
+			Example 1:
+			Input:
+				5 -> 10 -> 19 -> 28
+				↓     ↓     ↓     ↓ 
+				7     20    22   35
+				↓           ↓     ↓ 
+				8          50    40
+				↓                 ↓ 
+				30               45
+
+			Output:  5-> 7-> 8- > 10 -> 19-> 20->22-> 28-> 30-> 35-> 40-> 45-> 50.
+			Explanation:
+			The resultant linked lists has every node in a single level.
+			(Note: ↓ represents the bottom pointer.)
+
+			Example 2:
+				5 -> 10 -> 19 -> 28
+				↓          ↓                
+				7          22   
+				↓          ↓                 
+				8          50 
+				↓                           
+				30
+
+			Input: 
+			Output: 5->7->8->10->19->22->28->30->50
+			Explanation:
+			The resultant linked lists has every
+			node in a single level.
+
+			(Note: ↓ represents the bottom pointer.)
+			
+			Your Task:
+				You do not need to read input or print anything. Complete the function flatten() that takes the head of the linked list as input parameter and returns the head of flattened link list.
+
+			Expected Time Complexity: O(N*N*M)
+			Expected Auxiliary Space: O(N)
+
+			Constraints:
+				0 <= N <= 50
+				1 <= Mi <= 20
+				1 <= Element of linked list <= 10^3	
+	
+		/* Node structure  used in the program
+			struct Node{
+				int data;
+				struct Node * next;
+				struct Node * bottom;
+
+				Node(int x){
+					data = x;
+					next = NULL;
+					bottom = NULL;
+				}
+			};
+		*/
+
+		/*  Function which returns the  root of the flattened linked list. */
+		Node* flatten(Node *root) {
+			Node* temp = root;
+			vector<int> v;
+			
+			while(temp){
+				Node* childs = temp;
+				temp = temp -> next;
+				
+				while(childs){
+					v.push_back(childs -> data);
+					
+					childs = childs -> bottom;
+				}
+			}
+
+			sort(v.begin(), v.end());
+			
+			Node* ans = new Node(-1);
+			Node* Tail = ans;
+			
+			int i=0;
+			while(i<v.size()){
+				Node* n = new Node(v[i++]);
+				Tail -> bottom = n;
+				Tail = n;
+			}
+			
+			ans = ans -> bottom;
+			return ans;
+		}
+
+	772) Reverse Prefix of Word:
+		Problem Statement:
+			Given a 0-indexed string word and a character ch, reverse the segment of word that starts at index 0 and ends at the index of the first occurrence of ch (inclusive). If the character ch does not exist in word, do nothing.
+			For example, if word = "abcdefd" and ch = "d", then you should reverse the segment that starts at 0 and ends at 3 (inclusive). The resulting string will be "dcbaefd".
+			Return the resulting string.
+			
+			Example 1:
+			Input: word = "abcdefd", ch = "d"
+			Output: "dcbaefd"
+			Explanation: The first occurrence of "d" is at index 3. 
+			Reverse the part of word from 0 to 3 (inclusive), the resulting string is "dcbaefd".
+
+			Example 2:
+			Input: word = "xyxzxe", ch = "z"
+			Output: "zxyxxe"
+			Explanation: The first and only occurrence of "z" is at index 3.
+			Reverse the part of word from 0 to 3 (inclusive), the resulting string is "zxyxxe".
+
+			Example 3:
+			Input: word = "abcd", ch = "z"
+			Output: "abcd"
+			Explanation: "z" does not exist in word.
+			You should not do any reverse operation, the resulting string is "abcd".
+		
+			Constraints:
+				1 <= word.length <= 250
+				word consists of lowercase English letters.
+				ch is a lowercase English letter.
+
+		class Solution {
+			public:
+			string reversePrefix(string word, char ch) {
+				string rev;
+
+				int f=0;
+				while(word.size())
+					if(word[0] == ch){
+						rev += word[0];
+						f=1;
+						word.erase(word.begin());
+						break;
+					}else{
+						rev += word[0];
+						word.erase(word.begin());
+					}
+
+				if(f){
+					reverse(rev.begin(), rev.end());
+					rev += word;
+					return rev;
+				}
+				return rev;
+			}
+		};
+
+		// or
+			class Solution {
+				public:
+				string reversePrefix(string word, char ch) {
+					int i = word.find(ch);
+					if(i != -1)
+						reverse(word.begin(), word.begin()+i+1);
+					return word;        
+				}
+			};
+
+		// or
+			class Solution {
+				public:
+				string reversePrefix(string word, char ch) {
+					int i = word.find(ch);
+
+					if(i != -1){
+						int x=0, y=i;
+						while(x < y)
+							swap(word[x++], word[y--]);
+					}
+
+					return word;        
+				}
+			};
+
+	773) Arrange Consonants and Vowels:
+		Problem Statement:
+			Given a singly linked list having n nodes containing english alphabets ('a'-'z'). Rearrange the linked list in such a way that all the vowels come before the consonants while maintaining the order of their arrival. 
+			Example 1:
+			Input:
+			n = 9
+			linked list: a -> b -> c -> d -> e -> f -> g -> h -> i 
+			Output: 
+			a -> e -> i -> b -> c -> d -> f -> g -> h
+			Explanation: 
+			After rearranging the input linked list according to the condition the resultant linked list will be as shown in output.
+
+			Example 2:
+			Input:
+			n = 8
+			linked list: a -> b -> a -> b -> d -> e -> e -> d 
+			Output: 
+			a -> a -> e -> e -> b -> b -> d -> d
+
+			Explanation: 
+				After rearranging the input linked list according to the condition the resultant linked list will be as shown in output.
+			
+			Your Task:
+				Your task is to complete the function arrangeCV(), which takes head of linked list and arranges the list in such a way that all the vowels come before the consonants while maintaining the order of their arrival and returns the head of the updated linked list.
+
+			Expected Time Complexity :  O(n)
+			Expected Auxiliary Space :  O(1)
+
+			Constraints:
+				1 <= n <= 10^4
+				'a' <= elements of linked list <= 'z'
+
+		/*
+			Structure of the node of the linked list is as
+			struct Node {
+				char data;
+				struct Node *next;
+
+				Node(char x) {
+					data = x;
+					next = NULL;
+				}
+			};
+		*/
+
+		class Solution {
+			public:
+			// task is to complete this function
+			// function should return head to the list after making
+			// necessary arrangements
+			struct Node* arrangeCV(Node* head) {
+				vector<char> Vowels, Consonants;
+				
+				while(head){
+					if(head -> data == 'a' || head -> data == 'e' || head -> data == 'i' || head -> data == 'o' || head -> data == 'u')
+						Vowels.push_back(head -> data);
+					else
+						Consonants.push_back(head -> data);
+						
+					head = head -> next;
+				}
+				
+				
+				int i=0;
+				if(Vowels.size()){
+					head = new Node(Vowels[i++]);
+					Node* Tail = head;
+					
+					while(i < Vowels.size()){
+						struct Node* n = new Node(Vowels[i++]);
+						Tail -> next = n;
+						Tail = n;
+					}
+					
+					i=0;
+					while(i < Consonants.size()){
+						struct Node* n = new Node(Consonants[i++]);
+						Tail -> next = n;
+						Tail = n;
+					}
+				}
+				else{
+					head = new Node(Consonants[i++]);
+					Node* Tail = head;
+					while(i < Consonants.size()){
+						struct Node* n = new Node(Consonants[i++]);
+						Tail -> next = n;
+						Tail = n;
+					}
+				}		
+				return head;
+			}
+		};
+
+		/* TC: O(n) & SC: O(1)*/
+			class Solution {
+				public:
+				// task is to complete this function
+				// function should return head to the list after making
+				// necessary arrangements
+				struct Node* arrangeCV(Node* head) {
+					// these are dummy Nodes, if you want you can delete them later
+					struct Node* Vowels = new Node('1');
+					struct Node* Consonants = new Node('1');
+					
+					struct Node* Vt = Vowels;
+					struct Node* Ct = Consonants;
+					
+					while(head){
+						if(head -> data == 'a' || head -> data == 'e' || head -> data == 'i' || head -> data == 'o' || head -> data == 'u'){
+							Vt -> next = head;
+							Vt = head;
+						}else{
+							Ct -> next = head;
+							Ct = head;
+						}
+						head = head -> next;
+					}
+					
+					// ending both list properly
+					Vt -> next = NULL;
+					Ct -> next = NULL;
+					
+					if(Vowels -> next != nullptr){
+						Vt -> next = Consonants -> next;
+						return Vowels -> next;
+					}
+					
+					return Consonants -> next;
+				}
+			};
+	
+	774) Ninja And His Old Friends:
+		Problem statement
+			Ninja wants to meet his ‘N’ old friends standing in a row. All the friends along with Ninja are very happy because they are meeting after a long time. The happiness of each friend can be represented as a positive integer. Initially, Ninja has some happiness value ‘K’. Ninja shakes hands with all of his ‘N’ friends standing in a row one by one.
+			While shaking hands if the happiness value of Ninja matches with that of his friend, then the happiness value of Ninja becomes double. Ninja wants to calculate his happiness value after he shakes hands with all of his friends.
+			For Example: For ‘FRIENDS’ = [3, 2, 1, 4]. And ‘K’ = 2, following are the results after each hand shake:
+
+			1. At index 0 the happiness value of his friend is 3 and the happiness value of Ninja is 2. Both are unequal so ‘K’ remains the same.
+			2. At index 1 the happiness value of his friend is 2 and the happiness value of Ninja is 2. Both are equal so ‘K’ becomes 4.
+			3. At index 2 the happiness value of his friend is 1 and the happiness value of Ninja is 4. Both are unequal so ‘K’ remains the same.
+			4. At index 3 the happiness value of his friend is 4 and the happiness value of Ninja is 4. Both are equal so ‘K’ becomes 8.
+			As Ninja is busy with his friends so he needs your help. Can you help Ninja to find his final happiness value after all the handshakes?
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 10 ^ 4
+				1 <= K <= 10 ^ 3
+				1 <= FRIENDS[i] <= 10 ^ 6
+				Where 'FRIENDS[i]' denotes the happiness value of the friend at the ‘i’th index, respectively.
+				Time Limit: 1 sec 
+				
+			Sample Input 1:
+				2
+				3 1
+				1 2 4 
+				2 4 
+				1 2
+				Sample Output 1:
+				8
+				4 
+				Explanation of Sample Input 1:
+				For the first test case:
+				1. At index 0 the happiness value of his friend is 1 and the happiness value of Ninja is 1. Both are equal so ‘K’ becomes 2.
+				2. At index 1 the happiness value of his friend is 2 and the happiness value of Ninja is 2. Both are equal so ‘K’ becomes 4.
+				3. At index 2 the happiness value of his friend is 4 and the happiness value of Ninja is 4. Both are equal so ‘K’ becomes 8.
+
+				For the second test case:
+				1. At index 0 the happiness value of his friend is 1 and the happiness value of Ninja is 4. Both are unequal so ‘K’ remains the same. 
+				2. At index 1 the happiness value of his friend is 2 and the happiness value of Ninja is 4. Both are unequal so ‘K’ remains the same. 
+				Sample Input 2:
+				2
+				2 5
+				5 5 
+				3 8
+				2 4 8 
+				Sample Output 2:
+				10
+				16
+				Explanation of Sample Input 2:
+				For the first test case:
+				1. At index 0 the happiness value of his friend is 5 and the happiness value of Ninja is 5. Both are equal so ‘K’ becomes 10.
+				2. At index 1 the happiness value of his friend is 5 and the happiness value of Ninja is 10. Both are unequal so ‘K’ remains the same.    
+
+				For the second test case:
+				1. At index 0 the happiness value of his friend is 2 and the happiness value of Ninja is 8. Both are unequal so ‘K’ remains the same.
+				2. At index 1 the happiness value of his friend is 4 and the happiness value of Ninja is 8. Both are unequal so ‘K’ remains the same.
+				3. At index 2 the happiness value of his friend is 8 and the happiness value of Ninja is 8. Both are equal so ‘K’ becomes 16.
+
+		#include <bits/stdc++.h> 
+		int shakeHands(vector<int> &friends ,int n, int k){
+			for(int i: friends)
+				if(i == k)
+					k *= 2;
+			return k;
+		}
+	
+	#CN BeginnerContest-59:
+		775) 2 Power:
+			Problem statement
+				You are given a string 'S' which denotes the binary representation of a large number.
+				Your task is to return the highest power of 2 that divides the number represented by the binary string.
+				Example:
+					‘S’ = ‘11000’
+					Return 3 
+					‘S’ is 24
+				24 is divisible by 2 to the power 3 which is 8 
+				But it is not divisible by 2 to the power 4 which is 16
+				Hence 3 is the highest.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= |’S’| <= 10^5 where |’S’ represents the length of ‘S’
+					Time Limit: 1 sec
+
+				Sample Input 1:
+					2
+					100000
+					10010
+					Sample Output 1:
+					5
+					1
+					Explanation of sample input 1:
+					For test case 1:
+					The number is 32 and it itself is a power of two.
+					As it is not divisible by 2 to the power 6 the highest possible is 5.
+					For test case 2:
+					The number is 18 and it is divisible by 2 to the power 1.
+					As it is not divisible by 2 to the power 2 the highest possible is 1.
+					Sample Input 2:
+					3
+					11100
+					1110001001
+					111110
+					Sample Output 2:
+					2
+					0
+					1
+
+			int power2divisble(string &s){
+				if(s[s.size()-1] == '1')
+					return 0;
+
+				int i = s.size() - 2, cnt=0;
+				while(i >=0){
+					cnt++;
+					if(s[i--] == '1')
+						break;
+				}
+				return cnt;
+			}
+		
+		776) Linear Sort:
+			Problem statement
+				You have an array 'A' with 'N' integers and an empty array 'B'.
+				In one operation, you will remove the first or last element of array 'A' and push it at the back of the array 'B'.
+				You must perform the above operation until the array 'A' becomes empty.
+				Your task is to determine if it is possible to have the array 'B' sorted in non-decreasing order after performing all the operations. Return '1' in that case. Otherwise, return '0'.
+
+				Example:
+				N = 3
+				A = [4, 8, 1]
+				In the first operation, you will choose the last element of the array 'A' to remove. So after performing the operation, 'A' and 'B' are ['4', '8'] and ['1'], respectively.
+				In the second operation, you will choose the first element of the array 'A' to remove. So, after performing the operation, 'A' and 'B' are ['8'] and ['1', '4'], respectively.
+				In the third operation, only one element is remaining in the array 'A' to remove. So, after performing the operation, 'A' is empty, and 'B' is ['1', '4', '8'], respectively.
+				After performing all the operations, we see that array 'B' is sorted in a non-decreasing order. So the answer for this case is '1'.
+
+				Constraints:
+					1 <= 'N' <= 10^5
+					1 <= 'A[i]' <= 10^5
+					Time limit: 1 sec
+
+				Sample input 1:
+					2
+					2
+					2 1
+					4
+					1 2 1 2
+					Sample output 1:
+					1
+					0
+					Explanation of sample input 1:
+					For the test case 1:
+					In the first operation, you will choose the last element of the array 'A' to remove. So after performing the operation, 'A' and 'B' are ['2'] and ['1'], respectively.
+					In the second operation, only one element is remaining in the array 'A' to remove. So, after performing the operation, 'A' is empty, and 'B' is ['1', '2'], respectively.
+					After performing all the operations, we see that array 'B' is sorted in a non-decreasing order.
+					So the answer for this case is '1'.    
+
+					For the test case 2:
+					We can prove that it is impossible to have the array 'B' sorted after performing all the operations. 
+					So, the answer for this case is '0'.
+					Sample input 2:
+					2
+					3
+					1 2 3
+					5
+					1 3 2 1 1
+					Sample output 2:
+					1
+					1
+			
+			#include<algorithm>
+			int canBeSorted(int n, vector<int> a) {
+				vector<int> b;
+				while(a.size()){
+					// choosing first or last (smaller one)
+					if(a[0] < a[a.size()-1]){
+						b.push_back(a[0]);
+						a.erase(a.begin());
+					}else{
+						b.push_back(a.back());
+
+						// to remove the last element
+
+						// a.erase(a.begin()+a.size()-1);
+						//or
+						a.pop_back();
+					}
+				}
+				// if(is_sorted(b.begin(), b.end()))
+				//     return 1;
+				// return 0;
+
+				// or instead of above three lines,
+				for(int i=0; i<b.size()-1; i++)
+					if(b[i] > b[i+1])
+						return 0;
+				return 1;
+			}
+	
+	777) Removing Digits:
+		Problem Statement:
+			You are given an integer n. On each step, you may subtract one of the digits from the number.
+			How many steps are required to make the number equal to 0?
+		
+			Input
+				The only input line has an integer n.
+			Output
+				Print one integer: the minimum number of steps.
+
+			Constraints
+				1 <= n <= 10^6
+
+			Example
+				Input:
+					27
+				Output:
+					5
+				Explanation: An optimal solution is 27 → 20 → 18 → 10 → 9 → 0.
+
+		#include <iostream>
+		#include<algorithm>
+		using namespace std;
+
+		int main() {
+			int n;
+			cin>> n;
+			int minStep = 0;
+			
+			if(n == 0)
+				return minStep;
+			
+			string s = to_string(n);
+
+			
+			while(s.size()){
+				char mxV = *max_element(s.begin(), s.end());
+				int i= s.find(mxV);
+				s.erase(s.begin()+i);
+				
+				n -= (mxV - '0');
+				// cout<< n <<"\t";
+				
+				if(n == 0)
+					break;
+					
+				s = to_string(n);
+				minStep++;
+			}
+			std::cout << minStep+1 << std::endl;
+			return 0;
+		}
+	
+	778)
+	
+	779)
+	
+	780)
+
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
