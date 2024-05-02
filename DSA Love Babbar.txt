@@ -51103,7 +51103,7 @@ POTD:-[Problem of the Day]
 			return ans;
 		}
 	
-	364) Sequence Query:
+	364) Sequence Query:	(Refer Q.11)
 		Only for +ve a, d & x integers
 		Problem statement:
 			Alice is analyzing a mathematical sequence where the first element of the
@@ -51151,6 +51151,34 @@ POTD:-[Problem of the Day]
 						return 1;
 					else
 						a += d;
+				}
+				return 0;
+			}
+		
+		// Optimized:
+			int checkSequence(int a, int d, int x) {
+				if(a == x)
+					return 1;
+
+				if(d == 0 || (x > a && d < 0) || (x < a && d > 0) || (a >=0 && x < 0 && d > 0) || (a <= 0 && x < 0 && d < 0))
+					return 0;
+
+				if((x > a && d == 1) || (x < a && d == -1))
+					return 1;
+
+
+				if(d > 0){
+					while(a <= x){
+						if(a == x)
+							return 1;
+						a += d;
+					}
+				}else{
+					while(a >= x){
+						if(a == x)
+							return 1;
+						a += d;
+					}
 				}
 				return 0;
 			}
@@ -60751,7 +60779,7 @@ POTD:-[Problem of the Day]
 
 			Your Task:  
 				You dont need to read input or print anything. 
-				Complete the function orderStringâ€‹() which takes a 2d character array and an integer
+				Complete the function orderString() which takes a 2d character array and an integer
 				N as input parameter and returns an array of size 2 where first value should be 
 				lexicographically smallest string and second value should be lexicographically largest string.
 
@@ -73743,7 +73771,6 @@ POTD:-[Problem of the Day]
 
 		#include <bits/stdc++.h> 
 		string IsFriend( string s1, string s2 ) {
-			bool flag = 0;
 			for(int i=0; i<s1.size(); i++)
 				if(s2.find(s1[i]) != string::npos)
 				return "Yes";
@@ -73751,16 +73778,26 @@ POTD:-[Problem of the Day]
 			return "No";
 		}
 
+		//or
+			#include <bits/stdc++.h> 
+			string IsFriend( string s1, string s2 ) {
+				for(char ch: s1)
+				if(s2.find(ch) != string::npos)
+					return "Yes";
+
+				return "No";
+			}
+
 		// More Optimized:
 			#include <bits/stdc++.h> 
 			string IsFriend( string s1, string s2 ) {
 				vector<int> holder (26, 0);
 				for(int i=0; i<s1.size(); i++)
-				holder[s1[i]-'a'] = 1;
+					holder[s1[i]-'a'] = 1;
 
 				for(int i=0; i<s2.size(); i++)
-				if(holder[s2[i] - 'a'] == 1)
-					return "Yes";
+					if(holder[s2[i] - 'a'] == 1)
+						return "Yes";
 
 				return "No";
 			}
@@ -74668,7 +74705,7 @@ POTD:-[Problem of the Day]
 			return  0;
 		}
 	
-	# Floyd’s Cycle Detection Algorithm:
+	#Floyd’s Cycle Detection Algorithm:
 		Floyd’s cycle detection algorithm is a pointer algorithm that uses only two pointers, moving through the sequence at different speeds. 
 		Floyd's Cycle Detection Algorithm, well known as the ‘tortoise-hare’ algorithm. 
 		704) Cycle Detection in a Singly Linked List: (Check If A Linked List Is Circular Linked List)
@@ -80810,11 +80847,1011 @@ POTD:-[Problem of the Day]
 			return 0;
 		}
 	
-	778)
+	778) Largest Positive Integer That Exists With Its Negative:
+		Problem Statement:
+			Given an integer array nums that does not contain any zeros, find the largest positive integer k such that -k also exists in the array.
+			Return the positive integer k. If there is no such integer, return -1.
+
+			Example 1:
+				Input: nums = [-1,2,-3,3]
+				Output: 3
+				Explanation: 3 is the only valid k we can find in the array.
+			Example 2:
+				Input: nums = [-1,10,6,7,-7,1]
+				Output: 7
+				Explanation: Both 1 and 7 have their corresponding negative values in the array. 7 has a larger value.
+			Example 3:
+				Input: nums = [-10,8,6,7,-2,-3]
+				Output: -1
+				Explanation: There is no a single valid k, we return -1.
+		
+			Constraints:
+				1 <= nums.length <= 1000
+				-1000 <= nums[i] <= 1000
+				nums[i] != 0
+
+		class Solution {
+			public:
+			int findMaxK(vector<int>& nums) {
+				sort(nums.begin(), nums.end());
+
+				for(int i= nums.size()-1; i >=0; i--){
+					if(find(nums.begin(), nums.end(), -nums[i]) != nums.end())
+						return nums[i];
+				}
+				return -1;
+			}
+		};
 	
-	779)
+	779) Find Pair:
+		Problem statement
+			Bob likes mathematics. So, he gave you the task of finding the two numbers whose sum is 'X' and the difference is 'Y'.
+			Return a vector of size 2 containing the values of the two numbers specified above in any order if it is possible to get the two numbers else return [-1, -1].
+
+			For example:
+				Let 'X' = 8, 'Y' = 4.
+				So, the numbers can be 6 and 2 as their sum is 8 and their difference is 4.
+			Constraints:-
+				1 <= 'T' <= 10^5
+				1 <= 'X', 'Y' <= 10^9
+				Time Limit: 1-sec.
+			Sample Input 1:-
+				2
+				5 1
+				4 0
+				Sample Output 1:-
+				2 3
+				2 2
+				Explanation of sample input 1:-
+				First test case:-
+				'X' = 5, 'Y' = 1.
+				So, the numbers are 3 and 2 as their sum is 5 and their difference is 1.
+
+				Second test case:-
+				The numbers are 2 and 2 as their sum is 4 and their difference is 0.
+				Sample Input 2:-
+				2
+				5 2
+				4 2
+				Sample Output 2:-
+				-1 -1
+				1 3
+
+		//says Wrong ❌Pending
+		vector<int> findPair(int x, int y) {
+			int i = 1;
+			while(i <= x){
+				if((x-i) - i == y)
+					return {i, x-i};
+				i++;
+			}
+			return {-1,-1};
+		}
+
+	780) Ninja and Chocolates:
+		Problem statement
+			Ninja is at a shop to buy his favourite chocolates.
+			The cost of a chocolate is 10 Rupees. There is an ongoing offer where the shop offers a discount of 48 Rupees on every 5 chocolates bought by the customer.
+			If Ninja buys ‘N’ chocolates, return the amount he must pay to the shopkeeper.
+			It is guaranteed that the answer fits in a 32-bit integer.
+			Example :
+			‘N’ = 20
+			The total amount without discount is 20 x 10 = 200. Since Ninja has bought 20 chocolates, he will get a discount of (floor(20/5)) x (5) = 4 x 48 = 192 Rupees. 
+			Hence, he will pay a total amount of 200 - 192 = 8 Rupees to the shopkeeper.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 2 ^ 31 - 1
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				4
+				32
+				Sample Output 1 :
+				40
+				32
+				Explanation Of Sample Input 1 :
+				For test case 1:
+				Ninja pays a total of 4 * 10 = 40 Rupees for the chocolates as no discount is offered.
+				For test case 2:
+				The total amount without discount is 10 x 32 = 320.        
+				The discount offered is (floor (32/5)) x  (48) = 6 x 48 = 288 Rupees. 
+				Hence, he will pay a total amount of (320 - 288) = 32 Rupees to the shopkeeper
+				Sample Input 2 :
+				2
+				86
+				192
+				Sample Output 2 :
+				44
+				96
+
+		#include <bits/stdc++.h> 
+		int chocPrice(int n){
+			if(n < 5)
+				return n * 10;
+
+			int grps = n / 5;
+			int discForEachGrp = 48 * grps;
+			int totalCost = n * 10;
+			return totalCost - discForEachGrp;
+		}
 	
-	780)
+	781) Rotate a Linked List:
+		Problem Statement1:
+			Given a singly linked list of size N. The task is to left-shift the linked list by k nodes, where k is a given positive integer smaller than or equal to length of the linked list.
+			Example 1:
+				Input:
+				N = 5
+				value[] = {2, 4, 7, 8, 9}
+				k = 3
+				Output: 8 9 2 4 7
+				Explanation:
+				Rotate 1: 4 -> 7 -> 8 -> 9 -> 2
+				Rotate 2: 7 -> 8 -> 9 -> 2 -> 4
+				Rotate 3: 8 -> 9 -> 2 -> 4 -> 7
+			Example 2:
+				Input:
+				N = 8
+				value[] = {1, 2, 3, 4, 5, 6, 7, 8}
+				k = 4
+				Output: 5 6 7 8 1 2 3 4
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function rotate() which takes a head reference as the first argument and k as the second argument, and returns the head of the rotated linked list.
+				Expected Time Complexity: O(N).
+				Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 <= N <= 10^3
+				1 <= k <= N
+
+		/* TC: O(n) & SC: O(n)*/
+			/*
+				struct Node {
+					int data;
+					struct Node *next;
+					Node(int x) {
+						data = x;
+						next = NULL;
+					}
+				};
+			*/
+			
+			class Solution {
+				public:
+				//Function to rotate a linked list.
+				Node* rotate(Node* head, int k) {
+
+					vector<int> v;
+					Node* temp1 =head;
+					
+					while(k--)
+						temp1 = temp1 -> next;
+						
+					// if(temp1 == NULL)
+					//     return head;
+						
+					Node* temp2 = temp1;
+					
+					while(temp1){
+						v.push_back(temp1 -> data);
+						temp1 = temp1 -> next;
+					}
+					
+					temp1 = head;
+					while(temp1 != temp2){
+						v.push_back(temp1 -> data);
+						temp1 = temp1 -> next;
+					}
+					
+					temp1 = head;
+					int i=0;
+					while(temp1){
+						temp1 -> data = v[i++];
+						temp1 = temp1 -> next;
+					}
+					
+					return head;
+				}
+			};
+
+		/*TC: O(n) & SC: O(1)*/
+			class Solution {
+				public:
+				//Function to rotate a linked list.
+				Node* rotate(Node* head, int k) {
+					
+					Node* temp1 =head;
+					Node* prev = temp1;
+					
+					while(k--){
+						prev = temp1;
+						temp1 = temp1 -> next;
+					}
+					
+					// need to handle the case where k & no.of nodes are same
+					if(temp1 == NULL)
+						return head;
+						
+					prev -> next = NULL;
+					Node* temp2 = temp1;
+					
+					while(temp2 -> next)            // or         while(temp2 -> next  != NULL)
+						temp2 = temp2 -> next;
+					
+					temp2 -> next = head;
+					return temp1;
+				}
+			};
+
+	782) Reorder List:
+		Problem Statement:
+			Given a singly linked list: A0→A1→...→An-2→An-1, reorder it to: A0→An-1→A1→An-2→A2→An-3→...
+			For example: Given 1->2->3->4->5 its reorder is 1->5->2->4->3.
+			Note: It is recommended do this in-place without altering the node's values.
+			Example 1:
+			Input:
+			LinkedList: 1->2->3
+			Output: 1 3 2
+			Explanation:
+			Here n=3, so the correct
+			order is A0→A2→A1
+
+			Example 2:
+			Input:
+			Explanation: 1->7->3->4
+			Output: 1 4 7 3
+			Explanation:
+			Here n=4, so the correct
+			order is A0→A3→A1→A2
+
+			Your Task:
+				The task is to complete the function reorderList() which should reorder the list as required. The reorder list is automatically printed by the driver's code.
+				Note: Try to solve without using any auxilliary space.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= N <= 5*105
+				0 <= A[ i ] <= 105
+
+		/*
+			struct Node {
+				int data;
+				struct Node* next;
+
+				Node(int x){
+					data = x;
+					next = NULL;
+				}
+			};
+		*/
+
+		/*TC: O(n) & SC: O(n)*/
+			class Solution{ 
+				public:
+				void reorderList(Node* head) {
+					vector<int> v;
+					Node* temp = head;
+					
+					while(temp){
+						v.push_back(temp -> data);
+						temp = temp -> next;
+					}
+					
+					int f =1, s = 0, e = v.size()-1;
+					temp = head;
+					while(s <= e){
+						if(f){
+							temp -> data = v[s++];
+						}else{
+							temp -> data = v[e--];
+						}
+						temp = temp -> next;
+						f = f ? 0:1;
+					}
+				}
+			};
+
+		/*TC: O(n) & SC: O(1)*/
+			❌Pending			
+	
+	783) Reverse a String:
+		Problem Statement:
+			You are given a string s. You need to reverse the string.
+			Example 1:
+			Input:
+			s = Geeks
+			Output: skeeG
+			
+			Example 2:
+			Input:
+			s = for
+			Output: rof
+
+			Your Task:
+				You only need to complete the function reverseWord() that takes s as parameter and returns the reversed string.
+			
+			Expected Time Complexity: O(|S|).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 <= |s| <= 10000
+
+		class Solution {
+			public:
+			string reverseWord(string str) {
+				reverse(str.begin(), str.end());
+				return str;
+			}
+		};
+		
+		// or
+			class Solution {
+				public:
+				string reverseWord(string str) {
+					for(int i=0; i < str.size()/2; i++)
+						swap(str[i], str[str.size()-1-i]);
+					return str;
+				}
+			};
+
+	784) Magical String[Duplicate Problem]:
+		Problem Statement:
+			You are given a string S, convert it into a magical string.
+			A string can be made into a magical string if the alphabets are swapped in the given manner: a->z or z->a, b->y or y->b, and so on.  
+			Note: All the alphabets in the string are in lowercase.
+
+			Example 1:
+			Input:
+			S = varun
+			Output:
+			ezifm
+			Explanation:
+			Magical string of "varun" 
+			will be "ezifm" 
+			since v->e , a->z , 
+			r->i , u->f and n->m.
+		
+			Example 2:
+			Input:
+			S = akshay
+			Output:
+			zphszb
+			Explanation:
+			Magical string of "akshay" 
+			will be "zphszb" 
+			since a->z , k->p , s->h , 
+			h->s , a->z and y->b.
+			
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function magicalString() which takes the string S and returns the magical string.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1<=Length of String<=100
+
+		class Solution{   
+			public:
+			string magicalString(string S){
+				map<char, char> mapping = {
+										{'a','z'}, {'b','y'}, {'c','x'},
+										{'d','w'}, {'e','v'}, {'f','u'},
+										{'g','t'}, {'h','s'}, {'i','r'},
+										{'j','q'}, {'k','p'}, {'l','o'},
+										{'m','n'}, {'n','m'}, {'o','l'},
+										{'p','k'}, {'q','j'}, {'r','i'},
+										{'s','h'}, {'t','g'}, {'u','f'},
+										{'v','e'}, {'w','d'}, {'x','c'},
+										{'y','b'}, {'z','a'}
+									};
+
+				string ans;
+				for(int i=0; i<S.size(); i++)
+						ans += mapping[S[i]];
+						
+				return ans;
+			}
+		};
+
+		// or
+			class Solution{   
+				public:
+				string magicalString(string S){
+					string ans;
+					for(int i=0; i<S.size(); i++)
+						ans += 'a' - S[i] + 'z';					//or             ans += 'z' - S[i] + 'a';
+					
+					return ans;
+				}
+			};
+
+	785) Perfect Reversible String:
+		Problem Statement:
+			You are given a string ‘str’, the task is to check that reverses of all possible substrings of ‘str’ are present in ‘str’. If yes then the answer is 1, otherwise, the answer will be 0.
+
+			Example 1:
+				Input: n = 2, str = "ab"
+				Output: 0
+				Explanation: All substrings are "a",
+				"b","ab" but reverse of "ab" is not 
+				present in str.
+			Example 2:
+				Input: n = 3, str = "aba"
+				Output: 1
+				Explanation: Reverse of all possible 
+				substring is present in str.
+
+			Your Task:  
+				You don't need to read input or print anything. Your task is to complete the function isReversible() which takes the string str and n (the length of str) as inputs and returns the answer.
+				
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+			1 ≤ n ≤ 2 * 105
+
+		// Optimized:
+			class Solution{
+				public:
+				int isReversible(string str, int n) {
+					// the string contains all reverse substring if & only if that string is palindrome, else any of substring's reverse will not present
+					for(int i=0; i < (n/2); i++)
+						if(str[i] != str[n-1-i])
+							return 0;
+					return 1;   
+				}
+			};
+
+		// Not Optimized
+			class Solution{
+				public:
+				int isReversible(string str, int n) {
+					for(int i=0; i<n-1; i++){
+						int mxChar = n - i -1;
+						for(int j = 2; j <= mxChar+1; j++){
+							string sub = str.substr(i, j);
+							
+							// cout<<sub<<"\t";
+							reverse(sub.begin(), sub.end());
+							if(str.find(sub) == string::npos)
+								return 0;
+						}
+					}		
+					return 1;   
+				}
+			};
+	
+	786) String with numbers at its end:
+		Problem Statement:
+			Given string s that is appended with a number at last. The task is to check whether the length of string excluding that number is equal to that number.
+
+			Example 1:
+			Input:  s = "geeks5"
+			Output: 1
+			Explanation: Length of geeks is 5
+			and the last number is also 5.
+			
+			Example 2:
+			Input:  s = "geek5"
+			Output: 0
+			Explanation: Length of geek is 4
+			and the last number is 5.
+			User Task:
+				Your task is to complete the function isSame() which takes a single string as input and returns 1 in case the answer is true, otherwise 0. You do not need to take any input or print anything.
+
+			Expected Time Complexity: O(|s|)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= |s| <= 10^5
+
+		class Solution{ 
+			public:
+			int isSame(string s) {
+				int num =0, cnt=0;
+				
+				for(char ch: s)
+					if(isdigit(ch)){
+						num = (num * 10) + (ch - '0');
+						cnt++;
+					}
+				return num == (s.size() - cnt);
+			}
+		};
+	
+	787) Compare two Large Numbers:
+		// if there are 2 string the larger string is decided by the size of string
+		// if first string has larger size than second string then first string is larger
+		// if second string has larger size than first string then second string is larger
+		// if both the strings have same size then the comparison is done character by character,
+		// if we found the character which has larger ascii value in the first string than the first string is considered as larger one, & viceversa
+
+		Problem Statement:
+			You will be given two numbers a and b. Your task is to print 1 if a < b, print 2 if a > b and print 3 if a = b.
+
+			Example 1:
+			Input: 
+			a = 1234
+			b = 12345
+			Output: 1
+			Explanation: a < b so answer is 1.
+
+			Example 2:
+			Input:
+			a = 100
+			b = 1
+			Output: 2
+			Explanation: a > b, so answer is 2.
+			User Task:
+			Your task is to complete the function check() which takes 2 arguments(string a, string b) and returns the answer. You need not take input or print anything.
+			Expected Time Complexity: O(|a| + |b|).
+			Expected Auxiliary Space: O(|a| - |b|).
+
+			Constraints:
+			1 ≤ |a|, |b| ≤ 155      
+			'0' ≤  ai,bi  ≤  '9'
+
+
+
+		int check(string a,string b){
+			while(a.size() && a[0] == '0')
+				a.erase(a.begin());
+			
+			while(b.size() && b[0] == '0')
+				b.erase(b.begin());
+			
+			if(a.size() < b.size())
+				return 1;
+			else if(a.size() > b.size())
+				return 2;
+			
+			int i=0;
+			while(i < a.size()){
+				if(a[i] != b[i]){
+					if(a[i] < b[i])
+						return 1;
+					else
+						return 2;
+				}
+				i++;
+			}
+			return 3;
+		}
+	
+	788) The Penalty Shootout:
+		Problem Statement:
+			Given a string S contains 0's, 1's, and 2's, the task is to find the number of goals on the penalty.
+			'1' stands for "goal".
+			'0' stands for "no goal".
+			'2' stands for a foul which gives a penalty.
+
+			Example 1:
+			Input: S = "1012012112110"
+			Output: 2
+			Explanation: There are 3 penalties,
+			of which he scores only 2.
+			1012012112110
+
+			Example 2:
+			Input: S = "111122"
+			Output: 0
+			Explanation: No goal on penalty
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function penaltyScore() which takes a string S as input and returns the goals count on the penalty.
+
+			Expected Time Complexity: O(|S|).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+			1 <= |N| <= 10^5
+
+		class Solution{
+			public:	
+			int penaltyScore(string s) {
+				int GoalPenalty=0;
+				int i=0;
+				while(i < s.size()){
+					if(s[i] == '2' && i+1 < s.size() && s[i+1] == '1')
+						GoalPenalty++;
+					i++;
+				}
+				return GoalPenalty; 
+			}
+		};
+	
+	789) Good String:
+		Problem Statement:
+			Given a string s of length N, you have to tell whether it is good or not. A good string is one where the distance between every two adjacent character is exactly 1. Here distance is defined by minimum distance between two character when alphabets from 'a' to 'z' are put in cyclic manner. For example distance between 'a' to 'c' is 2 and distance between 'a' to 'y' is also 2. The task is to print "YES" or "NO" (without quotes) depending on whether the given string is Good or not.
+			Note: Unit length string will be always good.
+			Example 1:
+			Input: s = "aaa"
+			Output: NO
+			Explanation: distance between 'a' and 'a' is not 1.
+
+			Example 2:
+			Input: s = "cbc"
+			Output: YES
+			Explanation: distance between 'b' and 'c' is 1.
+
+			Your Task:  
+				You don't need to read input or print anything. Your task is to complete the function isGoodString() which accepts a string as input parameter and returns "YES" or "NO" (without quotes) accordingly. 
+			
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+			
+			Constraints:
+				String contains only lower case english alphabets.
+				1 <= N <= 10^5
+
+		string isGoodString(string s) {
+			for(int i=0; i<s.size()-1; i++){
+				char ch1 = s[i] + 1, ch2 = s[i+1];
+				char ch3 = s[i] - 1;
+				
+				if(ch1 > 'z')
+					ch1 = 'a';
+				
+				if(ch3 < 'a')
+					ch3 = 'z';
+				
+				if(ch1 != ch2 && ch2 != ch3)
+					return "NO";
+			}
+			return "YES";
+		}
+
+		// or
+			string isGoodString(string s) {
+				for(int i=0;i<s.length()-1;i++){
+					if(abs(s[i]-s[i+1]) != 1 && abs(s[i]-s[i+1]) != 25)
+						return "NO";
+				}
+				return "YES";
+			}
+
+	#CN WeeklyContest-124:
+		790) Battle Begins:
+			Problem statement
+				There is a number line where points are numbered from ‘0’ to infinity. There are also two players Alice and Bob, where Alice is currently present at point ‘X’ and Bob is currently present at point ‘Y’.
+				In each iteration of the game, Alice moves ‘A’ steps right and Bob moves ‘B’ steps left. More formally, if Alice is present at some point ‘P’, she’ll move to point ‘(P + A), and if Bob is present at some point ‘Q’, he’ll move to point ‘(Q - B)’.
+				You have to determine whether both the players meet at the same point after some iterations.
+				Your task is to tell whether Alice and Bob can meet at the same point after some iterations of the game. Return ‘1’, if possible, otherwise return ‘0’.
+
+				Example:
+				‘X’ = 2
+				‘Y’ = 8
+				‘A’ = 2
+				‘B’ = 1
+
+				During the first iteration of the game, Alice will move from ‘2’ to ‘4’ and Bob will move from ‘8’ to ‘7’.
+				During the second iteration of the game, Alice will move from ‘4’ to ‘6’ and Bob will move from ‘7’ to ‘6’.
+				Now, both the players are present at the same point after two iterations. So, the answer for this example is ‘1’.
+				Constraints:
+					1 <= 'T' <= 10
+					0 <= ‘X’, ‘Y’ <= 10^9 
+					1 <= ‘A’, ‘B’ <= 10^9
+					Time Limit: 1 sec 
+
+				Sample Input 1:
+					2
+					3 15 2 4
+					1 5 3 2
+					Sample Output 1:
+					1
+					0
+					Explanation of sample input 1:
+					For test case 1:
+					During the first iteration of the game, Alice will move from ‘3’ to ‘5’ and Bob will move from ‘15’ to ‘11’.
+					During the second iteration of the game, Alice will move from ‘5’ to ‘7’ and Bob will move from ‘11’ to ‘7’. 
+					Now, both the players are present at the same point. So, the answer for this test case is ‘1’.
+					For test case 2:
+					During the first iteration of the game, Alice will move from ‘1’ to ‘4’ and Bob will move from ‘5’ to ‘3’. 
+					Now, Bob is present on the left side of Alice. So, they’ll never meet.
+					Hence, the answer for this test case is ‘0’.
+					Sample Input 2:
+					2
+					3 2 1 5
+					0 10 5 5
+					Sample Output 2:
+					0
+					1
+
+			int battleBegins (int x, int y, int a, int b) {
+				while(x <= y){
+					if(x == y)
+					return 1;
+					x += a;
+					y -= b;
+				}
+				return 0;
+			}
+		
+		791) Alternate Sum:
+			Problem statement
+				You are given an array 'A' of 'N' integers numbered from '0' to 'N - 1'.
+				Let's define the alternate sum of the array 'B' of length 'X' as the value 'B[0] - B[1] + B[2] - B[3] …. B[X - 1]'.
+				You are required to remove exactly one element from the array 'A' without changing the order of the remaining elements.
+				Find the maximum alternate sum of the array 'A' after removing one element.
+				Example:
+					N = 4
+					A = [4, 2, 5, 5]
+					You can remove the last element from the array 'A', resulting in ['4', '2', '5'].
+					The alternate sum of the array is '4 - 2 + 5' = '7'.
+					It can be proved that you can not achieve an alternate sum greater than '7' by removing one element.
+					So, the answer for this case is '7'.
+				Constraints:
+					2 <= 'N' <= 10^5
+					1 <= A[i] <= 10^4
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					3
+					1 1 1
+					4
+					1 2 1 2
+					Sample output 1:
+					0
+					3
+					Explanation of sample input 1:
+					For test case 1:
+					You can remove any element from the array 'A', resulting in ['1', '1'].
+					The alternate sum of the array is '1 - 1' = '0'.
+					It can be proved that you can not achieve an alternate sum greater than '0' by removing one element.
+					So, the answer for this case is '0'.
+
+					For test case 2:
+					You can remove the first element from the array 'A', resulting in ['2', '1', '2'].
+					The alternate sum of the array is '2 - 1 + 2' = '3'.
+					It can be proved that you can not achieve an alternate sum greater than '3' by removing one element.
+					So, the answer for this case is '3'.
+					Sample input 2:
+					2
+					6
+					4 1 1 5 1 5
+					7
+					5 1 4 1 3 1 2
+					Sample output 2:
+					12
+					9
+
+			int maximumAlternateSum(int n, vector<int> &v) {
+				int mxValue= INT_MIN;
+
+				for(int i=0; i<v.size(); i++){
+					int sum =0, f=1;
+					for(int j=0; j<v.size(); j++){
+						if(i == j)
+							continue;
+						// if(f){
+						//     sum += v[j];
+						// }else{
+						//     sum -= v[j];
+						// }
+
+						f ? sum += v[j] : sum -= v[j];
+						f = f ? 0 : 1;
+					}
+					mxValue = max(mxValue, sum);
+				}
+				return mxValue;
+			}
+
+		792) Good Index:
+			Problem statement
+				You are given two arrays 'A' and 'B' of lengths 'N' and 'M', respectively.
+				Let's define the index 'X' as good if we remove the element 'B[X]' from the array 'B' without changing the orders of other elements, it becomes the subsequence of the array 'A'.
+				Find the number of the good indices in the array 'B'.
+				Example:
+				N = 4
+				M = 3
+				A = [1, 5, 2, 4]
+				B = [1, 2, 5]
+				We can see that only indices '1' and '2' are good as the corresponding resulting arrays are ['1', '5'] and ['1', '2'], which are subsequences of the array 'A'.
+				So, the answer for this case is '2'.
+				Constraints:
+					1 <= 'N' <= 10^5
+					1 <= 'M' <= 10^5
+					1 <= 'A[i]' <= 10^9
+					1 <= 'B[i]' <= 10^9
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					3 3
+					1 2 3
+					1 3 4
+					4 3
+					1 2 2 1
+					1 1 1
+					Sample output 1:
+					1
+					3
+					Explanation of sample input 1:
+					For test case 1:
+					We can see that only index '2' is good as the corresponding resulting array is ['1', '3'], which is a subsequence of the array 'A'.
+					So, the answer for this case is '1'.
+
+					For test case 2:
+					We can see that every index is good as the corresponding resulting array is ['1', '1'], which is a subsequence of the array 'A'.
+					So, the answer for this case is '3'.
+					Sample input 2:
+					2
+					6 4
+					1 2 1 2 2 5
+					1 2 5 1
+					2 2
+					1 2
+					3 4
+					Sample output 2:
+					2
+					0
+
+			// Not Optimized:
+				void subSequencesGenerator(vector<int> &main, int indx, vector<int> &temp, set<vector<int>> &storer){
+					if(indx == main.size()){
+						storer.insert(temp);
+						return;
+					}
+
+					temp.push_back(main[indx]);
+					subSequencesGenerator(main, indx+1, temp, storer);
+
+					temp.pop_back();
+					subSequencesGenerator(main, indx+1, temp, storer);
+				}
+
+				int howManyGoods(int n, int m, vector<int> &a, vector<int> &b) {
+					int GoodCnt=0;
+					set<vector<int>>  subSequences;
+					vector<int> temp;
+
+					subSequencesGenerator(a, 0,  temp, subSequences);
+					
+					for(int i=0; i<m; i++){
+						vector<int> test = b;
+						test.erase(test.begin()+i);
+
+						if(subSequences.find(test) != subSequences.end())
+							GoodCnt++;
+					}
+					return GoodCnt;
+				}
+
+			// Optimized:
+				❌Pending
+
+		793) Perfect Substrings:
+			Problem statement
+				You are given a string ‘S’ of length ‘N’ where each character is numbered from ‘0’ to ‘N - 1’. A string ‘T’ is considered to be a perfect string if it satisfies the following conditions:
+				‘T’ is a concatenation of ‘3’ strings, where the first string should be equal to the last string.
+				You can write ‘T’ as:(‘S1’ + ‘S2’ + ‘S1’), where ‘S1’ and ‘S2’ are two non-empty strings which may or may not be equal.
+				For example: “abbghiabb”, is a perfect string because you can write it as: (“abb” + “ghi” + “abb”).
+				You will be given an array ‘Queries’ which stores ‘Q’ queries of type ‘(L, R)’. You have to tell whether the substring from ‘L’ to ‘R’ is perfect or not.
+				Your task is to answer all the queries and return an array of ‘1’s and ‘0’s where ‘1’ means the substring is perfect and ‘0’ means the substring is not perfect.
+				Example:
+					‘N’ = 11
+					‘S’ = “acdafkbgb”
+					‘Q’ = 1
+					‘Queries’ = [[0, 3]]
+
+				Here, you have to check whether “acda” is perfect or not. You can write “acda” as: “a” + “cd” + “a”, which satisfies the criteria of perfect string.
+				So the answer for this example is: [1].
+
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 5000
+					‘a’ <= ‘S[i]’ <= ‘z’
+					1 <= ‘Q’ <= 10^6
+					0 <= ‘Queries[i][0]’ <= ‘Queries[i][1]’ <= ‘N - 1’.
+					Time Limit: 1 sec 
+
+				Sample Input 1:
+					2
+					13
+					abaabacefffcd
+					2
+					0 4
+					8 10
+					3
+					klo
+					1
+					2 2
+					Sample Output 1:
+					1 1
+					0
+					Explanation of sample input 1:
+					For test case 1:
+					‘1st’ query is “abaab”. You can write it as: “ab” + “a” + “ab” which follows the criteria of perfect string.
+					‘2nd’ query is “fff”. You can write it as: “f” + “f” + “f” which also satisfies the criteria of perfect string.
+					So, the answer for this test case is: [1, 1].
+					For test case 2:
+					Here we have only one query: “o”. It is not a perfect string.
+					So, the answer for this test case is: [0].
+					Sample Input 2:
+					2
+					10
+					zbaczbakkk
+					3
+					1 3
+					0 2
+					1 6
+					18
+					aaabbbcccdddeeefff
+					2
+					0 2
+					3 5
+					Sample Output 2:
+					0 0 1
+					1 1
+
+			// Not Optimized:
+				vector <int> perfectSubstrings (int n, string &s, int q, vector <vector<int>> &queries) {
+					vector<int> ans;
+					for(int i=0; i<q; i++){
+						if(queries[i][0] == queries[i][1]){
+							ans.push_back(0);
+							continue;
+						}
+						
+						string test;
+						for(int z= queries[i][0]; z <= queries[i][1]; z++)
+							test += s[z];
+						
+						//finding prefix & suffix
+						int mxReverse = test.size() / 2 + 1;
+						int z=0;
+
+						while(mxReverse < test.size() && test[z] != test[mxReverse])
+							mxReverse++;
+							
+						int midtemp = mxReverse +1;
+
+						while(1){
+							while(mxReverse < test.size() && test[z] == test[mxReverse]){
+								z++, mxReverse++;
+							}
+
+							if(mxReverse >= test.size())
+								break;
+							z=0;
+							mxReverse = midtemp;
+							midtemp++;
+						}
+
+						int f = 0;
+						if(test[--z] == test[--mxReverse])
+							f = 1;
+						
+						if(f)
+							ans.push_back(1);
+						else
+							ans.push_back(0);
+					}
+
+					return ans;
+				}
+
+			// Optimized:
+				❌Pending
+		
+	794)
+	
+	795)
+	
+	796)
+	
+	797)
+	
+	798)
+	
+	799)
+	
+	800)
+	
+	801)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
