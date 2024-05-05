@@ -15504,6 +15504,45 @@ Lecture-37: Recursion-Subsets/ Subsequences of String
 			}
 		};
 
+	// or the above gives you answer in reverse order, this below approach gives you original	order answer
+		#include <iostream>
+		#include<vector>
+		using namespace std;
+
+		void Generator(vector<int> &main, int i, vector<int> ans, vector<vector<int>> &sub){
+			if(i == main.size()){
+				sub.push_back(ans);
+				return ;
+			}
+			
+			ans.push_back(main[i]);
+			
+			// include call
+			Generator(main, i+1, ans, sub);
+			
+			ans.pop_back();
+			// exclude call
+			Generator(main, i+1, ans, sub);
+		}
+
+		int main() {
+			std::vector<int> v = {1,2,3};
+			vector<vector<int>> subSequences;
+			vector<int> ans;
+			
+			Generator(v, 0, ans, subSequences);
+			for(auto &row: subSequences){
+				if(row.empty()){
+					cout<<"empty set";
+					continue;
+				}
+				for(int i: row)
+					std::cout << i << "\t";
+				std::cout << std::endl;
+			}
+			return 0;
+		}
+
 	2) Subsequences of String
 		Problem statement
 			You are given a string 'STR' containing lowercase English letters from a to z inclusive. 
@@ -19612,12 +19651,49 @@ Lecture-53: Merge Sort in Linked List
 
 	HomeWork:
 		Why Quick Sort preferred for Arrays and Merge Sort for Linked Lists?
-		->❌Pending
-			https://www.geeksforgeeks.org/why-quick-sort-preferred-for-arrays-and-merge-sort-for-linked-lists/
+		->https://www.geeksforgeeks.org/why-quick-sort-preferred-for-arrays-and-merge-sort-for-linked-lists/
 
+			Quick sort is preferred for arrays because it has a good locality of reference. Merge sort is generally preferred for linked lists because it doesn't require random access to elements.
+			Quick Sort is generally preferred for arrays because it has good cache locality and can be easily implemented in-place, which means it doesn’t require any extra memory space beyond the original array. In Quick Sort, we can use the middle element as the pivot and partition the array into two sub-arrays around the pivot. This can be done by swapping elements, and the pivot can be placed in its final position in the sorted array. 
+	
+			This process of partitioning is done recursively until the entire array is sorted. The cache locality of Quick Sort is beneficial because it minimizes the number of cache misses, which improves performance.
+			On the other hand, Merge Sort is generally preferred for linked lists because it doesn’t require random access to elements. In Merge Sort, we divide the linked list into two halves recursively until we have individual elements. Then, we merge the individual elements by comparing and linking them in a sorted order. 
+			The advantage of Merge Sort for linked lists is that it doesn’t require random access to elements, which is not efficient for linked lists since we need to traverse the list linearly. Also, Merge Sort is a stable sort, which means it maintains the relative order of equal elements in the sorted list. This is important for linked lists, where the original order of equal elements may be significant. However, Merge Sort requires extra memory space for the merge step, which can be a disadvantage in some cases.
+			Quick Sort Advantages:
+				Fast and efficient for arrays, especially for large datasets.
+				In-place sorting which means it doesn’t require any extra memory space beyond the original array.
+				Good cache locality which minimizes the number of cache misses.
+				Easy to implement and widely used in practice.
+			
+			Quick Sort Disadvantages:
+				Not stable, which means it may change the relative order of equal elements in the sorted array.
+				Worst-case time complexity is O(n^2), which occurs when the pivot is not chosen properly and the partitioning process doesn’t divide the array evenly.
+				Not suitable for linked lists, as it requires random access to elements.
+
+			Merge Sort Advantages:
+				Suitable for sorting large datasets and linked lists.
+				Stable sort which means it maintains the relative order of equal elements in the sorted list.
+				Guaranteed worst-case time complexity of O(n*log(n)).
+				Memory efficient because it doesn’t require any extra memory space beyond the original data structure.
+
+			Merge Sort Disadvantages:
+				Requires extra memory space for the merge step, which can be a disadvantage in some cases.
+				Not as efficient as Quick Sort for small datasets.
+				Not in-place sorting, which means it requires extra memory space for temporary arrays during the merging process.
+		
 	Q.2 Flatten A Linked List
-		-> Refer Q.770 from POTD section
+		-> Refer Q.770 & 771 from POTD section.
 ---------------------------------------------------------------------------------------------------------
+Lecture-54: Introduction to Stacks
+	Stacks are a type of container adaptors with LIFO(Last In First Out) type of working, where a new element is added at one end (top) and an element is removed from that end only.  Stack uses an encapsulated object of either vector or deque (by default) or list (sequential container class) as its underlying container, providing a specific set of member functions to access its elements. 
+	If there is confusion in remembering the basic difference between stack and queue, then just have a real life example for this differentiation, for stack, stacking of books we can take the top book easily and for queue remember when you have to stand in queue front of ATM for taking out the cash, then first person near to ATM has the first chance to take out the money from ATM. So, queue is the FIFO (First In First Out) type working.
+
+	Stack Operations:
+		empty() – Returns whether the stack is empty – Time Complexity : O(1) 
+		size() – Returns the size of the stack – Time Complexity : O(1) 
+		top() – Returns a reference to the top most element of the stack – Time Complexity : O(1) 
+		push(g) – Adds the element ‘g’ at the top of the stack – Time Complexity : O(1) 
+		pop() – Deletes the most recent entered element of the stack – Time Complexity : O(1) 
 
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
@@ -23295,6 +23371,20 @@ Lecture-53: Merge Sort in Linked List
 			int n = 909;
 			std::cout << int(log10(n)+1) << std::endl;
 			std::cout << (int)log10(n)+1 << std::endl;			// you can (int) or int() both works to typecast.
+			return 0;
+		}
+
+	// we can use this find method for searching string in word or char in word
+		#include <iostream>
+		using namespace std;
+		int main() {
+			
+			string s = "Hello World";
+			std::cout << s << std::endl;
+			std::cout << "Index of char H: ( first occurrence) " << s.find('H') << std::endl;
+			std::cout << "Index of char 0: ( first occurrence) "<< s.find('0') << std::endl;                // if char not found then it will print the value of string::npos ie. 18446744073709551615 
+			std::cout << string::npos << std::endl;                 //18446744073709551615
+			std::cout << "Index of string 'orl' :" << s.find("orl") << std::endl;                // 7
 			return 0;
 		}
 ---------------------------------------------------------------------------------------------------------
@@ -45726,6 +45816,12 @@ POTD:-[Problem of the Day]
 				return b.find(a);
 			return -1;					//if we didn't found a single occurrence
 		}
+
+		// or
+		#include <bits/stdc++.h> 
+		int findIndexOf(string a, string b){
+			return b.find(a);
+		}
 	
 	304) Rotate Matrix:
 		Problem statement
@@ -54369,6 +54465,16 @@ POTD:-[Problem of the Day]
 					
 			return -1;
 		}
+
+		// More Optimized:
+			int happyKids(vector<int> &balls) {
+				sort(balls.begin(), balls.end());
+				for(int i=balls.size()-1; i>0; i--){
+					if(balls[i] == balls[i-1])
+						return balls[i];
+				}
+				return -1;
+			}
 	
 	405) Power of Two: (same Question as 44)
 		Problem statement:
@@ -80244,45 +80350,126 @@ POTD:-[Problem of the Day]
 					Time Limit: 1 sec
 
 		/*
-		* Definition for linked list.
-		* class Node {
-		*  public:
-		*		int data;
-		*		Node *next;
-		* 		Node *child;
-		*		Node() : data(0), next(nullptr), child(nullptr){};
-		*		Node(int x) : data(x), next(nullptr), child(nullptr) {}
-		*		Node(int x, Node *next, Node *child) : data(x), next(next), child(child) {}
-		* };
+			* Definition for linked list.
+			* class Node {
+			*  public:
+			*		int data;
+			*		Node *next;
+			* 		Node *child;
+			*		Node() : data(0), next(nullptr), child(nullptr){};
+			*		Node(int x) : data(x), next(nullptr), child(nullptr) {}
+			*		Node(int x, Node *next, Node *child) : data(x), next(next), child(child) {}
+			* };
 		*/
-		#include <algorithm>
-		Node* flattenLinkedList(Node* head) {
-			Node* ans = new Node(1);
-			Node* temp = head;
-			vector<int> v;
 
-			while(head){
-				head = head -> next;
+		// Used extra space:
+			#include <algorithm>
+			Node* flattenLinkedList(Node* head) {
+				Node* ans = new Node(1);
+				Node* temp = head;
+				vector<int> v;
 
-				while(temp){
-					v.push_back(temp -> data);
-					temp = temp -> child;
+				while(head){
+					head = head -> next;
+
+					while(temp){
+						v.push_back(temp -> data);
+						temp = temp -> child;
+					}
+					temp = head;
 				}
-				temp = head;
+
+				sort(v.begin(), v.end());
+				int i=0;
+				temp = ans;
+				while(i < v.size()){
+					Node* n = new Node(v[i++]);
+
+					temp -> child = n;
+					temp = n;
+				}			
+				ans = ans -> child;
+				return ans;
 			}
 
-			sort(v.begin(), v.end());
-			int i=0;
-			temp = ans;
-			while(i < v.size()){
-				Node* n = new Node(v[i++]);
+		// without using extra space:
+			#include <algorithm>
+			Node* sortMerge(Node* f, Node* s){
+				Node* n = new Node(1);
+				Node* Tail = n;
 
-				temp -> child = n;
-				temp = n;
-			}			
-			ans = ans -> child;
-			return ans;
-		}
+				while(f && s){
+					if(f->data < s -> data){
+						Tail -> child = f;
+						Tail = f;
+						f = f -> child;
+					}else{
+						Tail -> child = s;
+						Tail = s;
+						s = s -> child;
+					}
+				}
+
+				if(f)
+					Tail -> child = f;
+				
+				if(s)
+					Tail -> child = s;
+
+				Node* t = n;
+				n = n -> child;
+				delete t;
+
+				return n;
+			}
+
+			Node* getMid(Node* h){
+				Node* slow = h;
+				Node* fast = h -> child;
+
+				while(fast && fast ->child){
+					fast = fast -> child -> child;
+					slow = slow -> child;
+				}
+				return slow;
+			}
+
+			Node* solve(Node* a){
+				if(a -> child == NULL)
+					return a;
+				
+				Node* mid = getMid(a);
+
+				Node* first = a;
+				Node* sec = mid-> child;
+				mid -> child = NULL;
+
+				first = solve(first);
+				sec = solve(sec);
+
+				Node* n =  sortMerge(first, sec);
+				return n;
+			}
+
+			Node* flattenLinkedList(Node* head) {
+				Node* ans = head;
+				Node* temp = head;
+
+				while(head){
+					while(temp -> child)
+						temp = temp -> child;
+					temp -> child = head -> next;
+
+					Node* sample = head;
+					head = head -> next;
+
+					sample -> next =NULL;
+				}
+
+				// need to sort the LL
+				ans = solve(ans);
+				return ans;
+			}
 
 	771) Flattening a Linked List:
 		Problem Statement:
@@ -80917,15 +81104,23 @@ POTD:-[Problem of the Day]
 				-1 -1
 				1 3
 
-		//says Wrong ❌Pending
-		vector<int> findPair(int x, int y) {
-			int i = 1;
-			while(i <= x){
-				if((x-i) - i == y)
-					return {i, x-i};
-				i++;
+		vector<int> findPair(int X, int Y) {
+			if (X % 2 != Y % 2) {
+				return {-1, -1};  // Not possible to find numbers with different parity
 			}
-			return {-1,-1};
+
+			// Calculate the first number (average of sum and difference)
+			int num1 = (X + Y) / 2;
+
+			// Check if the first number is negative or overflows the integer range
+			if (num1 < 0 || num1 > INT_MAX) {
+				return {-1, -1};
+			}
+
+			// Calculate the second number (difference between first number and Y)
+			int num2 = num1 - Y;
+
+			return {num1, num2};
 		}
 
 	780) Ninja and Chocolates:
@@ -81837,21 +82032,844 @@ POTD:-[Problem of the Day]
 			// Optimized:
 				❌Pending
 		
-	794)
+	794) Min Stack:
+		Problem statement
+			Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+				1. Push(num): Push the given number in the stack.
+				2. Pop: Remove and return the top element from the stack if present, else return -1.
+				3. Top: return the top element of the stack if present, else return -1.
+				4. getMin: Returns minimum element of the stack if present, else return -1.
+
+			For Example:
+			For the following input: 
+				1
+				5
+				1 1
+				1 2
+				4
+				2
+				3
+			For the first two operations, we will just insert 1 and then 2 into the stack which was empty earlier. So now the stack is => [2,1]
+			In the third operation, we need to return the minimum element of the stack, i.e., 1. So now the stack is => [2,1]
+			For the fourth operation, we need to pop the topmost element of the stack, i.e., 2. Now the stack is => [1]
+			In the fifth operation, we return the top element of the stack, i.e. 1 as it has one element. Now the stack is => [1]
+
+			So, the final output will be: 
+			1 2 1
+			Sample Input 1 :
+			2
+			5
+			1 1
+			1 2
+			4
+			2
+			3
+			4
+			1 13
+			2
+			3
+			4
+			Sample Output 1 :
+			1 2 1
+			13 -1 -1
+			Explanation For Sample Input 1 :
+			For First Case - Similar to the example explained above. 
+
+			For Second Case - 
+			For the first operation, we will just insert 13 into the stack which was empty earlier. So now the stack is => [13]
+			In the second operation, we need to remove the topmost element 13 and return it for printing. Now the stack is => [] (empty)
+			For the third operation, we need to return the topmost element of the stack. As the stack is empty we will return -1. Now the stack is => [] (empty)
+			In the fourth operation, we return the minimum element of the stack if it is not empty, i.e. -1 as it has no elements. Now the stack is => [] (empty)
+			Sample Input 2 :
+			2
+			4 
+			4
+			2
+			1 4
+			3
+			6
+			1 19
+			1 45
+			3
+			4
+			2
+			3
+			Sample Output 2 :
+			-1 -1 4
+			45 19 45 19
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			// Implement class for minStack.
+			class minStack {
+				stack<int> st;
+				vector<int> v;
+				public:
+					
+				// Constructor
+				minStack() {
+
+				}
+				
+				// Function to add another element equal to num at the top of stack.
+				void push(int num) {
+					st.push(num);
+					v.push_back(num);
+				}
+				
+				// Function to remove the top element of the stack.
+				int pop() {
+					if(!st.empty()){
+						int val = st.top();
+						st.pop();
+						v.pop_back();
+						return val;
+					}
+					return -1;
+				}
+				
+				// Function to return the top element of stack if it is present. Otherwise return -1.
+				int top() {
+					if(st.empty())
+						return -1;
+					return st.top();
+				}
+				
+				// Function to return minimum element of stack if it is present. Otherwise return -1.
+				int getMin() {
+					if(st.empty())
+						return -1;
+					
+					return *min_element(v.begin(), v.end());
+				}
+			};
 	
-	795)
+		// Optimized:
+			❌Pending
+
+	795) Rahul And Minimum Subarray:
+		Problem statement
+			Rahul is a programming enthusiast. He is currently learning about arrays/lists. One day his teacher asked him to solve a very difficult problem. The problem was to find the length of the smallest subarray(subarray is a contiguous part of an array/list) in a given array/list ‘ARR’ of size ‘N’ with its sum greater than a given value. If there is no such subarray return 0.
+			Example: Given an ‘ARR’: [1, 2, 21, 7, 6, 12] and a number ‘X’: 23. The length of the smallest subarray is 2 as the subarray is [21, 7].
+			Note: Here are multiple subarrays whose sum is greater than ‘X’ such as [1, 2, 21] or [7, 6, 12] but we have to choose the minimum length subarray.
+			Constraints:
+				1 <= T <= 10^2
+				1 <= N <= 10^3
+				1 <= X <= 10^9
+				0 <= A[i] <= 10^9
+				Time Limit: 1 sec
+
+			Sample Input 1:
+				2
+				5 11
+				9 1 5 3 9
+				4 8
+				5 1 2 1 
+				Sample Output 1:
+				2
+				4
+				Explanation For Sample Input 1:
+				In the first test case, the length of the minimum subarray is 2. The subarray is [3, 9] as the sum is 12 which is greater than the given value 11.
+
+				In the second test case, the length of the minimum subarray is 4. The subarray is [5,1, 2, 1] as the sum is 9 which is greater than the given value 8.
+				Sample Input 2:
+				2
+				7  32
+				27 1 2 4 15 12 8 
+				6 10
+				9 1 2 11 4 1 
+				Sample Output 2:
+				3
+				1
+				Explanation For Sample Input 2:
+				In the first test case, the length of the minimum subarray is 3. The subarray is [15,12, 8] as the sum is 35 which is greater than the given value 32.
+				In the second test case, the length of the minimum subarray is 1. The subarray is [11] as the sum is 11 which is greater than the given value 10.
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			int minSubArrayLen(vector<int>& arr, int target, int n) {
+				int minSize = INT_MAX;
+
+				if(accumulate(arr.begin(), arr.end(),0) <= target)
+					return 0;
+
+				vector<int> temp;
+				for(int i=0; i<n; i++){
+					vector<int> test;
+					int s =0, f=0;
+
+					for(int j=i; j<n; j++){
+						test.push_back(arr[i]);
+						s += arr[j];
+
+						if(s > target){
+							f = 1;
+							break;
+						}
+					}
+					if(f && minSize > test.size()){
+						minSize = test.size();
+						temp = test;
+					}
+				}
+				return minSize;
+			}
 	
-	796)
+		// Optimized:
+			❌Pending
+
+	796) Transactions:
+		Problem statement
+			Alex is going to some stores where he will carry out some transactions. In each store, he will either pay some money, or he will receive some money. Initially, Alex has 0 amount with him. So he currently has an array 'money' containing the transaction amounts (both positive and negative) in the same order he did at stores. Can you find out the maximum amount that he will have with him after any(possibly 0) number of transactions?
+			Note: that at some point, the amount left with Alex can become negative. For example, in the transactions [1, -3], after the second transaction, the money left with Alex is -2.
+			Example: Let the transaction amounts be [1, -2, 5]. Here we can see that the amount left after the first transaction is 1 after the second is -1 and after the third is 4. So the maximum value is 4.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^4
+				-10^5 <= money[i] <= 10^5
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				6
+				1 -3 5 -6 4 -3
+				1
+				11
+				Sample Output 1:
+				3
+				11
+				Explanation for Sample Input 1:
+				In the first test case, the transaction values are [1, -3, 5, -6, 4, -3]. We can see that after the first transaction, the money left with Alex is 1. After the second, it is -2, then 3, then -3, then 1, and finally -2. We can see that after the third transaction, the money left with Alex is 3, which is the maximum money that he can have.
+				In the second test case, there is only one transaction. He receives 11 in the first transaction, which is also the highest that he can have.
+				Sample Input 2:
+				2
+				5
+				5 7 11 3 5
+				3
+				-20 -19 -21
+				Sample Output 2:
+				31
+				0
+
+		long long transactions(vector<int> &money) {
+			long long ans = 0;
+			// if(money.size()==1)
+			//     return money[0];
+
+			long long s=0;
+			for(int i=0; i<money.size(); i++){
+				s += money[i];
+				ans =  max(ans, s);
+			}
+			return ans;
+		}
 	
-	797)
+	797) Count vowels, consonants, and spaces:
+		Problem statement
+			Given a string, write a program to count the number of vowels, consonants, and spaces in that string.
+			EXAMPLE :
+			Input: ‘N’= 25, ‘s’ =”Take u forward is Awesome”
+			Output: 10 11 4
+			Constraints :
+				1 <= 'T' <= 10
+				1 <= 'N' <= 10^5
+				It is guaranteed that sum of ‘N’ over all test cases is <= 10^5
+				Time Limit: 1 sec
+			Sample Input 1 :
+			2
+			25
+			Take u forward is Awesome
+			27
+			India won the cricket match
+			Sample Output 1 :
+			10 11 4
+			8 15 4
+			Explanation Of Sample Input 1 :
+			Note: Ignore the inverted commas at the start and end of the string, they are just to make it visually better to understand the given string.
+			The first test case is the same as the explanation above.
+			For the second test case, the vowels are at indices {1, 4, 5, 8, 13, 17, 20, 24} and spaces are at indices {6, 10, 14, 22} rest indices are consonants i.e. (27 - 8 - 4) = 15.
+			Hence, the output will be: 8 15 4
+			Sample Input 2 :
+			2
+			12
+			hEllOWorlD
+			2
+			Sample Output 2 :
+			3 7 2
+			0 0 2
+
+		#include <bits/stdc++.h> 
+		vector<int> countVowelsConsonantsSpaces(string &s, int n) {
+			int sp, vow, conso;
+			sp = vow = conso = 0;
+
+			// shifting the string to lower-case
+			transform(s.begin(), s.end(), s.begin(), ::tolower);
+			
+			for(char ch: s)
+				if(isblank(ch))
+					sp++;
+				else if(ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u')
+					vow++;
+				else
+					conso++;
+
+			return {vow, conso, sp};
+		}
 	
-	798)
+	798) Insertion In A Singly Linked List:
+		Problem statement
+			You are given a Singly Linked List of ‘N’ positive integers. Your task is to add a node having the value ‘VAL’ at position ‘POS’ in the linked list.
+			Note:
+				Assume that the Indexing for the linked list starts from 0.
+				EXAMPLE:
+				Input: ‘N’ = 5, 'LIST' = [1, 1, 2, 3, 4, -1], ‘VAL’ = 2, ‘POS’ = 1.
+				Output: 1 -> 2 -> 1 -> 2 -> 3 -> 4 
+				Here in the given list we can see that the node having value 2 is inserted at position 1.
+			Constraints :
+				1 <= ‘T’ <= 10 
+				1 <= ‘N’ <= 10^4 
+				0 <= ‘POS <= N  
+				1 <= ‘data’, 'VAL' <= 10^7
+				Where 'N' is the size of the singly linked list, and ‘data’ is the Integer data of the singly linked list.
+				Time Limit: 1 sec
+
+			Sample Input 1 :
+				2
+				5
+				1 1 2 3 4 -1
+				2 1
+				1
+				1 -1
+				3 1
+				Sample Output 1 :
+				1 2 1 2 3 4
+				1 3
+				Explanation Of Sample Input 1 :
+				For the first test case,
+				‘N’ = 5, 'LIST' = [1, 1, 2, 3, 4, -1], ‘VAL’ = 2, ‘POS’ = 1.
+				After inserting the node having value = 2 at position 1 the list will be:
+				1 -> 2 -> 1 -> 2 -> 3 -> 4.
+
+				For the second test case,
+				‘N’ = 1,  'LIST' = [1, -1], ‘VAL’ = 3, ‘POS’ = 1.
+				After inserting the node having value = 3 at position 1 the list will be:
+				1 -> 3.
+				Sample Input 2 :
+				2
+				2
+				1 2 -1
+				3 0
+				2
+				3 4 -1
+				5 1
+				Sample Output 2 :
+				3 1 2  
+				3 5 4
+
+		/************************************************************
+			Following is the LinkedList class structure:
+			class Node {
+			public:
+				int data;
+				Node *next;
+
+				Node(int val) {
+					this->data = val;
+					next = NULL;
+				}
+				~Node() {
+					if (next != NULL) {
+						delete next;
+					}
+				}
+			};
+		************************************************************/
+
+		Node * insert(Node * head, int n, int pos, int val) {
+			Node* newNode = new Node(val);
+
+			if(pos == 0){
+				newNode -> next = head;
+				head = newNode;
+
+				return head;
+			}
+
+			Node *cur = head;
+			Node *prev = head;
+
+			while(pos--){
+				prev = cur;
+				cur = cur -> next;
+			}
+
+			prev -> next = newNode;
+			newNode -> next = cur;
+
+			return head;
+		}
 	
-	799)
+	799) Boolean Queries:
+		Problem statement
+			You are given a stream of boolean values. Your task is to maintain a data structure that supports the following functions.
+			setAllTrue(): Sets all the indicies to true
+			setAllFalse(): Sets all the indices to false
+			setIndexTrue(index): Set the value at position index to true
+			setIndexFalse(index): Set the value at position index to False
+			getIndex(index): Return the value of position index
+			Note:
+			Initially, all the values of the data structure are set to false.
+			The Queries are in the format below-:
+			(1, index, value): Set the value at the given index
+			(2, index): Get the value at the given index 
+			(3, value): Set all the indices to the boolean value given.
+			The value 1 represents true and 0 represents false.
+			For example:
+
+			You are given Q = [[1, 2, 1], [3, 0], [2, 4]], Here 
+			Q[0] is the query that sets the boolean value at index 2 to True.
+			Q[1] is the query that sets the value of all indices to False.
+			Q[2] is the query that gets the value at index 4 that is False.
+			Hence the answer is [False].
+			Detailed explanation ( Input/output format, Notes, Images )
+			Constraints:
+			1 <= T <= 10
+			2 <= Q <= 10^6
+			1 <= index <= 10^5
+
+			Time Limit: 1 sec
+			Note:
+			You do not need to print anything. It has already been taken care of. Just implement the function.
+			Sample Input 1:
+			2
+			3
+			1 2 1
+			3 0
+			2 4 
+			3
+			3 1
+			2 6
+			2 5
+			Sample Output 1:
+			False
+			True
+			True    
+			Explanation:
+			For first test case,  Q = [[1, 2, 1], [3, 0], [2, 4]], Here 
+			Q[0] is the query that sets the boolean value at index 2 to True
+			Q[1] is the query that sets the value of all indices to False
+			Q[2] is the query that gets the value at index 4 that is False.
+			Hence the answer is in a single line [False]
+
+			For the second test case, Q = [[3, 1], [2, 6], [2, 5]], Here
+			Q[0] is the query that sets all the indices to True.
+			Q[1] is the query that gets the value at index 6, this is True.
+			Q[2] is the query that gets the value at index 5 that is True.
+			Hence the answer is [True, True].
+			Sample Input 2:
+			2
+			5
+			2 4
+			1 4 1
+			2 4
+			3 0
+			2 4
+			2
+			3 1
+			2 9
+			Sample Output 2:
+			False
+			True
+			False
+			True
+
+		// commented lines are not mandatory
+		class InfiniteArray {
+			public: 
+			vector<bool> v;
+
+			InfiniteArray() {
+				v.resize(100000, false);
+			}
+				
+			void setAllTrue() {
+				fill(v.begin(), v.end(), true);
+			}
+
+			void setAllFalse() {
+				fill(v.begin(), v.end(), false);
+			}
+
+			void setIndexTrue(int index) {
+				// if(index >=0 && index < v.size())
+					v[index] = true;
+			}
+
+			void setIndexFalse(int index) {
+				// if(index >=0 && index < v.size())
+					v[index] = false;
+			}
+
+			bool getIndex(int index){
+				// if(index >=0 && index < v.size())
+					return v[index];
+				// return false;
+			}
+		};
 	
-	800)
+	#At-Coder Contest:
+	800) A - AtCoder Line:
+		Problem Statement
+			The AtCoder railway line has N stations, numbered 1,2,…,N.
+			On this line, there are inbound trains that start at station 1 and stop at the stations 2,3,…,N in order, and outbound trains that start at station 
+			N and stop at the stations N−1,N−2,…,1 in order.
+
+			Takahashi is about to travel from station X to station Y using only one of the inbound and outbound trains.
+			Determine whether the train stops at station Z during this travel.
+
+			Constraints
+			3 ≤ N ≤ 100
+			1 ≤ X,Y,Z ≤ N
+			X, Y, and Z are distinct.
+			All input values are integers.
+			Input
+			The input is given from Standard Input in the following format:
+			N X Y Z
+			Output
+			If the train stops at station Z during the travel from station X to station Y, print Yes; otherwise, print No.
+
+			Sample Input 1
+			7 6 1 3
+			Sample Output 1
+			Yes
+			To travel from station 
+			6 to station 1, Takahashi will take an outbound train.
+
+			After departing from station 6, the train stops at stations 5,4,3,2,1 in order, which include station 3, so you should print Yes.
+			Sample Input 2
+			10 3 2 9
+			Sample Output 2
+			No
+			Sample Input 3
+			100 23 67 45
+			Sample Output 3
+			Yes
+
+		- The Z should be in between X & Y, else print "No".
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			int N, x,y,z;
+			cin>>N>>x>>y>>z;
+			
+			if((x < z && z < y) || (x > z && z > y))
+				std::cout << "Yes" << std::endl;
+			else
+				std::cout << "No" << std::endl;
+			return 0;
+		}
 	
-	801)
+	801) B - Typing:
+		Problem Statement
+			Takahashi tried to type a string S consisting of lowercase English letters using a keyboard.
+			He was typing while looking only at the keyboard, not the screen.
+			Whenever he mistakenly typed a different lowercase English letter, he immediately pressed the backspace key. However, the backspace key was broken, so the mistakenly typed letter was not deleted, and the actual string typed was T.
+			He did not mistakenly press any keys other than those for lowercase English letters.
+			The characters in T that were not mistakenly typed are called correctly typed characters.
+
+			Determine the positions in T of the correctly typed characters.
+			Constraints
+			S and T are strings of lowercase English letters with lengths between 
+			1 and 2×10^5 , inclusive.
+			T is a string obtained by the procedure described in the problem statement.
+			Input
+			The input is given from Standard Input in the following format:
+				S
+				T
+			Output
+			Let ∣S∣ be the length of S. If the correctly typed characters are the 
+			Ensure that the output is in ascending order. That is, Ai < Ai+1 should hold for each 1 ≤ i ≤ ∣S∣−1.
+
+			Sample Input 1
+			abc
+			axbxyc
+			Sample Output 1
+			1 3 6
+			The sequence of Takahashi's typing is as follows:
+
+			Type a.
+			Try to type b but mistakenly type x.
+			Press the backspace key, but the character is not deleted.
+			Type b.
+			Try to type c but mistakenly type x.
+			Press the backspace key, but the character is not deleted.
+			Try to type c but mistakenly type y.
+			Press the backspace key, but the character is not deleted.
+			Type c.
+			The correctly typed characters are the first, third, and sixth characters.
+
+			Sample Input 2
+			aaaa
+			bbbbaaaa
+			Sample Output 2
+			5 6 7 8
+			Sample Input 3
+			atcoder
+			atcoder
+			Sample Output 3
+			1 2 3 4 5 6 7
+			Takahashi did not mistakenly type any characters.
+
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			string s,t;
+			cin>>s>>t;
+			int cnt = 0;
+			
+			int i, j;
+			i=j=0;
+			
+			while(i < s.size() && j < t.size()){
+				cnt++;
+				if(s[i] == t[j++]){
+					i++;
+					std::cout << cnt << " ";
+				}
+			}
+			return 0;
+		}
+
+	802) Boats to Save People:
+		Problem Statement:
+			You are given an array people where people[i] is the weight of the ith person, and an infinite number of boats where each boat can carry a maximum weight of limit. Each boat carries at most two people at the same time, provided the sum of the weight of those people is at most limit.
+			Return the minimum number of boats to carry every given person.
+			Example 1:
+			Input: people = [1,2], limit = 3
+			Output: 1
+			Explanation: 1 boat (1, 2)
+
+			Example 2:
+			Input: people = [3,2,2,1], limit = 3
+			Output: 3
+			Explanation: 3 boats (1, 2), (2) and (3)
+
+			Example 3:
+			Input: people = [3,5,3,4], limit = 5
+			Output: 4
+			Explanation: 4 boats (3), (3), (4), (5)
+
+			Constraints:
+				1 <= people.length <= 5 * 10^4
+				1 <= people[i] <= limit <= 3 * 10^4
+		
+		class Solution {
+			public:
+			int numRescueBoats(vector<int>& people, int limit) {
+				int nums=0, s=0;
+				sort(people.begin(), people.end());
+				int i=0, j= people.size()-1;
+				
+				while(i <= j){
+					if(i == j){
+						i++,j--;
+						nums++;
+					}else if((people[i] + people[j]) <= limit){
+						i++,j--;
+						nums++;
+					}else{
+						j--;
+						nums++;
+					}
+				}
+				return nums;
+			}
+		};
+
+	803) Minimum Rotations:
+		Problem statement
+			You’re given a string 'S' of length 'N'. Your task is to find the minimum number of rotations to get the same string 'S'.
+			NOTE :
+			The string only consists of lowercase English alphabets.
+			Constraints :
+				1 <= T <= 100
+				1 <= N <= 10 ^ 4
+				Time Limit: 1 sec
+				The string 'S' only contains lowercase English characters.     
+
+				Where 'T' denotes the number of test cases and 'N' denotes the length of string 'S'. 
+			Sample Input 1 :
+			1
+			5
+			ninja
+			Sample Output 1 :
+			5
+			Explanation of Sample Input 1 :
+			After five rotations we get the same string i.e “ninja”.  
+			Sample Input 2 :
+			1
+			5
+			ccccc
+			Sample Output 2 :
+			1
+			Explanation of Sample Input 2 :
+			Just after one rotation, we get the same string i.e “ccccc”.
+
+		#include <bits/stdc++.h> 
+		int minimumRotations(int n, string s){
+			// string test = s;
+			// int cnt=0;
+
+			// if at least one different char we found in string then to achieve the same string again we have to rotate it by its size times.
+			for(int i=0; i<n-1; i++)
+				if(s[i] != s[i+1])
+					return n;
+
+			return 1;
+		}
+
+	804) Append Nodes:
+		Problem statement
+			You have been given an integer Linked List.
+			After every 'M' nodes, you have to take the sum of the next 'N' nodes and append that sum to the linked list. Do this till the end of the Linked List.
+			Note:
+			You just need to return the head of the new linked list.
+			In case the linked list ends after adding K nodes, where K is any positive integer less than 'N'.Append the sum of those K nodes at the end of the linked list.
+			Constraints:
+				1 <= T <= 10        
+				1 <= n <= 10^4
+				1 <= N <= 10^4
+				1 <= M <= 10^4
+				-10^5 <= VAL <= 10^5
+				Where 'n' denotes the length of the linked list and 'VAL' represents a node value of the linked list.
+				Time limit: 1 sec
+
+			Sample Input 1:
+				2
+				1 2 3 4 5 6 7 8 9 10 11 12 -1
+				2 3
+				5 4 3 7 9 -1
+				4 3
+				Sample Output 1:
+				1 2 3 4 5 9 6 7 8 9 10 19 11 12
+				5 4 3 7 9 16
+				Explanation of the Sample Output 1:
+				In test case 1, for the linked list,  the value of 'M' is 3. So we skip the first 3 nodes(1->2->3). The value of 'N' is 2, hence we add the next 2 nodes(4->5). The sum is 9, so we add 9 after node 5. Now repeating the same process again, we skip the next 3 nodes(6->7->8). Now we add the next 2 nodes(9->10), for which the sum is 19. Hence we add 19 to the list after 10. Now while skipping the next 3 nodes we encounter the end of a linked list, hence the updated linked list is our answer.
+
+				In test case 2, for the linked list,  the value of 'M' is 3. So we skip the first 3 nodes(5->4->3). The value of 'N' is 4 so ideally we should add the next 4 nodes, but there are only two nodes remaining before we encounter the end of the linked list, hence we add those 2 nodes(7->9). The sum is 16, therefore we add 16 to the end of the linked list. Because we have encountered the end of the linked list, the updated linked list is our answer.
+				Sample Input 2:
+				2
+				10 30 10 40 5 5 -1
+				2 3
+				1 -2 1 2 2 -4 2 4 -1
+				2 4
+				Sample Output 2:
+				10 30 10 40 5 45 5 
+				1 -2 1 2 2 -4 -2 2 4
+				Explanation of the Sample Output 2:
+				In test case 1, for the linked list,  the value of 'M' is 3. So we skip the first 3 nodes(10->30->10). The value of 'N' is 2, hence we add the next 2 nodes(40->5). The sum is 45, so we add 45 after node 5. Now repeating the same process again, while skipping the next 3 nodes we encounter the end of a linked list, hence the updated linked list is our answer.
+
+				In test case 2, for the linked list,  the value of 'M' is 4. So we skip the first 4 nodes(1->-2->1->2). The value of 'N' is 2, hence we add the next 2 nodes(2->-4). The sum is -2, so we add -2 after node 6. Now repeating the same process again, while skipping the next 4 nodes we encounter the end of a linked list, hence the updated linked list is our answer.
+
+		#include <bits/stdc++.h> 
+		/****************************************************************
+			Following is the class structure of the Node class:
+			class Node {
+				public:
+				int data;
+				Node *next;
+				Node(int data)
+				{
+					this->data = data;
+					this->next = NULL;
+				}
+			};
+		*****************************************************************/
+
+		Node* addNodes(Node* head, int n, int m) {
+			Node* temp = head;
+			while(temp){
+				int skipVal = m;
+				while(temp && skipVal--)
+					temp = temp -> next;
+				
+				int s=0, addVal = n;
+				Node* prev = NULL;
+				while(temp && addVal--){
+					s += temp -> data;
+					prev = temp;
+					temp = temp -> next;
+				}
+				if(s != 0){
+					Node* newOne = new Node(s);
+					prev -> next = newOne;
+					newOne -> next = temp;
+				}
+			}
+			return head;
+		}
+
+	805) Unlucky Number:
+		Problem statement
+			Tushar is very superstitious. So naturally he hates the number 13. Not just that,
+			he even hates numbers that consist of only 1s and/or 3s. He calls them 'Unlucky
+			Numbers'
+			One day (Friday the 13th) he sat down and wondered what the N-th unlucky
+			number would be. Help him figure it out!
+			Constraints:
+				1 ≤ N≤ 10^9
+			Sample input 1
+			1
+			Sample output 1
+			1
+			Sample input 2
+			2
+			Sample output 2
+			3
+			Sample input 3
+			5
+			Sample output 3
+			31
+
+		// Not Optimized:
+			#include<bits/stdc++.h>
+			using namespace std;
+			bool consist1s_3s(int n){
+				while(n){
+					if(n % 10 != 1 && n%10 != 3)
+						return 0;
+					n /= 10;
+				}
+				return 1;
+			}
+
+			int main() {
+				int n;
+				cin>>n;
+				int ans = 0;
+				while(n){
+					ans++;
+					if(consist1s_3s(ans))
+						n--;
+				}
+				cout<<ans;
+				return 0;
+			}
+
+		// Optimized:
+			❌Pending
+
+	806) 
+	
+	807) 
+	
+	808) 
+	
+	809) 
+	
+	810) 
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
