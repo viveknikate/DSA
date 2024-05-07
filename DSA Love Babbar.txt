@@ -19920,7 +19920,7 @@ Lecture-54: Introduction to Stacks
 		};
 ---------------------------------------------------------------------------------------------------------
 Lecture 55: Stack Interview Questions
-	Q. Reverse a string using stack
+	Q.1. Reverse a string using stack
 		#include <iostream>
 		#include<stack>
 		using namespace std;
@@ -19942,7 +19942,7 @@ Lecture 55: Stack Interview Questions
 			return 0;
 		}
 
-	Q. Delete middle element from stack:
+	Q.2. Delete middle element from stack:
 		Problem statement
 			You are having a stack "ARR" of size 'N+1', your task is to delete the middlemost element so that the size of resulting stack is 'N'.
 			A stack is a linear data structure where both insertion and deletion of elements take place at the top. It follows FILO (First In Last Out) or LIFO (Last In First Out) approaches. Books piled on top of each other is an example of a stack, where you can only remove a single book at a time, which is at the top of the stack. Likewise, you can only add a single book at a time, on the top of the stack only.
@@ -20003,7 +20003,7 @@ Lecture 55: Stack Interview Questions
 			solve(inputStack, 0, N);
 		}
 
-	Q. Valid Parentheses:
+	Q.3. Valid Parentheses:
 		Problem statement
 			You're given a string 'S' consisting of "{", "}", "(", ")", "[" and "]" .
 			Return true if the given string 'S' is balanced, else return false.
@@ -20063,10 +20063,10 @@ Lecture 55: Stack Interview Questions
 				return st.empty();
 			}
 
-	Q. Insert An Element At Its Bottom In A Given Stack:
+	Q.4. Insert An Element At Its Bottom In A Given Stack:
 		Refer Q. 263 from POTD section
 
-	Q. Reverse Stack Using Recursion:
+	Q.5. Reverse Stack Using Recursion:
 		-> Refer Q. 443 from POTD section
 		void pushAtBottom(stack<int> &s, int n){
 			if(s.empty()){
@@ -20090,7 +20090,7 @@ Lecture 55: Stack Interview Questions
 			pushAtBottom(st, num);
 		}
 
-	Q. Sort a Stack:
+	Q.6. Sort a Stack:
 		Problem statement
 			You’re given a stack consisting of 'N' integers. Your task is to sort this stack in descending order using recursion.
 			We can only use the following functions on this stack S.
@@ -20165,7 +20165,7 @@ Lecture 55: Stack Interview Questions
 					stack.push(hold[i++];
 			}
 
-	Q. Redundant Brackets:
+	Q.7. Redundant Brackets:
 		Problem statement
 			Given valid mathematical expressions in the form of a string. You are supposed to return true if the given expression contains a pair of redundant brackets, else return false. The given string only contains ‘(‘, ’)’, ‘+’, ‘-’, ‘*’, ‘/’ and lowercase English letters.
 			Note :
@@ -20225,7 +20225,7 @@ Lecture 55: Stack Interview Questions
 			return 0;
 		}
 
-	Q. Minimum Cost To Make String Valid:
+	Q.8. Minimum Cost To Make String Valid:
 		Problem statement
 			Ninja has been given a string ‘STR’ containing either ‘{’ or ‘}’. 'STR’ is called valid if all the brackets are balanced. Formally for each opening bracket, there must be a closing bracket right to it.
 			For Example:
