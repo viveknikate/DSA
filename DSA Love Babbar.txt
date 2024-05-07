@@ -19694,8 +19694,619 @@ Lecture-54: Introduction to Stacks
 		top() – Returns a reference to the top most element of the stack – Time Complexity : O(1) 
 		push(g) – Adds the element ‘g’ at the top of the stack – Time Complexity : O(1) 
 		pop() – Deletes the most recent entered element of the stack – Time Complexity : O(1) 
+	
+	eg.
+		#include <iostream>
+		#include<stack>
+		using namespace std;
 
+		int main() {
+			std::stack<int> s;
+			std::cout << "is Stack empty :" << (s.empty() ? "Yes": "No") << std::endl;
+			
+			for(int i=1; i<=5; i++)
+				s.push(i);
+
+			std::cout << "is Stack empty :" << (s.empty() ? "Yes": "No") << std::endl;
+			std::cout << "top element of Stack: " << s.top()  << std::endl;
+			std::cout << "Size of Stack : "<< s.size() << std::endl;
+			
+			s.pop();
+			std::cout << "top element of Stack: " << s.top()  << std::endl;
+			std::cout << "Size of Stack : "<< s.size() << std::endl;
+			
+			while(!s.empty()){
+				cout<< s.top()<<"\t";
+				s.pop();
+			}
+			return 0;
+		}
+
+	Program: Stack using Array
+		#include <iostream>
+		using namespace std;
+
+		class Stack{
+			int top = -1;
+			int size, *arr;
+			
+			public:
+			// constructor
+			Stack(int size){
+				this -> size = size;
+				arr =  new int[size];
+			}
+			
+			void push(int val){
+				if((top + 1) < size){                       //if(++top < size){
+					arr[++top] = val;
+				}else{
+					std::cout << "Stack Overflow." << std::endl;
+				}
+			}
+			
+			void pop(){
+				if(top == -1){
+					std::cout << "Stack Underflow" << std::endl;
+					return ;
+				}
+				top--;
+			}
+			
+			int peek(){
+				if(top == -1){
+					std::cout << "Stack is empty" << std::endl;
+					return -1;
+				}
+				return arr[top];
+			}
+			
+			bool isEmpty(){
+				if(top == -1)
+					return 1;
+				return 0;
+			}
+		};
+
+
+		int main() {
+			Stack s(5);
+			std::cout << "Stack empty ? : " << s.isEmpty() << std::endl;
+			
+			for(int i=1; i<=5; i++)
+				s.push(i);
+			
+			std::cout << "Stack empty ? : " << s.isEmpty() << std::endl;
+			std::cout << "top element: "<< s.peek() << std::endl;
+			
+			s.pop();
+			std::cout << "top element: "<< s.peek() << std::endl;
+			
+			s.push(89);
+			std::cout << "top element: "<< s.peek() << std::endl;
+			
+			s.push(100);            // stack Overflow
+			std::cout << "top element: "<< s.peek() << std::endl;
+			
+			
+			std::cout << "Content of Stack" << std::endl;
+			while(!s.isEmpty()){
+				cout<<s.peek() <<"\t";
+				s.pop();
+			}
+			
+			std::cout << "\nStack empty ? : " << s.isEmpty() << std::endl;
+			s.pop();
+			return 0;
+		}
+
+	Stack Using LinkedList:
+		❌Pending
+	
+	Q. Two Stacks:
+		Problem statement
+			Design a data structure, which represents two stacks using only one array common for both stacks. The data structure should support the following operations:
+			push1(NUM) - Push ‘NUM’ into stack1.
+			push2(NUM) - Push ‘NUM’ into stack2.
+			pop1() - Pop out a top element from stack1 and return popped element, in case of underflow return -1.
+			pop2() - Pop out a top element from stack2 and return popped element, in case of underflow return -1.
+			There are 2 types of queries in the input
+			Type 1 - These queries correspond to Push operation.
+			Type 2 - These queries correspond to Pop operation.
+			Note:
+			1. You are given the size of the array.
+			2. You need to perform push and pop operations in such a way that we are able to push elements in the stack until there is some empty space available in the array.
+			3. While performing Push operations, do nothing in the situation of the overflow of the stack.
+			Constraints:
+				0 <= S <= 10^5
+				1 <= Q <= 5*10^5
+				1 <= type, stackNo <= 2
+				0 <= NUM <= 10^9
+				Time Limit: 1 sec.   
+
+			Sample Input 1:
+			3 5
+			1 1 3
+			1 2 4
+			1 1 5
+			2 1
+			2 2
+			Sample output 1:
+			5
+			4
+			Explanation of sample input 1:
+
+			Here every step shows a snapshot of 2 stacks after each operation.
+
+			Initialising the size of the array to 3, twoStack = new TwoStack(3).
+			Then operation on two stacks occurs as follows:
+			twoStack.push1(3) // pushing 3 in stack1.
+			twoStack.push2(4) // pushing 4 in stack2.
+			twoStack.push1(5) // pushing 5 in stack1.
+			twoStack.pop1() // popping out from stack2, it returns 5.
+			twoStack.pop2() // popping out from stack2, it returns 4.
+			Sample Input 2:
+			3 10
+			1 1 2
+			1 1 4
+			1 1 3
+			1 2 5
+			2 2
+			2 1
+			1 2 6
+			2 2
+			2 1
+			1 2 7
+			Sample output 2:
+			-1
+			3
+			6
+			4
+			Explanation of sample input 2:
+
+			Here every step shows a snapshot of 2 stacks after each operation.
+
+			Initialising the size of the array to 3, twoStack = new TwoStack(3).
+			Then operation on two stacks occurs as follows:
+			twoStack.push1(2) // pushing 2 in stack1.
+			twoStack.push1(4) // pushing 4 in stack1.
+			twoStack.push1(3) // pushing 3 in stack1.
+			twoStack.push2(5) // pushing 5 in stack2, but 3 elements are already in the array and there is no empty space hence it cannot be added.
+			twoStack.pop2() // popping out from stack2, it is already empty hence returns -1.
+			twoStack.pop1() // popping out from stack1, it returns 3.
+			twoStack.push2(6) // pushing 6 in stack2.
+			twoStack.pop2() // popping out from stack2, it returns 6.
+			twoStack.pop1() // popping out from stack1, it returns 4.
+			twoStack.push2(7) // pushing 7 in stack2.
+
+		#include <bits/stdc++.h> 
+		class TwoStack {
+			int *arr;
+			int top1, top2;
+			int size;
+			public:
+			// Initialize TwoStack.
+			TwoStack(int s) {
+				size = s;
+				top1 = -1, top2 = s;
+				arr = new int[s];
+			}
+			
+			// Push in stack 1.
+			void push1(int num) {
+				if(top2 - top1 > 1)                                                                     //or            // if((top1+1) < size && (top1+1) < top2)
+					arr[++top1] = num;
+			}
+
+			// Push in stack 2.
+			void push2(int num) {
+				if(top2 - top1 > 1)                                                                       //or         // if((top2-1) > top1 && (top2-1) >=0)
+					arr[--top2] = num;
+			}
+
+			// Pop from stack 1 and return popped element.
+			int pop1() {
+				if(top1 == -1)
+					return -1;
+				return arr[top1--];
+			}
+
+			// Pop from stack 2 and return popped element.
+			int pop2() {
+				if(top2 == size)
+					return -1;
+				return arr[top2++];
+			}
+		};
 ---------------------------------------------------------------------------------------------------------
+Lecture 55: Stack Interview Questions
+	Q. Reverse a string using stack
+		#include <iostream>
+		#include<stack>
+		using namespace std;
+		int main() {
+			string s = "Vivek", ans;
+			int i=0;
+			stack<char> st;
+			
+			std::cout << s << std::endl;
+			while(i < s.size())
+				st.push(s[i++]);
+				
+			while(!st.empty()){
+				ans += st.top();
+				st.pop();
+			}
+			
+			std::cout << ans << std::endl;
+			return 0;
+		}
+
+	Q. Delete middle element from stack:
+		Problem statement
+			You are having a stack "ARR" of size 'N+1', your task is to delete the middlemost element so that the size of resulting stack is 'N'.
+			A stack is a linear data structure where both insertion and deletion of elements take place at the top. It follows FILO (First In Last Out) or LIFO (Last In First Out) approaches. Books piled on top of each other is an example of a stack, where you can only remove a single book at a time, which is at the top of the stack. Likewise, you can only add a single book at a time, on the top of the stack only.
+			Example :-
+			INPUT : ARR [ ] = [ 1 , 2 , 3 , 4 , 5 ] , N = 4
+			OUTPUT: ARR [ ] = [ 1 , 2 , 4,  5 ]
+			The above example contains an odd number of elements, hence the middle element is clearly the (N+1) / 2th element, which is removed from the stack in the output.
+			INPUT : ARR [ ] = [ 5, 6, 7, 8 ] , N = 3
+			OUTPUT: ARR [ ] = [ 5, 7, 8 ]
+			The above example contains an even number of elements, so out of the two middle elements, we consider the one which occurs first. Hence, the middle element would be ((N+1) / 2 - 1) element, which is 6 and is removed from the stack in the output.
+			Constraints:
+				1 <= T <= 100    
+				1 <= N+1 <= 3000
+				0 <= data <= 10^9
+				Where ‘T’ is the number of test cases, ‘N+1’ is the number of elements in the input Stack. ‘data’ is the value of each element in the stack.
+				Time limit: 1 second
+			Sample Input 1:
+				2
+				4
+				1 2 3 4 5
+				7
+				83 74 67 49 94 8 11 1
+				Sample Output 1:
+				1 2 4 5
+				83 74 67 94 8 11 1
+				Explanation for Sample 1:
+				In the 1st testcase, there are an odd number of elements, hence the middle element is clearly the (N+1) / 2th element which is 3, and is removed from the stack in the output.
+
+				In the 2nd testcase, there are an odd number of elements, hence the middle element is clearly the (N+1) / 2th element which is 49, and is removed from the stack in the output.
+				Sample Input 2:
+				3
+				1
+				5 10    
+				4
+				1 3 4 2 7
+				5
+				9 5 2 7 8 6
+				Sample Output 2:
+				10
+				1 3 2 7
+				9 5 7 8 6
+
+		#include <bits/stdc++.h>
+		void solve(stack<int>& st, int c, int size){
+			if((size/2) == c){
+				st.pop();
+				return ;
+			}
+			int curEle = st.top();
+			st.pop();
+			
+			solve(st, c+1, size);
+			st.push(curEle);
+		}
+
+		void deleteMiddle(stack<int>&inputStack, int N){
+			// int cnt = 0;
+			solve(inputStack, 0, N);
+		}
+
+	Q. Valid Parentheses:
+		Problem statement
+			You're given a string 'S' consisting of "{", "}", "(", ")", "[" and "]" .
+			Return true if the given string 'S' is balanced, else return false.
+			For example:
+			'S' = "{}()".
+			There is always an opening brace before a closing brace i.e. '{' before '}', '(' before ').
+			So the 'S' is Balanced.
+			Sample Input 1 :
+				[()]{}{[()()]()}
+				Sample Output 1 :
+				Balanced
+				Explanation Of the Sample Input 1 :
+				There is always an opening brace before a closing brace i.e. '{' before '}', '(' before '), '[' before ']'.
+				So the 'S' is Balanced.
+				Sample Input 2 :
+				[[}[
+				Sample Output 2 :
+				Not Balanced
+				Constraints:
+				1 <= 'N' <= 10^5
+
+				Where 'N' is the length of the input string 'S'.
+				Time Limit: 1 sec
+		
+		// Using map:
+			bool isValidParenthesis(string s) {
+				stack<char> st;
+				map<char, char> mapping = {
+										{'}','{'},
+										{']','['},
+										{')', '('}
+									};
+
+				for(char ch: s){
+					if(!st.empty() && st.top() == mapping[ch])
+						st.pop();
+					else
+						st.push(ch);
+				}
+				return st.empty();
+			}
+
+		// without using map:
+			bool isValidParenthesis(string s) {
+				stack<char> st;
+
+				for(char ch: s){
+					if(ch == '(' || ch == '[' || ch == '{')
+						st.push(ch);
+					else{
+						if(!st.empty() && ((st.top() == '(' && ch == ')') || (st.top() == '[' && ch == ']') || (st.top() == '{' && ch == '}')))
+							st.pop();
+						else
+							return 0;
+					}
+				}
+				return st.empty();
+			}
+
+	Q. Insert An Element At Its Bottom In A Given Stack:
+		Refer Q. 263 from POTD section
+
+	Q. Reverse Stack Using Recursion:
+		-> Refer Q. 443 from POTD section
+		void pushAtBottom(stack<int> &s, int n){
+			if(s.empty()){
+				s.push(n);
+				return;
+			}
+			int num = s.top();
+			s.pop();
+
+			pushAtBottom(s, n);
+			s.push(num);
+		}
+
+		void reverseStack(stack<int> &st) {
+			if(st.size() == 0)
+				return;
+			int num = st.top();
+			st.pop();
+			reverseStack(st);
+
+			pushAtBottom(st, num);
+		}
+
+	Q. Sort a Stack:
+		Problem statement
+			You’re given a stack consisting of 'N' integers. Your task is to sort this stack in descending order using recursion.
+			We can only use the following functions on this stack S.
+			is_empty(S) : Tests whether stack is empty or not.
+			push(S) : Adds a new element to the stack.
+			pop(S) : Removes top element from the stack.
+			top(S) : Returns value of the top element. Note that this function does not remove elements from the stack.
+			Note :
+			1) Use of any loop constructs like while, for..etc is not allowed. 
+			2) The stack may contain duplicate integers.
+			3) The stack may contain any integer i.e it may either be negative, positive or zero.
+			Constraints:
+				1 <= 'T' <= 100
+				1 <=  'N' <= 100
+				1 <= |'V'| <= 10^9
+				Where |V| denotes the absolute value of any stack element.
+				Time limit: 1 sec
+
+			Sample Input 1:
+				1
+				5
+				5 -2 9 -7 3
+				Sample Output 1:
+				9 5 3 -2 -7
+				Explanation of Sample Input 1:
+				9 Is the largest element, hence it’s present at the top. Similarly 5>3, 3>-2 and -7 being the smallest element is present at the last. 
+				Sample Input 2:
+				1
+				5
+				-3 14 18 -5 30
+				Sample Output 2:
+				30 18 14 -3 -5
+				Explanation of Sample Input 2:
+				30 is the largest element, hence it’s present at the top. Similarly, 18>14, 14>-3 and -5 being the smallest element is present at the last. 
+
+		// using Recursion: TC: O(n²)
+			#include <bits/stdc++.h>
+			void pushSorted(stack<int> &stack, int val){
+				if(!stack.empty() && stack.top() > val){
+					int n1 = stack.top();
+					stack.pop();
+
+					pushSorted(stack, val);
+					stack.push(n1);
+				}else{
+					stack.push(val);
+				}
+			}
+
+			void sortStack(stack<int> &stack) {
+				if (stack.size() == 1) {
+					return;
+				}
+				int n = stack.top();
+				stack.pop();
+				sortStack(stack);
+				pushSorted(stack, n);
+			}
+
+		// without using Recursion:
+			#include <bits/stdc++.h> 
+			void sortStack(stack<int> &stack) {
+				vector<int> hold;
+				while(!stack.empty()){
+					hold.push_back(stack.top());
+					stack.pop();
+				}
+
+				sort(hold.begin(), hold.end());
+				int i=0;
+				while(i < hold.size())
+					stack.push(hold[i++];
+			}
+
+	Q. Redundant Brackets:
+		Problem statement
+			Given valid mathematical expressions in the form of a string. You are supposed to return true if the given expression contains a pair of redundant brackets, else return false. The given string only contains ‘(‘, ’)’, ‘+’, ‘-’, ‘*’, ‘/’ and lowercase English letters.
+			Note :
+			A pair of brackets is said to be redundant when a subexpression is surrounded by needless/ useless brackets.
+			For Example :
+				((a+b)) has a pair of redundant brackets. The pair of brackets on the first and last index is needless. 
+				While (a + (b*c)) does not have any pair of redundant brackets. 
+			Constraints :
+				1 <= T <= 50
+				3 <= |S| <= 10^4
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				(a+b)
+				(a+c*b)+(c))
+				Sample Output 1 :
+				No
+				Yes
+				Explanation of Sample Input 1 :
+				In the first test case, there are no redundant brackets. Hence, the output is “No”. 
+
+
+				In the second test case, the brackets around the alphabet ‘c’( index 8 and index 10) are redundant. Hence the output is “Yes”.
+				Sample Input 2 :
+				2
+				(a*b+(c/d))
+				((a/b))
+				Sample Output 2 :
+				No
+				Yes
+				Explanation of Sample Input 2 :
+				In the first test case, there are no redundant brackets. Hence, the output is “No”. 
+				In the second test case, the brackets around the subexpression “(a+b)” ( index 0 and index 6) are redundant. Hence the output is “Yes”.
+
+		// TC: O(n) & SC: O(n)
+		#include <bits/stdc++.h> 
+		bool findRedundantBrackets(string &s) {
+			stack<int> st;
+			for(char ch: s){
+				if(ch == '(' || ch == '+' || ch == '-' || ch == '*' || ch == '/')
+					st.push(ch);
+				else{
+					if(ch == ')'){
+						int isRedundant = 1;
+						while(st.top() != '('){
+							char top = st.top();
+							if(top == '+' || top == '-' || top == '*' || top == '/')
+							isRedundant =0;
+							st.pop();
+						}
+						if(isRedundant)
+							return 1;
+						st.pop();
+					}
+				}
+			}
+			return 0;
+		}
+
+	Q. Minimum Cost To Make String Valid:
+		Problem statement
+			Ninja has been given a string ‘STR’ containing either ‘{’ or ‘}’. 'STR’ is called valid if all the brackets are balanced. Formally for each opening bracket, there must be a closing bracket right to it.
+			For Example:
+			“{}{}”, “{{}}”, “{{}{}}” are valid strings while “}{}”, “{}}{{}”, “{{}}}{“ are not valid strings.
+			Ninja wants to make ‘STR’ valid by performing some operations on it. In one operation, he can convert ‘{’ into ‘}’ or vice versa, and the cost of one such operation is 1.
+			Your task is to help Ninja determine the minimum cost to make ‘STR’ valid.
+			For Example:
+			Minimum operations to make ‘STR’ =  “{{“ valid is 1.
+			In one operation, we can convert ‘{’ at index ‘1’ (0-based indexing) to ‘}’. The ‘STR’ now becomes "{}" which is a valid string.
+
+			Note:
+			Return -1 if it is impossible to make ‘STR’ valid.
+			Constraints :
+				1 <= T <= 100
+				0 <= |STR| <= 10^5
+				STR[i] = ‘{’ or ‘}’
+				Time Limit: 1 sec 
+			Sample Input 1:
+			2
+			{{{}
+			{{}{}}
+			Sample Output 1:
+			1
+			0
+			Explanation For Sample Input 1:
+			For the first test case:
+			The two valid strings that can be obtained from  ‘STR’ using minimum operations “{{}}”   and “{}{}”. Ninja can transform ‘STR’ to “{{}}” by performing the following operations:
+			Convert ‘{’ at index 2 to ‘}’.
+
+			Ninja can transform ‘STR’ to “{}{}” by performing the following operations:
+			Convert ‘{‘ at index 1 to ‘}’.
+			The minimum number of operations in transforming ‘STR’ to either of the two valid strings is 1.So, the total cost is 1.
+
+			For the second test case:
+			Given ‘STR’ is already valid so the minimum number of 
+			operations required is 0.
+			So, the total cost is 0.
+			Sample Input 2:
+			3
+			{}}{}}
+			{{{{
+			{{{}}
+			Sample Output 2:
+			1
+			2
+			-1
+
+		#include <bits/stdc++.h>
+		int findMinimumCost(string str) {
+			if (str.size() % 2)
+				return -1;
+
+			stack<char> st;
+			for(char ch: str){
+				if(ch == '{'){
+					st.push('{');
+				}else{
+					if(!st.empty() && st.top() == '{'){
+					st.pop();
+					}else{
+					st.push(ch);
+					}
+				}
+			}
+			
+			int OpBrac, CloBrac;
+			OpBrac = CloBrac=0;
+
+			while(!st.empty()){
+				if(st.top() == '{')
+					OpBrac++;
+				else
+					CloBrac++;
+				
+				st.pop();
+			}
+
+			// General math equation need to look it or need to understand it deeply
+			int ans = (OpBrac + 1)/2 + (CloBrac+1)/2;
+			return ans;
+		}
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
@@ -42351,6 +42962,7 @@ POTD:-[Problem of the Day]
 				We are given 'MY_STACK = [1,9]’ and 'X’ = 5.
 				So finally, 'MY_STACK' will become [5, 1, 9]. 
 
+		// Using Extra space:
 		#include <bits/stdc++.h> 
 		stack<int> pushAtBottom(stack<int>& myStack, int x) {
 			vector<int> holder;
@@ -42372,6 +42984,7 @@ POTD:-[Problem of the Day]
 			return myStack;
 		}
 
+		// Using Recursion:
 		stack<int> pushAtBottom(stack<int>& myStack, int x) {
 			// Write your code here.
 			if(myStack.empty()){
@@ -42383,6 +42996,23 @@ POTD:-[Problem of the Day]
 			myStack.pop();
 			pushAtBottom(myStack, x);
 			myStack.push(num);
+			return myStack;
+		}
+
+		//or Using extra space
+		#include <bits/stdc++.h> 
+		stack<int> pushAtBottom(stack<int>& myStack, int x) {
+			stack<int> temp;
+			
+			while(!myStack.empty()){
+				temp.push(myStack.top());
+				myStack.pop();
+			}
+			temp.push(x);
+			while(!temp.empty()){
+				myStack.push(temp.top());
+				temp.pop();
+			}
 			return myStack;
 		}
 	
@@ -82861,16 +83491,457 @@ POTD:-[Problem of the Day]
 		// Optimized:
 			❌Pending
 
-	806) 
-	
-	807) 
-	
-	808) 
-	
-	809) 
-	
-	810) 
+	806) Longest Common Prefix:
+		Problem Statement:
+			Write a function to find the longest common prefix string amongst an array of strings.
+			If there is no common prefix, return an empty string "".
+			Example 1:
+				Input: strs = ["flower","flow","flight"]
+				Output: "fl"
 
+			Example 2:
+				Input: strs = ["dog","racecar","car"]
+				Output: ""
+				Explanation: There is no common prefix among the input strings.
+
+			Constraints:
+				1 <= strs.length <= 200
+				0 <= strs[i].length <= 200
+				strs[i] consists of only lowercase English letters.
+
+		auto init = []{
+			ios_base::sync_with_stdio(0);
+			cin.tie(0);
+			cout.tie(0);
+			return 0;
+		}();
+		class Solution {
+			public:
+			string longestCommonPrefix(vector<string>& strs) {
+				string temp = strs[0], ans;
+				for(int i=1; i<strs.size(); i++){
+					int z =0, itr = min(temp.size(), strs[i].size());
+
+					while(z < itr){
+						if(temp[z] != strs[i][z])
+							break;
+						ans += temp[z++];
+					}
+					temp = ans;
+					ans.clear();
+				}
+				return temp;
+			}
+		};
+
+		// or
+			class Solution {
+				public:
+				string longestCommonPrefix(vector<string>& v) {
+					string ans="";
+					int n=v.size();
+
+					sort(v.begin(), v.end());
+					string first=v[0],last=v[n-1];
+					
+					for(int i=0; i < min(first.size(),last.size());i++){
+						if(first[i]!=last[i]){
+							return ans;
+						}
+						ans+=first[i];
+					}
+					return ans;
+				}
+			};
+	
+	807) Valid Word:
+		Problem Statement:
+			A word is considered valid if:
+			It contains a minimum of 3 characters.
+			It consists of the digits 0-9, and the uppercase and lowercase English letters. (Not necessary to have all of them.)
+			It includes at least one vowel.
+			It includes at least one consonant.
+			You are given a string word.
+			Return true if word is valid, otherwise, return false.
+			Notes:
+			'a', 'e', 'i', 'o', 'u', and their uppercases are vowels.
+			A consonant is an English letter that is not a vowel.
+			Example 1:
+				Input: word = "234Adas"
+				Output: true
+				Explanation:
+				This word satisfies the conditions.
+
+			Example 2:
+				Input: word = "b3"
+				Output: false
+				Explanation:
+				The length of this word is fewer than 3, and does not have a vowel.
+
+			Example 3:
+				Input: word = "a3$e"
+				Output: false
+				Explanation:
+				This word contains a '$' character and does not have a consonant.
+
+			Constraints:
+				1 <= word.length <= 20
+				word consists of English uppercase and lowercase letters, digits, '@', '#', and '$'.
+
+		class Solution {
+			public:
+			bool isValid(string word) {
+				if(word.size() < 3)
+					return 0;
+				
+				transform(word.begin(), word.end(), word.begin(), ::tolower);
+				
+				int vow=0, conso=0, dig=0;
+				for(char ch: word){            
+					if(isalpha(ch)){
+						if(ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u')
+							vow = 1;
+						else
+							conso = 1;
+					}else if(ispunct(ch)){
+						return 0;
+					}
+				}
+				if(vow && conso)
+					return 1;
+				return 0;
+			}
+		};
+
+	808) Minimum Number of Operations to Make Word K-Periodic:
+		Problem Statement:
+			You are given a string word of size n, and an integer k such that k divides n.
+			In one operation, you can pick any two indices i and j, that are divisible by k, then replace the substring
+			of length k starting at i with the substring of length k starting at j. That is, replace the substring word[i..i + k - 1] with the substring word[j..j + k - 1].
+			Return the minimum number of operations required to make word k-periodic.
+			We say that word is k-periodic if there is some string s of length k such that word can be obtained by concatenating s an arbitrary number of times. For example, if word == “ababab”, then word is 2-periodic for s = "ab".
+
+			Example 1:
+			Input: word = "leetcodeleet", k = 4
+			Output: 1
+			Explanation:
+			We can obtain a 4-periodic string by picking i = 4 and j = 0. After this operation, word becomes equal to "leetleetleet".
+
+			Example 2:
+				Input: word = "leetcoleet", k = 2
+				Output: 3
+				Explanation:
+				We can obtain a 2-periodic string by applying the operations in the table below.
+				i	j	word
+				0	2	etetcoleet
+				4	0	etetetleet
+				6	0	etetetetet
+	
+			Constraints:
+				1 <= n == word.length <= 105
+				1 <= k <= word.length
+				k divides word.length.
+				word consists only of lowercase English letters.
+
+		// Not Optimized:
+			class Solution {
+				public:
+				int minimumOperationsToMakeKPeriodic(string word, int k) {
+					int minCnt = INT_MAX;
+					
+					for(int i=0; i < word.size(); i += k){
+						string s1 = word.substr(i, k);
+						// cout<<s1<<"\t";
+						int cnt = 0;
+						for(int j=0; j < word.size(); j += k){
+							string s2 = word.substr(j, k);
+							// cout<<s2<<"\t";
+							if(s1 != s2)
+								cnt++;
+						}
+						minCnt = min(minCnt, cnt);
+					}
+					return minCnt;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				int minimumOperationsToMakeKPeriodic(string word, int k) {
+					map<string, int> Fr;
+					
+					for(int i=0; i < word.size(); i += k){
+						string s1 = word.substr(i, k);
+						Fr[s1]++;
+					}
+
+					vector<int> v;
+					int mxV=0;
+					for(auto i: Fr){
+						v.push_back(i.second);
+						mxV = max(mxV, i.second);   
+					}
+
+					int once = 1, OpsCnt=0;
+					for(int i: v){
+						if(once && i == mxV){
+							once =0;
+							continue;
+						}
+						OpsCnt += i;
+					}      
+					return OpsCnt;
+				}
+			};
+	
+	809) Double a Number Represented as a Linked List:
+		Problem Statement:
+			You are given the head of a non-empty linked list representing a non-negative integer without leading zeroes.
+			Return the head of the linked list after doubling it.
+			Example 1:
+			Input: head = [1,8,9]
+			Output: [3,7,8]
+			Explanation: The figure above corresponds to the given linked list which represents the number 189. Hence, the returned linked list represents the number 189 * 2 = 378.
+
+			Example 2:
+			Input: head = [9,9,9]
+			Output: [1,9,9,8]
+			Explanation: The figure above corresponds to the given linked list which represents the number 999. Hence, the returned linked list reprersents the number 999 * 2 = 1998. 
+
+			Constraints:
+				The number of nodes in the list is in the range [1, 104]
+				0 <= Node.val <= 9
+				The input is generated such that the list represents a number that does not have leading zeros, except the number 0 itself.
+
+		/**
+		* Definition for singly-linked list.
+		* struct ListNode {
+		*     int val;
+		*     ListNode *next;
+		*     ListNode() : val(0), next(nullptr) {}
+		*     ListNode(int x) : val(x), next(nullptr) {}
+		*     ListNode(int x, ListNode *next) : val(x), next(next) {}
+		* };
+		*/
+		class Solution {
+			public:
+			ListNode* ReverseIt(ListNode* h){
+				ListNode* prev = NULL;
+				ListNode* cur = h;
+				while(cur){
+					ListNode* upcoming = cur -> next;
+					cur -> next = prev;
+					prev = cur;
+
+					cur = upcoming;
+				}
+				return prev;
+			}
+			ListNode* doubleIt(ListNode* head) {
+				head = ReverseIt(head);
+
+				int carry = 0;
+				ListNode* cur = head;
+				ListNode* LastPlace = NULL;
+				while(cur){
+					int v = (cur -> val * 2) + carry;
+					cur -> val = (v % 10);
+					carry = v / 10;
+					
+					LastPlace = cur;
+					cur = cur -> next;
+				}
+
+				if(carry != 0){
+					ListNode* newNode = new ListNode(carry);
+					LastPlace -> next = newNode;
+				}
+
+				head = ReverseIt(head);
+				return head;
+			}
+		};
+	
+	810) Queries on Stack:
+		Problem statement
+			You are given an empty stack and an integer ‘LIMIT’. The size of the stack cannot exceed the ‘LIMIT’.
+			You are given ‘Q’ queries of the following three types -:
+			1. PUSH ‘X’ -: Push integer ‘X’ at top of the if its size is less than ‘X’, else do nothing.
+			2. POP -: Pops and returns the top element of stack or -1 if the stack is empty.
+			3. INC ‘K’, ‘Y’-: Increments the bottom ‘K’ elements of the stack by ‘Y’. If there are fewer than X elements in the stack, just increment all the elements in the stack.
+			Your task is to return an array/list, that consists of all elements returned by a query of type ‘POP’ in the same order in which these queries are executed. See the example for more clarity.
+			Note:
+			1. It is guaranteed that there is at least one query of type ‘POP’.
+			For Example:
+			Let there be the following 10  queries and ‘LIMIT’ be 3.
+			[PUSH 3, PUSH 2, PUSH 1, INC 2 1, PUSH 1, POP, INC 3 3, POP, POP, POP].
+			Stack after 0th query, i.e PUSH 3,  be [3]
+			Stack after 1st query, i.e PUSH 2, be [3, 2] (top to bottom of the stack is represented by right to the left of list)
+			Stack after 2nd query, i.e PUSH 1, be [3, 2, 1].
+			Stack after 3rd query, i.e INC 2 1, be [4, 3, 1]. We increment the bottom 2 elements by 1.
+			Stack after 4th query, i.e PUSH 1, be [4, 3, 1] as the size of the stack cannot exceed 3.
+			Stack after 5th query, i.e POP, be [4, 3] and we should return 1 for this query.
+			Stack after 6th query, i.e INC 3 3, be [7, 6] as stack size is less than 3, so we every element.
+			Stack after the 7th query, i.e POP, be [7] and we should return 6 for this query.
+			Stack after 8th query, i.e POP, be [] and we should return 7 for this query.
+			Stack after the 9th query, i.e POP, be [] and we should return -1 for this query.
+
+			Thus we should return an array/list [1, 6, 7, -1].
+			Constraints:
+				1 <= T <= 50
+				1 <= Q <= 10000
+				1 <= LIMIT <= 10000
+				1 <= X <= 10000
+				1 <= K <= 10000
+				1 <= Y <= 10000
+				Where ‘T’ is the number of test cases,  ‘Q’, ‘LIMIT’, representing the number of queries, and maximum size of stack respectively, and ‘X’, ‘K’, ‘Y’ are integers described in problem statements.
+				Time limit: 1 sec
+
+			Sample Input 1:
+			2
+			1 1
+			POP
+			10 3
+			PUSH 3 
+			PUSH 2 
+			PUSH 1
+			INC 2 1 
+			PUSH 1 
+			POP
+			INC 3 3
+			POP 
+			POP
+			POP
+			Sample Output 1:
+			-1
+			1 6 7 -1
+			Explanation of sample input 1:
+			In the first test case,  there is only 1 ‘POP’ query, as the stack initially is empty so we should return -1.
+
+			For the second test case, refer the problem statement for an explanation.
+			Sample Input 2:
+			1
+			5 5
+			PUSH 2
+			PUSH 3
+			INC 1 1
+			INC 2 1
+			POP
+			Sample Output 2:
+			4
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			/*
+				Here, queries[i] is a vector of integer representing the ith query, 
+				in which for different type of queries i.e -:
+				1. PUSH 'X' -: queries[i][0] = 1, and queries[i][1] = 'X';
+				2. POP -: queries[i][0] = 2;
+				3. INC 'K', 'Y' -: queries[i][0] = 3, queries[i][1] = 'K' and queries[i][2] = 'Y';
+				
+			*/
+
+			void increBottomK(stack<int> &s, int bottomK, int byVal){
+				stack<int> another;
+				while(!s.empty()){
+					another.push(s.top());
+					s.pop();
+				}
+
+				while(!another.empty()){
+					if(bottomK > 0){
+						s.push(another.top()+byVal);
+						bottomK--;
+					}
+					else
+						s.push(another.top());
+					another.pop();
+				}
+			}
+
+			vector<int> answerQueries(vector<vector<int>> &queries, int limit) {
+				stack<int> st;
+				vector<int> ans;
+				int temp = limit;
+
+				for(int i=0; i<queries.size(); i++){
+					if(queries[i][0] == 1){
+						// push operation
+						if(limit > 0){
+							limit--;
+							st.push(queries[i][1]);
+						}
+					}else if(queries[i][0] == 2){
+						// pop operation
+						if(st.empty()){
+							ans.push_back(-1);
+						}else{
+							ans.push_back(st.top());
+							st.pop();
+							limit++;
+						}
+					}else{
+						// increment operation
+						increBottomK(st, queries[i][1], queries[i][2]);
+					}
+				}
+				return ans;
+			}
+
+		// Optimized:
+			vector<int> answerQueries(vector<vector<int>> &queries, int limit) {
+				vector<int> stack;
+				vector<int> ans;
+
+				for(vector<int> q : queries){           // or     for(vector<int> q : queries){     "here q considering as without reference"
+					int qType = q[0];
+
+					if(qType == 1){
+						if(stack.size() < limit){
+							stack.push_back(q[1]);
+						}else{
+
+						}
+					}else if(qType == 2){
+						if(stack.empty()){
+							ans.push_back(-1);
+						}else{
+							ans.push_back(stack.back());
+							stack.pop_back();
+						}
+					}else{
+						int k = q[1];
+						int byVal = q[2];
+
+						int minIncrement = min(k, (int)stack.size());
+						for(int i=0; i<minIncrement; i++){
+							stack[i] += byVal;
+						}
+					}
+				}
+				return ans;
+			}
+
+	811)
+
+	812)
+	
+	813)
+	
+	814)
+	
+	815)
+	
+	816)
+	
+	817)
+	
+	818)
+	
+	819)
+	
+	820)
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
