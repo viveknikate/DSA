@@ -15985,6 +15985,7 @@ Lecture-41: Time & Space Complexity of Recursive Algorithms: ❌Pending
 	3) mergeSort:	 	TC- O(N log N)
 	4) Fibonacci:		TC- O(2ⁿ)
 ---------------------------------------------------------------------------------------------------------
+	12/03/2024
 Lecture-42: OOPs Concepts in C++ || Part-1
 	-Object Oriented Programming
 	eg.
@@ -16704,6 +16705,7 @@ Lecture-42: OOPs Concepts in C++ || Part-1
 			return 0;
 		}
 ---------------------------------------------------------------------------------------------------------
+	15/03/2024
 Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation & Abstraction
 	Encapsulation:
 		Encapsulation in C++ is defined as the wrapping up of data and information in a single unit.
@@ -17648,6 +17650,7 @@ Lecture-43: 4 Pillars of OOPs Concept -Inheritance, Polymorphism, Encapsulation 
 		-Interface, Friend keyword
 		-dedicated OOPs course by Love Babbar
 ---------------------------------------------------------------------------------------------------------
+	02/04/2024
 Lecture-44: Linked List & its types- Singly, Doubly, Circular
 	Linked List (LL):
 		-A linked list is a fundamental data structure in computer science. 
@@ -19272,6 +19275,7 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 					return 0;
 				}
 ---------------------------------------------------------------------------------------------------------
+	17/04/24
 Lecture-45: Linked List Questions: Reverse LL and find Middle of LL
 	Reverse LL:
 		Refer Q.693, Q.694 in POTD section.
@@ -19354,6 +19358,7 @@ Lecture-45: Linked List Questions: Reverse LL and find Middle of LL
 	Middle of LL:
 		Refer Q.695 in POTD section
 ---------------------------------------------------------------------------------------------------------
+	19/04/24
 Lecture-46: Linked List Questions: Reverse LL in "K group" && Check LL is Circular or not
 	Q. Reverse List In K Groups:
 		Problem statement
@@ -19532,6 +19537,7 @@ Lecture-46: Linked List Questions: Reverse LL in "K group" && Check LL is Circul
 				return false;
 			}
 ---------------------------------------------------------------------------------------------------------
+	20/04/24
 Lecture47: Detect & Remove Loop in Linked List [Approach Discussion + Optimised Implementation]
 	-Refer Q.704 & Q.705 Floyd’s Cycle Detection Algorithm in POTD section 
 	- Detect Cycle in LinkedList.
@@ -19611,6 +19617,7 @@ Lecture47: Detect & Remove Loop in Linked List [Approach Discussion + Optimised 
 				-firstly checking the flag, if flag = 1, then loop present, else continue iterating over list till NULL.
 				-as we visit each element setting that flag=1.
 ---------------------------------------------------------------------------------------------------------
+	23/04/24
 Lecture-48: Remove Duplicates from a Sorted/UnSorted Linked List
 	Q.1. Remove Duplicates from a Sorted LL:
 		-> Refer Q.727 & Q.728 from POTD section
@@ -19622,6 +19629,7 @@ Lecture-48: Remove Duplicates from a Sorted/UnSorted Linked List
 		Q.1. Circular LL split into 2 halves
 			Refer Q.738 & Q.739 from POTD section
 ---------------------------------------------------------------------------------------------------------
+	24/04/24
 Lecture-49: Merge 2 Sorted Linked Lists || Sort 0s, 1s and 2s in Linked List
 	Q.1. Sort linked list of 0s 1s 2s
 		-> Refer Q.743 from POTD section
@@ -19629,15 +19637,19 @@ Lecture-49: Merge 2 Sorted Linked Lists || Sort 0s, 1s and 2s in Linked List
 	Q.2. Merge two sorted linked lists
 		-> Refer Q.744 from POTD section
 ---------------------------------------------------------------------------------------------------------
+	28/04/24
 Lecture-50: Check Palindrome in Linked List
 	-> Refer Q.747 from POTD section
 ---------------------------------------------------------------------------------------------------------
+	28/04/24
 Lecture 51: Add 2 Numbers represented by Linked Lists
 	-> Refer Q.759 && Q.763 from POTD section
 ---------------------------------------------------------------------------------------------------------
+	28/04/24
 Lecture 52: Clone a Linked List with Random Pointers
 	-> Refer Q.760 from POTD section
 ---------------------------------------------------------------------------------------------------------
+	02/05/24
 Lecture-53: Merge Sort in Linked List
 	Q.1 Merge Sort in Linked List
 		Steps:
@@ -19684,6 +19696,7 @@ Lecture-53: Merge Sort in Linked List
 	Q.2 Flatten A Linked List
 		-> Refer Q.770 & 771 from POTD section.
 ---------------------------------------------------------------------------------------------------------
+	05/05/24
 Lecture-54: Introduction to Stacks
 	Stacks are a type of container adaptors with LIFO(Last In First Out) type of working, where a new element is added at one end (top) and an element is removed from that end only.  Stack uses an encapsulated object of either vector or deque (by default) or list (sequential container class) as its underlying container, providing a specific set of member functions to access its elements. 
 	If there is confusion in remembering the basic difference between stack and queue, then just have a real life example for this differentiation, for stack, stacking of books we can take the top book easily and for queue remember when you have to stand in queue front of ATM for taking out the cash, then first person near to ATM has the first chance to take out the money from ATM. So, queue is the FIFO (First In First Out) type working.
@@ -19919,7 +19932,8 @@ Lecture-54: Introduction to Stacks
 			}
 		};
 ---------------------------------------------------------------------------------------------------------
-Lecture 55: Stack Interview Questions
+	07/05/24
+Lecture-55: Stack Interview Questions
 	Q.1. Reverse a string using stack
 		#include <iostream>
 		#include<stack>
@@ -20308,8 +20322,489 @@ Lecture 55: Stack Interview Questions
 			return ans;
 		}
 ---------------------------------------------------------------------------------------------------------
+	09/05/24
+Lecture-56: Largest Rectangular Area in Histogram
+	Q.1 Next Smaller Element:
+		→ Refer Q.813 & Q.814 from POTD Section
+		Problem statement
+			You are given an array 'ARR' of integers of length N. Your task is to find the next smaller element for each of the array elements.
+			Next Smaller Element for an array element is the first element to the right of that element which has a value strictly smaller than that element.
+			If for any array element the next smaller element does not exist, you should print -1 for that array element.
+			For Example:
+			If the given array is [ 2, 3, 1], we need to return [1, 1, -1]. Because for  2, 1 is the Next Smaller element. For 3, 1 is the Next Smaller element and for 1, there is no next smaller element hence the answer for this element is -1.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10 ^ 5
+				0 <= ARR [i] <= 10 ^ 9
+				Time Limit: 1sec.
+			Sample Input 1:
+				2
+				4
+				2 1 4 3
+				3
+				1 3 2
+				Sample Output 1:
+				1 -1 3 -1
+				-1 2 -1
+				Explanation for Sample Input 1:
+				For the first test case : 
+				1) For ARR [1] = 2 ,  the next smaller element is 1. 
+				2) For ARR [2] = 1 ,  the next smaller element is -1 as no element in the array has value smaller than 1.
+				3) For ARR [3] = 4 ,  the next smaller element is 3.
+				4) For ARR [4] = 3 ,  the next smaller element is -1 as no element exists in the right of it.
+				Hence, we will return the array [ 1, -1, 3, -1] in this case.
+
+				For the second test case :
+				1) For ARR [1] = 1 ,  the next smaller element is -1 as no element in the array has value smaller than 1.
+				2) For ARR [2] = 3 ,  the next smaller element is 2.
+				3) For ARR [3] = 2 ,  the next smaller element is -1 as no element exists in the right of it.
+				Hence we will return the array [ -1, 2, -1 ] in this case.
+				Sample Input 2:
+				2
+				4
+				1 2 3 4
+				2
+				5 0
+				Sample Output 2:
+				-1 -1 -1 -1
+				0 -1
+
+		// Not Optimized:
+			vector<int> nextSmallerElement(vector<int> &arr, int n) {
+				vector<int> ans(n, -1);
+
+				for(int i=0; i<n-1; i++){
+					for(int j=i+1; j<n; j++){
+						if(arr[i] > arr[j]){
+							ans[i] = arr[j];
+							break;
+						}
+					}
+				}
+				return ans;
+			}
+
+		// Optimized:
+			#include <stack>
+			vector<int> nextSmallerElement(vector<int> &arr, int n) {
+				vector<int> ans(n);
+				stack<int> st;
+
+				for(int i=n-1; i >=0; i--){
+					while(!st.empty() && st.top() >= arr[i] )
+						st.pop();
+
+					if(st.empty()){
+						ans[i] = -1;
+					}else{
+						ans[i] = st.top();
+					}
+					st.push(arr[i]);
+				}
+				return ans;
+			}
+
+	Q.2. Largest Rectangle in Histogram:
+		Problem Statement:
+			Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.	
+			Example 1:
+				Input: heights = [2,1,5,6,2,3]
+				Output: 10
+				Explanation: The above is a histogram where width of each bar is 1.
+				The largest rectangle is shown in the red area, which has an area = 10 units.
+
+			Example 2:
+				Input: heights = [2,4]
+				Output: 4
+			
+			Constraints:
+				1 <= heights.length <= 10^5
+				0 <= heights[i] <= 10^4
+
+		// Not Optimized:
+			class Solution {
+				public:
+				int largestRectangleArea(vector<int>& heights) {
+					int mxArea = 0;
+
+					for(int i=0; i<heights.size(); i++){
+						// to left
+						int j = i-1, cnt = 1;
+						while(j >=0){
+							if(heights[j] >= heights[i])
+								cnt++;
+							else
+								break;
+							j--;
+						}
+
+						// to right
+						j = i+1;
+						while(j < heights.size()){
+							if(heights[j] >= heights[i])
+								cnt++;
+							else
+								break;
+							j++;
+						}
+						int newArea = cnt * heights[i];
+						mxArea = max(mxArea, newArea);
+					}        
+					return mxArea;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				vector<int> nextSmaller(vector<int> h, int n){
+					vector<int> ans(n,-1);
+					stack<int> st;
+
+					for(int i=n-1; i>=0; i--){
+						while(!st.empty() && h[st.top()] >= h[i])
+							st.pop();
+
+						if(!st.empty())
+							ans[i] = st.top();
+						st.push(i);
+					}        
+					return ans;
+				}
+				
+				vector<int> prevSmaller(vector<int> h, int n){
+					vector<int> ans(n,-1);
+					stack<int> st;
+
+					for(int i=0; i<n; i++){
+						while(!st.empty() && h[st.top()] >= h[i])
+							st.pop();
+
+						if(!st.empty())
+							ans[i] = st.top();
+						st.push(i);
+					}        
+					return ans;
+				}
+
+				int largestRectangleArea(vector<int>& heights) {
+					int mxArea = 0;
+					int n = heights.size();
+
+					vector<int> nxt(n,0);
+					vector<int> prev(n,0);
+
+					nxt = nextSmaller(heights, n);
+					prev = prevSmaller(heights, n);
+
+					for(int i=0; i<heights.size(); i++){
+						int l =  heights[i];
+						
+						if(nxt[i] == -1)
+							nxt[i] = n;
+
+						int b = nxt[i] - prev[i] - 1;
+						int newArea = l * b;
+						mxArea = max(mxArea, newArea);
+					}        
+					return mxArea;
+				}
+			};
 ---------------------------------------------------------------------------------------------------------
+	10/05/24
+Lecture-57: Stack - Celebrity Problem && Max Rectangle in Binary Matrix with all 1's
+	Q.1. The Celebrity Problem:
+		Problem Statement:
+			A celebrity is a person who is known to all but does not know anyone at a party. If you go to a party of N people, find if there is a celebrity in the party or not.
+			A square NxN matrix M[][] is used to represent people at the party such that if an element of row i and column j  is set to 1 it means ith person knows jth person. Here M[i][i] will always be 0.
+			Return the index of the celebrity, if there is no celebrity return -1.
+			Note: Follow 0 based indexing.
+			Follow Up: Can you optimize it to O(N)
+
+			Example 1:
+			Input:
+			N = 3
+			M[][] = {{0 1 0},
+				{0 0 0}, 
+				{0 1 0}}
+			Output: 1
+			Explanation: 0th and 2nd person both
+			know 1. Therefore, 1 is the celebrity. 
+
+			Example 2:
+			Input:
+			N = 2
+			M[][] = {{0 1},
+				{1 0}}
+			Output: -1
+			Explanation: The two people at the party both
+			know each other. None of them is a celebrity.
+
+			Your Task:
+				You don't need to read input or print anything. Complete the function celebrity() which takes the matrix M and its size N as input parameters and returns the index of the celebrity. If no such celebrity is present, return -1.
+
+
+			Expected Time Complexity: O(N^2)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= N <= 3000
+				0 <= M[][] <= 1
+
+		// Brute Force:
+			class Solution  {
+				public:
+				//Function to find if there is a celebrity in the party or not.
+				int celebrity(vector<vector<int>> &M, int n) {
+					int rNum = 0;
+					
+					// or use "&" 'for(auto &rows: M){'  or 
+					// don't use "&" sign for(auto rows: M){ or you can use 1D vector<int>.
+					// & sign used:- for(vector<int> &rows: M){ 
+					// Without & sign:- for(vector<int> &rows: M){ 
+					
+					int celRow = -1;
+					int secCheck = -1, once = 1;
+					for(vector<int> &rows: M){                    
+						int f = 1;            
+						for(int val: rows){                         
+							if(val == 1){
+								f = 0;
+								break;
+							}
+						}
+						
+						if(f){
+							celRow = rNum;
+							if(once){
+								secCheck = celRow;
+								once =0;
+							}
+						}
+						if(celRow != secCheck)                  // this condition indicates that there are 2 celebrities, so stop here by -1
+							return -1;
+						rNum++;
+					}
+					
+					if(celRow == -1)
+						return -1;
+						
+					int curRow = 0;
+					for(vector<int> &temp: M){
+						if(curRow == celRow)
+							continue;
+						
+						if(temp[celRow] != 1)
+							return -1;
+						curRow++;
+					}
+					return celRow;
+				}
+			};
+
+		// Everything stays same just using Vector
+			class Solution  {
+				public:
+				//Function to find if there is a celebrity in the party or not.
+				int celebrity(vector<vector<int>> &M, int n) {
+					
+					int rNum = 0;
+					vector<int> CelRow;
+					// or use "&" 'for(auto &rows: M){'  or 
+					// don't use "&" sign for(auto rows: M){ or you can use 1D vector<int>.
+					// & sign used:- for(vector<int> &rows: M){ 
+					// Without & sign:- for(vector<int> &rows: M){ 
+					
+					for(vector<int> &rows: M){                    
+						int f = 1;            
+						for(int val: rows){                         
+							if(val == 1){
+								f = 0;
+								break;
+							}
+						}
+						
+						if(f){
+							CelRow.push_back(rNum);
+						}
+						if(CelRow.size() >= 2)             // this condition indicates that there are 2 celebrities, so stop here by -1
+							return -1;
+						rNum++;
+					}
+					
+					if(CelRow.size() == 0)
+						return -1;
+						
+					int curRow = 0, val = CelRow[0];
+					for(vector<int> &temp: M){
+						if(curRow == val)
+							continue;
+						
+						if(temp[val] != 1)
+							return -1;
+						curRow++;
+					}
+					return val;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				//Function to find if there is a celebrity in the party or not.
+				int celebrity(vector<vector<int> >& M, int n) {
+					stack<int> st;
+					
+					for(int i=0; i<n; i++)
+						st.push(i);
+						
+					while(st.size() > 1){
+						int a = st.top();
+						st.pop();
+						
+						int b = st.top();
+						st.pop();
+						
+						if(M[a][b] == 1)
+							st.push(b);
+						else
+							st.push(a);
+					}
+					
+					// a might be a potential celebrity candidate.
+					int z = st.top(), zeroCnt=0;
+					int rowCheck = 0;
+				
+					for(int i=0; i<n; i++)
+						if(M[z][i] == 0)
+							zeroCnt++;
+						
+					if(zeroCnt == n)
+						rowCheck = 1;               // this means that the complete row contains zeros so might be celebrity
+						
+					int colCheck = 0, onesCnt=0;			// we can do without using colCheck and rowCheck, if(zeroCnt != n) return -1 & if(onesCnt != n-1) return -1; & at end return z;
+					
+					// except celebrity all should be one
+					for(int i=0; i<n; i++)
+						if(M[i][z] == 1)
+							onesCnt++;
+						
+					if(onesCnt == n-1)              // this means that zth col of every row contains 1 except his own
+						colCheck = 1;
+
+					if(rowCheck && colCheck)
+						return z;
+					return -1;
+				}
+			};
+
+	// HomeWork:
+		more approaches exploration ❌Pending
+
+	Q.2. Max rectangle: 
+		Problem Statement:
+			Given a binary matrix M of size n X m. Find the maximum area of a rectangle formed only of 1s in the given matrix.
+			Example 1:
+				Input:
+				n = 4, m = 4
+				M[][] = {{0 1 1 0},
+					{1 1 1 1},
+					{1 1 1 1},
+					{1 1 0 0}}
+				Output: 8
+				Explanation: For the above test case the
+				matrix will look like
+				0 1 1 0
+				1 1 1 1
+				1 1 1 1
+				1 1 0 0
+				the max size rectangle is 
+				1 1 1 1
+				1 1 1 1
+				and area is 4 *2 = 8.
+			Your Task: 
+				Your task is to complete the function maxArea which returns the maximum size rectangle area in a binary-sub-matrix with all 1’s. The function takes 3 arguments the first argument is the Matrix M[ ] [ ] and the next two are two integers n and m which denotes the size of the matrix M. 
+
+			Expected Time Complexity : O(n*m)
+			Expected Auixiliary Space : O(m)
+
+			Constraints:
+				1<=n,m<=1000
+				0<=M[][]<=1
+
+		/* TC: O(n*m) & SC: O(m) */
+		class Solution{
+			public:
+			vector<int> nextSmallers (int *arr, int n){
+				vector<int> ans (n, n);
+				stack<int> st;
+				
+				for(int i=n-1; i>=0; i--){
+					while(!st.empty() && arr[st.top()] >= arr[i]){
+						st.pop();
+					}
+					
+					if(!st.empty())
+						ans[i] = st.top();
+					st.push(i);
+				}
+				return ans;
+			}
+			
+			vector<int> prevSmallers (int *arr, int n){
+				vector<int> ans (n, -1);
+				stack<int> st;
+				
+				for(int i=0; i < n; i++){
+					while(!st.empty() && arr[st.top()] >= arr[i]){
+						st.pop();
+					}
+					
+					if(!st.empty())
+						ans[i] = st.top();
+					st.push(i);
+				}
+				return ans;
+			}
+			
+			int largetAreaFinder(int *arr, int cols){	
+				vector<int> nxt;
+				vector<int> prev;
+				
+				nxt = nextSmallers(arr, cols);
+				prev = prevSmallers(arr, cols);
+				
+				int mxArea = 0;
+				
+				for(int i=0; i<cols; i++){
+					mxArea = max(mxArea, ((nxt[i] - prev[i] - 1) * arr[i]));
+				}
+				return mxArea;
+			}
+			
+			int maxArea(int M[MAX][MAX], int n, int m) {
+				if(n == 0 || m == 0)
+					return 0;
+				
+				int Area = largetAreaFinder(M[0], m);
+				
+				for(int i=1; i<n; i++){
+					for(int j=0; j<m; j++){
+						// adding previous row's value
+						if(M[i][j])                             //if(M[i][j] != 0)
+							M[i][j] += M[i-1][j];
+						//else
+						//    M[i][j] = 0;
+					}
+					Area = max(Area, largetAreaFinder(M[i], m));
+				}
+				return Area;
+			}
+		};
 ---------------------------------------------------------------------------------------------------------
+Lecture-58: "N" Stacks in an Array || Stack Hard Question
+	
+
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
 	//Ternary Operator
@@ -28727,6 +29222,27 @@ POTD:-[Problem of the Day]
 			return str1<str2?-1:str1!=str2;     
 		}
 
+		// or
+			#include <bits/stdc++.h> 
+			int stringMania(int n, int m, string str1, string str2) {
+				if(s1 == s2) return 0;
+
+				for(int i=0; i<min(n, m); i++){
+					if(str1[i] > str2[i] )
+						return 1;
+					else if (str1[i] < str2[i])
+						return -1;
+					else
+						continue;
+				}
+				if(n > m)
+					return 1;
+				else if(m > n)
+					return -1;
+				else
+					return 0;
+			}
+
 	72) Count Of 3s:
 		You are given an integer ‘N’. You simply need to find out the number of occurrences of 3 as a digit in the
 			range of numbers from [0, N]. 
@@ -29091,6 +29607,20 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 		
+		// or
+			vector<int> nextSmallerElement(vector<int> &arr, int n) {
+				vector<int> ans(n, -1);
+				for(int i=0; i<n-1; i++){
+					for(int j=i+1; j<n; j++){
+						if(arr[i] > arr[j]){
+							ans[i] = arr[j];
+							break;
+						}
+					}
+				}
+				return ans;
+			}	
+
 		// Optimized:
 			#include <bits/stdc++.h>
 			vector<int> nextSmallerElement(vector<int> &arr, int n){
@@ -30866,6 +31396,16 @@ POTD:-[Problem of the Day]
 			reverse(str.begin(), str.end());
 			return str;
 		}
+
+		//or
+			#include <bits/stdc++.h> 
+			string reverseString(string str) {
+				int i=0, j=str.size()-1;
+				
+				while(i < j)
+					swap(str[i++], str[j--]);
+				return str;
+			}
 
 		//using Recursion:
 			#include <bits/stdc++.h> 
@@ -32670,28 +33210,49 @@ POTD:-[Problem of the Day]
 			True
 			False
 
-		bool findOverlap(string &s){
-			int cnt=0;
-			for(int i=1; i<s.length(); i++){
-				if(s[i] == 'A' && s[i-1] == 'B'){
-					// s[i] = '0';						//replacing A, B with 0, so that it should not match again with A, B.
-					// s[i-11] = '0';
-					i++;
-					cnt++;
-				}
-				if(s[i] == 'B' && s[i-1] == 'A'){
-					// s[i] = '0';
-					// s[i-11] = '0';
-					i++;
-					cnt++;
-				}
-			}
-			if(cnt >= 2)
-				return 1;
-			return 0;
-		}
+		// Correct:
+			bool findOverlap(string &s){
+				int ABcnt =0, BAcnt=0;
+				for(int i=0; i<s.size()-1; i++){
+					if(s[i] == 'A' && s[i+1] == 'B'){
+						ABcnt = 1;
+						s[i] = '0';
+						s[i+1] = '0';
+					}else if(s[i] == 'B' && s[i+1] == 'A'){
+						BAcnt=1;
+						s[i] = '0';
+						s[i+1] = '0';
+					}
 
-		//or
+					if(ABcnt && BAcnt)
+						return 1;
+				}
+				return 0;
+			}
+
+		// Wrong wont work on Test Case 'ABAB'
+			bool findOverlap(string &s){
+				int cnt=0;
+				for(int i=1; i<s.length(); i++){
+					if(s[i] == 'A' && s[i-1] == 'B'){
+						// s[i] = '0';						//replacing A, B with 0, so that it should not match again with A, B.
+						// s[i-11] = '0';
+						i++;
+						cnt++;
+					}
+					if(s[i] == 'B' && s[i-1] == 'A'){
+						// s[i] = '0';
+						// s[i-11] = '0';
+						i++;
+						cnt++;
+					}
+				}
+				if(cnt >= 2)
+					return 1;
+				return 0;
+			}
+
+			//or
 			bool findOverlap(string &s){
 				int cnt=0;
 				for(int i=0; i<s.length(); i++)
@@ -64750,6 +65311,35 @@ POTD:-[Problem of the Day]
 						return ans;
 					}
 				};
+
+				//or
+				class Solution {
+					public:
+					long long maximumHappinessSum(vector<int>& happiness, int k) {
+						long long mxValue=0;
+						sort(happiness.begin(), happiness.end(), greater<int>());
+
+						int i=0, decValue=0;
+						while(k--){
+							if((happiness[i] - decValue) > 0)
+								mxValue += happiness[i] - decValue;
+							i++;
+							decValue++;            
+						}
+
+						/* 
+						  	instead of above while loop you can use below one
+							int i=0;
+							while(k--){
+								mxValue += max(0, happiness[i] - i);
+								i++;            
+							}
+						*/
+
+
+						return mxValue;
+					}
+				};
 				
 		541) Apple Redistribution into Boxes:
 			Problem statement:
@@ -83923,25 +84513,818 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 
-	811)
+	811) Relative Ranks:
+		Problem Statement:
+			You are given an integer array score of size n, where score[i] is the score of the ith athlete in a competition. All the scores are guaranteed to be unique.
+			The athletes are placed based on their scores, where the 1st place athlete has the highest score, the 2nd place athlete has the 2nd highest score, and so on. The placement of each athlete determines their rank:
 
-	812)
+			The 1st place athlete's rank is "Gold Medal".
+			The 2nd place athlete's rank is "Silver Medal".
+			The 3rd place athlete's rank is "Bronze Medal".
+			For the 4th place to the nth place athlete, their rank is their placement number (i.e., the xth place athlete's rank is "x").
+			Return an array answer of size n where answer[i] is the rank of the ith athlete.
 	
-	813)
+			Example 1:
+				Input: score = [5,4,3,2,1]
+				Output: ["Gold Medal","Silver Medal","Bronze Medal","4","5"]
+				Explanation: The placements are [1st, 2nd, 3rd, 4th, 5th].
+			Example 2:
+				Input: score = [10,3,8,9,4]
+				Output: ["Gold Medal","5","Bronze Medal","Silver Medal","4"]
+				Explanation: The placements are [1st, 5th, 3rd, 2nd, 4th].
 	
-	814)
+			Constraints:
+				n == score.length
+				1 <= n <= 10^4
+				0 <= score[i] <= 10^6
+				All the values in score are unique.
+
+		class Solution {
+			public:
+			vector<string> findRelativeRanks(vector<int>& score) {
+				vector<int> temp = score;
+				sort(score.begin(), score.end(), greater<int>());
+
+				map<int, string> mapper;
+				int cnt =1;
+				for(int i: score){
+					if(cnt == 1){
+						mapper[i] = "Gold Medal";
+					}else if(cnt == 2){
+						mapper[i] = "Silver Medal";
+					}else if(cnt == 3){
+						mapper[i] = "Bronze Medal";
+					}else{
+						mapper[i] = to_string(cnt);
+					}
+					cnt++;
+				}
+
+				vector<string> result;
+				for(int i: temp){
+					result.push_back(mapper[i]);
+				}
+				return result;
+			}
+		};
+
+		// More Optimized:
+			class Solution {
+				public:
+				vector<string> findRelativeRanks(vector<int>& score) {
+					map<int, int> mapper;
+					int n = score.size();
+
+					for(int i=0; i<n; i++)
+						mapper[score[i]] = i;
+
+					sort(score.begin(), score.end(), greater<int>());
+					vector<string> ans(n);
+					for(int i=0; i<n; i++){
+						if(i == 0){
+							ans[mapper[score[i]]] = "Gold Medal";
+						}else if(i == 1){
+							ans[mapper[score[i]]] = "Silver Medal";
+						}else if(i == 2){
+							ans[mapper[score[i]]] = "Bronze Medal";
+						}else{
+							ans[mapper[score[i]]] = to_string(i+1);
+						}
+					}
+					return ans;    
+				}
+			};
+
+	812) Remove All Nodes with Value K:
+		Problem statement
+			You are given a Singly Linked List of integers and an integer 'K'. Your task is to remove all such nodes from the linked list whose value is equal to 'K'.
+			A singly linked list is a linear data structure in which we can traverse only in one direction i.e., from Head to Tail. It consists of several nodes where each node contains some data and a reference to the next node.
+			A sample Linked List-
+
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^5
+				0 <= node.data <= 10^9 and node.data != -1 
+				0 <= K <= 10^9
+				Where 'node.data' denotes the value of a Linked list node, and 'K' denotes the value of the nodes to be removed.
+				Time limit: 1 sec
+
+			Sample Input 1:
+				2
+				2 5 7 10 -1
+				7
+				4 9 10 -1
+				3
+				Sample Output 1:
+				2 5 10 -1
+				4 9 10 -1
+				Explanation Of Sample Input 1:
+				For the first test case, the given Linked List is
+				So, after deleting the node with value 7, the Linked List becomes 
+				For the second test case, the given Linked List is
+				As no node in the Linked List has value 3,  the Linked List remains unchanged.
+				Sample Input 2:
+				2
+				4 9 4 -1
+				4
+				1 2 -1
+				6
+				Sample Output 2:
+				9 -1
+				1 2 -1
+				Explanation Of Sample Input 2:
+				For the first test case, the given Linked List is [4, 9, 4]. So, after deleting both the node with value 4, the Linked List becomes [9].
+				For the second test case, the given Linked List is [1, 2]. As no node in the Linked List has value 6,  the Linked List remains unchanged.
+
+		#include <bits/stdc++.h> 
+		/****************************************************************
+			Following is the Linked List node structure
+			class Node {
+			public:
+				int data;
+				Node *next;
+				Node(int data) {
+					this->data = data;
+					this->next = NULL;
+				}
+			};
+		*****************************************************************/
+
+		Node *removeNodes(Node *head, int k) {
+			while(head && head -> data == k)
+				head = head -> next;
+
+			if(head == NULL)
+				return head;
+			
+			Node *cur = head -> next;
+			Node *prev = head;
+
+			while(cur){
+				if(cur -> data == k){
+					prev -> next = cur -> next;    
+				}else{
+					prev = cur;
+				}
+				cur = cur -> next;
+			}
+			return head;    
+		}
 	
-	815)
+	813) Smallest number on left:
+		Problem Statement:
+			Given an array a of integers of length n, find the nearest smaller number for every element such that the smaller element is on left side.If no small element present on the left print -1.
+			Example 1:
+				Input: n = 3
+				a = {1, 6, 2}
+				Output: -1 1 1
+				Explaination: There is no number at the 
+				left of 1. Smaller number than 6 and 2 is 1.
+
+			Example 2:
+				Input: n = 6
+				a = {1, 5, 0, 3, 4, 5}
+				Output: -1 1 -1 0 3 4
+				Explaination: Upto 3 it is easy to see 
+				the smaller numbers. But for 4 the smaller 
+				numbers are 1, 0 and 3. But among them 3 
+				is closest. Similary for 5 it is 4.
+
+			Your Task:
+				You do not need to read input or print anything. Your task is to complete the function leftSmaller() which takes n and a as input parameters and returns the list of smaller numbers.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+
+			Constraints:
+				1 ≤ n ≤ 10000
+				0 ≤ a[i] ≤ 10^4
+
+		// TC: O(n²) && SC:O(n)
+		class Solution{
+			public:
+			vector<int> leftSmaller(int n, int a[]){
+				vector<int> ans(n, -1);
+				for(int i=0; i<n; i++){
+					for(int j = i-1; j>=0; j--){
+						if(a[j] < a[i]){
+							ans[i] = a[j];
+							break;
+						}
+					}
+				}
+				
+				return ans;
+			}
+		};
+
+		// TC:O(n) && SC:O(n)
+			class Solution{
+				public:
+				vector<int> leftSmaller(int n, int a[]){
+					vector<int> res(n, -1);
+					stack<int> st;
+					
+					for(int i=0; i<n; i++){
+						while(!st.empty() && st.top() >= a[i])
+							st.pop();
+						
+						if(!st.empty())
+							res[i] = st.top();
+						st.push(a[i]);
+					}
+					return res;
+				}
+			};
 	
-	816)
+	814) Help Classmates:
+		Problem Statement:
+			Professor X wants his students to help each other in the chemistry lab. He suggests that every student should help out a classmate who scored less marks than him in chemistry and whose roll number appears after him. But the students are lazy and they don't want to search too far. They each pick the first roll number after them that fits the criteria. Find the marks of the classmate that each student picks.
+			Note: one student may be selected by multiple classmates.
+
+			Example 1:
+			Input: N = 5, arr[] = {3, 8, 5, 2, 25}
+			Output: 2 5 2 -1 -1
+			Explanation: 
+				1. Roll number 1 has 3 marks. The first person 
+				who has less marks than him is roll number 4, 
+				who has 2 marks.
+				2. Roll number 2 has 8 marks, he helps student 
+				with 5 marks.
+				3. Roll number 3 has 5 marks, he helps student 
+				with 2 marks.
+				4. Roll number 4 and 5 can not pick anyone as 
+				no student with higher roll number has lesser 
+				marks than them. This is denoted by -1.
+				Output shows the marks of the weaker student that 
+				each roll number helps in order. ie- 2,5,2,-1,-1
+
+			Example 2:
+				Input: N = 4, a[] = {1, 2, 3, 4}
+				Output: -1 -1 -1 -1 
+				Explanation: As the marks ars in increasing order. 
+				None of the students can find a classmate who has 
+				a higher roll number and less marks than them.
+
+			Your Task:
+				You don't need to read input or print anything. Complete the function help_classmate() which takes the array arr[] and size of array N as input parameters and returns a list of numbers. If a student is unable to find anyone then output is -1.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(N)
+
+			Constraints:
+				1 ≤ N ≤ 5*10^5
+
+		// TC: O(n²) SC: O(n)
+			class Solution{
+				public:
+				vector<int> help_classmate(vector<int> arr, int n) {
+					vector<int> ans(n, -1);
+					for(int i=0; i<n; i++){
+						for(int j=i+1; j<n; j++){
+							if(arr[i] > arr[j]){
+								ans[i] = arr[j];
+								break;
+							}
+						}
+					}
+					return ans;
+				} 
+			};
+
+		// Optimized:
+			class Solution{
+				public:
+				vector<int> help_classmate(vector<int> arr, int n) {
+					vector<int> ans(n, -1);
+					stack<int> st;
+					
+					for(int i=n-1; i>=0; i--){
+						while(!st.empty() && st.top() >= arr[i])
+							st.pop();
+						
+						if(!st.empty())
+							ans[i] = st.top();
+						
+						st.push(arr[i]);
+					}
+					return ans;
+				} 
+			};
 	
-	817)
+	815) Divisor Game:
+		Problem Statement:
+			Alice and Bob take turns playing a game, with Alice starting first.
+			Initially, there is a number n on the chalkboard. On each player's turn, that player makes a move consisting of:
+			Choosing any x with 0 < x < n  and n % x == 0.
+			Replacing the number n on the chalkboard with n - x.
+			Also, if a player cannot make a move, they lose the game.
+			Return true if and only if Alice wins the game, assuming both players play optimally.
+			Example 1:
+				Input:
+				n = 2
+				Output: True
+				Explanation: Alice chooses 1, and Bob has no more moves.
+		
+			Example 2:
+				Input:
+				n = 3
+				Output: False
+				Explanation: Alice chooses 1, Bob chooses 1, and Alice has no more moves.
+			
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function divisorGame() which takes an integer n as a parameter and returns true if Alice wins the game.
+
+			Expected Time Complexity: O(1)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ n ≤ 10^3
+
+		class Solution {
+			public:
+			bool divisorGame(int n) {
+				if(n&1)
+					return 0;
+				return 1;
+			}
+		};
+
+	#GFG Contest:
+		816) Character Matrix Conundrum:
+			Problem Statement:
+				You've been provided with a matrix mat comprising lowercase English letters, arranged in n
+				rows and m columns. Your objective is to determine whether it's feasible to choose four
+				distinct columns from left to right such that the first column contains 'p', the second contains
+				'I', the third contains 'a', and the fourth contains 'y'. If all these conditions can be met, the
+				function should return 1; otherwise, it should return 0.
+				Example 1:
+					Input:
+					n = 1
+					m = 4
+					mat = [ ['p, l, a, y] ]
+					Output:
+					1
+					Explanation:
+					Choose the columns numbered 1,2,3,4 and they satisfy the required condition as
+					they have the characters 'p' in column 1, 'I' in column 2, 'a' in column 3, 'y' in
+					column 4.
+				Example 2:
+					Input:
+					n = 3
+					m = 3
+					mat = [['a', 'b' , 'c'], ['d', 'e', 'f'], ['g', 'h, 'i']]
+					Output:
+					0
+					Explanation:
+					It is not possible to choose 4 distinct columns.
+					Your Task:
+					You don't need to read input or print anything. Your task is to complete the function
+					matrixConundrum(), which takes 2 integers n and m and a string array mat as input and
+					returns a boolean value as an answer to the question.
+
+				Constraints:
+					1 <= n, m <= 1000
+
+			class Solution {
+				public:
+				bool matrixConundrum(int n, int m, vector<string> &mat) {
+					if(m < 4)
+						return 0;
+					
+					char chrs[] = {'p','l','a','y'};
+					int i =0;
+					
+					for(int col=0; col<m; col++){
+						char curChar = chrs[i];
+						for(int row=0; row<n; row++){
+							if(mat[row][col] == curChar){
+								i++;
+								break;
+							}
+						}
+					}
+
+					if(i < 4)
+						return 0;
+					return 1;
+				}
+			};
+		
+		817) Maximum Doublet XOR:
+			Problem Statement:
+				You are given the head of a LinkedList containing an even number of nodes, your task is to
+				find the maximum doublet XOR of the LinkedList.
+				NOTE: If n is the length of the LinkedList, then doublet of ith node is (n-1-i)th
+				node. For example, if n = 6, the 0th node is a doublet of the 5th node.
+				Example 1:
+				Input:
+				10 20 12 4
+				LinkedList: 10 -> 20 -> 12 -> 4
+				Output:
+				24
+				Explanation:
+				0th and 3rd node are doublet and their XOR is = 10 XOR 4 => 14
+				1st and 2nd node are doublet and their XOR is = 20 XOR 12 => 24
+				Hence, the maximum possible doublet XOR is 24.
+				Example 2:
+					Input: 3 2 1 4 12 4
+					LinkedList: 3 -> 2 > 1 -> 4 -> 12 -> 4
+					Output:
+					14
+					Explanation:
+					0th and 5th node are doublet and their XOR is = 3 XOR 4 => 7
+					1st and 4th node are doublet and their XOR is = 2 XOR 12 => 14
+					2nd and 3rd node are doublet and their XOR is = 1 XOR 4 => 5
+					Hence, the maximum possible doublet XOR is 14.
+					Your Task:
+					The task is to complete the function maximumDoubletXOR) which takes the head of the LinkedList as
+					input and return the maximum doublet XOR of the LinkedList.
+					Expected Time Complexity: O(N).
+					Expected Auxiliary Space: 0(1).
+				Constraints:
+					2 <= Number of Nodes (always even) <= 10^5
+					1 <= Value of Nodes <= 10^5
+		
+			/*
+				Definition for singly Link List Node
+				struct Node {
+				int data;
+				Node* next;
+				Node(int x) {  data = x;  next = NULL; }
+				};
+
+				You can also use the following for printing the link list.
+				printList(Node* node);
+			*/
+
+			class Solution {
+				public:
+				int getLength(Node* temp){
+					int l=0;
+					while(temp){
+						l++;
+						temp = temp -> next;
+					}
+					return l;
+				}
+				
+				Node* reverseLL(Node* temp){
+					Node* cur = temp;
+					Node* prev = NULL;
+					
+					while(cur){
+						Node* hold = cur -> next;
+						
+						cur -> next = prev;
+						prev = cur;
+						
+						cur = hold;
+					}
+					return prev;
+				}
+				
+				int maximumDoubletXOR(struct Node* head) {
+					int mxAns = 0;
+					
+					// LL has even length ie. given in question so need to reverse the second half of LL & take XOR ops of first mid element
+					// increment both, start & mid
+					int len = getLength(head);
+					len /= 2;
+					Node* mid = head;
+					
+					while(len--)
+						mid = mid -> next;
+					
+					mid = reverseLL(mid);
+					
+					while(mid){
+						int value = (head -> data ^ mid -> data);
+						mxAns = max(mxAns, value);
+						
+						head = head -> next;
+						mid = mid -> next;
+					}
+					return mxAns;
+				}
+			};
+
+	#CN WeeklyContest-125
+		818) Even Sum:
+			Problem statement
+				You are given an array 'A' of length 'N'.
+				Your task is to modify the array so that the sum of its elements is even.
+				You can achieve this by removing any number of elements from the array, including none.
+				What is the maximum even sum you can achieve after performing these operations?
+
+				Example:
+				‘N’ = 4
+				‘A’ = [2, 4, 7, 8]
+				We can remove 7 to make the sum of the array even.
+				Hence the maximum even sum is 14.
+
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^5
+					1 <= 'A[i]' <= 10^9
+					Time Limit: 1 sec
+				Sample Input 1:
+					2
+					2
+					15 6 
+					5
+					12 1 7 9 17 
+					Sample Output 1:
+					6
+					46
+					Explanation of sample input 1:
+					For test case 1:
+					You can remove 15 to achieve the maximum even sum of 6.
+
+					For test case 2:
+					You can remove 1 to achieve the maximum even sum of 46.
+					Sample Input 2:
+					3
+					2
+					15 5 
+					2
+					4 17 
+					6
+					12 2 8 17 17 19 
+					Sample Output 2:
+					20
+					4
+					58
+
+			int solve(vector<int> &a) {
+				int s = accumulate(a.begin(), a.end(), 0);
+				if(s % 2 == 0)
+					return s;
+
+				vector<int> temp;
+				for(int i: a)
+					if(i&1)
+						temp.push_back(i);
+					
+				int minV = *min_element(temp.begin(), temp.end());
+				return s - minV;            
+			}
+
+			//or
+			int solve(vector<int> &a) {
+				int s = accumulate(a.begin(), a.end(), 0);
+				if(s % 2 == 0)
+					return s;
+
+				int minOdd = INT_MAX;
+				for(int i: a)
+					if(i&1)
+						minOdd = min(minOdd, i);
+
+				return s - minOdd;
+			}
 	
-	818)
+		819) Robot Moves:
+			Problem statement
+				There is a Robot named ‘Travis’ positioned at coordinates ‘(X, Y)’. You are given a string ‘S’ of length ‘N’ representing the robot’s movements: ‘L’ for Left, ‘R’ for Right, ‘U’ for Up, and ‘D’ for Down.
+				You can either delete any character from the string or insert any character into it with each move. You have to determine the minimum number of moves required to ensure that ‘Travis’ finishes its journey at the same starting coordinates ‘(X, Y)’.
+				Your task is to tell the minimum number of moves required to ensure that the Robot finishes its journey at the same starting coordinates and return it.
+				Example:
+				‘X’ = 1
+				‘Y’ = 2
+				‘N’ = 4
+				‘S’ = “DLLR”
+
+				One of the optimal ways is to remove the ‘0th’ character of the string and insert ‘R’ at the end of the string. Now, the string becomes “LLRR” and requires ‘2’ moves.
+				The movement of the Robot following the given directions “LLRR” will be:
+				(1, 2) -> (0, 2) -> (-1, 2) -> (0, 2) -> (1, 2).
+				Constraints:
+					1 <= 'T' <= 10
+					0 <= ‘X’, ‘Y’ <= 10^5
+					1 <= 'N' <= 10^5
+					‘S[i]’ belongs to the set {‘L’, ‘R’, ‘U’, ‘D’}
+					Time Limit: 1 sec 
+				Sample Input 1:
+				2
+				0 0
+				5   
+				UUDDL
+				3 5
+				5
+				LLLRL
+				Sample Output 1:
+				1
+				3
+				Explanation of sample input 1:
+				For test case 1:
+				Here, you can remove the last character of the string and it will change to “UUDD”.
+				The movements of the Robot will be: (0, 0) -> (0, 1) -> (0, 2) -> (0, 1) -> (0, 0).
+				For test case 2:
+				One of the possible ways is to remove the first two characters of the string and insert a character ‘R’ at the end of the string. It will take ‘3’ moves.
+				The string will change to: “LRLR”.
+				The movements of the Robot will be: (3, 5) -> (2, 5) -> (3, 5) -> (2, 5) -> (3, 5).
+				Sample Input 2:
+				2
+				1 5
+				2
+				LR
+				0 0
+				8
+				RRRRUUUU
+				Sample Output 2:
+				0
+				8
+
+			int robotMoves (int x, int y, int n, string &s) {
+				int Ucnt, Dcnt, Lcnt, Rcnt;
+				Ucnt = Dcnt = Lcnt = Rcnt = 0;
+				
+				for(char ch : s)
+					if(ch == 'U')
+						Ucnt++;
+					else if(ch == 'D')
+						Dcnt++;
+					else if(ch == 'L')
+						Lcnt++;
+					else
+						Rcnt++;
+					
+				return abs(Ucnt-Dcnt) + abs(Rcnt-Lcnt);
+			}
 	
-	819)
+		820) fizziness Evaluation:
+			Problem statement
+				You are given an array ‘A’ of ‘N’ integers numbered from ‘0’ to ‘N - 1’. The fizziness ‘F(i, j, k)’ is given by ‘((A[i] ^ A[j] ^ A[k]) | (A[i] & A[j] & A[k]))’. Your task is to evaluate the given expression:
+				∑∑∑ F(i, j, k), where ‘i’ is ranging from ‘0’ to ‘N - 3’, ‘j’ is ranging from ‘i + 1’ to ‘N - 2’ and ‘k’ is ranging from ‘j + 1’ to ‘N - 1’.
+				Here, ‘^’ denotes the bitwise ‘XOR’ operation, ‘|’ denotes the bitwise ‘OR’ operation, and ‘&’ denotes the bitwise ‘AND’ operation.
+				Your task is to evaluate the given expression and return the answer modulo ‘10^9 + 7’.
+				Example:
+				‘N’ = 4
+				‘A’ = [1, 5, 2, 7]
+
+				For ‘i’ = 0, ‘j’ = 1, and ‘k’ = 2:
+				‘F(0, 1, 2)’ = ‘((1 ^ 5 ^ 2) | (1 & 5 & 2))’ which is equal to ‘6’.
+
+				For ‘i’ = 0, ‘j’ = 1, and ‘k’ = 3:
+				‘F(0, 1, 3)’ = ‘((1 ^ 5 ^ 7) | (1 & 5 & 7))’ which is equal to ‘3’.
+
+				For ‘i’ = 0, ‘j’ = 2 and ‘k’ = 3:
+				‘F(0, 2, 3)’ = ‘((1 ^ 2 ^ 7) | (1 & 2 & 7))’ which is equal to ‘4’.
+
+				For ‘i’ = 1, ‘j’ = 2, and ‘k’ = 3:
+				‘F(1, 2, 3)’ = ‘((5 ^ 2 ^ 7) | (5 & 2 & 7))’ which is equal to ‘0’.
+
+				The sum of ‘fizziness’ between all these triplets is equal to ‘13’.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^5
+					0  <= A[i] <= 10^9
+					Time Limit: 1 sec 
+				Sample Input 1:
+					2
+					4
+					1 0 11 9
+					3
+					2 2 2
+					Sample output 1:
+					23
+					2
+					Explanation of sample input 1:
+					For test case 1:
+
+					For ‘i’ = 0, ‘j’ = 1, and ‘k’ = 2:
+					‘F(0, 1, 2)’ = ‘((1 ^ 0 ^ 11) | (1 & 0 & 11))’ which is equal to ‘10’.
+
+					For ‘i’ = 0, ‘j’ = 1, and ‘k’ = 3:
+					‘F(0, 1, 3)’ = ‘((1 ^ 0 ^ 9) | (1 & 0 & 9))’ which is equal to ‘8’.
+
+					For ‘i’ = 0, ‘j’ = 2 and ‘k’ = 3:
+					‘F(0, 2, 3)’ = ‘((1 ^ 11 ^ 9) | (1 & 11 & 9))’ which is equal to ‘3’.
+
+					For ‘i’ = 1, ‘j’ = 2, and ‘k’ = 3:
+					‘F(1, 2, 3)’ = ‘((0 ^ 11 ^ 9) | (0 & 11 & 9))’ which is equal to ‘2’.
+
+					The sum of ‘fizziness’ between all these triplets is equal to ‘23’.
+
+					For test case 2:
+					There is only one triplet ‘(0, 1, 2)’ whose ‘fizziness’ is equal to ‘2’.
+					Sample Input 2:
+					2
+					5
+					1 4 10 0 3
+					3
+					1 5 2
+					Sample Output 2:
+					90
+					6
+
+			// Not Optimized:
+				long long fizzinessEvaluation (int n, vector <int> &a) {
+					int mod = 1e9+7;
+					long long sum = 0;
+
+					for(int i=0; i<n-2; i++) {
+						for(int j=i+1; j<n-1; j++) {
+							for(int k=j+1; k<n; k++) {
+								int val = (a[i] ^ a[j] ^ a[k]) | (a[i] & a[j] & a[k]);
+								sum = (sum + val) % mod;
+							}
+						}
+					}
+					return sum % mod;
+				}
+
+			// Optimized:
+				❌Pending
+
+	821)	K-th Smallest Prime Fraction:
+		Problem Statement:
+			You are given a sorted integer array arr containing 1 and prime numbers, where all the integers of arr are unique. You are also given an integer k.
+			For every i and j where 0 <= i < j < arr.length, we consider the fraction arr[i] / arr[j].
+			Return the kth smallest fraction considered. Return your answer as an array of integers of size 2, where answer[0] == arr[i] and answer[1] == arr[j].
+			
+			Example 1:
+				Input: arr = [1,2,3,5], k = 3
+				Output: [2,5]
+				Explanation: The fractions to be considered in sorted order are:
+				1/5, 1/3, 2/5, 1/2, 3/5, and 2/3.
+				The third fraction is 2/5.
+			Example 2:
+				Input: arr = [1,7], k = 1
+				Output: [1,7]
+			
+			Constraints:
+				2 <= arr.length <= 1000
+				1 <= arr[i] <= 3 * 10^4
+				arr[0] == 1
+				arr[i] is a prime number for i > 0.
+				All the numbers of arr are unique and sorted in strictly increasing order.
+				1 <= k <= arr.length * (arr.length - 1) / 2
+			
+			Follow up: Can you solve the problem with better than O(n2) complexity?
+
+		// Not Optimized:
+			class Solution {
+				public:
+				bool static sortingByValues(pair<string, float> &a1, pair<string, float> &b1){
+					if(a1.second < b1.second)
+						return 1;
+					return 0;
+				}
+
+				vector<int> kthSmallestPrimeFraction(vector<int>& arr, int k) {
+					if(arr.size() == 2)
+						return arr;
+
+					map<string, float> mapper;
+					// fractions extracted
+					for(int i=0; i < arr.size() - 1; i++){
+						for(int j= i+1; j < arr.size(); j++){
+							string s = to_string(arr[i]) + "/" + to_string(arr[j]);
+							float a = arr[i];
+							float b = arr[j];
+
+							mapper[s] = a / b;
+						}
+					}
+
+					vector<pair<string, float>> holder;
+					for(auto i: mapper)
+						holder.push_back(i);
+
+					// sort the fractions based on values in ascending
+					sort(holder.begin(), holder.end(), sortingByValues);
+
+					// for(auto i: holder)
+					//     cout<<i.first << "\t"<< i.second <<"\n";
+					
+					string res = holder[k-1].first;
+					string sub1 = res.substr(0,res.find('/'));
+					string sub2 = res.substr(res.find('/')+1);
+
+					return {stoi(sub1), stoi(sub2)};
+				}
+			};
+
+	822) 
 	
-	820)
+	823)		
+	
+	824)		
+	
+	825)		
+	
+	826)		
+	
+	827)		
+	
+	828)		
+	
+	829)		
+	
+	830)		
+
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
