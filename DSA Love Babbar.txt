@@ -20802,9 +20802,102 @@ Lecture-57: Stack - Celebrity Problem && Max Rectangle in Binary Matrix with all
 			}
 		};
 ---------------------------------------------------------------------------------------------------------
+	12/05/24
 Lecture-58: "N" Stacks in an Array || Stack Hard Question
 	
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+Lecture-138: Maximum Rectangle with all 1's || DP Series
+	Q.1. Maximal Rectangle:
+		Problem Statement:
+			Given a rows x cols binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+			Example 1:
+				Input: matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+				Output: 6
+				Explanation: The maximal rectangle is shown in the above picture.
 
+			Example 2:
+				Input: matrix = [["0"]]
+				Output: 0
+
+			Example 3:
+				Input: matrix = [["1"]]
+				Output: 1
+			
+			Constraints:
+				rows == matrix.length
+				cols == matrix[i].length
+				1 <= row, cols <= 200
+				matrix[i][j] is '0' or '1'.
+
+		class Solution {
+			public:
+			vector<int> nextSmallerIndexes(vector<int> v, int n){
+				vector<int> ans (n, n);
+				stack<int> st;
+
+				for(int i=n-1; i>=0; i--){
+					while(!st.empty() && v[st.top()] >= v[i])
+						st.pop();
+
+					if(!st.empty())
+						ans[i] = st.top();
+					st.push(i);
+				}
+				return ans;
+			}
+
+			vector<int> prevSmallerIndexes(vector<int> v, int n){
+				vector<int> ans (n, -1);
+				stack<int> st;
+
+				for(int i=0; i<n; i++){
+					while(!st.empty() && v[st.top()] >= v[i])
+						st.pop();
+
+					if(!st.empty())
+						ans[i] = st.top();
+					st.push(i);
+				}
+				return ans;
+			}
+
+			int largestAreaFinder(vector<int> v, int n){
+				int mxArea=0;
+				vector<int> nxt = nextSmallerIndexes(v, n);
+				vector<int> prev = prevSmallerIndexes(v, n);
+
+				for(int i=0; i<n; i++)
+					mxArea = max(mxArea, (nxt[i] - prev[i] - 1) * v[i]);
+				return mxArea;
+			}
+
+			int maximalRectangle(vector<vector<char>>& matrix) {
+				vector<vector<int>> M (matrix.size(), vector<int>(matrix[0].size(), 0));
+
+				for(int i=0; i<matrix.size(); i++)
+					for(int j=0; j<matrix[0].size(); j++)
+						if(matrix[i][j] == '1')
+							M[i][j] = 1;
+
+				int Area = largestAreaFinder(M[0], matrix[0].size());
+
+				for(int i=1; i<matrix.size(); i++){
+
+					for(int j=0; j<matrix[0].size(); j++)
+						if(M[i][j])
+							M[i][j] += M[i-1][j];
+					
+					int tempArea = largestAreaFinder(M[i], matrix[0].size());
+					Area = max(Area, tempArea);
+				}
+				return Area;
+			}
+		};
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 #miscellaneous:
 	//Ternary Operator
@@ -85307,17 +85400,406 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	822) 
+	822) Juggler Sequence:
+		Problem Statement:
+			Juggler Sequence is a series of integers in which the first term starts with a positive integer number a and the remaining terms are generated from the immediate previous term using the below recurrence relation:
+			Juggler Formula
+			Given a number n, find the Juggler Sequence for this number as the first term of the sequence until it becomes 1.
+			Example 1:
+			Input: n = 9
+			Output: 9 27 140 11 36 6 2 1
+			Explaination: We start with 9 and use 
+			above formula to get next terms.
+			
+			Example 2:
+			Input: n = 6
+			Output: 6 2 1
+			Explaination: 
+			[6^1/2] = 2. 
+			[2^1/2] = 1.
+			
+			Your Task:
+				You do not need to read input or print anything. Your Task is to complete the function jugglerSequence() which takes n as the input parameter and returns a list of integers denoting the generated sequence.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+
+			Constraints:
+				1 ≤ n ≤ 100
+
+		// Not Optimized:
+			class Solution {
+				public:
+				vector<int> jugglerSequence(int n) {
+					vector<int> ans = {n};
+					while(n != 1){
+						if(n&1){
+							int val = n * n * n;
+							n = sqrt(val);
+							ans.push_back(n);
+						}else{
+							n = sqrt(n);
+							ans.push_back(n);
+						}
+					}
+					return ans;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				vector<int> jugglerSequence(int n) {
+					vector<int> ans {n};
+					while(n != 1){
+						n = (n&1) ? pow(n, 1.5) : pow(n, 0.5);
+						ans.push_back(n);
+					}
+					return ans;
+				}
+			};
 	
-	823)		
+	#AtCoder BeginnerContest-352
+		823) A - Buildings:
+			https://atcoder.jp/contests/abc353/tasks/abc353_a
+			Problem Statement
+				There are N buildings aligned in a row. The i-th building from the left has a height of Hi.
+				Determine if there is a building taller than the first one from the left. If such a building exists, find the position of the leftmost such building from the left.
+
+				Constraints
+					1≤ N ≤100
+					1≤ Hi ≤100
+				All input values are integers.
+				Input
+				The input is given from Standard Input in the following format:
+				N
+				H1 H2 … Hn
+				Output
+				If no building is taller than the first one from the left, print -1.
+				If such a building exists, print the position (index) of the leftmost such building from the left.
+
+				Sample Input 1
+					4
+					3 2 5 2
+				Sample Output 1
+					3
+				The building taller than the first one from the left is the third one from the left.
+				Sample Input 2
+				3
+				4 3 2
+				Sample Output 2
+				-1
+				No building is taller than the first one from the left.
+
+				Sample Input 3
+				7
+				10 5 10 2 10 13 15
+				Sample Output 3
+				6
+				The buildings taller than the first one from the left are the sixth and seventh ones. Among them, the leftmost is the sixth one.
+			
+			// Code:
+				#include <iostream>
+				#include<vector>
+				using namespace std;
+
+				int main() {
+					int size;
+					cin>>size;
+					
+					vector<int> holder(size);
+					
+					for(int i=0; i<size; i++)
+						cin>>holder[i];
+						
+					int cnt=1, found = 1;
+					
+					for(int i =1; i<size; i++){
+						cnt++;
+						if(holder[i] > holder[0]){
+							found = 0;
+							std::cout << cnt;
+							break;
+						}
+					}
+					
+					if(found)
+						std::cout << -1;
+						
+					return 0;
+				}
+			
+		824) B - AtCoder Amusement Park:
+			https://atcoder.jp/contests/abc353/tasks/abc353_b
+			Problem Statement
+				The AtCoder amusement park has an attraction that can accommodate 
+				K people. Now, there are N groups lined up in the queue for this attraction.
+
+				The i-th group from the front 
+				(1 ≤ i ≤ N) consists of Ai people. For all i ( 1 ≤ i ≤ N), it holds that Ai ≤ K.
+
+				Takahashi, as a staff member of this attraction, will guide the groups in the queue according to the following procedure.
+				Initially, no one has been guided to the attraction, and there are K empty seats.
+				1. If there are no groups in the queue, start the attraction and end the guidance.
+				2. Compare the number of empty seats in the attraction with the number of people in the group at the front of the queue, and do one of the following:
+					● If the number of empty seats is less than the number of people in the group at the front, start the attraction. Then, the number of empty seats becomes K again.
+					● Otherwise, guide the entire group at the front of the queue to the attraction. The front group is removed from the queue, and the number of empty seats decreases by the number of people in the group. Go back to step 1.
+				Here, no additional groups will line up after the guidance has started. Under these conditions, it can be shown that this procedure will end in a finite number of steps.
+				Determine how many times the attraction will be started throughout the guidance.
+
+				Constraints
+					1 ≤ N ≤ 100
+					1 ≤ K ≤ 100
+					1 ≤ Ai ≤ K (1 ≤ i ≤ N)
+				All input values are integers.
+				Input
+				The input is given from Standard Input in the following format:
+
+				N K
+				A1 A2 … AN
+				
+				Output
+				Print the answer.
+
+				Sample Input 1
+				7 6
+				2 5 1 4 1 2 3
+				Sample Output 1
+				4
+				Initially, the seven groups are lined up as follows:
+				Part of Takahashi's guidance is shown in the following figure:
+				Initially, the group at the front has 
+				2 people, and there are 
+				6 empty seats. Thus, he guides the front group to the attraction, leaving 
+				4 empty seats.
+				Next, the group at the front has 
+				5 people, which is more than the 
+				4 empty seats, so the attraction is started.
+				After the attraction is started, there are 
+				6 empty seats again, so the front group is guided to the attraction, leaving 
+				1 empty seat.
+				Next, the group at the front has 
+				1 person, so they are guided to the attraction, leaving 
+				0 empty seats.
+				In total, he starts the attraction four times before the guidance is completed. Therefore, print 4.
+
+
+
+				Sample Input 2
+				7 10
+				1 10 1 10 1 10 1
+				Sample Output 2
+				7
+				Sample Input 3
+				15 100
+				73 8 55 26 97 48 37 47 35 55 5 17 62 2 60
+				Sample Output 3
+				8
+
+			// Code:
+				#include <iostream>
+				#include<vector>
+				using namespace std;
+
+				int main() {
+					int size;
+					cin>>size;
+					
+					int k;
+					cin>>k;
+
+					vector<int> holder(size);
+					
+					for(int i=0; i<size; i++)
+						cin>>holder[i];
+						
+					int ans = 0, curSum=0;
+					for(int i =0; i<holder.size(); ){
+						if((curSum+holder[i]) <= k) {
+							curSum += holder[i];
+							i++;
+						}
+						else{
+							curSum =0;
+							ans++;
+						}
+					}
+					
+					if(curSum != 0)
+						ans++;
+					
+					std::cout << ans << std::endl;
+					return 0;
+				}
+
+		825) C - Sigma Problem:
+		https://atcoder.jp/contests/abc353/tasks/abc353_c
+		Problem Statement
+			For positive integers x and y, define f(x,y) as the remainder of (x+y) divided by 10^8 You are given a sequence of positive integers 
+			A=(A1,…,AN) of length N. Find the value of the following expression:
+			Constraints
+			2 ≤ N ≤ 3×10^5
+			1≤ Ai < 10^8
+			All input values are integers.
+
+			Input
+			The input is given from Standard Input in the following format:
+			N 
+			A1 ... AN
+			​
+			
+			Output
+			Print the answer.
+			Sample Input 1
+			3
+			3 50000001 50000002
+			Sample Output 1
+			100000012
+			f(A1,A2​)=50000004
+			f(A1,A3)=50000005
+			f(A2,A3)=3
+			Thus, the answer is  f(A1,A2)+f(A1,A3)+f(A2,A3)=100000012.
+			Note that you are not asked to compute the remainder of the sum divided by 10^8.
+			Sample Input 2
+			5
+			1 3 99999999 99999994 1000000
+			Sample Output 2
+			303999988
+
+		// Not Optimized:
+			#include <iostream>
+			#include<vector>
+			using namespace std;
+
+			inline long long f(long a, long b){
+				int md = 1e8;
+				return (a+b) % md;
+			}
+
+			int main() {
+				int N;
+				cin>>N;
+				
+				vector<int> hold(N);
+				
+				long long sum=0;
+				
+				for(int i=0; i<N; i++)
+					cin >> hold[i];
+					
+				for(int i=0; i<N; i++)
+					for(int j = i+1; j<N; j++)
+						sum += f(hold[i], hold[j]);
+					
+				std::cout << sum << std::endl;
+				return 0;
+			}
+		
+		// Optimised:
+			❌Pending
+
+	#LeetCode BiweeklyContest-130
+		826) Check if Grid Satisfies Conditions:
+			Problem Statement:
+				You are given a 2D matrix grid of size m x n. You need to check if each cell grid[i][j] is:
+				Equal to the cell below it, i.e. grid[i][j] == grid[i + 1][j] (if it exists).
+				Different from the cell to its right, i.e. grid[i][j] != grid[i][j + 1] (if it exists).
+				Return true if all the cells satisfy these conditions, otherwise, return false.
+
+				Example 1:
+					Input: grid = [[1,0,2],[1,0,2]]
+					Output: true
+					Explanation:
+					All the cells in the grid satisfy the conditions.
+
+				Example 2:
+					Input: grid = [[1,1,1],[0,0,0]]
+					Output: false
+					Explanation:
+					All cells in the first row are equal.
+
+				Example 3:
+					Input: grid = [[1],[2],[3]]
+					Output: false
+					Explanation:
+					Cells in the first column have different values.
+					
+				Constraints:
+					1 <= n, m <= 10
+					0 <= grid[i][j] <= 9
+
+			class Solution {
+				public:
+				bool satisfiesConditions(vector<vector<int>>& grid) {
+					int r = grid.size(), c = grid[0].size();
+					if(r == 1){
+						for(int i=0; i<c-1; i++)
+							if(grid[0][i] == grid[0][i+1])
+								return 0;
+					}
+					
+					if(c==1){
+						for(int i=0; i<r-1; i++)
+							if(grid[i][0] != grid[i+1][0])
+								return 0;
+					}
+					
+					for(int i=0; i<r-1; i++){
+						// for each row
+						for(int j=0; j < c-1; j++)
+							if(grid[i][j] == grid[i][j+1])
+								return 0;            
+					}
+					
+					for(int i=0; i<c; i++){
+						for(int j=0; j<r-1; j++){
+							if(grid[j][i] != grid[j+1][i])
+								return 0;
+						}
+					}		
+					return 1;
+				}
+			};
 	
-	824)		
-	
-	825)		
-	
-	826)		
-	
-	827)		
+	827) Mirror String:
+		Problem statement
+			You are given a string S containing only uppercase English characters. Find whether S is the same as its reflection in the mirror.
+			For Example, S = “AMAMA” is the same as its reflection in the mirror.
+			Constraints
+				1 <= T <=10
+				1 <= Length(S) <= 10 ^ 5
+				Where ‘T’ is the number of test cases, ‘S’ is the string given in input.
+				Time limit: 1sec.
+			Sample Input 1:
+				1
+				ITATI
+			Sample Output 1:
+				YES
+			Explanation of sample input 1:
+			String “ITATI” is the same as its reflection in the mirror.
+			Sample Input 2:
+			2
+			MMMM
+			MZM
+			Sample Output 2:
+			YES
+			NO
+
+		#include <bits/stdc++.h> 
+		bool isReflectionEqual(string &s) {
+			for(char ch: s)
+				if(ch != 'A' && ch != 'H' && ch != 'I' && ch != 'M' && 
+					ch != 'O' && ch != 'T' && ch != 'U' && ch != 'V' && 
+					ch != 'W' && ch != 'X' && ch != 'Y')
+					return 0;
+
+			int i=0, j = s.size()-1;
+			while(i < j)
+				if(s[i++] != s[j--])
+					return 0;
+				
+			return 1;	
+		}
 	
 	828)		
 	
