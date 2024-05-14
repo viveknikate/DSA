@@ -6638,14 +6638,14 @@ Lecture-14: Binary Search Interview Questions | Problem set-2
 			}
 ---------------------------------------------------------------------------------------------------------
 	14/08/23
-Lecture-15: Allocation Problem || Aggressive Cows Problem || Binary Search Advanced Problems
+Lecture-15: Allocation Problem || Aggressive Cows Problem || Binary Search Advanced Problems ❌Pending
 		1). Book Allocation:
 			HW- https://www.codingninjas.com/studio/problems/allocate-books_1090540
 		2). Painter partition
 			HW.
 		3). Aggressive cows
 
-	COME BACK TO THIS LECTURE AGAIN. ❌
+	COME BACK TO THIS LECTURE AGAIN. 
 ---------------------------------------------------------------------------------------------------------
 	15/08/23
 Lecture-16: Selection Sort
@@ -20803,10 +20803,254 @@ Lecture-57: Stack - Celebrity Problem && Max Rectangle in Binary Matrix with all
 		};
 ---------------------------------------------------------------------------------------------------------
 	12/05/24
-Lecture-58: "N" Stacks in an Array || Stack Hard Question
-	
+Lecture-58: "N" Stacks in an Array || Stack Hard Question ❌Pending
+	#include <bits/stdc++.h>
+	class NStack {
+		int n, s, freespot;
+		int *arr, *next, *top;
+		public:
+		// Initialize your data structure.
+		NStack(int N, int S) {
+			n = N;
+			s = S;
+			arr = new int[s];
+			next = new int[s];
+			top = new int[n];
+			freespot = 0;
+			// add -1 to all index of top array
+			for (int i = 0; i < n; i++)
+				top[i] = -1;
+
+			// add next freespace available index in next array
+			for (int i = 0; i < s; i++) 
+				next[i] = i + 1;
+
+			next[s - 1] = -1;
+		}
+
+		// Pushes 'X' into the Mth stack. Returns true if it gets pushed into the
+		// stack, and false otherwise.
+
+		bool push(int x, int m) {
+			// overflow case
+			if (freespot == -1) 
+				return false;
+
+			// create a index;
+			int index = freespot;
+
+			// update freespot
+			freespot = next[index];
+
+			// update arr
+			arr[index] = x;
+
+			// update next
+			next[index] = top[m - 1];
+
+			// update top
+			top[m - 1] = index;
+
+			return true;
+		}
+		
+		// Pops top element from Mth Stack. Returns -1 if the stack is empty,
+		// otherwise returns the popped element.
+
+		int pop(int m) {
+			if (top[m - 1] == -1)
+				return -1;
+
+			int index = top[m - 1];
+
+			top[m - 1] = next[index];
+			next[index] = freespot;
+			freespot = index;
+			return arr[index];
+		}
+	};
 ---------------------------------------------------------------------------------------------------------
+	13/05/24
+Lecture 59: Design Special Stack Problem
+	Q.1. Design a stack that supports getMin() in O(1) time and O(1) extra space:
+		Problem statement
+			Create a stack data structure that allows operations such as push (adding an element), pop (removing the top element), top (retrieving the top element), and also provides a way to retrieve the minimum element in constant time.
+			Implement the following public functions :
+
+			1. push(data) :
+			This function should take one argument of type integer. It pushes the element into the stack and returns nothing.
+
+			2. pop() :
+			It pops the element from the top of the stack and returns nothing.
+
+			3. top() :
+			It returns the element being kept at the top of the stack.
+
+			4.  getMin() :
+			It returns the smallest element present in the stack.
+
+			Operations Performed on the Stack:
+			Query-1(Denoted by an integer 1): Pushes integer data to the stack. (push function)
+			Query-2(Denoted by an integer 2): Pops the data kept at the top of the stack. (pop function)
+			Query-3(Denoted by an integer 3): Fetches and returns the data being kept at the top of the stack. (top function)
+			Query-4(Denoted by an integer 4): Returns the smallest element present in the stack. (getMin() function)
+
+			Sample Input 1:
+			6
+			1 13
+			1 47
+			3
+			1 8
+			2
+			4
+			Sample Output 1:
+			47
+			13
+			Explanation of Input 1:
+			Here we have six queries in total.
+
+			Query 1: Integer 1 represents the push function. Hence we push element ‘13’ onto the stack.
+			Query 2: Integer 1 represents the push function. Hence we push element ‘47’ onto the stack.
+			Query 3: Integer 3 represents the top function. Hence we print the top element in stack i.e. '47'.
+			Query 4: Integer 1 represents the push function. Hence we push element ‘8’ onto the stack.
+			Query 5: Integer 2 represents the pop function. The stack contains element ‘8’ at the top. We remove/pop ‘8’ from the stack and we have 13, 47 left in stack.
+			Query 6: Integer 4 represents the getMin function. Hence the min of current stack is '13'.
+
+			Sample Input 2:
+			8
+			1 45
+			2
+			1 53
+			4
+			1 46
+			4
+			2
+			4
+			Sample Output 2:
+			53
+			46
+			53
+			Constraints:
+				1 <= 'Q' <= 1000
+				1 <= query type <= 4
+				-10^9 <= data <= 10^9 and data != -1
+			where 'Q' is the total number of queries being performed on the stack and 'data' represents the integer pushed into the stack.
+			Operations like pop, top and getMin  will always be called on non-empty stacks.
+			Time Limit: 1 sec
+
+		// TC: O(1) But SC: O(n), used extra space
+			-Note: no need to handle the case where stack is empty or not, test cases are in such way that they don't request pop query when stack is empty
+			class SpecialStack {
+				stack<int> st;
+				stack<int> minHolder;
+				int mini = INT_MAX;
+
+				public:    
+				void push(int data) {
+					st.push(data);
+					mini = min(mini, data);
+					minHolder.push(mini);    
+				}
+
+				void pop() {
+					st.pop();
+					minHolder.pop();
+
+					if(minHolder.empty())
+						mini = INT_MAX;
+					else
+						mini = minHolder.top();
+				}
+
+				int top() {
+					return st.top();
+				}
+
+				int getMin() {
+					return mini;
+				}  
+			};
+
+			//or
+				class SpecialStack {
+					public:
+					stack<int> s, minHold;
+
+					void push(int data) {
+						s.push(data);
+						if(minHold.empty()){
+							minHold.push(data);
+						}else{
+							if(minHold.top() > data)
+								minHold.push(data);
+							else
+								minHold.push(minHold.top());
+						}
+					}
+
+					void pop() {
+						// if(s.empty())
+						//     return ;
+						minHold.pop();
+						s.pop();
+					}
+
+					int top() {
+						// if(s.empty())
+						//     return  -1;
+						return s.top();
+					}
+
+					int getMin() {
+						return minHold.top();
+					}  
+				};
+
+		// TC: O(1) & SC: O(1) ❌Pending
+			class SpecialStack {
+				public:
+				int mini ;
+				stack<int> s;
+
+				void push(int data) {
+					if(s.empty()){
+						mini = data;
+						s.push(data);
+					}else{
+						if(data < mini){
+							s.push(2*data - mini);
+							mini = data;
+						}else{
+							s.push(data);
+						}
+					}
+				}
+
+				void pop() {    
+
+					int cur = s.top();
+					if(cur < mini)
+						mini = 2*mini - cur;
+
+					s.pop();
+				}
+
+				int top() {
+					if(s.top()  < mini)
+						return mini;
+					return s.top();
+					
+				}
+
+				int getMin() {
+					return mini;
+				}  
+			};
+				
+	#HomeWork: ❌Pending
+		Go through 450 DSA LoveBabbar Sheet 
 ---------------------------------------------------------------------------------------------------------
+
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
@@ -39992,7 +40236,7 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 
-	212) Mailing Problem: ❌Pending
+	212) Mailing Problem: 
 		Problem Statement:
 			Dr. Doofenshmirtz is trying to make another big mischief. To prevent this, Major
 			Francis Monogram wants to send mail to Perry the Platypus to inform him about
@@ -40033,6 +40277,41 @@ POTD:-[Problem of the Day]
 				Sample Output 2 :
 				28
 				48
+			
+		int timeTakenToMail(string keyboard, string s) {
+			int Time=0;
+			Time += keyboard.find(s[0]);
+
+			int curIndex = Time;
+			for(int i=1; i<s.size(); i++){
+				int flag = 0;
+				// check on left side
+				int cnt =0;
+				for(int z = curIndex; z >=0; z--){
+					if(s[i] == keyboard[z]){
+						curIndex = z;
+						flag=1;
+						break;
+					}
+					cnt++;
+				}
+
+				// if not found on left side go check on right side
+				if(!flag){
+					cnt =0;
+					for(int z = curIndex; z < 26; z++){
+						if(s[i] == keyboard[z]){
+							curIndex = z;
+							flag=1;
+							break;
+						}
+						cnt++;
+					}
+				}
+				Time += cnt;
+			}
+			return Time;
+		}
 	
 	213) Calculate Money in Leetcode Bank:
 		Problems Statement:
@@ -65874,7 +66153,22 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 		
-		// Optimized:	 ❌Pending
+		// Optimized:
+			#include <bits/stdc++.h> 
+			vector<int> nextGreater(vector<int> &arr, int n) {
+				vector<int> ans (n, -1);
+				stack<int> st;
+
+				for(int i=n-1; i>=0; i--){
+					while(!st.empty() && st.top() <= arr[i])
+						st.pop();
+
+					if(!st.empty())
+						ans[i] = st.top();
+					st.push(arr[i]);
+				}
+				return ans;
+			}
 
 	548) Maximum Even Two Sum
 		Problem statement
@@ -67528,8 +67822,8 @@ POTD:-[Problem of the Day]
 					if(B[j] == A[i]){
 						for(int k=j+1; k<m; k++){
 							if(B[j] < B[k]){
-							ans[i] = B[k];
-							break;
+								ans[i] = B[k];
+								break;
 							}
 						}
 					}
@@ -85801,11 +86095,509 @@ POTD:-[Problem of the Day]
 			return 1;	
 		}
 	
-	828)		
+	828) Minimum steps to destination: ❌Pending
+		Problem Statement:
+			Given an infinite number line. You start at 0 and can go either to the left or to the right. The condition is that in the ith move, you must take i steps. Given a destination d, find the minimum number of steps required to reach that destination.
+			Example 1:
+			Input: d = 2
+			Output: 3
+			Explaination: The steps takn are +1, -2 and +3.
+
+			Example 2:
+			Input: d = 10
+			Output: 4
+			Explaination: The steps are +1, +2, +3 and +4.
+
+			Your Task:
+				You do not need to read input or print anything. Your task is to complete the function minSteps() which takes the value d as input parameter and returns the minimum number of steps required to reach the destination d from 0.
+
+			Expected Time Complexity: O(d)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ d ≤ 10000
+
+		class Solution {
+			public:
+			int minSteps(int d) {
+				int steps=0, total=0;
+				
+				while(total < d)
+					total += ++steps;
+				
+				while((total - d) % 2 != 0)
+					total += ++steps;
+				
+				return steps;
+			}
+		};
+
+	829) Largest Local Values in a Matrix:
+		Problem Statement:
+			You are given an n x n integer matrix grid.
+			Generate an integer matrix maxLocal of size (n - 2) x (n - 2) such that:
+			maxLocal[i][j] is equal to the largest value of the 3 x 3 matrix in grid centered around row i + 1 and column j + 1.
+			In other words, we want to find the largest value in every contiguous 3 x 3 matrix in grid.
+			Return the generated matrix.
+			
+			Example 1:
+				Input: grid = [[9,9,8,1],[5,6,2,6],[8,2,6,4],[6,2,2,2]]
+				Output: [[9,9],[8,6]]
+				Explanation: The diagram above shows the original matrix and the generated matrix.
+				Notice that each value in the generated matrix corresponds to the largest value of a contiguous 3 x 3 matrix in grid.
+			Example 2:
+				Input: grid = [[1,1,1,1,1],[1,1,1,1,1],[1,1,2,1,1],[1,1,1,1,1],[1,1,1,1,1]]
+				Output: [[2,2,2],[2,2,2],[2,2,2]]
+				Explanation: Notice that the 2 is contained within every contiguous 3 x 3 matrix in grid.
+			
+			Constraints:
+				n == grid.length == grid[i].length
+				3 <= n <= 100
+				1 <= grid[i][j] <= 100
+
+		class Solution {
+			public:
+			vector<vector<int>> largestLocal(vector<vector<int>>& grid) {
+				int n = grid.size();
+				vector<vector<int>> ans(n-2, vector<int>(n-2, 0));
+
+				for(int i=0; i<(n-2); i++){
+					for(int j=0; j<(n-2); j++){
+						int times1 = 3;
+						int times2 = 3;
+
+						int mxValue =0;
+
+						for(int row = i; row<n && times1--; row++){
+							times2 = 3;
+							for(int col = j; col < n && times2--; col++){
+								mxValue = max(mxValue, grid[row][col]);
+							}
+						}
+						ans[i][j] = mxValue;
+					}
+				}
+
+				/* // or
+					for(int i=0; i<(n-2); i++){
+						for(int j=0; j<(n-2); j++){
+							int mxValue =0;
+
+							for(int row = i; row <= (i+2); row++){
+								for(int col = j; col <= (j+2); col++){
+									mxValue = max(mxValue, grid[row][col]);
+								}
+							}
+							ans[i][j] = mxValue;
+						}
+					}
+
+				*/
+
+				return ans;
+			}
+		};
 	
-	829)		
+	830) Check if the door is open or closed:
+		Problem statement
+			There are ‘N’ doors and ‘N’ people in a house. Each person and door has a unique ID ranging from 1 to ‘N’. A person can change the status of the door i.e, if the door is open then a person can close the door and vice versa. Initially, all the doors are closed and each person wants to change the status of all doors whose ID is a multiple of the ID of the person. You need to find out the final status of all the doors.
+			The answer should be given in a form of a binary string where ‘0’ represents the closed door and ‘1’ represents the open door. For example, the status “close open close” will form a binary string “010”.
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 10^4  
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				2
+				4
+				Sample Output 1:
+				10
+				1001    
+				Explanation for sample input 1:
+				Test case 1:
+				Initially, all the doors are closed -> 00
+				The first person has an ID 1 so it will change the status of doors 1(1 * 1) and 2(1 * 2) -> 11
+				The second person has an ID 2 so it will change the status of door 2 (2 * 1)-> 10
+
+				Test case 2:
+				Initially, all the doors are closed -> 0000
+				The first person has an ID 1 so it will change the status of door 1, 2, 3 and 4 -> 1111
+				The second person has an ID 2 so it will change the status of door  2 and 4 -> 1010
+				The third person has an ID 3 so it will change the status of door 3-> 1000
+				The fourth person has an ID 4 so it will change the status of door 4 -> 1001
+				Sample Input 2:
+				2
+				6
+				8
+				Sample Output 2:
+				100100
+				10010000
+
+		#include <bits/stdc++.h> 
+		string doorStatus(int n) {
+			string s = string(n, '0');
+			int i=1;
+			while(i <= n){
+
+				for(int z=i-1; z < s.size(); z += i)
+					s[z] = (s[z] == '0') ? '1' : '0';
+
+				i++;
+			}
+			return s;
+		}
+
+	831) Chess Tournament:
+		Problem statement:
+			You played a chess tournament consisting of 'N' rounds. You know each round's
+			result, which can be a Win, Draw, or Loss. Your score is updated based on the
+			result of each round.
+			A. Loss means 1 will be subtracted from your score.
+			B. Draw means there will be no change in your score.
+			C. Win. If you are on a winning streak means you won your previous round, then
+			add 2 to the score; otherwise, add 1.
+			Your task is to find your final score based on the results.
+			Example :
+			'N' = 4. 'result' = "WWDL"
+			The tournament consisted of 4 rounds. Here are the results of each round.
+			1. Won, 2. Won, 3. Draw, and 4. Loss
+			After round 1 score will be 1, as we won, and there is no winning streak. After
+			round 2 score will be 3 because we won the current round, and there is a streak
+			going on, so add 2. After round 3, there is no change, and after round 4, the
+			score will be 2.
+			Hence, the answer is 2.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^5
+				It's guaranteed that sum of N over all cases does not exceed 1015.
+				Time limit: 1 sec
+			Sample Input 1 :
+				2
+				5
+				DWWLW
+				WDDWW
+				Sample Output 1
+				3
+				4:
+				Explanation For Sample Input 1:
+				For test case 1:
+				Here are our scores after every round.
+				R1 - 0. R2 - 1, R3 - 3. R4 - 2. R5 - 3.
+				Hence, the answer is 3.
+				For test case 2:
+				Scores after every round.
+				R1 - 1. R2 - 1. R3 - 1. R4 - 2. R5 - 4
+				Hence, the answer is 4.
+				Sample Input 2 :
+				2
+				3
+				LLW
+				4
+				DWDW
+				Sample Output 2 :
+				-1
+				2
+
+		int findScore(string &result) {
+			int streak = 0, ans = 0;
+
+			for(char ch: result){
+				if(ch == 'W' && streak){
+					ans += 2;
+				}else if(ch == 'W'){
+					ans++;
+					streak++;
+				}else if(ch == 'L'){
+					ans--;
+					streak=0;
+				}else{
+					streak=0;
+				}
+			}
+			return ans;
+		}
 	
-	830)		
+	#AtCoder Regular Contest-177
+		832) A - Exchange:
+			https://atcoder.jp/contests/arc177/tasks/arc177_a
+			Problem Statement
+				In Japan, there are six types of coins in circulation: 1 yen, 5 yen, 10 yen, 50 yen, 100 yen, and 500 yen. Answer the following question regarding these coins.
+				Mr. AtCoder's wallet contains A 1-yen coins, B 5-yen coins, C 10-yen coins, D 50-yen coins, E 100-yen coins, and F 500-yen coins.
+				He is planning to shop at 
+				N stores in sequence. Specifically, at the i-th store (1 ≤ i ≤ N), he plans to buy one item that costs Xi yen (including tax).
+				Giving and receiving change takes time, so he wants to choose his coins so that he can pay the exact amount at each store. Determine if this is possible.
+
+				Constraints
+					0 ≤ A ≤ 200
+					0 ≤ B ≤ 200
+					0 ≤ C ≤ 200
+					0 ≤ D ≤ 200
+					0 ≤ E ≤ 200
+					0 ≤ F ≤ 200
+					1 ≤ N ≤ 10
+					1 ≤ Xi ≤ 10000 (1 ≤ i ≤ N)
+					All input values are integers.
+				Input
+					The input is given from Standard Input in the following format:
+					A B C D E F
+					N
+					X1 X2 ⋯ Xn			
+				Output
+					Print Yes if the objective is achievable, and No otherwise.
+				Sample Input 1
+				0 0 6 3 4 1
+				3
+				700 250 160
+				Sample Output 1
+				Yes
+				For example, he can make exact payments at all three stores as follows:
+
+				At the first store: Use two 
+					100-yen coins and one 
+					500-yen coin.
+					At the second store: Use five 
+					10-yen coins and two 
+					100-yen coins.
+					At the third store: Use one 
+					10-yen coin and three 
+					50-yen coins.
+				Sample Input 2
+				0 0 0 2 4 0
+				3
+				100 200 300
+				Sample Output 2
+				No
+				The total amount in the wallet is 
+				500 yen, but a total payment of 
+				100+200+300=600 yen is required, so it is impossible to purchase all the items.
+
+				Sample Input 3
+				0 0 0 0 8 8
+				1
+				250
+				Sample Output 3
+				No
+				There are no 50-yen or smaller coins in the wallet, so it is impossible to pay exactly 
+				250 yen.
+
+				Sample Input 4
+				20 5 9 7 10 6
+				5
+				177 177 177 177 177
+				Sample Output 4
+				Yes
+				Sample Input 5
+				17 5 9 7 10 6
+				5
+				177 177 177 177 177
+				Sample Output 5
+				No
+
+			#include <iostream>
+			#include<vector>
+			using namespace std;
+
+			int main() {
+				int A,B,C,D,E,F;
+				cin>>A>>B>>C>>D>>E>>F;
+				
+				// A 1
+				// B 5
+				// C 10
+				// D 50
+				// E 100
+				// F 500
+				
+				int N;
+				cin>>N;
+				vector<int> v(N);
+
+				for(int i=0; i<N; i++)
+					cin>>v[i];
+				
+				int flag = 0;
+				for(int i=0; i<N; i++){
+					int curVal = v[i];
+					
+					while(curVal){
+						if(curVal >= 500 && F){
+							curVal -= 500;
+							F--;
+						}else if(curVal >= 100 && E){
+							curVal -= 100;
+							E--;
+						}else if(curVal >= 50 && D){
+							curVal -= 50;
+							D--;
+						}else if(curVal >= 10 && C){
+							curVal -= 10;
+							C--;
+						}else if(curVal >= 5 && B){
+							curVal -= 5;
+							B--;
+						}else if(curVal >= 1 && A){
+							curVal -= 1;
+							A--;
+						}else{
+							break;
+						}
+					}
+					
+					if(curVal){
+						flag = 1;
+						break;
+					}
+				}
+				
+				if(flag){
+					cout<<"No";
+				}else{
+					std::cout << "Yes" << std::endl;
+				}
+				return 0;
+			}
+		
+	#GFG Weekly-154 
+		833) Check Anagram Existence:
+			Problem Statement:
+				jlkjlk
+			
+			class Solution {
+				public:
+				string doesExists(string s) {
+					
+					int n = s.size();
+					for(int i=0; i<n-1; i++)
+						if(s[i] != s[i+1])
+							return "YES";
+
+					return "NO";
+				}
+			};
+		
+		834) Minimise the Distance:
+			Problem Statement:
+				jklj
+
+			// Not Optimized:
+				class Solution {
+					public:
+					int minimumDis(int N, vector<int> X) {
+						int HouseIndex = 0, ActualSum = INT_MAX;
+						int minValue = INT_MAX;
+						
+						for(int i=0; i<N; i++){
+							int CurSum =0;
+							for(int j=0; j<N; j++){
+								if(i == j)
+									continue;
+								CurSum += abs(X[i] - X[j]);
+							}
+							// cout<<"House :" << X[i] << "\t" << CurSum<<"\n";
+							if(CurSum <= ActualSum){
+								if(CurSum < ActualSum){
+									minValue = X[i];
+								}else{
+									if(minValue > X[i]){
+										minValue = X[i];
+									}
+								}
+								ActualSum = CurSum;
+							}
+						}
+						return minValue;
+					}
+				};
+
+			// Optimized:
+				❌Pending		
+		
+	#LeetCode WeeklyContest-397
+		835)	Permutation Difference between Two Strings:
+			Problem Statement:
+				You are given two strings s and t such that every character occurs at most once in s and t is a permutation of s.
+				The permutation difference between s and t is defined as the sum of the absolute difference between the index of the occurrence of each character in s and the index of the occurrence of the same character in t.
+				Return the permutation difference between s and t.
+			
+				Example 1:
+					Input: s = "abc", t = "bac"
+					Output: 2
+					Explanation:
+					For s = "abc" and t = "bac", the permutation difference of s and t is equal to the sum of:
+					The absolute difference between the index of the occurrence of "a" in s and the index of the occurrence of "a" in t.
+					The absolute difference between the index of the occurrence of "b" in s and the index of the occurrence of "b" in t.
+					The absolute difference between the index of the occurrence of "c" in s and the index of the occurrence of "c" in t.
+					That is, the permutation difference between s and t is equal to |0 - 1| + |2 - 2| + |1 - 0| = 2.
+				Example 2:
+					Input: s = "abcde", t = "edbac"
+					Output: 12
+					Explanation: The permutation difference between s and t is equal to |0 - 3| + |1 - 2| + |2 - 4| + |3 - 1| + |4 - 0| = 12.
+				
+				Constraints:
+					1 <= s.length <= 26
+					Each character occurs at most once in s.
+					t is a permutation of s.
+					s consists only of lowercase English letters.
+		
+			class Solution {
+				public:
+				int findPermutationDifference(string s, string t) {
+					int total=0, curIndex=0;
+					for(char ch: s){
+						int val = t.find(ch);
+						total += abs(curIndex - val);
+						curIndex++;
+					}
+					return total;
+				}
+			};
+
+		836) Taking Maximum Energy From the Mystic Dungeon:
+			Problem Statement:
+				In a mystic dungeon, n magicians are standing in a line. Each magician has an attribute that gives you energy. Some magicians can give you negative energy, which means taking energy from you.
+				You have been cursed in such a way that after absorbing energy from magician i, you will be instantly transported to magician (i + k). This process will be repeated until you reach the magician where (i + k) does not exist.
+				In other words, you will choose a starting point and then teleport with k jumps until you reach the end of the magicians' sequence, absorbing all the energy during the journey.
+				You are given an array energy and an integer k. Return the maximum possible energy you can gain.
+				Example 1:
+					Input: energy = [5,2,-10,-5,1], k = 3
+					Output: 3
+					Explanation: We can gain a total energy of 3 by starting from magician 1 absorbing 2 + 1 = 3.
+				Example 2:
+					Input: energy = [-2,-3,-1], k = 2
+					Output: -1
+					Explanation: We can gain a total energy of -1 by starting from magician 2.
+				Constraints:
+					1 <= energy.length <= 10^5
+					-1000 <= energy[i] <= 1000
+					1 <= k <= energy.length - 1
+
+			// Not Optimized:
+				class Solution {
+					public:
+					int maximumEnergy(vector<int>& energy, int k) {
+						int mxEnergyStore = INT_MIN, n = energy.size();
+						
+						// considering each & every index
+						for(int i=0; i<n; i++){
+							int curEnergy = 0;
+							for(int j=i; j<n; j += k)
+								curEnergy += energy[j];
+							mxEnergyStore = max(mxEnergyStore, curEnergy);
+						}
+						return mxEnergyStore;
+					}
+				};	
+
+			// Optimized:
+				❌Pending
+		
+	837) 
+	
+	838)		
+	
+	839)		
+	
+	840)		
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
