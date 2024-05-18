@@ -21082,6 +21082,271 @@ Lecture-59: Design Special Stack Problem
 		Go through 450 DSA LoveBabbar Sheet 
 ---------------------------------------------------------------------------------------------------------
 Lecture-60: Queues in C++ [STL + Implementation + Types of Queues]
+	Queue:
+		Queues are a type of container adaptors that operate in a first in first out (FIFO) type of arrangement. Elements are inserted at the back (end) and are deleted from the front. Queues use an encapsulated object of deque or list (sequential container class) as its underlying container, providing a specific set of member functions to access its elements.
+		The time complexity and definition of the following functions are as follows:
+		queue::empty()			O(1)
+		queue::size()			O(1)
+		queue::emplace()		O(1)
+		queue::front()			O(1)
+		queue::back()			O(1)
+		queue::push(g) 		O(1)
+		queue::pop() 			O(1)
+
+		Method						Definition
+		queue::empty()			Returns whether the queue is empty. It return true if the queue is empty otherwise returns false.
+		queue::size()			Returns the size of the queue.
+		queue::swap()			Exchange the contents of two queues but the queues must be of the same data type, although sizes may differ.
+		queue::emplace()		Insert a new element into the queue container, the new element is added to the end of the queue.
+		queue::front()			Returns a reference to the first element of the queue.
+		queue::back()			Returns a reference to the last element of the queue.
+		queue::push(g) 		Adds the element ‘g’ at the end of the queue.
+		queue::pop() 			Deletes the first element of the queue.
+
+	Note:
+		push() adds a copy of an already constructed object into the queue as a parameter, it takes an object of the queue's element type.
+		eg.
+			queue<int> q;
+			int val = 10;
+			q.push(val);
+
+		emplace() constructs a new object in-place at the end of the queue. It takes as parameters the parameters that the queue's element types constructor takes.
+			q.emplace(10);
+		
+		eg.
+			#include <iostream>
+			#include<queue>
+			using namespace std;
+
+			int main() {
+				queue<int> q;
+				q.push(10);
+				q.emplace(89);
+				
+				queue<pair<int, char>> qc;
+				
+				qc.push({10,'c'});                   // we can't push like this qc.push(1, 'c'), need to use emplace method here
+				qc.push(make_pair(20, 'b'));
+				qc.emplace(1,'A');
+				
+				while(!q.empty()){
+					std::cout << q.front() << "\t";
+					q.pop();
+				}
+				
+				std::cout << std::endl;
+				while(!qc.empty()){
+					std::cout << qc.front().first << "\t" << qc.front().second << endl;
+					qc.pop();
+				}	
+				return 0;
+			}
+
+	Example:
+		#include <iostream>
+		#include<queue>
+		using namespace std;
+		int main() {
+			queue<int> q;
+			
+			// empty method
+			std::cout << "is empty? " <<boolalpha<< q.empty() << std::endl;
+			
+			// inserting element using push
+			q.push(10);
+			q.push(90);
+			
+			// using emplace
+			q.emplace(20);
+			q.emplace(40);
+			q.emplace(30);
+			
+			std::cout << "is empty? " <<boolalpha<< q.empty() << std::endl;
+			
+			// accessing the first element of queue
+			std::cout << "first/ Front : "<< q.front() << std::endl;
+			
+			int poped = q.front();
+			
+			// deleting front element of queue
+			q.pop();
+			std::cout << "Deleted element : " << poped << std::endl;
+			std::cout << "After deleting, first/ Front : "<< q.front() << std::endl;
+			
+			// accessing the last element of queue
+			std::cout << "Last/ end : "<< q.back() << std::endl;
+			
+			// total element in queue or size of queue
+			std::cout << "Size :" << q.size() << std::endl;
+			
+			// content of queue
+			while(!q.empty()){
+				std::cout << q.front() << "\t";
+				q.pop();
+			}
+			std::cout << std::endl;
+			
+			queue<int> q1;
+			std::cout << "is empty? q & q1 " <<boolalpha<< q.empty() << "\t" << q1.empty() << std::endl;
+			
+			q1.push(11);
+			q1.push(12);
+			q1.push(13);
+			q1.push(14);
+			std::cout << "is empty? q & q1 " <<boolalpha<< q.empty() << "\t" << q1.empty() << std::endl;
+			
+			// copying to q
+			q = q1;
+			std::cout << "is empty? q & q1 " <<boolalpha<< q.empty() << "\t" << q1.empty() << std::endl;
+			
+			// you can see both queue q & q1 have the contents in it
+			// printing the contents of q & q1 queues
+			
+			std::cout << "Contents of Q : " << std::endl;
+			while(!q.empty()){
+				std::cout << q.front() << std::endl;
+				q.pop();
+			}
+			
+			std::cout << std::endl;
+			std::cout << "Contents of Q1 : " << std::endl;
+			while(!q1.empty()){
+				std::cout << q1.front() << std::endl;
+				q1.pop();
+			}
+			
+			// now both queues will be empty
+			std::cout << "is empty? q & q1 " <<boolalpha<< q.empty() << "\t" << q1.empty() << std::endl;
+			return 0;
+		}
+
+	swap:
+		#include <iostream>
+		#include<queue>
+		using namespace std;
+		int main() {
+			queue<int> q;
+			std::cout << "Q :" <<  q.empty() << std::endl;
+			
+			q.push(1);
+			q.push(2);
+			q.push(3);
+			
+			// here q contains some values, if you want to clear complete queue you can pop one by one elements
+			// or you can use swap function
+			std::cout << "Q :" <<  q.empty() << std::endl;
+			
+			queue<int> newQ;
+			std::cout << "newQ : " << newQ.empty() << std::endl;
+
+			swap(newQ, q);              // now q is completely cleared, in queue we don't have .clear() method to delete all elements in queue.
+			
+			std::cout << "newQ : " << newQ.empty() << std::endl;
+			std::cout << "Q :" <<  q.empty() << std::endl;
+			return 0;
+		}
+	
+	Queue Implementation Using LinkedList:
+		❌Pending
+	
+	Q.1. Implement a Queue:
+		Problem statement
+			Implement a Queue Data Structure specifically to store integer data using a Singly Linked List or an array.
+			You need to implement the following public functions :
+			1. Constructor: It initializes the data members as required.
+			2. enqueue(data): This function should take one argument of type integer. It enqueues the element into the queue.
+			3. dequeue(): It dequeues/removes the element from the front of the queue and in turn, returns the element being dequeued or removed. In case the queue is empty, it returns -1.
+			4. front(): It returns the element being kept at the front of the queue. In case the queue is empty, it returns -1.
+			5. isEmpty(): It returns a boolean value indicating whether the queue is empty or not.
+			Operations Performed on the Queue :
+			Query-1(Denoted by an integer 1): Enqueues integer data to the queue.
+			Query-2(Denoted by an integer 2): Dequeues the data kept at the front of the queue and returns it to the caller, return -1 if no element is present in the queue.
+			Query-3(Denoted by an integer 3): Fetches and returns the data being kept at the front of the queue but doesn't remove it, unlike the dequeue function, return -1 if no element is present in the queue.
+			Query-4(Denoted by an integer 4): Returns a boolean value denoting whether the queue is empty or not.
+			Constraints :
+				1 <= t <= 5
+				1 <= q <= 5000
+				1 <= x <= 4
+				1 <= data <= 2^31 - 1
+				Time Limit: 1 sec
+
+				Sample Input 1 :
+				1
+				7
+				1 17
+				1 23
+				1 11
+				2
+				2
+				2
+				2
+				Sample Output 1 :
+				17
+				23
+				11
+				-1
+				Explanation for Sample Output 1 :
+				The first three queries are of enQueue, so we will push 17, 23, and 11 into the queue.
+
+				The next four queries are of deQueue, so we will starting removing elements from the queue, so the first element will be 17, then 23, and then 11. And after the third dequeue query, the queue is now empty so for the fourth query, we will return -1.
+				Sample Input 2 :
+				1
+				3
+				2
+				1 10
+				3
+				Sample Output 2 :
+				-1 
+				10
+
+		#include <bits/stdc++.h> 
+		class Queue {
+			int *arr;
+			int frnt, rear, size;
+			public:
+			Queue() {
+				size = 1e8;
+				arr = new int[size];
+				frnt = rear = 0;
+			}
+
+			/*----------------- Public Functions of Queue -----------------*/
+
+			bool isEmpty() {
+				if(frnt == rear)
+					return true;
+				return 0;
+			}
+
+			void enqueue(int data) {
+				if(rear == size){
+					return ;
+				}
+				arr[rear++] = data;
+			}
+
+			int dequeue() {
+				if(frnt == rear)
+					return -1;
+
+				int val = arr[frnt];
+				arr[frnt++] = -1;
+				if(frnt == rear){
+					frnt = 0;
+					rear = 0;
+				}
+				return val;
+			}
+
+			int front() {
+				if(frnt == rear)
+					return -1;
+				
+				return arr[frnt];
+			}
+		};
+	
+	Q.2. 
 	
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
@@ -86578,7 +86843,7 @@ POTD:-[Problem of the Day]
 				return 0;
 			}
 		
-	#GFG Weekly-154 
+	#GFG Weekly-154
 		833) Check Anagram Existence:
 			Problem Statement:
 				jlkjlk
@@ -87107,21 +87372,1019 @@ POTD:-[Problem of the Day]
 			return mxAns;
 		}
 	
-	843)
+	843) Maximum Subarray Sum:
+		Problem statement
+			Given an array of numbers, find the maximum sum of any contiguous subarray of the array.
+			For example, given the array [34, -50, 42, 14, -5, 86], the maximum sum would be 137, since we would take elements 42, 14, -5, and 86.
+			Given the array [-5, -1, -8, -9], the maximum sum would be -1.
+			Follow up: Do this in O(N) time.
+			Constraints:
+				1 <= N <= 10^6
+				1 <= K <= N
+				Time limit: 1 sec 
+			Sample Input 1:
+				4 1
+				1 2 3 4
+				Sample Output 1:
+				4
+				Sample Input 2:
+				6 2
+				2 7 3 6 7 7 
+				Sample Output 2:
+				14
+				Explanation for Sample Output 2:
+				There are 5 subarrays of size 2 in this array. They are {2, 7}, {7, 3}, {3, 6}, {6, 7}, {7, 7}. Since the subarray {7, 7} has the maximum sum among all the subarrays, the output will be 7 + 7 = 14
 
-	844)
+		#include<bits/stdc++.h>
+		using namespace std;
+		int main() {
+			int n;
+			cin>>n;
+
+			int *arr = new int[n];
+			for(int i=0; i<n; i++)
+				cin>>arr[i];
+
+			long long mxAns= *max_element(arr, arr+n);				// or long long mxAns= INT_MIN;
+			long long curSum = 0;
+			for(int i=0; i<n; i++){
+				curSum += arr[i];
+				if(curSum < 0)
+					curSum = 0;
+				mxAns = max(mxAns, curSum);
+			}
+			cout<<mxAns<<endl;
+			return 0;
+		}
+
+	#CN WeeklyContest-126
+		844) War:
+			Problem statement
+				There are 'N' nations at war, each with its own power denoted by the array 'P'. Nations have the option to form alliances, where their powers combine and they are considered as a single entity. For example, if nations A, B, and C form an alliance, their combined power is P[A] + P[B] + P[C].
+				You aim to establish a new nation. Your current power is 0 and you want to invest in increasing its power. What is the minimum amount the power needs to be increased so that your nation can defeat any other nation, either when standing alone or when combined in any possible alliance? You cannot form alliances; defeating a nation means having strictly greater power than it.
+				Example:
+				‘N’ = 5
+				‘A’ = [1, 2, -1, 0, 1] 
+				Return 5
+				The most powerful enemy can be Nations 1,2 and 5 in alliance which have a total power of 4.
+				Hence you need at least 5 power to defeat them.
+				Constraints:
+					1 <= ‘T’ <= 10
+					1 <= ‘N’ <= 10^5
+					-10^4 <= A[i] <= 10^4
+					Time Limit: 1 sec
+				Sample Input 1:
+					2
+					6
+					6 10 3 -10 4 0 
+					5
+					-1 -2 -3 -4 -5
+					Sample Output 1:
+					24
+					0
+					Explanation of sample input 1:
+					For Test case 1:
+					The most powerful enemy can be Nations 1, 2, 3 and 5 in alliance which have a total power of 23.
+					Hence you need at least 24 power to defeat them.
+					For Test case 2:
+					There doesn't exist any alliance which when combined has increased power.
+					The most powerful nation is -1 and as your power is 0 already you don't need to increase your power.
+					Sample Input 2:
+					3
+					5
+					7 9 -5 2 7 
+					9
+					3 -2 0 9 4 1 2 6 8 
+					5
+					4 2 -8 7 9 
+					Sample Output 2:
+					26
+					34
+					23
+
+			int powerIncrease(int n, vector<int> &p){
+				int ttl_pwr = 0;
+
+				for(int i: p)
+					if(i > 0)
+						ttl_pwr += i;
+
+				return (ttl_pwr)? ttl_pwr+1 : ttl_pwr;
+			}
+		
+		845) Contrasting properties:
+			Problem statement
+				You are given two strings 'S' and 'T' of 'N' lowercase English letters.
+				You are required to generate string 'G' of length 'N' which satisfies the given conditions:
+				The string 'G' must be sorted in non-increasing order and for each 'i', 'G[i]' must be equal to either 'S[i]' or 'T[i]'.
+				You are required to find the lexicographically minimum string 'G' which satisfies the mentioned conditions. It is guaranteed that there exists at least '1' string 'G' that satisfies the given conditions.
+				Example:
+				N = 3
+				S = 'eac'
+				T = 'cdc'
+				One possible string 'G' is 'edc'.
+				It can be proved that you can not find a lexicographically smaller string 'G' than 'edc' which follows the mentioned conditions.
+				So, the answer for this case is 'edc'.
+				Constraints:
+					1 <= 'N' <= 10^5
+					'a' <= S[i] <= 'z'
+					'a' <= T[i] <= 'z'
+					Time limit: 1 sec
+
+				Sample input 1:
+					2
+					3
+					cba
+					dcb
+					4
+					fbbc
+					cdcc
+					Sample output 1:
+					cba
+					fdcc
+					Explanation of sample input 1:
+					For test case 1:
+					One possible string 'G' is 'cba'.
+					It can be proved that you can not find a lexicographically smaller string 'G' than 'cba' which follows the mentioned conditions.
+					So, the answer for this case is 'cba'.
+
+
+					For test case 2:
+					One possible string 'G' is 'fdcc'.
+					It can be proved that you can not find a lexicographically smaller string 'G' than 'fdcc' which follows the mentioned conditions.
+					So, the answer for this case is 'fdcc'.
+					Sample input 2:
+					2
+					5
+					axdfs
+					zdvcf
+					2
+					aa
+					bb
+					Sample output 2:
+					zxvff
+					aa
+
+			string lexicographicallyMinimum(int n, string &s, string &t) {
+				string ans(n, '0');
+
+				// starting from end & appending the min element every time 
+				// to generate the string which is decreasing in order
+
+				for(int i=n-1; i>=0; i--){
+					char min = s[i], max = t[i];
+
+					if(max < min)
+						swap(min, max);
+
+					if(ans[i+1] <= min)
+						ans[i] = min;
+					else
+						ans[i] = max;
+				}
+				return ans;
+			}
+
+			// or Explanative
+				/*
+					Time Complexity: O(n)
+					Space Complexity: O(n)
+
+					Where 'n' denotes the lengths of the strings 's' and 't'.
+				*/
+				string lexicographicallyMinimum(int n, string &s, string &t) {
+
+					// Initialize a string 'g' of length 'n'.
+					string g = string(n, '?');
+
+					// Update 'g[n - 1]' equal to the minimum of 's[n - 1]' and 't[n - 1]'.
+					g[n - 1] = min(s[n - 1], t[n - 1]);
+
+					// Iterate the strings in reverse direction.
+					for (int i = n - 2; i >= 0; i--) {
+
+						// Initialize characters 'min' and 'max' equal to 's[i]' and 't[i]', respectively.
+						char min = s[i], max = t[i];
+
+						// Swap 'min' and 'max' if 'min' is greater than 'max'.
+						if (min > max) {
+							swap(min, max);
+						}
+
+						// Update 'g[i]' according to the characters 'g[i + 1]', 'min' and 'max'.
+						if (min >= g[i + 1]) {
+							g[i] = min;
+						}
+						else {
+							g[i] = max;
+						}
+					}
+
+					// Return the string 'g'.
+					return g;
+				}
+				
+		845) Three Array Triplets:
+			Problem statement
+				You are given three arrays ‘A’, ‘B’ and ‘C’ each of size ‘N’ where elements in the corresponding arrays are numbered from ‘0’ to ‘N - 1’. You have to count the number of triplets {‘i’, ‘j’, ‘k’} such that ‘(A[i] <= 2 * B[j] <= 3 * C[k])’.
+				Your task is to count the number of triplets following the given condition mentioned above and return it.
+				Example:
+				‘N’ = 3
+				‘A’ = [1, 4, 2]
+				‘B’ = [3, 0, 2]
+				‘C’ = [4, 0, 1]
+
+				Here, the number of triplets following the given condition are:
+				(0, 2, 0): As ‘A[0]’ <= ‘2 * B[2]’ <= ‘3 * C[0]’.
+				(0, 0, 0): As ‘A[0]’ <= ‘2 * B[0]’ <= ‘3 * C[0]’.
+				(2, 0, 0): As ‘A[2]’ <= ‘2 * B[0]’ <= ‘3 * C[0]’.
+				(2, 2, 0): As ‘A[2]’ <= ‘2 * B[2]’ <= ‘3 * C[0]’.
+				The count of these triplets is ‘4’.
+				Constraints:
+					1 <= ‘T’ <= 10
+					1 <= ‘N’ <= 10^5
+					1 <= ‘A[i]’ <= 10^6
+					1 <= ‘B[i]’ <= 10^6
+					1 <= ‘C[i]’ <= 10^6
+					Time Limit: 1 sec
+				Sample Input 1:
+					2
+					3
+					5 0 1
+					1 0 2
+					2 0 3
+					2
+					1 1
+					1 1
+					1 1
+					Sample Output 1:
+					11
+					8
+					Explanation of sample input 1:
+					For test case 1:
+					The number of triplets following the given condition are: (1, 1, 0), (1, 1, 1), (1, 1, 2), (1, 0, 0), (1, 0, 2), (1, 2, 0), (1, 2, 2), (2, 0, 0), (2, 0, 2), (2, 2, 0), and (2, 2, 2).
+					The total count of these triplets is ‘11’.
+
+					For test case 2:
+					The number of triplets following the given condition are: (0, 0, 0), (0, 0, 1), (0, 1, 0), (0, 1, 1), (1, 0, 0), (1, 0, 1), (1, 1, 0), and (1, 1, 1).
+					The total count of these triplets is ‘8’.
+					Sample Input 2:
+					2
+					1
+					3
+					0
+					7
+					2
+					1 0
+					4 5
+					0 4
+					Sample Output 2:
+					0
+					4
+
+			// Not Optimized:
+				long long threeArrayTriplets (int n, vector <int> &a, vector <int> &b, vector <int> &c) {
+					long long cnt =0;
+
+					for(int i=0; i<n; i++){
+						for(int j=0; j<n; j++){
+							for(int k=0; k<n; k++){
+								long long v1 = a[i];
+								long long v2 = 2*b[j];
+								long long v3 = 3*c[k];
+								if((v1 <= v2) && (v2 <= v3))
+									cnt++;
+							}
+						}    
+					}
+					return cnt;
+				}
+			
+			// Optimized:
+				❌Pending
+		
+		847) Stacking Skill:
+			Problem statement
+				You recently learned about stacks, where you can push elements to the back and pop one element at a time from the back.
+				Now, you are playing with a stack. To test your skills, the Ninja has provided you with 'N' queries. There are two types of queries:
+				'1 L R': Add elements 'L, L+1, L+2, ..., R` into the stack.
+				'2 K': Remove the last 'K' elements from the stack and print the sum of them modulo '10^9 + 7'
+				Perform all the queries and return the array of answers to queries of type '2' modulo '10^9+7'.
+				Example:
+				'N' = 2
+				'Queries' = [[1, 4, 5], [2, 2]] 
+				The stack is initially empty.
+				Adding elements '4' and '5' to the stack results in'`[4, 5]'.
+				Removing the top '2' elements from the stack ('5' and '4') yields an answer of '4 + 5 = 9'. The stack will become empty.
+				So, the answer will be '[9]'.
+				Detailed explanation ( Input/output format, Notes, Images )
+				Constraints:
+					1 <= T <= 10
+					1 <= N <= 10^5
+					1 <= L <= 10^12
+					L <= R <= 10^12
+					1 <= K <= min(number in stacks, 10^12)
+					Time Limit: 1 second
+
+				Sample Input 1:
+					2
+					3
+					1 4 9 
+					2 3 
+					2 1 
+					3
+					1 1 4 
+					2 2 
+					2 1 
+					Sample Output 1:
+					24 6
+					7 2
+					Explanation Of Sample Input 1:
+					For test case 1:
+					The stack is initially empty.
+					Adding elements '4', '5', '6', '7', '8' and '9' to the stack results in'`[4, 5, 6, 7, 8, 9]'.
+					Removing the top '3' elements from the stack ('9', '8' and '7') yields an answer of '9 + 8 + 7 = 24'. The stack will become '[4, 5, 6]'.
+					Removing the top '1' elements from the stack ('6') yields an answer of '6'. The stack will become '[4, 5]'.
+					So, the answer will be '[24, 6]'.
+
+					For test case 2:
+					The stack is initially empty.
+					Adding elements '1', '2', '3', and '4' to the stack results in'`[1, 2, 3, 4]'.
+					Removing the top '2' elements from the stack ('4' and '3') yields an answer of '4 + 3 = 7'. The stack will become '[1, 2]'.
+					Removing the top '1' elements from the stack ('2') yields an answer of '2'. The stack will become '[1]'.
+					So, the answer will be '[7, 2]'.
+					Sample Input 2:
+					2
+					7
+					1 9 34 
+					2 13 
+					2 1 
+					1 13 36 
+					2 16 
+					1 4 25 
+					2 26 
+					7
+					1 13 36 
+					1 6 30 
+					2 20 
+					2 6 
+					1 1 42 
+					2 32 
+					2 24 
+					Sample Output 2:
+					364 21 456 393 
+					410 76 848 454 
+
+			// Not Optimized:
+				vector<int> solveQueries(int n, vector<vector<long long>> queries) {
+					vector<int> ans;
+					int mod = 1e9+7;
+					stack<int> st;
+
+					for(int i=0; i < queries.size(); i++){
+						if(queries[i][0] == 1){
+							int s = queries[i][1], e = queries[i][2];
+							
+							while(s <= e)
+								st.push(s++);
+
+						}else{
+							int K = queries[i][1];
+							int Sum =0;
+							while(K-- && !st.empty()){						//not necessary to check empty condition you can do just this 'while(K--)'
+								Sum += st.top();
+								st.pop();
+								Sum %= mod;
+							}
+							ans.push_back(Sum);
+						}
+					}
+					return ans;
+				}
+			
+			// Optimized:
+				❌Pending
 	
-	845)
+	848) Find Pair Given Difference:
+		Problem Statement:
+			Given an array arr[] of size n and an integer x, return 1 if there exists a pair of elements in the array whose absolute difference is x, otherwise, return -1.
+			Example 1:
+				Input:
+				n = 6
+				x = 78
+				arr[] = {5, 20, 3, 2, 5, 80}
+				Output:
+				1
+				Explanation:
+				Pair (2, 80) have absolute difference of 78.
+
+			Example 2:
+				Input:
+				n = 5
+				x = 45
+				arr[] = {90, 70, 20, 80, 50}
+				Output:
+				-1
+				Explanation:
+				There is no pair with absolute difference of 45.
+			Your Task:
+				You need not take input or print anything. Your task is to complete the function findPair() which takes integers n, x, and an array arr[] as input parameters and returns 1 if the required pair exists, return -1 otherwise.
+
+			Expected Time Complexity: O(n* Log(n)).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1<=n<=10^6 
+				1<=arr[i]<=10^6
+				0<=x<=10^5
+
+		// Not Optimized:
+			class Solution {
+				public:
+				int findPair(int n, int x, vector<int> &arr) {
+					for(int i=0; i<n-1; i++){
+						for(int j=i+1; j<n; j++){
+							if(abs(arr[i] - arr[j]) == x)
+								return 1;
+						}
+					}
+					return -1;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				int findPair(int n, int x, vector<int> &arr) {
+					
+					sort(arr.begin(), arr.end());
+					int i=0, j=1;
+					
+					while(i < n && j < n){
+						int diff = (arr[j]-arr[i]);
+						if(diff == x && i != j)
+							return 1;
+						else if(diff < x)
+							j++;
+						else
+							i++;
+					}
+					return -1;
+				}
+			};
+
+	849) Special Sum:
+		Problem statement
+			You are given an array ‘ARR’ of length ‘N’. There are two operations, ‘FIRST_SUM’ and ‘LAST_SUM’ for every index ‘i’ (1 <= i <= N) in the array,
+			i) FIRST_SUM(i) calculates the sum of first i numbers.
+			ii) LAST_SUM(i) calculates the sum of last N-i+1 numbers.
+			Also for every ‘i’, SPECIAL_SUM(i) can be calculated as:
+			SPECIAL_SUM(i) = FIRST_SUM(i) + LAST_SUM(i)
+			Your task is to return the minimum SPECIAL_SUM for 0 <= i <= N - 1.
+			For example:
+			Given ‘N’ = 4 and ‘ARR’ = [1, 2, 3, 4].
+			Then the minimum special sum will be 5 for i = 0 (0-based indexing), which is (1 + 4) = 5.Sum of 1 integer from beginning and end.
+			For i = 1 it will be (1 + 2) + (3 + 4) = 10
+			For i = 2 it will be (1 + 2 + 3) + (2 + 3 + 4) = 15
+			For i = 3 it will be (1 + 2 + 3 + 4) + (1 + 2 + 3 + 4) = 20
+			All of which are greater than 5.
+			Constraints:
+				1 <= T <= 5
+				1 <= N <= 5 *10^3
+				-5 *10^2 <= ARR[i] < 5 *10^2
+				Time limit: 1 sec
+
+			Sample Input 1:
+			2
+			4
+			1 2 3 4
+			4
+			1 -2 -3 4
+			Sample Output 1:
+			5
+			-5
+			Explanation of the Sample Input 1:
+			For the first test case:
+			The  minimum special sum will be 5 for i = 0 (0-based indexing), which is (1 + 4) = 5.
+			For i = 1 it will be (1 + 2) + (3 + 4) = 10
+			For i = 2 it will be (1 + 2 + 3) + (2 + 3 + 4) = 15
+			For i = 3 it will be (1 + 2 + 3 + 4) + (1 + 2 + 3 + 4) = 20
+			All of which are greater than 5.  
+
+			For the second test case:
+			The  minimum special sum will be -5 for i = 2 (0-based indexing), which is (1 + (-2) + (-3)) +  (-2 + (-3) + (4)) = -5.
+			For i = 0 it will be (1) + (4) = 5
+			For i = 1 it will be (1 + (-2) ) + ( (-3) + 4) = 0 
+			For i = 3 it will be (1 + (-2) + (-3) + 4)  + (1 + (-2) + (-3) + 4) = 0.
+			All of which are less than -5.
+			Sample Input 2:
+			2
+			5
+			1 2 -5 3 1
+			5 
+			1 1 1 1 1
+			Sample Output 2:
+			-3
+			2
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			int specialSum(vector<int> &arr, int n) {
+				int ans = INT_MAX;
+
+				for(int i=0; i<n; i++){
+					int z = i;
+
+					int curAns =0;
+					while(z >= 0){
+						curAns += arr[z];				// first sum
+						curAns += arr[n-1-z];		 // last sum
+						z--;
+					}
+					// cout<<ans <<"\t"<<curAns<<endl;
+					ans = min(ans, curAns);
+				}
+				return ans;
+			}
+
+		// Optimized:
+			#include <bits/stdc++.h> 
+			int specialSum(vector<int> &arr, int n) {
+				int ans = INT_MAX;
+
+				int curAns =0;
+				for(int i=0; i<n; i++){
+					curAns += arr[i];
+					curAns += arr[n-1-i];
+					// cout<<ans <<"\t"<<curAns<<endl;
+					ans = min(ans, curAns);
+				}
+				return ans;
+			}
 	
-	846)
+	850) Add K Nodes:
+		Problem statement
+			You are given a Singly Linked List of integers and an integer 'K'.
+			Your task is to modify the linked list by inserting a new node after every 'K' node in the linked list with the node value being equal to the sum of the previous 'K' nodes.
+			Note :
+			If you reach a situation when the number of nodes remaining in the linked list is less than 'K' but greater than zero, just insert a node with the value equal to the sum of the remaining nodes.
+			Constraints:
+				0 <= L <= 5 * 10^5
+				-10^3 <= data <= 10^3 and data != -1
+				1 <= K <= 10^6
+				where 'L' is the number of nodes in the linked list and 'data' is the value of elements present in the given linked list.
+				Time Limit: 1 sec
+			Sample Input 1:
+				1 2 3 4 5 6 7 -1
+				3
+				Sample Output 1:
+				1 2 3 6 4 5 6 15 7 7 -1
+				Explanation For Sample Output 1:
+				For the given input, K = 3, so we have inserted a node after the first 3 nodes with a value of 6 as (1 + 2 + 3).
+
+				Similarly, we insert a node after the next 3 nodes with a value of 15 as (4 + 5 + 6). Now only 1 node is left (with a value 7) and 0 < 1 < K, so we insert a node with the value 7 at the end of the list.
+				Sample Input 2:
+				0 6 1 5 -1
+				2
+				Sample Output 2:
+				0 6 6 1 5 6 -1
+
+		#include <bits/stdc++.h> 
+		/****************************************************************
+			Following is the class structure of the Node class:
+
+			class Node{
+				public:
+					int data;
+					Node *next;
+				Node(int data){
+					
+					this->data = data;
+					this->next = NULL;
+				}
+			};
+		*****************************************************************/
+		Node *getListAfterAddingNodes(Node *head, int k){
+			int s, cnt;
+			s = cnt = 0;
+			Node* temp = head;
+			Node* prev = head;
+
+			while(temp){
+				s += temp->data;
+				cnt++;
+
+				prev = temp;
+				temp = temp -> next;
+
+				if(cnt == k){
+					Node* nn = new Node(s);
+					nn -> next = temp;
+					prev -> next = nn;
+				
+					s = cnt = 0;
+				}
+			}
+
+			if(s){
+				Node* nn = new Node(s);
+				prev -> next = nn;
+			}
+			return head;
+		}
+
+	851) Intersection of Linked Lists:
+		Problem statement
+			You are given two linked lists L1 and L2 which are sorted in ascending order. You have to make a linked list with the elements which are present in both the linked lists and are present in ascending order.
+			Example:-
+			L1 = 1->2->3->4->7
+			L2 = 2->4->6->7
+
+			ANSWER:- The answer should be 2->4->7 because 2,4, and 7 are present in both the linked lists.
+			Constraints :
+				1 <= T <= 5
+				1 <= Length of the the two linked lists <= 10^5 
+				Time Limit = 1 sec
+			Sample Input 1 :
+				2
+				1 3 5 -1
+				1 2 4 -1
+				2 3 -1
+				2 3 4 -1
+				Sample Output 1 :
+				1 -1
+				2 3 -1
+				Explanation for Sample Output 1 :
+				In the first test case, the intersecting linked list is 1, so the node containing 1 is returned.
+
+				In the second test case, the intersecting linked list is 2->3, so the node containing 2 is returned.
+				Sample Input 2 :
+				1
+				2 3 4 -1
+				1 5 6 -1
+				Sample Output 2 :
+				-1 
+
+		#include <bits/stdc++.h> 
+		/************************************************************
+			Following is the linkedList class structure:
+
+			class Node {
+				public:
+					int data;
+					Node *next;
+				Node(int val) {
+					this->data = val;
+					next = NULL;
+				}
+				~Node() {
+					if (next != NULL) {
+						delete next;
+					}
+				}
+			};
+		************************************************************/
+			
+		Node* intersect_ll(Node* L1, Node *L2){
+			Node* ans = nullptr;
+			Node* trvrs = nullptr;
+
+			while(L1 && L2){
+				if(L1 -> data == L2 -> data){
+					if(ans == nullptr){
+						ans = L1;
+						trvrs = L1;
+					}else{
+						trvrs -> next = L1;
+						trvrs = trvrs -> next;
+					}
+					L1 = L1 -> next;
+					L2 = L2 -> next;
+				}else if(L1 -> data < L2 ->data){
+					L1 = L1 -> next;
+				}else{
+					L2 = L2 -> next;
+				}
+			}
+			if(trvrs)
+				trvrs -> next = nullptr;		
+			return ans;
+		}
 	
-	847)
+	852) Add First and Second Reversed Half:
+		Problem statement
+			You have been given a Linked List of 'N' nodes such that each node represents a single digit.
+			Your task is to return a node 'X', where 'X' represents the head of the Linked List storing the digits of the sum(most significant digit at the head) formed by adding 1st half and reverse of 2nd half of the given linked list.
+			Note:
+			1. When 'N' is odd consider the middle element to be part of 1st half.
+			2. The sum should not contain any leading zero, except the number 0 itself.
+			For example:
+			Given a Linked List: 1-2-3-4-5-5-6
+			First half: 1-2-3-4   
+			Reversed second half: 6-5-5
+			Output linkedlist: 1-8-8-9 = (1234 + 655 = 1889)
+			Follow Up:
+			Can you add both halves without finding the length of LinkedList and in O(1) space?
+			Constraints :
+				0 <= 'N' <= 10 ^ 5
+				0 <= 'DATA' <= 9
+
+			Where 'N' is the number of nodes in linked list and 'DATA' is the integer value in each node.
+			Time Limit: 1 sec
+			Sample Input 1:
+			1 2 4 5 6 -1
+			Sample Output 1:
+			189
+			Explanation for Sample Input 1:
+			The first half of the given linkedlist is: 1-2-4
+			The second half of the given linkedlist is: 6-5
+			Sum of both parts = 124 + 65 = 189
+			Sample Input 2:
+			3 9 0 1 1 0 -1
+			Sample Output 2:
+			401
+		
+		#include <bits/stdc++.h> 
+		/****************************************************************
+			Following is the class structure of the Node class:
+				class Node {
+					public:
+						int data;
+						Node *next;
+					Node(int data) {
+						this->data = data;
+						this->next = NULL;
+					}
+				};
+		*****************************************************************/
+		Node* findMid(Node* h){
+			Node* slow = h;
+			Node* fst = h -> next;
+
+			while(fst && fst -> next){
+				slow = slow -> next;
+				fst = fst -> next -> next;
+			}
+			// cout<< slow -> data<<"\n";
+			return slow;
+		}
+
+		Node* reverseIt(Node* h){
+			Node* cur = h;
+			Node* prev = NULL;
+
+			while(cur){
+				Node* tempNxt = cur -> next;
+				cur -> next = prev;
+				prev = cur;
+
+				cur = tempNxt;
+			}
+			return prev;
+		}
+
+		Node* addFirstAndReversedSecondHalf(Node* head) {
+			if(!head)
+				return head;
+				
+			if(!head -> next)
+				return head;
+			
+			Node* mid = findMid(head);
+			Node* secondHf = mid -> next;
+			mid -> next = NULL;
+			mid = reverseIt(head);
+
+			Node* ans = new Node(0);
+
+			int c = 0;
+			Node* temp = ans;
+
+			while(mid or secondHf or c){
+				int v1 =0, v2=0;
+				if(mid)
+				v1 = mid -> data;
+
+				if(secondHf) 
+				v2 =  secondHf -> data;
+
+				int sum =  v1 + v2 + c;
+				c = sum / 10;
+
+				Node* nn = new Node(sum % 10);
+				temp -> next = nn;
+				temp = nn;
+
+				if(secondHf)
+				secondHf = secondHf -> next;
+
+				if(mid)
+				mid = mid -> next;
+			}
+
+			ans = ans -> next;        //ignoring the dummy node
+			ans = reverseIt(ans);
+
+			// erasing leading zeros
+			while(ans -> next && ans->data == 0)
+				ans = ans -> next;
+
+			return ans;
+		}
+
+		Practice:
+			Node* FindMid(Node* h){
+				Node* s = h;
+				Node* f = h-> next;
+				while(f && f-> next){
+					s = s -> next;
+					f = f -> next -> next;
+				}
+				return s;
+			}
+
+			Node* reverseLL(Node* h){
+				Node* prev = NULL;
+				Node* cur = h;
+
+				while(cur){
+					Node* nxtND = cur -> next;
+					cur -> next = prev;
+					prev = cur;
+
+					cur = nxtND;
+				}
+				return prev;
+			}
+
+			Node* addFirstAndReversedSecondHalf(Node* head) {
+				if(!head)
+					return head;
+				
+				Node* mid = FindMid(head);
+				Node* second = mid -> next;
+				mid -> next = NULL;
+
+				Node* first = reverseLL(head);
+
+				int c =0;
+				
+				Node* ans = new Node(0);
+				Node* temp = ans;
+
+				while(first or second or c){
+					int v1, v2;
+					v1 = v2 = 0;
+					if(first)
+						v1 = first -> data;
+					
+					if(second)
+						v2 = second -> data;
+
+					int sum = v1 + v2 + c;
+
+					c = sum / 10;
+					Node* nn = new Node(sum % 10);
+					temp -> next = nn;
+					temp = nn;
+
+					if(second)
+						second = second -> next;
+						
+					if(first)
+						first = first -> next;
+				}
+				ans = ans -> next;
+				ans = reverseLL(ans);
+
+				while(ans && ans -> next && ans -> data == 0)
+					ans = ans -> next;
+				return ans;
+			}
+
+	853) Merge k sorted lists:
+		Problem statement
+			Given 'k' sorted linked lists, each list is sorted in increasing order. You need to merge all these lists into one single sorted list. You need to return the head of the final linked list.
+			For example:
+			Input:
+			3
+			3
+			4 6 8
+			3
+			2 5 7 
+			2
+			1 9
+
+			Output:
+			1 2 4 5 6 7 8 9 
+
+			Explanation:
+			First list is: 4 -> 6 -> 8 -> NULL
+			Second list is: 2 -> 5 -> 7 -> NULL
+			Third list is: 1 -> 9 -> NULL
+			The final list would be: 1 -> 2 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> NULL
+			Sample Input 1:
+			2
+			2
+			2 6 
+			2
+			-5 7 
+			Sample Output 1:
+			-5 2 6 7
+			Explanation for input 1:
+			First list is: 2 -> 6 -> NULL
+			Second list is: -5 -> 7 -> NULL
+			The final list would be: -5 -> 2 -> 6 -> 7 -> NULL
+			Sample Input 2:
+			2
+			3
+			8 9 11 
+			2
+			1 2 
+			Sample output 2:
+			1 2 8 9 11 
+			Constraints:
+				1 <= 'k' <= 10^3
+				1 <= 'n' <= 100
+				-10^9  <= 'data' <=  10^9 
+
+				where 'n' is the size of the list.
+				Time limit: 1 sec.
+		
+		/*
+			Following is the class structure of the Node class:
+			class Node {
+				public:
+					int data;
+					Node *next;
+				Node() {
+					this->data = 0;
+					next = NULL;
+				}
+				Node(int data) {
+					this->data = data; 
+					this->next = NULL;
+				}
+				Node(int data, Node* next) {
+					this->data = data;
+					this->next = next;
+				}
+			};
+		*/
+
+		// used extra space
+		/* TC: O(n * log n) & SC: O(n*m) */
+		Node* mergeKLists(vector<Node*> &listArray){
+			int i=0, n = listArray.size();
+			Node* head = NULL;
+
+			// connecting all lists
+			head = listArray[i++];
+			Node* temp = head;
+
+			while(temp -> next)
+				temp = temp -> next;  
+
+			while(i < n){
+				temp -> next = listArray[i++];
+				while(temp -> next)
+					temp = temp -> next;
+			}
+
+			// sorting all lists
+			vector<int> v;
+			temp = head;
+			while(temp){
+				v.push_back(temp -> data);
+				temp = temp -> next;
+			}
+
+			sort(v.begin(), v.end());
+			temp = head;
+			i =0;
+			while(temp){
+				temp -> data = v[i++];
+				temp = temp -> next;
+			}
+			return head;
+		}
+
+		// without using extra space:
+			❌Pending
+
+	854) 
 	
-	848)
+	855)
 	
-	849)
+	856)
 	
-	850)
+	857)
+	
+	858)
+	
+	859)
+	
+	860)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
