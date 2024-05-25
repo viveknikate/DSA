@@ -21081,6 +21081,7 @@ Lecture-59: Design Special Stack Problem
 	#HomeWork: ❌Pending
 		Go through 450 DSA LoveBabbar Sheet 
 ---------------------------------------------------------------------------------------------------------
+	16/05/2024
 Lecture-60: Queues in C++ [STL + Implementation + Types of Queues]
 	Queue:
 		Queues are a type of container adaptors that operate in a first in first out (FIFO) type of arrangement. Elements are inserted at the back (end) and are deleted from the front. Queues use an encapsulated object of deque or list (sequential container class) as its underlying container, providing a specific set of member functions to access its elements.
@@ -21249,6 +21250,15 @@ Lecture-60: Queues in C++ [STL + Implementation + Types of Queues]
 	Queue Implementation Using LinkedList:
 		❌Pending
 	
+	#Types of Queues:
+		1.Input Restricted Queue (this is a Simple Queue)
+		2.Output Restricted Queue (this is also a Simple Queue)
+		3.Circular Queue
+		4.Double Ended Queue (Deque)
+		5.Priority Queue
+		 a) Ascending Priority Queue
+		 b) Descending Priority Queue
+
 	Q.1. Implement a Queue:
 		Problem statement
 			Implement a Queue Data Structure specifically to store integer data using a Singly Linked List or an array.
@@ -21304,6 +21314,7 @@ Lecture-60: Queues in C++ [STL + Implementation + Types of Queues]
 			class Queue {
 				int *arr;
 				int frnt, rear, size;
+				
 				public:
 				Queue() {
 					size = 1e8;
@@ -21429,9 +21440,990 @@ Lecture-60: Queues in C++ [STL + Implementation + Types of Queues]
 				}
 			};
 	
-	Q.2. 
-	
+	3) Cicular Queue:
+		A Circular Queue is an extended version of a normal queue where the last element of the queue is connected to the first element of the queue forming a circle.
+		The operations are performed based on FIFO (First In First Out) principle. It is also called ‘Ring Buffer’. 
+
+		Complexity Analysis of Circular Queue Operations:
+		Time Complexity: 
+			Enqueue: O(1) because no loop is involved for a single enqueue.
+			Dequeue: O(1) because no loop is involved for one dequeue operation.
+			Auxiliary Space: O(N) as the queue is of size N.
+		Applications of Circular Queue:
+			Memory Management: The unused memory locations in the case of ordinary queues can be utilized in circular queues.
+			Traffic system: In computer controlled traffic system, circular queues are used to switch on the traffic lights one by one repeatedly as per the time set.
+			CPU Scheduling: Operating systems often maintain a queue of processes that are ready to execute or that are waiting for a particular event to occur.
+
+	Q.2. Circular Queue:
+		Problem statement
+			You will be given ‘Q’ queries. You need to implement a circular queue according to those queries. Each query will belong to one of these two types
+			1 ‘X’: Enqueue element ‘X’ into the end of the nth queue. Returns true if the element is enqueued, otherwise false.
+			2: Dequeue the element at the front of the nth queue. Returns -1 if the queue is empty, otherwise, returns the dequeued element.
+			Note:
+			Enqueue means adding an element to the end of the queue, while Dequeue means removing the element from the front of the queue.
+			Constraints:
+				1 <= N <= 1000
+				1 <= Q <= 10^5 
+				1 <= P <= 2
+				1 <= X <= 10^5
+				Time limit: 1 sec
+			Sample Input 1:
+				3 7
+				1 2 
+				1 3 
+				2 
+				1 4 
+				1 6 
+				1 7 
+				2
+				Sample Output 1:
+				True 
+				True
+				2
+				True
+				True
+				False
+				3
+				Explanation of Sample Output 1:
+				For this input, we have the size of the queue, 'N' = 3, and the number of queries, 'Q' = 7.
+
+				Operations performed on the queue are as follows:
+
+				push(2): Push element ‘2’ into the queue. This returns true.
+				push(3): Push element ‘3’ into the queue. This returns true.
+				pop(): Pop the top element from the queue. This returns 2.
+				push(4): Push element ‘4’ into the queue. This returns true.
+				push(6): Push element ‘6’ into the queue. This returns true.
+				push(7): Push element ‘7’ into the queue. This returns false because the queue is full.
+				pop(): Pop the top element from the queue. This returns 3.
+				Sample Input 2:
+				4 7
+				1 11 
+				1 51 
+				1 26 
+				2 
+				1 6
+				2
+				2 
+				Sample Output 2:
+				True
+				True
+				True
+				11
+				True
+				51
+				26
+				Explanation for Sample Output 2:
+				For this input, we have the size of the queue, 'N' = 3, and the number of queries, 'Q' = 7.
+
+				Operations performed on the queue are as follows:
+
+				push(11): Push element ‘11’ into the queue. This returns true.
+				push(51): Push element ‘51’ into the queue. This returns true.
+				push(26): Push element ‘26’ into the queue. This returns true.
+				pop(): Pop the top element from the queue. This returns 11.
+				push(6): Push element ‘6’ into the queue. This returns true.
+				pop(): Pop the top element from the queue. This returns 51.
+				pop(): Pop the top element from the queue. This returns 26.
+		
+		// Using Array:
+			#include <bits/stdc++.h> 
+			class CircularQueue{
+				int *arr;
+				int size;
+				int frnt, rear;
+
+				public:
+				CircularQueue(int n){
+					size = n;
+					arr = new int[n];
+					frnt = rear = -1;
+				}
+
+				// Enqueues 'X' into the queue. Returns true if it gets pushed into the stack, and false otherwise.
+				bool enqueue(int value){
+					if((frnt == 0 && rear == size - 1) || (rear == (frnt-1))) {
+						return false;
+					}else if(frnt == -1){
+						frnt = rear = 0;
+					}else if(rear == size -1 && frnt != 0){
+						rear =0;
+					}else{
+						rear++;
+					}
+					arr[rear] = value;
+					return 1;
+				} 
+
+				// Dequeues top element from queue. Returns -1 if the stack is empty, otherwise returns the popped element.
+				int dequeue(){
+					if(frnt == -1)
+						return -1;
+						
+					int ans = arr[frnt];
+					arr[frnt] = -1;
+					if(frnt == rear)
+						frnt = rear = -1;
+					else if(frnt == size-1)
+						frnt =0;
+					else
+						frnt++;
+					return ans;
+				}
+			};
+
+		// Using LinkedList:
+			#include <bits/stdc++.h> 
+			struct Node{
+				int data;
+				Node *nxt = NULL;
+				Node(int val){
+					data = val;
+				}
+
+				~Node() {
+					delete nxt;
+				}
+			};
+			class CircularQueue{
+				int cnt, size;
+				Node* Head = NULL;
+				Node* Tail = NULL;
+
+				public:
+				CircularQueue(int n){
+					size = n;
+					cnt = 0;
+				}
+
+				// Enqueues 'X' into the queue. Returns true if it gets pushed into the stack, and false otherwise.
+				bool enqueue(int value){
+					if(cnt == size)         // this indicates the circular queue is full
+						return false;
+					
+					Node* nn = new Node(value);
+					if(Head == NULL){            // this indicates that first element came
+						Head = nn;
+						Tail = nn;
+					}else{
+						Tail -> nxt = nn;
+						Tail = nn;
+					}
+					cnt++;
+					return 1;
+				}
+
+				// Dequeues top element from queue. Returns -1 if the stack is empty, otherwise returns the popped element.
+				int dequeue(){
+					if(cnt == 0)         // this indicates the circular queue is empty
+						return -1;
+
+					int val = Head ->data;
+					Head = Head -> nxt;
+					cnt--;
+					return val;
+				}
+			};
+
+	1) Input Restricted Queue:
+		In this type of Queue, the input can be taken from one side only(rear) and deletion of elements can be done from both sides(front and rear). This kind of Queue does not follow FIFO(first in first out).
+
+	2) Output Restricted Queue:
+		In this type of Queue, the input can be taken from both sides(rear and front) and the deletion of the element can be done from only one side(front).  This queue is used in the case where the inputs have some priority order to be executed and the input can be placed even in the first place so that it is executed first. 
+
+	4) Double Ended Queue:
+		Double Ended Queue is also a Queue data structure in which the insertion and deletion operations are performed at both the ends (front and rear). 
+		That means, we can insert at both front and rear positions and can delete from both front and rear positions.
+		Since Deque supports both stack and queue operations, it can be used as both. 
+		The Deque data structure supports clockwise and anticlockwise rotations in O(1) time which can be useful in certain applications.
+		Also, the problems where elements need to be removed and or added both ends can be efficiently solved using Deque.
+		- insert at both start and end
+		- delete from both start & end
+		- Used in CPU/ Process Scheduling
+		eg.
+			#include <iostream>
+			#include <deque>
+			using namespace std;
+			int main() {
+				
+				std::deque<int> d;
+				std::cout << d.empty() << std::endl;
+				
+				d.push_front(1);
+				d.push_front(2);
+				
+				d.push_back(4);
+				d.push_back(5);
+				
+				std::cout << d.empty() << std::endl;
+				std::cout <<"current front : " << d.front() << std::endl;
+				std::cout <<"current back : " << d.back() << std::endl;
+				return 0;
+			}
+
+	Q.3. Implement Deque:
+		Problem statement
+			Design a data structure to implement deque of size ‘N’. It should support the following operations:
+			pushFront(X): Inserts an element X in the front of the deque. Returns true if the element is inserted, otherwise false.
+			pushRear(X): Inserts an element X in the back of the deque. Returns true if the element is inserted, otherwise false.
+			popFront(): Pops an element from the front of the deque. Returns -1 if the deque is empty, otherwise returns the popped element.
+			popRear(): Pops an element from the back of the deque. Returns -1 if the deque is empty, otherwise returns the popped element.
+			getFront(): Returns the first element of the deque. If the deque is empty, it returns -1.
+			getRear(): Returns the last element of the deque. If the deque is empty, it returns -1.
+			isEmpty(): Returns true if the deque is empty, otherwise false.
+			isFull(): Returns true if the deque is full, otherwise false.
+			Following types of queries denote these operations:
+
+			Type 1: for pushFront(X) operation.
+			Type 2: for pushRear(X) operation.
+			Type 3: for popFront() operation.
+			Type 4: for popRear() operation.
+			Type 5: for getFront() operation.
+			Type 6: for getRear() operation.
+			Type 7: for isEmpty() operation.
+			Type 8: for isFull() operation.
+			Constraints:
+				1 <= N <= 1000
+				1 <= Q <= 10^5 
+				1 <= P <= 8
+				1 <= X <= 10^5
+				Time Limit: 1 sec
+
+				Where ‘N’ represents the size of the deque, ‘Q’ represents the number of queries, ‘P’ represents the type of operation and ‘X’ represents the element.
+			Sample Input 1:
+				5 7
+				7
+				1 10
+				1 20
+				2 30
+				5
+				4
+				4
+				Sample Output 1:
+				True 
+				True 
+				True
+				True
+				20
+				30
+				10
+				Explanation 1:
+				For the given input, we have the number of queries, Q = 7.
+				Operations performed on the deque are as follows:
+
+				isEmpty(): Deque is initially empty. So, this returns true.
+				pushFront(10): Insert the element ‘10’ in the front of the deque. This returns true.
+				pushFront(20): Insert the element ‘20’ in the front of the deque. This returns true.
+				pushRear(30): Insert the element ‘30’ in the back of the deque. This returns true.
+				getFront(): Returns the front element of the deque i.e. 20
+				popRear(): Pop an element from the back of the deque. This returns 30.
+				popRear(): Pop an element from the back of the deque. This returns 10.
+				The following image shows the snapshots of the deque after each operation:
+
+				Sample Input 2:
+				2 5
+				1 15
+				2 25
+				1 20
+				8
+				6
+				Sample Output 2:
+				True
+				True
+				False
+				True
+				25
+
+		// Using Array:
+			#include <bits/stdc++.h>
+			class Deque {
+				int *arr;
+				int size;
+				int frnt, rear;
+
+				public:
+				// Initialize your data structure.
+				Deque(int n) {
+					size = n;
+					arr = new int[n];
+					frnt = rear = -1;
+				}
+
+				// Pushes 'X' in the front of the deque. Returns true if it gets pushed into
+				// the deque, and false otherwise.
+				bool pushFront(int x) {
+					if ((frnt == 0 && rear == size - 1) || (rear == (frnt - 1)))				// if(isFull())
+						return 0;
+
+					if (frnt == -1) {
+						frnt = rear = 0;
+					} else if (frnt == 0 && rear != size - 1) {
+						frnt = size - 1;
+					} else {
+						frnt--;
+					}
+					arr[frnt] = x;
+					return 1;
+				}
+
+				// Pushes 'X' in the back of the deque. Returns true if it gets pushed into
+				// the deque, and false otherwise.
+				bool pushRear(int x) {
+					if ((frnt == 0 && rear == size - 1) || (rear == (frnt - 1)))					// if(isFull())
+						return 0;
+
+					if (frnt == -1) {
+						frnt = rear = 0;
+					} else if (rear == size - 1 && frnt != 0) {
+						rear = 0;
+					} else {
+						rear++;
+					}
+					arr[rear] = x;
+					return 1;
+				}
+
+				// Pops an element from the front of the deque. Returns -1 if the deque is
+				// empty, otherwise returns the popped element.
+				int popFront() {
+					if (frnt == -1)								// if(isEmpty())
+						return -1;
+
+					int val = arr[frnt];
+					if (frnt == rear)
+						frnt = rear = -1;
+					else if (frnt == size - 1)
+						frnt = 0;
+					else
+						frnt++;
+
+					return val;
+				}
+
+				// Pops an element from the back of the deque. Returns -1 if the deque is
+				// empty, otherwise returns the popped element.
+				int popRear() {
+					if (frnt == -1)				// if(isEmpty())
+						return -1;
+
+					int val = arr[rear];
+					if (frnt == rear)
+						frnt = rear = -1;
+					else if (rear == 0)
+						rear = size - 1;
+					else
+						rear--;
+
+					return val;
+				}
+
+				// Returns the first element of the deque. If the deque is empty, it returns
+				// -1.
+				int getFront() {
+					if (frnt == -1)					//if(isEmpty())
+						return -1;
+					return arr[frnt];
+				}
+
+				// Returns the last element of the deque. If the deque is empty, it returns
+				// -1.
+				int getRear() {
+					if (frnt == -1)					//if(isEmpty())
+						return -1;
+					return arr[rear];
+				}
+
+				// Returns true if the deque is empty. Otherwise returns false.
+				bool isEmpty() {
+					if (frnt == -1)
+						return 1;
+					return 0;
+				}
+
+				// Returns true if the deque is full. Otherwise returns false.
+				bool isFull() {
+					if ((frnt == 0 && rear == size - 1) || (rear == (frnt - 1)))
+						return 1;
+					return 0;
+				}
+			};
+
+		// Using LinkedList:
+			#include <bits/stdc++.h>
+			class Node{
+				public:
+					int data;
+					Node *nxt = NULL;
+					Node *prev = NULL;
+					
+				Node(int val){
+					data = val;
+				}
+
+				~Node(){
+					delete nxt;
+					delete prev;
+				}
+			};
+
+			class Deque {
+				int size, cnt=0;
+				Node *H = NULL;
+				Node *T = NULL;
+
+				public:
+				Deque(int n) {
+					size = n;
+				}
+
+				// Pushes 'X' in the front of the deque. Returns true if it gets pushed into
+				// the deque, and false otherwise.
+				bool pushFront(int x) {
+					if(isFull())
+						return false;
+
+					cnt++;
+					Node *nn = new Node(x);
+
+					if(H == NULL){
+						H = nn;
+						T = nn;
+					}else{
+						H -> prev = nn;
+						nn -> nxt = H;
+
+						H = nn;
+					}
+					return true;    
+				}
+
+				// Pushes 'X' in the back of the deque. Returns true if it gets pushed into
+				// the deque, and false otherwise.
+				bool pushRear(int x) {
+					if(isFull())
+						return false;
+
+					cnt++;
+					Node *nn = new Node(x);
+
+					if(H == NULL){
+						H = nn;
+						T = nn;
+					}else{
+						T -> nxt = nn;
+						nn -> prev = T;
+
+						T = nn;
+					}
+					return true;
+				}
+
+				// Pops an element from the front of the deque. Returns -1 if the deque is
+				// empty, otherwise returns the popped element.
+				int popFront() {
+					if(isEmpty())
+						return -1;
+
+					cnt--;
+					int val = H -> data;
+					Node *tmp = H;
+					H = H -> nxt;
+
+					tmp -> nxt = NULL;
+					tmp -> prev = NULL;
+					delete tmp;
+					
+					return val;
+				}
+
+				// Pops an element from the back of the deque. Returns -1 if the deque is
+				// empty, otherwise returns the popped element.
+				int popRear() {
+					if(isEmpty())
+						return -1;
+
+					cnt--;
+					int val = T -> data;
+					Node *tmp = T;
+					T = T -> prev;
+
+					if(cnt == 0){
+						H = NULL;
+						T = nullptr;
+					}
+
+					tmp -> nxt = NULL;
+					tmp -> prev = NULL;
+					delete tmp;
+
+					return val;
+				}
+
+				// Returns the first element of the deque. If the deque is empty, it returns
+				// -1.
+				int getFront() {
+					if(isEmpty())
+						return -1;
+					return H -> data;
+				}
+
+				// Returns the last element of the deque. If the deque is empty, it returns
+				// -1.
+				int getRear() {
+					if(isEmpty())
+						return -1;
+					return T -> data;
+				}
+
+				// Returns true if the deque is empty. Otherwise returns false.
+				bool isEmpty() {
+					if(cnt == 0)                        // if(H == NULL)
+						return 1;
+					return 0;
+				}
+
+				// Returns true if the deque is full. Otherwise returns false.
+				bool isFull() {
+					if(cnt == size)
+						return 1;
+					return 0;
+				}
+			};
 ---------------------------------------------------------------------------------------------------------
+Lecture-61: Queue FAANG Interview Questions
+	Q.1. Queue Reversal:
+		Problem Statement:
+			Given a Queue Q containing N elements. The task is to reverse the Queue. Your task is to complete the function rev(), that reverses the N elements of the queue.
+
+			Example 1:
+			Input:
+			6
+			4 3 1 10 2 6
+			Output: 
+			6 2 10 1 3 4
+			Explanation: 
+			After reversing the given elements of the queue , the resultant queue will be 6 2 10 1 3 4.
+
+			Example 2:
+			Input:
+			4
+			4 3 2 1 
+			Output: 
+			1 2 3 4
+			Explanation: 
+			After reversing the given elements of the queue , the resultant queue will be 1 2 3 4.
+			Your Task: You need to complete the function rev that takes a queue as parameter and returns the reversed queue. The printing is done automatically by the driver code.
+
+			Expected Time Complexity : O(n)
+			Expected Auxilliary Space : O(n)
+
+			Constraints:
+				1 ≤ N ≤ 10^5
+				1 ≤ elements of Queue ≤ 10^5
+
+		class Solution {
+			public:
+			queue<int> rev(queue<int> q) {
+				stack<int> st;
+				
+				while(!q.empty()){
+					st.push(q.front());
+					q.pop();
+				}
+				
+				while(!st.empty()){
+					q.push(st.top());
+					st.pop();
+				}
+				return q;
+			}
+		};
+	
+	Q.2. First negative integer in every window of size k:
+		Problem Statement:
+			Given an array A[] of size N and a positive integer K, find the first negative integer for each and every window(contiguous subarray) of size K.
+			Example 1:
+			Input : 
+			N = 5
+			A[] = {-8, 2, 3, -6, 10}
+			K = 2
+			Output : 
+			-8 0 -6 -6
+			Explanation :
+			First negative integer for each window of size k
+			{-8, 2} = -8
+			{2, 3} = 0 (does not contain a negative integer)
+			{3, -6} = -6
+			{-6, 10} = -6
+			
+			Example 2:
+			Input : 
+			N = 8
+			A[] = {12, -1, -7, 8, -15, 30, 16, 28}
+			K = 3
+			Output :
+			-1 -1 -7 -15 -15 0 	
+
+			Your Task:  
+				You don't need to read input or print anything. Your task is to complete the function printFirstNegativeInteger() which takes the array A[], its size N and an integer K as inputs and returns the first negative number in every window of size K starting from the first till the end. If a window does not contain a negative integer , then return 0 for that window.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(K)
+
+			Constraints:
+				1 <= N <= 10^5
+				-10^5 <= A[i] <= 10^5
+				1 <= K <= N
+			
+		// Not Optimized:
+			long long checkFirstNegative(long long int A[], int s, int e){
+				for(int i=s; i <= e; i++)
+					if(A[i] < 0)
+						return A[i];
+				return 0;
+			}
+
+			vector<long long> printFirstNegativeInteger(long long int A[], long long int N, long long int K) {
+				vector<long long> ans;
+				
+				for(int i=0; i <= N-K; i++){
+					long long int firstNeg = checkFirstNegative(A, i, i+K-1);
+					ans.push_back(firstNeg);
+				}
+				return ans;
+			}
+
+		// Optimized:
+			vector<long long> printFirstNegativeInteger(long long int A[], long long int N, long long int K) {
+				vector<long long> ans;
+				deque<long long int> dq;
+				
+				// window of size K
+				for(int i=0; i<K; i++)
+					if(A[i] < 0)
+						dq.push_back(i);
+				
+				if(dq.size()) {          // not empty then
+					ans.push_back(A[dq.front()]);
+				}else{
+					ans.push_back(0);
+				}
+				
+				for(int i=K; i<N; i++){
+					if(!dq.empty() && (i - dq.front()) >= K)
+						dq.pop_front();
+					
+					if(A[i] < 0)
+						dq.push_back(i);
+					
+					if(dq.size()) {          // not empty then
+						ans.push_back(A[dq.front()]);
+					}else{
+						ans.push_back(0);
+					}
+				}
+				return ans;
+			}
+
+		// More Optimized:
+			❌Pending (HomeWork)
+	
+	Q.3. Reverse First K elements of Queue (Refer Q.173 & Q.280 from POTD)
+	
+	Q.4. First non-repeating character in a stream:
+		Problem Statement:
+			Given an input stream A of n characters consisting only of lower case alphabets. While reading characters from the stream, you have to tell which character has appeared only once in the stream upto that point. If there are many characters that have appeared only once, you have to tell which one of them was the first one to appear. If there is no such character then append '#' to the answer.
+			NOTE:
+			1. You need to find the answer for every i (0 <= i < n)
+			2. In order to find the solution for every i you need to consider the string from starting position till ith position.
+			
+			Example 1:
+				Input: A = "aabc"
+				Output: "a#bb"
+				Explanation: For every ith character we will
+				consider the string from index 0 till index i first non
+				repeating character is as follow-
+				"a" - first non-repeating character is 'a'
+				"aa" - no non-repeating character so '#'
+				"aab" - first non-repeating character is 'b'
+				"aabc" - there are two non repeating characters 'b' and 'c', 
+				first non-repeating character is 'b' because 'b' comes before
+				'c' in the stream.
+
+			Example 2:
+				Input: A = "zz"
+				Output: "z#"
+				Explanation: For every character first non
+				repeating character is as follow-
+				"z" - first non-repeating character is 'z'
+				"zz" - no non-repeating character so '#'
+
+			Your Task:
+				You don't need to read or print anything. Your task is to complete the function FirstNonRepeating() which takes A as input parameter and returns a string after processing the input stream.			
+
+			Expected Time Complexity: O(n)
+			Expected Space Complexity: O(n)
+			
+			Constraints:
+			1 <= n <= 10^5
+		
+		// Not Optimized:
+			/* TC: O(n³)  & SC: O(n) */
+			class Solution {
+				public:
+				string FirstNonRepeating(string A){
+					string ans(A.size(), '#');
+					ans[0] = A[0];
+					
+					set<char> temp;
+					for(int i=1; i<A.size(); i++){
+						char ch = '#';
+						set<char> hold;
+						
+						// search window
+						for(int x=0; x<i; x++){
+							int flag = 1;
+							for(int y=x+1; y<=i; y++){
+								if(A[x] == A[y]){
+									hold.insert(A[x]);
+									flag =0;
+									break;
+								}
+							}
+							if(flag && hold.find(A[x]) == hold.end()){
+								ch = A[x];
+								break;
+							}
+							temp = hold;
+						}
+						
+						if(ch == '#' && temp.find(A[i]) == temp.end())
+							ch = A[i];
+						
+						temp.clear();
+						ans[i] = ch;
+					}
+					return ans;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				string FirstNonRepeating(string A){
+					string ans;
+					
+					map<char, int> mp;
+					queue<int> q;
+					
+					for(int i=0; i<A.size(); i++){
+						char ch =A[i];
+						
+						mp[ch]++;
+						q.push(ch);
+						
+						while(!q.empty()){
+							if(mp[q.front()] > 1){
+								q.pop();
+							}else{
+								ans.push_back(q.front());
+								break;
+							}
+						}
+						
+						if(q.empty())
+							ans.push_back('#');
+					}
+					return ans;
+				}
+			};
+
+	Q.5. Circular tour:
+		Problem Statement:
+			Suppose there is a circle. There are N petrol pumps on that circle. You will be given two sets of data.
+			1. The amount of petrol that every petrol pump has.
+			2. Distance from that petrol pump to the next petrol pump.
+			Find a starting point where the truck can start to get through the complete circle without exhausting its petrol in between.
+			Note :  Assume for 1 litre petrol, the truck can go 1 unit of distance.
+
+			Example 1:
+				Input:
+				N = 4
+				Petrol = 4 6 7 4
+				Distance = 6 5 3 5
+				Output: 1
+				Explanation: There are 4 petrol pumps with
+				amount of petrol and distance to next
+				petrol pump value pairs as {4, 6}, {6, 5},
+				{7, 3} and {4, 5}. The first point from
+				where truck can make a circular tour is
+				2nd petrol pump. Output in this case is 1
+				(index of 2nd petrol pump).
+
+			Your Task:
+				Your task is to complete the function tour() which takes the required data as inputs and returns an integer denoting a point from where a truck will be able to complete the circle (The truck will stop at each petrol pump and it has infinite capacity). If there exists multiple such starting points, then the function must return the first one out of those. (return -1 otherwise)
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space : O(1)
+
+			Constraints:
+				2 ≤ N ≤ 10000
+				1 ≤ petrol, distance ≤ 1000
+
+		// Not Optimized:
+			/*
+				The structure of petrolPump is 
+				struct petrolPump {
+					int petrol;
+					int distance;
+				};
+			*/
+
+			/*You are required to complete this method*/
+			class Solution{
+				public:
+				//Function to find starting point where the truck can start to get through
+				//the complete circle without exhausting its petrol in between.
+				int tour(petrolPump p[],int n) {
+					int ans = -1;
+					for(int i=0; i<n; i++){
+						if((p[i].petrol - p[i].distance) < 0)
+							continue;
+						
+						int petrolLeft = p[i].petrol - p[i].distance;
+						int flag = 1, j = i+1, times = 1;
+						
+						while(1 && times < n){
+							if(j == n)
+								j = 0;
+							
+							times++;
+							petrolLeft += (p[j].petrol - p[j].distance);
+							if(petrolLeft < 0){
+								flag =0;
+								break;
+							}
+							j++;   
+						}
+						
+						if(flag){
+							ans = i;
+							break;
+						}
+					}
+					return ans;
+				}
+			};
+
+		// Optimized:
+			class Solution{
+				public:
+				int tour(petrolPump p[],int n) {
+					int balance = 0, deficiency = 0;
+					int start =0;
+					
+					for(int i=0; i<n; i++){
+						balance += p[i].petrol - p[i].distance;
+						if(balance < 0){
+							deficiency += balance;
+							balance =0;
+							start = i+1;
+						}
+					}
+					
+					if((deficiency + balance) >=0)
+						return start;
+					else
+						return -1;
+				}
+			};
+
+	Q.6. Interleave the First Half of the Queue with Second Half:
+		Problem Statement:
+			You are given a queue Q of N integers of even length, rearrange the elements by interleaving the first half of the queue with the second half of the queue.
+
+			Example 1:
+			Input:
+			N = 4
+			Q = {2,4,3,1}
+			Output:
+			{2,3,4,1}
+			Explanation:
+			After the mentioned rearrangement of the first half
+			and second half, our final queue will be {2,3,4,1}.
+			
+
+			Example 2:
+			Input:
+			N = 2
+			Q = {3,5}
+			Output:
+			{3,5}
+			Explanation:
+			After the mentioned rearrangement of the first half
+			and second half, our final queue will be {3,5}.
+			
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function rearrangeQueue() which takes a queue Q as input and returns the modified queue after the rearrangement.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(N)
+
+			Constraints:
+				2 <= N <= 10^5
+				N is even
+				1 <= Elements of Queue <= 10^3
+				Sum of N over all test cases doesn't exceeds 10^6
+
+		class Solution{
+			public:
+			vector<int> rearrangeQueue(queue<int> &q){
+				vector<int> ans, temp;
+				
+				while(!q.empty()){
+					temp.push_back(q.front());
+					q.pop();
+				}
+				
+				int i=0, n = temp.size(), j = n/2;
+				int f = 1;
+				while(j < n){
+					if(f)
+						ans.push_back(temp[i++]), f = 0;
+					else
+						ans.push_back(temp[j++]), f = 1;
+					
+					// (f) ? (ans.push_back(temp[i++]), f = 0) : (ans.push_back(temp[j++]), f = 1);
+
+				}
+				
+				return ans;
+			}
+		};
+
+		// or 
+		class Solution{
+			public:
+			vector<int> rearrangeQueue(queue<int> &q){
+				vector<int> ans;
+				queue<int> temp;
+				int val = q.size() / 2;
+				
+				while(val--){
+					temp.push(q.front());
+					q.pop();
+				}
+				
+				int f = 1;
+				while(!q.empty())
+					(f) ? (ans.push_back(temp.front()), temp.pop(), f = 0) : (ans.push_back(q.front()), q.pop(), f = 1);
+
+				return ans;
+			}
+		};
+
+	Q.7. 
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -26877,29 +27869,23 @@ POTD:-[Problem of the Day]
 				5
 				1 5 3 4 2
 
-
 				Sample Output 1:
 				5 -1 4 -1 -1
-
 
 				Sample Input 2:
 				5
 				5 5 5 5 5
 
-
 				Sample Output 2:
 				-1 -1 -1 -1 -1
-
 
 				Expected Time Complexity :
 				The expected time complexity is O(n).
 
-
 				Constraints :
-				1 <= 'n' <= 10^5
-				1 <= 'a[i]' <= 10^9
-
-				Time Limit: 1 sec
+					1 <= 'n' <= 10^5
+					1 <= 'a[i]' <= 10^9
+					Time Limit: 1 sec
 
 		#include <bits/stdc++.h> 
 		vector<int> nextGreater(vector<int> &arr, int n) {
@@ -29336,30 +30322,39 @@ POTD:-[Problem of the Day]
 			};
 
 	64) Column name from a given column number:
-		Given a positive integer, return its corresponding column title as appear in an Excel sheet.
-		Excel columns has a pattern like A, B, C, … ,Z, AA, AB, AC,…. ,AZ, BA, BB, … ZZ, AAA, AAB ….. etc. 
-		In other words, column 1 is named as “A”, column 2 as “B”, column 27 as “AA” and so on.
-
+		Problem Statement:
+			Given a positive integer, return its corresponding column title as appear in an Excel sheet.
+			Excel columns has a pattern like A, B, C, … ,Z, AA, AB, AC,…. ,AZ, BA, BB, … ZZ, AAA, AAB ….. etc. In other words, column 1 is named as “A”, column 2 as “B”, column 27 as “AA” and so on.
 			Example 1:
 				Input:
 				N = 28
-				Output: AB
+				Output: 
+				AB
 				Explanation: 1 to 26 are A to Z.
 				Then, 27 is AA and 28 = AB.
 
 			Example 2:
 				Input: 
 				N = 13
-				Output: M
+				Output: 
+				M
 				Explanation: M is the 13th character of
 				alphabet.
-				Your Task:
-			You don't need to read input or print anything. Your task is to complete the function colName() which takes the column number N as input and returns the column name represented as a string.
+
+			Example 3:
+				Input:
+				N = 5473578
+				Output: 
+				KYJZF
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function colName() which takes the column number N as input and returns the column name represented as a string.
 			Expected Time Complexity: O(LogN).
 			Expected Auxiliary Space: O(1).
 
 			Constraints:
-				1 <= N <= 1018
+				1 <= N <= 10^18
+		
 		class Solution{
 			public:
 			string colName (long long int n){
@@ -29380,6 +30375,28 @@ POTD:-[Problem of the Day]
 				return s;
 			}
 		};
+
+		// or
+			class Solution{
+				public:
+				string colName (long long int n) {
+					string res;
+					
+					while(n){
+						int inc = (n-1) % 26;
+						char crntCh = 'A' + inc;
+						
+						res += crntCh;
+						n = (n-1) / 26;
+					}
+					
+					// reverse the string
+					int i=0, j=res.size()-1;
+					while(i < j)
+						swap(res[i++], res[j--]);
+					return res;
+				}
+			};
 
 	65) Roman Number to Integer:
 		Given a string in roman no format (s)  your task is to convert it to an integer . 
@@ -43578,6 +44595,35 @@ POTD:-[Problem of the Day]
 			return storer[n-1];
 		}
 
+		// Or:
+			#include <bits/stdc++.h> 
+			string lookAndSaySequence(int n) {
+				vector<string> v = {"1"};
+
+				while(v.size() < n){
+					string cur = v.back();
+					string temp;
+
+					int cnt =1, i;
+					for(i=0; i<cur.size()-1; i++){
+						if(cur[i] == cur[i+1])
+							cnt++;
+						else{
+							temp += to_string(cnt);
+							temp += cur[i];
+							cnt=1;
+						}
+					}
+
+					//inserting last cnt mannually
+					temp += to_string(cnt);
+					temp += cur[i];
+
+					v.push_back(temp);
+				}
+				return v.back();
+			}
+
 	254) Ninja And The Game Of Words:
 		Problem statement
 			Ninja and his friend playing a game in which his friend gave him a string ‘STR’ 
@@ -45913,7 +46959,7 @@ POTD:-[Problem of the Day]
 			Expected Auxiliary Space : O(K)
 
 			Constraints:
-				1 <= K <= N <= 105
+				1 <= K <= N <= 10^5
 
 		class Solution {
 			public:
@@ -45966,7 +47012,31 @@ POTD:-[Problem of the Day]
 						q.push(q.front());
 						q.pop();
 					}
+					return q;
+				}
+			};
+
+		// Concise:
+			class Solution {
+				public:
+				queue<int> modifyQueue(queue<int> q, int k) {
+					stack<int> st;
+					int val = q.size() - k;
 					
+					while(k--){
+						st.push(q.front());
+						q.pop();
+					}
+					
+					while(!st.empty()){
+						q.push(st.top());
+						st.pop();
+					}
+					
+					while(val--){
+						q.push(q.front());
+						q.pop();
+					}
 					return q;
 				}
 			};
@@ -66564,6 +67634,26 @@ POTD:-[Problem of the Day]
 				}
 				return ans;
 			}
+
+			// or
+				#include<stack>
+				vector<int> nextGreaterElement(vector<int>& arr, int n) {
+					vector<int> ans (n, -1);
+					stack<int> st;
+
+					for(int i=n-1; i>=0; i--){
+						while(!st.empty()){
+							if(arr[i]>=st.top())
+								st.pop();
+							else{
+								ans[i] = st.top();
+								break;
+							}
+						}
+						st.push(arr[i]);
+					}
+					return ans;
+				}
 
 	548) Maximum Even Two Sum
 		Problem statement
@@ -88932,26 +90022,864 @@ POTD:-[Problem of the Day]
 			}
 		};
 			
-	862) 
-	
-	863)
-	
-	864)
-	
-	865)
-	
-	866)
-	
-	867)
-	
-	868)
-	
-	869)
-	
-	870)
-	
-	871)
+	862) Odd Before Even:
+		Problem statement
+			You are given two sorted linked lists of length ‘N1’ and ‘N2’ respectively. Your task is to create a linked list with common elements such that all common odd elements are before common even elements.
+			Note: The relative order inside both the even and odd groups should remain as it was in the input.
+			You just need to return the head of the new linked list formed, don't print the elements.
+			Constraints:
+				1 <= T <= 5
+				0 <= N <= 5 * 10 ^ 6
+				1 <= nodeVal[i] <= 10 ^ 9
+				Time Limit: 1 sec.
+			Sample Input 1:
+				2
+				1 2 3 4 5 7 8 -1
+				2 4 4 7 8 10 -1
+				1 2 7 10 20 23 -1
+				2 7 23 -1
+				Sample Output 1:
+				7 2 4 8
+				7 23 2
+				Explanation of Sample Input 1:
+				In the first test case, the common elements are {2, 4, 7, 8 }. So the elements of the new linked list is 7 -> 2 -> 4 -> 8 -> NULL as odd will come before even maintaining the relative order.
+				In the second test case, the common elements are {2, 7, 23 }. So the elements of the new linked list is 7 -> 23 -> 2 -> NULL as odd will come before even maintaining the relative order..
+				Sample Input 2:
+				2
+				10 11 12 -1
+				1 2 8 9 10 12 12 -1
+				1 2 3 3 4 -1
+				1 2 3 4 -1
+				Sample Output 2:
+				10 12
+				1 3 2  4
 
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			/****************************************************************
+				Following is the Linked list node structure already written
+				template <typename T>
+				class LinkedListNode {
+					public:
+						T data;
+						LinkedListNode<T>* next;
+					LinkedListNode(T data) {
+						this->data = data;
+						next = NULL;
+					}
+				};
+			*****************************************************************/
+			LinkedListNode<int>* commonOddEven(LinkedListNode<int> *head1, LinkedListNode<int> *head2){
+				LinkedListNode<int>* ansHead = NULL;
+				LinkedListNode<int>* Tail = NULL;
+
+				LinkedListNode<int>* headHolder = head1;
+				LinkedListNode<int>* headHolder2 = head1;
+
+				while(head1 && head2){
+					if(head1 -> data == head2 -> data){
+						if(ansHead == nullptr){
+							ansHead = head2;
+							Tail = head2;
+							
+						}else{
+							Tail -> next = head2;
+							Tail = head2;
+						}
+						head1 = head1 -> next;
+						head2 = head2 -> next;
+
+					}else if((head1 -> data) < (head2 -> data)){
+						head1 = head1 -> next;
+					}else{
+						head2 = head2 -> next;
+					}
+				}
+
+				if(Tail != NULL)
+					Tail -> next = nullptr;
+				else{
+					return nullptr;
+				}
+
+				LinkedListNode<int>* temp1 = ansHead;
+				LinkedListNode<int>* temp2 = ansHead;
+				LinkedListNode<int>* temp3 = ansHead;
+
+				vector<int> v;
+				while(temp1){
+					if((temp1 -> data)&1)
+						v.push_back(temp1->data);
+					temp1 = temp1 -> next;
+				}  
+
+				while(temp2){
+					if(!((temp2 -> data)&1))
+						v.push_back(temp2->data);
+					temp2 = temp2 -> next;
+				}
+
+				int n = v.size(), i=0;
+				while(i < n){
+					temp3 -> data = v[i++];
+					temp3 = temp3 -> next;
+				}
+				return ansHead;
+			}
+
+		// Optimized:
+			❌Pending
+	
+	863) Excel Sheet | Part-2:
+		Problem statement
+			You are given a string STR representing the column title in an Excel Sheet. You need to find its corresponding column number.
+			For example: A corresponds to 1, B to 2, C to 3, … , Z to 26, AA to 27, .. and so on.
+			Constraints:
+				1 ≤ T ≤ 50
+				1 ≤ |STR| ≤ 12
+				where 'T' denotes number of testcases, and |STR| denotes the length of the string.
+				Time Limit : 1 sec 
+			Sample Input 1:
+				3
+				A
+				AB
+				F
+				Sample Output 1:
+				1
+				28
+				6
+				Explanation of Input 1:
+				The first test case, STR = “A”. This corresponds to column number 1.
+
+				The second test case, STR = “AB”. This corresponds to column number 28.
+
+				The third test case, STR = “F”. This corresponds to column number 6.
+				Sample Input 2:
+				3
+				AZ
+				COD
+				ZZZ
+				Sample Output 2
+				52
+				2422
+				18278
+
+		#include <bits/stdc++.h> 
+		long long titleToNumber(string str) {
+			long long ans =0;
+			map<char, int> mapping = {
+												{'A', 1}, {'B', 2}, {'C', 3}, {'D', 4},
+												{'E', 5}, {'F', 6}, {'G', 7}, {'H', 8}, 
+												{'I', 9}, {'J', 10}, {'K', 11}, {'L', 12}, 
+												{'M', 13}, {'N', 14}, {'O', 15}, {'P', 16}, 
+												{'Q', 17}, {'R', 18}, {'S', 19}, {'T', 20}, 
+												{'U', 21}, {'V', 22}, {'W', 23}, {'X', 24}, 
+												{'Y', 25}, {'Z', 26}
+											};
+
+			// if(str.size() == 1)
+			//     return mapping[str[0]];
+			// else if(str.size() == 2)
+			//     return mapping[str[1]] + mapping[str[0]] * 26;
+
+			long long place = 26;
+			for(int i=str.size()-1; i>=0; i--){
+				if(i == str.size()-1){
+					ans += mapping[str[i]];
+				}else{
+					ans += mapping[str[i]] * place;
+					place *= 26;
+				}        
+			}
+			return ans;
+		}
+
+		// Simpler:
+			#include <bits/stdc++.h> 
+			long long titleToNumber(string str) {
+				long long ans =0;
+
+				for(auto s: str) {						// for(char s: str){
+					ans *= 26;
+					ans += s - 'A' + 1;
+				}
+				return ans;
+			}
+	
+	864) Excel Column Number:
+		Problem statement
+			You have been given a column title as appears in an Excel sheet, return its corresponding column number.
+			For example:
+			A -> 1
+			B -> 2
+			C -> 3
+			...
+			Z -> 26
+			AA -> 27
+			AB -> 28 
+			...
+			Constraints:
+				1 <= |S| <= 10
+				Input contains only uppercase English Alphabet letters
+
+				Time Limit : 1 sec
+			Output Format
+			The only line of output will print the column number corresponding to given column title 
+			Sample Input 1
+			AB
+			Sample Output 1
+			28
+			Sample Input 2
+			ZZZ
+			Sample Output 2
+			18278
+
+		long long excelColumnNumber(string input) {
+			long long ans =0;
+			for(char ch: input)
+				ans = ans*26 + (ch - 'A' + 1);
+
+			return ans;
+		}
+	
+	866) Excel Sheet Column Number:
+		Problem Statement:
+			Given a string columnTitle that represents the column title as appears in an Excel sheet, return its corresponding column number.
+			For example:
+			A -> 1
+			B -> 2
+			C -> 3
+			...
+			Z -> 26
+			AA -> 27
+			AB -> 28 
+			...
+
+			Example 1:
+				Input: columnTitle = "A"
+				Output: 1
+
+			Example 2:
+				Input: columnTitle = "AB"
+				Output: 28
+
+			Example 3:
+				Input: columnTitle = "ZY"
+				Output: 701
+			
+			Constraints:
+				1 <= columnTitle.length <= 7
+				columnTitle consists only of uppercase English letters.
+				columnTitle is in the range ["A", "FXSHRXW"].
+
+		class Solution {
+			public:
+			int titleToNumber(string columnTitle) {
+				int ans = 0;
+
+				for(char ch: columnTitle)
+					ans = (ans*26)  + (ch - 'A' + 1);
+
+				return ans;
+			}
+		};
+
+	867) Excel Sheet | Part - 2:
+		Problem Statement:
+			Given a string S that represents column title of an Excel sheet, find the number that represents that column.
+			In excel A column is number 1, AA is 27 and so on.
+
+			Example 1:
+				Input:
+				S = A
+				Output: 1
+
+			Example 2:
+				Input:
+				S = AA
+				Output: 27
+			Your Task:
+				Complete the function ExcelColumnNumber() which takes a string as input and returns an integer.
+			Expected Time Complexity: O(|S|)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ |S| <=7
+
+		class Solution{
+			public:
+			int ExcelColumnNumber(string s) {
+				int ans = 0;
+				
+				for(char ch: s){
+					int val = ch - 'A' + 1;
+					ans *= 26;
+					ans += val;
+				}
+				return ans;
+			}
+		};
+
+	865) Multigram
+		Problem statement
+			Pero is a passionate lover of riddles. The newest type of riddles he has come
+			across requires the solver to check whether the given word is a multigram.
+			A multigram is a word that consists of concatenating two or more words that
+			are all mutually anagrams. The first of these words is called the root of the
+			multigram. For instance, the word bbabab is a multigram with the root bba
+			because it consists of anagrams bba and bab.
+			Help Pero solve the riddle by determining whether his word is a multigram and
+			determining its root in case it is. If there are multiple possible roots of the
+			multigram, output the shortest.
+			Please note: Two words are mutually anagrams if one of them can be obtained
+			from the other by changing the letter order
+
+			Constraints:
+				length of word is at most 100000.
+				Time limit: 1 sec
+
+			Input Format:
+				The first and only line of input contains a word of length at most 100000
+				lowercase English characters.
+
+			Output Format:
+				If the given word is not a multigram, output -1.
+				Otherwise, output the shortest root of the given word in one line.
+			Sample Input 1:
+			aaaa
+			Sample Output 1:
+			a
+
+			Sample Input 2:
+			ab
+			Sample Output 2:
+			-1
+		
+		// Not Optimized:
+			#include<bits/stdc++.h>
+			using namespace std;
+			bool checkAreTheyEqual(vector<string>& h){
+				for(int i=0; i<h.size()-1; i++){
+					string s1 = h[i];
+					string s2 = h[i+1];
+
+					sort(s1.begin(), s1.end());
+					sort(s2.begin(), s2.end());
+
+					if(s1 != s2)
+						return 0;
+				}
+				return 1;
+			}
+
+			int main() {
+				string out = "-1";
+
+				string s;
+				cin>>s;
+
+				//checking every subsequence
+				for(int i=1; i <= s.size(); i++){
+					vector<string> hold;
+					for(int j=0; j <= s.size() - i; j+=i){
+						string cur = s.substr(j, i);
+						hold.push_back(cur);
+					}
+					if(checkAreTheyEqual(hold)){
+						out = hold[0];
+						break;
+					}
+				}
+
+				cout<<out<<endl;
+				return 0;
+			}
+	
+		// Optimized:
+			❌Pending
+	
+	868) K-Palindrome:
+		Problem Statement:
+			Given a string str of length n, find if the string is K-Palindrome or not. A k-palindrome string transforms into a palindrome on removing at most k characters from it.
+			Example 1:
+			Input: str = "abcdecba"
+			n = 8, k = 1
+			Output: 1
+			Explaination: By removing 'd' or 'e' 
+			we can make it a palindrome.
+
+			Example 2:
+			Input: str = "abcdefcba"
+			n = 9, k = 1
+			Output: 0
+			Explaination: By removing a single 
+			character we cannot make it a palindrome.
+
+			Your Task:
+				You do not need to read input or print anything. Your task is to complete the function kPalindrome() which takes string str, n, and k as input parameters and returns 1 if str is a K-palindrome else returns 0.
+
+
+			Expected Time Complexity: O(n*n)
+			Expected Auxiliary Space: O(n*n)
+
+
+			Constraints:
+				1 ≤ n, k ≤ 10^3
+
+		// Not Optimized:
+			class Solution{
+				public:
+				bool solve(string s, int k){
+					int i=0, j=s.size()-1;
+					
+					while(i < j){
+						if(s[i] != s[j] && k <= 0){
+							return 0;
+						}else if(s[i] != s[j]){
+							k--;
+							
+							// left side
+							string t1 = s;
+							t1.erase(t1.begin() + i);
+							if(solve(t1, k))
+								return 1;
+							
+							// right side
+							string t2 = s;
+							t2.erase(t2.begin() + j);
+							if(solve(t2, k))
+								return 1;
+						}
+						i++,j--;
+					}
+					return 1;
+				}
+				
+				int kPalindrome(string str, int n, int k) {
+					int i=0, j = n-1;
+					while(i < j && k) {
+						if(str[i] != str[j]) {
+							k--;
+							
+							// left side
+							string t1 = str;
+							t1.erase(t1.begin() + i);
+							if(solve(t1, k))
+								return 1;
+							
+							// right side
+							string t2 = str;
+							t2.erase(t2.begin() + j);
+							if(solve(t2, k))
+								return 1;
+								
+						}
+						i++,j--;
+					}
+						
+					i=0, j=n-1;
+					while(i < j)
+						if(str[i++] != str[j--])
+							return 0;
+					
+					return 1;
+				}
+			};
+	
+		// Optimized:
+			❌Pending
+
+	#CN WeeklyContest-127
+		869) Jump string:
+			Problem statement
+				You are given a string ‘S’ of length ‘N’ where characters are numbered from ‘0’ to ‘N - 1’. Initially you have an empty string ‘K’ and you start at index ‘0’ of ‘S’ and proceed through the following steps until you reach the end of the string or beyond its boundary.
+				If the current character is ‘*’, skip the character and move forward by ‘1’.
+				If the current character is ‘#’, skip the character and move forward by ‘2’.
+				Otherwise, append the character at the end of ‘K’ and move forward by ‘1’.
+				You have to determine the resulting string ‘K’ formed by the given steps.
+				Your task is to tell the string ‘K’ formed by the given steps and return it. Return “-1”, if the string ‘K’ is empty.
+				Example:
+				‘N’ = 5
+				‘S’ = “a*#ck”
+				Initially the string ‘K’ is “”.
+
+				Step 1: You are at index ‘0’, and ‘S[0]’ is ‘a’.
+				Append the character at the end of ‘K’, now ‘K’ becomes “a”.
+				Move forward by ‘1’.
+
+				Step 2: You are at index ‘1’ and ‘S[1]’ is ‘*’.
+				Skip the character and move forward by ‘1’.
+
+				Step ‘3’ You are at index ‘2’ and ‘S[2]’ is ‘#’.
+				Skip the character and move forward by ‘2’.
+
+				Step 4: You are at index ‘4’ and ‘S[4]’ is ‘k’.
+				Append the character at the end of ‘K’, now ‘K’ becomes “ak”.
+
+				The final string formed is “ak”.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^5
+					‘a’ <= ‘S[i]’ <= ‘z’ or ‘S[i]’ belongs to the set {‘*’, ‘#’}
+
+					Time Limit: 1 sec 
+				Sample Input 1:
+					2
+					4
+					ff#h
+					3
+					*#*
+					Sample Output 1:
+					ff
+					-1
+					Explanation of sample input 1:
+					For test case 1:
+					Step 1: Append ‘f’ at the end of the string ‘K’ and move forward by ‘1’.
+					Step 2: Append ‘f’ at the end of the string ‘K’ and move forward by ‘1’.
+					Step 3: The current element is ‘#’, so skip the character and move forward by ‘2’.
+					The final string formed is: “ff”.
+
+					For test case 2:
+					Step 1: The current element is ‘*’, so skip the character and move forward by ‘1’.
+					Step 2: The current element is ‘#’, so skip the character and move forward by ‘2’.
+					The final string ‘K’ is an empty string. So, the answer for this test case is “-1”.
+					Sample Input 2:
+					2
+					5
+					youkn 
+					6
+					pp#ppk
+					Sample Output 2:
+					youkn 
+					pppk 
+
+			string jumpString (int n, string &s) {
+				string k;
+				int i=0;
+				
+				while(i < n){
+					if(s[i] == '*')
+						i++;
+					else if(s[i] == '#')
+						i += 2;
+					else
+						k += s[i++];
+				}
+
+				return (k.size()) ? k : "-1";
+			}
+		
+		870) Max Score: ❌Pending
+			Problem statement
+				You have two arrays ‘A’ and ‘B’ consisting of ‘N’ and ‘M’ numbers respectively. The compatibility score of the two arrays is the maximum possible value of ‘abs(X-Y)’ which is the absolute value of X-Y.
+				'X' denotes a number shared by both arrays, while 'Y' represents a number unique to one of the arrays. If such numbers don't exist return -1.
+				Example:
+				‘A’ = [1, 2, 4, 1]
+				‘B’ = [3, 2, 4]
+				Return 3,
+				X can be chosen as 4 as it is in both arrays.
+				Y can be chosen as 1 as it is unique to array ‘A’.
+				It can be shown that we can't obtain any value higher than 3 with any other values of X and Y.
+
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= ’N’,’M’ <= 10^5 
+					1 <= ’A[i], B[i]’ <= 10^9 
+					Time Limit: 1 sec
+				Sample Input 1:
+					2
+					5 6
+					6 2 7 7 5 
+					2 4 7 6 2 2 
+					7 4
+					7 8 9 10 8 10 3 
+					10 8 1 10 
+					Sample Output 1:
+					3
+					9
+					Explanation of sample input 1:
+					For test case 1:
+					X can be chosen as 7 as it is in both arrays.
+					Y can be chosen as 4 as it is unique to array ‘B’.
+					It can be shown that we can't obtain any value higher than 3 with any other values of X and Y.
+					For test case 2:
+					X can be chosen as 10 as it is in both arrays.
+					Y can be chosen as 1 as it is unique to array ‘B’.
+					It can be shown that we can't obtain any value higher than 9 with any other values of X and Y.
+					Sample Input 2:
+					3
+					6 7
+					1 7 4 6 1 2 
+					1 4 1 1 7 7 4 
+					6 7
+					5 5 1 1 5 2 
+					5 1 6 2 9 9 7 
+					5 7
+					2 3 2 10 8 
+					2 2 2 9 10 3 1 
+					Sample Output 2:
+					5
+					8
+					9
+
+			int score(vector<int> &a,vector<int> &b){
+				set<int> ua (a.begin(), a.end());
+				set<int> ub (b.begin(), b.end());
+
+				map<int, int> mp;
+				for(auto i: ua)
+					mp[i]++;
+				
+				for(auto i: ub)
+					mp[i]++;
+
+				int min1, min2;
+				min1 = min2 = 1e9+1;          // to find the min elements
+
+				int mx1, mx2;
+				mx1 = mx2 = 0;                  // to find the max elements
+
+				for(auto i: mp){
+					if(i.second == 1) {
+						min1 = min(min1, i.first);
+						mx1 = max(mx1, i.first);
+					}else {
+						min2 = min(min2, i.first);
+						mx2 = max(mx2, i.first);
+					}
+				}
+				if(mx1 == 0 || mx2 == 0) 
+					return -1;  
+				return max(mx1-min2, mx2 - min1);
+			}
+
+	871) Different Bits Sum Pairwise:
+		Problem statement
+			You are given an arbitrary array ‘arr’ consisting of 'N' non-negative integers. You need to find the sum of bit differences of all the pairs that can be formed in the given array.
+			In simple words, let us define f(x, y) as the count of different bits at the same position in the binary representations of two integers, x and y.
+			You need to find the summation of f over all possible values of x and y in the input array I.e sum( f(arr[i], arr[j])) for all 0 <= i < N and 0 <= j < N.
+			For Example :
+			f(2, 3) = 1, as 2 → 0010 and 3 → 0011, only the last bit is different in both the numbers, hence f(2, 3) is 1.
+			Note :
+			As the final answer may be very large, return your answer modulo 10^9 + 7.
+			Constraints :
+				1 <= T <= 100
+				1 <= N <= 10^4
+				0 <= arr[i] < 10^9
+				Time Limit: 1sec
+
+			Sample Input 1 :
+				2
+				2
+				1 2
+				2
+				6 6
+				Sample Output 1 :
+				4
+				0
+				Explanation for Sample Input 1 :
+				Test Case 1:
+				All the possible pairs in the given array are:-
+				f(1, 1) - as both numbers are same, no. of bit differences is 0
+				f(1, 2) - 1 in binary is (0001) and 2 in binary is (0010). There are 2 bits which are different in both the numbers. Hence, no. of bit differences is 2.
+				f(2, 2) - as both numbers are the same, no, of bit differences is 0
+				f(2, 1) - same as (1, 2), hence no. of bit differences is 2.
+				Summing the above values (0+2+0+2) we get 4. Hence, the output is 4.
+
+				Test Case 2:
+				There is only one possible pair (6,6). As both the numbers are sum, the output is 0.
+				Sample Input 2 :
+				2
+				3 
+				1 3 5
+				4
+				4 6 7 8
+				Sample Output 2 :
+				8
+				26
+		
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			int cnt(int a, int b){
+				int z=0;
+				while(a || b){
+					if((a & 1) != (b  & 1))
+						z++;
+						
+					a >>= 1;
+					b >>= 1;
+				}
+
+				return z;
+			}
+
+			int differentBitsSumPairwise(vector<int> &arr, int n) {
+				int ans =0, mod = 1e9+7;
+
+				map<pair<int, int>, int> keyValuePair;
+				for(int i=0; i<n; i++){
+					for(int j=0; j<n; j++){
+						int diff;
+						if((keyValuePair.find({arr[i], arr[j]}) != keyValuePair.end()))
+							diff = keyValuePair[{arr[i], arr[j]}];
+						else if(keyValuePair.find({arr[j], arr[i]}) != keyValuePair.end())
+							diff = keyValuePair[{arr[j], arr[i]}];
+						else{
+							diff = cnt(arr[i], arr[j]);
+							keyValuePair[{arr[i], arr[j]}] = diff;
+						}
+						ans = (ans + diff) % mod;
+					}
+				}
+				return ans % mod;
+			}
+
+			// Or
+			#include <bits/stdc++.h> 
+			int countDiff(int a, int b){
+				int cnt = 0;
+				while(a || b){
+					if((a & 1) != (b & 1))
+						cnt++;
+					
+					a >>= 1;
+					b >>= 1;
+				}
+				return cnt;
+			}
+
+			int differentBitsSumPairwise(vector<int> &arr, int n) {
+				int mod = 1e9+7;
+				int ans =0;
+
+				for(int i=0; i<n; i++){
+					for(int j=0; j<n; j++){
+						int diffCnt = countDiff(arr[i], arr[j]);
+						ans = (ans + diffCnt) % mod;
+					}
+				}
+				return ans % mod;
+			}
+
+		// Optimized:
+			❌Pending (bit manipulation)
+
+	872) Check If One String Is A Rotation Of Another String:
+		Problem statement
+			You are given two Strings 'P' and 'Q' of equal length.
+			Your task is to return 1 if String 'P' can be converted into String 'Q' by cyclically rotating it to the right any number of times ( Possibly Zero ), else return 0.
+			A cyclic rotation to the right on String 'A' consists of taking String 'A' and moving the rightmost character to the leftmost position. For example, if 'A' = "pqrst", then it will be "tpqrs" after one cyclic rotation on 'A'.
+			For example:
+			Consider the two strings 'P' = "abfyg" and 'Q' = "gabfy" 
+			If we cyclically rotate String 'P' to the right once. The resulting string P becomes "gabfy" which is equal to String 'Q'. 
+			Therefore it is possible to convert String 'P' to String 'Q'.
+
+			Sample Input 1:
+			abac
+			baca
+			Sample Output 1:
+			1
+			Explanation For Sample Input 1:
+			Let's try rotating the String 'P' to the right and try all the possible rotations:
+			1) If we rotate "abac" to the right, the resulting string becomes "caba".
+			2) If we rotate "caba" to the right, the resulting string becomes "acab".
+			3) If we rotate "acab" to the right, the resulting string becomes "baca" which is equal to String 'Q'.
+			Therefore it is possible to convert String 'P' to String 'Q'. Hence, we will return 1 in this case.
+			Sample Input 2:
+			aabca
+			bacaa
+			Sample Output 2:
+			0
+			Constraints:
+				1 <= |P| , |Q| <= 10^5
+				|P| = |Q|
+				String 'P' and 'Q' have the same length and contain only lowercase English letters.
+				Time Limit: 1 sec
+			Follow Up:
+				Can you solve this in O(N) time?
+
+		// Not Optimized:
+			int isCyclicRotation(string &p, string &q) {
+				if(p == q)
+					return 1;
+					
+				int val = p.size()-1;
+				for(int i=0; i<val; i++){
+					char ch = p[0];
+					p.erase(p.begin());
+					p += ch;
+					if(p == q)
+						return 1;
+				}
+				return 0;
+			}
+
+		// Optimized:
+			❌Pending
+
+	873) You and your books:
+		Problem Statement:
+			You have n stacks of books. Each stack of books has some nonzero height arr[i] equal to the number of books on that stack ( considering all the books are identical and each book has a height of 1 unit ). In one move, you can select any number of consecutive stacks of books such that the height of each selected stack of books arr[i] <= k. Once such a sequence of stacks is chosen, You can collect any number of books from the chosen sequence of stacks.
+			What is the maximum number of books that you can collect this way?
+			Example 1
+			Input
+			8 1
+			3 2 2 3 1 1 1 3
+			Output
+			3
+			Explanation 
+			We can collect maximum books from consecutive stacks numbered 5, 6, and 7 having height less than equal to K.
+
+			Example 2
+			Input
+			8 2
+			3 2 2 3 1 1 1 3
+			Output
+			4
+			Explanation
+			We can collect maximum books from consecutive stacks numbered 2 and 3 having height less than equal to K.
+
+			Your Task:
+				You don't have to read input or print anything. Your task is to complete the function max_Books() which takes the integer arr, n, and k returns the maximum number of books you can collect.
+
+			Expected Time Complexity: O(n)
+			Expected Space Complexity: O(1)
+
+			Constraints:
+				1 <= n <= 10^5
+				1 <= k <= 10^9
+				1 <= arr[i] <= 10^9
+
+		class Solution {
+			public:
+			/*You are requried to complete this method */
+			long long max_Books(int arr[], int n, int k) {
+				long long ans = 0, cur = 0;
+				for(int i=0; i<n; i++){
+					if(arr[i] <= k){
+						cur += arr[i];
+					}else{
+						cur = 0;
+					}
+					ans = max(ans, cur);
+				}
+				return ans;
+			}
+		};
+	
+	874)
+	
+	875)
+	
+	876)
+	
+	877)
+	
+	878)
+	
+	879)
+	
+	880)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
@@ -89955,11 +91883,7 @@ calender:
 	}
 --------------------------------------------------------------------------------------------------------
 //❌Pending
-	//Excel Column Number https://www.codingninjas.com/studio/problems/excel-column-number_630461 ❌Pending
-
 	//K Sum Subset https://www.codingninjas.com/studio/problems/k-sum-subset_2546852 ❌Pending
 
 	// power of n without using looops & recursion ❌Pending
 	https://www.geeksforgeeks.org/find-whether-given-integer-power-3-not/
-
-	https://www.codingninjas.com/studio/problem-details/two-substrings_920397 ❌Pending
