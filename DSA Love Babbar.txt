@@ -21990,6 +21990,7 @@ Lecture-60: Queues in C++ [STL + Implementation + Types of Queues]
 				}
 			};
 ---------------------------------------------------------------------------------------------------------
+	28/05/24
 Lecture-61: Queue FAANG Interview Questions
 	Q.1. Queue Reversal:
 		Problem Statement:
@@ -22376,6 +22377,7 @@ Lecture-61: Queue FAANG Interview Questions
 				1 <= Elements of Queue <= 10^3
 				Sum of N over all test cases doesn't exceeds 10^6
 
+		// Using temporary vector
 		class Solution{
 			public:
 			vector<int> rearrangeQueue(queue<int> &q){
@@ -22402,7 +22404,7 @@ Lecture-61: Queue FAANG Interview Questions
 			}
 		};
 
-		// or 
+		// or Using temporary Queue
 		class Solution{
 			public:
 			vector<int> rearrangeQueue(queue<int> &q){
@@ -22423,7 +22425,179 @@ Lecture-61: Queue FAANG Interview Questions
 			}
 		};
 
-	Q.7. 
+		// Using stack
+			class Solution{
+				public:
+				vector<int> rearrangeQueue(queue<int> &q){
+					stack<int> st;
+					
+					int val = q.size()/2;
+					int temp = val;
+					
+					while(temp--){
+						st.push(q.front());
+						q.pop();
+					}
+					
+					while(!st.empty()){
+						q.push(st.top());
+						st.pop();
+					}
+					
+					temp = val;
+					while(temp--){
+						q.push(q.front());
+						q.pop();
+					}
+					
+					temp = val;
+					while(temp--){
+						st.push(q.front());
+						q.pop();
+					}
+					
+					vector<int> v;
+					int f = 1;
+					while(!q.empty())
+						(f) ? (v.push_back(st.top()), st.pop(), f = 0) : (v.push_back(q.front()), q.pop(), f = 1);
+					
+					return v;
+				}
+			};
+
+	Q.7. Implement k Queues in a single array: ❌Pending
+		#include <iostream>
+		using namespace std;
+		class KQueues{
+			public:
+				int n;              // array size
+				int k;              // no.of queues
+				int *frnt, *rear, *arr, *nxt;
+				int freeSpot = 0;
+			
+			KQueues(int n, int k){
+				this -> n = n;
+				this -> k = k;
+				frnt = new int[k];
+				rear = new int[k];
+				nxt = new int[n];
+				arr = new int[n];
+				
+				for(int i=0; i<k; i++)
+					frnt[i] = rear[i] = -1;
+				
+				for(int i=0; i<n; i++)
+					nxt[i] = i+1;
+				
+				nxt[n-1] = -1;
+			}
+			
+			void enQueue(int data, int Qn){
+				if(freeSpot == -1){
+					cout<<"Queues are full";
+					return;
+				}
+				
+				// find first free space
+				int curIndex = freeSpot;
+				
+				// update freeSpot
+				freeSpot = nxt[curIndex];
+				
+				if(frnt[Qn-1] == -1){
+					frnt[Qn-1] = curIndex;
+				}else{
+					nxt[rear[Qn-1]] = curIndex;
+				}
+				
+				nxt[curIndex] = -1;
+				rear[Qn-1] = curIndex;
+				
+				arr[curIndex] = data;
+			}
+			
+			int deQueue(int Qn){
+				if(frnt[Qn-1] == -1){
+					cout<<Qn<<" Queue is empty" <<"\t";
+					return 0;
+				}
+				int index = frnt[Qn-1];
+				
+				frnt[Qn-1] = nxt[index];
+				
+				nxt[index] = freeSpot;
+				freeSpot = index;
+				return arr[index]; 
+			}
+		};
+
+		int main() {
+			KQueues Q(5,5);
+			
+			Q.enQueue(1, 1);
+			Q.enQueue(2, 1);
+			Q.enQueue(3, 2);
+			Q.enQueue(4, 3);
+			Q.enQueue(5, 3);
+			Q.enQueue(100, 5);
+			std::cout << std::endl;
+			
+			std::cout << Q.deQueue(1) << std::endl;
+			std::cout << Q.deQueue(1) << std::endl;
+			std::cout << Q.deQueue(1) << std::endl;
+			std::cout << Q.deQueue(1) << std::endl;
+			std::cout << Q.deQueue(5) << std::endl;
+			return 0;
+		}
+
+	Q.8. Sum of minimum and maximum elements of all subarrays of size k:
+		Problem Statement:
+			Given an array of both positive and negative integers, the task is to compute sum of minimum and maximum elements of all sub-array of size k.
+			Examples: 
+			Input : arr[] = {2, 5, -1, 7, -3, -1, -2}  
+				K = 4
+			Output : 18
+			Explanation : Subarrays of size 4 are : 
+				{2, 5, -1, 7},   min + max = -1 + 7 = 6
+				{5, -1, 7, -3},  min + max = -3 + 7 = 4      
+				{-1, 7, -3, -1}, min + max = -3 + 7 = 4
+				{7, -3, -1, -2}, min + max = -3 + 7 = 4   
+
+		// Not Optimized:
+			#include <iostream>
+			#include <climits>
+			using namespace std;
+			int Solve(int arr[], int k, int n){
+				int sum = 0;
+				
+				for(int i=0; i <= (n-k); i++){
+					int val = k, j=i;
+					int mn = INT_MAX, mx = INT_MIN;
+
+					while(val--){
+						mn = min(mn, arr[j]);
+						mx = max(mx, arr[j]);
+						j++;
+					}
+					sum += (mn + mx);
+				}
+				return sum;
+			}
+
+			int main() {
+				int arr[] = {2, 5, -1, 7, -3, -1, -2};
+				int k = 4, n=7;
+
+				cout << Solve(arr, k, n) << "\t";
+				cout << Solve(arr, 3, n);	
+				return 0;
+			}
+
+		// Optimized:
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -86801,7 +86975,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	#GFG Contest:
+	#GFG Weekly-153:
 		816) Character Matrix Conundrum:
 			Problem Statement:
 				You've been provided with a matrix mat comprising lowercase English letters, arranged in n
@@ -87490,70 +87664,70 @@ POTD:-[Problem of the Day]
 				}
 
 		825) C - Sigma Problem:
-		https://atcoder.jp/contests/abc353/tasks/abc353_c
-		Problem Statement
-			For positive integers x and y, define f(x,y) as the remainder of (x+y) divided by 10^8 You are given a sequence of positive integers 
-			A=(A1,…,AN) of length N. Find the value of the following expression:
-			Constraints
-			2 ≤ N ≤ 3×10^5
-			1≤ Ai < 10^8
-			All input values are integers.
+			https://atcoder.jp/contests/abc353/tasks/abc353_c
+			Problem Statement
+				For positive integers x and y, define f(x,y) as the remainder of (x+y) divided by 10^8 You are given a sequence of positive integers 
+				A=(A1,…,AN) of length N. Find the value of the following expression:
+				Constraints
+				2 ≤ N ≤ 3×10^5
+				1≤ Ai < 10^8
+				All input values are integers.
 
-			Input
-			The input is given from Standard Input in the following format:
-			N 
-			A1 ... AN
-			​
+				Input
+				The input is given from Standard Input in the following format:
+				N 
+				A1 ... AN
+				​
+				
+				Output
+				Print the answer.
+				Sample Input 1
+				3
+				3 50000001 50000002
+				Sample Output 1
+				100000012
+				f(A1,A2​)=50000004
+				f(A1,A3)=50000005
+				f(A2,A3)=3
+				Thus, the answer is  f(A1,A2)+f(A1,A3)+f(A2,A3)=100000012.
+				Note that you are not asked to compute the remainder of the sum divided by 10^8.
+				Sample Input 2
+				5
+				1 3 99999999 99999994 1000000
+				Sample Output 2
+				303999988
+
+			// Not Optimized:
+				#include <iostream>
+				#include<vector>
+				using namespace std;
+
+				inline long long f(long a, long b){
+					int md = 1e8;
+					return (a+b) % md;
+				}
+
+				int main() {
+					int N;
+					cin>>N;
+					
+					vector<int> hold(N);
+					
+					long long sum=0;
+					
+					for(int i=0; i<N; i++)
+						cin >> hold[i];
+						
+					for(int i=0; i<N; i++)
+						for(int j = i+1; j<N; j++)
+							sum += f(hold[i], hold[j]);
+						
+					std::cout << sum << std::endl;
+					return 0;
+				}
 			
-			Output
-			Print the answer.
-			Sample Input 1
-			3
-			3 50000001 50000002
-			Sample Output 1
-			100000012
-			f(A1,A2​)=50000004
-			f(A1,A3)=50000005
-			f(A2,A3)=3
-			Thus, the answer is  f(A1,A2)+f(A1,A3)+f(A2,A3)=100000012.
-			Note that you are not asked to compute the remainder of the sum divided by 10^8.
-			Sample Input 2
-			5
-			1 3 99999999 99999994 1000000
-			Sample Output 2
-			303999988
-
-		// Not Optimized:
-			#include <iostream>
-			#include<vector>
-			using namespace std;
-
-			inline long long f(long a, long b){
-				int md = 1e8;
-				return (a+b) % md;
-			}
-
-			int main() {
-				int N;
-				cin>>N;
-				
-				vector<int> hold(N);
-				
-				long long sum=0;
-				
-				for(int i=0; i<N; i++)
-					cin >> hold[i];
-					
-				for(int i=0; i<N; i++)
-					for(int j = i+1; j<N; j++)
-						sum += f(hold[i], hold[j]);
-					
-				std::cout << sum << std::endl;
-				return 0;
-			}
-		
-		// Optimised:
-			❌Pending
+			// Optimised:
+				❌Pending
 
 	#LeetCode BiweeklyContest-130
 		826) Check if Grid Satisfies Conditions:
@@ -90867,19 +91041,1090 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	874)
+	#AtCoder BeginnerContest-355:
+		874) A - Who Ate the Cake?:
+			https://atcoder.jp/contests/abc355/tasks/abc355_a
+			Problem Statement
+				Takahashi's cake has been eaten by someone. There are three suspects: person 1, person 2, and person 3.
+				There are two witnesses, Ringo and Snuke. Ringo remembers that person A is not the culprit, and Snuke remembers that person B is not the culprit.
+				Determine if the culprit can be uniquely identified based on the memories of the two witnesses. If the culprit can be identified, print the person's number.
+				Constraints
+					1 ≤ A,B ≤ 3
+				All input values are integers.
+				Input
+				The input is given from Standard Input in the following format:
+				A B
+				Output
+				If the culprit can be uniquely identified based on the memories of the two witnesses, print the person's number; otherwise, print -1.
+				Sample Input 1
+				1 2
+				Sample Output 1
+				3
+				From the memories of the two witnesses, it can be determined that person 
+				3 is the culprit.
+
+				Sample Input 2
+				1 1
+				Sample Output 2
+				-1
+				From the memories of the two witnesses, it cannot be determined whether person 2 or person 3 is the culprit. Therefore, print -1.
+				Sample Input 3
+				3 1
+				Sample Output 3
+				2
+
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int a,b;
+				
+				cin>>a>>b;
+				
+				if(a==b)
+					cout<<-1;
+				else{
+					if((a == 1 && b == 2) || (a == 2 && b == 1))
+						cout<<3;
+					else if((a == 1 && b == 3) || (a == 3 && b == 1))
+						cout<<2;
+					else
+						cout<<1;
+				}
+				return 0;
+			}		
+		
+		875) B - Piano 2:
+			https://atcoder.jp/contests/abc355/tasks/abc355_b
+			Problem Statement
+				You are given a sequence A=(A1, A2​, …, AN) of length N and a sequence 
+				B=(B1, B2,…,BM) of length M. Here, all elements of A and B are pairwise distinct. Determine whether the sequence 
+				C=(C1,C2,…,CN+M) formed by sorting all elements of A and B in ascending order contains two consecutive elements appearing in A.
+				Constraints
+					1 ≤ N,M ≤ 100
+					1 ≤ Ai,Bj ≤ 200
+					A1​, A2​, …, AN, B1, B2, …, BM are distinct.
+					All input values are integers.
+				Input
+					The input is given from Standard Input in the following format:
+					N M
+					A1​ A2​ … AN
+					​B1 B2 … BM
+				Output
+					If C contains two consecutive elements appearing in A, print Yes; otherwise, print No.
+
+				Sample Input 1
+					3 2
+					3 2 5
+					4 1
+					Sample Output 1
+					Yes
+					C=(1,2,3,4,5). Since 
+					2 and 
+					3 from 
+					A occur consecutively in 
+					C, print Yes.
+
+					Sample Input 2
+					3 2
+					3 1 5
+					4 2
+					Sample Output 2
+					No
+					C=(1,2,3,4,5). Since no two elements from 
+					A occur consecutively in 
+					C, print No.
+
+					Sample Input 3
+					1 1
+					1
+					2
+					Sample Output 3
+					No
+
+			#include <iostream>
+			#include<vector>
+			#include<algorithm>
+			using namespace std;
+			int main() {
+				int n, m;
+				cin>>n>>m;
+				
+				vector<int> A(n);
+				vector<int> B(m);
+				
+				for(int i=0; i<n; i++)
+					cin>>A[i];
+					
+				for(int i=0; i<m; i++)
+					cin>>B[i];
+					
+				if(A.size() == 1){
+					cout<<"No";
+					return 0;
+				}
+				
+				sort(A.begin(), A.end());
+				sort(B.begin(), B.end());
+				
+				int s = A.size();
+				for(int i=0; i<(s-1); i++){
+					int start = A[i], end = A[i+1];
+					vector<int> test;
+					
+					for(int z = start; z <= end; z++)
+						test.push_back(z);
+					
+					int s2 = test.size();
+					int flag = 1;
+					for(int x=0; x<s2; x++)
+						if(find(B.begin(), B.end(), test[x]) != B.end()){
+							flag = 0;
+						}
+					
+					if(flag){
+						cout<<"Yes";
+						return 0;
+					}
+				}
+				cout<<"No";
+				return 0;
+			}
+
+		876) C - Bingo 2:
+			https://atcoder.jp/contests/abc355/tasks/abc355_c
+			Problem Statement
+				There is an N×N grid, where the cell at the i-th row from the top and the j-th column from the left contains the integer N×(i−1)+j.
+				Over T turns, integers will be announced. On Turn i, the integer Ai​ is announced, and the cell containing Ai is marked. Determine the turn on which Bingo is achieved for the first time. If Bingo is not achieved within T turns, print -1.
+				Here, achieving Bingo means satisfying at least one of the following conditions:
+
+				There exists a row in which all 
+				N cells are marked.
+				There exists a column in which all 
+				N cells are marked.
+				There exists a diagonal line (from top-left to bottom-right or from top-right to bottom-left) in which all 
+				N cells are marked.
+				Constraints
+					2≤N≤2×10 
+					3
+					
+					1≤T≤min(N^2,2×10^5)
+					1≤Ai≤N^2
+					Ai != Aj if i != j.
+					All input values are integers.
+				Input
+					The input is given from Standard Input in the following format:
+				N T
+				A1 A2 … AT
+				Output
+				If Bingo is achieved within 
+				T turns, print the turn number on which Bingo is achieved for the first time; otherwise, print -1.
+
+				Sample Input 1
+				3 5
+				5 1 8 9 7
+				Sample Output 1
+				4
+				The state of the grid changes as follows. Bingo is achieved for the first time on Turn 
+				4.
+				Sample Input 2
+				3 5
+				4 2 9 7 5
+				Sample Output 2
+				Copy
+				-1
+				Bingo is not achieved within five turns, so print -1.
+
+				Sample Input 3
+				4 12
+				13 9 6 5 2 7 16 14 8 3 10 11
+				Sample Output 3
+				9
+
+			// Not Optimized:
+				#include <iostream>
+				#include<vector>
+				using namespace std;
+
+				bool checkIsBingo(vector<vector<int>> &v, int n){
+					
+					// for(auto &out: v){
+					//     for(int i: out)
+					//         cout<<i<<"\t";
+					//     cout<<"\n";
+					// }
+					
+					// check any column which is completely zero
+					for(int i=0; i<n; i++){
+						int cnt=0;
+						for(int j=0; j<n; j++){
+							if(v[j][i] == 0)
+								cnt++;
+						}
+						if(cnt == n)
+							return 1;
+					}
+					
+					// check any row which is completely zero
+						for(int i=0; i<n; i++){
+						int cnt=0;
+						for(int j=0; j<n; j++){
+							if(v[i][j] == 0)
+								cnt++;
+						}
+						if(cnt == n)
+							return 1;
+					}
+					
+					// check top-left to bottom-right diagonal which is completely zero
+					int cnt = 0;
+					for(int i=0; i<n; i++){
+						if(v[i][i] == 0)
+							cnt++;
+					}
+					if(cnt == n)
+						return 1;
+					
+					// check top-left to bottom-right diagonal which is completely zero
+					cnt =0;
+					int var = n-1;
+					
+					for(int i=0; i<n; i++)
+						if(v[i][var--] == 0)
+							cnt++;
+					
+					if(cnt == n)
+						return 1;
+					
+					return 0;
+				}
+
+				int main() {
+					int N, T;
+					
+					cin>>N>>T;
+					
+					if(T < N){
+						std::cout << -1;
+						return 0;
+					}
+					
+					vector<vector<int>> v(N, vector<int>(N));
+					int cnt = 1;
+					
+					for(int i=0; i<N; i++)
+						for(int j=0; j<N; j++)
+							v[i][j] = cnt++;
+					
+					vector<int> input(T);
+					for(int i=0; i<T; i++)
+						cin>>input[i];
+					
+					int Turn = 0;
+					for(int i=0; i<T; i++){
+						Turn++;
+						
+						// index where input[i] matches replacing it with zero, searching index
+						for(int x=0; x<N; x++){
+							int flag = 0;
+							for(int y=0; y<N; y++){
+								if(v[x][y] == input[i]){
+									v[x][y] = 0;
+									flag = 1;
+									break;
+								}
+							}
+							if(flag)
+								break;
+						}
+						
+						if(Turn >= N && checkIsBingo(v, N)){
+							cout<< Turn;
+							return 0;
+						}
+					}
+					// Bingo not possible
+					std::cout << -1 << std::endl;
+					return 0;
+				}
+
+			// Optimised:
+				❌Pending
+		
+	#LeetCode BiweeklyContest-131
+		877) Find the XOR of Numbers Which Appear Twice:
+			Problem Statement:
+				You are given an array nums, where each number in the array appears either once or twice.
+				Return the bitwise XOR of all the numbers that appear twice in the array, or 0 if no number appears twice.
+				Example 1:
+				Input: nums = [1,2,1,3]
+				Output: 1
+				Explanation:
+				The only number that appears twice in nums is 1.
+				Example 2:
+				Input: nums = [1,2,3]
+				Output: 0
+				Explanation:
+				No number appears twice in nums.
+				Example 3:
+				Input: nums = [1,2,2,1]
+				Output: 3
+				Explanation:
+				Numbers 1 and 2 appeared twice. 1 XOR 2 == 3.
+				Constraints:
+					1 <= nums.length <= 50
+					1 <= nums[i] <= 50
+					Each number in nums appears either once or twice.
+
+			class Solution {
+				public:
+				int duplicateNumbersXOR(vector<int>& nums) {
+					vector<int> twice;
+					map<int, int> Fr;
+					for(int i: nums)
+						Fr[i]++;
+					
+					for(auto i: Fr)
+						if(i.second == 2)
+							twice.push_back(i.first);
+					
+					int ans = 0;
+					for(int i: twice)
+						ans ^= i;
+					return ans;
+				}
+			};
+
+			//or Advance:
+				class Solution {
+					public:
+					int duplicateNumbersXOR(vector<int>& nums) {
+						unordered_set<int> s(begin(nums), end(nums));
+						return accumulate(begin(nums), end(nums), accumulate(begin(s), end(s), 0, bit_xor{}), bit_xor{});
+					}
+				};
+		
+		878) Find Occurrences of an Element in an Array:
+			Problem Statement:
+				You are given an integer array nums, an integer array queries, and an integer x.
+				For each queries[i], you need to find the index of the queries[i]th occurrence of x in the nums array. If there are fewer than queries[i] occurrences of x, the answer should be -1 for that query.
+				Return an integer array answer containing the answers to all queries.
+				
+				Example 1:
+				Input: nums = [1,3,1,7], queries = [1,3,2,4], x = 1
+				Output: [0,-1,2,-1]
+				Explanation:
+				For the 1st query, the first occurrence of 1 is at index 0.
+				For the 2nd query, there are only two occurrences of 1 in nums, so the answer is -1.
+				For the 3rd query, the second occurrence of 1 is at index 2.
+				For the 4th query, there are only two occurrences of 1 in nums, so the answer is -1.
+
+				Example 2:
+				Input: nums = [1,2,3], queries = [10], x = 5
+				Output: [-1]
+				Explanation:
+				For the 1st query, 5 doesn't exist in nums, so the answer is -1.
+		
+				Constraints:
+					1 <= nums.length, queries.length <= 10^5
+					1 <= queries[i] <= 10^5
+					1 <= nums[i], x <= 10^4
+
+			// Not Optimized:
+				class Solution {
+					public:
+					vector<int> occurrencesOfElement(vector<int>& nums, vector<int>& queries, int x) {
+						int countOfX=0;
+						for(int i: nums)
+							if(i == x)
+								countOfX++;
+						
+						int n = queries.size();
+						vector<int> ans(n, -1);
+						for(int i=0; i<n; i++){
+							if(queries[i] > countOfX)
+								continue;
+							
+							int curCnt =0, index=0;
+							for(int j: nums){
+								if(j == x)
+									curCnt++;
+								
+								if(curCnt == queries[i])
+									break;
+								index++;
+							}
+							ans[i] = index;
+						}
+						return ans;
+					}
+				};
+			
+			// Optimized: ❌Pending
+				class Solution {
+					public:
+					vector<int> occurrencesOfElement(vector<int>& nums, vector<int>& queries, int x) {
+						vector<int> ans, index;
+						int curIndex=0;
+						for(int i: nums){
+							if(i == x)
+								index.push_back(curIndex);
+							curIndex++;
+						}
+
+						for(auto q: queries){
+							int val;
+							if(q-1 < index.size()){
+								val = index[q-1];
+							}else{
+								val = -1;
+							}
+							ans.push_back(val);
+						}
+						return ans;
+					}
+				};
+
+	#LeetCode WeeklyContest-399
+		879) Find the Number of Good Pairs I:
+			Problem Statement:
+				You are given 2 integer arrays nums1 and nums2 of lengths n and m respectively. You are also given a positive integer k.
+				A pair (i, j) is called good if nums1[i] is divisible by nums2[j] * k (0 <= i <= n - 1, 0 <= j <= m - 1).
+				Return the total number of good pairs.
+				Example 1:
+				Input: nums1 = [1,3,4], nums2 = [1,3,4], k = 1
+				Output: 5
+				Explanation:
+				The 5 good pairs are (0, 0), (1, 0), (1, 1), (2, 0), and (2, 2).
+
+				Example 2:
+				Input: nums1 = [1,2,4,12], nums2 = [2,4], k = 3
+				Output: 2
+				Explanation:
+				The 2 good pairs are (3, 0) and (3, 1).
+		
+				Constraints:
+					1 <= n, m <= 50
+					1 <= nums1[i], nums2[j] <= 50
+					1 <= k <= 50
+
+			class Solution {
+				public:
+				int numberOfPairs(vector<int>& nums1, vector<int>& nums2, int k) {
+					int cnt=0;
+					
+					for(int i=0; i<nums1.size(); i++){
+						for(int j=0; j<nums2.size(); j++){
+							int val = nums2[j]*k;
+							if(nums1[i] % val == 0)
+								cnt++;
+						}
+					}
+					return cnt;
+				}
+			};
+
+		880) String Compression III:
+			Problem Statement:
+				Given a string word, compress it using the following algorithm:
+				Begin with an empty string comp. While word is not empty, use the following operation:
+				Remove a maximum length prefix of word made of a single character c repeating at most 9 times.
+				Append the length of the prefix followed by c to comp.
+				Return the string comp.
+				Example 1:
+				Input: word = "abcde"
+				Output: "1a1b1c1d1e"
+				Explanation:
+				Initially, comp = "". Apply the operation 5 times, choosing "a", "b", "c", "d", and "e" as the prefix in each operation.
+				For each prefix, append "1" followed by the character to comp.
+
+				Example 2:
+				Input: word = "aaaaaaaaaaaaaabb"
+				Output: "9a5a2b"
+				Explanation:
+				Initially, comp = "". Apply the operation 3 times, choosing "aaaaaaaaa", "aaaaa", and "bb" as the prefix in each operation.
+				For prefix "aaaaaaaaa", append "9" followed by "a" to comp.
+				For prefix "aaaaa", append "5" followed by "a" to comp.
+				For prefix "bb", append "2" followed by "b" to comp.
+			
+				Constraints:
+				1 <= word.length <= 2 * 10^5
+				word consists only of lowercase English letters.
+
+			class Solution {
+				public:
+				string compressedString(string word) {
+					string comp;
+					int cnt=1;
+					for(int i=0; i<word.size()-1; i++){
+						if(cnt == 9 || word[i] != word[i+1]){
+							comp += to_string(cnt);
+							comp += word[i];
+							cnt=1;
+						}else{
+							cnt++;
+						}
+					}
+					
+					// inserting the count of the last char
+					comp += to_string(cnt);
+					comp += word.back();
+					
+					return comp;
+				}
+			};
+
+		881) Find the Number of Good Pairs II:
+			Problem Statement:
+				You are given 2 integer arrays nums1 and nums2 of lengths n and m respectively. You are also given a positive integer k.
+				A pair (i, j) is called good if nums1[i] is divisible by nums2[j] * k (0 <= i <= n - 1, 0 <= j <= m - 1).
+				Return the total number of good pairs.
+
+				Example 1:
+				Input: nums1 = [1,3,4], nums2 = [1,3,4], k = 1
+				Output: 5
+				Explanation:
+				The 5 good pairs are (0, 0), (1, 0), (1, 1), (2, 0), and (2, 2).
+
+				Example 2:
+				Input: nums1 = [1,2,4,12], nums2 = [2,4], k = 3
+				Output: 2
+				Explanation:
+				The 2 good pairs are (3, 0) and (3, 1).
+				
+				Constraints:
+					1 <= n, m <= 105^
+					1 <= nums1[i], nums2[j] <= 10^6
+					1 <= k <= 10^3
+
+			// Not Optimized:
+				class Solution {
+					public:
+					long long numberOfPairs(vector<int>& nums1, vector<int>& nums2, int k) {
+						long long cnt = 0;
+						int n = nums1.size(), m = nums2.size();
+						
+						for(int i=0; i<n; i++){
+							for(int j=0; j<m; j++){
+								int val = nums2[j] * k;
+								if(nums1[i] % val == 0)
+									cnt++;
+							}
+						}
+						return cnt;
+					}
+				};
+			
+			// Optimized:
+				❌Pending
+		
+	#GFG Weekly-156
+		882) Geekland Fair:
+			Problem Statement:
+				It is Geekland fair 2024, Geek and Geekina are enjoying the fair. They went to a juice shop in the fair.
+				There are n types of juices each having k units of juice. If Geekina drinks x units of juice of any type,
+				Geek drinks the remaining units (k-x) of that type. Given the units of juice drank by the Geekina in the
+				array a, find the minimum value of k such that the sum of juices (total units of juice) drank by Geek is
+				strictly greater than Geekina. Also ensure that the remaining units (k-x) of any juice that Geek drinks is
+				always non-negative (k-x>=0).
+				Example 1:
+				Input:
+				n = 8
+				a = (5, 7, 4, 8, 10, 9, 0, 6}
+				Output:
+				13
+				Explanation:
+				It can be proven that 13 is the minimum value of k such that units drank by Geek is
+				strictly greater than Geekina. Geek drinks 55 units and Geekina drinks 49 units.
+				Example 2:
+				Input:
+				n = 4
+				a = (1 1 1 8)
+				Output:
+				8
+				Explanation:
+				8 is the minimum value for k such that units drank by Geek is strictly greater than Geekina.
+				Geek drinks 21 units and Geekina drinks 11 units.
+				
+				Your Task:
+					You don't need to read input or print anything. Your task is to complete the function minimumK() which
+					takes interger n and an array of integers a as an input and returns the minimum value of k.
+				Constraints:
+					1 <= n <= 10^5
+					0 <= ai<= 10^9
+		
+			// Not Optimized:
+				class Solution {
+					public:
+					long long minimumK(int n, vector<int> &a) {
+						int minK = *max_element(a.begin(), a.end());
+						long long sum = accumulate(a.begin(), a.end(), 0LL);
+						long long curS = 0;
+						
+						while(curS < sum){
+							for(int i: a)
+								curS += abs(minK-i);
+							
+							// cout<<curS<<"\t";
+							if(curS > sum)
+								break;
+							curS = 0;
+							minK++;
+						}
+						return minK;
+					}
+				};
+			
+			// Optimized
+				❌Pending
+
+		883) Geekland Elections:
+			Problem Statement:
+				In 2024, the king of Geekland would be decided through the general elections. There are n persons in
+				Geekland who would be voting. You are given a binary string s, where s; = '1' menas the ith person has
+				voted for Geek and si = 'O' means ith person has voted against Geek. Geek has an ability to flip the votes
+				of any person. But he can do this atmost k times. Given n, k and s answer whether Geek wins the
+				election or not. Winning criteria is simple, get strictly more votes than the opponent.
+				Example 1:
+				Input:
+				n = 8, k = 3, s = 10110001
+				Output:
+				1
+				Explanation:
+				Geek has 4 votes for him, he can flip any of the zeros to one and get 5 votes and his
+				opponent gets only 3 votes.
+				Example 2:
+				Input:
+				n = 8, k = 2, s = 10000001
+				Output:
+				0
+				Explanation:
+				Geek has 2 votes for him, he can flip any two zeros to ones but can only get 4 votes
+				which are not enough to win the elections as per the criteria.
+				Your Task:
+					You don't need to read input or print anything. Your task is to complete the function geeklandElections()
+				which takes intergers n and k and a string s an input and returns true or false depending on whether
+				Geek wins or does not wins the election.
+				Constraints:
+					1 <= n <= 10^5
+					0 <= k <= n
+			
+			class Solution {
+				public:
+				bool geeklandElections(int n, int k, string &s) {
+					// count the no.of ones if no.of ones is already greater than zero then return 1
+					// if both ones & zeros have same counts & k > 0 then return 1 else return 0
+					int count1=0;
+					for(char ch: s)
+						if(ch == '1')
+							count1++;
+					
+					int count0 = n - count1;
+					if((count1 > count0) || (count1+k)>(count0-k))
+						return 1;
+					return 0;
+				}
+			};
+
+	884) Count Even Or Odd:
+		Problem statement
+			Tanmay and Rohit are best buddies. One day Tanmay gives Rohit a problem to test his intelligence and skills. He gives him an array of N natural numbers and asks him to solve the following queries:-
+			Query 0 :
+			0 x y
+			This operation modifies the element present at index x to y.
+
+			Query 1 :
+			1 x y 
+			This operation counts the number of even numbers in range x to y inclusive.
+
+			Query 2 :
+			2 x y 
+			This operation counts the number of odd numbers in range x to y inclusive.
+
+			Constraints :
+				1 <= N, Q <= 10^5
+				0 <= l <=  r  <= N - 1 
+				0 <= arr[i] <= 10 ^ 9
+				1 <= x <= N
+				0 <= y <= 10 ^ 9
+
+			Where 'arr[i]' denotes the 'ith' element of arr.
+			Time limit: 1 sec
+			Note :
+				You do not need to print anything, it has already been taken care of. Just implement the given function.
+			Sample Input 1 :
+			6
+			1 2 3 4 5 6
+			4
+			1 1 4
+			2 0 3
+			0 4 4
+			1 0 5
+			Sample Output 1 :
+			2
+			2
+			4
+			Explanation Of Sample Input 1 :
+			The first query consists of 1 1 4 .It means we have to count the number of even numbers from 1st index to 4th index. Hence even numbers in the given range are 2 and 4. So the answer for the first query is 2.So the answer is 2.
+			The second query consists of 2 0 3. It means we have to count odd numbers from 0th index to 3rd index. Hence odd numbers in the given range are 1 and 3.So the answer is 2.
+			The third query consists of 0 4 4. It means we have to modify the element at 4th index to 4. So the array becomes 1 2 3 4 4 6.
+			The fourth query consists of 1 0 5 .It means we have to count even numbers from 0th index to 5th index. Hence even numbers in the given range are 2 4 4 6. So the answer is 4.
+			Sample Input 2 :
+			16
+			525 327 227 725 833 860 255 803 625 766 200 383 712 935 422 937 
+			9
+			2 12 14
+			1 14 15
+			1 1 6
+			1 10 15
+			0 10 430
+			2 2 12
+			0 10 905
+			2 4 10
+			1 15 15
+			Sample Output 2 :
+			1
+			1
+			1
+			3
+			7
+			5
+			0
+
+		vector<int> solve(int n, vector<int> &arr, int q, vector<vector<int>> &queries) {
+			vector<int> ans;
+
+			for(int i=0; i<q; i++){
+				int decision = queries[i][0];
+				if(decision == 0){
+					arr[queries[i][1]] = queries[i][2];
+				}else if(decision == 1){
+					// even
+					int cnt=0;
+					int s = queries[i][1], e = queries[i][2];
+					for(int z = s; z<=e; z++)
+						if(arr[z] % 2 == 0)
+							cnt++;
+					ans.push_back(cnt);
+				}else{
+					// odd
+					int cnt=0;
+					int s = queries[i][1], e = queries[i][2];
+					for(int z = s; z<=e; z++)
+						if(arr[z]&1)
+							cnt++;
+					ans.push_back(cnt);
+				}
+			}
+			return ans;
+		}
 	
-	875)
+	885) Ninja and Subarrays:
+		Problem Statement:
+			One day Ninja got an array and started to play with it. He is finding subarrays of the array randomly and suddenly starts to wonder about the maximum of the sum of the smallest and the second smallest elements of all the subarrays possible of size at least 2.
+			For Example:
+			For the array [3 2 1]
+			All the subarrays of size at least 2 are:
+			[3 2], [2 1], [3 2 1]
+			For the first subarray, the smallest and second smallest elements are 2 and 3, and their sum is 5.
+			For the second subarray, the smallest and second smallest elements are 1 and 2, and their sum is 3.
+			For the third subarray, the smallest and second smallest elements are 1 and 2, and their sum is 3.
+			So the maximum among these sums is 5.
+			Since Ninja is too lazy to do this task, he asked you for help. You have to find the maximum of the sum of the smallest and the second smallest elements of all the subarray possible of size at least 2.
+			Constraints:
+				1 <= T <= 5
+				2 <= N <= 10^5
+				1 <= A[i] <= 10^4
+				Time Limit: 1 sec.
+			Sample Input 1:
+			2
+			4
+			1 2 3 4
+			2
+			3 8
+			Sample Output 1:
+			7
+			11
+			Explanation For Sample Output 1:
+			For the first test case, all the possible subarrays of size at least 2 are:
+			[1 2], [1 2 3], [1 2 3 4], [2 3], [2 3 4], [3 4].
+			The respective sum of the smallest and second smallest elements are 3, 3, 3, 5, 5, 7.
+			So the answer will be the maximum of all of them, i.e., 7.
+
+			For the second test case, there is only one subarray possible [3 8]. So the answer will be 11. 
+			Sample Input 2:
+			2
+			5
+			8 3 7 2 4
+			4
+			6 4 7 5
+			Sample Output 2:
+			11
+			12
+		
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			int sumOfSmallestAndSecondSmallest(int n, vector<int> &arr){
+				int ans = 0;
+				vector<vector<int>> hold;
+				
+				for(int i=0; i<n-1; i++){
+					vector<int> temp = {arr[i]};
+					for(int j=i+1; j<n; j++){
+						temp.push_back(arr[j]);
+						hold.push_back(temp);
+					}
+				}
+
+				for(auto &outer: hold){
+					sort(outer.begin(), outer.end());
+					ans = max(ans, (outer[0]+outer[1]));
+				}
+				return ans;
+			}
+		
+		// Optimized:
+			#include <bits/stdc++.h> 
+			int sumOfSmallestAndSecondSmallest(int n, vector<int> &arr){
+				int ans = 0;
+				for(int i=1; i< n; i++)
+					ans = max(ans, arr[i]+arr[i-1]);
+				return ans;
+			}
 	
-	876)
+	886) IPL 2021 - Match Day 2:
+		Problem Statement:
+			Due to the rise of covid-19 cases in India, this year BCCI decided to organize knock-out matches in IPL rather than a league.
+			Today is matchday 2 and it is between the most loved team Chennai Super Kings and the most underrated team - Punjab Kings. Stephen Fleming, the head coach of CSK, analyzing the batting stats of Punjab. He has stats of runs scored by all N players in the previous season and he wants to find the maximum score for each and every contiguous sub-list of size K to strategize for the game.
+			Example 1:
+			Input:
+			N = 9, K = 3
+			arr[] = 1 2 3 1 4 5 2 3 6
+			Output: 
+			3 3 4 5 5 5 6 
+			Explanation: 
+			1st contiguous subarray = {1 2 3} Max = 3
+			2nd contiguous subarray = {2 3 1} Max = 3
+			3rd contiguous subarray = {3 1 4} Max = 4
+			4th contiguous subarray = {1 4 5} Max = 5
+			5th contiguous subarray = {4 5 2} Max = 5
+			6th contiguous subarray = {5 2 3} Max = 5
+			7th contiguous subarray = {2 3 6} Max = 6
+
+			Example 2:
+			Input:
+			N = 10, K = 4
+			arr[] = 8 5 10 7 9 4 15 12 90 13
+			Output: 
+			10 10 10 15 15 90 90
+			Explanation: 
+			1st contiguous subarray = {8 5 10 7}, Max = 10
+			2nd contiguous subarray = {5 10 7 9}, Max = 10 
+			3rd contiguous subarray = {10 7 9 4}, Max = 10 
+			4th contiguous subarray = {7 9 4 15}, Max = 15
+			5th contiguous subarray = {9 4 15 12}, Max = 15 
+			6th contiguous subarray = {4 15 12 90}, Max = 90 
+			7th contiguous subarray = {15 12 90 13}, Max = 90 
+
+			Your Task:  
+				You don't need to read input or print anything. Complete the function max_of_subarrays() which takes the array, N, and K as input parameters and returns a list of integers denoting the maximum of every contiguous subarray of size K.
+
+			Constraints:
+				1 ≤ N ≤ 10^6
+				1 ≤ K ≤ N
+				0 ≤ arr[i] ≤ 10^6
+
+		// Not Optimized:
+			class Solution {
+				public:
+				vector<int> max_of_subarrays(vector<int> arr, int n, int k) {
+					vector<int> ans;
+					
+					for(int i=0; i <= (n-k); i++){
+						int curMax = arr[i];
+						int val = k-1, j=i+1;
+						
+						while(val--)
+							curMax = max(curMax, arr[j++]);
+
+						ans.push_back(curMax);
+					}
+					
+					return ans;
+				}
+			};
 	
-	877)
+		// Optimized:
+			❌Pending			
+
+	887) Get Equal Substrings Within Budget:
+		Problem Statement:
+			You are given two strings s and t of the same length and an integer maxCost.
+			You want to change s to t. Changing the ith character of s to ith character of t costs |s[i] - t[i]| (i.e., the absolute difference between the ASCII values of the characters).
+			Return the maximum length of a substring of s that can be changed to be the same as the corresponding substring of t with a cost less than or equal to maxCost. If there is no substring from s that can be changed to its corresponding substring from t, return 0.
+			
+			Example 1:
+			Input: s = "abcd", t = "bcdf", maxCost = 3
+			Output: 3
+			Explanation: "abc" of s can change to "bcd".
+			That costs 3, so the maximum length is 3.
+
+			Example 2:
+			Input: s = "abcd", t = "cdef", maxCost = 3
+			Output: 1
+			Explanation: Each character in s costs 2 to change to character in t,  so the maximum length is 1.
+
+			Example 3:
+			Input: s = "abcd", t = "acde", maxCost = 0
+			Output: 1
+			Explanation: You cannot make any change, so the maximum length is 1.
+			
+			Constraints:
+				1 <= s.length <= 10^5
+				t.length == s.length
+				0 <= maxCost <= 10^6
+				s and t consist of only lowercase English letters.
+
+		// Not Optimized:
+			class Solution {
+				public:
+				int equalSubstring(string s, string t, int maxCost) {
+					int mxLen = 0, n = s.size();
+
+					for(int i=0; i<n ; i++){
+						int curCost = maxCost;
+						string test;
+						
+						for(int j=i; j<n; j++){
+							int val = abs(s[j] - t[j]);
+							if(val <= curCost){
+								curCost -= val;
+								test += s[j];
+							}else{
+								break;
+							}
+						}
+						// int size = test.size();
+						mxLen = max(mxLen, (int) test.size());
+					}
+					return mxLen;
+				}
+			};
+			
+		// Optimized:
+			class Solution {
+				public:
+				int equalSubstring(string s, string t, int maxCost) {
+					int mxLen = 0, n = s.size();
+
+					for(int i=0; i<n ; i++){
+						int curCost = maxCost, cnt=0;
+						
+						for(int j=i; j<n; j++){
+							int val = abs(s[j] - t[j]);
+							if(val <= curCost){
+								curCost -= val;
+								cnt++;
+							}else{
+								break;
+							}
+						}
+						// int size = test.size();
+						mxLen = max(mxLen, cnt);
+					}
+					return mxLen;
+				}
+			};
 	
-	878)
+	888) Custom Sort String:
+		Problem statement
+			You are provided with the two strings named X and Y respectively. Y has its own specific order and has no repeating characters. Your task is to arrange the characters of the first string i.e. X in such a way that the order of characters in X is exactly the same as in Y, which means if ‘d’ occurs after ‘c’ in Y then it should also occur after ‘c’ in X ( obviously if X has ‘d’ and ‘c’ as characters in it ). All you have to do is, convert string X in the specific order with respect to string Y.
+			Note :
+
+			Both the strings have only lowercase English alphabets. 
+			There may be more than one correct solution, you have to return any one of the possible solutions.
+			Constraints :
+				1 <= T <= 10
+				1 <= |X| <= 10000
+				1 <= |Y| <= 26
+				where ‘T’ is the number of test cases, |X| is the length of the first string and |Y| is the length of the second string.
+				Time Limit: 1 sec
+			Sample Input 1:
+				1
+				acabd
+				abc
+				Sample Output 1:
+				aabcd
+				Explanation of Sample Input 1:
+				String Y has ‘a’ first then ‘b’ and then ‘c’ and therefore string X must be ordered as ‘aabcd’ to keep the respective order of characters same as in string Y.
+				Other possible answers are: ‘daabc’ , ‘adabc’ , ‘aadbc’, ‘aabdc’.
+				Sample Input 2:
+				4
+				dfhfgk
+				h
+				aabbb
+				gd
+				abababab
+				ab
+				cag
+				abcdef
+				Sample Output 2:
+				hdffgk
+				aabbb
+				aaaabbbb
+				acg
+
+		#include <bits/stdc++.h> 
+		// here it is important that the ans is stored in x or if you are storing the ans in
+		// different string then don't change the actual x
+
+		// here storing the answer in ans & assign it back to x, Means storing ans in X
+		string specificOrder(string &x, string &y) {
+			string ans;
+			int n = y.size();
+			for(int i=0; i<n; i++){
+				char ch = y[i];
+				for(int j=0; j<x.size();){
+					if(ch == x[j]){
+						ans += ch;
+						x.erase(x.begin()+j);
+					}else{
+						j++;
+					}
+				}
+			}
+
+			ans += x;
+			x = ans;
+
+			return ans;
+		}
+
+		// here storing it in another var ans & not changing x
+			#include <bits/stdc++.h> 
+			string specificOrder(string & x, string & y) {
+				string temp = x;
+				string ans;
+				int n = y.size();
+
+				for(int i=0; i<n; i++){
+					char ch = y[i];
+					for(int j=0; j<temp.size(); ){
+						if(ch == temp[j]){
+							ans += ch;
+							temp.erase(temp.begin()+j);
+						}else{
+							j++;
+						}
+					}
+				}
+
+				ans += temp;
+				return ans;
+			}
 	
-	879)
+	888) 
 	
-	880)
+	890)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
