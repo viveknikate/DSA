@@ -22094,7 +22094,7 @@ Lecture-61: Queue FAANG Interview Questions
 				return ans;
 			}
 
-		// Optimized:
+		// Optimized: Using Deque
 			vector<long long> printFirstNegativeInteger(long long int A[], long long int N, long long int K) {
 				vector<long long> ans;
 				deque<long long int> dq;
@@ -22124,6 +22124,36 @@ Lecture-61: Queue FAANG Interview Questions
 					}
 				}
 				return ans;
+			}
+
+		// Optimized: Using Queue
+			vector<long long> printFirstNegativeInteger(long long int A[], long long int N, long long int K) {
+			vector<long long> ans;
+			queue<int> q;
+			
+			for(int i=0; i<K; i++)
+				if(A[i] < 0)
+					q.push(i);
+			
+			if(q.size())
+				ans.push_back(A[q.front()]);
+			else
+				ans.push_back(0);
+			
+			for(int i=K; i<N; i++){
+				if(!q.empty() && i - q.front() >= K)
+					q.pop();
+					
+				if(A[i] < 0)
+					q.push(i);
+				
+				if(q.size())
+					ans.push_back(A[q.front()]);
+				else
+					ans.push_back(0);
+			}    
+			
+			return ans;
 			}
 
 		// More Optimized:
@@ -22550,7 +22580,7 @@ Lecture-61: Queue FAANG Interview Questions
 			return 0;
 		}
 
-	Q.8. Sum of minimum and maximum elements of all subarrays of size k:
+	Q.8. Sum of minimum and maximum elements of all subarrays of size k: (Refer Q.886 from POTD section)
 		Problem Statement:
 			Given an array of both positive and negative integers, the task is to compute sum of minimum and maximum elements of all sub-array of size k.
 			Examples: 
@@ -22594,7 +22624,7 @@ Lecture-61: Queue FAANG Interview Questions
 			}
 
 		// Optimized:
-
+			
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
@@ -88453,7 +88483,7 @@ POTD:-[Problem of the Day]
 			return minEle;
 		}
 	
-	#CN BeginnerContest-60
+	#CN BeginnerContest-60:
 		839) First vs Last:
 			Problem statement
 				You are given a string 'S' containing 'N' lowercase English characters.
@@ -92122,9 +92152,883 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 	
-	888) 
+	889) Inverted Triangle Of Stars:
+		Problem statement
+			You have been given an integer ‘N’. You need to print an inverted isosceles triangle of stars such that the height of the triangle is N.
+			For example :
+			If N = 4 then the output will
+			*******
+			 *****
+			  ***
+			   *
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 100
+				Time Limit : 1 sec
+
+			Sample Input 1:
+			1
+			4
+			Sample Output 1:
+			*******
+			 *****
+			  ***
+			   *
+			Sample Input 2:
+			1
+			3
+			Sample Output 2:
+			*****
+			 ***
+			  *
+
+		#include <bits/stdc++.h> 
+		vector<string> Triangle(int n) {
+			vector<string> ans;
+			int sp = 0;
+			for(int i=n; i>0; i--){
+				string s;
+				int j=0;
+				while(j < sp){
+					s += " ";
+					j++;
+				}
+				sp++;
+				string s2(i*2-1, '*');
+				s += s2;
+				ans.push_back(s);
+			}
+			return ans;
+		}
+
+	890) Number of Steps to Reduce a Number in Binary Representation to One:
+		Problem Statement:
+			Given the binary representation of an integer as a string s, return the number of steps to reduce it to 1 under the following rules:
+			If the current number is even, you have to divide it by 2.
+			If the current number is odd, you have to add 1 to it.
+			It is guaranteed that you can always reach one for all test cases.
+			
+			Example 1:
+				Input: s = "1101"
+				Output: 6
+				Explanation: "1101" corressponds to number 13 in their decimal representation.
+				Step 1) 13 is odd, add 1 and obtain 14. 
+				Step 2) 14 is even, divide by 2 and obtain 7.
+				Step 3) 7 is odd, add 1 and obtain 8.
+				Step 4) 8 is even, divide by 2 and obtain 4.  
+				Step 5) 4 is even, divide by 2 and obtain 2. 
+				Step 6) 2 is even, divide by 2 and obtain 1.  
+			Example 2:
+				Input: s = "10"
+				Output: 1
+				Explanation: "10" corressponds to number 2 in their decimal representation.
+				Step 1) 2 is even, divide by 2 and obtain 1.  
+			Example 3:
+				Input: s = "1"
+				Output: 0
+			
+			Constraints:
+				1 <= s.length <= 500
+				s consists of characters '0' or '1'
+				s[0] == '1'
+
+		class Solution {
+			public:
+			int numSteps(string s) {
+				int stps =0;
+
+				while(s.size() > 1){
+					if(s[s.size()-1] == '1'){
+						// adding one
+						string temp = s;
+						int i=temp.size()-1;
+						int c = 1;
+
+						while(i >=0 && c){
+							if(temp[i] == '1' && c){
+							temp[i] = '0';
+							c = 1;
+							}else{
+							temp[i] = '1';
+							c = 0;
+							}
+							i--;
+						}
+						if(c)
+							temp.insert(temp.begin(), '1'); 
+						
+						s = temp;
+					}else{
+						s.erase(s.begin()+(s.size()-1));
+					}
+					stps++;
+				}
+
+				return stps;
+			}
+		};
+
+		// More Optimized:
+			class Solution {
+				public:
+				int numSteps(string s) {
+					int ans=0;
+
+					while(s != "1"){
+						if(s.back() == '0'){
+							s.pop_back();
+						}else{
+							int i=s.size()-1;
+							while(i >=0 && s[i] == '1'){
+								s[i] = '0';
+								i--;
+							}
+							// this means s contains all 1's
+							if(i < 0){
+								s = '1' + s;
+							}else{
+								s[i] = '1';
+							}
+						}
+						ans++;
+					}
+					return ans;
+				}
+			};
 	
-	890)
+	#CodeChef Starters-136 Division-4: 
+		891) Who Makes P1:
+			https://www.codechef.com/START136D/problems/WHOMAKESP1
+			Problem Statement:
+				Tyro and Dom are fighting over who makes the first problem of the contest. Both of them are very lazy so they don't want to make it.
+				Tyro has a patience level of A, meaning he will only be convinced on the 𝐴𝑡ℎ time when Dom asks him to make the problem.
+				Dom, on the other hand, has decided to convince Tyro at most B times. If Tyro is not convinced by the 𝐵𝑡ℎ time, Dom will proceed to make it himself.
+				Given the values of 
+				𝐴 and 𝐵, find out who will end up making the problem.
+				Input Format
+				The first and only line of input contains 2 integers, A and B - Tyro's patience level, and the number of times Dom tries to convince Tyro respectively.
+				Output Format
+				For each test case, output on a new line, Dom or Tyro corresponding to who ends up making the problem.
+				You can print each character in uppercase or lowercase. For example, the strings DOM, dom, Dom, and dOM are considered identical.
+
+				Constraints
+				1≤A,B≤10
+				Sample 1:
+				Input
+				5 5
+				Output
+				Tyro
+				Explanation:
+				Dom will convince Tyro for at most 5 times. Tyro agrees on the 5𝑡ℎ time and makes the problem.
+				Sample 2:
+				Input
+				4 3
+				Output
+				Dom
+				Explanation:
+				Dom will convince Tyro for at most 3 times. However, Tyro has decided to agree on the 4𝑡ℎ time. Thus, Dom makes the problem.
+
+			#include <bits/stdc++.h>
+			using namespace std;
+			int main() {
+				int a, b;
+				cin>>a>>b;
+				
+				if(a > b)
+					cout<<"Dom";
+				else
+					cout<<"Tyro";
+				
+				return 0;
+			}
+
+		892) Even Sum Subarray:
+			https://www.codechef.com/START136D/problems/EVENSUMSUB
+			Problem Statement:
+				Given an array A of size N, find the size of the largest subarray of A which has an even sum.
+				For example, for the array 2, 1, 2 the answer is just 1 as the largest subarray with an even sum is 2.
+				Note that a subarray is a contiguous part of an array. For the array [1, 3, 2], some possible subarrays
+				are [11, [2], [1, 3], [1, 3, 2]. However, [1, 2] is not a subarray for this array.
+				Input Format
+				• The first line of input will contain a single integer 1, denoting the number of test cases.
+				• Each test case consists of multiple lines of input.
+				• The first line of each test case contains a single integer N — the size of the array.
+				• The next line contains N space-separated integer - A1, A2, •••, AN.
+				Output Format
+				For each test case, output on a new line, the size of the largest subarray with even sum.
+				Constraints
+					• 1 ≤ T ≤ 50
+					• 1≤ N≤ 50
+					• 1 ≤ Ai ≤ 10^4
+				input:
+					4
+					3
+					2 1 2
+					3
+					1 3 2
+					6
+					2 2 1 1 1 2
+					1
+					1
+				output:
+					1
+					3
+					4
+					0
+				Explanation:
+					Test case 1: The largest subarray with even sum is the subarray [2] having size 1.
+					Test case 2: The largest subarray with even sum is the subarray [1,3,2] having size 3.
+					Test case 3: The largest subarray with even sum is the subarray [2,2,1,1] having size 4.
+					Test case 4: No subarray has even sum.
+
+			#include <bits/stdc++.h>
+			using namespace std;
+			int Finder(vector<int> &v){
+				int n = v.size();
+				int mxSize = 0;
+				for(int i=0; i<n; i++){
+					int curSum = 0, cnt=0;
+					for(int j=i; j<n; j++){
+						curSum += v[j];
+						cnt++;
+						if(!(curSum&1))
+							mxSize = max(mxSize, cnt);
+					}
+				}
+				return mxSize;
+			}
+
+			int main() {
+				int T;
+				cin>>T;
+				
+				while(T--) {
+					int n;
+					cin >> n;
+					
+					vector<int> v(n);
+					for(int i=0; i<n; i++)
+						cin>>v[i];
+						
+					int largeSize = Finder(v);
+					cout<< largeSize << endl;
+				}
+				return 0;
+			}
+		
+	#CN BeginnerContest-61:
+		893) Conversion:
+			Problem statement
+				You are given two integers ‘A’ and ‘B’. You can apply following operations on ‘B’:
+				‘Operation 1’: Subtract ‘3’ from ‘B’.
+				‘Operation 2’: Subtract ‘5’ from ‘B’.
+				‘Operation 1’ can be applied any number of times but ‘Operation 2’ can be applied at most two times. You have to determine whether you can convert ‘B’ to ‘A’.
+				Your task is to tell whether you can convert ‘B’ to ‘A’ by using given operations and return ‘1’ if possible, otherwise return ‘0’.
+				Example:
+				‘A’ = 5
+				‘B’ = 16
+
+				‘1st’ operation: Subtract ‘3’ from ‘B’. Now, ‘B’ becomes ‘13’.
+				‘2nd’ operation: Subtract ‘3’ from ‘B’. Now, ‘B’ becomes ‘10’.
+				‘3rd’ operation: Subtract ‘5’ from ‘B’. Now, ‘B’ becomes ‘5’.
+				So, it is possible to convert ‘B’ to ‘A’ by using the given operations.
+				Constraints:
+					1 <= 'T' <= 10
+					0 <= ‘A’, ‘B’ <= 10^8
+
+					Time Limit: 1 sec 
+				Sample Input 1:
+					2
+					10 19
+					0 2
+					Sample Output 1:
+					1
+					0
+					Explanation of sample input 1:
+					For test case 1:
+
+					‘1st’ operation: Subtract ‘3’ from ‘B’. Now ‘B’ becomes ‘16’.
+					‘2nd’ operation: Subtract ‘3’ from ‘B’. Now ‘B’ becomes ‘13’.
+					‘3rd’ operation: Subtract ‘3’ from ‘B’. Now, ‘B’ becomes ‘10’.
+					Here, it is possible to convert ‘B’ to ‘A’.
+					For test case 2:
+					It is impossible to convert ‘B’ to ‘A’ by using the given operations any number of times.
+					Sample Input 2:
+					2
+					2 6
+					1 11
+					Sample Output 2:
+					0
+					1
+
+			// Not Optimized:
+				int conversion (int a, int b) {
+					int temp = b;
+
+					// 0 times 5
+					while(temp > a)
+						temp -= 3;
+
+					if(temp == a)
+						return  1;
+					
+					// 1 times 5
+					temp = b;
+					temp -= 5;
+					while(temp > a)
+						temp -= 3;
+
+					if(temp == a)
+						return 1;
+
+					// 2 times 5
+					temp = b - 10;
+					while(temp > a)
+						temp -=3;
+					
+					if(temp == a)
+						return 1;
+
+					return 0;
+				}
+		
+			// Optimized:
+				int conversion (int a, int b) {
+					if((b-a) >= 0 && (b-a) % 3 ==0){
+						return 1;
+					}else if((b-a-5) >=0 && (b-a-5) % 3== 0)
+						return 1;
+					else if((b-a-10) >=0 && (b-a-10) % 3== 0)
+						return 1;
+					return 0;
+				}
+
+				//or
+				int conversion (int a, int b) {
+					if(((b-a) >= 0 && (b-a) % 3 ==0) || ((b-a-5) >=0 && (b-a-5) % 3== 0) || ((b-a-10) >=0 && (b-a-10) % 3== 0))
+						return 1;
+					return 0;
+				}
+
+		894) L Shaped Grid:
+			Problem statement
+				A grid of size ‘N * N’ is called an ‘L’ shaped grid if it contains the numbers from ‘1’ to ‘N’ such that any number ‘K’ (‘1’ <= ‘K’ <= ‘N’) is filled vertically from position ‘(K, K)’ to ‘(N, K)’ and horizontally from ‘(K, K)’ to ‘(K, N)’. For instance, a ‘(4 * 4)’ grid would look like:
+				[1, 1, 1, 1]
+				[1, 2, 2, 2]
+				[1, 2, 3, 3]
+				[1, 2, 3, 4]
+				You will be given an integer ‘R’ denoting the row of the grid of size ‘N * N’. You have to compute the sum of the ‘Rth’ row. All the given inputs are based on ‘1-based’ indexing.
+				Your task is to tell the sum of the ‘Rth’ row and return it.
+
+				Example:
+				‘N’ = 3
+				‘R’ = 2
+				The grid would look like: [[1, 1, 1], [1, 2, 2], [1, 2, 3]].
+
+				The ‘2nd’ Row is ‘[1, 2, 2]’, and its sum is ‘5’.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^9
+					1 <= ‘R’ <= ‘N’
+					Time Limit: 1 sec 
+				Sample Input 1:
+				2
+				4 3
+				2 2
+				Sample Output 1:
+				9
+				3
+				Explanation of sample input 1:
+				For test case 1:
+				Here, the grid would look like: [[1, 1, 1, 1], [1, 2, 2, 2], [1, 2, 3, 3], [1, 2, 3, 4]].
+				The ‘3rd’ row is ‘[1, 2, 3, 3]’, and its sum is ‘9’.
+				For test case 2:
+				Here, the grid would look like: [[1, 1][1, 2]].
+				The ‘2nd’ row is ‘[1, 2]’, and its sum is ‘3’.
+				Sample Input 2:
+				2
+				5 2
+				6 1
+				Sample Output 2:
+				9
+				6
+
+			// Not Optimized:
+				long long lShapedGrid (int n, int r) {
+					vector<vector<int>> Grid;
+					int row = 1;
+					for(int i=0; i<n; i++){
+						vector<int> temp;
+						int cnt = 0;
+
+						for(int j=0; j<= i; j++)
+						temp.push_back(++cnt);
+						
+						for(int j=i+1; j<n; j++)
+						temp.push_back(cnt);
+						
+						Grid.push_back(temp);
+					}
+
+					long long s = 0;
+					for(int i=0; i<n; i++)
+						s += Grid[r-1][i];
+					return s;
+				}
+
+			// Little Bit Optimized:
+				long long lShapedGrid (int n, int r) {
+					long long s=0;
+					int cnt=0;
+
+					int remain =  n - r;
+
+					while(r--)
+						s += ++cnt;
+					
+					while(remain--)
+						s += cnt;
+					return s;
+				}
+
+			// Optimized:
+				Don't forget to convert each & every int variable to long long (you *1ll or *1LL)
+				long long lShapedGrid (int n, int r) {
+					long long s1 = (r * 1ll * (r+1))/2LL;
+					long long s2 = (n-r) * 1LL * r * 1ll;
+					long long ans = s1 + s2;
+					return ans;
+				}
+
+				// or
+					long long lShapedGrid (int n, int r) {
+						return (r * 1ll * (r+1))/2LL + (n-r) * 1LL * r * 1ll;
+					}
+
+	895) String Subsequence
+		Problem Statement:
+			Given two strings, s1 and s2, count the number of subsequences of string s1 equal to string s2.
+			Return the total count modulo 1e9+7.
+			Example 1:
+			Input: 
+			s1 = geeksforgeeks
+			s2 = gks
+			Output:
+			4
+			Explaination: 
+				We can pick characters from s1 as a subsequence from indices {0,3,4}, {0,3,12}, {0,11,12} and {8,11,12}.So total 4 subsequences of s1 that are equal to s2.Example 2:
+
+			Example 2:
+				Input: 
+				s1 = problemoftheday
+				s2 = geek
+				Output:
+				0
+				Explaination: 
+				No subsequence of string s1 is equal to string s2.
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function countWays() which takes the string s1 and s2 as input parameters and returns the number of subsequences of s1 equal to s2.
+
+			Expected Time Complexity: O(n*m)   	     [n and m are lengths of the strings s1 and s2]
+			Expected Auxiliary Space: O(n*m)        	[n and m are lengths of the strings s1 and s2]
+
+			Constraints:
+				1 ≤ n, m ≤ 500  [n and m are lengths of the strings s1 and s2]
+
+		// Not Optimized:
+			class Solution {
+				public:
+				void SubSecGen(string main, string store, vector<string> &ans, int i){
+					if(i == main.size()){
+						ans.push_back(store);
+						return;
+					}
+					
+					// exclude call
+					SubSecGen(main, store, ans, i+1);
+					
+					// include call
+					store += main[i];
+					SubSecGen(main, store, ans, i+1);
+				}
+				
+				int countWays(string s1, string s2) {
+					string s;
+					vector<string> hold;
+					SubSecGen(s1, s, hold, 0);
+					
+					int mod = 1e9+7;
+					for(string test: hold)
+						if(test == s2)
+							cnt++;
+					
+					return cnt % mod;
+				}
+			};
+	
+		// Optimized:
+			❌Pending
+
+	896) Count Triplets That Can Form Two Arrays of Equal XOR
+		Problem Statement:
+			Given an array of integers arr.
+			We want to select three indices i, j and k where (0 <= i < j <= k < arr.length).
+			Let's define a and b as follows:
+			a = arr[i] ^ arr[i + 1] ^ ... ^ arr[j - 1]
+			b = arr[j] ^ arr[j + 1] ^ ... ^ arr[k]
+			Note that ^ denotes the bitwise-xor operation.
+			Return the number of triplets (i, j and k) Where a == b.
+	
+			Example 1:
+				Input: arr = [2,3,1,6,7]
+				Output: 4
+				Explanation: The triplets are (0,1,2), (0,2,2), (2,3,4) and (2,4,4)
+			Example 2:
+				Input: arr = [1,1,1,1,1]
+				Output: 10
+			
+
+			Constraints:
+				1 <= arr.length <= 300
+				1 <= arr[i] <= 10^8
+
+		/* Time Complexity (TC): O(n⁴) Space Complexity (SC): O(1) */		
+		// Not Optimized:
+			class Solution {
+				public:
+				int countTriplets(vector<int>& arr) {
+					int cnt =0, n = arr.size();
+
+					for(int i=0; i<n-1; i++){
+						for(int j=i+1; j<n; j++){
+							for(int k=j; k<n; k++){
+								int a = 0, curI = i;
+								
+								while(curI < j)
+									a ^= arr[curI++];
+
+								int b = 0, curJ = j;
+								while(curJ <= k)
+									b ^= arr[curJ++];
+								
+								if(a==b)
+									cnt++;
+							}
+						}
+					}
+					return cnt;
+				}
+			};
+	
+		// Optimized:
+			❌Pending
+
+	#CN WeeklyContest-128
+		897) Bottle Pickup:
+			Problem statement
+				There are 'N' bottles numbered from '1' to 'N' on the table. You are given an array 'filled' of length 'N', where if 'filled[i]' is equal to '1', then the 'i'-th bottle is filled. If 'filled[i]' is equal to '0', then the 'i'-th bottle is empty.
+				You can pick bottles by performing the following operation:
+				Choose two integers 'L' and 'R' (L <= R), and pick every bottle in the range '[L, R]'.
+				You want to pick every filled bottle in exactly one operation. So, find the minimum number of bottles you must pick up.
+				Note: It is guaranteed that there will be at least one filled bottle.
+
+				Example:
+					'N' = 3
+					'filled' = [0, 1, 0]
+					Perform the operation in the following way:
+				Choose 'L' and 'R' equal to '2'. So, you can pick a filled bottle by just picking only the filled bottle. So, the answer is '1'.
+
+				Constraints:
+					1 <= T <= 10
+					1 <= N <= 10^5
+					0 <= filled[i] <= 1
+					It is guaranteed that the sum of 'N' over all test cases does not exceed '2*10^5'.
+					Time Limit: 1 second
+
+				Sample Input 1:
+					2
+					3
+					1 0 0 
+					4
+					1 1 0 1 
+					Sample Output 1:
+					1
+					4
+					Explanation Of Sample Input 1:
+					For test case 1:
+					Perform the operation in the following way:
+					-  Choose 'L' and 'R' equal to '1'.
+					So, you can pick a filled bottle by just picking only the filled bottle.
+					So, the answer is '1'.
+
+					For test case 2:
+					Perform the operation in the following way:
+					-  Choose 'L' equal to '1' and 'R' equal to '4'.
+					So, you can pick a filled bottle by just picking only the filled bottle.
+					So, the answer is '4'.
+					Sample Input 2:
+					2
+					6
+					0 0 0 0 1 0 
+					7
+					0 1 1 1 0 1 0 
+					Sample Output 2:
+					1
+					5
+
+			int countBottles(int n, vector<int> filled){
+			int L, R;
+			int cnt= 0;
+			for(int i: filled){
+				if(i == 1){
+					L = cnt;
+					break;
+				}
+				cnt++;
+			}
+
+			for(int i=n-1; i>=0; i--){
+				if(filled[i] == 1){
+					R = i;
+					break;
+				}
+			}
+			return (L == R) ? 1 : (R-L+1);
+			}
+		
+		898) Vague String:
+			Problem statement
+				A string is considered to be Vague if it contains a palindromic substring having length greater than ‘1’.
+				For example: “rfgugfo” is a Vague String because it contains “fgugf” as a palindromic substring.
+				You are given a string ‘S’ of size ‘N’ where each character is numbered from ‘0’ to ‘N - 1’. You are also given a ‘Queries’ array of size ‘Q’ where each query is of the given format:
+				‘(L, R)’ : Check whether a substring from ‘L’ to ‘R’ is vague or not.
+				Your task is to answer all the queries and return an array of ‘0s’ and ‘1s’ where ‘1’ shows that the substring is Vague and ‘0’ shows that the substring is not Vague.
+
+				Example:
+				‘N’ = 5
+				‘S’ = “fpaka”
+				‘Q’ = 2
+				‘Queries’ = [[2, 4], [1, 3]]
+
+				‘1st’ query: From ‘L’ = 2 to ‘R’ = 4
+				Here the whole string from ‘L’ = 2 to ‘R’ = 4 is a palindrome. So, the answer for this case will be ‘1’.
+
+				‘2nd’ query: From ‘L’ = 1 to ‘R’ = 3
+				Here, we have to check whether “pak” is Vague or not. As it does not contain any palindromic substring having length greater than ‘1’, So it is not Vague.
+				Hence the answer for this example is: [1, 0].
+
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^5
+					‘a’ <= ‘S[i]’ <= ‘z’
+					1 <= ‘Q’ <= 10^5
+					0 <= ‘Queries[i][0]’, ‘Queries[i][1]’ <= ‘N - 1’
+					Time Limit: 1 sec 
+
+				Sample Input 1:
+					2
+					7
+					pqgffgo
+					2
+					1 6
+					3 5
+					1
+					a
+					1
+					0 0
+					Sample Output 1:
+					1 1
+					0
+					Explanation of sample input 1:
+					For test case 1:
+					‘1st’ Query: The substring is “qgffgo” 
+					Here, the given substring contains a palindrome “gffg” having length greater than ‘1’. So, it is a Vague Substring.
+					‘2nd’ Query: The substring is “ffg”
+					Here, the given substring contains a palindrome “ff” having length greater than ‘1’. So, it is a Vague Substring.
+					Hence, the answer for this test case is: [1, 1].
+
+					For test case 2:
+					‘1st’ Query: The substring is “a”
+					Here, we don’t have any palindrome with length greater than ‘1’. So, it is not a Vague Substring.
+
+					Hence, the answer for this test case is: [0].
+					Sample Input 2:
+					2
+					6
+					wwaapp 
+					3
+					0 3
+					1 2
+					2 4
+					2
+					ab
+					2
+					0 0
+					1 1
+					Sample Output 2:
+					1 0 1
+					0 0
+		
+			// Not Optimized:
+				bool isPalindrome(string& s){
+					int i=0, j=s.size()-1;
+
+					while(i < j)
+						if(s[i++] != s[j--])
+							return 0;
+
+					return 1;
+				}
+
+				bool AnyPalindromFound(vector<string> &v){
+					// checking each & every substring, is it palindrome or not
+					for(string s: v){
+						if(isPalindrome(s))
+							return 1;
+					}
+					return 0;
+				}
+
+				vector <int> vagueString (int n, string &s, int q, vector<vector<int>> &queries) {
+					vector<int> res;
+					for(int i=0; i<q; i++){
+						int L = queries[i][0], R = queries[i][1];
+						if((R-L) > 1){
+							// need to generate all substrings & check are any of the substring is palindrome
+							vector<string> holder;
+
+							for(int z=L; z<R; z++){
+								string test;
+								test += s[z];
+								for(int y=z+1; y <= R; y++){
+									test += s[y];
+									// cout<<test<<"\t";
+									holder.push_back(test);
+								}
+								// cout<<"\n";
+							}
+
+							if(AnyPalindromFound(holder))
+								res.push_back(1);
+							else
+								res.push_back(0);
+						}else{
+							res.push_back(0);
+						}
+					}
+					return res;
+				}
+
+			// Optimized:
+				❌Pending
+
+		899) Blue vs Red:
+			Problem statement
+				You are given an array 'A' of 'N' distinct integers numbered from '0' to 'N - 1'.
+				All the integers of the array are colored with either blue or red color.
+				Let's define the profit for each element of the array 'A' as mentioned below. For the index 'i':
+				If the element on the 'i-th' index is red, the profit of the element is equal to 'A[i] * A[j]' where 'A[j]' is the maximum element such that 'j < i' and the color of 'A[j]' is blue. If there is no such 'A[j]' then the profit of 'A[i]' is equal to '0'.
+				If the element on the 'i-th' index is blue, the profit of the element is equal to '0'.
+				Let's define the beauty of the array 'A' as the sum of the profit of all the elements.
+				You are given an array 'color' where 'color[i]' is '1' if the element on index 'i' is red and '0' if the element is blue. You can shuffle the elements of the array 'A' and want to maximize the beauty of the array.
+				Note that 'color[i]' will remain the same even if the element on the index 'i' changes.
+				Let's denote 'max' is the maximum beauty of the array 'A' that is possible after shuffling the elements of the array 'A'. Find the total number of different arrays with beauty equal to 'max' that can be generated by shuffling the elements of the array 'A'.
+				As the answer might be large and can not fit inside a 64-bit integer, return the answer modulo '10^9 + 7'.
+				Example:
+				N = 4
+				A = [1, 5, 2, 6]
+				color =  [1, 0, 1, 0]
+				It can be proved that the maximum beauty of the array 'A' after shuffling the elements is '30'.
+				There are total '4' different arrays with beauty equal to '30' which are ['1', '5', '6', '2'], ['1', '6', '5', '2'], ['2', '5', '6', '1'] and ['2', '6', '5', '1'].
+				So, the answer for this case is '4'.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^5
+					1 < 'A[i]' <= 10^5
+					0 <= 'color[i]' <= 1
+					It is guaranteed that all the elements of the array 'A' are distinct from each other.
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					3
+					1 2 3
+					0 1 1
+					3
+					1 2 4
+					1 1 0
+					Sample output 1:
+					2
+					6
+					Explanation of sample input 1:
+					For test case 1:
+					It can be proved that the maximum beauty of the array 'A' after shuffling the elements is '9'.
+					There are '2' different arrays with beauty equal to '9' which are ['3', '2', '1'] and ['3', '1', '2'].
+					So, the answer for this case is '2'.
+
+
+					For test case 2:
+					We can see that there is no blue-colored element on the left side of any red element. So, beauty will be always '0'.
+					There are '6' different arrays with beauty equal to '0' which are ['1', '2', '4'], ['1', '4', '2'], ['2', '1', '4'], ['2', '4', '1'], ['4', '1', '2'] and ['4', '2', '1'].
+					So, the answer for this case is '6'.
+					Sample input 2:
+					2
+					5
+					4 5 1 2 6 
+					0 0 0 1 0
+					7
+					7 6 3 1 2 4 5
+					0 0 1 1 0 0 1
+					Sample output 2:
+					36
+					72
+
+			// Not Optimized:
+				long long CurVectorAns(vector<int>& ops, vector<int>& col){
+					int n = col.size();
+					long long prof = 0;
+					int curMx = 0;
+					for(int i=0; i<n; i++){
+						if(col[i] == 1){
+							prof += (ops[i] * curMx);
+						}else{
+							curMx = max(curMx, ops[i]);
+						}
+					}
+					return prof;
+				}
+
+				int numberOfArrays(int n, vector<int> &v, vector<int> &color) {
+					// need to generate the permutation of v.
+					
+					vector<vector<int>> hold;
+					sort(v.begin(), v.end());
+					hold.push_back(v);
+
+					while(next_permutation(v.begin(), v.end()))
+						hold.push_back(v);
+
+					// finding the max of every subsequence
+					long long mx = 0;
+					vector<long long> storer;
+					for(auto out: hold){
+						long long val = CurVectorAns(out, color);
+						storer.push_back(val);
+						mx = max(mx, val);
+					}
+
+					int cnt =0, mod = 1e9+7;
+					for(long long i: storer)
+						if(i == mx)
+							cnt++;
+					return cnt % mod;;
+				}
+		
+			// Optimized:
+				❌Pending
+
+	900)
+	
+	901)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
