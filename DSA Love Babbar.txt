@@ -8799,6 +8799,24 @@ Lecture-22: All about Char Arrays, Strings & solving LeetCode Questions
 				}
 			};
 
+			// or
+				class Solution {
+					public:
+					void reverseString(vector<char>& s) {
+						int n = s.size();
+						for(int i=0; i<n/2; i++)
+							swap(s[i], s[n-1-i]);
+					}
+				};
+			
+			// or
+				class Solution {
+					public:
+					void reverseString(vector<char>& s) {
+						reverse(s.begin(), s.end());
+					}
+				};
+
 		- Check If The String Is A Palindrome
 			#include <bits/stdc++.h> 
 			bool checkPalindrome(string s){
@@ -17662,7 +17680,7 @@ Lecture-44: Linked List & its types- Singly, Doubly, Circular
 		 But what if we don't have enough contiguous space to store a large number of elements together?
 		 To overcome this problem, we define another data structure which is called Linked List.
 		-a linked list is also called dynamic data structure.
-		-
+		- Its Linear Data Structure.
 
 		- Instead of Linked List we can use vector but if vector has some specified size [vector<int> v(5,0)], then
 		  when we exhaust the size of vector then new vector is created with size doubled, and copies all the element into new vector
@@ -22624,8 +22642,163 @@ Lecture-61: Queue FAANG Interview Questions
 			}
 
 		// Optimized:
-			
+			❌Pending
 ---------------------------------------------------------------------------------------------------------
+	31/05/24
+Lecture 62: Binary Trees & its Representation || Different types of Traversals
+	Binary Tree is a non-linear data structure where each node has at most two children [might be 0 or 1 or 2 childrens, but not more than 2] (one on left & one on right).
+	figure:
+									 1
+									 │
+					┌────────────────────┴───────────────────────┐
+					2               	                  		3
+				    	│                   	         	    		│
+			 ┌────────┴──────────┐              		┌─────────┴─────────┐
+			 4                   5                 		6                   7
+			 │                   │                 		│                   │
+		 ┌────┴────┐        ┌─────┴─────┐	         ┌─────┴─────┐       ┌─────┴─────┐
+		 8         9        10          11          12         13       14	      15
+
+	Terms: Considering above figure..
+		1) Node		- is entity which holds information, it contains data & pointer to childrens. (any element of tree is Node)
+		2) Root		- Top Node where tree starts (here 1 is root node.)
+		3) Children	- 8 and 9 are the childrens of 4 or 2 & 3 are the childrens of 1
+		4) Parent		- 1 is parent of 2 & 3, or 5 is parent of 10 & 11
+		5) Siblings 	- childs have same parent are called Siblings, here 12 & 13 has same parent(6) so 12 & 13 are Siblings.
+		6) Ancestor	- for example consider Node with value 11, here Ancestor of 11 are, 5, 2 & 1. (from bottom to top)
+		7) Descendant	- for example consider Node with value 3, here Descendant of 3 are, 6,7 12,13, 14 & 15 (from top to bottom)
+		8) Leaf		- The Node which don't have childrens are called Leaf Node.here 8, 9, 10, 11, 12, 13, 14 & 15 are te leaf Nodes.
+	-Also Refer image named lect-62.
+	#Binary Tree Structure:
+		struct Node{
+			int data;
+			Node* left;
+			Node* right;
+		}
+
+		// Use any below method to implement Nodes of tree
+		// Method 1: Using "struct" to make
+		// user-define data type
+		struct node {
+			int data;
+			struct node* left;
+			struct node* right;
+		};
+
+		// Method 2: Using "class" to make
+		// user-define data type
+		class Node {
+			public:
+			int data;
+			Node* left;
+			Node* right;
+		};
+	
+	#If want to create Tree with multiple childrens called n-nary tree
+		struct Node{
+			int data;
+			Node* child[10];
+		}
+
+	#Binary Tree 
+		#include <iostream>
+		#include<queue>
+		using namespace std;
+		// inputs
+		// 1 3 5 7 -1 -1 11 -1 -1 17 -1 -1 -1
+		// 1 2 4 8 -1 -1 9 -1 -1 5 10 -1 -1 11 -1 -1 3 6 12 -1 -1 13 -1 -1 7 14 -1 -1 15 -1 -1
+
+		class Node{
+			public:
+				int data;
+				Node *left, *right;
+			
+			Node(int data){
+				this -> data = data;
+				this -> left = NULL;
+				this -> right = NULL;
+			}
+		};
+
+		// Creation:
+		Node* buildTree(){
+			std::cout << "Enter the data: " << std::endl;
+			int data;
+			std::cin >> data;
+			
+			Node* root = new Node(data);
+			if(data == -1)
+				return NULL;
+			
+			std::cout << "Enter data for inserting in left: "<< data << std::endl;
+			root -> left = buildTree();
+			
+			std::cout << "Enter data for inserting in right: "<< data << std::endl;
+			root -> right = buildTree();
+			return root;
+		}
+
+		// Level order traversal:
+		void LevelOrderTraversal(Node *root){
+			std::queue<Node *> q;
+			q.push(root);
+			q.push(NULL);
+			
+			while(!q.empty()){
+				Node *temp = q.front();
+				q.pop();
+				
+				if(temp == NULL){
+					std::cout << std::endl;
+					if(!q.empty())
+						q.push(NULL);
+					
+				}else{
+					cout<<temp -> data << "\t";
+					if(temp -> left)
+						q.push(temp -> left);
+						
+					if(temp -> right)
+						q.push(temp -> right);
+				}
+			}
+		}
+
+		int main() {
+			Node *root = NULL;
+			
+			// creating a Tree
+			root = buildTree();
+			
+			// printing the tree
+			if(root != NULL)
+				LevelOrderTraversal(root);
+			
+			return 0;
+		}
+
+
+				
+
+	Types of Binary Tree
+		Binary Tree can be classified into multiples types based on multiple factors:
+		On the basis of Number of Children
+			Full Binary Tree
+			Degenerate Binary Tree
+			Skewed Binary Trees
+		
+		On the basis of Completion of Levels
+			Complete Binary Tree
+			Perfect Binary Tree
+			Balanced Binary Tree
+		
+		On the basis of Node Values:
+			Binary Search Tree
+			AVL Tree
+			Red Black Tree
+			B Tree
+			B+ Tree
+			Segment Tree
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
@@ -26404,6 +26577,68 @@ Lecture-138: Maximum Rectangle with all 1's || DP Series
 			std::cout << "Index of char 0: ( first occurrence) "<< s.find('0') << std::endl;                // if char not found then it will print the value of string::npos ie. 18446744073709551615 
 			std::cout << string::npos << std::endl;                 //18446744073709551615
 			std::cout << "Index of string 'orl' :" << s.find("orl") << std::endl;                // 7
+			return 0;
+		}
+
+	// vector front() & back() function:
+		#include <iostream>
+		#include <vector>
+		using namespace std;
+		int main() {
+			vector<int> v {1,2,3,4};
+			vector<vector<int>> V2 {{1,2,3}, {4, 5, 6}, {7,8,9}};
+			
+			std::cout << "The first element of v : " << v.front() << std::endl;
+			std::cout << "The last element of v : " << v.back() << std::endl;
+			
+			std::cout << "first vector of V2 : " << std::endl;
+			for(int i: V2.front())
+				std::cout << i << "\t";
+			
+			std::cout << std::endl;
+			std::cout << "last vector of V2 : " << std::endl;
+			for(int i: V2.back())
+				std::cout << i << "\t";
+				
+			std::cout << std::endl;
+			std::cout << "The first element of first vector in V2" << std::endl;
+			std::cout << V2.front().front() << std::endl;
+			
+			std::cout << "The last element of first vector in V2" << std::endl;
+			std::cout << V2.front().back() << std::endl;
+			
+			std::cout << std::endl;
+			std::cout << "The first element of last vector in V2" << std::endl;
+			std::cout << V2.back().front() << std::endl;
+			
+			std::cout << "The last element of last vector in V2" << std::endl;
+			std::cout << V2.back().back() << std::endl;
+			
+			// modifying the last elements
+			std::cout << "The first element of last vector in V2" << std::endl;
+			V2.back().front() = 909;
+			std::cout << V2.back().front() << std::endl;
+			
+			std::cout << "The last element of last vector in V2" << std::endl;
+			V2.back().back() = 404;
+			std::cout << V2.back().back() << std::endl;
+			
+			// any middle element of first or last vector
+			std::cout << "middle element of first vector in V2: " << V2.front()[1] << std::endl;
+			std::cout << "middle element of last vector in V2: " << V2.back()[1] << std::endl;
+			
+			// modifying the middle elements
+			V2.front()[1] = 1755;
+			std::cout << "Updated middle element of first vector in V2: " <<  V2.front()[1] << std::endl;
+			V2.back()[1] = 1945;
+			std::cout << "Updated middle element of last vector in V2: " << V2.back()[1] << std::endl;
+
+			
+			for(auto at: V2){
+				for(int i: at)
+					cout<<i<<"\t";
+				cout<<endl;
+			}
 			return 0;
 		}
 ---------------------------------------------------------------------------------------------------------
@@ -49006,6 +49241,26 @@ POTD:-[Problem of the Day]
 			*/		
 			return a;
 		}
+
+		// or
+			#include <bits/stdc++.h> 
+			vector<vector<int>> getFinalGrid(vector<vector<int>> &a, int n) {
+
+				for(vector<int> &row: a){               // using & (ampersand) here is very important else it will create a new vector & made changes in that new vector
+					// reverse it
+					int i=0, j= n-1;
+
+					while(i < j)
+						swap(row[i++], row[j--]);
+				}
+
+				// changing black color to white color & viceversa
+				for(int i=0; i<n; i++)
+					for(int j=0; j<n; j++)
+						a[i][j] = (a[i][j] == 1) ? 0 : 1;
+
+				return a;
+			}
 	
 	303) Implement strStr():
 		Problem statement
@@ -55994,6 +56249,30 @@ POTD:-[Problem of the Day]
 			}
 		};
 
+		// or
+			bool isPalindrom(string s){
+				int i=0, j=s.size()-1;
+				while(i < j)
+					if(s[i++] != s[j--])
+						return 0;
+
+				return 1;
+			}
+
+			int palindromicSubstrings(string input) {
+				int n = input.size();
+				int cnt = n;
+				for(int i=0; i<n; i++){
+					string temp = string(1, input[i]);
+					for(int j=i+1; j<n; j++){
+						temp += input[j];
+						if(isPalindrom(temp))
+							cnt++;
+					}
+				}
+				return cnt;
+			}
+
 	382) Rotate Bits:
 		Problem statement:
 			Given an integer N and an integer D, 
@@ -57854,6 +58133,79 @@ POTD:-[Problem of the Day]
 				
 			return cnt;
 		}
+
+		// or
+			#include <bits/stdc++.h> 
+			bool isPalindrome(string s){
+				int i=0, j=s.size()-1;
+
+				if(s.empty())				// this handles the multiple/extra spaces between the words of string
+					return 0;
+
+				while(i < j)
+					if(s[i++] != s[j--])
+						return 0;
+				return 1;
+			}
+
+			int countNumberOfPalindromeWords(string s) {
+				vector<string> v;
+				transform(s.begin(), s.end(), s.begin(), ::tolower);				// this is for converting the whole string into lowercase
+
+				if(s.empty())
+					return 0;
+
+				string temp;
+				for(char ch: s){
+					if(ch == ' '){
+						v.push_back(temp);
+						temp.clear();
+					}else{
+						temp += ch;
+					}
+				}
+
+				// last word manual insertion
+				v.push_back(temp);
+				
+				int cnt=0;
+				for(string s: v){
+					// cout<<s<<endl;
+					if(isPalindrome(s))
+						cnt++;
+				}
+				return cnt;
+			}
+
+		// or using istringstream:
+			#include <bits/stdc++.h> 
+			bool isPalindrome(string s){
+				int i=0, j=s.size()-1;
+				while(i < j)
+					if(s[i++] != s[j--])
+						return 0;
+				return 1;
+			}
+
+			int countNumberOfPalindromeWords(string s) {
+				vector<string> v;
+				transform(s.begin(), s.end(), s.begin(), ::tolower);				// this is for converting the whole string into lowercase
+
+				// this lines of code is to extract the words from string
+				string test;
+				istringstream iss(s);
+				while(iss >> test)
+					v.push_back(test);
+				
+				// this is for counting the palindrome stirngs
+				int cnt=0;
+				for(string s: v){
+					// cout<<s<<endl;
+					if(isPalindrome(s))
+						cnt++;
+				}
+				return cnt;
+			}
 	
 	407) Least Number of Unique Integers after K Removals:
 		Problem statement:
@@ -93026,9 +93378,968 @@ POTD:-[Problem of the Day]
 			// Optimized:
 				❌Pending
 
-	900)
+	900) Lexicographical Numbers:
+		Problem Statement:
+			Given an integer n, return all the numbers in the range [1, n] sorted in lexicographical order.
+			You must write an algorithm that runs in O(n) time and uses O(1) extra space. 
+			Example 1:
+				Input: n = 13
+				Output: [1,10,11,12,13,2,3,4,5,6,7,8,9]
+
+			Example 2:
+				Input: n = 2
+				Output: [1,2]
+		
+			Constraints:
+				1 <= n <= 5 * 10^4
+
+		class Solution {
+			public:
+			vector<int> lexicalOrder(int n) {
+				vector<int> store;
+				vector<string> temp;
+				for(int i=0; i<n; i++){
+					temp.push_back(to_string(i+1));
+				}
+				sort(temp.begin(), temp.end());
+				for(string s: temp)
+					store.push_back(stoi(s));
+				
+				return store;
+			}
+		};
 	
-	901)
+	901) Swap two nibbles in a byte:
+		Problem Statement:
+			Given a number n, Your task is to swap the two nibbles and find the resulting number. 
+			A nibble is a four-bit aggregation, or half an octet. There are two nibbles in a byte. For example, the decimal number 150 is represented as 10010110 in an 8-bit byte. This byte can be divided into two nibbles: 1001 and 0110.
+
+			Example 1:
+			Input: n = 100
+			Output: 70
+			Explanation: 100 in binary is 01100100, two nibbles are (0110) and (0100). If we swap the two nibbles, we get 01000110 which is 70 in decimal.
+
+			Example 2:
+			Input: n = 129
+			Output: 24
+			Explanation: 129 in binary is 10000001, two nibbles are (1000) and (0001). If we swap the two nibbles, we get 00011000 which is 24 in decimal.
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function swapNibbles() which takes an integer n as input parameter and returns an integer after swapping nibbles in the binary representation of n.
+
+			Expected Time Complexity: O(1)
+			Expected Space Complexity: O(1)
+
+			Constraints:
+				0 ≤ n ≤ 255
+
+		class Solution {
+			public:
+			int swapNibbles(int n) {
+				string s = bitset<8>(n).to_string();
+				string s1 = s.substr(0, 4);
+				string s2 = s.substr(4);
+				s = s2 + s1;
+
+				return stoi(s,0,2);
+			}
+		};
+
+		// or
+			1. (n & 0x0F) << 4: 
+				This operation first masks the lower nibble of n using the bitwise AND operator (&) with 0x0F (which is 00001111 in binary). This effectively zeroes out the higher nibble. The result is then shifted left (<<) by 4 bits, moving the lower nibble to the place of the higher nibble.
+			2. (n & 0xF0) >> 4: 
+				Similarly, this operation masks the higher nibble of n using the bitwise AND operator with 0xF0 (which is 11110000 in binary), and then shifts it right (>>) by 4 bits, moving the higher nibble to the place of the lower nibble.
+			The results of these two operations are then combined using the bitwise OR operator (|), which effectively merges the two nibbles into a single byte, with the original nibbles swapped.
+			
+			class Solution {
+				public:
+				int swapNibbles(int n) {
+					return (((n & 0x0F) << 4) | (n & 0xF0) >> 4);
+				}
+			};
+
+	902) Find prime numbers:
+		Problem statement
+			You are given a positive integer ‘N’. Your task is to print all prime numbers less than or equal to N.
+			Note: A prime number is a natural number that is divisible only by 1 and itself. Example - 2, 3, 17, etc.
+			You can assume that the value of N will always be greater than 1. So, the answer will always exist.
+			Constraints:
+				2 <= N <= 10^7
+				Where ‘N’ is the given positive integer.
+				Time Limit: 1sec
+
+			Sample Input 1 :
+			7
+			Sample Output 1 :
+			2 3 5 7
+			Sample Output 1 Explanation:
+			For the given input, all prime numbers from 2 to 7 are 2, 3, 5 and 7.
+			Sample Input 2 :
+			30
+			Sample Output 2 :
+			2 3 5 7 11 13 17 19 23 29
+
+		// Not Optimized:
+			bool isPrime(int n){
+				int s = 2;
+				while(s <= n/2){
+					if(n % s == 0)
+						return 0;
+					s++;	
+				}
+				return 1;
+			}
+
+			vector<int> primeNumbersTillN(int N) {
+				vector<int> ans;
+				int i = 2;
+				while(i <= N){
+					if(isPrime(i))
+						ans.push_back(i);
+					i++;
+				}
+				return ans;
+			}
+
+		// Optimized:
+			❌Pending
+
+	903) Uncommon Words from Two Sentences:
+		Problem Statement:
+			A sentence is a string of single-space separated words where each word consists only of lowercase letters.
+			A word is uncommon if it appears exactly once in one of the sentences, and does not appear in the other sentence.
+			Given two sentences s1 and s2, return a list of all the uncommon words. You may return the answer in any order.
+
+			Example 1:
+				Input: s1 = "this apple is sweet", s2 = "this apple is sour"
+				Output: ["sweet","sour"]
+			Example 2:
+				Input: s1 = "apple apple", s2 = "banana"
+				Output: ["banana"]
+			
+			Constraints:
+				1 <= s1.length, s2.length <= 200
+				s1 and s2 consist of lowercase English letters and spaces.
+				s1 and s2 do not have leading or trailing spaces.
+				All the words in s1 and s2 are separated by a single space.
+
+		class Solution {
+			public:
+			vector<string> uncommonFromSentences(string s1, string s2) {
+				vector<string> ans;
+				map<string, int> Fr;
+
+				string temp;
+				for(char ch: s1){
+					if(ch == ' '){
+						Fr[temp]++;
+						temp.clear();
+					}else{
+						temp += ch;
+					}
+				}
+				Fr[temp]++;            // the last word
+
+				temp.clear();
+				for(char ch: s2){
+					if(ch == ' '){
+						Fr[temp]++;
+						temp.clear();
+					}else{
+						temp += ch;
+					}
+				}
+				Fr[temp]++;            // the last word
+
+				for(auto at: Fr)
+					if(at.second == 1)
+						ans.push_back(at.first);
+
+				return ans;
+			}
+		};
+		
+	#AtCoder BeginnerContest-356
+	904) A - Subsegment Reverse:
+		Problem Statement:
+			You are given positive integers N, L, and R.
+			For a sequence A=(1,2,…,N) of length 
+			N, an operation of reversing the L-th through R-th elements was performed once.
+			Print the sequence after this operation.
+			Constraints
+			All input values are integers.
+				1≤L≤R≤N≤100
+			Input
+			The input is given from Standard Input in the following format:
+
+			N L R
+			Output
+			Let 
+			A′ =(A1′, A2′,…,AN′) be the sequence after the operation. Print it in the following format:
+			A1′,A2′…,AN′
+	
+			Sample Input 1
+			5 2 3
+			Sample Output 1
+			1 3 2 4 5
+			Initially, 
+			A=(1,2,3,4,5).
+			After reversing the second through third elements, the sequence becomes 
+			(1,3,2,4,5), which should be printed.
+
+			Sample Input 2
+			7 1 1
+			Sample Output 2
+			1 2 3 4 5 6 7
+			It is possible that 
+			L=R.
+
+			Sample Input 3
+			10 1 10
+			Sample Output 3
+			10 9 8 7 6 5 4 3 2 1
+			It is possible that 
+			L=1 or 
+			R=N.
+
+		#include <iostream>
+		#include <vector>
+		using namespace std;
+		int main() {
+			
+			int N, L, R;
+			cin>>N>>L>>R;
+			
+			vector<int> v;
+			for(int i=1; i<= N; i++)
+				v.push_back(i);
+				
+			L--, R--;
+			while(L < R)
+				swap(v[L++], v[R--]);
+				
+			for(int i: v)
+				cout<<i<<" ";
+			return 0;
+		}
+	
+	#LeetCode WeeklyContest-400
+		905) Minimum Number of Chairs in a Waiting Room:
+			Problem Statement:
+				You are given a string s. Simulate events at each second i:
+				If s[i] == 'E', a person enters the waiting room and takes one of the chairs in it.
+				If s[i] == 'L', a person leaves the waiting room, freeing up a chair.
+				Return the minimum number of chairs needed so that a chair is available for every person who enters the waiting room given that it is initially empty.
+
+				Example 1:
+				Input: s = "EEEEEEE"
+				Output: 7
+				Explanation:
+				After each second, a person enters the waiting room and no person leaves it. Therefore, a minimum of 7 chairs is needed.
+
+				Example 2:
+				Input: s = "ELELEEL"
+				Output: 2
+				Explanation:
+				Let's consider that there are 2 chairs in the waiting room. The table below shows the state of the waiting room at each second.
+				Second	Event	People in the Waiting Room	Available Chairs
+					0	Enter		1						1
+					1	Leave		0						2
+					2	Enter		1						1
+					3	Leave		0						2
+					4	Enter		1						1
+					5	Enter		2						0
+					6	Leave		1						1
+					
+				Example 3:
+				Input: s = "ELEELEELLL"
+				Output: 3
+				Explanation:
+				Let's consider that there are 3 chairs in the waiting room. The table below shows the state of the waiting room at each second.
+				Second	Event	People in the Waiting Room	Available Chairs
+				0		Enter			1						2
+				1		Leave			0						3
+				2		Enter			1						2
+				3		Enter			2						1
+				4		Leave			1						2
+				5		Enter			2						1
+				6		Enter			3						0
+				7		Leave			2						1
+				8		Leave			1						2
+				9		Leave			0						3
+				
+
+				Constraints:
+
+				1 <= s.length <= 50
+				s consists only of the letters 'E' and 'L'.
+				s represents a valid sequence of entries and exits.
+
+			class Solution {
+				public:
+				int minimumChairs(string s) {
+					int maxReached=0, curCnt=0;
+					for(char ch: s){
+						if(ch == 'E')
+							curCnt++;
+						else
+							curCnt--;
+						maxReached = max(maxReached, curCnt);
+					}
+					return maxReached;
+				}
+			};
+
+		906) Count Days Without Meetings:
+			Problem Statement:
+				You are given a positive integer days representing the total number of days an employee is available for work (starting from day 1). You are also given a 2D array meetings of size n where, meetings[i] = [start_i, end_i] represents the starting and ending days of meeting i (inclusive).
+				Return the count of days when the employee is available for work but no meetings are scheduled.
+				Note: The meetings may overlap.
+				
+				Example 1:
+				Input: days = 10, meetings = [[5,7],[1,3],[9,10]]
+				Output: 2
+				Explanation:
+				There is no meeting scheduled on the 4th and 8th days.
+
+				Example 2:
+				Input: days = 5, meetings = [[2,4],[1,3]]
+				Output: 1
+				Explanation:
+				There is no meeting scheduled on the 5th day.
+
+				Example 3:
+				Input: days = 6, meetings = [[1,6]]
+				Output: 0
+				Explanation:
+				Meetings are scheduled for all working days.
+				
+				Constraints:
+					1 <= days <= 10^9
+					1 <= meetings.length <= 10^5
+					meetings[i].length == 2
+					1 <= meetings[i][0] <= meetings[i][1] <= days
+
+			// Not Optimized:
+				class Solution {
+					public:
+					int countDays(int days, vector<vector<int>>& meetings) {
+						int cnt=0;
+
+						vector<int> v(days, 1);
+						for(int z=0; z<meetings.size(); z++){
+							int start = meetings[z][0], end = meetings[z][1];
+							for(int i=start; i<=end; i++)
+								v[i-1] = 0;
+						}
+
+						/*
+							for(auto cur: meetings){                         // for(vector<int> cur: meetings){
+								int start = cur[0], end = cur[1];
+								for(int i=start; i<=end; i++)
+									v[i-1] = 0;
+							}
+						*/
+
+						for(int i: v){
+							// cout<<i<<"\t";
+							if(i != 0)
+								cnt++;
+						}
+
+						return cnt;
+					}
+				};
+			
+			// Optimized:
+				class Solution {
+					public:
+					int countDays(int days, vector<vector<int>>& meetings) {
+						sort(meetings.begin(), meetings.end());
+						vector<vector<int>> test;
+						test.push_back(meetings[0]);
+
+						for(int i=1; i<meetings.size(); i++){
+							if(test.back()[1] >= meetings[i][0]){
+								test.back()[1] = max(test.back()[1], meetings[i][1]);
+							}else{
+								test.push_back(meetings[i]);
+							}
+						}
+
+						int cnt =0;
+						for(int i=0; i<test.size(); i++)
+							cnt += (test[i][1] - test[i][0] + 1);
+
+						return days - cnt;
+					}
+				};
+			
+		907) Lexicographically Minimum String After Removing Stars:
+			Problem Statement:
+				You are given a string s. It may contain any number of '*' characters. Your task is to remove all '*' characters.
+				While there is a '*', do the following operation:
+				Delete the leftmost '*' and the smallest non-'*' character to its left. If there are several smallest characters, you can delete any of them.
+				Return the 
+				lexicographically smallest
+				resulting string after removing all '*' characters.
+				
+				Example 1:
+				Input: s = "aaba*"
+				Output: "aab"
+				Explanation:
+				We should delete one of the 'a' characters with '*'. If we choose s[3], s becomes the lexicographically smallest.
+
+				Example 2:
+				Input: s = "abc"
+				Output: "abc"
+				Explanation:
+				There is no '*' in the string.
+				
+				Constraints:
+				1 <= s.length <= 10^5
+				s consists only of lowercase English letters and '*'.
+				The input is generated such that it is possible to delete all '*' characters.
+
+			// Not Optimized:
+				class Solution {
+					public:
+					string clearStars(string s) {
+						for(int i=0; i<s.size();){
+							if(s[i] == '*'){
+								s.erase(s.begin()+i);
+								i--;
+								char cur = s[i];
+								int index = i;
+								for(int z=i-1; z>=0; z--){
+									if(s[z] < cur){
+									index = z;
+									cur = s[z];
+									}
+								}
+								s.erase(s.begin()+index);
+							}else{
+								i++;
+							}
+						}
+						return s;
+					}
+				};
+			
+			// Optimized:
+				❌Pending
+		
+		908) Find Subarray With Bitwise AND Closest to K:
+			Problem Statement:
+				You are given an array nums and an integer k. You need to find a subarray
+				of nums such that the absolute difference between k and the bitwise AND of the subarray elements is as small as possible. In other words, select a subarray nums[l..r] such that |k - (nums[l] AND nums[l + 1] ... AND nums[r])| is minimum.
+				Return the minimum possible value of the absolute difference.
+				A subarray is a contiguous non-empty sequence of elements within an array.
+				
+				Example 1:
+				Input: nums = [1,2,4,5], k = 3
+				Output: 1
+				Explanation:
+				The subarray nums[2..3] has AND value 4, which gives the minimum absolute difference |3 - 4| = 1.
+
+				Example 2:
+				Input: nums = [1,2,1,2], k = 2
+				Output: 0
+				Explanation:
+				The subarray nums[1..1] has AND value 2, which gives the minimum absolute difference |2 - 2| = 0.
+
+				Example 3:
+				Input: nums = [1], k = 10
+				Output: 9
+				Explanation:
+				There is a single subarray with AND value 1, which gives the minimum absolute difference |10 - 1| = 9.
+			
+				Constraints:
+				1 <= nums.length <= 10^5
+				1 <= nums[i] <= 10^9
+				1 <= k <= 10^9
+
+			// Not Optimized:
+				class Solution {
+					public:
+					int AndValue(vector<int>& n, int l, int r){
+						int val = n[l];
+						for(int i = l+1; i<=r; i++)
+							val &= n[i];
+						
+						return val;
+					}
+					int minimumDifference(vector<int>& nums, int k) {
+						int minValue = INT_MAX;
+
+						for(int i=0; i<nums.size(); i++){
+							for(int j=i; j<nums.size(); j++){
+								minValue = min(minValue, abs(k-AndValue(nums, i, j)));
+							}
+						}
+						return minValue;
+					}
+				};
+		
+			// Optimized:
+				❌Pending
+
+	909) Merge Intervals:
+		Problem Statement:
+			Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+			Example 1:
+			Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+			Output: [[1,6],[8,10],[15,18]]
+			Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+
+			Example 2:
+			Input: intervals = [[1,4],[4,5]]
+			Output: [[1,5]]
+			Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+		
+			Constraints:
+				1 <= intervals.length <= 10^4
+				intervals[i].length == 2
+				0 <= starti <= endi <= 10^4
+
+		class Solution {
+			public:
+			vector<vector<int>> merge(vector<vector<int>>& intervals) {
+				sort(intervals.begin(), intervals.end());
+				vector<vector<int>> ans = {intervals[0]};
+
+				for(int i=1; i<intervals.size(); i++) {
+					if(ans.back()[1] >= intervals[i][0]) {
+						if(intervals[i][1] > ans.back()[1])
+							ans.back()[1] = intervals[i][1];
+					}else{
+						ans.push_back(intervals[i]);
+					}
+				}
+				return ans;
+			}
+		};
+	
+	910) Insert Interval:
+		Problem Statement:
+			You are given an array of non-overlapping intervals intervals where intervals[i] = [starti, endi] represent the start and the end of the ith interval and intervals is sorted in ascending order by starti. You are also given an interval newInterval = [start, end] that represents the start and end of another interval.
+			Insert newInterval into intervals such that intervals is still sorted in ascending order by starti and intervals still does not have any overlapping intervals (merge overlapping intervals if necessary).
+			Return intervals after the insertion.
+			Note that you don't need to modify intervals in-place. You can make a new array and return it.
+
+			Example 1:
+			Input: intervals = [[1,3],[6,9]], newInterval = [2,5]
+			Output: [[1,5],[6,9]]
+
+			Example 2:
+			Input: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+			Output: [[1,2],[3,10],[12,16]]
+			Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
+			
+
+			Constraints:
+				0 <= intervals.length <= 10^4
+				intervals[i].length == 2
+				0 <= starti <= endi <= 10^5
+				intervals is sorted by starti in ascending order.
+				newInterval.length == 2
+				0 <= start <= end <= 10^5
+
+		class Solution {
+			public:
+			vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+				intervals.push_back(newInterval);
+				sort(intervals.begin(), intervals.end());
+				vector<vector<int>> ans = {intervals[0]};
+
+				for(int i=1; i<intervals.size(); i++) {
+					if(ans.back()[1] >= intervals[i][0]) {
+						if(intervals[i][1] > ans.back()[1])
+							ans.back()[1] = intervals[i][1];
+					}else{
+						ans.push_back(intervals[i]);
+					}
+				}
+				return ans;
+			}
+		};
+
+		// or
+			class Solution {
+				public:
+				vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+					vector<vector<int>> ans;
+
+					int n = intervals.size();
+					int i=0;
+
+					while(i < n && intervals[i][1] < newInterval[0]){
+						ans.push_back(intervals[i]);
+						i++;
+					}
+
+					while(i < n && intervals[i][0] <= newInterval[1]){
+						newInterval[0] = min(intervals[i][0], newInterval[0]);
+						newInterval[1] = max(intervals[i][1], newInterval[1]);
+						i++;
+					}
+					ans.push_back(newInterval);
+
+					while(i < n){
+						ans.push_back(intervals[i]);
+						i++;
+					}
+					return ans;
+				}
+			};
+	
+	#GFG Weekly-157 ❌Pending
+		911) Valid Triangle:
+
+			class Solution {
+				public:
+				string isPossible(int a, int b, int c) {
+					if((a+b) > c && (b+c) > a && (c+a) > b)
+						return "YES";
+					return "NO";
+				}
+			};
+
+		912) Super Palindrome:
+			class Solution {
+				public:
+				int countSuperPalindrome(int l, int r) {
+					int cnt=0;
+					
+					for(int i=1; i <= r; i++){
+						int val1 = i * i;
+						
+						if(val1 > r)
+							break;
+							
+						int rev = 0;
+						int temp = val1;
+						
+						while(temp){
+							rev = rev*10 + temp % 10;
+							temp /= 10;
+						}
+						// cout<<rev<<"\t"<<val1<<endl;
+						if(rev == val1 && l <= val1 && val1 <= r)
+							cnt++;
+					}
+					return cnt;
+				}
+			};
+		
+		913) String Replacement:
+			-Reference:
+				#include <iostream>
+				using namespace std;
+				int main() {
+					
+					string s = "Hello World";
+					std::cout << s << std::endl;						// Hello World
+					
+					int index = s.find("lo");
+					s.erase(s.begin()+(index),s.begin()+(index)+2);
+					std::cout << s << std::endl;						// Hel World
+					
+					s.insert(index, "Vi");
+					std::cout << s << std::endl;						// HelVi World
+
+					return 0;
+				}
+			
+			// Not Optimized:
+				class Solution {
+					public:
+					int countOperations(string s) {
+						int cnt =0, mod = 1e9+7;
+						
+						while(s.find("ab") != string::npos){
+							int index = s.find("ab");
+							s.erase(s.begin()+index,s.begin()+index+2);
+							s.insert(index, "bba");
+							cnt++;
+							cnt %= mod;
+						}
+						return cnt % mod;
+					}
+				};
+			
+			// Optimized:
+				❌Pending
+
+		914) Make Array Zero:
+
+			// Not Optimized:
+				class Solution {
+					public:
+					bool checkAllZero(vector<int> &v){
+						for(int i: v)
+							if(i > 0)
+								return 0;
+						return 1;
+					}
+					
+					int minimumOperations(int n, vector<int> &arr, int p, int q) {
+						int minOps = 0;
+						sort(begin(arr), end(arr));
+						
+						// if(checkAllZero(arr))
+						//     return minOps;
+							
+						while(!checkAllZero(arr)){
+							// last element decreasing it by p
+							arr.back() -= p;
+							
+							// rest all elements decreasing them by q
+							for(int i=0; i<arr.size()-1; i++)
+								arr[i] -= q;
+							
+							sort(arr.begin(), arr.end());
+							minOps++;
+						}
+						return minOps;
+					}
+				};
+			
+			// Optimized:
+				❌Pending
+		
+	915) Append Characters to String to Make Subsequence:
+		Problem Statement:
+			You are given two strings s and t consisting of only lowercase English letters.
+			Return the minimum number of characters that need to be appended to the end of s so that t becomes a subsequence of s.
+			A subsequence is a string that can be derived from another string by deleting some or no characters without changing the order of the remaining characters.
+			
+			Example 1:
+			Input: s = "coaching", t = "coding"
+			Output: 4
+			Explanation: Append the characters "ding" to the end of s so that s = "coachingding".
+			Now, t is a subsequence of s ("coachingding").
+			It can be shown that appending any 3 characters to the end of s will never make t a subsequence.
+
+			Example 2:
+			Input: s = "abcde", t = "a"
+			Output: 0
+			Explanation: t is already a subsequence of s ("abcde").
+
+			Example 3:
+			Input: s = "z", t = "abcde"
+			Output: 5
+			Explanation: Append the characters "abcde" to the end of s so that s = "zabcde".
+			Now, t is a subsequence of s ("zabcde").
+			It can be shown that appending any 4 characters to the end of s will never make t a subsequence.
+		
+			Constraints:
+				1 <= s.length, t.length <= 10^5
+				s and t consist only of lowercase English letters.
+
+		class Solution {
+			public:
+			int appendCharacters(string s, string t) {
+				int i,j, found;
+				i=j=found=0;
+				int n = s.size();
+				int m = t.size();
+				for(i; i<n && j <m; i++)
+					if(s[i] == t[j]){
+						found++;
+						j++;
+					}
+				return t.size() - found;
+			}
+		};
+	
+	916) Trail of ones:
+		Problem Statement:
+			Given a number n, find the number of binary strings of length n that contain consecutive 1's in them. Since the number can be very large, return the answer after modulo with 1e9+7.
+			Example 1:
+			Input:
+			n = 2
+			Output:
+			1
+			Explanation:
+			There are 4 strings of 
+			length 2, the strings 
+			are 00, 01, 10, and 
+			11. Only the string 11 
+			has consecutive 1's.
+
+			Example 2:
+			Input:
+			n = 5
+			Output:
+			19
+			Explanation:
+			There are 19 strings
+			having consecutive 1's.
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function numberOfConsecutiveOnes() which takes an integer n and returns the number of binary strings that contain consecutive 1's in them.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+
+			Constraints
+				2 <= n <= 10^5
+
+		// Not Optimized:
+			class Solution {
+				public:
+				bool containsConsective1s(string &s){
+					int n = s.size();
+					for(int i=0; i < n-1; i++)
+						if(s[i] == '1' && s[i+1] == '1')
+							return 1;
+						
+					return 0;
+				}
+				
+				void BinaryAddition(string &s){
+					char carryChar = '1';
+					
+					for(int i=s.size()-1; i>=0; i--){
+						if(s[i] == '1' && carryChar == '1'){
+							s[i] = '0';
+						}else{
+							s[i] = '1';
+							carryChar = '0';
+							break;
+						}
+					}
+					
+					if(carryChar == '1')
+						s.insert(s.begin(), carryChar);
+				}
+
+				// or
+				/* 
+					void BinaryAddition(string &s){
+						char carryChar = '1';
+						int i;
+						
+						for(i=s.size()-1; i>=0; i--){
+							if(s[i] == '1')
+								s[i] = '0';
+							else
+								break;
+						}
+						
+						if(i >= 0){
+							s[i] = '1';
+							carryChar = '0';
+						}
+						
+						if(carryChar == '1')
+							s.insert(s.begin(), carryChar);
+					}			
+				*/
+						
+				int numberOfConsecutiveOnes(int n) {
+					int mod = 1e9+7, cnt=0;
+					string s = "11";
+					while(s.size() <= n){
+						if(containsConsective1s(s))
+							cnt++;
+							
+						// cout<<s<<endl;
+						cnt %= mod;
+						BinaryAddition(s);          // to generate the next number
+					}
+					return cnt % mod;
+				}
+			};
+
+		// Optimized:
+			❌Pending
+	
+	917) Palindrome Count:
+		Problem statement
+			Ninja loves to play with strings and anagrams. A palindrome is a string that is read the same backward or forward. An anagram is a string that is formed by rearranging the characters of the string. Ninjas have been given a string ‘STR’, and asked to find the number of substrings whose anagram is palindromic.
+			Constraints :
+				1 <= T <= 10
+				1 <= |STR| <= 5*10^3
+				The string ‘STR’ contains small letters only.   
+				Time Limit : 1 sec
+			Sample Input 1 :
+				2
+				aa
+				abc
+				Sample Output 1 :
+				3
+				3
+				Explanation For Sample Input 1 :
+				For first test case :
+
+				Substring are: {a, a, aa}
+				Since, all the substrings are palindromes.
+				So, the result is 3.
+
+				For second test :
+
+				Substring are: {a, b, c, ab, bc, abc}
+				Since, all {a, b, c} are palindromes. And no anagram of {ab, bc, abc} have palindromes. 
+				So, the result is 3.
+				Sample Input 2 :
+				2
+				aaa
+				aab
+				Sample Output 2 :
+				6
+				5
+
+		// Not Optimized:
+			bool isPalin(string s){
+				map<char, int> Fr;
+				for(char ch: s){
+					Fr[ch]++;
+				}
+
+				int cnt = 0;
+				for(auto i: Fr){
+					if(i.second&1)
+						cnt++;
+					if(cnt > 1)
+						return 0;
+				}
+				return 1;
+			}
+
+			int palinCount(string s) {
+				// need to generate all the substring of s
+				vector<string> v;
+				int n = s.size();
+				for(int i=0; i<n-1; i++){
+					string temp = string(1, s[i]);
+					for(int j=i+1; j<n; j++){
+						temp += s[j];
+						v.push_back(temp);
+					}
+				}
+
+				int totalCnt = n;
+				// checking substring is palidrom or not
+				for(string sample: v)
+					if(isPalin(sample))
+						totalCnt++;
+
+				return totalCnt;
+			}
+		
+		// Optimized:
+			❌Pending
+	
+	918)
+	
+	919)
+	
+	920)
+	
+	921)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
