@@ -22700,7 +22700,7 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 			Node* child[10];
 		}
 
-	#Binary Tree 
+	#Binary Tree
 		#include <iostream>
 		#include<queue>
 		using namespace std;
@@ -22777,7 +22777,19 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 			return 0;
 		}
 
-
+	HomeWork
+		#Reverse Level Order Traversal: ❌Pending
+	
+	Tyes of Traversal:
+		1) In-Order
+		2) Pre-Order
+		3) Post-Order
+	
+	HomeWork: solve below traversals without using recursion instead use iterative approach	
+		1) In-Order
+		2) Pre-Order
+		3) Post-Order
+		
 				
 
 	Types of Binary Tree
@@ -93994,8 +94006,34 @@ POTD:-[Problem of the Day]
 				}
 			};
 	
-	#GFG Weekly-157 ❌Pending
+	#GFG Weekly-157
 		911) Valid Triangle:
+			Problem Statement:
+				You are given three sticks of lengths a, b and c. You need to check whether it is possible to make a triangle with a positive area using these three sticks.
+				Return "YES" if it is possible else return "NO".
+				Example 1:
+				Input:
+				a = 3
+				b = 4
+				с = 5
+				Output:
+				YES
+				Explanation:
+				we can form a triangle of positive area with the help of these sticks which is also a right-angle triangle.
+				Example 2:
+				Input:
+				a = 1
+				b = 1
+				c = 3
+				Output:
+				NO
+				Explanation:
+				it is impossible to make a triangle of positive area with the help of these sticks.
+				Your Task:
+					You have to complete the function isPossible(), which takes three integers a, b and c as input parameters and return "YES" if it is possible to make a triangle of positive area else "NO".
+
+				Constraints:
+					1 <= a , b, c<= 10^9
 
 			class Solution {
 				public:
@@ -94007,6 +94045,31 @@ POTD:-[Problem of the Day]
 			};
 
 		912) Super Palindrome:
+			Problem Statement:
+				You are given two integers I and r. You have to count how many super palindrome numbers are there in the range [l,r] (both inclusive).
+				A number is called super palindrome if it is a palindrome in its decimal representation as well as a perfect square number.
+				Example 1:
+				Input:
+					l = 1
+					r = 10
+					Output:
+					3
+					Explanation:
+					1, 4, 9 are three numbers in the range [1,10] which are palindrome as well as perfect square.
+				Example 2:
+					Input:
+					1 = 100
+					r = 1000
+					Output:
+					3
+					Explanation:
+					121, 484, 676 are three numbers in the range [100,1000] which are palindrome as well as perfect square.
+
+				Constraints:
+					1 <= l <= r <= 10^9
+				Your Task:
+					You have to complete the function countSuperPalindrome() , which takes two integers l and r and returns number of super palindrome numbers in the range [l,r].
+				
 			class Solution {
 				public:
 				int countSuperPalindrome(int l, int r) {
@@ -94032,8 +94095,40 @@ POTD:-[Problem of the Day]
 					return cnt;
 				}
 			};
-		
+			
 		913) String Replacement:
+			Problem Statement:
+				You are given a string s , containing only characters 'a' and 'b'. In one operation you can replace substring "ab" with "bba".
+				Find the minimum number of operations required to make so that no substring "ab" is present in the string s.
+				Answer can be large so return it with modulo 109+7.
+
+				Example 1:
+
+				Input:
+				s = "bab"
+				Output: 
+				1
+				Explanation:
+				In one operation string s becomes "bbba" , and there is no "ab" substring in "bbba".
+				Example 2:
+
+				Input:
+				s = "abab"
+				Output:
+				4
+				Explanation:
+				Replace the first  "ab" substring from "abab" and string s becomes "bbaab" .
+				Replace the last "ab" substring from "bbaab" and string s becomes "bbabba".
+				Replace "ab" substring from "bbabba" and string s becomes "bbbbaba".
+				Replace last "ab" substring from "bbbbaba" and string s becomes "bbbbbbaa".
+				As we can see there is no substring in s after 4 operations.
+				Your Task:
+					You have to complete the function countOperations( ) , which takes string s as input parameters and return the number of operations  required to make such that there is no substring "ab" in s ,with modulo 10^9 + 7 .
+
+				Constraints:
+					1 <= length(s) <= 10^6
+					s contains only 'a' and 'b'
+					
 			-Reference:
 				#include <iostream>
 				using namespace std;
@@ -94073,6 +94168,45 @@ POTD:-[Problem of the Day]
 				❌Pending
 
 		914) Make Array Zero:
+			Problem Statement:
+				You are given a positive integer array arr of length n and two integers p and q .
+				In one operation you can select any element from the array and decrease it by p and other remaining elements are decreased by q.If any element becomes negative then you can replace it with 0.
+				You have to return minimum number of operations to make all elements of the array zero i.e. arr[i] = 0
+
+				Example 1:
+				Input:
+				n = 3
+				arr = {1, 2, 3}
+				p = 2
+				q = 1
+				Output:
+				2
+				Explanation:
+				First perform the operation on arr[1] then arr[0] becomes 1-1 = 0 , arr[1] becomes 2-2 = 0 and arr[2] becomes 3-1 = 2. i.e. arr becomes {0, 0, 2}
+				Perform the second operation on arr[2] and arr becomes = {-1, -1, 0} and after replacing the negative element by zero arr becomes {0, 0, 0}.
+				So there are two operation are required.
+
+				Example 2:
+				Input:
+				n = 4
+				arr = {4, 5, 6, 7}
+				p = 3
+				q = 1
+				Output:
+				4
+				Explanation:
+				First perform the operation on arr[3] then arr becomes {3, 4, 5, 4} .
+				Perform the second operation on arr[2] and arr becomes {2, 3, 2, 3} .
+				Perform the third operation on arr[3] and arr becomes {1, 2, 1, 0} .
+				Perform the fourth operation on arr[1] and arr becomes = {0, 0, 0, 0} .
+				So total 4 operations are required.
+
+				Your Task:
+					You have to complete the function minimumOperations() , which takes integer n , and positive integer array arr of length n and two integers p and q as input parameters and returns the number of operations required to make arr zero.
+				Constraints:
+					1 <= n <= 10^4
+					0 <= arr[i] <= 10^5
+					1 <= q < p <= 10^5 
 
 			// Not Optimized:
 				class Solution {
@@ -94333,13 +94467,324 @@ POTD:-[Problem of the Day]
 		// Optimized:
 			❌Pending
 	
-	918)
+	918) Binary representation of next number:
+		Problem Statement:
+			Given a binary representation in the form of a string(s) of a number n, the task is to find a binary representation of n+1.
+			Example 1:
+			Input: s = "10"
+			Output: 11
+			Explanation: "10" is the binary representation of 2 and binary representation of 3 is "11"
+
+			Example 2:
+				Input: s = "111"
+				Output: 1000
+				Explanation: "111" is the binary representation of 7 and binary representation of 8 is "1000"
+
+			Your Task:  
+				You don't need to read input or print anything. Complete the function binaryNextNumber()which takes s as input parameter and returns the string.
+				
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n) to store resultant string  
+
+			Constraints:
+				1 <= n <= 10^5
+
+		class Solution {
+			public:
+			string binaryNextNumber(string s) {
+				char carryChar = '1';
+				
+				for(int i=s.size()-1; i>=0; i--){
+					if(s[i] == '1')
+						s[i] = '0';
+					else{
+						s[i] = '1';
+						carryChar = '0';
+						break;
+					}
+				}
+				
+				if(carryChar == '1')
+					s.insert(s.begin(), '1');
+				
+				// removes leading zeros
+				// s = s.substr(s.find('1'));               // finding the first occurence of 1 to remove the leading zero
+				
+				// or
+				// while(s[0] == '0')
+				//     s.erase(s.begin());                 // manualy removing the leading zeros one by one
+				
+				// or
+				int index = s.find('1');                // finding the index of first occurence of char 1 in string
+				s = s.substr(index);                    // from that index considering as new string, without leading zeros
+				
+				return s;
+			}
+		};
 	
-	919)
+	919) Longest Palindrome:
+		Problem Statement:
+			Given a string s which consists of lowercase or uppercase letters, return the length of the longest palindrome
+			that can be built with those letters.
+			Letters are case sensitive, for example, "Aa" is not considered a palindrome.
+
+			Example 1:
+			Input: s = "abccccdd"
+			Output: 7
+			Explanation: One longest palindrome that can be built is "dccaccd", whose length is 7.
+
+			Example 2:
+			Input: s = "a"
+			Output: 1
+			Explanation: The longest palindrome that can be built is "a", whose length is 1.
+			
+			Constraints:
+				1 <= s.length <= 2000
+				s consists of lowercase and/or uppercase English letters only.
+
+		class Solution {
+			public:
+			static bool DESC_By_values(pair<char, int> &a, pair<char, int> &b){
+				return a.second > b.second;
+			}
+
+			int longestPalindrome(string s) {
+				map<char, int> Fr;
+
+				for(char ch: s)
+					Fr[ch]++;
+				
+				if(Fr.size() == 1)
+					return s.size();
+				
+				vector<pair<char, int>> v;
+				for(auto i: Fr)
+					v.push_back(i);
+
+				sort(v.begin(), v.end(), DESC_By_values);
+				
+				// for(auto i: v)
+				//     cout<<i.first << "\t"<<i.second<<endl;
+
+				int flagOddOnce = 1, cnt = 0;
+				for(auto i: v){
+					if(i.second&1 && flagOddOnce){       // once add full odd
+						cnt += i.second;
+						flagOddOnce = 0;
+					}else if(i.second&1){               // decrement by one & then add
+						cnt += (i.second)-1;
+					}else{                              // if it is even then just add
+						cnt += i.second;
+					}
+				}
+				return cnt;
+			}
+		};
 	
-	920)
+	920) PRETTY JSON:
+		Problem statement
+			You are given a string 'STR' representing JSON object. Return an array of strings denoting JSON objects with proper indentation.
+			Rules for proper indentation:
+			1. Every inner brace should increase one indentation to the following lines.
+			2. Every close brace should decrease one indentation to the same line and the following lines.
+			3. Every ‘,’ will mean a separate line.
+			4. The indents can be increased with an additional 4 spaces or ‘/t’.
+			Example:
+			Let the input be: "{A:"B",C:{D:"E",F:{G:"H",I:"J"}}}"
+			Then we return the following array of strings: 
+			{ 
+				A:"B",
+				C: 
+				{ 
+					D:"E",
+					F: 
+					{ 
+						G:"H",
+						I:"J"
+					} 
+				} 
+			}
+
+			Note that for every new brace we are putting an additional 4 spaces or \t.
+			Note:
+			1. [] and {} are only acceptable braces in this case.
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 2*10^3
+				Where 'N' denotes the length of the string.
+				Time limit: 1 sec
+			Sample Input 1:
+			2
+			["foo", {"bar":["baz",null,1.0,2]}]
+			[{"EmployeeID":1,"Name":"Abhishek","Designation":"SoftwareEngineer"}]
+			Sample Output 1:
+			[
+				"foo",
+				{
+					"bar":
+					[
+						"baz",
+						null,
+						1.0,
+						2
+					]
+				}
+			]
+			[
+				{
+					"Employee ID":1,
+					"Name":"Abhishek",
+					"Designation":"SoftwareEngineer"
+				}
+			]
+			Explanation of sample input 1 :
+			Test Case 1:
+
+			In the first test case,
+			We can see that we have 3 braces so we print when we encounter ‘[‘ we indent by leaving 4 spaces and then put “foo” in the string. 
+			Then we indent 4 more spaces and put “bar”.
+			Finally, we indent 4 more spaces for the last opening brace and then print baz.
+			Since we have ‘,’ after ‘bazz’ we make a new line for null and the numbers. 
+			Finally, we close the brackets taking care of the proper indentation.
+
+
+			In the second test case,
+			We have 2 braces only. After the first ‘[‘ we leave 4 spaces and put ‘{‘ in the string.
+			Then we put the string data taking care to change the line after every ‘,’  and de-indent for every closing brace.
+			Sample Input 2:
+			1
+			{"EmployeeID":2,"Name":"Garima","Designation":"EmailMarketing Specialist"}
+			Sample Output 2:
+			{
+				"Employee ID":2,
+				"Name":"Garima",
+				"Designation":"EmailMarketing Specialist"
+			}
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			vector<string> prettyJSON(string &str) {
+				vector<string> ans;
+				string cur, spacer;
+
+				for(char ch: str){
+					if(ch == '{' or ch == '['){
+						if(!cur.empty()){
+							cur = spacer + cur;
+							ans.push_back(cur);
+							cur.clear();
+						}
+						ans.push_back(spacer + ch);
+						spacer += "\t";
+					}else if(isdigit(ch) or isalpha(ch) or ch == '.'  or ch == '"' or ch == ':' or ch == '_' or ch == '-'){
+						cur += ch;
+					}else if(ch == ','){
+						if(ans.back().find('}') != string::npos or ans.back().find(']') != string::npos){
+							string test = ans.back() + ch;
+							ans.pop_back();
+							ans.push_back(test);
+						}else{
+							cur += ch;
+							cur = spacer + cur;
+							ans.push_back(cur);
+							cur.clear();
+						}
+					}else{
+						if(!cur.empty()){
+							ans.push_back(spacer+cur);
+							cur.clear();
+						}
+						spacer.pop_back();
+						ans.push_back(spacer+ch);
+					}
+				}
+				return ans;
+			}
 	
-	921)
+		// Optimized:
+			❌Pending
+
+	921) Fair Indexes:
+		Problem statement
+			Levi Ackerman has two arrays, ‘A’ and ‘B’ consisting of ‘N’ integers each. He wants to divide these two arrays into two parts each, such that the sum of all the elements in the first part is equal to the sum of elements in the second part, and the index ‘k’ where the splitting is done, must be the same in both the arrays.
+			In simple terms, If he splits the array at index k, then (A[0]+A[1]....A[k]), (A[k + 1] + A[k + 2]....A[n - 1]), (B[0] + B[1]....B[k]), (B[k + 1] + B[k + 2]....B[n - 1]) are all equal.
+			Find the total number of all the Indexes which satisfy the given condition.
+			For Example :
+			n = 4, A = {2, 4, 5, 1}, B = {3, 3, 10, -4}
+			Now in this example, if we split the array at index 1 then the sum of all the subarrays is 2 + 4 = 6, 5 + 1 = 6, 3 + 3 = 6, 10 + (-4) = 6, and no other index satisfies this condition, hence the answer is 1.
+			Constraints :
+				1 <= T <= 100
+				2 <= N <= 10^5
+				-10^9 <= A[i], B[i] <= 10^9
+				Time Limit: 1 second
+			Sample Input 1 :
+				2
+				3
+				1 2 3
+				2 1 3
+				2
+				6 6
+				10 2
+				Sample Output 1 :
+				1
+				0
+				Explanation For Sample Output 1 :
+				In the first test case, at index 1, the sum of the first array is 3, 3, and the sum of the second array is also 3, 3. Hence the answer is 1.
+
+				In the second test case, There is no index satisfying the given condition. Hence, the answer is 0.
+				Sample Input 2 :
+				2
+				5
+				-5 2 -10 -3 6
+				-5 -10 3 4 -2
+				5  
+				1 4 2 -2 5 
+				7 -2 -2 2 5  
+				Sample Output 2 :
+				1
+				2
+
+		#include<bits/stdc++.h>
+		int totalIndexes(vector<int> &A, vector<int> &B) {
+			int cnt=0;
+
+			long long sumA = accumulate(A.begin(), A.end(), 0LL);
+			long long sumB = accumulate(B.begin(), B.end(), 0ll);
+			int n = A.size();
+			
+			long long curSumA = 0;
+			long long curSumB = 0;
+			
+			for(int i=0; i<n-1; i++){
+				curSumA += A[i];
+				curSumB += B[i];
+
+				sumA -= A[i];
+				sumB -= A[i];
+
+				if(curSumB == sumB && curSumA == sumA && sumA == sumB)
+					cnt++;
+			}
+			return cnt;
+		}
+
+	922)
+
+	923)
+	
+	924)
+	
+	925)
+	
+	926)
+	
+	927)
+	
+	928)
+	
+	929)
+	
+	930)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
