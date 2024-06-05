@@ -22700,7 +22700,7 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 			Node* child[10];
 		}
 
-	#Binary Tree
+	#Binary Tree / Level Order Traversal (Breadth First Search or BFS)
 		#include <iostream>
 		#include<queue>
 		using namespace std;
@@ -22777,20 +22777,332 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 			return 0;
 		}
 
-	HomeWork
-		#Reverse Level Order Traversal: ❌Pending
+	Q. Level order traversal (Refer Q. 926 from POTD section)
+
+	#Practice:
+		#include <iostream>
+		#include<queue>
+		using namespace std;
+
+		//                  1
+		//         2                  3
+		//     4           5       6    7
+
+		// 1 2 4 -1 -1 5 -1 -1 3 6 -1 -1 7 -1 -1
+		// 1 2 4 8 -1 -1 9 -1 -1 5 10 -1 -1 11 -1 -1 3 6 12 -1 -1 13 -1 -1 7 -1 14 -1 -1
+
+		class Node{
+		public:
+			int data;
+			Node *left;
+			Node *right;
+		
+		Node(int data){
+			this -> data = data;
+			right = left = NULL;
+		}
+		};
+
+		Node* TreeCreation(){
+		std::cout << "Enter data: ";
+		int data;
+		cin>>data;
+		
+		if(data == -1)
+			return NULL;
+		
+		Node *n = new Node(data);
+		std::cout << "Enter data on left of "<< data << std::endl;
+		n -> left = TreeCreation();
+		
+		
+		std::cout << "Enter data on right of "<< data << std::endl;
+		n -> right = TreeCreation();
+
+		return n;
+		}
+
+		void LevelOrderTraversal(Node *r){
+		queue<Node *> q;
+		q.push(r);
+		q.push(NULL);
+		
+		std::cout << std::endl;
+		while(!q.empty()){
+			Node *temp = q.front();
+			q.pop();
+			
+			if(temp == NULL){
+				std::cout << std::endl;
+				if(!q.empty())
+					q.push(NULL);
+			}else{
+
+				cout<< temp -> data << "\t";
+				
+				if(temp -> left)
+					q.push(temp -> left);
+				if(temp -> right)
+					q.push(temp -> right);
+			}
+		}
+		}
+
+		int main() {
+		
+		Node *root = NULL;
+		root = TreeCreation();
+		LevelOrderTraversal(root);
+		
+		return 0;
+		}
+
+	HomeWork: #Reverse Level Order Traversal: (Refer Q.927 form POTD section)
+		// Using stack & queue
+		/*
+			struct Node {
+				int data;
+				Node* left;
+				Node* right;
+			};
+		*/
+		void RLOT(Node* r, vector<int> &v){
+			queue<Node*> q;
+			stack<int> st;
+			q.push(r);
+			
+			while(!q.empty()){
+				Node *curNode = q.front();
+				st.push(curNode -> data);
+				q.pop();
+				
+				if(curNode -> right)
+					q.push(curNode -> right);
+				
+				if(curNode -> left)
+					q.push(curNode -> left);
+			}
+			
+			while(!st.empty()){
+				v.push_back(st.top());
+				st.pop();
+			}
+		}
+
+		vector<int> reverseLevelOrder(Node *root) {
+			vector<int> ans;
+			
+			RLOT(root, ans);                // RLOT = Reverse Level Order Traversal
+			return ans;
+		}
 	
 	Tyes of Traversal:
 		1) In-Order
 		2) Pre-Order
 		3) Post-Order
+		Code:
+			#include <iostream>
+			#include<queue>
+			using namespace std;
+			/* 			  1
+						/   \
+					    2     3
+					   / \   / \
+					  4   5 6   7
+			*/
+			// above tree in input looks like: 1 2 4 -1 -1 5 -1 -1 3 6 -1 -1 7 -1 -1
+			// Level Order Traversal (Breadth First Search or BFS): 1 2 3 4 5 6 7
+			// InOrder Traversal    : 4 2 5 1 6 3 7
+			// PreOrder Traversal   : 1 2 4 5 3 6 7
+			// PostOrder Traversal  : 4 5 2 6 7 3 1
+
+			struct TreeNode{
+				public:
+					int data;
+					TreeNode *left = NULL;
+					TreeNode *right = NULL;
+				
+				TreeNode(int data){
+					this -> data = data;
+				}
+			};
+
+			TreeNode *GenerateTree(){
+				std::cout << "Enter data : " << std::endl;
+				int data;
+				cin>> data;
+				
+				if(data == -1)
+					return NULL;
+					
+				TreeNode *curNode = new TreeNode(data);
+				std::cout << "Enter data on left of " << data << std::endl;
+				curNode -> left = GenerateTree();
+				
+				std::cout << "Enter data on left of " << data << std::endl;
+				curNode -> right = GenerateTree();
+				
+				return curNode;
+			}
+
+			void showTree(TreeNode* Root){
+				queue<TreeNode *> q;
+				q.push(Root);
+				q.push(NULL);
+				
+				while(!q.empty()){
+					TreeNode *curNode  = q.front();
+					q.pop();
+					
+					if(curNode){                                //  if(curNode != NULL){
+						cout<< curNode -> data <<"\t";
+						if(curNode -> left)
+							q.push(curNode -> left);
+							
+						if(curNode -> right)
+							q.push(curNode -> right);
+					}else{
+						std::cout << std::endl;
+						if(!q.empty())
+							q.push(NULL);
+					}
+				}
+			}
+
+			void InOrderTraversal(TreeNode *Root){
+				if(Root == NULL)
+					return ;
+				InOrderTraversal(Root -> left);
+				std::cout << Root -> data << "\t";
+				InOrderTraversal(Root -> right);
+			}
+
+			void PreOrderTraversal(TreeNode *Root){
+				if(Root == NULL)
+					return ;
+				std::cout << Root -> data << "\t";
+				PreOrderTraversal(Root -> left);
+				PreOrderTraversal(Root -> right);
+			}
+
+			void PostOrderTraversal(TreeNode *Root){
+				if(Root == NULL)
+					return ;
+				PostOrderTraversal(Root -> left);
+				PostOrderTraversal(Root -> right);
+				std::cout << Root -> data << "\t";
+			}
+
+			int main() {
+				std::cout << "Enter Root : " << std::endl;
+				TreeNode *root = GenerateTree();
+				
+				// Tree
+				showTree(root);
+				
+				std::cout << "InorderTraversal: \t";                    // 4       2       5       1       6       3       7
+				InOrderTraversal(root);
+				std::cout << std::endl;
+				
+				std::cout << "PreOrderTraversal: \t";                   // 1       2       4       5       3       6       7
+				PreOrderTraversal(root);
+				std::cout << std::endl;
+				
+				std::cout << "PostOrderTraversal: \t";                  // 4       5       2       6       7       3       1
+				PostOrderTraversal(root);                   
+				std::cout << std::endl;
+				
+				return 0;
+			}
 	
 	HomeWork: solve below traversals without using recursion instead use iterative approach	
 		1) In-Order
 		2) Pre-Order
 		3) Post-Order
-		
-				
+		Code: Iterative Approach
+			
+
+	Q. Count Leaf Nodes:
+		https://www.naukri.com/code360/problems/count-leaf-nodes_893055
+		Problem statement
+			You are given a Binary tree. You have to count and return the number of leaf nodes present in it.
+			A binary tree is a tree data structure in which each node has at most two children, which are referred to as the left child and the right child
+			A node is a leaf node if both left and right child nodes of it are NULL.
+			Constraints:
+				1 <= T <= 100
+				1 <= N <=10^3
+				1 <= data <= 10^9
+				Time Limit : 1 sec
+			Sample Input 1:
+				3
+				1 -1 -1
+				1  2  3  -1 -1 -1 4 -1 -1
+				1  2 -1 -1 3 -1 4 -1 -1
+				Sample Output 1:
+				1
+				2
+				1
+				Explanation For Sample Input 1:
+				(i) 1 is the only node present in the tree, and hence it is the only leaf node.
+				(ii) 2 and 4 are two leaf nodes present in the tree; all other nodes have at least one child (1 has 2 and 3 and 3 has 4).
+				(iii) 4 is the only leaf node present in the tree as all other nodes have at least one child node (1 has 2, 2 has 3 and 3 has 4)
+				Sample Input 2:
+				3
+				1 2 3 4 5 6 7 -1 -1 -1 -1 -1 -1 -1 -1
+				1 -1 2 -1 3 -1 -1
+				1 2 -1 3 4 5 6 7 8 -1 - 1 -1 -1 -1 -1 -1 -1
+				Sample Output 2:
+				4
+				1
+				4
+				Explanation For Sample Input 2:
+				(i) 4, 5, 6 and 7 are 4 leaf nodes present in the tree, all other nodes have at least one child (1 has 2 and 3, 2 has 4 and 5 and 3 has 6 and 7).
+				(ii) 3 is the only leaf node present in the tree as all other nodes have at least one child node (1 has 2 and 2 has 3)
+				(iii) 5, 6, 7 and 8 are 4 leaf nodes present in the tree, all other nodes have at least one child (1 has 2, 2 has 3 and 4, 3 has 5 and 6 and 4 has 7 and 8).
+
+		/**********************************************************
+			Following is the Binary Tree Node class structure:
+			template <typename T>
+			class BinaryTreeNode {
+				public :
+					T data;
+					BinaryTreeNode<T> *left;
+					BinaryTreeNode<T> *right;
+
+				BinaryTreeNode(T data) {
+						this -> data = data;
+						left = NULL;
+						right = NULL;
+				}
+			};
+		***********************************************************/
+
+		void Inorder(BinaryTreeNode<int> *r, int &c){
+			if(r == nullptr)
+				return;
+			
+			Inorder(r->left, c);
+
+			if(r -> left == nullptr && r -> right == nullptr){
+				c++;
+				return ;
+			}
+
+			Inorder(r->right, c);
+
+			/* or
+				Inorder(r->left, c);
+				Inorder(r->right, c);
+				if(r -> left == nullptr && r -> right == nullptr)
+					c++;
+			*/
+		}
+
+		int noOfLeafNodes(BinaryTreeNode<int> *root){
+			int cnt =0;
+			Inorder(root, cnt);
+			return cnt;
+		}
 
 	Types of Binary Tree
 		Binary Tree can be classified into multiples types based on multiple factors:
@@ -22812,6 +23124,7 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 			B+ Tree
 			Segment Tree
 ---------------------------------------------------------------------------------------------------------
+
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
@@ -94580,6 +94893,29 @@ POTD:-[Problem of the Day]
 				return cnt;
 			}
 		};
+
+		// or simpler:
+			class Solution {
+				public:
+				int longestPalindrome(string s) {
+					set<char> st;
+					int cnt =0;
+
+					for(char ch: s){
+						if(st.count(ch)){               // count method returns the 1 if element is present in set, else 0
+							cnt += 2;
+							st.erase(ch);
+						}else{
+							st.insert(ch);
+						}
+					}
+
+					if(!st.empty())
+						cnt++;
+
+					return cnt;   
+				}
+			};
 	
 	920) PRETTY JSON:
 		Problem statement
@@ -94768,23 +95104,701 @@ POTD:-[Problem of the Day]
 			return cnt;
 		}
 
-	922)
+	922) Swapping pairs make sum equal:
+		Problem Statement:
+			Given two arrays of integers a[] and b[] of size n and m, the task is to check if a pair of values (one value from each array) exists such that swapping the elements of the pair will make the sum of two arrays equal.
 
-	923)
+			Example 1:
+				Input: n = 6, m = 4, a[] = {4, 1, 2, 1, 1, 2}, b[] = (3, 6, 3, 3)
+				Output: 1
+				Explanation: Sum of elements in a[] = 11, Sum of elements in b[] = 15, To get same sum from both arrays, we can swap following values: 1 from a[] and 3 from b[]
+
+			Example 2:
+				Input: n = 4, m = 4, a[] = {5, 7, 4, 6}, b[] = {1, 2, 3, 8}
+				Output: 1
+				Explanation: We can swap 6 from array a[] and 2 from array b[]
+
+			Your Task
+				You don't need to read or print anything. You need to complete the function findSwapValues() that takes array a, array b, integer n, and integer m as parameters and returns 1 if there exists any such pair otherwise returns -1.
+
+			Expected Time Complexity: O(mlogm+nlogn).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1 ≤ n, m ≤ 10^6
+
+		// Not Optimized:
+			class Solution {
+				public:
+				bool areSumEqual(int a[], int b[], int n, int m){
+					
+					long long sumA = accumulate(a, a+n, 0LL);				// long sumA = accumulate(a, a+n, 0L);
+					long long sumB = accumulate(b, b+m, 0ll);				// long sumB = accumulate(b, b+m, 0l); 
+					
+					if(sumA == sumB)
+						return 1;
+					return 0;
+				}
+				int findSwapValues(int a[], int n, int b[], int m) {
+					for(int i=0; i<n; i++){
+						for(int j=0; j<m; j++){
+							swap(a[i], b[j]);
+							if(areSumEqual(a, b, n, m))
+								return 1;
+							swap(a[i], b[j]);
+						}
+					}
+					return -1;
+				}
+			};
+			
+		// Optimized:
+			❌Pending
+
+	923) Insert Interval (Refer Q.910):
+		https://www.naukri.com/code360/problems/insert-interval_1102297
+		Problem statement
+			You are given a list of ‘N’ non-overlapping intervals (each interval can be represented using two integers ‘start’ and ‘end’), sorted in ascending order (based on ‘start’ values). Your task is to insert a given interval in the list, such that all the intervals are present in sorted order.
+			In case the given interval overlaps with other intervals, merge all necessary intervals to produce a list containing only non-overlapping intervals.
+			Example:
+			Let’s say the list of intervals is: [[1,3], [5,7], [8,12]] and we need to insert the interval [4,6] into the list. [4,6] must be inserted in the second position. After insertion, since [4,6] overlaps with [5,7], we merge them into one interval [4,7]. So, our resulting list is:  [[1,3], [4,7], [8,12]]
+			Constraints:
+				1 <= T <= 10 
+				1 <= N <= 5 * 10^4
+				1 <= start <= end <= 10^5
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				3
+				1 3
+				5 7
+				8 12
+				4 6
+				2
+				2 3
+				5 8
+				1 9
+				Sample Output 1:
+				1 3
+				4 7
+				8 12
+				1 9
+				Explanation 1:
+				For the first test case,  The list of intervals is: [[1,3], [5,7], [8,12]] and we need to insert the interval [4,6] into the list. [4,6] must be inserted in the second position. After insertion, since [4,6] overlaps with [5,7], we merge them into one interval [4,7]. So, our resulting list is:  [[1,3], [4,7], [8,12]]
+
+				For the second test case, N = 2. The list of intervals is: [[2,3], [5,8]] and we need to insert the interval [1,9] into the list. [4,6] must be inserted in the first position. After insertion, since it overlaps with [2,3] and [5,8], we merge them into one interval [1,9]. So, our resulting list is:  [[1,9]].
+				Sample Input 2:
+				2
+				3
+				1 3
+				5 7
+				8 12
+				4 10
+				2
+				2 3
+				5 10
+				1 4
+				Sample Output 2:
+				1 3 
+				4 12
+				1 4
+				5 10
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			vector<vector<int>> insertInterval(vector<vector<int>> &intervals, vector<int> &newInterval) {
+				intervals.push_back(newInterval);
+				sort(intervals.begin(), intervals.end());
+
+				vector<vector<int>> ans {intervals[0]};
+
+				for(int i=1; i<intervals.size(); i++){
+					if(ans.back()[1] >= intervals[i][0]){
+						// if(ans.back()[0] >= intervals[i][0]){
+						//     ans.pop_back();
+						//     ans.push_back(intervals[i]);
+						// }else{
+							if(ans.back()[1] < intervals[i][1])
+								ans.back()[1] = intervals[i][1];
+						// }
+					}else{
+						ans.push_back(intervals[i]);
+					}
+				}
+				return ans;
+			}
+
+		// Optimized:
+			#include <bits/stdc++.h> 
+			vector<vector<int>> insertInterval(vector<vector<int>> &intervals, vector<int> &newInterval) {
+				int i=0, n = intervals.size();
+				vector<vector<int>> ans;
+
+				while(i<n && intervals[i][1] < newInterval[0])
+					ans.push_back(intervals[i++]);
+				
+				while(i<n && intervals[i][0] <= newInterval[1]){
+					newInterval[0] = min(intervals[i][0], newInterval[0]);
+					newInterval[1] = max(intervals[i][1], newInterval[1]);
+					i++;
+				}
+
+				ans.push_back(newInterval);
+				while(i<n)
+					ans.push_back(intervals[i++]);
+
+				return ans;
+			}
 	
-	924)
+	924) Rotate DLL
+		https://www.naukri.com/code360/problems/rotate-dll_1115782
+		Problem statement
+			You are given a doubly-linked list with 'N' nodes, rotate the linked list counter-clockwise by 'K' nodes. 'K' is a positive integer and is smaller than the number of nodes in the linked list, that is 'N'.
+			A doubly linked List (DLL) contains an extra pointer, called the previous pointer, together with the next pointer and data which are there in the singly linked list such that both forward and backward navigation is possible.
+			For example
+			The given linked list is - 
+			If K = 3, then the list after rotating it by K nodes is:
+			Note:
+			1. The value of any node in the linked list will not be equal to -1.
+			Constraints:
+				1 <= T <= 5
+				1 <= N <= 3000
+				1 <= K < N
+				-10 ^ 7 <= data <= 10 ^ 7
+				where ‘T’ is the total number of test cases, 'N' is the total number of nodes in the linked list and ‘data’ is the value of any node of the linked list.
+
+			Sample Input 1 :
+			2
+			4 3 9 1 7 8 -1
+			4
+			1 2 3 4 5 -1
+			2
+			Sample Output 1 :
+			7 8 4 3 9 1 
+			3 4 5 1 2
+			Explanation of The Sample Input 1:
+			For the first test case:
+			The given linked list is :
+			4 <-> 3 <->  9 <->  1 <-> 7 <-> 8 <-> NULL
+
+			And K = 4 therefore we have to rotate the linked list by 4 nodes. So after the rotation, list will become  
+			7 <-> 8 <->  4 <-> 3 <-> 9 <-> 1 <-> NULL
+
+			For the second test case:
+			The given linked list is 
+			1 <-> 2 <->  3 <->  4 <-> 5  <-> NULL                                                          
+			And K = 2 therefore we have to rotate the linked list by 2 nodes. So after the rotation, list will become  
+			3 <-> 4 <->  5 <-> 1 <-> 2 <-> NULL
+			Sample Input 2 :
+			2
+			6 2 4 2 1 4 -1
+			2
+			12 33 55 11 22 -1
+			3
+			Sample Output 2 :
+			4 2 1 4 6 2
+			11 22 12 33 55
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			/****************************************************
+				Following is the class structure of the DLLNode class:
+				class DLLNode {
+				public:
+					int data;
+					Node *next;
+
+					DLLNode(int data) {
+						this->data = data;
+						this->next = NULL;
+						this->prev = NULL;
+					}
+				}
+			*****************************************************/
+
+			DLLNode* rotateDLL(DLLNode* head, int k) {
+				// finding the Tail
+				DLLNode* Tail = head;
+				while(Tail -> next)
+					Tail = Tail -> next;
+
+				// Tail found now need to attach every upcoming node to Tail now
+				while(k--){
+					DLLNode * temp = head;
+					head = head -> next;
+					head -> prev = NULL;
+
+					Tail -> next = temp;
+					temp -> prev = Tail;
+					temp -> next = NULL;
+					Tail = Tail -> next;
+				}
+				return head;
+			}
+
+		// Optimized:
+			❌Pending
+
+	925) Find Common Characters:
+		Problem Statement:
+			Given a string array words, return an array of all characters that show up in all strings within the words (including duplicates). You may return the answer in any order.
+			Example 1:
+				Input: words = ["bella","label","roller"]
+				Output: ["e","l","l"]
+
+			Example 2:
+				Input: words = ["cool","lock","cook"]
+				Output: ["c","o"]
+			
+
+			Constraints:
+				1 <= words.length <= 100
+				1 <= words[i].length <= 100
+				words[i] consists of lowercase English letters.
+
+		class Solution {
+			public:
+			vector<string> commonChars(vector<string>& words) {
+				vector<map<char, int>> everyWord;
+				for(string s: words){
+					map<char, int> Fr;
+					for(char ch: s)
+						Fr[ch]++;
+					everyWord.push_back(Fr);
+				}
+
+				map<char, int> mainFr = everyWord[0];
+				vector<string> ans;
+				for(auto i: mainFr){
+					char curCh = i.first;
+					int iteration = i.second;
+					int flag = 1;
+					while(iteration--){
+						for(int i=1; i<everyWord.size(); i++){
+							if(everyWord[i][curCh] > 0){
+							everyWord[i][curCh]--;
+							}else{
+							flag = 0;
+							break;
+							}
+						}
+						if(flag)
+							ans.push_back(string(1, curCh));
+					}
+				}
+				return ans;
+			}
+		};
 	
-	925)
+	926) Level order traversal:
+		Problem Statement:
+			Given a root of a binary tree with n nodes, find its level order traversal.
+			Level order traversal of a tree is breadth-first traversal for the tree.
+
+			Example 1:
+
+			Input:
+			     1
+			    / \ 
+			   3   2
+			Output:
+			1 3 2
+			Example 2:
+
+			Input:
+				   10
+			  	 /   \
+			    20	 30
+			  /   \
+			 40   60
+			Output:
+			10 20 30 40 60
+			Your Task:
+				You don't have to take any input. Complete the function levelOrder() that takes the root node as input parameter and returns a list of integers containing the level order traversal of the given Binary Tree.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+
+			Constraints:
+				1 ≤ n ≤ 10^5
+				0 ≤ Data of a node ≤ 10^9
+
+		/* A binary tree Node
+			struct Node {
+				int data;
+				struct Node* left;
+				struct Node* right;
+				
+				Node(int x){
+					data = x;
+					left = right = NULL;
+				}
+			};
+		*/
+		class Solution {
+			public:
+			void LevelTraversal(Node* r, vector<int> &a){
+				queue<Node *> q;
+				q.push(r);
+				
+				while(!q.empty()){
+					Node *temp = q.front();
+					q.pop();
+					
+					if(temp -> left)
+						q.push(temp -> left);
+					
+					if(temp -> right)
+						q.push(temp -> right);
+					
+					a.push_back(temp -> data);
+				}
+			}
+			//Function to return the level order traversal of a tree.
+			vector<int> levelOrder(Node* root) {
+				vector<int> ans;
+				
+				LevelTraversal(root, ans);
+				return ans;
+			}
+		};
 	
-	926)
+	927) Reverse Level Order Traversal:
+		Problem Statement:
+			Given a binary tree of size n, find its reverse level order traversal. ie- the traversal must begin from the last level.
+			Example 1:
+			Input :
+				  1
+				/   \
+			    3     2
+
+			Output: 
+			3 2 1
+			Explanation:
+			Traversing level 1 : 3 2
+			Traversing level 0 : 1
+			Example 2:
+
+			Input :
+				 10
+				/  \
+			    20   30
+			   /  \ 
+			  40  60
+
+			Output: 
+			40 60 20 30 10
+			Explanation:
+			Traversing level 2 : 40 60
+			Traversing level 1 : 20 30
+			Traversing level 0 : 10
+			Your Task: 
+				You don't need to read input or print anything. Complete the function reverseLevelOrder() which takes the root of the tree as input parameter and returns a list containing the reverse level order traversal of the given tree.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+
+			Constraints:
+				1 ≤ n ≤ 10^4
+		
+		Using vector
+		// Reference:
+			#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+			int main() {
+				vector<vector<int>> v {{1,2,3}, {4,5,6}, {7,8,9}};
+				vector<int> a;
+				for(int i=2; i>=0; i--)
+					a.insert(a.end(), v[i].begin(), v[i].end());
+				
+				for(int i: a)
+					std::cout << i << "\t";	
+				return 0;
+			}
+
+		/*
+			struct Node {
+				int data;
+				Node* left;
+				Node* right;
+			};
+		*/
+
+		void LevelOrderTraversal(Node *r, vector<vector<int>> &v){
+			queue<Node *> q;
+			q.push(r);
+			q.push(NULL);
+			
+			vector<int> test;
+			
+			while(!q.empty()){
+				Node* curNode = q.front();
+				q.pop();
+				
+				if(curNode){
+					test.push_back(curNode -> data);
+					
+					if(curNode -> left)
+						q.push(curNode -> left);
+					
+					if(curNode -> right)
+						q.push(curNode -> right);
+				}else{
+					if(!test.empty())
+						v.push_back(test);
+					test.clear();
+					if(!q.empty())
+						q.push(NULL);
+				}
+			}
+		}
+
+		vector<int> reverseLevelOrder(Node *root) {
+			vector<vector<int>> holder;
+			LevelOrderTraversal(root, holder);
+			
+			// reverse level order, reversing the sequence
+			vector<int> ans;
+			for(int i=holder.size()-1; i>=0; i--){
+				vector<int> cur = holder[i];
+				
+				ans.insert(ans.end(), cur.begin(), cur.end());
+			}
+			return ans;
+		}
+
+	#CodeChef Starters-137
+		928) Election Hopes:
+			https://www.codechef.com/problems/ELHP
+			Problem Statement:
+				The elections in Chefland have concluded, and the results are in Chef received X votes, and his rival Chefu received Y.
+				Chef thinks he dominated the election if and only if he received at least double the number of votes Chefu received.
+				Did Chef dominate the election?
+
+				Input Format
+					The only line of input contains two space-separated integers X and 𝑌 — the number of votes received by Chef and Chefu, respectively.
+				Output Format
+					Print a single line containing the answer: either "Yes" or "No" (without quotes), depending on whether Chef dominated the election or not.
+				Each letter of the output may be printed in either uppercase or lowercase, i.e, the strings No, no, NO, and nO will all be treated as equivalent.
+
+				Constraints
+				1≤X,Y≤100
+				Sample 1:
+				Input
+				79 40
+				Output
+				No
+				Explanation:
+				Chef received 79 votes, and Chefu received 40.Twice of 40 is 80, and since Chef didn't receive ≥ 80 votes, he didn't dominate the election.
+
+				Sample 2:
+				Input
+				28 14
+				Output
+				Yes
+				Explanation:
+				Chef received 28 votes, and Chefu received 14.
+				Twice of 14 is 28, and since Chef received ≥ 28 votes, he dominated the election.
+			#include <bits/stdc++.h>
+			using namespace std;
+			int main() {
+				int x,y;
+				cin>>x>>y;
+				
+				if(x >= y*2)
+					cout<<"Yes";
+				else
+					cout<<"No";
+				return 0;
+			}
+		
+		929) Spell Splice:
+			https://www.codechef.com/START137D/problems/CMIX
+			Problem Statement:
+				Chef has N magic spells. The i-th spell has a volatility of Vi and a strength of Ai.
+				When spells 𝑖 and 𝑗 (1 ≤ i < j ≤ N) are activated together, they merge to form a single spell of strength (𝐴𝑖 × 𝑉𝑗 + 𝑉𝑖 × 𝐴𝑗).
+				What's the maximum possible strength of a spell Chef can obtain by activating exactly two of his spells?
+
+				Input Format
+					The first line of input will contain a single integer T, denoting the number of test cases. Each test case consists of multiple lines of input.
+				The first line of each test case contains a single integer N, the number of spells.
+				The next N lines describe the spells. The i-th of them contains two space-separated integers 𝑉𝑖 and Ai — the volatility and strength of the i-th spell.
+				Output Format
+					For each test case, output on a new line the maximum possible power of a combined spell.
+
+				Constraints
+					1≤T≤100
+					2≤N≤100
+					1 ≤ 𝐴𝑖 , 𝑉𝑖 ≤ 1000
+				Sample 1:
+					Input
+						3
+						2
+						1 10
+						5 5
+						4
+						4 7
+						8 9
+						10 2
+						6 6
+						4
+						35 45
+						5 50
+						50 5
+						45 35
+					Output
+						55
+						106
+						3250
+				Explanation:
+				Test case 1: There are only two spells. Combining them results in a spell of strength 1×5+5×10=55.
+				Test case 2: It's optimal to choose the second and third spells. Combining them results in a spell of strength 8×2+10×9=106.
+				Test case 3: It's optimal to choose the first and fourth spells. Combining them results in a spell of strength 45×45+35×35=3250.
+
+			#include <bits/stdc++.h>
+			using namespace std;
+			int main() {
+				int T;
+				cin>>T;
+				
+				while(T--){
+					int n;
+					cin>>n;
+					vector<vector<int>> v;
+					
+					int mx =0;
+					for(int i=0; i<n; i++){
+						int f,s;
+						cin>>f>>s;
+						v.push_back({f,s});
+					}
+					
+					for(int i=0; i<n-1; i++){
+						for(int j=i+1; j<n; j++){
+							mx = max(mx, ((v[i][0] * v[j][1])+ (v[i][1] * v[j][0])));
+						}
+					}
+					cout<<mx<<endl;
+				}
+				return 0;
+			}
+		
+		930) Large Differences:
+			https://www.codechef.com/START137D/problems/HIDIF
+			Problem Statement:
+				You are given an array A of length N, and a positive integer K.
+				It is guaranteed that 1 ≤ Ai ≤ K for every index i from 1 to N.
+				You can do the following at most once:
+				Choose an index i(1 ≤ i ≤ N) and a value (1 ≤ x ≤ K).
+				Then, set Ai := x.
+				Find the maximum possible value of the sum of adjacent differences of A after performing this operation at most once.
+				That is, maximize the quantity
+				Input Format
+				The first line of input will contain a single integer T, denoting the number of test cases.
+				Each test case consists of two lines of input.
+				The first line of each test case contains two space-separated integers N and 𝐾
+				K — the length of the array and the maximum allowed integer K, respectively.
+				The second line contains N space-separated integers 𝐴1, 𝐴2,…,𝐴𝑁 the elements of array A.
+				Output Format
+				For each test case, output on a new line the answer: the maximum possible sum of adjacent differences of A after replacing at most one element.
+				
+				Constraints
+					1≤T≤100
+					1≤N≤1000
+					1≤K≤2⋅10^6 
+					1 ≤ Ai ≤ K
+				The sum of N across all tests won't exceed 1000.
+				Sample 1:
+				Input
+					3
+					2 5
+					1 5
+					3 8
+					7 2 7
+					5 20
+					18 3 1 4 19
+				Output
+					4
+					12
+					63
+				Explanation:
+				Test case 1: It's best to leave the array unchanged, giving us a difference of ∣1−5∣=4.
+				Test case 2: It's optimal to set A2 :=1, giving us the array [7,1,7]. The sum of adjacent differences is 6+6=12.
+				Test case 3: It's optimal to set A3 :=20, to obtain [18,3,20,4,19]. The sum of adjacent differences is 63.
+
+			// Not Optimized:
+				#include <bits/stdc++.h>
+				using namespace std;
+
+				int AdjacentDiffSum(vector<int> &v){
+					int val = 0, n=v.size();
+					for(int i=0; i<n-1; i++){
+						val += abs(v[i]-v[i+1]);
+					}
+					return val;
+				}
+
+				int main() {
+					int T;
+					cin>>T;
+					
+					while(T--){
+						int n, k;
+						cin>>n>>k;
+						
+						vector<int> v(n);
+						for(int i=0; i<n; i++)
+							cin >> v[i];
+						
+						int mxDiff = 0;
+						
+						for(int i=0; i<n; i++){
+							// trying brute force checking every element by putting (1 to k) as value & finding the adjacent difference sum
+							int temp = v[i];
+							mxDiff = max(mxDiff, AdjacentDiffSum(v));
+							int curValue = 1;
+							while(curValue <= k){
+								if(curValue == v[i]){
+									curValue++;
+									continue;
+								}
+								v[i] = curValue++;
+								mxDiff = max(mxDiff, AdjacentDiffSum(v));
+							}
+							v[i] = temp;
+						}
+						cout<<mxDiff<<endl;
+					}
+					return 0;
+				}
+
+			// Optimized:
+				❌Pending
+
+	931)
+
+	932)
 	
-	927)
+	933)
 	
-	928)
+	934)
 	
-	929)
+	935)
 	
-	930)
+	936)
+	
+	937)
+	
+	938)
+	
+	939)
+	
+	940)
+	
+	941)
+	
+	942)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
