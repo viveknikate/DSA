@@ -95776,21 +95776,568 @@ POTD:-[Problem of the Day]
 			// Optimized:
 				❌Pending
 
-	931)
+	931) Max sum in the configuration:
+		Problem statemene:
+			Given an integer array(0-based indexing) a of size n. Your task is to return the maximum value of the sum of i*a[i] for all 0 <= i <= n-1, where a[i] is the element at index i in the array. The only operation allowed is to rotate(clockwise or counterclockwise) the array any number of times.
+			Example 1:
+			Input: n = 4, a[] = {8, 3, 1, 2}
+			Output: 29
+			Explanation: All the configurations possible by rotating the elements are:
+			3 1 2 8 here sum is 3*0+1*1+2*2+8*3 = 29
+			1 2 8 3 here sum is 1*0+2*1+8*2+3*3 = 27
+			2 8 3 1 here sum is 2*0+8*1+3*2+1*3 = 17
+			8 3 1 2 here sum is 8*0+3*1+1*2+2*3 = 11, so the maximum sum will be 29.
 
-	932)
+			Example 2:
+			Input: n = 3, a[] = {1, 2, 3}
+			Output: 8
+			Explanation: All the configurations possible by rotating the elements are:
+			1 2 3 here sum is 1*0+2*1+3*2 = 8
+			3 1 2 here sum is 3*0+1*1+2*2 = 5
+			2 3 1 here sum is 2*0+3*1+1*2 = 5, so the maximum sum will be 8.
+
+			Expected Time Complexity: O(n).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1<=n<=10^5
+				1<=a[]<=10^6
+
+		// Not Optimized:
+			class Solution {
+				public:
+				long long max_sum(int a[], int n) {
+					long long mxAns = 0;
+					int times = n;
+					while(times--){
+						long long CurSum = 0;
+						for(int i=0; i<n; i++){
+							CurSum += (i * a[i]);
+						}
+						mxAns = max(mxAns, CurSum);
+						rotate(a, a+1, a+n);
+					}
+					return mxAns;
+				}
+			};
+		
+		// Optimized:
+			❌Pending
+
+	932) Diagonal Traversal of a binary tree:
+		https://www.naukri.com/code360/problems/diagonal-traversal-of-a-binary-tree_920477
+		Problem statement
+			You have been given a binary tree of integers. You are supposed to find the diagonal traversal(refer to Example) of the given binary tree.
+			Example:
+			Consider lines at an angle of 135 degrees(with respect to standard X- axis)  in between nodes. Then, all nodes between two consecutive lines belong to the same diagonal
+			The diagonal traversal for the above tree is: 
+			0 2 6 1 5 3 4 7 
+			Constraints :
+				1 <= T <= 100
+				0 <= N <= 3000
+				0 <= data <= 10^5 and data!=-1
+				Where ‘N’ is the total number of nodes in the binary tree, and 'data' is the value of the binary tree node
+				Time limit : 1 sec
+
+			Sample Input 1 :
+			2
+			1 2 3 4 -1 -1 -1 -1 -1
+			0 1 2 4 5 3 6 -1 -1 7 -1 -1 -1 -1 -1 -1 -1
+			Sample Output 1 :
+			1 3 2 4
+			0 2 6 1 5 3 4 7
+			Explanation of Sample Output 1 :
+			In test case 1,
+			Nodes 1 and 3 belong to diagonal number 0, node 2 belongs to diagonal 1, and node 4 belongs to diagonal number 2.
+			In test case 2, nodes 0,2,6 belong to diagonal 0, nodes 1,5,3 belong to diagonal 1, and nodes 4,7 belong to diagonal number 2.
+			Sample Input 2 :
+			2
+			1 -1 2 -1 -1
+			5 7 8 -1 -1 -1 -1
+			Sample Output 2 :
+			1 2
+			5 8 7
+			Explanation of Sample Output 2 :
+			In test case 1, nodes 1,2 both belong to diagonal number 0. 
+			In test case 2, nodes 5,8 belong to diagonal number 0, and node 7 belongs to diagonal number 1.
+
+		#include <bits/stdc++.h> 
+		/************************************************************
+			Following is the TreeNode class structure:
+			template <typename T>
+			class TreeNode {
+				public:
+					T data;
+					TreeNode<T> *left;
+					TreeNode<T> *right;
+
+				TreeNode(T data) {
+					this->data = data;
+					left = NULL;
+					right = NULL;
+				}
+			};
+		************************************************************/
+		vector<int> diagonalTraversal(TreeNode<int> *root) {
+			vector<int> ans;
+			queue<TreeNode<int>*> q;
+
+			if(root == NULL)
+				return ans;
+
+			q.push(root);   
+			while(!q.empty()){
+				TreeNode<int> *temp = q.front();
+				q.pop();
+
+				while(temp){
+					if(temp -> left)
+						q.push(temp -> left);
+
+					ans.push_back(temp -> data);
+					temp = temp -> right;
+				}
+			}
+			return ans;
+		}
 	
-	933)
+	933) Diagonal Traversal: (Used extra vector to put the new lines after diagonal traversal ends)
+		Problem statement
+			You are given a binary tree having ‘N’ nodes. Your task is to return its diagonal traversal.
+			A binary tree is a hierarchical data structure in which each node has at most two children.
+			For Example:
+					  8
+					/   \
+				    3     10
+				   / \	  \
+				  1	 6	   \  
+				  	/ \ 	    \	
+				    4   7	    14
+				    		    /
+						  13	
+			For the above binary tree, the output will be:
+			8 10 14
+			3 6 7 13
+			1 4
+			Input Format:
+				The first line contains an Integer 'T' which denotes the number of test cases or queries to be run. Then the test cases follow.
+
+				The first line of each test case contains the elements of the tree in the level order form separated by a single space.
+				If any node does not have a left or right child, take -1 in its place. Refer to the example below.
+			Example:
+			Elements are in the level order form. The input consists of values of nodes separated by a single space in a single line. In case a node is null, we take -1 in its place.
+			For example, the input for the tree depicted in the below image would be :
+				    1
+				   / \
+				  2   3
+			 	/   / \
+			    4   5   6
+				\
+				 7
+
+
+
+			1
+			2 3
+			4 -1 5 6
+			-1 7 -1 -1 -1 -1
+			-1 -1
+
+			Explanation :
+			Level 1 :
+			The root node of the tree is 1
+
+			Level 2 :
+			Left child of 1 = 2
+			Right child of 1 = 3
+
+			Level 3 :
+			Left child of 2 = 4
+			Right child of 2 = null (-1)
+			Left child of 3 = 5
+			Right child of 3 = 6
+
+			Level 4 :
+			Left child of 4 = null (-1)
+			Right child of 4 = 7
+			Left child of 5 = null (-1)
+			Right child of 5 = null (-1)
+			Left child of 6 = null (-1)
+			Right child of 6 = null (-1)
+
+			Level 5 :
+			Left child of 7 = null (-1)
+			Right child of 7 = null (-1)
+
+			The first not-null node (of the previous level) is treated as the parent of the first two nodes of the current level. The second not-null node (of the previous level) is treated as the parent node for the next two nodes of the current level and so on.
+			The input ends when all nodes at the last level are null (-1).
+			Note: The above format was just to provide clarity on how the input is formed for a given tree. 
+			The sequence will be put together in a single line separated by a single space. Hence, for the above-depicted tree, the input will be given as:
+			1 2 3 4 -1 5 6 -1 7 -1 -1 -1 -1 -1 -1
+			Output Format :
+				For each test case, print each diagonal traversal in a new line.
+				The output of each test case should be printed in a separate line.
+			Note
+				You are not required to print anything, it has already been taken care of. Just implement the function.
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 3 * 10^3
+				1 <= nodeVal <= 10^9
+				Time Limit: 1 sec.
+
+			Sample Input 1:
+			2
+			3 1 2 4 -1 -1 -1 -1 -1
+			1 2 3 4 -1 5 -1 -1 -1 -1 6 -1 -1
+			Sample Output 1:
+			3 2 
+			1 
+			4
+			1 3 
+			2 5 6 
+			4 
+			Explanation For Sample Output 1:
+			For the first test case, the tree will be:
+			So, the output will be:
+			3 2
+			1
+			4
+			For the second test case, the tree will be:
+			So, the output will be:
+			1 3
+			2 5 6
+			4
+			Sample Input 2:
+			2
+			1 2 -1 -1 -1
+			1 3 2 -1 -1 -1 -1
+			Sample Output 2:
+			1 
+			2 
+			1 2 
+			3 
 	
-	934)
+		#include <bits/stdc++.h> 
+		/*
+			Following is the Binary Tree node structure for your referance:
+			class TreeNode {
+			public :
+				int data;
+				TreeNode *left;
+				TreeNode *right;
+
+				TreeNode(int data) {
+					this -> data = data;
+					left = NULL;
+					right = NULL;
+				}
+				~TreeNode() {
+					if (left){
+						delete left;
+					}
+					if (right){
+						delete right;
+					}
+				}
+			};
+		*/
+		vector<vector<int>> diagonal(TreeNode<int>* root){
+			vector<vector<int>> ans;
+
+			if(root == NULL)
+				return ans;
+
+			queue<TreeNode<int>*> q;
+			q.push(root);
+
+			vector<int> a;
+			TreeNode<int>* curNode = q.front();
+			q.pop();
+
+			while(curNode){
+				if(curNode -> left)
+					q.push(curNode -> left);
+
+				a.push_back(curNode -> data);
+				curNode = curNode -> right;
+			}
+			ans.push_back(a);
+			a.clear();
+
+			if(!q.empty())
+				q.push(NULL);
+
+			while(!q.empty()){
+				TreeNode<int>* cur = q.front();
+				q.pop();
+				
+				if(cur == NULL){
+					ans.push_back(a);
+					a.clear();
+					if(!q.empty())
+						q.push(NULL);
+				}
+
+				while(cur){
+					a.push_back(cur -> data);
+					if(cur -> left)
+						q.push(cur -> left);
+					
+					cur = cur -> right;
+				}        
+			}
+			return ans;    
+		}
+
+	934) Diagonal Traversal:
+		https://www.naukri.com/code360/problems/diagonal-traversal_893029
+		Problem statement
+			You have been given a binary tree of integers. You have to return all the diagonal paths of the binary tree. A diagonal path is one in which all the nodes pass through -1 slope line.
+			A binary tree is a tree in which each parent node has at most two children.
+			Note:
+			Order of return of diagonal path’s array/vector: The rightmost diagonal path must come first, and so on.
+			Every parent node comes first then the child node. In other words, return the diagonal element from top to bottom.
+			Example
+			Consider the given binary tree.
+			There are 4 diagonal paths:
+			1 3 6
+			2 5 9
+			4 8
+			7
+			You need to return ‘1 3 6 2 5 9 4 8 7’.
+			Let's consider this example
+			Diagonal paths are:
+			1 3 6
+			2 5
+			4
+
+			You need to return ‘1 3 6 2 5 4’.
+			Sample Input 1:
+			2
+			1 2 3 4 5 6 7 -1 -1 -1 -1 -1 -1 -1 -1
+			1 2 3 -1 -1 4 5 -1 -1 -1 -1
+			Sample Output 1:
+			1 3 7 2 5 6 4
+			1 3 5 2 4
+			Explanation For Sample Test 1:
+
+			It is clear that '1 3 7' is the first diagonal path '2 5 6' is the second and '4' is the third diagonal path. But 5 and 6 have the same level and same diagonal path, so we need to consider a node that comes first in the pre-order traversal.
+			Hence the diagonal path of the above binary tree is 1 3 7 2 5 6 4.
+
+			Test case 2:
+			It is clear that the first diagonal path is '1 3 5', and the second is '2 4'.
+			Hence diagonal binary tree traversal when combined is '1 3 5 2 4'.
+			Sample Input 2:
+			2
+			1 -1 2 3 4 -1 -1 -1 -1
+			1 2 3 -1 -1 4 -1 -1 -1
+			Sample Output 2:
+			1 2 4 3
+			1 3 2 4
+
+		#include <bits/stdc++.h> 
+		/*************************************************************
+			Following is the Binary Tree node structure.
+			class BinaryTreeNode {
+				public:
+					T data;
+					BinaryTreeNode<T> *left;
+					BinaryTreeNode<T> *right;
+
+				BinaryTreeNode(T data) {
+					this -> data = data;
+					left = NULL;
+					right = NULL;
+				}
+
+				~BinaryTreeNode() {
+					if (left){
+						delete left;
+					}
+					if (right){
+						delete right;
+					}
+				}
+			};
+		*************************************************************/
+
+		vector<int> diagonalPath(BinaryTreeNode<int>* root) {
+			vector<int> ans;
+
+			queue<BinaryTreeNode<int>*> q;
+			q.push(root);
+
+			while(!q.empty()){
+				BinaryTreeNode<int>* curNode = q.front();
+				q.pop();
+
+				while(curNode){
+					ans.push_back(curNode -> data);
+
+					if(curNode -> left)
+						q.push(curNode -> left);
+					
+					curNode = curNode -> right;
+				}
+
+			}
+			return ans;
+		}
+
+	935) Diagonal Traversal of Binary Tree:
+		Problem Statement:
+			Given a Binary Tree, print the diagonal traversal of the binary tree.
+			Consider lines of slope -1 passing between nodes. Given a Binary Tree, print all diagonal elements in a binary tree belonging to same line.
+			If the diagonal element are present in two different subtress then left subtree diagonal element should be taken first and then right subtree. 
+
+			Example 1:
+
+			Input :
+					    8
+					 /     \
+					3       10
+				   /   \       \
+				  1     6       14
+				 /       \  	/
+				4         7   /
+						   13
+			Output : 8 10 14 3 6 7 13 1 4
+			Explanation:
+			unnamed
+			Diagonal Traversal of binary tree : 
+			8 10 14 3 6 7 13 1 4
+			Your Task:
+				You don't need to read input or print anything. The task is to complete the function diagonal() that takes the root node as input argumets and returns the diagonal traversal of the given tree.
+
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(N).
+			Here N is number of nodes.
+
+			Constraints:
+				1 <= Number of nodes<= 10^5
+				1 <= Data of a node<= 10^5
 	
-	935)
+		/* 
+			A binary tree node
+			struct Node {
+				int data;
+				Node* left, * right;
+			}; 
+		*/
+		vector<int> diagonal(Node *root) {
+			vector<int> ans;
+			queue<Node *> q;
+			q.push(root);
+			
+			while(!q.empty()){
+				Node *cur = q.front();
+				q.pop();
+				
+				while(cur){
+					if(cur -> left)
+						q.push(cur -> left);
+					
+					ans.push_back(cur -> data);
+					cur = cur -> right;
+				}
+			}
+			return ans;
+		}
 	
-	936)
+	936) Hand of Straights:
+		Problem Statement:
+			Alice has some number of cards and she wants to rearrange the cards into groups so that each group is of size groupSize, and consists of groupSize consecutive cards.
+			Given an integer array hand where hand[i] is the value written on the ith card and an integer groupSize, return true if she can rearrange the cards, or false otherwise.
+			Example 1:
+				Input: hand = [1,2,3,6,2,3,4,7,8], groupSize = 3
+				Output: true
+				Explanation: Alice's hand can be rearranged as [1,2,3],[2,3,4],[6,7,8]
+			Example 2:
+				Input: hand = [1,2,3,4,5], groupSize = 4
+				Output: false
+				Explanation: Alice's hand can not be rearranged into groups of 4.
+
+			Constraints:
+				1 <= hand.length <= 10^4
+				0 <= hand[i] <= 10^9
+				1 <= groupSize <= hand.length
+
+		class Solution {
+			public:
+			bool isNStraightHand(vector<int>& hand, int groupSize) {
+				int n = hand.size();
+				if(n % groupSize != 0)
+					return 0;
+
+				// sort(hand.begin(), hand.end());				// not necessary
+				map<int, int> Fr;
+				for(int i: hand)
+					Fr[i]++;
+
+				while(!Fr.empty()){
+
+					int cur = Fr.begin() -> first;
+					for(int i=0; i<groupSize; i++){
+						if(Fr[cur+i] < 1)
+							return 0;
+
+						Fr[cur+i]--;
+						if(Fr[cur+i] < 1)
+							Fr.erase(cur+i);
+					}
+				}
+				return 1;
+			}
+		};
 	
-	937)
+	937) Divide Array in Sets of K Consecutive Numbers:
+		Problem Statement:
+			Given an array of integers nums and a positive integer k, check whether it is possible to divide this array into sets of k consecutive numbers.
+			Return true if it is possible. Otherwise, return false.
+			Example 1:
+				Input: nums = [1,2,3,3,4,4,5,6], k = 4
+				Output: true
+				Explanation: Array can be divided into [1,2,3,4] and [3,4,5,6].
+			Example 2:
+				Input: nums = [3,2,1,2,3,4,3,4,5,9,10,11], k = 3
+				Output: true
+				Explanation: Array can be divided into [1,2,3] , [2,3,4] , [3,4,5] and [9,10,11].
+			Example 3:
+				Input: nums = [1,2,3,4], k = 3
+				Output: false
+				Explanation: Each array should be divided in subarrays of size 3.
+			Constraints:
+				1 <= k <= nums.length <= 10^5
+				1 <= nums[i] <= 10^9
+
+		class Solution {
+			public:
+			bool isPossibleDivide(vector<int>& nums, int k) {
+				int n = nums.size();
+				if(n % k != 0)
+					return 0;
+
+				map<int, int> Fr;
+				for(int i: nums)
+					Fr[i]++;
+
+				while(!Fr.empty()){
+					int cur = (*Fr.begin()).first;              // or Fr.begin() -> first;           // to access the key
+					
+					for(int i=0; i<k; i++){
+						if(Fr[cur+i] < 1)
+							return 0;
+						
+						Fr[cur+i]--;
+						if(Fr[cur+i] < 1)
+							Fr.erase(cur+i);
+					}
+				}
+				return 1;
+			}
+		};
 	
-	938)
+	938) 
 	
 	939)
 	
