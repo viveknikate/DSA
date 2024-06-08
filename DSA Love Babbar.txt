@@ -23015,12 +23015,11 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 				return 0;
 			}
 	
-	HomeWork: solve below traversals without using recursion instead use iterative approach	
+	HomeWork: solve below traversals without using recursion instead use iterative approach
 		1) In-Order
 		2) Pre-Order
 		3) Post-Order
 		Code: Iterative Approach
-			
 
 	Q. Count Leaf Nodes:
 		https://www.naukri.com/code360/problems/count-leaf-nodes_893055
@@ -43799,7 +43798,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 		
-	233) Count Customers Who Did Not Get A Computer: ❌Pending
+	233) Count Customers Who Did Not Get A Computer:
 		Problem statement:
 			Mr. X runs an internet cafe which has 'K' computers. His internet cafe has 'N'
 			customers who can come anytime throughout the day. Initially, all the 'K
@@ -43903,6 +43902,83 @@ POTD:-[Problem of the Day]
 				}
 
 				return (left/2);
+			}
+
+		// Own Solution:
+			// Reference for set:
+				#include <iostream>
+				#include<set>
+				using   namespace std;
+				int main() {
+					set<int> s;
+					
+					s.insert(1);
+					s.insert(2);
+					s.insert(43);
+					s.insert(6);
+
+					for(int i: s)
+						cout<<i<<" ";
+						
+					// checks if that elements present in set if present then returns 1 else 0
+					if(s.count(2))                          // this statement says if present then delete/remove it
+						s.erase(2);
+					
+					std::cout << std::endl;
+					std::cout << "is 100 present in set: ?" << s.count(100) << std::endl;
+					std::cout << "is 43 present in set: ?" << s.count(43) << std::endl;
+					std::cout << "is 45 present in set: ?" << s.count(45) << std::endl;
+						
+					cout<<endl;
+					for(int i: s)
+						cout<<i<<" ";
+					return 0;
+				}
+
+			#include <bits/stdc++.h> 
+			int countCustomers(vector<int> &arr, int k) {
+				set<int> notFoundGuy;
+				set<int> FoundGuy;
+				int cnt=0;
+
+				for(int i: arr){
+					if(notFoundGuy.count(i)){
+						notFoundGuy.erase(i);
+					}else if(FoundGuy.count(i)){
+						FoundGuy.erase(i);
+						k++;
+					}else if(k > 0){
+						FoundGuy.insert(i);
+						k--;
+					}else{
+						notFoundGuy.insert(i);
+						cnt++;
+					}
+				}
+				return cnt;
+			}
+
+			// or
+			#include <bits/stdc++.h> 
+			int countCustomers(vector<int> &arr, int k) {
+			set<int> Found, notFound;
+			int cnt=0;
+
+			for(int i: arr){
+				if(Found.count(i)){
+					Found.erase(i);
+					k++;
+				}else if(notFound.count(i)){
+					notFound.erase(i);
+				}else if(k > 0){
+					Found.insert(i);
+					k--;
+				}else{
+					notFound.insert(i);
+					cnt++;
+				}
+			}
+			return cnt;
 			}
 
 		//optimized:
@@ -52586,7 +52662,7 @@ POTD:-[Problem of the Day]
 			}
 
 	338) Star Pattern:
-		https://www.codingninjas.com/studio/problems/star-pattern_893204?leftPanelTabValue=PROBLEM
+		https://www.codingninjas.com/studio/problems/star-pattern_893204
 			Problem statement
 				Print the following pattern
 				Pattern for N = 4
@@ -52628,6 +52704,78 @@ POTD:-[Problem of the Day]
 					cout<<endl;
 				}
 			}
+			// Updated concise:
+				#include <bits/stdc++.h> 
+				void printPattern(int n) {
+					for(int i=1; i<=n; i++){
+						for(int sp=n; sp>i; sp--)
+							cout<<" ";
+
+						for(int j=1; j<=(2*i-1); j++)
+							cout<<"*";
+						cout<<endl;
+					}
+				}
+
+		https://www.naukri.com/code360/problems/star-pattern_624933
+		Problem statement
+			Print the following pattern
+			Pattern for N = 4
+			    *
+			   *** 
+			  *****
+			 *******
+			Hint
+				As taught in the video, you just have to modify the code so that instead of printing numbers, it should output stars ('*').
+				The dots represent spaces.
+			Input Format :
+				N (Total no. of rows)
+			Output Format :
+				Pattern in N lines
+			Constraints :
+				0 <= N <= 50
+			Sample Input 1 :
+			3
+			Sample Output 1 :
+				  *
+				 *** 
+				*****
+			Sample Input 2 :
+			4
+			Sample Output 2 :
+			   *
+		 	  *** 
+			 *****
+			*******
+
+		#include<iostream>
+		using namespace std;
+		int main(){
+			/*
+				Read input as specified in the question.
+				Print output as specified in the question.
+			*/
+
+			int n;
+			cin>>n;
+
+			int sp = n-1;
+			int a = 1;
+
+			for(int i=0; i<n; i++){
+				int k = sp;
+				while(k--)
+					cout<<" ";
+				sp--;
+				
+				int t = a;
+				while(t--)
+					cout<<"*";
+				a += 2;
+				cout<<endl;
+			}
+			return 0;
+		}
 
 	339) Arrow Pattern:
 		https://www.codingninjas.com/studio/problems/arrow-pattern_893298
@@ -86567,130 +86715,130 @@ POTD:-[Problem of the Day]
 				}
 			};
 	
-	#At-Coder Contest:
-	800) A - AtCoder Line:
-		Problem Statement
-			The AtCoder railway line has N stations, numbered 1,2,…,N.
-			On this line, there are inbound trains that start at station 1 and stop at the stations 2,3,…,N in order, and outbound trains that start at station 
-			N and stop at the stations N−1,N−2,…,1 in order.
+	#AtCoder BeginnerContest-352
+		800) A - AtCoder Line:
+			Problem Statement
+				The AtCoder railway line has N stations, numbered 1,2,…,N.
+				On this line, there are inbound trains that start at station 1 and stop at the stations 2,3,…,N in order, and outbound trains that start at station 
+				N and stop at the stations N−1,N−2,…,1 in order.
 
-			Takahashi is about to travel from station X to station Y using only one of the inbound and outbound trains.
-			Determine whether the train stops at station Z during this travel.
+				Takahashi is about to travel from station X to station Y using only one of the inbound and outbound trains.
+				Determine whether the train stops at station Z during this travel.
 
-			Constraints
-			3 ≤ N ≤ 100
-			1 ≤ X,Y,Z ≤ N
-			X, Y, and Z are distinct.
-			All input values are integers.
-			Input
-			The input is given from Standard Input in the following format:
-			N X Y Z
-			Output
-			If the train stops at station Z during the travel from station X to station Y, print Yes; otherwise, print No.
+				Constraints
+				3 ≤ N ≤ 100
+				1 ≤ X,Y,Z ≤ N
+				X, Y, and Z are distinct.
+				All input values are integers.
+				Input
+				The input is given from Standard Input in the following format:
+				N X Y Z
+				Output
+				If the train stops at station Z during the travel from station X to station Y, print Yes; otherwise, print No.
 
-			Sample Input 1
-			7 6 1 3
-			Sample Output 1
-			Yes
-			To travel from station 
-			6 to station 1, Takahashi will take an outbound train.
+				Sample Input 1
+				7 6 1 3
+				Sample Output 1
+				Yes
+				To travel from station 
+				6 to station 1, Takahashi will take an outbound train.
 
-			After departing from station 6, the train stops at stations 5,4,3,2,1 in order, which include station 3, so you should print Yes.
-			Sample Input 2
-			10 3 2 9
-			Sample Output 2
-			No
-			Sample Input 3
-			100 23 67 45
-			Sample Output 3
-			Yes
+				After departing from station 6, the train stops at stations 5,4,3,2,1 in order, which include station 3, so you should print Yes.
+				Sample Input 2
+				10 3 2 9
+				Sample Output 2
+				No
+				Sample Input 3
+				100 23 67 45
+				Sample Output 3
+				Yes
 
-		- The Z should be in between X & Y, else print "No".
-		#include <iostream>
-		using namespace std;
+			- The Z should be in between X & Y, else print "No".
+			#include <iostream>
+			using namespace std;
 
-		int main() {
-			int N, x,y,z;
-			cin>>N>>x>>y>>z;
-			
-			if((x < z && z < y) || (x > z && z > y))
-				std::cout << "Yes" << std::endl;
-			else
-				std::cout << "No" << std::endl;
-			return 0;
-		}
-	
-	801) B - Typing:
-		Problem Statement
-			Takahashi tried to type a string S consisting of lowercase English letters using a keyboard.
-			He was typing while looking only at the keyboard, not the screen.
-			Whenever he mistakenly typed a different lowercase English letter, he immediately pressed the backspace key. However, the backspace key was broken, so the mistakenly typed letter was not deleted, and the actual string typed was T.
-			He did not mistakenly press any keys other than those for lowercase English letters.
-			The characters in T that were not mistakenly typed are called correctly typed characters.
-
-			Determine the positions in T of the correctly typed characters.
-			Constraints
-			S and T are strings of lowercase English letters with lengths between 
-			1 and 2×10^5 , inclusive.
-			T is a string obtained by the procedure described in the problem statement.
-			Input
-			The input is given from Standard Input in the following format:
-				S
-				T
-			Output
-			Let ∣S∣ be the length of S. If the correctly typed characters are the 
-			Ensure that the output is in ascending order. That is, Ai < Ai+1 should hold for each 1 ≤ i ≤ ∣S∣−1.
-
-			Sample Input 1
-			abc
-			axbxyc
-			Sample Output 1
-			1 3 6
-			The sequence of Takahashi's typing is as follows:
-
-			Type a.
-			Try to type b but mistakenly type x.
-			Press the backspace key, but the character is not deleted.
-			Type b.
-			Try to type c but mistakenly type x.
-			Press the backspace key, but the character is not deleted.
-			Try to type c but mistakenly type y.
-			Press the backspace key, but the character is not deleted.
-			Type c.
-			The correctly typed characters are the first, third, and sixth characters.
-
-			Sample Input 2
-			aaaa
-			bbbbaaaa
-			Sample Output 2
-			5 6 7 8
-			Sample Input 3
-			atcoder
-			atcoder
-			Sample Output 3
-			1 2 3 4 5 6 7
-			Takahashi did not mistakenly type any characters.
-
-		#include <iostream>
-		using namespace std;
-
-		int main() {
-			string s,t;
-			cin>>s>>t;
-			int cnt = 0;
-			
-			int i, j;
-			i=j=0;
-			
-			while(i < s.size() && j < t.size()){
-				cnt++;
-				if(s[i] == t[j++]){
-					i++;
-					std::cout << cnt << " ";
-				}
+			int main() {
+				int N, x,y,z;
+				cin>>N>>x>>y>>z;
+				
+				if((x < z && z < y) || (x > z && z > y))
+					std::cout << "Yes" << std::endl;
+				else
+					std::cout << "No" << std::endl;
+				return 0;
 			}
-			return 0;
-		}
+		
+		801) B - Typing:
+			Problem Statement
+				Takahashi tried to type a string S consisting of lowercase English letters using a keyboard.
+				He was typing while looking only at the keyboard, not the screen.
+				Whenever he mistakenly typed a different lowercase English letter, he immediately pressed the backspace key. However, the backspace key was broken, so the mistakenly typed letter was not deleted, and the actual string typed was T.
+				He did not mistakenly press any keys other than those for lowercase English letters.
+				The characters in T that were not mistakenly typed are called correctly typed characters.
+
+				Determine the positions in T of the correctly typed characters.
+				Constraints
+				S and T are strings of lowercase English letters with lengths between 
+				1 and 2×10^5 , inclusive.
+				T is a string obtained by the procedure described in the problem statement.
+				Input
+				The input is given from Standard Input in the following format:
+					S
+					T
+				Output
+				Let ∣S∣ be the length of S. If the correctly typed characters are the 
+				Ensure that the output is in ascending order. That is, Ai < Ai+1 should hold for each 1 ≤ i ≤ ∣S∣−1.
+
+				Sample Input 1
+				abc
+				axbxyc
+				Sample Output 1
+				1 3 6
+				The sequence of Takahashi's typing is as follows:
+
+				Type a.
+				Try to type b but mistakenly type x.
+				Press the backspace key, but the character is not deleted.
+				Type b.
+				Try to type c but mistakenly type x.
+				Press the backspace key, but the character is not deleted.
+				Try to type c but mistakenly type y.
+				Press the backspace key, but the character is not deleted.
+				Type c.
+				The correctly typed characters are the first, third, and sixth characters.
+
+				Sample Input 2
+				aaaa
+				bbbbaaaa
+				Sample Output 2
+				5 6 7 8
+				Sample Input 3
+				atcoder
+				atcoder
+				Sample Output 3
+				1 2 3 4 5 6 7
+				Takahashi did not mistakenly type any characters.
+
+			#include <iostream>
+			using namespace std;
+
+			int main() {
+				string s,t;
+				cin>>s>>t;
+				int cnt = 0;
+				
+				int i, j;
+				i=j=0;
+				
+				while(i < s.size() && j < t.size()){
+					cnt++;
+					if(s[i] == t[j++]){
+						i++;
+						std::cout << cnt << " ";
+					}
+				}
+				return 0;
+			}
 
 	802) Boats to Save People:
 		Problem Statement:
@@ -88197,7 +88345,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 	
-	#AtCoder BeginnerContest-352
+	#AtCoder BeginnerContest-353
 		823) A - Buildings:
 			https://atcoder.jp/contests/abc353/tasks/abc353_a
 			Problem Statement
@@ -90430,59 +90578,60 @@ POTD:-[Problem of the Day]
 		// without using extra space:
 			❌Pending
 
-	854) A - Exponential Plant:
-		Problem Statement
-			Takahashi is growing a plant. Its height at the time of germination is 0cm. Considering the day of germination as day 0, its height increases by 
-			2^icm day i's night (0≤i).
-			Takahashi's height is H cm.
-			Every morning, Takahashi measures his height against this plant. Find the first day such that the plant's height is strictly greater than Takahashi's height in the morning.
-			Constraints
-			1 ≤ H ≤ 10^9
-			All input values are integers.
-			Input
-			The input is given from Standard Input in the following format:
-				H
-			Output
-				Print an integer representing the first day such that the plant's height is greater than Takahashi's height in the morning.
+	#AtCoder BeginnerContest-354
+		854) A - Exponential Plant:
+			Problem Statement
+				Takahashi is growing a plant. Its height at the time of germination is 0cm. Considering the day of germination as day 0, its height increases by 
+				2^icm day i's night (0≤i).
+				Takahashi's height is H cm.
+				Every morning, Takahashi measures his height against this plant. Find the first day such that the plant's height is strictly greater than Takahashi's height in the morning.
+				Constraints
+				1 ≤ H ≤ 10^9
+				All input values are integers.
+				Input
+				The input is given from Standard Input in the following format:
+					H
+				Output
+					Print an integer representing the first day such that the plant's height is greater than Takahashi's height in the morning.
 
-			Sample Input 1
-			54
-			Sample Output 1
-			6
-			The plant's height in the mornings of days 
-			1,2,3,4,5,6 will be 1cm, 3cm, 7cm, 15cm, 31cm, 63cm, respectively. The plant becomes taller than Takahashi in the morning day 6, so print 6.
+				Sample Input 1
+				54
+				Sample Output 1
+				6
+				The plant's height in the mornings of days 
+				1,2,3,4,5,6 will be 1cm, 3cm, 7cm, 15cm, 31cm, 63cm, respectively. The plant becomes taller than Takahashi in the morning day 6, so print 6.
 
-			Sample Input 2
-			7
-			Sample Output 2
-			4
-			The plant's height will be 7cm in the morning of day 3 and 15cm in the morning day 4. The plant becomes taller than Takahashi in the morning of day 
-			4, so print 4.
-			Note that, in the morning of day 3, the plant is as tall as Takahashi, but not taller.
+				Sample Input 2
+				7
+				Sample Output 2
+				4
+				The plant's height will be 7cm in the morning of day 3 and 15cm in the morning day 4. The plant becomes taller than Takahashi in the morning of day 
+				4, so print 4.
+				Note that, in the morning of day 3, the plant is as tall as Takahashi, but not taller.
 
-			Sample Input 3
-				262144
-			Sample Output 3
-				19
+				Sample Input 3
+					262144
+				Sample Output 3
+					19
 
-		#include <iostream>
-		#include <math.h>
-		using namespace std;
-		int main() {
-			int H;
-			cin>>H;
-			
-			int curH = 0, day=1;
-			while(curH < H){
-				curH = pow(2, day) - 1;
-				if(curH <= H)
-					day++;
-				// std::cout << curH<< std::endl;
+			#include <iostream>
+			#include <math.h>
+			using namespace std;
+			int main() {
+				int H;
+				cin>>H;
+				
+				int curH = 0, day=1;
+				while(curH < H){
+					curH = pow(2, day) - 1;
+					if(curH <= H)
+						day++;
+					// std::cout << curH<< std::endl;
+				}
+				std::cout << day << std::endl;
+				return 0;
 			}
-			std::cout << day << std::endl;
-			return 0;
-		}
-	
+		
 	#LeetCode WeeklyContest-398
 		855) Special Array I:
 			Problem Statement:
@@ -93886,69 +94035,69 @@ POTD:-[Problem of the Day]
 		};
 		
 	#AtCoder BeginnerContest-356
-	904) A - Subsegment Reverse:
-		Problem Statement:
-			You are given positive integers N, L, and R.
-			For a sequence A=(1,2,…,N) of length 
-			N, an operation of reversing the L-th through R-th elements was performed once.
-			Print the sequence after this operation.
-			Constraints
-			All input values are integers.
-				1≤L≤R≤N≤100
-			Input
-			The input is given from Standard Input in the following format:
+		904) A - Subsegment Reverse:
+			Problem Statement:
+				You are given positive integers N, L, and R.
+				For a sequence A=(1,2,…,N) of length 
+				N, an operation of reversing the L-th through R-th elements was performed once.
+				Print the sequence after this operation.
+				Constraints
+				All input values are integers.
+					1≤L≤R≤N≤100
+				Input
+				The input is given from Standard Input in the following format:
 
-			N L R
-			Output
-			Let 
-			A′ =(A1′, A2′,…,AN′) be the sequence after the operation. Print it in the following format:
-			A1′,A2′…,AN′
-	
-			Sample Input 1
-			5 2 3
-			Sample Output 1
-			1 3 2 4 5
-			Initially, 
-			A=(1,2,3,4,5).
-			After reversing the second through third elements, the sequence becomes 
-			(1,3,2,4,5), which should be printed.
+				N L R
+				Output
+				Let 
+				A′ =(A1′, A2′,…,AN′) be the sequence after the operation. Print it in the following format:
+				A1′,A2′…,AN′
+		
+				Sample Input 1
+				5 2 3
+				Sample Output 1
+				1 3 2 4 5
+				Initially, 
+				A=(1,2,3,4,5).
+				After reversing the second through third elements, the sequence becomes 
+				(1,3,2,4,5), which should be printed.
 
-			Sample Input 2
-			7 1 1
-			Sample Output 2
-			1 2 3 4 5 6 7
-			It is possible that 
-			L=R.
+				Sample Input 2
+				7 1 1
+				Sample Output 2
+				1 2 3 4 5 6 7
+				It is possible that 
+				L=R.
 
-			Sample Input 3
-			10 1 10
-			Sample Output 3
-			10 9 8 7 6 5 4 3 2 1
-			It is possible that 
-			L=1 or 
-			R=N.
+				Sample Input 3
+				10 1 10
+				Sample Output 3
+				10 9 8 7 6 5 4 3 2 1
+				It is possible that 
+				L=1 or 
+				R=N.
 
-		#include <iostream>
-		#include <vector>
-		using namespace std;
-		int main() {
-			
-			int N, L, R;
-			cin>>N>>L>>R;
-			
-			vector<int> v;
-			for(int i=1; i<= N; i++)
-				v.push_back(i);
+			#include <iostream>
+			#include <vector>
+			using namespace std;
+			int main() {
 				
-			L--, R--;
-			while(L < R)
-				swap(v[L++], v[R--]);
+				int N, L, R;
+				cin>>N>>L>>R;
 				
-			for(int i: v)
-				cout<<i<<" ";
-			return 0;
-		}
-	
+				vector<int> v;
+				for(int i=1; i<= N; i++)
+					v.push_back(i);
+					
+				L--, R--;
+				while(L < R)
+					swap(v[L++], v[R--]);
+					
+				for(int i: v)
+					cout<<i<<" ";
+				return 0;
+			}
+		
 	#LeetCode WeeklyContest-400
 		905) Minimum Number of Chairs in a Waiting Room:
 			Problem Statement:
@@ -95902,6 +96051,7 @@ POTD:-[Problem of the Day]
 		}
 	
 	933) Diagonal Traversal: (Used extra vector to put the new lines after diagonal traversal ends)
+		https://www.naukri.com/code360/problems/diagonal-traversal_920391
 		Problem statement
 			You are given a binary tree having ‘N’ nodes. Your task is to return its diagonal traversal.
 			A binary tree is a hierarchical data structure in which each node has at most two children.
@@ -96021,10 +96171,10 @@ POTD:-[Problem of the Day]
 		/*
 			Following is the Binary Tree node structure for your referance:
 			class TreeNode {
-			public :
-				int data;
-				TreeNode *left;
-				TreeNode *right;
+				public :
+					int data;
+					TreeNode *left;
+					TreeNode *right;
 
 				TreeNode(int data) {
 					this -> data = data;
@@ -96337,16 +96487,955 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	938) 
-	
-	939)
-	
-	940)
-	
-	941)
-	
-	942)
+	938) Maximum occured integer:
+		Problem Statement:
+			Given n integer ranges, the task is to return the maximum occurring integer in the given ranges. If more than one such integer exists, return the smallest one.
+			The ranges are in two arrays l[] and r[].  l[i] consists of the starting point of the range and r[i] consists of the corresponding endpoint of the range & a maxx which is the maximum value of r[].
+			For example, consider the following ranges.
+				l[] = {2, 1, 3}, r[] = {5, 3, 9)
+			Ranges represented by the above arrays are.
+				[2, 5] = {2, 3, 4, 5}
+				[1, 3] = {1, 2, 3}
+				[3, 9] = {3, 4, 5, 6, 7, 8, 9}
+			The maximum occurred integer in these ranges is 3.
 
+			Example 1:
+				Input: n = 4, l[] = {1,4,3,1}, r[] = {15,8,5,4}, maxx = 15
+				Output: 4
+				Explanation: The given ranges are [1,15] [4, 8] [3, 5] [1, 4]. The smallest number that is most common or appears most times in the ranges is 4.
+
+			Example 2:
+				Input: n = 5, l[] = {1,5,9,13,21}, r[] = {15,8,12,20,30}, maxx = 30
+				Output: 5
+				Explanation: The given ranges are [1, 15] [5, 8] [9, 12] [13, 20] [21, 30]. The smallest number that is most common or appears most times in the ranges is 5.
+
+			Expected Time Complexity: O(n+maxx).
+			Expected Auxiliary Space: O(maxx), maxx is maximum element in r[]
+
+			Constraints:
+				1 ≤ n ≤ 10^6
+				0 ≤ l[i], r[i] ≤ 10^6
+
+		// Not Optimized:
+			class Solution {
+				public:
+				// l and r are input array
+				// maxx : maximum in r[]
+				// n: size of array
+				// arr[] : declared globally with size equal to maximum in l[] and r[]
+				// Function to find the maximum occurred integer in all ranges.
+				int maxOccured(int n, int l[], int r[], int maxx) {
+					map<int, int> Fr;
+					
+					for(int i=0; i<n; i++){
+						int s = l[i], e = r[i];
+						for(int j=s; j <= e; j++)
+							Fr[j]++;
+					}
+					
+					int mxCntofMinNum = INT_MAX;
+					int cur = 0;
+					for(auto i: Fr)
+						if(i.second > cur){
+							cur = i.second;
+							mxCntofMinNum = i.first;
+						}
+						
+					return mxCntofMinNum;
+				}
+			};
+
+		// Optimized:
+			❌Pending
+	
+	939) Fibonacci Sum:
+		Problem statement
+			Given two integers, ‘N’ and ‘M’, your task is to find the sum of Fibonacci numbers between ‘fib(N)’ and ‘fib(M)’ where ‘fib(N)’ represents the Nth Fibonacci number and ‘fib(M)’ represents the Mth Fibonacci number. The sum is given by sum(N, M) = fib(N) + fib(N+1) + fib(N+2) … fib(M). Since the answer could be large, so you have to return the sum modulo 10^9 + 7.
+			The fibonacci relation is given by:
+			fib(0) = 0 
+			fib(1) = 1
+			fib(n) = fib(n-1) + fib(n-2), n >= 2, where fib(n) represents the nth fibonacci number.
+			Constraints:
+				1 <= T <= 1000
+				0 <= N <= M <= 10^9
+				Where ‘T’ represents the number of test cases, and ‘N’ and ‘M’ represents the starting and ending of the range respectively.
+				Time Limit: 1 sec
+			Sample Input 1:
+			2
+			2 6
+			0 5
+			Sample Output 1:
+			19
+			12 
+			Explanation 1:
+			For the first test case, 
+			The Fibonacci numbers between fib(2) and fib(6) are {1, 2, 3, 5, 8}. Their sum is equal to 19. Hence the output is 19.
+
+			For the second test case,
+			The Fibonacci numbers between fib(0) and fib(5) are {0, 1, 1, 2, 3, 5}. Their sum is equal to 12. Hence the output is 12.
+			Sample Input 2:
+			2
+			3 6
+			6 7
+			Sample Output 2:
+			18
+			21
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			int mod = 1e9+7;
+			int fib(int n){
+				if(n == 0)
+					return 0;
+				else if(n == 1)
+					return 1;
+				else
+					return (fib(n-1) + fib(n-2)) % mod;
+			}
+
+			int fiboSum(int n , int m) {
+				int sum = 0;
+				for(int i=n; i<=m; i++){
+					sum += fib(i);
+					sum %= mod;
+				}
+				return sum % mod;
+			}
+	
+		// Optimized:
+			#include <bits/stdc++.h> 
+			int fiboSum(int n , int m) {
+				if(m == 0)
+					return 0;
+				
+				vector<int> fibValues(m+1);
+				fibValues[0] = 0;
+				fibValues[1] = 1;
+
+				int sum =0, mod = 1e9+7;
+				for(int i=2; i<=m; i++)
+					fibValues[i] = (fibValues[i-1]+fibValues[i-2]) % mod;
+				
+				for(int i=n; i <= m; i++)
+					sum = (sum + fibValues[i]) % mod;
+
+				return sum;
+			}
+
+	940) Find K-Th Element From Product Array:
+		Problem statement
+			You are given an integer array ‘Arr’ of length ‘N’. Your task is to find the Kth element of the ‘product’ array when the ‘product’ array is sorted in non-decreasing order.
+			The ‘product’ array of ‘Arr’ is an array of size (N*(N-1)) / 2 which consist multiplication of each pair of elements present in the array ‘Arr’, i.e product[k] = Arr[i] * Arr[j], where 0 ≤ i < j < ‘N’.
+			Note :
+			Return -1 if the value of ‘K’ exceeds the number of elements in the array ‘product’.
+			For Example :
+			Input array “arr”= [1, 2, 3, 4] and K = 3
+			Output: 4 
+			Explanation: The ‘product’ array i.e array formed by multiplying each pair of element of ‘Arr’ is [1*2, 1*3, 1*4, 2*3, 2*4, 3*4] = [2, 3, 4, 6, 8, 12]. So the Kth(K = 3) element in this sorted ‘product’ array is 4.
+			Constraints :
+				1 <= T <= 50
+				1 <= N <= 10^4
+				1 <= K <= 10^9
+				-10^4 <= Arr[i] <= 10^4
+				Time Limit: 1 sec 
+			Sample Input 1 :
+			2
+			4 2
+			1 2 3 -1
+			3 2
+			-1 0 1
+			Sample Output 1 :
+			-2
+			0
+			Explanation For Sample Input 1 :
+			Test Case 1:
+			The ‘product’ array formed by multiplying any two numbers taken two at a time is : [-1 * 1, -1 * 2, -1 * 3, 1 * 2, 1 * 3, 2 * 3] = [-1, -2, -3, 2, 3, 6] and this array after sorting  is: [-3, -2, -1, 2, 3, 6]. So the 2nd element in the sorted ‘product’ array is -2.
+			Test Case 2:
+			The ‘product’ array formed by multiplying any two numbers taken two at a time is : [-1 * 0, -1 * 1, -0 * 1] [0, -1] and sorted ‘product’ array is: [-1, 0, 0]. So the 2nd element in the sorted ‘product’ array is 0.
+			Sample Input 2 :
+			2
+			3 5
+			1 3 4
+			1 1
+			-1
+			Sample Output 2 :
+			-1
+			-1
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			int kthSmallest(vector<int> &arr, int k) {
+				vector<int> v;
+				int n = arr.size();
+				for(int i=0; i<n-1; i++){
+					for(int j=i+1; j<n; j++){
+						v.push_back(arr[i]*arr[j]);
+					}
+				}
+				
+				if(k >= v.size())
+					return -1;
+				sort(v.begin(), end(v));
+				return v[k-1];
+			}
+
+		// Optimized:
+			❌Pending
+	
+	941) Replace Words:
+		Problem Statement:
+			In English, we have a concept called root, which can be followed by some other word to form another longer word - let's call this word derivative. For example, when the root "help" is followed by the word "ful", we can form a derivative "helpful".
+			Given a dictionary consisting of many roots and a sentence consisting of words separated by spaces, replace all the derivatives in the sentence with the root forming it. If a derivative can be replaced by more than one root, replace it with the root that has the shortest length.
+			Return the sentence after the replacement.
+			Example 1:
+				Input: dictionary = ["cat","bat","rat"], sentence = "the cattle was rattled by the battery"
+				Output: "the cat was rat by the bat"
+			Example 2:
+				Input: dictionary = ["a","b","c"], sentence = "aadsfasf absbs bbab cadsfafs"
+				Output: "a a b c"
+		
+			Constraints:
+				1 <= dictionary.length <= 1000
+				1 <= dictionary[i].length <= 100
+				dictionary[i] consists of only lower-case letters.
+				1 <= sentence.length <= 106
+				sentence consists of only lower-case letters and spaces.
+				The number of words in sentence is in the range [1, 1000]
+				The length of each word in sentence is in the range [1, 1000]
+				Every two consecutive words in sentence will be separated by exactly one space.
+				sentence does not have leading or trailing spaces.
+
+		// Optimized:
+			class Solution {
+				public:
+				string replaceWords(vector<string>& dictionary, string sentence) {
+					string ans;
+					vector<string> v;
+
+					string temp;
+					istringstream iss(sentence);
+
+					// creating the vector of string from given sentence
+					while(iss >> temp)
+						v.push_back(temp);
+					
+					for(int i=0; i<dictionary.size(); i++){
+						for(int j=0; j<v.size(); j++){
+							string Sdiction = dictionary[i];
+							string Sv = v[j];
+
+							int innerFlg = 1;
+							for(int z=0; z<Sdiction.size(); z++){
+								if(Sdiction[z] != Sv[z]){
+									innerFlg=0;
+									break;
+								}
+							}
+							if(innerFlg)
+								v[j] = Sdiction;
+						}
+					}
+					for(string s: v)
+						ans += s +" ";
+					ans.pop_back();                 // to remove the last extra space.
+					return ans;
+				}
+			};
+
+		// Not Optimized: Used find function
+			class Solution {
+				public:
+				string replaceWords(vector<string>& dictionary, string sentence) {
+					string ans;
+					vector<string> v;
+
+					string temp;
+					istringstream iss(sentence);
+
+					while(iss >> temp)
+						v.push_back(temp);
+					
+					for(int i=0; i<dictionary.size(); i++){
+						for(int j=0; j<v.size(); j++){
+							string Sdiction = dictionary[i];
+							string Sv = v[j];
+
+							int isPresent = Sv.find(Sdiction);          
+							// this statement confirms the dictionary word is present in statement or not, 
+							// if present then returns index else return a some larger value like string::npos, 
+							// we want if the word is present then index must be first ie. 0, 
+							// then will replace the word in sentence with word in dictionary
+							
+							if(isPresent == 0)
+								v[j] = Sdiction;
+						}
+					}
+					for(string s: v)
+						ans += s +" ";
+					ans.pop_back();                 // to remove the last extra space.
+					return ans;
+				}
+			};
+	
+	#CN WeeklyContest-129
+		942) Equal Distribution:
+			Problem statement
+				You are given an array ‘A’ of ‘N’ integers where each element is numbered from ‘0’ to ‘N - 1’ and can occur atmost ‘2’ times. You have to split the given array into two arrays of the same length such that the intersection between the two arrays is ‘0’.
+				The intersection between the two arrays is the count of common elements in both the arrays. For example: the intersection between ‘[1, 2, 4]’ and ‘[8, 7, 2]’ is ‘1’ because ‘2’ is present in both the arrays, whereas the intersection between ‘[1, 5]’ and ‘[2, 7]’ is ‘0’.
+				Your task is to tell whether it is possible to split the given array into two arrays of the same length having ‘0’ intersection. Return ‘1’, if possible, otherwise return ‘0’.
+				Example:
+				‘N’ = 6
+				‘A’ = [1, 5, 2, 6, 5, 1]
+				Here, we can split the given array into: ‘[1, 2, 1]’ and ‘[5, 6, 5]’. Both the arrays have ‘0’ intersection. So, the answer for this example is ‘1’.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^5
+					0 <= A[i] <= 10^9
+					Time Limit: 1 sec 
+				Sample Input 1:
+					2
+					4
+					2 5 6 2
+					2
+					1 1
+					Sample Output 1:
+					1
+					0
+					Explanation of sample input 1:
+					For test case 1:
+					Here, we can split the given array into: ‘[2, 2]’ and ‘[5, 6]’. Both the arrays have ‘0’ intersection. So, the answer for this test case is ‘1’.
+					For test case 2:
+					It is impossible to split the given array into two arrays of the same length because in that case the intersection between them will be non-zero. So, the answer for this test case is ‘0’.
+					Sample Input 2:
+					2
+					8
+					3 7 3 7 2 8 9 9
+					2
+					1 2
+					Sample Output 2:
+					1
+					1
+
+			int equalDistribution (int n, vector <int> &a) {
+				if(n&1){
+					return 0;
+				}else if(n == 2){
+					if(a[0] == a[1])
+						return 0;
+					return 1;
+				}else{
+					return 1;
+				}
+			}
+
+	943) Absolute difference in an array:
+		Problem statement
+			You are given an array/list 'ARR' consisting of 'N' non - negative integers. Your task is to return the running absolute difference of the elements at even and odd index positions separately.
+			The index of the first element in the array is considered to be zero that is 0 - based indexing is considered for calculating the parity of the index.
+			Example:
+			Consider the array - [1, 2, 3, 4, 5, 6]
+			The elements at even positions will be 1, 3, 5. The running absolute difference of elements will be - |1 - 3| = 2 , |2 -5| = 3. Hence our answer will be 3.
+			The elements at odd positions will be 2, 4, 6. The running absolute difference of elements will be - |2 - 4| = 2 , |2 - 6| = 4. Hence our answer will be 4.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 5 * 10^4
+				1 <= ARR[i] <=10^5
+				Time Limit: 1 sec
+
+			Sample Input 1:
+				2
+				5
+				5 4 3 4 2
+				4
+				3 5 3 1
+				Sample Output 1:
+				0 0
+				0 4
+				Explanation of Input 1:
+				For test case 1:
+				• The running absolute difference of elements at even positions will be : |5 - 3| = 2, |2 - 2| = 0.
+				• The running absolute difference of elements at odd positions will be : |4 - 4| = 0.
+				For test case 2:
+				• The running absolute difference of elements at even positions will be : |3 - 3| = 0.
+				• The running absolute difference of elements at odd positions will be : |5 - 1| = 4.
+				Sample Input 2:
+				1
+				7
+				10 20 30 40 50 60 70
+				Sample Output 2:
+				40 40
+
+		#include <bits/stdc++.h> 
+		pair<int, int> absDiff(vector<int>& arr, int n) {
+			if(n == 1)
+				return {arr[0],0};
+			
+			int i=2, j=3;
+			int num1 = arr[0];
+			int num2 = arr[1];
+
+			for(i; i<n ; i +=2)
+				num1 = abs(num1 - arr[i]);
+
+			for(j; j<n ; j +=2)
+				num2 = abs(num2 - arr[j]);
+
+			/*	
+				// instead of above 2 loops use this one loop only
+				for(i, j; j < n or i<n ; i +=2, j +=2){
+					if(i < n)
+						num1 = abs(num1 - arr[i]);
+						
+					if(j < n)
+						num2 = abs(num2 - arr[j]);
+				}
+			
+			*/
+
+			return {num1, num2};
+		}
+
+		// or if the size of arr is odd then one element is remaining to substract from num1
+			#include <bits/stdc++.h> 
+			pair<int, int> absDiff(vector<int>& arr, int n) {
+				if(n == 1)
+					return {arr[0],0};
+				
+				int i=2, j=3;
+				int num1 = arr[0];
+				int num2 = arr[1];
+
+				for(i, j; j < n && i<n ; i +=2, j +=2){
+					num1 = abs(num1 - arr[i]);
+					num2 = abs(num2 - arr[j]);
+				}
+
+				if(n&1)
+					num1 = abs(num1 - arr.back());
+
+				return {num1, num2};
+			}
+	
+		// or using just one looping variable:
+			#include <bits/stdc++.h> 
+			pair<int, int> absDiff(vector<int>& arr, int n) {
+				if(n == 1)
+					return {arr[0], 0};
+				
+				int evenPos, OddPos;
+				evenPos = arr[0];
+				OddPos = arr[1];
+
+				for(int i=2; i<n; i+=2){
+					evenPos = abs(evenPos - arr[i]);
+					if(i+1 < n)
+						OddPos = abs(OddPos - arr[i+1]);
+				}
+				
+				return {evenPos, OddPos};
+			}
+
+	944) Day 8 : Second largest element in the array:
+		https://www.naukri.com/code360/problems/second-largest-element-in-the-array_873375
+		Problem statement
+			You have been given an array/list 'ARR' of integers. Your task is to find the second largest element present in the 'ARR'.
+			Note:
+			a) Duplicate elements may be present.
+			b) If no such element is present return -1.
+			Example:
+			Input: Given a sequence of five numbers 2, 4, 5, 6, 8.
+			Output:  6
+			Explanation:
+			In the given sequence of numbers, number 8 is the largest element, followed by number 6 which is the second-largest element. Hence we return number 6 which is the second-largest element in the sequence.
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 5000
+				-10 ^ 9 <= 'SIZE' <= 10 ^ 9 
+				Where ‘T’ is the total number of test cases, ‘N’ denotes the number of elements in the array and ‘SIZE’ denotes the range of the elements in the array.
+				Time limit: 1 sec.
+			Sample Input 1:
+				2
+				6
+				12 1 35 10 34 1
+				5
+				10 10 10 10 10
+				Sample Output 1:
+				34
+				-1
+				Explanation of sample input 1:
+				Test case 1: In the given sequence of numbers, number 35 is the largest element, followed by number 34 which is the second-largest element. Hence we return number 34 which is the second-largest element in the sequence.
+
+				Test case 2: In the given sequence of numbers, number 10 is the largest element. However, since all the elements are the same, the second largest element does not exist. So, we return -1.
+				Sample Input 2:
+				1
+				6
+				7 8 8 1 4 3 
+				Sample Output 2:
+				7
+				Explanation of sample input 2:
+				In the given sequence of numbers, 8 exists two times and is the largest element, followed by 7 which is the second-largest element. Hence we return the number 7 as the second-largest element.
+			Hints:
+				Think about how the sorting of the array can help.
+
+		#include <bits/stdc++.h> 
+		int findSecondLargest(int n, vector<int> &arr) {
+			set<int> s (arr.begin(), arr.end());
+			if(s.size() < 2)
+				return -1;
+			auto itr = s.end();
+			--itr;
+			--itr;
+
+			/*
+				// or instead of above 3 lines you can use 			
+				auto itr = s.rbegin();          // rbegin function consider the last element as first
+				itr++;                          // & after incrementing it by once its currently pointing the second last element
+			*/
+			return *itr;    
+		}
+	
+	945) Continuous Subarray Sum:
+		Problem Statement:
+			Given an integer array nums and an integer k, return true if nums has a good subarray or false otherwise.
+			A good subarray is a subarray where:
+			its length is at least two, and
+			the sum of the elements of the subarray is a multiple of k.
+			Note that:
+			A subarray is a contiguous part of the array.
+			An integer x is a multiple of k if there exists an integer n such that x = n * k. 0 is always a multiple of k.
+		
+			Example 1:
+				Input: nums = [23,2,4,6,7], k = 6
+				Output: true
+				Explanation: [2, 4] is a continuous subarray of size 2 whose elements sum up to 6.
+			Example 2:
+				Input: nums = [23,2,6,4,7], k = 6
+				Output: true
+				Explanation: [23, 2, 6, 4, 7] is an continuous subarray of size 5 whose elements sum up to 42.
+				42 is a multiple of 6 because 42 = 7 * 6 and 7 is an integer.
+			Example 3:
+				Input: nums = [23,2,6,4,7], k = 13
+				Output: false
+
+			Constraints:
+				1 <= nums.length <= 10^5
+				0 <= nums[i] <= 10^9
+				0 <= sum(nums[i]) <= 2^31 - 1
+				1 <= k <= 2^31 - 1
+		
+		// Not Optimized:
+			class Solution {
+				public:
+				bool checkSubarraySum(vector<int>& nums, int k) {
+					int n = nums.size();
+					for(int i=0; i<n-1; i++){
+						int sum = nums[i];
+						for(int j=i+1; j<n; j++){
+							sum += nums[j];
+							if(sum % k == 0)
+								return 1;
+						}
+					}
+					return 0;
+				}
+			};
+	
+		// Optimized:
+			❌Pending
+
+	946) Index of an Extra Element:
+		Problem Statement:
+			You have given two sorted arrays arr1[] & arr2[] of distinct elements. The first array has one element extra added in between. Return the index of the extra element.
+			Note: 0-based indexing is followed.
+			Examples
+				Input: n = 7, arr1[] = {2,4,6,8,9,10,12}, arr2[] = {2,4,6,8,10,12}
+				Output: 4
+				Explanation: In the first array, 9 is extra added and it's index is 4.
+				Input: n = 6, arr1[] = {3,5,7,8,11,13}, arr2[] = {3,5,7,11,13}
+			Output: 3
+				Explanation: In the first array, 8 is extra and it's index is 3.
+			Expected Time Complexity: O(log n).
+			Expected Auxiliary Space: O(1).
+
+			Constraints:
+				1<=n<=10^5
+				1<=arr1[i],arr2[i]<=10^6
+
+		// Brute Force:
+			class Solution {
+				public:
+				int findExtra(int n, int arr1[], int arr2[]) {
+					for(int i=0; i<n-1; i++)
+						if(arr1[i] != arr2[i])
+							return i;
+
+					return n-1;
+				}
+			};
+
+		// Using set
+			class Solution {
+				public:
+				int findExtra(int n, int arr1[], int arr2[]) {
+					set<int> s (arr2, arr2+n-1);
+					for(int i=0; i<n; i++){
+						if(s.count(arr1[i]) == 0)
+							return i;
+					}
+				}
+			};
+		
+			//or
+				class Solution {
+					public:
+					int findExtra(int n, int arr1[], int arr2[]) {
+						set<int> s (arr2, arr2+n-1);
+						for(int i=0; i<n; i++){
+							if(s.count(arr1[i]))
+								s.erase(arr1[i]);
+							else
+								return i;
+						}
+					}
+				};
+
+		// Using Binary search:
+			class Solution {
+				public:
+				int findExtra(int n, int arr1[], int arr2[]) {
+					int s =0, e = n-2;
+					while(s < e){
+						int mid = (s+e)/2;
+						
+						if(arr1[mid] == arr2[mid])
+							s++;
+						else
+							e = mid;
+					}
+					if(arr1[s] == arr2[s])
+						return ++s;
+						
+					return s;
+				}
+			};
+
+	947) Maximal AND Subsequences:
+		Problem statement
+			You are given an array consisting of N integers. You need to find the number of k-element subsequences of the given array where the bitwise AND of the subsequence's elements is maximal. Also, find the maximal AND value.
+			Example:
+			Let the array be [1, 3, 6, 7] and K=3. The possible k-element subsequences of the given array are: {1, 3, 6}, {1, 3, 7}, {1, 6, 7}, {3, 6, 7}. Applying AND operation on all possible subsequences we get values: 0, 1, 0, 2 respectively. The maximal AND value of these subsequences is 2, and only 1 subsequence {3, 6, 7} has this value.
+			Constraints:
+				1 <= T <= 10
+				2 <= N <= 5 * 10^4
+				2 <= K <= N
+				0 <= Arr[i] <= 10^8
+				Where  ‘T’ represents the number of test cases, ‘N’ represents the number of elements present in the array and ‘K’ represents the length of the subsequences.
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				4 3
+				1 3 6 7
+				3 2
+				9 9 9    
+				Sample Output 1:
+				2 1
+				9 3
+				Explanation 1:
+				For the first test case refer to the example explained above.
+				For the second test case we have, array: [9, 9, 9], N = 3 and K = 2. The possible k-element subsequences of the given array are: {9, 9}, {9, 9}, {9, 9}. Applying AND operation on all possible subsequences we get values: 9, 9, 9 respectively. The maximal AND value of these subsequences is 9, and all subsequences have this value.
+				Sample Input 2:
+				2
+				5 2
+				1 2 3 4 5
+				4 4
+				6 3 7 0
+				Sample Output 2:
+				4 1 
+				0 1
+
+		// Not Optimized:
+			#include <bits/stdc++.h>
+			void Generate(vector<int> &main, vector<int> temp,vector<vector<int>> &InfoHolder, int sizeDoNotCross, int CurIndex){
+				if(temp.size() >= sizeDoNotCross or CurIndex >= main.size()){					//    if(temp.size() >= sizeDoNotCross || CurIndex >= main.size()) : "you can use this pipe sign also to denote as or (||)."
+					if(temp.size() == sizeDoNotCross)
+						InfoHolder.push_back(temp);
+					return ;
+				}
+
+				Generate(main, temp, InfoHolder, sizeDoNotCross, CurIndex+1);
+
+				// include call
+				temp.push_back(main[CurIndex]);
+				Generate(main, temp, InfoHolder, sizeDoNotCross, CurIndex+1);
+			}
+
+			vector<int> maximalANDSubsequences(vector<int> &arr, int k) {
+				// generate all the subsequence of size k
+				vector<int> temp;
+				vector<vector<int>> InfoHolder;
+				Generate(arr, temp, InfoHolder, k, 0);
+
+				// perform AND operation on that generated sequence, 
+				int mx = 0, cnt=0;
+				for(auto row: InfoHolder){
+					vector<int> cur = row;
+					int first = cur[0];
+					for(int i=1; i<cur.size(); i++)
+						first &= cur[i];
+
+					if(mx < first){
+						mx = first;
+						cnt=1;
+					}else if(mx == first){
+						cnt++;
+					}
+				}
+
+				// return the ans
+				return {mx, cnt};
+			}
+
+		// Optimized:
+			❌Pending
+
+	948) K-th Element of Two Sorted Arrays:
+		Problem statement
+			You're given two sorted arrays 'arr1' and 'arr2' of size 'n' and 'm' respectively and an element 'k'.
+			Find the element that would be at the 'kth' position of the combined sorted array.
+			Position 'k' is given according to 1 - based indexing, but arrays 'arr1' and 'arr2' are using 0 - based indexing.
+			For example :
+			Input: 'arr1' = [2, 3, 45], 'arr2' = [4, 6, 7, 8] and 'k' = 4
+			Output: 6
+			Explanation: The merged array will be [2, 3, 4, 6, 7, 8, 45]. The element at position '4' of this array is 6. Hence we return 6.
+			Sample Input 1:
+				5
+				2 3 6 7 9
+				4
+				1 4 8 10
+				4
+				Sample Output 1:
+				4
+				Explanation of sample input 1 :
+				The merged array will be: [1, 2, 3, 4, 6, 7, 8, 9, 10]
+
+				The element at position '4' is 4 so we return 4.
+				Sample Input 2:
+				5
+				1 2 3 5 6
+				5
+				4 7 8 9 100  
+				6
+				Sample Output 2:
+				6
+				Explanation of sample input 2 :
+				The merged array will be: [1, 2, 3, 4, 5, 6, 7, 8, 9, 100]
+
+				The element at position '6'  is 6, so we return 6.
+				Constraints :
+					1 <= 'n' <= 5000
+					1 <= 'm' <= 5000
+					0 <= 'arr1[i]', 'arr2[i]' <= 10^9
+					1 <= 'k' <= 'n' + 'm'
+
+				'n' and 'm' denote the size of 'arr1' and 'arr2'.
+				Time limit: 1 second
+				Expected time complexity :
+				The expected time complexity is O(log('n') + log('m')). 
+
+		// Not Optimized:
+			#include<bits/stdc++.h>
+			int kthElement(vector<int> &arr1, vector<int>& arr2, int n, int m, int k){
+				arr1.insert(arr1.end(), arr2.begin(), arr2.end());
+				sort(begin(arr1), end(arr1));
+				return arr1[k-1];
+			}
+
+		// Optimized:
+			#include <bits/stdc++.h>
+			int kthElement(vector<int> &arr1, vector<int>& arr2, int n, int m, int k){
+				vector<int> v;
+				int i,j;
+				i=j=0;
+
+				while((i < n or j < m) && v.size() < k){
+					if(i < n && j < m){
+						if(arr1[i] < arr2[j]){
+							v.push_back(arr1[i++]);
+						}else{
+							v.push_back(arr2[j++]);
+						}
+					}else if(i < n){                        // this statement indicates (j >= m)
+						v.push_back(arr1[i++]);         
+					}else{
+						v.push_back(arr2[j++]);             // this statement indicates (j < m) but i >= n
+					}
+				}
+				return v.back();
+			}
+		
+	#AtCoder BeginnerContest-357
+		949) A - Sanitize Hands:
+			Problem Statement
+				There is a bottle of disinfectant that can disinfect exactly M hands.
+				N aliens come one by one to disinfect their hands.The i-th alien (1≤i≤N) has Hi hands and wants to disinfect all of their hands once.
+				Determine how many aliens can disinfect all of their hands. Here, even if there is not enough disinfectant left for an alien to disinfect all of their hands when they start, they will use up the remaining disinfectant.
+				Constraints
+					1≤N,M≤100
+					1 ≤ Hi ≤100
+					All input values are integers.
+				Input
+					The input is given from Standard Input in the following format:
+					N M
+					H1 H2 … HN
+				Output
+					Print the number of aliens who can disinfect all of their hands.
+
+				Sample Input 1
+					5 10
+					2 3 2 5 3
+				Sample Output 1
+					3
+				The aliens disinfect their hands in the following steps:
+				The first alien disinfects their two hands. The remaining disinfectant can 10−2=8 hands.
+				The second alien disinfects their three hands. The remaining disinfectant can disinfect 8−3=5 hands.
+				The third alien disinfects their two hands. The remaining disinfectant can disinfect 5−2=3 hands.
+				The fourth alien has five hands, but there is only enough disinfectant for three hands, so they use up the disinfectant without disinfecting all of their hands.
+				Thus, the first three aliens can disinfect all of their hands, so print 3.
+
+				Sample Input 2
+					5 10
+					2 3 2 3 5
+				Sample Output 2
+				4
+				Sample Input 3
+				1 5
+				1
+				Sample Output 3
+				1
+				All aliens can disinfect their hands.
+
+			#include <iostream>
+			using namespace std;
+			int main() {
+				int n, m;                   // n is hands count, m is total hands can disinfect.
+				cin>>n>>m;
+				
+				// using local array not vector
+				int * arr = new int[n];
+				for(int i=0; i<n; i++)
+					cin>>arr[i];
+				
+				int cnt=0;
+				for(int i=0; i<n; i++){
+					if((m - arr[i]) < 0)
+						break;
+					m -= arr[i];
+					cnt++;
+				}
+
+				cout<<cnt<<endl;
+				return 0;
+			}
+
+			// Or
+				#include <iostream>
+				using namespace std;
+				int main() {
+					int n, m;                   // n is hands count, m is total hands can disinfect.
+					cin>>n>>m;
+					
+					// using local array not vector
+					int * arr = new int[n];
+					for(int i=0; i<n; i++)
+						cin>>arr[i];
+					
+					int cnt=0;
+					for(int i=0; i<n; i++){
+						if((m - arr[i]) >= 0){
+							m -= arr[i];
+							cnt++;
+						}else{
+							break;
+						}
+					}
+					cout<<cnt<<endl;
+					return 0;
+				}
+
+		950) B - Uppercase and Lowercase:
+			Problem Statement:
+				You are given a string S consisting of lowercase and uppercase English letters. The length of S is odd.
+				If the number of uppercase letters in S is greater than the number of lowercase letters, convert all lowercase letters in 
+				S to uppercase.Otherwise, convert all uppercase letters in S to lowercase.
+
+				Constraints
+					S is a string consisting of lowercase and uppercase English letters.The length of S is an odd number between 1 and 99, inclusive.
+				Input
+					The input is given from Standard Input in the following format: S
+				Output
+					Print the string S after converting the letters according to the problem statement.
+
+				Sample Input 1
+				AtCoder
+				Sample Output 1
+				atcoder
+				The string AtCoder contains five lowercase letters and two uppercase letters. Thus, convert all uppercase letters in AtCoder to lowercase, which results in atcoder.
+
+				Sample Input 2
+				SunTORY
+				Sample Output 2
+				SUNTORY
+				The string SunTORY contains two lowercase letters and five uppercase letters. Thus, convert all lowercase letters in SunTORY to uppercase, which results in SUNTORY.
+
+				Sample Input 3
+				a
+				Sample Output 3
+				a
+
+			#include <iostream>
+			#include<algorithm>
+			using namespace std;
+
+			int main() {
+				string s;
+				cin>>s;
+				
+				int n=s.length();               // int n=s.size(); 
+				int Lower_cnt=0;
+				
+				for(char ch: s)
+					if(islower(ch))
+						Lower_cnt++;
+				
+				int Upper_cnt = n - Lower_cnt;
+				if(Upper_cnt > Lower_cnt)
+					transform(s.begin(), s.end(), s.begin(), ::toupper);
+				else
+					transform(s.begin(), s.end(), s.begin(), ::tolower);
+				
+				std::cout << s << std::endl;    
+				return 0;
+			}
+
+	951) 
+
+	952)
+	
+	953)
+	
+	954)
+	
+	955)
+	
+	956)
+	
+	957)
+	
+	958)
+	
+	959)
+	
+	960)
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
