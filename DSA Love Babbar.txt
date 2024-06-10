@@ -49066,7 +49066,39 @@ POTD:-[Problem of the Day]
 			}
 			return sum;
 		}
+
+		// or
+			#include <bits/stdc++.h> 
+			int minSubarraySum(int arr[], int n, int k) {
+				int minValue = INT_MAX;
+
+				for(int i=0; i<=(n-k); i++){
+					int itr = i+k;
+					int curValue=0;
+					for(int j=i; j <itr; j++)
+						curValue += arr[j];
+					
+					minValue = min(minValue, curValue);
+				}
+				return minValue;
+			}
 	
+		// Optimized:
+			#include <bits/stdc++.h> 
+			int minSubarraySum(int arr[], int n, int k) {
+				int minValue=0;
+				for(int i=0; i<k; i++)
+					minValue += arr[i];
+				
+				int curValue = minValue;
+				for(int i=k; i<n; i++){
+					curValue -= arr[i-k];
+					curValue += arr[i];
+					minValue = min(minValue, curValue);
+				}
+				return minValue;
+			}
+
 	296) Greatest Common Divisor
 		 	Problem statement
 				You are given two numbers, ‘X’ and ‘Y’. 
@@ -69905,7 +69937,7 @@ POTD:-[Problem of the Day]
 		// Optimized:
 			❌Pending
 
-	#LeetCode BiweeklyContest-126
+	#LeetCode BiweeklyContest-126:
 		566) Find the Sum of Encrypted Integers:
 			Problem statement:
 				You are given an integer array nums containing positive integers. We define a function encrypt such that encrypt(x) replaces every digit in x with the largest digit in x. For example, encrypt(523) = 555 and encrypt(213) = 333.
@@ -69996,7 +70028,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	#LeetCode WeeklyContest-389
+	#LeetCode WeeklyContest-389:
 		568) Existence of a Substring in a String and Its Reverse:
 			Problem statement:
 				Given a string s, find any substring of length 2 which is also present in the reverse of s.
@@ -71590,7 +71622,7 @@ POTD:-[Problem of the Day]
 				return {repeated, num};
 			}
 	
-	#LeetCode WeeklyContest-390
+	#LeetCode WeeklyContest-390:
 		593) Maximum Length Substring With Two Occurrences:
 			Problem statement:
 				Given a string s, return the maximum length of a substring
@@ -76162,7 +76194,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	#LeetCode WeeklyContest-392
+	#LeetCode WeeklyContest-392:
 		663) Longest Strictly Increasing or Strictly Decreasing Subarray:
 			Problem statement:
 				You are given an array of integers nums. Return the length of the longest subarray of nums which is either strictly increasing or strictly decreasing.
@@ -77412,7 +77444,7 @@ POTD:-[Problem of the Day]
 		// Optimized:
 			❌Pending
 
-	#LeetCode BiweeklyContest-128
+	#LeetCode BiweeklyContest-128:
 		682) Score of a String:
 			Problem statement:
 				You are given a string s. The score of a string is defined as the sum of the absolute difference between the ASCII values of adjacent characters.
@@ -77510,7 +77542,7 @@ POTD:-[Problem of the Day]
 					}
 				};
 		
-	#LeetCode WeeklyContest-393
+	#LeetCode WeeklyContest-393:
 		684) Latest Time You Can Obtain After Replacing Characters:
 			Problem statement:
 				You are given a string s representing a 12-hour format time where some of the digits (possibly none) are replaced with a "?".
@@ -79855,7 +79887,7 @@ POTD:-[Problem of the Day]
 			return head;
 		}
 	
-	#LeetCode WeeklyContest-394
+	#LeetCode WeeklyContest-394:
 		716) Count the Number of Special Characters I:
 			Problem Statement:
 				You are given a string word. A letter is called special if it appears both in lowercase and uppercase in word.
@@ -82881,7 +82913,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	#LeetCode BiweeklyContest-129	
+	#LeetCode BiweeklyContest-129:
 		754) Make a Square with the Same Color:
 			https://leetcode.com/problems/make-a-square-with-the-same-color/description/
 			Problem Statement:
@@ -83715,7 +83747,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	#LeetCode WeeklyContest-395
+	#LeetCode WeeklyContest-395:
 		761) Find the Integer Added to Array I:
 			Problem Statement:
 				You are given two arrays of equal length, nums1 and nums2.
@@ -87122,7 +87154,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 	
-	#LeetCode WeeklyContest-396
+	#LeetCode WeeklyContest-396:
 		807) Valid Word:
 			Problem Statement:
 				A word is considered valid if:
@@ -88584,7 +88616,7 @@ POTD:-[Problem of the Day]
 			// Optimised:
 				❌Pending
 
-	#LeetCode BiweeklyContest-130
+	#LeetCode BiweeklyContest-130:
 		826) Check if Grid Satisfies Conditions:
 			Problem Statement:
 				You are given a 2D matrix grid of size m x n. You need to check if each cell grid[i][j] is:
@@ -89049,7 +89081,7 @@ POTD:-[Problem of the Day]
 				return 0;
 			}
 		
-	#GFG Weekly-154
+	#GFG Weekly-154:
 		833) Check Anagram Existence:
 			Problem Statement:
 				jlkjlk
@@ -89104,7 +89136,7 @@ POTD:-[Problem of the Day]
 			// Optimized:
 				❌Pending		
 		
-	#LeetCode WeeklyContest-397
+	#LeetCode WeeklyContest-397:
 		835)	Permutation Difference between Two Strings:
 			Problem Statement:
 				You are given two strings s and t such that every character occurs at most once in s and t is a permutation of s.
@@ -90632,7 +90664,7 @@ POTD:-[Problem of the Day]
 				return 0;
 			}
 		
-	#LeetCode WeeklyContest-398
+	#LeetCode WeeklyContest-398:
 		855) Special Array I:
 			Problem Statement:
 				An array is considered special if every pair of its adjacent elements contains two numbers with different parity.
@@ -90784,7 +90816,7 @@ POTD:-[Problem of the Day]
 			} 
 		};
 
-	#GFG Weekly-155
+	#GFG Weekly-155:
 		858) Eye's Contact:
 			Problem Statement:
 				Alice and Bob were invited to Geek's birthday party. While there, Bob noticed Alice, who caught his
@@ -92206,7 +92238,7 @@ POTD:-[Problem of the Day]
 			// Optimised:
 				❌Pending
 		
-	#LeetCode BiweeklyContest-131
+	#LeetCode BiweeklyContest-131:
 		877) Find the XOR of Numbers Which Appear Twice:
 			Problem Statement:
 				You are given an array nums, where each number in the array appears either once or twice.
@@ -92340,7 +92372,7 @@ POTD:-[Problem of the Day]
 					}
 				};
 
-	#LeetCode WeeklyContest-399
+	#LeetCode WeeklyContest-399:
 		879) Find the Number of Good Pairs I:
 			Problem Statement:
 				You are given 2 integer arrays nums1 and nums2 of lengths n and m respectively. You are also given a positive integer k.
@@ -92473,7 +92505,7 @@ POTD:-[Problem of the Day]
 			// Optimized:
 				❌Pending
 		
-	#GFG Weekly-156
+	#GFG Weekly-156:
 		882) Geekland Fair:
 			Problem Statement:
 				It is Geekland fair 2024, Geek and Geekina are enjoying the fair. They went to a juice shop in the fair.
@@ -94098,7 +94130,7 @@ POTD:-[Problem of the Day]
 				return 0;
 			}
 		
-	#LeetCode WeeklyContest-400
+	#LeetCode WeeklyContest-400:
 		905) Minimum Number of Chairs in a Waiting Room:
 			Problem Statement:
 				You are given a string s. Simulate events at each second i:
@@ -94468,7 +94500,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 	
-	#GFG Weekly-157
+	#GFG Weekly-157:
 		911) Valid Triangle:
 			Problem Statement:
 				You are given three sticks of lengths a, b and c. You need to check whether it is possible to make a triangle with a positive area using these three sticks.
@@ -97417,25 +97449,883 @@ POTD:-[Problem of the Day]
 				return 0;
 			}
 
-	951) 
+	#LeetCode BiweeklyContest-132:
+		951) Clear Digits:
+			Problem Statement:
+				You are given a string s.
+				Your task is to remove all digits by doing this operation repeatedly:
+				Delete the first digit and the closest non-digit character to its left.
+				Return the resulting string after removing all digits.
 
-	952)
+				Example 1:
+					Input: s = "abc"
+					Output: "abc"
+					Explanation:
+					There is no digit in the string.
+
+				Example 2:
+					Input: s = "cb34"
+					Output: ""
+					Explanation:
+					First, we apply the operation on s[2], and s becomes "c4".
+					Then we apply the operation on s[1], and s becomes "".
+					
+				Constraints:
+					1 <= s.length <= 100
+					s consists only of lowercase English letters and digits.
+					The input is generated such that it is possible to delete all digits.
+			
+			class Solution {
+				public:
+				string clearDigits(string s) {
+					int i=0, n = s.size();
+
+					while(i < s.size()){
+						if(isdigit(s[i])){
+							s.erase(s.begin()+i);
+							s.erase(s.begin()+i-1);          // deleted the left non-digit & the current digit
+							i--;
+						}else{
+							i++;
+						}
+					}
+					return s;
+				}
+			};
+
+			// or Simple traversing TC: 𝑂(𝑛) SC: 𝑂(𝑛)
+				class Solution {
+					public:
+					string clearDigits(string s) {
+						string ans;
+
+						for(char ch: s)
+							if(isdigit(ch))
+								ans.pop_back();
+							else
+								ans += ch;
+
+						return ans;        
+					}
+				};
+			
+			// or Using Stack: Time Complexity (TC): 𝑂(𝑛) Space Complexity (SC): 𝑂(𝑛)
+				class Solution {
+					public:
+					string clearDigits(string s) {
+						string ans;
+						stack<char> st;
+						for(char ch: s)
+							if(isdigit(ch))
+								st.pop();
+							else
+								st.push(ch);
+
+						while(!st.empty()){
+							ans = st.top() + ans;               // adding it in reverse fashion
+							st.pop();
+						}
+
+						return ans;
+					}
+				};
+
+		952) Find The First Player to win K Games in a Row:
+			Problem Statement:
+				A competition consists of n players numbered from 0 to n - 1.
+				You are given an integer array skills of size n and a positive integer k, where skills[i] is the skill level of player i. All integers in skills are unique.
+				All players are standing in a queue in order from player 0 to player n - 1.
+				The competition process is as follows:
+				The first two players in the queue play a game, and the player with the higher skill level wins.
+				After the game, the winner stays at the beginning of the queue, and the loser goes to the end of it.
+				The winner of the competition is the first player who wins k games in a row.
+				Return the initial index of the winning player.
+
+				Example 1:
+					Input: skills = [4,2,6,3,9], k = 2
+					Output: 2
+					Explanation:
+					Initially, the queue of players is [0,1,2,3,4]. The following process happens:
+					Players 0 and 1 play a game, since the skill of player 0 is higher than that of player 1, player 0 wins. The resulting queue is [0,2,3,4,1].
+					Players 0 and 2 play a game, since the skill of player 2 is higher than that of player 0, player 2 wins. The resulting queue is [2,3,4,1,0].
+					Players 2 and 3 play a game, since the skill of player 2 is higher than that of player 3, player 2 wins. The resulting queue is [2,4,1,0,3].
+					Player 2 won k = 2 games in a row, so the winner is player 2.
+
+				Example 2:
+					Input: skills = [2,5,4], k = 3
+					Output: 1
+					Explanation:
+					Initially, the queue of players is [0,1,2]. The following process happens:
+					Players 0 and 1 play a game, since the skill of player 1 is higher than that of player 0, player 1 wins. The resulting queue is [1,2,0].
+					Players 1 and 2 play a game, since the skill of player 1 is higher than that of player 2, player 1 wins. The resulting queue is [1,0,2].
+					Players 1 and 0 play a game, since the skill of player 1 is higher than that of player 0, player 1 wins. The resulting queue is [1,2,0].
+					Player 1 won k = 3 games in a row, so the winner is player 1.
+
+				Constraints:
+					n == skills.length
+					2 <= n <= 10^5
+					1 <= k <= 10^9
+					1 <= skills[i] <= 10^6
+					All integers in skills are unique.
+
+			// Not Optimized:
+				class Solution {
+					public:
+					int findWinningPlayer(vector<int>& skills, int k) {
+						int cnt=0;
+						vector<int> temp = skills;
+						int prev = temp[0];
+						
+						while(cnt < k) {
+							int cur = temp[1];
+							int now = (cur > prev) ? cur : prev;
+
+							if(temp[0] > temp[1]){
+								temp.push_back(temp[1]);
+								temp.erase(temp.begin()+1);
+							}else{
+								temp.push_back(temp[0]);
+								temp.erase(temp.begin());
+							}
+
+							if(now == prev){
+								cnt++;
+							}else{
+								prev = now;
+								cnt=1;
+							}
+						}
+						return find(skills.begin(), skills.end(), temp.front()) - skills.begin();
+					}
+				};
+
+			// Little Optimized:
+				class Solution {
+					public:
+					int findWinningPlayer(vector<int>& skills, int k) {
+
+						// this line make code very optimized
+						if((k-1) >= skills.size())
+							return (max_element(skills.begin(), skills.end()) - skills.begin());
+
+						// this below code is same as previous but the above line is so much important
+						int cnt=0;
+						vector<int> temp = skills;
+						int prev = temp[0];
+						
+						while(cnt < k) {
+							int cur = temp[1];
+							int now = (cur > prev) ? cur : prev;
+
+							if(temp[0] > temp[1]){
+								temp.push_back(temp[1]);
+								temp.erase(temp.begin()+1);
+							}else{
+								temp.push_back(temp[0]);
+								temp.erase(temp.begin());
+							}
+
+							if(now == prev){
+								cnt++;
+							}else{
+								prev = now;
+								cnt=1;
+							}
+						}
+						return find(skills.begin(), skills.end(), temp.front()) - skills.begin();
+					}
+				};
+
+			// Optimized:
+				❌Pending
+				
+	#LeetCode WeeklyContest-401:
+		954) Find the Child Who Has the Ball After K Seconds:
+			https://leetcode.com/problems/find-the-child-who-has-the-ball-after-k-seconds/description/
+			Problem Statement:
+				You are given two positive integers n and k. There are n children numbered from 0 to n - 1 standing in a queue in order from left to right.
+				Initially, child 0 holds a ball and the direction of passing the ball is towards the right direction. After each second, the child holding the ball passes it to the child next to them. Once the ball reaches either end of the line, i.e. child 0 or child n - 1, the direction of passing is reversed.
+				Return the number of the child who receives the ball after k seconds.
+
+				Example 1:
+					Input: n = 3, k = 5
+					Output: 1
+					Explanation:
+					Time elapsed	Children
+						0		[0, 1, 2]
+						1		[0, 1, 2]
+						2		[0, 1, 2]
+						3		[0, 1, 2]
+						4		[0, 1, 2]
+						5		[0, 1, 2]
+
+				Example 2:
+					Input: n = 5, k = 6
+					Output: 2
+					Explanation:
+					Time elapsed	Children
+						0		[0, 1, 2, 3, 4]
+						1		[0, 1, 2, 3, 4]
+						2		[0, 1, 2, 3, 4]
+						3		[0, 1, 2, 3, 4]
+						4		[0, 1, 2, 3, 4]
+						5		[0, 1, 2, 3, 4]
+						6		[0, 1, 2, 3, 4]
+
+				Example 3:
+					Input: n = 4, k = 2
+					Output: 2
+					Explanation:
+					Time elapsed	Children
+						0		[0, 1, 2, 3]
+						1		[0, 1, 2, 3]
+						2		[0, 1, 2, 3]
+
+				Constraints:
+					2 <= n <= 50
+					1 <= k <= 50
+
+			class Solution {
+				public:
+				int numberOfChild(int n, int k) {
+					int ans =0;
+					
+					while(k){
+						while((ans < n-1) and k>0){
+							ans++;
+							k--;
+						}
+						
+						while((ans > 0) and k>0){
+							ans--;                
+							k--;
+						}
+					}
+					return ans;
+				}
+			};
+		
+		953) Find the N-th Value After K Seconds:
+			https://leetcode.com/problems/find-the-n-th-value-after-k-seconds/description/
+			Problem Statement:
+				You are given two integers n and k.
+				Initially, you start with an array a of n integers where a[i] = 1 for all 0 <= i <= n - 1. After each second, you simultaneously update each element to be the sum of all its preceding elements plus the element itself. For example, after one second, a[0] remains the same, a[1] becomes a[0] + a[1], a[2] becomes a[0] + a[1] + a[2], and so on.
+				Return the value of a[n - 1] after k seconds.
+				Since the answer may be very large, return it modulo 109 + 7.
+			
+				Example 1:
+				Input: n = 4, k = 5
+				Output: 56
+				Explanation:
+				Second	State After
+					0	[1,1,1,1]
+					1	[1,2,3,4]
+					2	[1,3,6,10]
+					3	[1,4,10,20]
+					4	[1,5,15,35]
+					5	[1,6,21,56]
+
+				Example 2:
+				Input: n = 5, k = 3
+				Output: 35
+				Explanation:
+				Second	State After
+					0	[1,1,1,1,1]
+					1	[1,2,3,4,5]
+					2	[1,3,6,10,15]
+					3	[1,4,10,20,35]
+				
+				Constraints:
+					1 <= n, k <= 1000
+
+			class Solution {
+				public:
+				int valueAfterKSeconds(int n, int k) {
+					vector<int> a(n, 1);
+					int mod = 1e9+7;
+					
+					while(k--){
+						for(int i=1; i<n; i++){
+							a[i] += a[i-1];
+							a[i] %= mod;
+						}
+					}
+					
+					return a.back();
+				}
+			};
+
+		955) Maximum Total Reward Using Operations I:
+			Problem Statement:
+				You are given an integer array rewardValues of length n, representing the values of rewards.
+				Initially, your total reward x is 0, and all indices are unmarked. You are allowed to perform the following operation any number of times:
+				Choose an unmarked index i from the range [0, n - 1].
+				If rewardValues[i] is greater than your current total reward x, then add rewardValues[i] to x (i.e., x = x + rewardValues[i]), and mark the index i.
+				Return an integer denoting the maximum total reward you can collect by performing the operations optimally.
+				
+				Example 1:
+					Input: rewardValues = [1,1,3,3]
+					Output: 4
+					Explanation:
+					During the operations, we can choose to mark the indices 0 and 2 in order, and the total reward will be 4, which is the maximum.
+
+				Example 2:
+					Input: rewardValues = [1,6,4,3,2]
+					Output: 11
+					Explanation:
+					Mark the indices 0, 2, and 1 in order. The total reward will then be 11, which is the maximum.
+
+				Constraints:
+					1 <= rewardValues.length <= 2000
+					1 <= rewardValues[i] <= 2000
+
+			// Memory Limit Exceeded (MLE):
+				class Solution {
+					public:
+					int mxValue=0;
+					void subSequence(vector<int>& main, vector<int> temp, int i){
+						if(i >= main.size()){
+							int curMx=0;
+							for(int i: temp){
+								if(i > curMx)
+									curMx += i;
+							}
+							mxValue = max(mxValue, curMx);
+							return ;
+						}
+						
+						subSequence(main, temp, i+1);
+						
+						temp.push_back(main[i]);
+						subSequence(main, temp, i+1);
+					}
+					int maxTotalReward(vector<int>& rewardValues) {
+						vector<int> sub;
+						sort(rewardValues.begin(), rewardValues.end());
+						subSequence(rewardValues, sub, 0);
+						
+						return mxValue;
+					}
+				};
+
+			// Optimized:
+				❌Pending
+
+		956) Maximum Total Reward Using Operations II:
+			Problem Statement:
+				You are given an integer array rewardValues of length n, representing the values of rewards.
+				Initially, your total reward x is 0, and all indices are unmarked. You are allowed to perform the following operation any number of times:
+				Choose an unmarked index i from the range [0, n - 1].
+				If rewardValues[i] is greater than your current total reward x, then add rewardValues[i] to x (i.e., x = x + rewardValues[i]), and mark the index i.
+				Return an integer denoting the maximum total reward you can collect by performing the operations optimally.
+
+				Example 1:
+					Input: rewardValues = [1,1,3,3]
+					Output: 4
+					Explanation:
+					During the operations, we can choose to mark the indices 0 and 2 in order, and the total reward will be 4, which is the maximum.
+
+				Example 2:
+					Input: rewardValues = [1,6,4,3,2]
+					Output: 11
+					Explanation:
+					Mark the indices 0, 2, and 1 in order. The total reward will then be 11, which is the maximum.
+					
+				Constraints:
+					1 <= rewardValues.length <= 5 * 10^4
+					1 <= rewardValues[i] <= 5 * 10^4
+
+			// Memory Limit Exceeded (MLE)
+				class Solution {
+					public:
+					void subSequence(vector<int>& main, vector<vector<int>> &info, vector<int> temp, int i){
+						if(i >= main.size()){
+							info.push_back(temp);
+							return ;
+						}
+						
+						subSequence(main, info, temp, i+1);
+						
+						temp.push_back(main[i]);
+						subSequence(main, info, temp, i+1);
+					}
+					int maxTotalReward(vector<int>& rewardValues) {
+						vector<vector<int>> info;
+						vector<int> sub;
+						sort(rewardValues.begin(), rewardValues.end());
+						subSequence(rewardValues, info, sub, 0);
+						
+						int mxValue=0;
+						for(auto &eachRow: info){
+							int curMx=0;
+							for(int i: eachRow){
+								if(i > curMx)
+									curMx += i;
+							}
+							mxValue = max(mxValue, curMx);
+						}        
+						return mxValue;
+					}
+				};
+			
+			// Optimized:
+				❌Pending
+			
+	#GFG Weekly-158:
+		957) Bob's Impression:
+			Problem Statement:
+				In an assembly ground of a school, the class teacher needs to arrange the students in non-decreasing order of their heights. Mrs. Alice, the vice-principal, is impressed by any class teacher who can arrange students of their class in non-decreasing order of heights by swapping the positions of exactly two students once.
+				Mr. Bob, the class teacher of section D, wants to impress Mrs. Alice. Given the initial order of height in which the students of his class are standing, represented by an array arr, where arr[i] denotes the height of the i-th student. Return true if Mr. Bob can impress Mrs. Alice, otherwise return false.
+				Example 1:
+				Input:
+				n = 3, 
+				arr = [1, 2, 3]
+				Output: False
+				Explanation: 
+				All the students are already standing in the order of non decreasing order, if Mr. Bob swaps any two students, the class would no longer be standing in the non decreasing order.
+
+				Example 2:
+				Input:
+				n = 3,
+				arr = [1, 3, 2]
+				Output: True
+				Explanation: 
+				If Mr. Bob swaps the pair of students standing at 2nd and 3rd position, the order of heights will be [1, 2, 3] which is following the non decreasing order in a single swap.
+				Your Task:
+					You don't need to read input or print anything. Your Task is to return True(1) if Mr. Bob can impress Mrs. Alice by arranging the students in non-decreasing order of heights with a single swap among any one pair of students, otherwise return False(0).
+
+				Constraints:
+					2 ≤ n ≤ 10^5
+					1 ≤ arr[i] ≤ 10^5
+
+			// Not Optimized:
+				class Solution {
+					public:
+					bool ContainsDuplicate(vector<int> &a){
+						for(int i=0; i<a.size(); i++)
+							if(a[i] == a[i+1])
+								return 1;
+						return 0;
+					}
+					bool classArrangement(int n, vector<int> &arr) {
+						if(is_sorted(arr.begin(), arr.end())){
+							if(ContainsDuplicate(arr))
+								return 1;
+							else
+								return 0;
+						}
+						
+						for(int i=0; i<n-1; i++){
+							for(int j=i+1; j<n; j++){
+								swap(arr[i], arr[j]);
+								if(is_sorted(arr.begin(), arr.end())){
+									return 1;
+								}
+								swap(arr[i], arr[j]);
+							}
+						}
+						return 0;
+					}
+				};
+
+			// Optimized:
+				class Solution {
+					public:
+					bool classArrangement(int n, vector<int> &arr) {
+						bool sameFound = false;
+						int cnt=0;
+						
+						vector<int> desired = arr;
+						sort(desired.begin(), desired.end());
+
+						// Bob wants to impress Alice, he can impress only when there are 2 student who are not in sorted order
+						// or array is already sorted but contains same element twice else Bob can not impress Alice 
+
+						for(int i=0; i<n; i++){
+							if(desired[i] != arr[i])
+								cnt++;
+							
+							if(i > 0 && (arr[i] == arr[i-1]))
+								sameFound = 1;
+						}
+						
+						// if(cnt == 0 && sameFound)
+						//     return 1;
+						// else if(cnt == 2)
+						//     return 1;
+						// else
+						//     return 0;
+						// or instead of above if-else ladder use below 
+						
+						if((cnt == 0 && sameFound) or cnt == 2)
+							return 1;
+						return 0;
+					}
+				};
+			
+		958) Traffic Lights:
+			Problem Statement:
+				You are responsible for managing the traffic lights on a long stretch of highway. Initially, all traffic lights on the highway are set to red. There are n traffic lights in total. You will be given q queries, each of which instructs you to change the signal of a segment of the traffic lights.
+				Each query specifies two indices [ai, bi], indicating that all traffic lights from ai to bi (both inclusive) should change their signals in the following manner:
+					A red light ('R') changes to yellow ('Y').
+					A yellow light ('Y') changes to green ('G').
+					A green light ('G') changes to red ('R'). 
+
+				Return a string of length n with the final state of all n traffic lights where the ith character in the string denotes the state of the ith traffic light after all the queries have been processed in the given order.
+				Example 1:
+					Input:
+					n = 5, q= 3,
+					queries = [[1,5], [1,4], [3,4]]
+					Output: "GGRRY"
+					Explanation: 
+					Initial signal of the traffic lights is all red(RRRRR). After 1st query all traffic lights signal changes to Yellow(YYYYY).
+					After 2nd query the signal changes for all traffic lights from index 1 to 4. The state of traffic lights is now GGGGY.
+					After 3rd query the signal changes for all traffic lights from index 3 to 4. The final state of traffic lights is now GGRRY.
+
+				Example 2:
+					Input:
+					n = 1, q = 2,
+					queries = [[1,1], [1,1]]
+					Output: "G"
+					Explanation: 
+					There is only one traffic light initially it is Red("R"). After first query the signal changes to "Y" and after the second and final query the final state changes to "G".
+
+				Your Task:
+					You don't need to read input or print anything. Return a string representing the final state of all n traffic lights after all the queries have been processed in the given order. 
+
+				Constraints:
+
+					1 ≤ n ≤ 10^5
+					1 ≤ q ≤ 10^5
+					1 ≤ queries[i][0] ≤ queries[i][1] ≤ n
+
+			// Not Optimized:
+				class Solution {
+					public:
+					string trafficLights(int n, int q, vector<vector<int>> &queries) {
+						string s(n, 'R');
+						
+						for(int i=0; i < q; i++){
+							int begin = queries[i][0], end = queries[i][1];
+							for(int j=begin-1; j<end; j++){
+								if(s[j] == 'R'){
+									s[j] = 'Y';
+								}else if(s[j] == 'Y'){
+									s[j] = 'G';
+								}else{          // if s[j] == 'G'
+									s[j] = 'R';
+								}
+							}
+						}		
+						return s;
+					}
+				};
+
+			// Optimized:
+				❌Pending
+
+	959) Convert array into Zig-Zag fashion:
+		Problem Statement:
+			Given an array arr of distinct elements of size n, the task is to rearrange the elements of the array in a zig-zag fashion so that the converted array should be in the below form: 
+			arr[0] < arr[1]  > arr[2] < arr[3] > arr[4] < . . . . arr[n-2] < arr[n-1] > arr[n]. 
+			Note: Modify the given arr[] only, If your transformation is correct, the output will be 1 else the output will be 0.
+			Examples
+			Input: n = 7, arr[] = {4, 3, 7, 8, 6, 2, 1}
+			Output: 1
+			Explanation:  After modification the array will look like 3 < 7 > 4 < 8 > 2 < 6 > 1, the checker in the driver code will produce 1.
+			Input: n = 5, arr[] = {4, 7, 3, 8, 2}
+			Output: 1
+			Explanation: After modification the array will look like 4 < 7 > 3 < 8 > 2 hence output will be 1.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= n <= 10^6
+				0 <= arri <= 10^9
+
+		class Solution {
+			public:
+			void zigZag(int n, vector<int> &arr) {
+				int flag =1;
+				for(int i=0; i<n-1; i++){
+					if(flag){
+						if(arr[i] > arr[i+1])
+							swap(arr[i], arr[i+1]);
+						
+						flag=0;
+					}else{
+						if(arr[i] < arr[i+1])
+							swap(arr[i], arr[i+1]);
+						
+						flag=1;
+					}
+				}
+			}
+		};
+
+		// or
+			class Solution {
+				public:
+				void zigZag(int n, vector<int> &arr) {
+					for(int i=0; i<n-1; i++){
+						if(i&1){
+							if(arr[i] < arr[i+1]) swap(arr[i], arr[i+1]);
+						}else{
+							if(arr[i] > arr[i+1]) swap(arr[i], arr[i+1]);
+						}
+					}
+				}
+			};
 	
-	953)
+	960) Subarray Sums Divisible by K:
+		Problem Statement:
+			Given an integer array nums and an integer k, return the number of non-empty subarrays that have a sum divisible by k.
+			A subarray is a contiguous part of an array.
+			Example 1:
+				Input: nums = [4,5,0,-2,-3,1], k = 5
+				Output: 7
+				Explanation: There are 7 subarrays with a sum divisible by k = 5:
+				[4, 5, 0, -2, -3, 1], [5], [5, 0], [5, 0, -2, -3], [0], [0, -2, -3], [-2, -3]
+			Example 2:
+				Input: nums = [5], k = 9
+				Output: 0				
+			Constraints:
+				1 <= nums.length <= 3 * 10^4
+				-10^4 <= nums[i] <= 10^4
+				2 <= k <= 10^4
+
+		class Solution {
+			public:
+			int subarraysDivByK(vector<int>& nums, int k) {
+				int n = nums.size(), cnt=0;
+				map<int, int> mp;
+				mp[0] = 1;
+				int sum=0;
+				for(int i: nums){
+					sum += i;
+					int remainder = sum % k;
+					if(remainder < 0)
+						remainder += k;
+					if(mp.find(remainder) !=  mp.end())
+						cnt += mp[remainder];
+					
+					mp[remainder]++;
+				}
+				return cnt;
+			}
+		};
 	
-	954)
+	961) Nuts and Bolts Problem:
+		Problem Statement:
+			Given a set of n nuts & bolts. There is a one-on-one mapping between nuts and bolts. You have to Match nuts and bolts efficiently. Comparison of a nut to another nut or a bolt to another bolt is not allowed. It means the nut can only be compared with the bolt and the bolt can only be compared with the nut to see which one is bigger/smaller.
+			The elements should follow the following order: { !,#,$,%,&,*,?,@,^ }
+			Note: Make all the required changes directly in the given arrays, output will be handled by the driver code.
+			Examples
+				Input: n = 5, nuts[] = {@, %, $, #, ^}, bolts[] = {%, @, #, $ ^}
+				Output: 
+				# $ % @ ^
+				# $ % @ ^
+				Explanation: As per the order # should come first after that $ then % then @ and ^. 
+			Input: n = 9, nuts[] = {^, &, %, @, #, *, $, ?, !}, bolts[] = {?, #, @, %, &, *, $ ,^, !}
+				Output: 
+				! # $ % & * ? @ ^
+				! # $ % & * ? @ ^
+				Explanation: We'll have to match first ! then  # , $,  %,  &,  *,  @,  ^,  ? as per the required ordering.
+
+			Expected Time Complexity: O(n(logn))
+			Expected Auxiliary Space: O(log(n))
+
+			Constraints:
+				1 <= n <= 9
+				The arrays 'nuts' and 'bolts' can only consist of the following elements: {'@', '#', '$', '%', '^', '&', '?', '*', '!'}.
+				All the elements of arrays 'nuts' and 'bolts' should be unique.
 	
-	955)
+		class Solution {
+			public:
+			void matchPairs(int n, char nuts[], char bolts[]) {
+				vector<char> hold;
+				char ch[] = {'!', '#', '$', '%', '&', '*', '?', '@', '^'};
+				for(int i=0; i<9; i++){
+					if(find(nuts, nuts+n, ch[i]) != nuts+n)
+						hold.push_back(ch[i]);
+				}
+				for(int i=0; i<n; i++){
+					nuts[i] = hold[i];
+					bolts[i] = hold[i];
+				}
+			}
+		};
+
+	962) Height Checker:
+		Problem Statement:
+			A school is trying to take an annual photo of all the students. The students are asked to stand in a single file line in non-decreasing order by height. Let this ordering be represented by the integer array expected where expected[i] is the expected height of the ith student in line.
+			You are given an integer array heights representing the current order that the students are standing in. Each heights[i] is the height of the ith student in line (0-indexed).
+			Return the number of indices where heights[i] != expected[i].
+			
+			Example 1:
+				Input: heights = [1,1,4,2,1,3]
+				Output: 3
+				Explanation: 
+				heights:  [1,1,4,2,1,3]
+				expected: [1,1,1,2,3,4]
+				Indices 2, 4, and 5 do not match.
+			Example 2:
+				Input: heights = [5,1,2,3,4]
+				Output: 5
+				Explanation:
+				heights:  [5,1,2,3,4]
+				expected: [1,2,3,4,5]
+				All indices do not match.
+			Example 3:
+				Input: heights = [1,2,3,4,5]
+				Output: 0
+				Explanation:
+				heights:  [1,2,3,4,5]
+				expected: [1,2,3,4,5]
+				All indices match.
+			
+			Constraints:
+				1 <= heights.length <= 100
+				1 <= heights[i] <= 100
+
+		class Solution {
+			public:
+			int heightChecker(vector<int>& heights) {
+				vector<int> sortedHeight = heights;
+				sort(sortedHeight.begin(), sortedHeight.end());
+				int cnt=0, n=sortedHeight.size();
+
+				for(int i=0; i<n; i++)
+					if(sortedHeight[i] != heights[i])
+						cnt++;
+
+				return cnt;
+			}
+		};
+
+	963) Kth Smallest and Largest Element of Array:
+		Problem statement
+			You are given an array ‘Arr’ consisting of ‘N’ distinct integers and a positive integer ‘K’. Find out Kth smallest and Kth largest element of the array. It is guaranteed that K is not greater than the size of the array.
+			Example:
+			Let ‘N’ = 4,  ‘Arr’ be [1, 2, 5, 4] and ‘K’ = 3.  
+			then the elements of this array in ascending order is [1, 2, 4, 5].  Clearly, the 3rd smallest and largest element of this array is 4 and 2 respectively.
+			Constraints:
+				1 <= T <= 50
+				1 <= N <= 10^4
+				1 <= K <= N
+				-10^9 <= Arr[i] <= 10^9
+				Where ‘T’ is the total number of test cases, ‘N’ is the size of array ‘Arr’ and Arr[i] is the element of the given array.
+				Time limit: 1 sec
+			Sample Input 1:
+				2
+				4 4
+				5 6 7 2
+				4 3
+				1 2 5 4
+				Sample Output 1:
+				7 2 
+				4 2
+				Explanation of Sample Input 1:
+				Test case 1:
+				Here, ‘N’ = 4, ‘Arr’ = [5, 6, 7, 2] and ‘K’ = 3.
+				Elements of the array in ascending order are [2, 5, 6, 7]
+				Thus the 4rd smallest and 4rd largest elements of this array are 7 and 2 respectively.
+
+				Test case 2:
+				See problem statement for an explanation.
+				Sample Input 2:
+				2
+				1 1
+				2
+				5 1
+				5 4 3 2 1
+				Sample Output 2:
+				2 2
+				1 5
+
+		#include <algorithm>
+		vector<int> kthSmallLarge(vector<int> &arr, int n, int k) {
+			sort(arr.begin(), arr.end());
+			return {arr[k-1], arr[n-k]};
+		}
+
+	964) Statistics From A Large Sample:
+		Problem statement
+			You have been given a sample of integers in the range [0, 255]. Since the sample is quite large, you are provided with an array/list “count” whose i-th element denotes the number of times ‘i’ appears in the sample.
+			You are supposed to calculate the following statistics :
+			1. minimum: The minimum element in the sample.
+			2. maximum: The maximum element in the sample.
+			3. mean: The average of the sample, calculated as the total sum of all elements divided by the total number of elements.
+			4. median:
+				If the sample has an odd number of elements, then the median is the middle element once the sample is sorted.
+				If the sample has an even number of elements, then the median is the average of the two middle elements once the sample is sorted.
+			5. mode: The number that appears the most in the sample. It is guaranteed to be unique.
+			Constraints :
+				1 <= T <= 50
+				0 <= count[i] <= 1000    
+				Where count[i] is the i-th element of the “count” array/list.
+				Time limit: 1 sec
+				
+			Sample Input 1 :
+				2
+				1 0 1 1 1 1 1 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+				1 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+			Sample Output 1 :
+				0.00000 8.00000 4.66667 5.00000 7.00000
+				0.00000 2.00000 1.00000 1.00000 1.00000
+			Explanation of Sample Input 1 :
+				For the first test case, the elements in the sample are [0, 2, 3, 4, 5, 6, 7, 7, 8]. The minimum and maximum element is 0 and 8 respectively. Mean is (0 + 2 + 3 + 4 + 5 + 6 + 7 + 7 + 8) / 9 = 4.66667. Since the sample size is odd, median is the middle element i.e. 5. The mode is 7 as it appears the most in the sample.
+				For the second test case, the elements in the sample are [0, 1, 1, 2]. The minimum and maximum element is 0 and 2 respectively. Mean is (0 + 1 + 1 + 2) / 4 = 1.00000. Since the sample size is even, the median is the average of the two middle elements i.e. (1 + 1) / 2 = 1. The mode is 1 as it appears the most in the sample.
+
+		#include <bits/stdc++.h> 
+		vector<double> sampleStats(vector<int> &count) {
+			vector<double> ans;
+			vector<int> values;
+			for(int i=0; i<256; i++){
+				int val = count[i];
+				while(val--){
+					values.push_back(i);
+				}
+			}
+
+			ans.push_back(values.front());
+			ans.push_back(values.back());
+			int size = values.size();
+
+			double mean = 0;
+			for(int i: values)
+				mean += i;
+			
+			mean /= (double) size;
+			ans.push_back(mean);
+
+			double median;
+			if(size&1){
+				median = values[size/2];
+			}else{
+				int ind = size/2;
+				median = ((values[ind] + values[ind - 1]) * 1.0)/ 2.0;
+			}
+			ans.push_back(median);
+
+			double mode = (max_element(count.begin(), count.end()) - count.begin());	
+			ans.push_back(mode);
+			return ans;
+		}
 	
-	956)
+	965) 
 	
-	957)
+	966)
 	
-	958)
+	967)
 	
-	959)
+	968)
 	
-	960)
+	969)
+	
+	970)
+
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
