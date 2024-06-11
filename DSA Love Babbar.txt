@@ -5614,6 +5614,28 @@ Lecture-10: Solving LeetCode/CodeStudio Questions [Arrays]
 			Reversing first 6 elements: 
 			6       1       2       3       4       5       7       8       9       10
 
+		// or
+			#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+			int main() {
+				vector<int> v1 {0,9,8,7,6,5,100,4,3,2};
+				for(int i: v1)
+					std::cout << i << "\t";
+					
+				sort(v1.begin(), v1.end());
+				std::cout << std::endl;
+				for(int i: v1)
+					std::cout << i << "\t";
+					
+				sort(v1.rbegin(), v1.rend());               // to sort array in descending order this one or below one
+				// sort(v1.begin(), v1.end(), greater<int>());
+				std::cout << std::endl;
+				for(int i: v1)
+					std::cout << i << "\t";
+				return 0;
+			}
+
 	-Set:
 		-set by default store element in ascending order,
 		-set store unique elements. not duplicate.
@@ -5623,6 +5645,9 @@ Lecture-10: Solving LeetCode/CodeStudio Questions [Arrays]
 
 			set<int> val; // defining an empty set
 			set<int> val = {6, 10, 5, 1}; // defining a set with values
+			set<int> s {1,2,3};			// set assigning values without = sign
+			for(int i: s)
+				std::cout << i << std::endl;
 
 			//to check element present in set or not use count method with parameter in it.
 			val.count(5);			//if that value present in set it returns 1
@@ -5650,7 +5675,13 @@ Lecture-10: Solving LeetCode/CodeStudio Questions [Arrays]
 
 				cout<<*a.begin()<<"\t";     //return first element of set.
 				
-				cout<<*a.end()<<"\t";       //return the last element index, Length of set
+				cout<< *a.end() <<"\t";       //return the last element index, Length of set, or might not be correct
+				
+				// to access the last element of set
+				// a is acts as iterator, end() function pointing to index (last element + 1) which is out of last index
+				// need to decrement iterator by one using decrement operator only. 
+				// for printing the values at that index need to use dereference operator *
+				std::cout << *--a.end() << std::endl;
 
 				//length of set:
 				cout<<"\n the length of set A is :: "<<a.size();
@@ -8534,6 +8565,19 @@ Lecture-21: Solving LeetCode/CodeStudio Questions [Arrays]
 				rotate 1 steps to the right: [99,-1,-100,3]
 				rotate 2 steps to the right: [3,99,-1,-100]
 
+			// Not Optimized:
+				class Solution {
+					public:
+					void rotate(vector<int>& nums, int k) {
+						while(k--){
+							int val = nums.back();
+							nums.pop_back();
+
+							nums.insert(nums.begin(), val);
+						}
+					}
+				};
+
 			class Solution {
 				public:
 				void rotate(vector<int>& nums, int k) {
@@ -8551,7 +8595,7 @@ Lecture-21: Solving LeetCode/CodeStudio Questions [Arrays]
 				 class Solution {
 					public:
 					void rotate(vector<int>& nums, int k) {
-						if(k >= nums.size())
+						//if(k >= nums.size())
 							k %= nums.size();
 						reverse(nums.begin(), nums.end());
 						reverse(nums.begin(), nums.begin()+k);
@@ -8562,7 +8606,7 @@ Lecture-21: Solving LeetCode/CodeStudio Questions [Arrays]
 		2) Check if Array Is Sorted and Rotated:
 			https://leetcode.com/problems/check-if-array-is-sorted-and-rotated/
 			class Solution {
-			public:
+				public:
 				bool check(vector<int>& nums) {
 					int cnt=0;
 					for(int i=1;i<nums.size();i++)
@@ -8573,6 +8617,24 @@ Lecture-21: Solving LeetCode/CodeStudio Questions [Arrays]
 					return cnt<=1;
 				}	
 			};
+
+			// or
+				class Solution {
+					public:
+					bool check(vector<int>& nums) {
+						int n = nums.size()-1;
+						while(n--){
+							if(is_sorted(nums.begin(), nums.end()))
+								return 1;
+							reverse(nums.begin(), nums.end());
+							reverse(nums.begin(), nums.begin()+1);
+							reverse(nums.begin()+1, nums.end());
+						}
+						if(is_sorted(nums.begin(), nums.end()))
+							return 1;
+						return 0;
+					}
+				};
 
 		3) Sum Of Two Arrays:
 			Sample Input 1:
@@ -25259,9 +25321,7 @@ Lecture-138: Maximum Rectangle with all 1's || DP Series
 			// Decreasing Order
 			// sort(begin(a), end(a), greater<int>());
 			// or
-			sort(a, a+n, greater<int> ());
-
-			
+			sort(a, a+n, greater<int> ());			
 			std::cout << std::endl;
 				
 			for(int I: a)
@@ -25735,6 +25795,63 @@ Lecture-138: Maximum Rectangle with all 1's || DP Series
 			for(pair<int, int> i: sorted){
 				std::cout << i.first << "\t" << i.second << std::endl;
 			}
+			return 0;
+		}
+
+	// Sorting vector of pairs in ASC & DESC based on keys
+		#include <iostream>
+		#include<bits/stdc++.h>
+		using namespace std;
+		bool compByValueASC(pair<int, int> a, pair<int, int> b);
+		bool compByValueDESC(pair<int, int> &a, pair<int, int> &b);
+
+		int main() {
+			int n = 5;
+			int arr[] = {6,4,7,1,9};
+			int brr[] = {1,2,5,4,3};
+			
+			// sorting pair based on keys
+			vector<pair<int, int>> v;
+				for(int i=0; i<n; i++)
+					v.push_back({arr[i], brr[i]});
+					
+			for(pair<int, int> p: v)
+				cout<< p.first << "\t" << p.second << "\n";
+				
+			sort(v.begin(), v.end());
+			std::cout << "Sorted in ASC: " << std::endl;
+			for(pair<int, int> p: v)
+				cout<< p.first << "\t" << p.second << "\n";
+				
+			sort(v.begin(), v.end(), greater<pair<int, int>>());
+			std::cout << "Sorted in DESC: " << std::endl;
+			for(pair<int, int> p: v)
+				cout<< p.first << "\t" << p.second << "\n";
+			
+			
+			// sorting pair based on key's value
+			sort(v.begin(), v.end(), compByValueASC);
+			std::cout << "Sorted in ASC by values: " << std::endl;
+			for(pair<int, int> p: v)
+				cout<< p.first << "\t" << p.second << "\n";
+			
+			sort(v.begin(), v.end(), compByValueDESC);
+			std::cout << "Sorted in DESC by values: " << std::endl;
+			for(pair<int, int> p: v)
+				cout<< p.first << "\t" << p.second << "\n";
+			
+			return 0;
+		}
+
+		bool compByValueASC(pair<int, int> a, pair<int, int> b){
+			if(a.second < b.second)
+				return 1;
+			return 0;
+		}
+
+		bool compByValueDESC(pair<int, int> &a, pair<int, int> &b){
+			if(a.second > b.second)
+				return 1;
 			return 0;
 		}
 
@@ -26963,6 +27080,43 @@ Lecture-138: Maximum Rectangle with all 1's || DP Series
 					cout<<i<<"\t";
 				cout<<endl;
 			}
+			return 0;
+		}
+
+	// find_if method to confirm the given value is present or not.
+	// if present returns iterator at that point else it will equals to end() of container
+		#include <iostream>
+		#include <bits/stdc++.h>
+		using namespace std;
+
+		int main() {
+			vector<pair<int, int>> v { {1,11}, {2,22}, {3,33},
+									{4,44}, {5,55}, {6,66},
+									{7,77}, {8,88}, {9,99}, {10,100100}
+								};
+			
+			for(auto i: v)
+				std::cout << i.first << "\t" << i.second << std::endl;
+			
+			int n= 10;
+			auto it = find_if(v.begin(), v.end(), [n](pair<int, int> p){                // here [n] is a element to find
+				return p.first ==  n;
+			});
+			
+			std::cout << "is vector have key 10? : " << ((it != v.end()) ? "Yes" : "No" ) << std::endl;
+			
+			int value = 100100;
+			auto it2 = find_if(v.begin(), v.end(), [value](pair<int, int> p){
+				return p.second == value;
+			});
+			std::cout << "is vector have value 100100? " << ((it2 != v.end()) ? "Yes" : "No") << std::endl;
+			
+			
+			value = 100;
+			auto it3 = find_if(v.begin(), v.end(), [value](pair<int, int> p){
+				return p.second == value;
+			});
+			std::cout << "is vector have value 100? " << ((it3 != v.end()) ? "Yes" : "No") << std::endl;
 			return 0;
 		}
 ---------------------------------------------------------------------------------------------------------
@@ -28934,37 +29088,55 @@ POTD:-[Problem of the Day]
 		}
 
 	35) Vaccination Drive:
-			The Indian government recently launched the world's largest vaccination drive for
-			COVID-19. Dr Ritesh has been appointed as a nodal officer for vaccinating a
-			locality. There are ‘N’ houses numbers from 1 to ‘N’ in that locality. Dr Ritesh will
-			visit each house one by one and vaccinate all the people in the house. He
-			has already covered ‘K’ number of houses. Since ‘N’ is a very large number,
-			‘L’ bits are required to represent the number. You are supposed to help Dr
-			Ritesh and find the maximum possible number of houses that are yet to be
-			covered under the vaccination drive
-			(Hint 2's power)
-		Sample Input 1 :
-			2
-			3 5
-			5 3
-			Sample output 1 :
-			29
-			3
-			Explanation of Sample output 1 :
-			For the first test case, since the number of bits required is 5, the maximum possible value for ‘N’ is 32. So the maximum possible number of remaining houses are 32 - 3 = 29.
+		Problem statement
+			The Indian government recently launched the world's largest vaccination drive for COVID-19. Dr Ritesh has been appointed as a nodal officer for vaccinating a locality. There are ‘N’ houses numbers from 1 to ‘N’ in that locality. Dr Ritesh will visit each house one by one and vaccinate all the people in the house. He has already covered ‘K’ number of houses. Since ‘N’ is a very large number, ‘L’ bits are required to represent the number. You are supposed to help Dr Ritesh and find the maximum possible number of houses that are yet to be covered under the vaccination drive.
+			Input Format :
+			The first line contains an integer ‘T’ denoting the number of test cases. Then each test case follows.
+			The first input line of each test case contains two space-separated integers ‘K’ and ‘L’ as described in the problem.
 
-			For the second test case, since the number of bits required is 3, the maximum possible value for ‘N’ is 8. So the maximum possible number of remaining houses are 8 - 3 = 5.
-			Sample Input 2 :
-			2
-			1 1
-			2 3
-			Sample output 2 :
-			1
-			6
+			Output Format :
+			For each test case, print the maximum possible number of houses that are yet to be covered under the vaccination drive.
+			The output of each test case will be printed in a separate line.
+			Note:
+			You are not required to print the expected output, it has already been taken care of. Just implement the function.
+			Constraints :
+				1 <= T <= 50
+				1 <= ‘K’ <= N
+				1 <= ‘L’ <= 30
+				Where ‘T’ is the number of test cases, ‘K’, ‘N’ and ‘L’ are described in the problem statement.
+				Time limit: 1 sec
+			Sample Input 1 :
+				2
+				3 5
+				5 3
+				Sample output 1 :
+				29
+				3
+				Explanation of Sample output 1 :
+				For the first test case, since the number of bits required is 5, the maximum possible value for ‘N’ is 32. So the maximum possible number of remaining houses are 32 - 3 = 29.
+
+				For the second test case, since the number of bits required is 3, the maximum possible value for ‘N’ is 8. So the maximum possible number of remaining houses are 8 - 3 = 5.
+				Sample Input 2 :
+				2
+				1 1
+				2 3
+				Sample output 2 :
+				1
+				6
+
 		#include <bits/stdc++.h> 
 		int getMaximumHouses(int k, int l){
 			return (pow(2,l))-k;
 		}
+
+		// or
+			#include <bits/stdc++.h> 
+			int getMaximumHouses(int k, int l) {
+				// int n = pow(2, l);
+				// return n-k;
+
+				return (1 << l) - k; 			// left Shift operator to generate the power of 2.
+			}
 
 	36) Factorial of Larger nums:
 		void multiply(vector<int> &result, int x) {
@@ -77047,7 +77219,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	#CN WeeklyContest-121
+	#CN WeeklyContest-121:
 		676) Candies Distribution:
 			Problem statement
 				You have ‘N’ candies that need to be distributed among ‘3’ children, ‘c1’, ‘c2’, and ‘c3’. The distribution must follow the given rules:
@@ -78446,7 +78618,7 @@ POTD:-[Problem of the Day]
 			return arr;
 		}
 		
-	#CN BeginnerConstest-58
+	#CN BeginnerConstest-58:
 		697) Maximum books:
 			Problem statement
 				You are given 'N' boxes numbered from '0' to 'N - 1' containing a different number of books in each box. More specifically there are 'A[i]' books in the box 'i'.
@@ -88021,7 +88193,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	#CN WeeklyContest-125
+	#CN WeeklyContest-125:
 		818) Even Sum:
 			Problem statement
 				You are given an array 'A' of length 'N'.
@@ -89655,7 +89827,7 @@ POTD:-[Problem of the Day]
 			return 0;
 		}
 
-	#CN WeeklyContest-126
+	#CN WeeklyContest-126:
 		844) War:
 			Problem statement
 				There are 'N' nations at war, each with its own power denoted by the array 'P'. Nations have the option to form alliances, where their powers combine and they are considered as a single entity. For example, if nations A, B, and C form an alliance, their combined power is P[A] + P[B] + P[C].
@@ -91551,7 +91723,7 @@ POTD:-[Problem of the Day]
 		// Optimized:
 			❌Pending
 
-	#CN WeeklyContest-127
+	#CN WeeklyContest-127:
 		869) Jump string:
 			Problem statement
 				You are given a string ‘S’ of length ‘N’ where characters are numbered from ‘0’ to ‘N - 1’. Initially you have an empty string ‘K’ and you start at index ‘0’ of ‘S’ and proceed through the following steps until you reach the end of the string or beyond its boundary.
@@ -93581,7 +93753,7 @@ POTD:-[Problem of the Day]
 		// Optimized:
 			❌Pending
 
-	#CN WeeklyContest-128
+	#CN WeeklyContest-128:
 		897) Bottle Pickup:
 			Problem statement
 				There are 'N' bottles numbered from '1' to 'N' on the table. You are given an array 'filled' of length 'N', where if 'filled[i]' is equal to '1', then the 'i'-th bottle is filled. If 'filled[i]' is equal to '0', then the 'i'-th bottle is empty.
@@ -96809,7 +96981,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 	
-	#CN WeeklyContest-129
+	#CN WeeklyContest-129:
 		942) Equal Distribution:
 			Problem statement
 				You are given an array ‘A’ of ‘N’ integers where each element is numbered from ‘0’ to ‘N - 1’ and can occur atmost ‘2’ times. You have to split the given array into two arrays of the same length such that the intersection between the two arrays is ‘0’.
@@ -98278,49 +98450,340 @@ POTD:-[Problem of the Day]
 				For the first test case, the elements in the sample are [0, 2, 3, 4, 5, 6, 7, 7, 8]. The minimum and maximum element is 0 and 8 respectively. Mean is (0 + 2 + 3 + 4 + 5 + 6 + 7 + 7 + 8) / 9 = 4.66667. Since the sample size is odd, median is the middle element i.e. 5. The mode is 7 as it appears the most in the sample.
 				For the second test case, the elements in the sample are [0, 1, 1, 2]. The minimum and maximum element is 0 and 2 respectively. Mean is (0 + 1 + 1 + 2) / 4 = 1.00000. Since the sample size is even, the median is the average of the two middle elements i.e. (1 + 1) / 2 = 1. The mode is 1 as it appears the most in the sample.
 
-		#include <bits/stdc++.h> 
-		vector<double> sampleStats(vector<int> &count) {
-			vector<double> ans;
-			vector<int> values;
-			for(int i=0; i<256; i++){
-				int val = count[i];
-				while(val--){
-					values.push_back(i);
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			vector<double> sampleStats(vector<int> &count) {
+				vector<double> ans;
+				vector<int> values;
+				for(int i=0; i<256; i++){
+					int val = count[i];
+					while(val--){
+						values.push_back(i);
+					}
 				}
+
+				ans.push_back(values.front());
+				ans.push_back(values.back());
+				int size = values.size();
+
+				double mean = 0;
+				for(int i: values)
+					mean += i;
+				
+				mean /= (double) size;
+				ans.push_back(mean);
+
+				double median;
+				if(size&1){
+					median = values[size/2];
+				}else{
+					int ind = size/2;
+					median = (values[ind] + values[ind - 1])/ 2.0;			// dividing by 2.0 instead of 2 coz it should consider it as double
+				}
+				ans.push_back(median);
+
+				double mode = (max_element(count.begin(), count.end()) - count.begin());	
+				ans.push_back(mode);
+				return ans;
 			}
+	
+		// Optimized:
+			❌Pending
 
-			ans.push_back(values.front());
-			ans.push_back(values.back());
-			int size = values.size();
-
-			double mean = 0;
-			for(int i: values)
-				mean += i;
+	965) Relative Sort Array:
+		Problem Statement:
+			Given two arrays arr1 and arr2, the elements of arr2 are distinct, and all elements in arr2 are also in arr1.
+			Sort the elements of arr1 such that the relative ordering of items in arr1 are the same as in arr2. Elements that do not appear in arr2 should be placed at the end of arr1 in ascending order.
 			
-			mean /= (double) size;
-			ans.push_back(mean);
+			Example 1:
+				Input: arr1 = [2,3,1,3,2,4,6,7,9,2,19], arr2 = [2,1,4,3,9,6]
+				Output: [2,2,2,1,4,3,3,9,6,7,19]
+			Example 2:
+				Input: arr1 = [28,6,22,8,44,17], arr2 = [22,28,8,6]
+				Output: [22,28,8,6,17,44]
+					
+			Constraints:
+				1 <= arr1.length, arr2.length <= 1000
+				0 <= arr1[i], arr2[i] <= 1000
+				All the elements of arr2 are distinct.
+				Each arr2[i] is in arr1.
 
-			double median;
-			if(size&1){
-				median = values[size/2];
-			}else{
-				int ind = size/2;
-				median = ((values[ind] + values[ind - 1]) * 1.0)/ 2.0;
+		Time Complexity (TC): O(n⋅m+klogk), where n is the size of arr2, m is the size of arr1, and k is the number of elements in arr1 not in arr2.
+		Space Complexity (SC): O(m+k), due to the space used by the auxiliary vectors ans and temp.
+
+		class Solution {
+			public:
+			vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+				vector<int> ans;
+				// we need to sort arr1 according to arr2, so place all elements of arr2 which are there in arr1
+				for(int i: arr2){
+					for(int z=0; z<arr1.size(); z++){
+						if(i == arr1[z]){
+							ans.push_back(i);
+							arr1[z] = -1;
+						}
+					}
+				}
+				vector<int> temp;
+				for(int i=0; i<arr1.size(); i++)
+					if(arr1[i] != -1)
+						temp.push_back(arr1[i]);
+					
+				sort(begin(temp), end(temp));
+				ans.insert(ans.end(), temp.begin(), temp.end());
+				return ans;
 			}
-			ans.push_back(median);
+		};
 
-			double mode = (max_element(count.begin(), count.end()) - count.begin());	
-			ans.push_back(mode);
-			return ans;
-		}
+		// Reference for delete element form map:
+			#include <iostream>
+			#include<bits/stdc++.h>
+			using namespace std;
+			int main() {		
+				map<int, int> mp;
+				mp[1] = 100;
+				mp[2] = 200;
+				mp[10] = 1000;
+				mp[9] = 900;
+				mp[8] = 800;
+
+				for(auto i= mp.begin(); i != mp.end(); i++)
+					// std::cout << i -> first << "\t" << i -> second << std::endl;
+					std::cout << (*i).first << "\t" << (*i).second << std::endl;
+					
+				// or
+				// for(auto i: mp)
+				//     std::cout << i.first << "\t" << i.second << std::endl;
+				
+				auto itr = mp.begin();
+				itr++, itr++;
+				
+				mp.erase(itr);
+				std::cout << std::endl;
+				for(auto i: mp)
+					std::cout << i.first << "\t" << i.second << std::endl;
+
+				itr = mp.end();
+				itr--;
+				mp.erase(itr);
+				std::cout << std::endl;
+				for(auto i: mp)
+					std::cout << i.first << "\t" << i.second << std::endl;
+				
+				return 0;
+			}
+
+		// Using map:
+			class Solution {
+				public:
+				vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+					map<int, int> mp;
+					for(int i: arr1)
+						mp[i]++;
+
+					vector<int> ans;
+
+					for(int i: arr2){
+						int val = mp[i];
+						while(val--)
+							ans.push_back(i);
+						mp.erase(i);
+					}
+
+					for(auto itr = mp.begin(); itr != mp.end(); itr++){
+						int val = itr -> second;
+						while(val--)
+							ans.push_back(itr -> first);
+
+						mp.erase(mp.begin());			// to delete the starting element of map
+					}
+					return ans;
+				}
+			};
+
+		// Modification in same array arr1
+			class Solution {
+				public:
+				vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+					map<int, int> mp;
+					for(int i: arr1)
+						mp[i]++;
+
+						
+					int z=0;
+					for(int i: arr2){
+						int val = mp[i];
+						while(val--)
+							arr1[z++] =i;
+						mp.erase(i);
+					}
+
+					for(auto itr: mp){
+						int val = itr.second;
+						while(val--)
+							arr1[z++] = itr.first;
+					}
+					return arr1;
+				}
+			};
 	
-	965) 
+		// Using Lambda function:
+			class Solution {
+				public:
+				vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+					map<int, int> mp;
+					for(int i=0; i<arr2.size(); i++)
+						mp[arr2[i]] = i;
+					
+					for(int i: arr1)
+						if(!mp.count(i))
+							mp[i] = 1e9;
+						
+					auto CustomSort = [&](int n1, int n2){
+						if(mp[n1] == mp[n2])
+							return n1 < n2;
+						return mp[n1] < mp[n2];
+					};
+
+					sort(arr1.begin(), arr1.end(), CustomSort);
+					return arr1;
+				}
+			};
+
+	966) Count Palindromic Subsequences - II:
+		Problem Statement:
+			You have been given a string ‘S’. Your task is to find the number of non-empty distinct palindromic subsequences in string ‘S’ and return that number modulo 10^9 + 7.
+			Note:
+			1. A string ‘A’ is a subsequence of a string ‘B’ if ‘A’ can be obtained from ‘B’ by deleting several (possibly, zero or all) characters. 
+			2. A sequence is palindromic if it is equal to the sequence reversed.
+			3. Two sequences A1, A2,... and B1, B2,... are different if there is some ‘i’ for which ‘Ai’ != ‘Bi’.
+			Constraints :
+				1 <= T <= 10
+				1 <= |S| <= 3*10^3
+				Where |S| denotes the length of ‘S’.
+				Time limit: 1 sec
+			Sample Input 1 :
+				2
+				abc
+				pppp
+				Sample output 1 :
+				3
+				4
+				Explanation For Sample Output 1 :
+				For the first test case, distinct palindromic subsequences are “a”, “b”, and “c”.
+
+				For the second test case, distinct palindromic subsequences are “p”, “pp”, “ppp”, “pppp”.
+				Sample Input 2 :
+				2
+				aba
+				pqqr
+				Sample output 2 :
+				4
+				4
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			void SubSequenceGenerator(string &s, string temp, vector<string> &hold, int index){
+				if(index >= s.size()){
+					hold.push_back(temp);
+					return ;
+				}
+				SubSequenceGenerator(s, temp, hold, index+1);
+
+				temp += s[index];
+				SubSequenceGenerator(s, temp, hold, index+1);
+			}
+
+			bool isPalindrom(string &s){
+				int i=0, j=s.size()-1;
+				while(i < j)
+					if(s[i++] != s[j--])
+						return 0;    
+
+				return 1;
+			}
+
+			int countPalinSubseq(string &s) {
+				string temp;
+				vector<string> hold;
+				SubSequenceGenerator(s, temp, hold, 0);
+
+				set<string> st;
+				int mod =  1e9+7, n;
+				for(string ss: hold){
+					if(isPalindrom(ss)){
+						if(!st.count(ss)){
+							
+						}
+						st.insert(ss);
+						n = st.size() % mod;
+					}
+				}
+				return (n-1) % mod ;          // decrementing coz it is considering empty sequence as palindrom
+			}
+
+		// Optimized:
+			❌Pending
+
+	967) Maximum Tip Calculator:
+		Problem Statement:
+			In a restaurant, two waiters, A and B, receive n orders per day, earning tips as per arrays arr[i] and brr[i] respectively. If A takes the ith order, the tip is arr[i] rupees; if B takes it, the tip is brr[i] rupees.
+			To maximize total tips, they must distribute the orders such that:
+			A can handle at most x orders
+			B can handle at most y orders
+			Given that x + y ≥ n, all orders can be managed by either A or B. Return the maximum possible total tip after processing all the orders.
+			Examples
+			Input: n = 5, x = 3, y = 3, arr = {1, 2, 3, 4, 5}, brr = {5, 4, 3, 2, 1}
+			Output: 21
+			Explanation: Person A will serve the 3rd, 4th and 5th order while person B will serve the rest so the total tip from A = 3+4+5 & B = 5 + 4 i.e. 21. 
+
+			Input: n = 8, x = 4, y = 4, arr = {1, 4, 3, 2, 7, 5, 9, 6}, brr = {1, 2, 3, 6, 5, 4, 9, 8}
+			Output: 43
+			Explanation: Person A will serve 1st, 2nd, 5th and 6th order while Person B will serve the rest & the total tip will be 43.
+		
+			Input: n = 7, x = 3, y = 4, arr[] = {8, 7, 15, 19, 16, 16, 18}, brr[] = {1, 7, 15, 11, 12, 31, 9}
+			Output: 110
+			Explanation: Person A will serve orders 8,19,18 while person B will serve 7,15, 12 & 31.
+
+			Expected Time Complexity: O(n*logn)
+			Expected Auxiliary Space: O(n)
+
+			Constraints:
+				1 ≤ n ≤ 10^5
+				1 ≤ x, y ≤ n
+				1 ≤ arr[i], brr[i] ≤ 10^9
+
+		class Solution {
+			public:
+			long long maxTip(int n, int x, int y, vector<int> &arr, vector<int> &brr) {
+				long long mxValue=0;
+
+				vector<pair<int, pair<int, int>>> v;
+				for(int i=0; i<n; i++)
+					v.push_back({abs(arr[i]-brr[i]), {arr[i], brr[i]}});
+					
+				sort(v.begin(), v.end(), greater<pair<int, pair<int, int>>>());        // sorting vector of pair is in descending order
+				// sort(v.rbegin(), v.rend());
+				for(int i=0; i<v.size(); i++){
+					if(x == 0){
+						mxValue += v[i].second.second;
+					}else if(y == 0){
+						mxValue += v[i].second.first;
+					}else{
+						if(v[i].second.first > v[i].second.second){
+							mxValue += v[i].second.first;
+							x--;
+						}else{
+							mxValue += v[i].second.second;
+							y--;
+						}
+					}
+				}
+				return mxValue;
+			}
+		};
 	
-	966)
-	
-	967)
-	
-	968)
+	968) 
 	
 	969)
 	
@@ -98795,7 +99258,7 @@ POTD-END
 				}    
 				return abs(leftSum-rightSum);
 			}
-		
+
 	8) Counting Sort 1:
 		Problem Statement:
 			For this exercise, always return a frequency array with 100 elements. 
