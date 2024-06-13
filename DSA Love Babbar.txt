@@ -23082,6 +23082,7 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 		2) Pre-Order
 		3) Post-Order
 		Code: Iterative Approach
+			❌Pending
 
 	Q. Count Leaf Nodes:
 		https://www.naukri.com/code360/problems/count-leaf-nodes_893055
@@ -40640,40 +40641,69 @@ POTD:-[Problem of the Day]
 			return num;
 		}
 	
-	186) Matrix Multiplication: ❌Pending
-		Sample Input 1:
-			1
-			2 1 1 2
-			2
-			0
-			1 2
-			Sample Output 1:
-			2 4
-			0 0
-			Explanation for Sample Output 1:
-			For sample test case 1: 
-			1. MAT3[0][0] = MAT1[0][0] * MAT2[0][0] ie. 2 * 1 = 2
-			2. MAT3[0][1] = MAT1[0][0] * MAT2[0][1] ie. 2 * 2 = 4
-			3. MAT3[1][0] = MAT1[0][1] * MAT2[0][0] ie. 0 * 1 = 0 
-			4. MAT3[1][1] = MAT1[1][1] * MAT2[0][1] ie. 0 * 2 = 0
-			Sample Input 2:
-			2
-			1 1 1 2
-			3
-			1 0
-			1 1 1 1
-			-1
-			7
-			Sample Output 2:
-			3 0
-			-7
-			Explanation for Sample Output 1:
-			For sample test case 1: 
-			1. MAT3[0][0] = MAT1[0][0] * MAT2[0][0] ie. 3 * 1 = 3
-			2. MAT3[0][1] = MAT1[0][0] * MAT2[0][1] ie. 3 * 0 = 0
+	186) Matrix Multiplication:
+		Problem statement:
+			Ninja has been given two sparse matrices ‘MAT1’ and ‘MAT2’ of integers having size ‘N’ x ‘M’ and ‘M’ x ‘P’, respectively.
+			A sparse matrix is a matrix that contains very few non-zero elements.
+			Ninja has to find the matrix formed by the multiplication of ‘MAT1’ and ‘MAT2’. As Ninja is busy with some other tasks so he needs your help. Can you help Ninja to find the matrix formed by the multiplication of ‘MAT1’ and ‘MAT2’?
+			Note: The number of columns in ‘MAT1’ i.e ‘M’ is equal to the number of rows in ‘MAT2’ i.e ‘M’. It means we can always multiply ‘MAT1’ with ‘MAT2’.
+			For example:
+			For the ‘MAT1’ and ‘MAT2’ given below, ‘MAT3’ is the matrix formed by multiplying ‘MAT1’ and ‘MAT2’. 
+				MAT1			MAT2
+				2	1         1		6 
+						⋈   		=
+				0	0		4      	0
 
-			For sample test case 2: 
-			1. MAT3[0][0] = MAT1[0][0] * MAT2[0][0] ie. -1 * 7 = -7
+			1. MAT3[0][0] = MAT1[0][0] * MAT2[0][0] + MAT1[0][1] * MAT2[1][0]  ie. 2 * 1 + 1 * 4 = 6
+			2. MAT3[1][0] = MAT1[1][0] * MAT2[1][0] + MAT1[1][1] * MAT2[1][0] ie. 0 * 6 + 0 * 4 = 0
+			Detailed explanation ( Input/output format, Notes, Images )
+			Input Format:
+			The first line of input contains an integer ‘T’ denoting the number of test cases. Then each test case follows.
+			The first line of each test case contains four space-separated integers ‘N’, ‘M’, ‘M’, ‘P’ where ‘N’ and ‘M’ representing the number of rows and columns of ‘MAT1’ respectively and ‘M’ and ‘P’ representing the number of rows and columns of ‘MAT2’ respectively. 
+			The next ‘N’ lines of each test case contain ‘M’ single space-separated integers denoting the values of ‘MAT1’. Then the next ‘M’ lines contain ‘P’ single space-separated integers denoting the values of ‘MAT2’
+			Output Format :
+			For each test case, return the matrix ‘MAT3’ which will be formed by multiplying ‘MAT1’ and ‘MAT2’.
+			Note:
+			You are not required to print the expected output; it has already been taken care of. Just implement the function.
+			Constraints:
+				1 <= ‘T’ <= 100
+				1 <= ‘N’, ‘M’ and ‘P’ <= 100
+				-10^5 <= ‘MAT1[i][j]’ and ‘MAT2[i][j]’ <= 10^5
+				Time limit: 1 sec
+
+			Sample Input 1:
+				1
+				2 1 1 2
+				2
+				0
+				1 2
+				Sample Output 1:
+				2 4
+				0 0
+				Explanation for Sample Output 1:
+				For sample test case 1: 
+				1. MAT3[0][0] = MAT1[0][0] * MAT2[0][0] ie. 2 * 1 = 2
+				2. MAT3[0][1] = MAT1[0][0] * MAT2[0][1] ie. 2 * 2 = 4
+				3. MAT3[1][0] = MAT1[0][1] * MAT2[0][0] ie. 0 * 1 = 0 
+				4. MAT3[1][1] = MAT1[1][1] * MAT2[0][1] ie. 0 * 2 = 0
+				Sample Input 2:
+				2
+				1 1 1 2
+				3
+				1 0
+				1 1 1 1
+				-1
+				7
+				Sample Output 2:
+				3 0
+				-7
+				Explanation for Sample Output 1:
+				For sample test case 1: 
+				1. MAT3[0][0] = MAT1[0][0] * MAT2[0][0] ie. 3 * 1 = 3
+				2. MAT3[0][1] = MAT1[0][0] * MAT2[0][1] ie. 3 * 0 = 0
+
+				For sample test case 2: 
+				1. MAT3[0][0] = MAT1[0][0] * MAT2[0][0] ie. -1 * 7 = -7
 
 		#include <bits/stdc++.h> 
 		vector<vector<int>> multiplyMatrices(vector<vector<int>> &mat1, vector<vector<int>> &mat2) {
@@ -40689,7 +40719,28 @@ POTD:-[Problem of the Day]
 					}
 				}
 			}
+			return ans;
+		}
 
+		// or
+		#include <bits/stdc++.h> 
+		vector<vector<int>> multiplyMatrices(vector<vector<int>> &mat1, vector<vector<int>> &mat2) {
+			int row1 = mat1.size();
+			int col1 = mat1[0].size();
+
+			int row2 = mat2.size();
+			int col2 = mat2[0].size();
+
+			vector<vector<int>> ans (row1, vector<int>(col2, 0));           // the resultant matrix has rows as mat1 & cols as mat2
+			for(int i=0; i<row1; i++) {
+				for(int j=0; j<col2; j++) {
+					int itr = 0;
+					while(itr < row2) {
+						ans[i][j] += (mat1[i][itr] * mat2[itr][j]);
+						itr++;
+					}
+				}
+			}
 			return ans;
 		}
 	
@@ -78233,6 +78284,25 @@ POTD:-[Problem of the Day]
 
 				return "No";
 			}
+		
+		// or
+			#include <bits/stdc++.h> 
+			string IsFriend( string s1, string s2 ){
+				int n;
+				if(s1.size() < s2.size()){
+					n = s1.size();
+
+				}else{
+					n = s2.size();
+					swap(s1, s2);
+				}
+				
+				for(int i=0; i<n; i++){
+					if(s2.find(s1[i]) != string::npos)
+						return "Yes";
+				}
+				return "No";
+			}
 	
 	692) Count Pairs in an Array:
 		Problem statement:
@@ -80231,7 +80301,7 @@ POTD:-[Problem of the Day]
 				1 <= array[i], a, b <= 10^9
 
 		/* TC: O(n) & SC: O(n)*/
-		class Solution{   
+		class Solution{
 			public:
 			//Function to partition the array around the range such 
 			//that array is divided into three parts.
@@ -89781,6 +89851,18 @@ POTD:-[Problem of the Day]
 			}
 			return mxAns;
 		}
+
+		// or
+		long long maxSubarraySum(vector<int> arr, int n) {
+			long long maxSubValue=0, curValue =0;
+			for(int i=0; i<n; i++){
+				curValue = max((int)arr[i],(int)(curValue + arr[i]));				// curValue = fmax(arr[i],(curValue + arr[i]));		
+																		// either specify its (int) type value or use fmax functino instead
+																		// (int) won't work for long long returntype
+				maxSubValue = max(maxSubValue, curValue);
+			}
+			return maxSubValue;
+		}
 	
 	843) Maximum Subarray Sum:
 		Problem statement
@@ -95921,7 +96003,7 @@ POTD:-[Problem of the Day]
 			return ans;
 		}
 
-	#CodeChef Starters-137
+	#CodeChef Starters-137:
 		928) Election Hopes:
 			https://www.codechef.com/problems/ELHP
 			Problem Statement:
@@ -98783,11 +98865,816 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	968) 
+	968) Sort Colors:
+		Problem Statement:
+			Given an array nums with n objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.
+			We will use the integers 0, 1, and 2 to represent the color red, white, and blue, respectively.
+			You must solve this problem without using the library's sort function.
+			Example 1:
+				Input: nums = [2,0,2,1,1,0]
+				Output: [0,0,1,1,2,2]
+			Example 2:
+				Input: nums = [2,0,1]
+				Output: [0,1,2]
+		
+			Constraints:
+				n == nums.length
+				1 <= n <= 300
+				nums[i] is either 0, 1, or 2.	
+			Follow up: Could you come up with a one-pass algorithm using only constant extra space?
+
+		// Using Selection Sort:
+			class Solution {
+				public:
+				void sortColors(vector<int>& nums) {
+					for(int i=0; i<nums.size(); i++)
+						for(int j=i+1; j<nums.size(); j++)
+							if(nums[i] > nums[j])
+								swap(nums[i], nums[j]);
+				}
+			};
+
+		// sort:
+			class Solution {
+				public:
+				void sortColors(vector<int>& nums) {
+					sort(nums.begin(), nums.end());
+				}
+			};
+
+		// Simpler Counting & Loops
+			class Solution {
+				public:
+				void sortColors(vector<int>& nums) {
+					int zeros, ones;
+					zeros=ones=0;
+					for(int i: nums)
+						if(i==0)
+							zeros++;
+						else if(i == 1)
+							ones++;
+
+					// for(int i=0; i<zeros; i++)
+					//     nums[i] = 0;
+					
+					// for(int i=zeros; i<zeros+ones; i++)
+					//     nums[i] = 1;
+
+					// for(int i=zeros+ones; i<nums.size(); i++)
+					//     nums[i] = 2;
+
+					// or
+					int i=0;
+					while(zeros--)
+						nums[i++] = 0;
+
+					while(ones--)
+						nums[i++] = 1;
+
+					while(i < nums.size())
+						nums[i++] = 2;  
+				}
+			};
 	
-	969)
+		// DNF 0s 1s 2s:
+			class Solution {
+				public:
+				void sortColors(vector<int>& nums) {
+					int low, mid, high;
+					low = mid = 0;
+					high = nums.size()-1;
+
+					while(mid <= high){
+						if(nums[mid] == 0){
+							swap(nums[low], nums[mid]);
+							mid++, low++;
+						}else if(nums[mid] == 2){
+							swap(nums[mid], nums[high]);
+							high--;
+						}else{
+							mid++;
+						}
+					}
+				}
+			};
+
+	969) Count numbers containing 4:
+		Problem Statement:
+			You are given a number n, Return the count of total numbers from 1 to n containing 4 as a digit.
+			Examples:
+				Input: n = 9
+				Output: 1
+				Explanation: 4 is the only number between 1 to 9 which contains 4 as a digit.
+			Input: n = 44
+				Output: 9
+				Explanation: 4, 14, 24, 34, 40, 41, 42, 43 & 44, there are total 9 numbers containing 4 as a digit.
+
+			Expected Time Complexity: O(nlogn)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= n <= 10^5
+
+		Time Complexity (TC): O(nlogn) & Space Complexity (SC): O(1)
+		class Solution {
+			public:
+			int countNumberswith4(int n) {
+				int cnt = 1, ans=0;
+				while(cnt <= n){
+					int curDigit = cnt;
+					while(curDigit){
+						if(curDigit % 10 == 4){
+							ans++;
+							break;
+						}
+						curDigit /= 10;
+					}
+					cnt++;
+				}
+				return ans;
+			}
+		};
+		
+		TC: O(n log(n)) & SC: O(log n)
+			class Solution {
+				public:
+				int countNumberswith4(int n) {
+					int cnt=0;
+					
+					for(int i=1; i<=n; i++){
+						string s = to_string(i);
+						if(s.find('4') != string::npos)
+							cnt++;
+					}
+					return cnt;
+				}
+			};
+
+	970) Sort an array of 0s, 1s and 2s:
+		Problem Statement:
+			Given an array of size N containing only 0s, 1s, and 2s; sort the array in ascending order.
+			Example 1:
+				Input: 
+				N = 5
+				arr[]= {0 2 1 2 0}
+				Output:
+				0 0 1 2 2
+				Explanation:
+				0s 1s and 2s are segregated 
+				into ascending order.
+			Example 2:
+				Input: 
+				N = 3
+				arr[] = {0 1 0}
+				Output:
+				0 0 1
+				Explanation:
+				0s 1s and 2s are segregated 
+				into ascending order.
+
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function sort012() that takes an array arr and N as input parameters and sorts the array in-place.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= N <= 10^6
+				0 <= A[i] <= 2
+
+		Using DNF Algorithm:
+			class Solution {
+				public:
+				void sort012(int a[], int n) {
+					int low, mid, high;
+					low = mid = 0;
+					high = n-1;
+					
+					while(mid <= high){
+						if(a[mid] == 2){
+							swap(a[mid], a[high]);
+							high--;
+						}else if(a[mid] == 0){
+							swap(a[mid], a[low]);
+							mid++, low++;
+						}else{
+							mid++;
+						}
+					}
+				}
+			};
+
+	971) Largest rectangle in a histogram:
+		Problem statement
+			You have been given an array/list 'HEIGHTS' of length ‘N. 'HEIGHTS' represents the histogram and each element of 'HEIGHTS' represents the height of the histogram bar. Consider that the width of each histogram is 1.
+			You are supposed to return the area of the largest rectangle possible in the given histogram.
+			For example :
+			In the below histogram where array/list elements are {2, 1, 5, 6, 2, 3}.
+			The area of largest rectangle possible in the given histogram is 10.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^6
+				0 <= HEIGHTS[i] <= 10^9
+
+				Where ‘T’ is the number of test cases.
+				'N' is the length of the given array/list.
+				And, HEIGHTS[i] denotes the height of the 'ith' histogram bar.
+				Time Limit: 1 sec.
+			Sample Input 1 :
+			2
+			10
+			1 0 1 2 2 2 2 1 0 2 
+			10
+			1 2 1 0 1 1 0 0 2 2 
+			Sample Output 1 :
+			8
+			4
+			Explanation For Sample Input 1 :
+			In the first test case, the area of the largest rectangle of the given histogram is 8 in the rectangle starting from index 4 to index 7 in the given array/list.
+
+			In the second test case, the area of the largest rectangle of the given histogram is 4 in the rectangle starting from index 9 to index 10 in the given array/list.
+			Sample Input 2 :
+			2
+			10
+			8 6 3 5 0 0 4 10 2 5 
+			10
+			6 1 8 10 5 7 0 4 5 8 
+			Sample Output 2 :
+			12
+			20
+			Explanation For Sample Input 2 :
+			In the first test case, the area of the largest rectangle of the given histogram is 12.
+			In the second test case, the area of the largest rectangle of the given histogram is 20.
+
+		// Not Optimized:
+			int largestRectangle(vector<int>& heights) {
+				int mxArea=0;
+				for(int i=0; i < heights.size(); i++){
+					int cnt=1;          // considering the current height.
+					// going backwards
+					for(int j=i-1; j>=0; j--){
+						if(heights[i] > heights[j])
+						break;
+						cnt++;
+					}
+
+					// going forwards
+					for(int j=i+1; j<heights.size(); j++){
+						if(heights[i] > heights[j])
+						break;
+						cnt++;
+					}
+
+					mxArea = max(mxArea, cnt*heights[i]);
+				}
+				return mxArea;
+			}
+
+			// Or
+				int largestRectangleArea(vector<int>& heights) {
+					int mxArea = 0;
+					int n = heights.size();
+					vector<int> nextSmaller(n, 0);
+					vector<int> prevSmaller(n, 0);
+
+					for (int i = 0; i < n; i++) {
+						int cnt = 0;
+						for (int j = i + 1; j < n; j++) {
+						if (heights[i] > heights[j])
+							break;
+						cnt++;
+						}
+						nextSmaller[i] = cnt;
+					}
+
+					for (int i = 0; i < n; i++) {
+						int cnt = 0;
+						for (int j = i - 1; j >= 0; j--) {
+						if (heights[i] > heights[j])
+							break;
+						cnt++;
+						}
+						prevSmaller[i] = cnt;
+					}
+
+					for (int i = 0; i < n; i++) {
+						int curValue = (1 + prevSmaller[i] + nextSmaller[i]) * heights[i];
+						mxArea = max(mxArea, curValue);
+					}
+					return mxArea;
+				}
+
+		// Optimized: Using logic of Next Greater Element & stack
+			❌Pending practice
+
+	972) Subarray with distinct integers:
+		Problem statement
+			You are given an array/list 'ARR' consisting of 'N' integers and an integer 'B'. A non-empty subarray of 'ARR' is good if it contains exactly 'B' distinct integers.
+			Your task is to return the number of good subarrays in the given array/list.
+			Example:
+			For 'ARR' = [1, 2, 1, 3, 2, 4] and 'B' = 3, one of the good subarrays which contains three distinct integers is [1, 2, 1, 3]. 
+			Note:
+			An array 'C' is a subarray of array 'D' if it can be obtained by deletion of several elements(possibly zero) from the beginning and the end from array 'D'.
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 5000
+				1 <= B <= N
+				1 <= ARR[i] <= 10^9
+				Time Limit: 1sec
+			Sample Input 1 :
+				2
+				5 2 
+				1 2 1 2 3
+				5 3
+				1 2 1 3 4
+				Sample Output 1:
+				7
+				3
+				Explanation for Sample 1:
+				All good subarrays in test case 1 are [1, 2], [2, 1], [1, 2], [2, 3], [1, 2, 1], [2, 1, 2], [1, 2, 1, 2].
+
+				All good subarrays in test case 2 are [1, 2, 1, 3], [2, 1, 3], [1, 3, 4]. So the total good subarray are 3.
+				Sample Input 2 :
+				1
+				5 5
+				1 2 1 3 4
+				Sample Output 2 :
+				0
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			int goodSubarrays(vector<int>& arr, int n, int b) {
+				int cnt=0;
+				for(int i=0; i<n; i++){
+					set<int> s;
+					for(int j=i; j<n; j++){
+						s.insert(arr[j]);
+						if(s.size() == b)
+							cnt++;
+							
+						if(s.size() > b)
+							break;
+					}
+				}
+				return cnt;
+			}
+
+		// Optimized:
+			❌Pending
 	
-	970)
+	973) Reverse The Groups:
+		Problem statement
+			You are given a stack 'S', of size 'N' consisting of integers only. You are also given an integer 'K'. You are supposed to reverse each group of size 'K' in the stack.
+			Start making the group of size 'K' from the top of the stack and then reverse this group. Repeat this process and if there are fewer than 'K' integers in the last group, leave the group as it is.
+			Print the stack after reversing each group of size 'K'.
+			Example :
+			'S' = {1, 2, 3, 4, 5, 6}, 'K' = 2.
+			The leftmost element (i.e. 1) is the bottommost element of the stack, and the rightmost element (i.e. 6) is the topmost element of the stack.
+
+			Group 1 : {5, 6}.
+			Group 2 : {3, 4}.
+			Group 3 : {1, 2}.
+
+			After reversing the groups :
+
+			Group 1 : {6, 5}.
+			Group 2 : {4, 3}.
+			Group 3 : {2, 1}.
+
+			So, the stack now looks like , 'S' : {2, 1, 4, 3, 6, 5}.
+			Constraints :
+				1 <= T <= 10
+				1 <= N, K <= 10^5
+				1 <= S[i] <= 10^5
+
+			The Sum of 'N' over all test cases is <= 10^5.
+			Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				4 4
+				2 4 6 8
+				8 3
+				1 3 5 7 9 11 13 15
+				Sample Output 1 :
+				8 6 4 2
+				1 3 9 7 5 15 13 11
+				Explanation Of Sample Input 1 :
+				For test 1:
+
+				There is only one group of size 4 which is {2, 4, 6, 8}.
+				After reversing the group, it becomes {8, 6, 4, 2}.
+				The final stack is : {8, 6, 4, 2}.
+
+				For test 2:
+
+				There are two groups of size 3 and one group of size < 3.
+				Group 1 : {11, 13, 15}.
+				Group 2 : {5, 7, 9}.
+				Group 3 : {1, 3}.
+
+				After reversing the groups:
+				Group 1 : {15, 13, 11}.
+				Group 2 : {9, 7, 5}.
+				Group 3 : {1, 3}. This group is not reversed as its size is < 'K'.
+
+				The final stack is : {1, 3, 9, 7, 5, 15, 13, 11}.    
+				Sample Input 2 :
+				2
+				3 1
+				9 7 8
+				4 3
+				1 7 6 5
+				Sample Output 2 :
+				9 7 8
+				1 5 6 7
+
+		#include <bits/stdc++.h> 
+		stack<int> reverseTheGroups(stack<int> &s, int n, int k) {
+			if(k == 1)
+				return s;
+
+			vector<int> v;
+			while(!s.empty()){
+				v.push_back(s.top());
+				s.pop();
+			}
+
+			vector<int> temp;
+			stack<vector<int>> sample;
+			for(int i=0; i<v.size(); i++){
+				temp.push_back(v[i]);
+				if(temp.size() >= k){
+					sample.push(temp);
+					temp.clear();
+				}
+			}
+
+			if(!temp.empty())
+				sample.push(temp);
+
+			while(!sample.empty()){
+				vector<int> cur = sample.top();
+				if(cur.size() % k != 0){
+					reverse(cur.begin(), cur.end());
+					int i=0;
+					while(i<cur.size()){
+						s.push(cur[i++]);
+					}
+				}else{
+					int i=0;
+					while(i < cur.size()){
+						s.push(cur[i++]);
+					}
+				}
+				sample.pop();
+			}
+			return s;
+		}
+	
+	#CN BeginnerContest-62:
+		974) Find Min-Max:
+			Problem statement
+				You are given '4' integers 'A', 'B', 'C', and 'D'.
+				As you like maximum and minimum elements from these, you want to find the sum of them.
+				Return the integer denoting the sum of every element which is either minimum or maximum among 'A', 'B', 'C', and 'D'.
+				Example:
+				A = 4
+				B = 5
+				C = 1
+				D = 5
+				We can see that 'B' and 'D' are the maximum and 'C' is a minimum element among 'A', 'B', 'C', and 'D'. The sum of these elements is '5 + 5 + 1' = '11'.
+				So, the answer for this case is '11'.
+				Constraints:
+					1 <= 'T' <= 10
+					-10^8 <= 'A', 'B', 'C', 'D' <= 10^8
+
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					4 1 4 1
+					1 2 3 4
+					Sample output 1:
+					10
+					5
+					Explanation of sample input 1:
+					For test case 1:
+					We can see that 'A' and 'C' are the maximum and 'B' and 'D' are the minimum elements among 'A', 'B', 'C', and 'D'. The sum of these elements is '4 + 4 + 1 + 1' = '10'.
+					So, the answer for this case is '10'.
+
+					For test case 2:
+					We can see that 'D' is the maximum and 'A' is the minimum element among 'A', 'B', 'C', and 'D'. The sum of these elements is '1 + 4' = '5'.
+					So, the answer for this case is '5'.
+					Sample input 2:
+					2
+					1 -3 1 1
+					5 4 -2 5
+					Sample output 2:
+					0
+					8
+
+			// #include<bits/stdc++.h>
+			int minMaxSum(int a, int b, int c, int d) {
+				int sum =0;
+				vector<int> z {a,b,c,d};
+				int mn = *min_element(z.begin(), z.end());
+				int mx = *max_element(z.begin(), z.end());
+
+				for(int i: z){
+					if(i == mn)
+						sum += i;
+					else if(i == mx)
+						sum += i;
+				}
+				return sum;
+			}
+		
+		975) Dice game:
+			Problem statement
+				You have a die of six sides numbered from '0' to '5'.
+				You are given an array 'A' of '6' integers, where 'A[i]' is the integer written on the side 'i' of the die.
+				In one operation, you can choose any two sides 'i' and 'j' of the die and swap the integers written on them.
+				Let's call a die perfect if, for each pair of opposite sides, the integers written on them are equal.
+				Note that side '0' is opposite of side '3', side '1' is opposite of side '4', and side '2' is opposite of side '5'.
+				You are required to find the minimum number of operations you must perform to make the die perfect. It is guaranteed that you can always make the die perfect.
+				Example:
+				A = [1, 2, 1, 1, 1, 2]
+				In one operation, you can select sides '1' and '2'. So, the resulting array ['1', '1', '2', '1', '1', '2'] represents a perfect die.
+				It can be proved that you can not make die perfect in less than '1' operation.
+				So, the answer for this case is '1'.
+				Detailed explanation ( Input/output format, Notes, Images )
+				Constraints:
+					1 <= 'A[i]' <= 10
+					It is guaranteed that input is given in such a way that you can always make the die perfect.
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					1 2 3 1 2 3
+					10 2 2 2 2 10
+					Sample output 1:
+					0
+					1
+					Explanation of sample input 1:
+					For test case 1:
+					We can see that the given array already represents perfect die.
+					So, the answer for this case is '0'.
+
+					For test case 2:
+					In one operation, you can select sides '3' and '5'. So, the resulting array ['10', '2', '2', '10', '2', '2'] represents a perfect die.
+					It can be proved that you can not make die perfect in less than '1' operation.
+					So, the answer for this case is '1'.
+					Sample input 2:
+					2
+					1 1 2 2 3 3 
+					1 2 2 1 3 3
+					Sample output 2:
+					2
+					1
+
+			int minimumOperations(vector<int> &v) {
+				if(v[0] == v[3] && v[1] == v[4] && v[2] == v[5])
+					return 0;
+				else if(v[0] == v[3] or v[1] == v[4] or v[2] == v[5])
+					return 1;
+				else
+					return 2;
+			}
+
+	#CodeChef Starters-138:
+	976) 
+	
+	977) Minimum Number of Moves to Seat Everyone:
+		Problem Statement:
+			There are n seats and n students in a room. You are given an array seats of length n, where seats[i] is the position of the ith seat. You are also given the array students of length n, where students[j] is the position of the jth student.
+			You may perform the following move any number of times:
+			Increase or decrease the position of the ith student by 1 (i.e., moving the ith student from position x to x + 1 or x - 1)
+			Return the minimum number of moves required to move each student to a seat such that no two students are in the same seat.
+			Note that there may be multiple seats or students in the same position at the beginning.
+	
+			Example 1:
+				Input: seats = [3,1,5], students = [2,7,4]
+				Output: 4
+				Explanation: The students are moved as follows:
+				- The first student is moved from from position 2 to position 1 using 1 move.
+				- The second student is moved from from position 7 to position 5 using 2 moves.
+				- The third student is moved from from position 4 to position 3 using 1 move.
+				In total, 1 + 2 + 1 = 4 moves were used.
+
+			Example 2:
+				Input: seats = [4,1,5,9], students = [1,3,2,6]
+				Output: 7
+				Explanation: The students are moved as follows:
+				- The first student is not moved.
+				- The second student is moved from from position 3 to position 4 using 1 move.
+				- The third student is moved from from position 2 to position 5 using 3 moves.
+				- The fourth student is moved from from position 6 to position 9 using 3 moves.
+				In total, 0 + 1 + 3 + 3 = 7 moves were used.
+
+			Example 3:
+				Input: seats = [2,2,6,6], students = [1,3,2,6]
+				Output: 4
+				Explanation: Note that there are two seats at position 2 and two seats at position 6.
+				The students are moved as follows:
+				- The first student is moved from from position 1 to position 2 using 1 move.
+				- The second student is moved from from position 3 to position 6 using 3 moves.
+				- The third student is not moved.
+				- The fourth student is not moved.
+				In total, 1 + 3 + 0 + 0 = 4 moves were used.
+
+			Constraints:
+				n == seats.length == students.length
+				1 <= n <= 100
+				1 <= seats[i], students[j] <= 100
+
+		class Solution {
+			public:
+			int minMovesToSeat(vector<int>& seats, vector<int>& students) {
+				ios_base::sync_with_stdio(0);
+				cin.tie(0);
+				cout.tie(0);
+				
+				sort(seats.begin(), seats.end());
+				sort(students.begin(), students.end());
+
+				int n = seats.size();
+				int cnt=0;
+				for(int i=0; i<n ; i++) {
+					if(students[i] != seats[i])
+						cnt += abs(students[i] - seats[i]);
+				}
+				return cnt;
+			}
+		};
+	
+	978) Padovan Sequence
+		Problem Statement:
+			Given a number n, find the nth number in the Padovan Sequence.
+			A Padovan Sequence is a sequence which is represented by the following recurrence relation
+			P(n) = P(n-2) + P(n-3)
+			P(0) = P(1) = P(2) = 1
+			Note: Since the output may be too large, compute the answer modulo 10^9+7.
+			Examples :
+				Input: n = 3
+				Output: 2
+				Explanation: We already know, P1 + P0 = P3 and P1 = 1 and P0 = 1
+			Input: n = 4
+			Output: 2
+			Explanation: We already know, P4  = P2 + P1 and P2 = 1 and P1 = 1
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= n <= 10^6
+
+		// Not Optimized: TC: O(2^n) SC: O(n)
+			class Solution {
+				public:
+				int mod = 1e9+7;
+				int padovanSequence(int n) {
+					if(n == 0 or n == 1 or n == 2)
+						return 1;
+					return (padovanSequence(n-2) + padovanSequence(n-3)) % mod;
+				}	
+			};
+
+		// Optimized:
+			Time Complexity (TC): O(n)  & Space Complexity (SC): O(n)
+				class Solution {
+					public:
+					int padovanSequence(int n) {
+						vector<int> v {1, 1, 1};
+						int mod = 1e9+7;
+						
+						if(n == 1)
+							return v[0];
+						else if(n == 2)
+							return v[1];
+						else{
+							for(int i=3; i<=n; i++){
+								int val = v[i-2] + v[i-3];
+								val %= mod;
+								v.push_back(val);
+							}
+						}
+						return v.back();
+					}
+				};
+
+			Time Complexity (TC): O(n)  & Space Complexity (SC): O(1)
+				class Solution {
+					public:
+					int padovanSequence(int n) {
+						int mod = 1e9+7;
+						if(n == 1 or n == 2)
+							return 1;
+						
+						int last, secondLast, thirdLast;
+						last = secondLast = thirdLast = 1;
+						for(int i=3; i<=n; i++){
+							int val = secondLast + thirdLast;
+							thirdLast = secondLast;
+							secondLast = last;
+							last = val % mod;
+						}
+						return last;
+					}
+				};
+		
+	979) Return Subsets Sum to K:
+		Problem statement
+			Given an integer array 'ARR' of size 'N' and an integer 'K', return all the subsets of 'ARR' which sum to 'K'.
+			Subset of an array 'ARR' is a tuple that can be obtained from 'ARR' by removing some (possibly all) elements of 'ARR'.
+			Note :
+			The order of subsets is not important. 
+			The order of elements in a particular subset should be in increasing order of the index.
+			Constraints:
+				1 <= 'N' <= 16
+				- (10 ^ 6) <= ARR[i] <= (10 ^ 6)
+				- 16 * (10 ^ 6) <= 'K' <= 16 * (10 ^ 6)
+				Where ‘ARR[i]’ denotes the value for ‘ith’ element of the array ‘ARR’ and 'K' is the given sum.
+				Time Limit: 1 sec.
+
+			Sample Input 1:
+				3
+				2 4 6
+				6
+				Sample Output 1:
+				2 4
+				6
+				Explanation of the Sample Input 1:
+				For the array'ARR' = {2, 4, 6}, we can have subsets {}, {2}, {4}, {6}, {2, 4}, {2, 6}, {4, 6}, {2, 4, 6}. Out of these 8 subsets, {2, 4} and {6} sum to the given 'K' i.e. 6. 
+				Sample Input 2:
+				6 
+				5 -1 8 2 7 0
+				7
+				Sample Output 2:
+				-1 8 
+				-1 8 0 
+				5 2 
+				5 2 0 
+				7 
+				7 0 
+
+		void Generate(vector<int> &main, vector<int> curSeq, vector<vector<int>> &ans, int i){
+			if(i >= main.size()){
+				ans.push_back(curSeq);        
+				return;
+			}
+
+			Generate(main, curSeq, ans, i+1);
+			
+			curSeq.push_back(main[i]);
+			Generate(main, curSeq, ans, i+1);
+		}
+
+		vector<vector<int>> findSubsetsThatSumToK(vector<int> arr, int n, int k) {
+			vector<vector<int>> allSequence;
+			vector<int> eachSeq;
+			Generate(arr, eachSeq, allSequence, 0);
+
+			vector<vector<int>> sumToK;
+			for(auto row: allSequence){
+				int sum = 0;
+				for(int i: row)
+					sum += i;
+
+				if(sum == k)
+					sumToK.push_back(row);
+			}
+			return sumToK;
+		}
+
+		// or
+			void Generate(vector<int> &main, vector<int> curSeq, vector<vector<int>> &ans, int i, int k){
+				if(i >= main.size()){
+					int sum = 0;
+					for(int i: curSeq)
+						sum += i;
+					if(sum == k)
+						ans.push_back(curSeq);
+					return;
+				}
+
+				Generate(main, curSeq, ans, i+1, k);
+				
+				curSeq.push_back(main[i]);
+				Generate(main, curSeq, ans, i+1, k);
+			}
+			
+			vector<vector<int>> findSubsetsThatSumToK(vector<int> arr, int n, int k) {
+				vector<vector<int>> allSequence;
+				vector<int> eachSeq;
+				Generate(arr, eachSeq, allSequence, 0, k);
+				
+				return allSequence;
+			}
+
+	#CN WeeklyContest-130:
+		980) 
+		
+		981)
+	
+	982)
 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
