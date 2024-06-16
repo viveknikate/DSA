@@ -100243,12 +100243,724 @@ POTD:-[Problem of the Day]
 			return -1;
 		}
 
-	988)
+	988) IPO:
+		Problem Statement:
+			Suppose LeetCode will start its IPO soon. In order to sell a good price of its shares to Venture Capital, LeetCode would like to work on some projects to increase its capital before the IPO. Since it has limited resources, it can only finish at most k distinct projects before the IPO. Help LeetCode design the best way to maximize its total capital after finishing at most k distinct projects.
+			You are given n projects where the ith project has a pure profit profits[i] and a minimum capital of capital[i] is needed to start it.
+			Initially, you have w capital. When you finish a project, you will obtain its pure profit and the profit will be added to your total capital.
+			Pick a list of at most k distinct projects from given projects to maximize your final capital, and return the final maximized capital.
+			The answer is guaranteed to fit in a 32-bit signed integer.
+			
+			Example 1:
+				Input: k = 2, w = 0, profits = [1,2,3], capital = [0,1,1]
+				Output: 4
+				Explanation: Since your initial capital is 0, you can only start the project indexed 0.
+				After finishing it you will obtain profit 1 and your capital becomes 1.
+				With capital 1, you can either start the project indexed 1 or the project indexed 2.
+				Since you can choose at most 2 projects, you need to finish the project indexed 2 to get the maximum capital.
+				Therefore, output the final maximized capital, which is 0 + 1 + 3 = 4.
+			Example 2:
+				Input: k = 3, w = 0, profits = [1,2,3], capital = [0,1,2]
+				Output: 6
+			
+			Constraints:
+				1 <= k <= 10^5
+				0 <= w <= 10^9
+				n == profits.length
+				n == capital.length
+				1 <= n <= 10^5
+				0 <= profits[i] <= 10^4
+				0 <= capital[i] <= 10^9
 
-	989)
+		TC : O(NLogN + KLogN) & SC: O(N)
+			class Solution {
+				public:
+				int findMaximizedCapital(int k, int w, vector<int>& profits, vector<int>& capital) {
+					vector<pair<int, int>> v;
+					// we need to sort based on capital, coz if we don't have enough capital then 
+					// we can't buy that ith project & project after ith index.
+					ios_base::sync_with_stdio(0);
+					cin.tie(0);
+					cout.tie(0);
+					
+					int n = profits.size();
+					for(int i=0; i<n; i++)
+						v.push_back({capital[i], profits[i]});
 
-	990)
+					sort(v.begin(), v.end());               // this sort function sorts the v based on first value ie. capital's value
 
+					int i=0;
+					priority_queue<int> pq;
+
+					while(k--){
+
+						while(i < n && w >= v[i].first){
+							pq.push(v[i].second);               // selecting project which we can afford
+							i++;
+						}
+
+						if(pq.empty()){
+							break;                          // we can't even afford a single project with current money, so stoping here.
+						}
+						w += pq.top();                  // selecting project which gives us more profit
+						pq.pop();                       // removing selected projects
+					}
+					return w;
+				}
+			};
+
+	#AtCoder BeginnerContest-358:
+		989) Welcome to AtCoder Land:
+			Problem Statement:
+				Takahashi is heading to AtCoder Land. There is a signboard in front of him, and he wants to determine whether it says AtCoder Land.
+				You are given two strings S and T separated by a space. Determine whether S= AtCoder and T= Land.
+				Constraints
+				S and T are strings consisting of uppercase and lowercase English letters, with lengths between 1 and 10, inclusive.
+				Input
+				The input is given from Standard Input in the following format: S T
+				Output
+				If S= AtCoder and T= Land, print Yes; otherwise, print No.
+
+				Sample Input 1
+				AtCoder Land
+				Sample Output 1
+				Yes
+				S= AtCoder and 
+				T= Land.
+
+				Sample Input 2
+				CodeQUEEN Land
+				Sample Output 2
+				No
+				S is not AtCoder.
+
+				Sample Input 3
+				aTcodeR lANd
+				Sample Output 3
+				No
+				Uppercase and lowercase letters are distinguished.
+
+			#include <iostream>
+			using namespace std;
+			int main() {
+				string s, t;
+				cin>>s>>t;
+				
+				if(s == "AtCoder" && t == "Land")
+					cout<<"Yes";
+				else
+					cout<<"No";
+				return 0;
+			}
+
+		990) Ticket Counter:
+			Problem Statement:
+				At the entrance of AtCoder Land, there is a single ticket booth where visitors line up to purchase tickets one by one. The purchasing process takes 
+				A seconds per person. Once the person at the front of the line finishes purchasing their ticket, the next person (if any) immediately starts their purchasing process.
+				Currently, there is no one in line at the ticket booth, and N people will come to buy tickets one after another. Specifically, the 
+				i-th person will arrive at the ticket booth Ti seconds from now. If there is already a line, they will join the end of it; if not, they will start the purchasing process immediately.
+				Here, 
+					T1 < T2 < ⋯ < TN.
+
+				For each i (1≤i≤N), determine how many seconds from now the i-th person will finish purchasing their ticket.
+				Constraints
+				1≤N≤100
+				0 ≤ T1 < T2 < ⋯ < TN ≤ 10^6
+				1≤ A ≤ 10^6
+				
+				All input values are integers.
+				Input
+				The input is given from Standard Input in the following format:
+
+				N A 
+				T1 T2 … TN			
+				Output
+					Print N lines. The i-th line should contain the number of seconds from now that the 
+					i-th person will finish purchasing their ticket.
+
+				Sample Input 1
+				3 4
+				0 2 10
+				Sample Output 1
+				4
+				8
+				14
+				The events proceed in the following order:
+
+				At 0 seconds: The 1st person arrives at the ticket booth and starts the purchasing process.
+				At 2 seconds: The 2nd person arrives at the ticket booth and joins the line behind the 1st person.
+				At 4 seconds: The 1st person finishes purchasing their ticket, and the 2nd person starts the purchasing process.
+				At 8 seconds: The 2nd person finishes purchasing their ticket.
+				At 10 seconds: The 3rd person arrives at the ticket booth and starts the purchasing process.
+				At 14 seconds: The 3rd person finishes purchasing their ticket.
+				Sample Input 2
+				3 3
+				1 4 7
+				Sample Output 2
+				4
+				7
+				10
+				The events proceed in the following order:
+				At 1 second: The 1st person arrives at the ticket booth and starts the purchasing process.
+				At 4 seconds: The 1st person finishes purchasing their ticket, and the 2nd person arrives at the ticket booth and starts the purchasing process.
+				At 7 seconds: The 2nd person finishes purchasing their ticket, and the 3rd person arrives at the ticket booth and starts the purchasing process.
+				At 10 seconds: The 3rd person finishes purchasing their ticket.
+				Sample Input 3
+				10 50000
+				120190 165111 196897 456895 540000 552614 561627 743796 757613 991216
+				Sample Output 3
+				170190
+				220190
+				270190
+				506895
+				590000
+				640000
+				690000
+				793796
+				843796
+				1041216
+
+			#include <iostream>
+			#include<vector>
+			using namespace std;
+			int main() {
+				int n, A;
+				cin>>n>>A;
+				vector<int> v(n);
+				for(int i=0; i<n; i++)
+					cin>>v[i];
+					
+				vector<int> ans = {A+v[0]};
+				
+				for(int i=1; i<n; i++){
+					if(v[i] < ans.back()){
+						ans.push_back(ans.back()+A);
+					}else{
+						ans.push_back(v[i]+A);
+					}
+				}
+				
+				for(int i: ans)
+					std::cout << i << " ";
+				return 0;
+			}
+
+	#LeetCode WeeklyContest-402:
+		991) Count Pairs That Form a Complete Day I:
+			Problem Statement:
+				Given an integer array hours representing times in hours, return an integer denoting the number of pairs i, j where i < j and hours[i] + hours[j] forms a complete day.
+				A complete day is defined as a time duration that is an exact multiple of 24 hours.
+				For example, 1 day is 24 hours, 2 days is 48 hours, 3 days is 72 hours, and so on.
+
+				Example 1:
+					Input: hours = [12,12,30,24,24]
+					Output: 2
+					Explanation:
+					The pairs of indices that form a complete day are (0, 1) and (3, 4).
+
+				Example 2:
+					Input: hours = [72,48,24,3]
+					Output: 3
+					Explanation:
+					The pairs of indices that form a complete day are (0, 1), (0, 2), and (1, 2).
+			
+				Constraints:
+					1 <= hours.length <= 100
+					1 <= hours[i] <= 10^9
+
+			class Solution {
+				public:
+				int countCompleteDayPairs(vector<int>& hours) {
+					int cnt=0;
+					for(int i=0; i<hours.size()-1; i++){
+						for(int j=i+1; j<hours.size(); j++){
+							if((hours[i]+hours[j]) % 24 == 0)
+								cnt++;
+						}
+					}
+					return cnt;
+				}
+			};
+
+		992) Count Pairs That Form a Complete Day II:
+			Problem Statement:
+				Given an integer array hours representing times in hours, return an integer denoting the number of pairs i, j where i < j and hours[i] + hours[j] forms a complete day.
+				A complete day is defined as a time duration that is an exact multiple of 24 hours.
+				For example, 1 day is 24 hours, 2 days is 48 hours, 3 days is 72 hours, and so on.
+				
+				Example 1:
+					Input: hours = [12,12,30,24,24]
+					Output: 2
+					Explanation: The pairs of indices that form a complete day are (0, 1) and (3, 4).
+				Example 2:
+					Input: hours = [72,48,24,3]
+					Output: 3
+					Explanation: The pairs of indices that form a complete day are (0, 1), (0, 2), and (1, 2).
+
+				Constraints:
+					1 <= hours.length <= 5 * 10^5
+					1 <= hours[i] <= 10^9
+
+			// Not Optimized:
+				class Solution {
+					public:
+					long long countCompleteDayPairs(vector<int>& hours) {
+						long long cnt =0;
+						int n = hours.size();
+						for(int i=0; i<n; i++){
+							for(int j=i+1; j<n; j++){
+								if((hours[i] + hours[j]) % 24 ==0 )
+									cnt++;
+							}
+						}
+						return cnt;
+					}
+				};
+		
+			// Optimized:
+				❌Pending
+	
+		993) Peaks in Array:
+			Problem Statement:
+				A peak in an array arr is an element that is greater than its previous and next element in arr.
+				You are given an integer array nums and a 2D integer array queries.
+				You have to process queries of two types:
+				queries[i] = [1, li, ri], determine the count of peak elements in the subarray nums[li..ri].
+				queries[i] = [2, indexi, vali], change nums[indexi] to vali.
+				Return an array answer containing the results of the queries of the first type in order.
+				Notes:
+				The first and the last element of an array or a subarray cannot be a peak.
+				Example 1:
+					Input: nums = [3,1,4,2,5], queries = [[2,3,4],[1,0,4]]
+					Output: [0]
+					Explanation:
+					First query: We change nums[3] to 4 and nums becomes [3,1,4,4,5].
+					Second query: The number of peaks in the [3,1,4,4,5] is 0.
+
+				Example 2:
+					Input: nums = [4,1,4,2,1,5], queries = [[2,2,4],[1,0,2],[1,0,4]]
+					Output: [0,1]
+					Explanation:
+					First query: nums[2] should become 4, but it is already set to 4.
+					Second query: The number of peaks in the [4,1,4] is 0.
+					Third query: The second 4 is a peak in the [4,1,4,2,1].
+				Constraints:
+					3 <= nums.length <= 10^5
+					1 <= nums[i] <= 10^5
+					1 <= queries.length <= 10^5
+					queries[i][0] == 1 or queries[i][0] == 2
+					For all i that:
+					queries[i][0] == 1: 0 <= queries[i][1] <= queries[i][2] <= nums.length - 1
+					queries[i][0] == 2: 0 <= queries[i][1] <= nums.length - 1, 1 <= queries[i][2] <= 10^5
+
+			// Not Optimized:
+				class Solution {
+					public:
+					vector<int> countOfPeaks(vector<int>& nums, vector<vector<int>>& queries) {
+						vector<int> peakCnt;
+						int q = queries.size();
+						
+						for(int i=0; i<q; i++){
+							int first = queries[i][0];
+							if(first == 1){
+								int start = queries[i][1], end = queries[i][2];
+								int cnt =0;
+								
+								for(int z=start+1; z <= end-1; z++){
+									if(nums[z-1] < nums[z] && nums[z] > nums[z+1])
+									cnt++;
+								}
+								
+								peakCnt.push_back(cnt);
+							}else{
+								nums[queries[i][1]] = queries[i][2];
+							}
+						}
+						
+						return peakCnt;
+					}
+				};
+
+			// Optimized:
+				❌Pending
+
+	#GFG Weekly-159:
+		994) Sorting Items:
+			Problem Statement:
+				In Geekland, each item has a unique identifier made up of uppercase English letters (A-Z). Here's how the identifiers work:
+				'A' represents the number 1
+				'B' represents the number 2
+				...
+				'Z' represents the number 26
+				'AA' represents the number 27
+				'AB' represents the number 28
+				...
+				'ZZ' represents the number 702
+				'AAA' represents the number 703 and so on...
+				You are given n identifiers sort these identifiers in ascending order based on their numeric values.
+
+				Example 1:
+					Input:
+					n = 5
+					items[] = {D, C, B, ABC, AA}
+					Output: B C D AA ABC
+					Explanation: 
+					B = 2,
+					C = 3
+					D = 4,
+					AA = 27
+					ABC = 731
+
+				Example 2:
+					Input:
+					n = 5
+					items[] = {DD, A, B, ZZ, ABCDE}
+					Output: A B DD ZZ ABCDE
+					Explanation: 
+					A = 1
+					B = 2
+					DD = (4 * 26) + 4 = 108
+					ZZ = (26 * 26) + 26 = 702
+					ABCDE = (1 * 264) + (2 * 263) + (3 * 262) + (4 * 261) + (5 * 260) = 494265
+
+				Your Task:
+					You don't read input or print anything; you need to complete the function sortItems which has an integer n and a string array items[] as an argument passed to it. The function should return the array sorted in ascending order based on their numeric values as described. Each identifier is a unique combination of uppercase English letters ('A'-'Z').
+
+				Constraints:
+					1 <= n <= 10^5
+					1 <= items[i].length <= 10
+					items array consists of uppercase English letters only.
+
+			class Solution {
+				public:
+				long long VALUE(string &s){
+					long long cost=0;
+					
+					for(char ch: s){
+						cost = (cost*26 + (ch - 'A' + 1));
+					}
+					
+					return cost;
+				}
+				
+				vector<string> sortItems(int n, vector<string> &items) {
+					vector<pair<long long, string>> StringValue;
+					for(string s: items)
+						StringValue.push_back({VALUE(s), s});
+					
+					
+					sort(StringValue.begin(), StringValue.end());
+					items.clear();
+					for(auto i: StringValue)
+						items.push_back(i.second);
+					return items;
+				}
+			};
+			
+			// or Using multiset:
+				class Solution {
+					public:
+					vector<string> sortItems(int n, vector<string> &items) {
+						map<int, multiset<string>> mp;
+						for(auto s: items)
+							mp[s.size()].insert(s);
+						
+						vector<string> v;
+						for(auto i: mp)
+							for(auto j: i.second)
+								v.push_back(j);
+						
+						return v;
+					}
+				};
+
+		995) Bridge on Bits:
+			Problem Statement:
+				Given an array arr of length n, the task is to construct a bridge from arr[0] to arr[n-1], bridge between all the numbers in the array is said to be complete if for any ith bit all the number in the array arr have there ith bit set. In one operation you can flip any bit of a number in the array, if the bit is 0 make it 1 or vice versa, your task is to return the minimum number of operations required to construct a bridge.
+				Example 1:
+					Input:
+					n = 5
+					arr = {1,2,3,4,5}
+					Output: 2
+					Explanation:
+					Initially there is no bridge between the numbers, current state looks like:
+					arr[0] = 001(binary representation)
+					arr[1] = 010
+					arr[2] = 011
+					arr[3] = 100
+					arr[4] = 101
+
+					After performing the flipping operation, arr[1] and arr[3] gets converted to 3 and 5. Now the state looks like:
+					arr[0] = 001
+					arr[1] = 011
+					arr[2] = 011
+					arr[3] = 101
+					arr[4] = 101
+					There is a bridge between all the numbers through 0th bit. This state requires minimum number of operations.
+
+				Example 2:
+					Input:
+					n = 3
+					arr = {6,2,3}
+					Output: 0
+					Explanation:
+					arr[0] = 110(binary representation)
+					arr[1] = 010
+					arr[2] = 011
+					There is already a bridge between the elements through 1st bit, hence no operation required.
+
+				Your Task:
+					You need to complete a function makeBridgeOne() which takes an  integer n and an integer array arr[] as parameter and return the minimum number of operations required to construct a bridge from arr[0] to arr[n-1].
+
+				Constraints:
+					1 <= n <= 10^5
+					1 <= arr[i] <= 10^18
+
+			class Solution {
+				public:
+				int makeBridgeOne(int n, vector<long long> &arr) {
+					int min_cost = INT_MAX;
+					
+					for(int i=0; i<63; i++){         // taken 63 coz its long long, & have size of 64, so checking all bits & taking min number of unset bits
+						int curCost=0;
+						for(int z=0; z<n; z++){
+							long long mask = 1;
+							if(!((mask << i) & arr[z]))                // if its zero then increment cur_cost by one.		// if(!((1L << i) & arr[z])) 
+								curCost++;
+						}
+						min_cost = min(min_cost, curCost);
+					}
+					
+					return min_cost;
+				}
+			};
+
+		996) Candy Distribution And Geeks' Queries:
+			Problem Statement:
+				Geek is distributing candies among n childern who are standing in a straight line. Geek is taking help of a robot for distributing candies. It distributes candies for m minutes. During each minute, robot chooses a segment of students [a[i][0], a[i][1]] (1 <= a[i][0] <= a[i][1] <= n and 0 <= i < m) both inclusive and gives a[i][2] candies to each child in that segment. After robot has distributed the candies, Geek asks you q queries. In each query there will be an integer query[i] (0 <= i < q), you have to find how many childern have atleast query[i] candies.
+				Example 1:
+					Input:
+					n = 3, m = 2, q = 2
+					a = [[2, 3, 4], [3, 3, 1]]
+					query = [5, 6]
+					Output:
+					1 0
+					Explanation:
+					Number of candies with childern:
+					After 1st minute, [0, 4, 4].
+					After 2nd minute, [0, 4, 5].
+					So the answer
+					to query[0] will be 1, 
+					and that to query[1] will be 0. 
+
+				Example 2:
+					Input:
+					n = 4, m = 3, q = 4
+					a = [[2, 3, 2], [1, 1, 1], [1, 4, 3]]
+					query = [3, 4, 5, 6]
+					Output:
+					4 3 2 0
+					Explanation:
+					Number of candies with childern:
+					After 1st minute, [0, 2, 2, 0].
+					After 2nd minute, [1, 2, 2, 0].
+					After 3rd minute, [4, 5, 5, 3].
+					So the answer
+					to query[0] will be 4, 
+					that to query[1] will be 3,
+					that to query[2] will be 2,
+					and that to query[3] will be 0. 
+
+				Your Task:
+					You don't need to read input or print anything. Your task is to complete the function queriesAndCandyDistribution() which takes intergers n, m, q and arrays a, query as input and returns the answer to all the queries in an array.
+
+				Constraints:
+					1 <= n, m, q <= 10^5
+					1 <= a[i][0] <= a[i][1] <= n, (0 <= i < m)
+					1 <= a[i][2] <= 10^4, (0 <= i < m)
+					0 <= query[i] <= 10^9, (0 <= i < q)
+
+			class Solution {
+				public:
+				vector<int> queriesAndCandyDistribution(int n, int m, int q, vector<vector<int>>& a, vector<int>& query) {
+					vector<int> childs(n, 0);
+					
+					for(int i=0; i<m; i++){
+						int start = a[i][0], end = a[i][1];
+						for(int j=start-1; j < end; j++)
+							childs[j] += a[i][2];
+						
+						// for(int z: childs)
+						//     cout<<z<<"\t";
+						// cout<<"\n";
+					}
+					
+					
+					vector<int> ans;
+					for(int i: query){
+						int child_with_min_i_candi_cnt=0;
+						for(int j: childs)
+							if(i <= j)
+								child_with_min_i_candi_cnt++;
+						
+						ans.push_back(child_with_min_i_candi_cnt);
+					}
+					return ans;
+				}
+			};
+
+	997) Prime Pair with Target Sum:
+		Problem Statement:
+			Given a number n, find out if n can be expressed as a+b, where both a and b are prime numbers. If such a pair exists, return the values of a and b, otherwise return [-1,-1] as an array of size 2.
+			Note: If [a, b] is one solution with a <= b, and [c, d] is another solution with c <= d, and a < c then  [a, b] is considered as our answer.
+
+			Examples
+				Input: n = 10
+				Output: 3 7
+				Explanation: There are two possiblities 3, 7 & 5, 5 are both prime & their sum is 10, but we'll pick 3, 7 as 3 < 5.
+				Input: n = 3
+				Output: -1 -1
+				Explanation: There are no solutions to the number 3.
+
+			Expected Time Complexity: O(n*loglog(n))
+			Expected Auxiliary Space: O(n)
+
+			Constraints:
+				2 <= n <= 10^6
+
+		// Not Optimized:
+			class Solution {
+				public:
+				bool isPrime(int n){
+					for(int i=2; i<= n/2; i++)
+						if(n % i == 0)
+							return 0;
+					return 1;
+				}
+				vector<int> getPrimes(int n) {
+					// Prime nums till n (max 10^6)
+					vector<int> primeV;
+					for(int i=2; i<n; i++){
+						if(isPrime(i))
+							primeV.push_back(i);
+					}
+					
+					int i=0;
+					while(i<primeV.size()-1){
+						int j = i+1;
+						while(j < primeV.size()){
+							if(primeV[i] + primeV[j] == n)
+								return {primeV[i], primeV[j]};
+							j++;
+						}
+						i++;
+					}
+					return {-1, -1};
+				}
+			};
+
+		// Optimized:
+			❌Pending
+	
+	998)	Patching Array:
+		Problem Statement:
+			Given a sorted integer array nums and an integer n, add/patch elements to the array such that any number in the range [1, n] inclusive can be formed by the sum of some elements in the array.
+			Return the minimum number of patches required.		
+			Example 1:
+				Input: nums = [1,3], n = 6
+				Output: 1
+				Explanation:
+				Combinations of nums are [1], [3], [1,3], which form possible sums of: 1, 3, 4.
+				Now if we add/patch 2 to nums, the combinations are: [1], [2], [3], [1,3], [2,3], [1,2,3].
+				Possible sums are 1, 2, 3, 4, 5, 6, which now covers the range [1, 6].
+				So we only need 1 patch.
+
+			Example 2:
+				Input: nums = [1,5,10], n = 20
+				Output: 2
+				Explanation: The two patches can be [2, 4].
+
+			Example 3:
+				Input: nums = [1,2,2], n = 5
+				Output: 0
+			
+			Constraints:
+				1 <= nums.length <= 1000
+				1 <= nums[i] <= 10^4
+				nums is sorted in ascending order.
+				1 <= n <= 2^31 - 1
+
+		// Memory Limit Exceed (MLE):
+			class Solution {
+				public:
+				void GenerateSequence(vector<int> &main, vector<int> temp, int i, vector<int> &storingN){
+					if(i >= main.size()){
+						int sum = 0;
+						for(int z=0; z<temp.size(); z++)
+							sum += temp[z];
+
+						auto itr = find(storingN.begin(), storingN.end(), sum);
+						if( itr != storingN.end() ){
+							storingN.erase(itr);
+						}
+
+						return ;
+					}
+
+					GenerateSequence(main, temp, i+1, storingN);
+
+					temp.push_back(main[i]);
+					GenerateSequence(main, temp, i+1, storingN);
+				}
+				int minPatches(vector<int>& nums, int n) {
+					vector<int> storingN(n);
+					for(int i=0; i<n; i++)
+						storingN[i] = i+1;
+
+					
+					vector<int> temp;
+					GenerateSequence(nums, temp, 0, storingN);
+
+					int cnt=0;
+					while(storingN.size() > 0){
+						int firstPresentElement = storingN[0];
+						nums.push_back(firstPresentElement);
+						GenerateSequence(nums, temp, 0, storingN);
+						temp.clear();
+						cnt++;
+					}
+
+					return cnt;
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				int minPatches(vector<int>& nums, int n) {
+					int patch=0, i=0;
+					long maxReach=0;
+
+					while(maxReach < n){
+						if(i < nums.size() && nums[i] <= maxReach+1){
+							maxReach += nums[i];
+							i++;
+						}else{
+							maxReach += (maxReach+1);
+							patch++;
+						}
+					}
+					return patch;
+				}
+			};
+		
+	999) 
+
+	1000)
+
+	1001)
+
+	1002)
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
