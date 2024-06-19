@@ -5696,7 +5696,6 @@ Lecture-10: Solving LeetCode/CodeStudio Questions [Arrays]
 				cout<<"is 10 present in set A :: "<<a.count(10);			//1 means present
 				
 				std::cout << '\n';
-
 				return 0;
 			}
 		
@@ -5707,6 +5706,31 @@ Lecture-10: Solving LeetCode/CodeStudio Questions [Arrays]
 				for(MY = set1.begin(); MY != set1.end(); MY++){
 					cout<< *MY;
 				}
+
+		// set in reverse order:
+			#include <iostream>
+			#include<set>
+			using namespace std;
+			int main() {
+				
+				// storing elements in reverse order in set
+				set<int, greater<int>> s;
+				
+				for(int i=0; i<5; i++)
+					s.insert(i);
+					
+				// first element of set
+				cout<<*s.begin()<<"\n";
+				
+				// last element of set
+				std::cout << *--s.end() << std::endl;
+				
+				cout<<"element of set: ";
+				for(auto i=s.begin(); i != s.end(); i++)
+					cout<<*i<<"\t";
+
+				return 0;
+			}
 
 	-Array intersection (common element from 2 array).
 		Intersection Of Two Sorted Arrays
@@ -100954,13 +100978,684 @@ POTD:-[Problem of the Day]
 				}
 			};
 		
-	999) 
+	999) Sum of Square Numbers:
+		Problem Statement:
+			Given a non-negative integer c, decide whether there're two integers a and b such that a2 + b2 = c.
+ 			Example 1:
+				Input: c = 5
+				Output: true
+				Explanation: 1 * 1 + 2 * 2 = 5
+			Example 2:
+				Input: c = 3
+				Output: false
+			
+			Constraints:
+				0 <= c <= 231 - 1
 
-	1000)
+		// Not Optimized:
+			class Solution {
+				public:
+				bool judgeSquareSum(int c) {
+					long i=0;
+					vector<long long> v;
+					while(i*i <= c){
+						v.push_back(i*i);
+						i++;
+					}
+					for(int i=0; i<v.size(); i++){
+						for(int j=i; j<v.size(); j++)
+							if(v[i]+v[j] == c)
+								return 1;
+					}
+					return 0;
+				}
+			};
 
-	1001)
+		// Optimized:
+			class Solution {
+				public:
+				bool judgeSquareSum(int c) {
+					// two pointers approach
+					long a = 0;
+					long b = sqrt(c);
 
-	1002)
+					while(a <= b){
+						long sum = a*a + b*b;
+						if(sum == c){
+							return 1;
+						}else if(sum > c){
+							b--;
+						}else{
+							a++;
+						}
+					}
+					return 0;
+				}
+			};
+
+	1000) Partition:
+		Problem statement
+			You are given a linked list and a number ‘x’, You have to partition the linked list in such a way that all nodes with a value less than 'x' comes before the nodes with values greater than or equal to 'x'. The original relative order should be preserved.
+			Constraints
+				1 <= ’T’ <= 50
+				-1000 <= ’x’ <= 1000
+				0 <= Length of linked list <= 10000
+				-1000 <= "data" <= 1000
+				"data" != -1, 'x' != -1
+			Where 'T' is the number of test cases. 'x' denotes the given integer and "data" denotes the linked list node value.
+				Sample Input 1
+				2
+				5 4 7 1 2 3 -1
+				4
+				1 2 3 4 0 5 6 -1
+				3
+				Sample Output 1:
+				1 2 3 5 4 7  
+				1 2 0 3 4 5 6  
+				Explanation:-
+				Here is the linked list for the first test case:-
+
+				The nodes with value 1,2,3 are less than x that is 
+				4.They should appear before 5,4,7
+				Sample Input 2:
+				2
+				-3 5 -2 6 4 7 -1
+				5
+				1 2 3 4 5 6 7 -1
+				1
+				Sample Output 2:
+				-3 -2 4 5 6 7  
+				1 2 3 4 5 6 7  
+
+		#include <bits/stdc++.h> 
+		/****************************************************************
+			Following is the class structure of the Node class:
+				class Node {
+					public:
+					int data;
+					Node *next;
+					Node(int data) {
+						this->data = data;
+						this->next = NULL;
+					}
+				};
+		*****************************************************************/
+		Node*findPartiton(Node*head, int x) {
+			vector<int> temp;
+			Node *h1 = head;
+			while(h1){
+				temp.push_back(h1 -> data);
+				h1 = h1 -> next;
+			}
+
+			// traversing through temp vector to collect all values less than x
+			int n = temp.size();
+			Node *h2 = head;
+			for(int i=0; i<n; i++){
+				if(temp[i] < x){
+					h2 -> data = temp[i];
+					h2 = h2 -> next;
+				}
+			}
+
+			// traversing through temp vector to collect all values greater or equals to x
+			for(int i=0; i<n; i++){
+				if(temp[i] >= x){
+					h2 -> data = temp[i];
+					h2 = h2 -> next;
+				}
+			}
+			return head;
+		}
+
+	1001) Minimum Deletions To Make Character Frequencies Unique:
+		Problem statement
+			You are given a string ‘STR’ consisting of lowercase English alphabets. Your take is to find out the minimum number of character deletions required such that each character in the final string has a unique frequency.
+			Constraints :
+				1 <= T <= 10
+				2 <= |STR| <= 10^5
+				Where |STR| denotes the length of the initial string ‘STR’. 
+				Time limit: 1 second
+			Sample Input 1 :
+				2
+				babccbc
+				gttqtq
+				Sample Output 1 :
+				1
+				0
+				Explanation For Sample Input 1 :
+				Test Case 1 :
+				The frequency of ‘a’ is 1, of ‘b’ is 3 and of ‘c’ is 3. Therefore after deletion of one character of either ‘b’ or ‘c’ makes the frequencies 1,2 and 3.
+
+				Test Case 2 :
+				The frequency of 'g' is 1, 't' is 3 and 'q' is 2. Therefore there is no need for a delete operation.
+				Sample Input 2 :
+				2
+				abbccc
+				cbbd
+				Sample Output 2 :
+				0
+				1
+				Explanation For Sample Input 2 :
+				For the first test case, each character already has a unique frequency(1 for ‘a’, 2 for ‘b’ and 3 for ‘c’), hence we don’t need to do any deletions.
+				For the second test case frequency of ‘c’ and ‘d’ is equal hence we need to delete either of them. Therefore the answer is 1.
+
+		#include<set>
+		int minDeletions(string str) {
+			vector<int> v (26);
+			for(char ch: str)
+				v[ch-'a']++;
+			
+			sort(v.begin(), v.end());
+			set<int> s;
+			int cnt=0;
+
+			s.insert(v[0]);
+			for(int i=1; i<26; i++){
+				if(v[i] == 0)
+					continue;
+				while(s.count(v[i]) && v[i] != 0){
+					v[i]--;
+					cnt++;
+				}
+				if(s.count(v[i]) != 1 && v[i] != 0)
+					s.insert(v[i]);
+			}
+			return cnt;
+		}
+
+	1002) Number of Rectangles in a Circle:
+		Problem Statement:
+			Given a circular sheet of radius, r. Find the total number of rectangles with integral length and width that can be cut from the sheet that can fit on the circle, one at a time.
+			Examples :
+				Input: r=1
+				Output: 1
+				Explanation: Only 1 rectangle of dimensions 1x1.
+			Input: r=2
+				Output: 8
+				Explanation: The 8 possible rectangles are 
+				(1x1)(1x2)(1x3)(2x1)(2x2)(2x3)(3x1)(3x2).
+
+			Expected Time Complexity: O(r^2)
+			Expected Auxillary Space: O(1)
+
+			Constraints:
+				1<=r<=1000 
+
+		class Solution {
+			public:
+			int rectanglesInCircle(int r) {
+				int cnt=0, last = 2*r;
+				for(int i=1; i <= last; i++){
+					for(int j=1; j <= last; j++){
+						if(i * i + j * j <= 4*r*r)              // reactangle area is less or equals to circle area then cnt increment
+							cnt++;
+					}
+				}
+				return cnt;
+			}
+		};
+
+	1003) Most Profit Assigning Work:
+		Problem Statement:
+			You have n jobs and m workers. You are given three arrays: difficulty, profit, and worker where:
+			difficulty[i] and profit[i] are the difficulty and the profit of the ith job, and
+			worker[j] is the ability of jth worker (i.e., the jth worker can only complete a job with difficulty at most worker[j]).
+			Every worker can be assigned at most one job, but one job can be completed multiple times.
+			For example, if three workers attempt the same job that pays $1, then the total profit will be $3. If a worker cannot complete any job, their profit is $0.
+			Return the maximum profit we can achieve after assigning the workers to the jobs.
+
+			Example 1:
+				Input: difficulty = [2,4,6,8,10], profit = [10,20,30,40,50], worker = [4,5,6,7]
+				Output: 100
+				Explanation: Workers are assigned jobs of difficulty [4,4,6,6] and they get a profit of [20,20,30,30] separately.
+
+			Example 2:
+				Input: difficulty = [85,47,57], profit = [24,66,99], worker = [40,25,25]
+				Output: 0
+			
+			Constraints:
+				n == difficulty.length
+				n == profit.length
+				m == worker.length
+				1 <= n, m <= 104
+				1 <= difficulty[i], profit[i], worker[i] <= 10^5
+
+		class Solution {
+			public:
+			int maxProfitAssignment(vector<int>& difficulty, vector<int>& profit, vector<int>& worker) {
+				vector<pair<int, int>> v;
+				int n = profit.size();
+
+				for(int i=0; i<n; i++)
+					v.push_back({difficulty[i], profit[i]});
+
+				// we'll assign the work to worker based on their ability, so we will sort the v based on difficulty
+				sort(v.begin(), v.end());
+				int w = worker.size(), total=0;
+				for(int i=0; i<w; i++){
+					int curProf = 0;
+					for(int j=0; j<n; j++){
+						if(worker[i] < v[j].first)
+							break;
+						curProf = max(curProf, v[j].second);
+					}
+					total += curProf;
+				}
+				return total;
+			}
+		};
+
+		// using Prioriy queue (max heap):
+			class Solution {
+				public:
+				int maxProfitAssignment(vector<int>& difficulty, vector<int>& profit, vector<int>& worker) {
+					priority_queue<pair<int, int>> pq;      // max heap
+					int n = difficulty.size();
+					int m = worker.size();
+					for(int i=0; i<n; i++)
+						pq.push({profit[i], difficulty[i]});                // max profit should be on top so we keep profit first
+					
+					sort(worker.rbegin(), worker.rend());       // sorting in descending order
+					int i=0, mxProf=0;
+					while(i < m && !pq.empty()) {
+						if(pq.top().second > worker[i]){
+							pq.pop();
+						}else{
+							mxProf += pq.top().first;
+							i++;
+						}
+					}
+					return mxProf;
+				}
+			};
+
+		// using BinarySearch:
+			❌Pending
+	
+	1004) Binary Pattern:
+		Problem statement
+			You have been given an input integer 'N'. Your task is to print the following binary pattern for it.
+			Example
+			Pattern for 'N' = 4
+				1111
+				000
+				11
+				0
+			The first line contains 'N' 1s. The next line contains 'N' - 1 0s. Then the next line contains 'N' - 2 1s and so on.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^3
+				Time Limit: 1 sec
+			Sample Input 1:
+				2
+				1
+				2
+				Sample Output 1:
+				1
+				11
+				0
+				Sample Input 2:
+				2
+				3
+				5
+				Sample Output 2:
+				111
+				00
+				1
+				11111
+				0000
+				111
+				00
+				1
+
+		#include <bits/stdc++.h> 
+		void printPatt(int n) {
+			for(int i=0; i<n; i++){
+				if(i&1){
+					string s(n-i, '0');
+					cout<<s<<"\n";
+				}else{
+					string s(n-i, '1');
+					cout<<s<<"\n";
+				}
+			}
+		}
+	
+	1005) Find maximum volume of a cuboid: ❌Pending
+		-formula should be known to solve it
+		Problem Statement:
+			You are given a perimeter & the area. Your task is to return the maximum volume that can be made in the form of a cuboid from the given perimeter and surface area.
+			Note: Round off to 2 decimal places and for the given parameters, it is guaranteed that an answer always exists.
+			Examples
+				Input: perimeter = 22, area = 15
+				Output: 3.02
+				Explanation: The maximum attainable volume of the cuboid is 3.02
+				Input: perimeter = 20, area = 5
+				Output: 0.33
+				Explanation: The maximum attainable volume of the cuboid is 0.33
+			Expected Time Complexity: O(1)
+			Expected Auxiliary Space: O(1)
+
+			Constraints :
+				1 ≤ perimeter ≤ 10^9
+				1 ≤ area ≤ 10^9
+
+		class Solution {
+			public:
+			double maxVolume(double perimeter, double area) {
+				double p = perimeter, a = area;
+				double sqrtTerm = sqrt(p*p - 24 * a);
+				double dimension1 = (p - sqrtTerm) / 12.0;
+				double dimension2 = (p/4.0) - 2 * dimension1;
+				
+				double volume = pow(dimension1, 2) * dimension2;
+				return round(volume * 100.0) / 100.0;
+			}
+		};
+	
+	1006) Add First and Second Half:
+		Problem statement
+			You are given a Singly Linked List of N nodes such that each node represents a single digit.
+			Your task is to return a node 'X', where 'X' represents the head of the Linked List storing the digits of the sum(most significant digit at the head) formed by adding the 1st half and 2nd half of the given Linked List.
+			Note:
+			1. When N is odd consider the middle element to be part of 1st half.
+			2. The sum should not contain any leading zero, except the number 0 itself.
+			For Example:
+			Given Linked List: 1-2-3-4-5-5-6
+			First half: 1-2-3-4    
+			Second half: 5-5-6
+			Output Linked List: 1-7-9-0 = (1234 + 556 = 1790)
+			Follow Up:
+				Can you add both halves without finding the length of Linked List and in O(1) space?
+			Constraints :
+				0 <= N <= 10^5
+				0 <= DATA <= 9 
+				Where 'DATA' is the integer corresponding to the value of nodes of the given Linked List.
+				Time Limit: 1 sec
+
+			Sample Input 1:
+			1 2 4 5 6 -1
+			Sample Output 1:
+			180
+			Explanation for Sample Input 1:
+			The first half of the given Linked List is 1-2-4.
+			The second half of the given Linked List is 5-6.
+			Sum of both parts = 124 + 56 = 180.
+			Sample Input 2:
+			3 9 0 1 1 0 -1
+			Sample Output 2:
+			500
+
+		#include <bits/stdc++.h> 
+		/****************************************************************
+			Following is the class structure of the Node class:
+			class Node {
+				public:
+					int data;
+					Node *next;
+				Node(int data){
+					this->data = data;
+					this->next = NULL;
+				}
+			};
+		*****************************************************************/
+		Node *reverseIt(Node *t){
+			Node *prev = NULL;
+			Node *cur = t;
+
+			while(cur){
+				Node *upComing = cur -> next;
+				cur -> next = prev;
+				prev = cur;
+				cur = upComing;
+			}
+			return prev;
+		}
+
+		Node* addFirstAndSecondHalf(Node *head){
+			if(head == NULL or head-> next == NULL)
+				return head;
+			
+			Node *first = head;
+			Node *second = head -> next;
+
+			// splitting done
+			while(second && second -> next){
+				first = first -> next;
+				second = second -> next -> next;
+			}
+
+			second = first -> next;
+			first -> next = NULL;               // detaching first half
+			first = head;
+
+			// length of first List is always little smaller than second one,
+			// so will consider first one as our answer or head also can be a answer
+			first = reverseIt(first);
+			second = reverseIt(second);
+
+			Node *temp = new Node(0);
+			Node *ans = temp;
+			int carry =0;
+			while(first or second or carry){
+				int val = carry;
+				if(first != NULL)
+					val += first->data,
+					first = first -> next;
+				
+				
+				if(second != NULL){
+					val += second->data;
+					second = second -> next;
+				}
+
+				Node* nn = new Node(val % 10);
+				temp -> next = nn;
+
+				carry = val / 10;
+				temp = temp -> next;
+			}
+
+			ans = ans -> next;
+			ans = reverseIt(ans);
+			while(ans && ans -> next && ans -> data == 0)
+				ans = ans -> next;
+
+			return ans;
+		}	
+
+	1007) Add Two Numbers As Linked Lists ll:
+		Problem statement
+			You have been given two singly Linked Lists, where each of them represents a positive number without any leading zeros.
+			Your task is to add these two numbers and print the summation in the form of a linked list.
+			Example:
+			If the first linked list is 1 -> 2 -> 3 -> 4 -> 5 -> NULL and the second linked list is 4 -> 5 -> NULL.
+			The two numbers represented by these two lists are 12345 and 45, respectively. So, adding these two numbers gives 12390. 
+			So, the linked list representation of this number is 1 -> 2 -> 3 -> 9 -> 0 -> NULL.
+			Constraints:
+			1 <= T <= 100
+			1 <= L <= 5000
+			0 <= data <= 9 and data != -1
+			Where 'L' is the number of nodes in either of the two Linked List and 'data' is the element value in a node of the linked list.
+			Time limit: 1 sec
+			Sample Input 1 :
+			2
+			1 1 -1
+			9 9 9 -1
+			2 4 -1
+			5 3 -1
+			Sample Output 1:
+			1 0 1 0 -1
+			7 7 -1
+			Explanation for Sample Output 1:
+			In test case 1, we are adding 11 and 999 to get 1010.
+			In test case 2, we are adding 24 and 53 to get 77.
+			Sample Input 2:
+			2
+			3 8 1 2 9 -1
+			9 8 2 9 -1
+			1 9 0 -1
+			8 1 0 -1
+			Sample Output 2:
+			4 7 9 5 8 -1
+			1 0 0 0 -1
+			Explanation for Sample Output 2:
+			In test case 1, we are adding 38129 and 9829 to get 47958.
+			In test case 2, we are adding 190 and 810 to get 1000.
+
+		#include <bits/stdc++.h> 
+		/************************************************************
+			Following is the linked list node structure:
+			template <typename T>
+			class Node {
+				public:
+					T data;
+					Node* next;
+				Node(T data) {
+					next = NULL;
+					this->data = data;
+				}
+			};
+		************************************************************/
+		Node<int>* reverse(Node<int>* t){
+			Node<int>* prev = NULL;
+			Node<int>* cur = t;
+
+			while(cur){
+				Node<int>* up = cur -> next;
+				cur -> next = prev;
+				prev = cur;
+				cur = up;
+			}
+			return prev;
+		}
+
+		Node<int>* addTwoLists(Node<int>* first, Node<int>* second) {
+			first = reverse(first);
+			second = reverse(second);
+			Node<int>* temp = new Node(0);
+			Node<int>* ans = temp;
+
+			int carry =0;
+			while(carry or first or second){
+				int val = carry;
+
+				if(first != NULL)
+					val += first -> data, first = first -> next;
+				
+				if(second != NULL)
+					val += second -> data, second = second -> next;
+
+				Node<int>* nn = new Node(val % 10);
+				carry = val /10;
+
+				temp -> next = nn;
+				temp = temp -> next;
+			}
+			
+			ans = ans -> next;
+			ans = reverse(ans);
+			return ans;
+		}
+
+	1008) Minimum Number of Days to Make m Bouquets:
+		Problem Statement:
+			You are given an integer array bloomDay, an integer m and an integer k.
+			You want to make m bouquets. To make a bouquet, you need to use k adjacent flowers from the garden.
+			The garden consists of n flowers, the ith flower will bloom in the bloomDay[i] and then can be used in exactly one bouquet.
+			Return the minimum number of days you need to wait to be able to make m bouquets from the garden. If it is impossible to make m bouquets return -1.
+			
+			Example 1:
+				Input: bloomDay = [1,10,3,10,2], m = 3, k = 1
+				Output: 3
+				Explanation: Let us see what happened in the first three days. x means flower bloomed and _ means flower did not bloom in the garden.
+				We need 3 bouquets each should contain 1 flower.
+				After day 1: [x, _, _, _, _]   // we can only make one bouquet.
+				After day 2: [x, _, _, _, x]   // we can only make two bouquets.
+				After day 3: [x, _, x, _, x]   // we can make 3 bouquets. The answer is 3.
+			Example 2:
+				Input: bloomDay = [1,10,3,10,2], m = 3, k = 2
+				Output: -1
+				Explanation: We need 3 bouquets each has 2 flowers, that means we need 6 flowers. We only have 5 flowers so it is impossible to get the needed bouquets and we return -1.
+			Example 3:
+				Input: bloomDay = [7,7,7,7,12,7,7], m = 2, k = 3
+				Output: 12
+				Explanation: We need 2 bouquets each should have 3 flowers.
+				Here is the garden after the 7 and 12 days:
+				After day 7: [x, x, x, x, _, x, x]
+				We can make one bouquet of the first three flowers that bloomed. We cannot make another bouquet from the last three flowers that bloomed because they are not adjacent.
+				After day 12: [x, x, x, x, x, x, x]
+				It is obvious that we can make two bouquets in different ways.
+			
+			Constraints:
+				bloomDay.length == n
+				1 <= n <= 10^5
+				1 <= bloomDay[i] <= 10^9
+				1 <= m <= 10^6
+				1 <= k <= n
+
+		// Not Optimized:
+			class Solution {
+				public:
+				bool allSet(vector<int> &v, int s, int e, int minSize){
+					if(v.size() - s < minSize)
+						return 0;
+					
+					for(int i=s; i<e; i++)
+						if(v[i] == 0)
+							return 0;
+					return 1;
+				}
+				int minDays(vector<int>& bloomDay, int m, int k) {
+					// for each bouquet we need k flowers, so for m bouquet we need m*k flowers
+					// if array size is less than m*k return -1
+					if(bloomDay.size() < m*k)
+						return -1;
+					
+					set<int> s;
+					for(int i: bloomDay)
+						s.insert(i);
+
+					auto itr = s.begin();
+
+					int n = bloomDay.size();
+					vector<int> v (n, 0);
+					int MDs=0, cntsMade=0;
+
+					while(cntsMade < m && itr != s.end()){
+						cntsMade=0;
+						MDs = *itr;
+
+						for(int i=0; i<n; i++)
+							if(bloomDay[i] <= MDs)
+								v[i] = 1;
+
+						// check how many adjucent bouquet can form.
+						for(int z=0; z < n; ){
+							if(allSet(v, z, z+k, k)){
+								z += k;
+								cntsMade++;
+							}else{
+								z++;
+							}
+						}
+						itr++;
+					}
+					return MDs;
+				}
+			};
+	
+		// Optimized:
+			
+
+	1009) 
+	
+	1010) 
+	
+	1011) 
+	
+	1012) 
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
