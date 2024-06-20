@@ -101647,15 +101647,654 @@ POTD:-[Problem of the Day]
 			};
 	
 		// Optimized:
-			
+			class Solution {
+				public:
+				int PossibleBouquetCnt(vector<int>& bloomDay, int curDays, int minRequire){
+					int ConsecutiveCnt=0, bouquetCnt=0;
+					for(int i=0; i<bloomDay.size(); i++){
+						if(bloomDay[i] <= curDays){
+							ConsecutiveCnt++;
+						}else{
+							ConsecutiveCnt=0;
+						}
+						
+						if(ConsecutiveCnt == minRequire){
+							bouquetCnt++;
+							ConsecutiveCnt=0;
+						}
+					}
+					return bouquetCnt;
+				}
+				int minDays(vector<int>& bloomDay, int m, int k) {
+					int n = bloomDay.size();
+					int minDaysCnt=-1;
 
-	1009) 
+					int start_day = 1;
+					int end_day   = *max_element(begin(bloomDay), end(bloomDay));
+
+					while(start_day <= end_day){
+						int mid = start_day + (end_day - start_day)/2;          // mid is acting as no.of days
+						if(PossibleBouquetCnt(bloomDay, mid, k) >= m){
+							end_day = mid - 1;
+							minDaysCnt = mid;
+						}else{
+							start_day = mid + 1;
+						}
+					}
+					return minDaysCnt;
+				}
+			};
+
+	#CodeChef Starters-139:
+		1009) Television Channels:
+			Problem Statement:
+				You have a television which had X working channels numbered 
+				1,2,...,X. Unfortunately, due to a recent change, all even-numbered channels stopped working.
+				For example if X=5, channels numbered 2 and 4 have stopped working, while channels numbered 
+				1, 3 and 5 are still working.
+				Given X, can you tell how many channels are still working?
+				Input Format
+				The first and only line of input contains a single integer 𝑋
+				Output Format
+				Output the number of working channels.
+				Constraints
+				1≤X≤100
+				Sample 1:
+				Input
+				5
+				Output
+				3
+				Explanation:
+				As explained in the statement, channels 
+				1, 3 and 5 are still working, but channels 
+				2 and 4 are not. Thus, the answer is 3.
+
+				Sample 2:
+				Input
+				100
+				Output
+				50
+				Explanation:
+				Channels 
+				1, 3, 5, 7, ..., 99 are still working. Carefully counting them, we know there are exactly 50 working channels.
+			#include <bits/stdc++.h>
+			using namespace std;
+
+			int main() {
+				int X;
+				std::cin >> X;
+				(X&1) ? cout<<X/2 + 1 : cout<<X/2;
+				return 0;
+			}
+		
+		1010) Distribute Cookies:
+			Problem Statement:
+				Chef is making cookies for N kids. He wants to give everyone an equal number of cookies. He must give at least 1 cookie to each kid.
+				Chef already has M cookies.
+				He can destroy or make 1 cookie in 1 second.
+				Find the minimum time after which he can evenly distribute the cookies between all kids.
+				Input Format
+				The first line of input will contain a single integer 𝑇, denoting the number of test cases.
+				Each test case consists of a single line of input.The first and only line of each test case contains 𝑁 and 𝑀- the number of kids and the initial number of cookies.
+				Output Format
+				For each test case, output on a new line the minimum time such that Chef can evenly distribute all his cookies.
+
+				Constraints
+				1 ≤ T ≤ 10^4
+				1 ≤ N, M ≤ 10^9
+				
+				Sample 1:
+				Input
+				4
+				5 17
+				5 18
+				4 1
+				2 18
+				Output
+				2
+				2
+				3
+				0
+				Explanation:
+				Test Case 1 : Chef destroys 2 cookies to have 15 cookies total. This takes 2 seconds. Now, he can distribute all his cookies by giving every kid 3 cookies each.
+				Test Case 2 : Chef makes 2 cookies to have 20 cookies total. This takes 2 seconds again. Now, he can distribute all his cookies by giving every kid 4 cookies each.
+				Test Case 3 : Chef makes 3 more cookies to have 4 cookies total, and he gives 1 each to the 4 kids. Note that Chef can't destroy 1 cookie and then evenly distribute, as he needs to give everyone at least 1 cookie.
+
+			#include <bits/stdc++.h>
+			using namespace std;
+			int main() {
+				int T;
+				cin>>T;
+				
+				while(T--){
+					int n,m;
+					cin>>n>>m;
+					
+					if(m < n){
+						cout<<(n-m)<<endl;
+					}else{
+						if(m == n){
+							std::cout << 0 << std::endl;
+						}else{
+							int timeNeed = m % n;
+							timeNeed = min(timeNeed, abs(timeNeed - n));
+							std::cout << timeNeed << std::endl;
+						}
+					}
+				}
+				return 0;
+			}
+
+		1011) Maximum Distance Permutations:
+			Problem Statement:
+				Define the distance between 2 permutations† 𝐴 and 𝐵, each of length 𝑁, as the minimum value of ∣𝐴𝑖−𝐵𝑖∣‡ for 1 ≤ i ≤ N.
+				Find a pair of permutations of length 𝑁 which have the maximum possible distance among all pairs of permutations of length 𝑁.	
+				†A permutation of length 𝑁 is an array of 𝑁 distinct elements which are all in the range [1,N]. For example, [2,3,1,4] is a permutation of length 4 whereas 
+				[2,4,3] and [1,1,2] are not.
+				‡∣𝑋∣ denotes the absolute value of 𝑋. For example, ∣−5∣=∣5∣=5.
+				Input Format
+				The first line of input will contain a single integer 𝑇, denoting the number of test cases.
+				Each test case consists of a single integer 𝑁 - the length of the permutations.
+				Output Format
+				For each test case, output 2 lines.
+				The first line containing 𝑁 space-separated integers - 𝐴1, 𝐴2, 𝐴3, …, 𝐴𝑁, denoting the permutation 𝐴.
+				The second line containing 𝑁 space-separated integers - 𝐵1, 𝐵2, 𝐵3, …, 𝐵𝑁, denoting the permutation 𝐵.
+				The permutations 𝐴 and 𝐵 must have the maximum distance possible. If multiple answers are possible, all will be accepted.
+				Constraints
+					1≤T≤100
+					1≤N≤100
+				Sample 1:
+				Input
+				3
+				1
+				2
+				3
+				Output
+				1
+				1
+				1 2
+				2 1
+				1 2 3
+				3 1 2
+				Explanation:
+				Test case 1 : There is only one possible permutation of length 𝑁, and thus only one possible pair, which has distance 0.
+				Test case 2 : The permutations [1,2] and [2,1] have a distance of 1. This can be shown to be the maximum possible distance.
+
+			Hints:
+				Observation Line 1
+					the main observation is that we need to start the second array from middle. so that the absolute value is maximum lets take exaple of 1 to 10; the max diff is |1-5| only else we would get only more. so to obtain this we can start the 2nd array from middle of 1st array.
+				Observation Line 1
+					1 2 3 4 5 6 7 8 9 10
+				Observation Line 1
+					6 7 8 9 10 1 2 3 4 5
+
+			#include <bits/stdc++.h>
+			using namespace std;
+			int main() {
+				int T;
+				cin>>T;
+				
+				while(T--){		
+					int n;
+					cin>>n;
+					vector<int> a(n), b(n);
+					
+					for(int i=0; i<n; i++)
+						a[i] = i+1;
+						
+					int j=1;
+					for(int i = (n/2); i<n; i++)
+						b[i] = j++;
+						
+					for(int i=0; i< (n/2); i++)
+						b[i] = j++;
+					
+					for(int x=0; x<n; x++)
+						cout<<a[x]<<" ";
+					cout<<endl;
+
+					for(int x=0; x<n; x++)
+						cout<<b[x]<<" ";
+					cout<<endl;
+				}
+				return 0;
+			}
+
+	1012) Find MSB In O(1):
+		Problem statement
+			You are given a positive integer 'N'. Your task is to find the greatest integer less than or equal to 'N' which is a power of 2.
+			For Example:
+			If N = 14, then the nearest integer that is less than or equal to 14 and is a power of two is 8(2^3). So, the answer is 8.
+			Follow Up:
+			Can you solve this in constant time and space complexity?
+			Constraints:
+				1 <= T <= 2 * 10^3
+				1 <= N <= 10^9
+				Time Limit: 1 second
+			Sample Input 1:
+				2
+				4
+				22
+				Sample Output 1:
+				4
+				16
+				Explanation for sample 1:
+				For the first test case, 4 itself is a power of two.
+				For the second test case, the nearest integer that is less than or equal to 22 and also is a power of two is 16.
+				Sample Input 2:
+				2
+				1
+				63
+				Sample Output 2:
+				1
+				32
+				Explanation for sample 1:
+				For the first test case, 1 itself is a power of two.
+				For the second test case, the nearest integer that is less than or equal to 63 and also is a power of two is 32.
+
+		#include <bits/stdc++.h> 
+		int findMSB(int n){
+			int mask = 1, ans;
+
+			while(mask <= n){
+				ans = mask;
+				mask <<= 1;
+			}
+			return ans;
+		}
 	
-	1010) 
+	1013) Magnetic Force Between Two Balls:
+		Problem Statement:
+			In the universe Earth C-137, Rick discovered a special form of magnetic force between two balls if they are put in his new invented basket. Rick has n empty baskets, the ith basket is at position[i], Morty has m balls and needs to distribute the balls into the baskets such that the minimum magnetic force between any two balls is maximum.
+			Rick stated that magnetic force between two different balls at positions x and y is |x - y|.
+			Given the integer array position and the integer m. Return the required force.
+			
+			Example 1:
+				Input: position = [1,2,3,4,7], m = 3
+				Output: 3
+				Explanation: Distributing the 3 balls into baskets 1, 4 and 7 will make the magnetic force between ball pairs [3, 3, 6]. The minimum magnetic force is 3. We cannot achieve a larger minimum magnetic force than 3.
+			Example 2:
+				Input: position = [5,4,3,2,1,1000000000], m = 2
+				Output: 999999999
+				Explanation: We can use baskets 1 and 1000000000.
+			
+			Constraints:
+				n == position.length
+				2 <= n <= 10^5
+				1 <= position[i] <= 10^9
+				All integers in position are distinct.
+				2 <= m <= position.length
+
+		class Solution {
+			public:
+			bool ballsPlaced(vector<int>& pos, int force, int m) {
+				int k=1;
+				int prevPosition = 0;
+				for(int i=1; i<pos.size(); i++){
+					if(pos[i] - pos[prevPosition] >= force){
+						k++;
+						prevPosition = i;
+					}
+
+					if(k == m)
+						break;
+				}
+				// return (k < m) ? 0 : 1;
+				return k == m;
+			}
+			int maxDistance(vector<int>& position, int m) {
+				sort(position.begin(), position.end());
+
+				int startForce = 1, endForce = position[position.size()-1] - position[0];
+				int res = 1;
+				while(startForce <= endForce){
+					int mid = startForce + (endForce - startForce)/2;
+
+					if(ballsPlaced(position, mid, m)){
+						res = mid;
+						startForce = mid + 1;
+					}else{
+						endForce = mid - 1;
+					}
+				}
+				return res;
+			}
+		};
+
+	#CN WeeklyContest-131:
+		1014) Odd Sum:
+			Problem statement
+				You are given an array 'A' of 'N' integers numbered from '0' to 'N - 1'.
+				Return the maximum number of elements you can select from the array 'A' such that the sum of all the selected elements is odd or return '-1' if you can not select elements such that the sum of them is odd.
+				Example:
+					N = 3
+					A = ['1', '5', '2']
+					You can select '2' elements 'A[0]' and 'A[2]'. The sum of the selected elements is 'A[0] + A[2]' = '1 + 2' = '3' which is odd.
+					It can be proved that you can not select more than '2' elements such that the sum of selected elements is odd for the given input.
+					So, the answer for this case is '2'. 
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^5
+					1 <= 'A[i]' <= 10^5
+
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					2
+					1 7
+					2
+					4 10
+					Sample output 1:
+					1
+					-1
+					Explanation of sample input 1:
+					For test case 1:
+					You can select '1' element 'A[0]'. The sum of the selected elements is 'A[0]' = '1' which is odd.
+					It can be proved that you can not select more than '1' elements such that the sum of selected elements is odd for the given input.
+					So, the answer for this case is '1'. 
+					
+					For test case 2:
+					It can be proved that you can not select elements such that the sum of them is odd.
+					So, the answer for this case is '-1'. 
+					Sample input 2:
+					2
+					4
+					7 5 7 3
+					4
+					9 5 1 6
+					Sample output 2:
+					3
+					4
+
+			int maximumElements(int n, vector<int> &v) {
+				int oddCnt=0, evenCnt=0;
+				for(int i: v)
+					if(i&1)
+						oddCnt++;
+					else
+						evenCnt++;
+					
+				if(oddCnt == 0)
+					return -1;
+				
+				// if(evenCnt == 0)
+				//     if(oddCnt&1)
+				//         return oddCnt;
+				//     else
+				//         return oddCnt - 1;
+					
+				return (oddCnt&1) ? oddCnt + evenCnt : (oddCnt-1) + evenCnt;
+			}
+		
+		1015) Incremental Jumps:
+			Problem statement
+				You have a staircase with ‘N’ steps, numbered from ‘1’ to ‘N’, and you need to reach a specific target step ‘K’. To do this, you can start from any step and make incremental jumps.
+				In this system, you begin with an initial jump length ‘X’ (‘X’ > 0), and each subsequent jump increases by ‘1’ (i.e., your jumps will be of the form ‘X’, ‘X + 1’, ‘X + 2’, and so on). Additionally you must make at least ‘2’ jumps. Determine if it is possible to reach ‘K’ by using at least ‘2’ incremental jumps.
+				Your task is to tell whether it is possible to reach ‘K’ by using at least ‘2’ incremental jumps. Return ‘1’, if possible, otherwise return ‘0’.
+				Example:
+				‘N’ = 10
+				‘K’ = 8
+
+				Here, we can choose step ‘2’ as a starting position. Our path would look like: ‘2’ -> ‘3’ -> ‘5’ -> ‘8’.
+				The transition from ‘2’ to ‘3’ took ‘1’ step, ‘3’ to ‘5’ took ‘2’ steps and ‘5’ to ‘8’ took ‘3’ steps. So, the total number of incremental jumps will be ‘3’.
+				Hence, it is possible to reach ‘8’ by using at least ‘2’ incremental jumps.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^9
+					1 <= 'K' <= 'N’
+
+					Time Limit: 1 sec
+				Sample Input 1:
+					2
+					6 6
+					5 2
+					Sample Output 1:
+					1
+					0
+					Explanation of sample input 1:
+					For test case 1:
+					Here, we can choose ‘1’ as the starting position and our path would look like: ‘1’ -> ‘3’ -> ‘6’.
+					The first jump is of the length ‘2’ and the second jump is of the length ‘3’. So, the answer for this test case is ‘1’.
+					For test case 2:
+					It is impossible to reach ‘2’ by using at least ‘2’ incremental jumps. So, the answer for this test case is ‘0’.
+					Sample Input 2:
+					2   
+					8 3
+					9 8
+					Sample Output 2:
+					0
+					1
+
+			int incrementalJumps (int n, int k) {
+				if(k >= 6)
+					return 1;
+				return 0;
+			}
+		
+		1016) Supercomputer:
+			Problem statement
+				There are ‘N’ people, each with a unique assigned number given to you in the array ‘A’. There's a supercomputer protected by a password, ‘K’. To gain access, three people can enter their numbers, and if the result of XOR on their numbers equals ‘K’, access is granted.
+				Your task is to figure out how many different groups of three people can enter their numbers and successfully gain access to the supercomputer. A group of 1,2 and 3 is the same as the group 3,1 and 2 or any other ordering.
+				Example:
+				‘N’ = 4
+				‘K’ = 2
+				‘A’ = [6, 5, 1, 5] 
+				Return 2
+				There are 2 groups:
+				Group 1: 1,2 and 3 as 6⊕5⊕1 = 2
+				Group 2: 1,3 and 4 as 6⊕1⊕5 = 2
+				Detailed explanation ( Input/output format, Notes, Images )
+				Constraints:
+				1 <= ‘T’ <= 10
+				1 <= ‘N’ <= 10^3
+				1 <= ‘K’, A[i] <= 10^6
+				Time Limit: 1 sec
+				Sample Input 1:
+					2
+					6 1
+					5 6 5 2 1 7 
+					7 5
+					7 2 5 5 2 4 7 
+					Sample Output 1:
+					3
+					4
+					Explanation of sample input 1:
+					For Test case 1:
+					The 3 groups are:
+						1, 2 and 4 as 5⊕6⊕2 = 1
+						1, 3 and 5 as 5⊕5⊕1 = 1
+						2, 3 and 4 as 6⊕5⊕2 = 1
+					There don't exist any more groups.
+					For Test case 2:
+					The 4 groups are:
+						1, 3 and 7 as 7⊕5⊕7 = 5
+						1, 4 and 7 as 7⊕5⊕7 = 5
+						2, 3 and 5 as 2⊕5⊕2 = 5
+						2, 4 and 5 as 2⊕5⊕2 = 5
+					There don't exist any more groups.
+					Sample Input 2:
+					3
+					6 13
+					2 2 8 7 7 9 
+					6 0
+					1 9 6 10 8 8 
+					8 8
+					10 3 3 9 1 10 5 8 
+					Sample Output 2:
+					4
+					2
+
+			// Not Optimized:
+				void SubSequence(vector<int> &main, vector<int> temp, vector<vector<int>> &all, int index){
+					if(index >= main.size()){
+						all.push_back(temp);
+						return;
+					}
+					SubSequence(main, temp, all, index+1);
+
+					temp.push_back(main[index]);
+					SubSequence(main, temp, all, index+1);
+				}
+
+				int solve(int n, int k, vector<int> &a){
+					vector<vector<int>> all;
+					
+					vector<int> temp;
+					SubSequence(a, temp, all, 0);
+
+					int cnt=0;
+					for(auto row: all){
+						if(row.size() != 3)
+							continue;
+							
+						int ans = 0;
+						for(int i: row)
+							ans ^= i;
+						
+						if(ans == k)
+							cnt++;
+					}
+					return cnt;
+				}
+		
+			// Optimized:
+				❌Pending
+
+		1017) Tricky Triplets:
+			Problem statement
+				You are given an array ‘A’ of ‘N’ integers numbered from ‘0’ to ‘N - 1’. A Triplet ‘(i, j, k)’ is said to be a Tricky Triplet if ‘i’ < ‘j’ < ‘k’ and all the prime factors of ‘A[i]’, ‘A[j]’, and ‘A[k]’ are the same.
+				For example: The prime factors of ‘6’, ‘12’, and ‘18’ are the same.
+				As ‘6’ = ‘(2 * 3)’, ‘12’ = ‘(2 * 2 * 3)’, and ‘18’ = ‘(2 * 3 * 3)’.
+				The prime factors of all these numbers are: ‘2’, and ‘3’.
+				The beautiness of a Tricky Triplet ‘(i, j, k)’ is given by: ‘GCD(A[i], A[j], A[k])’, where ‘GCD’ is the greatest common factor. You have to count the unique beautiness values of the Tricky Triplets.
+				Your task is to tell the count of unique beautiness values of the Tricky Triplets and return it.
+				Example:
+				‘N’ = 6
+				‘A’ = [2, 4, 8, 3, 9, 27]
+				The Tricky Triplets of the given array are: ‘(0, 1, 2)’, and  ‘(3, 4, 5)’.
+
+				Triplet 1 -  ‘(0, 1, 2)’:
+				Here, ‘GCD(A[0], A[1], A[2])’ is ‘2’.
+
+				Triplet 2 - ‘(3, 4, 5)’:
+				Here, ‘GCD(A[3], A[4], A[5])’ is ‘3’.
+
+				Hence, the count of unique beautiness values is ‘2’.
+				Constraints:
+					1 <= 'T' <= 10
+					1 <= 'N' <= 10^5
+					2 <= A[i] <= 10^5
+
+					Time Limit: 1 sec 
+				Sample Input 1:
+				2
+				4
+				10 20 40 80
+				3
+				3 5 2
+				Sample Output 1:
+				2
+				0
+				Explanation of sample input 1:
+				For test case 1:
+
+				The tricky triplets of the given array are: ‘(0, 1, 2)’, ‘(0, 1, 3)’, ‘(0, 2, 3)’, and ‘(1, 2, 3)’.
+
+				Triplet 1 - ‘(0, 1, 2)’:
+				The ‘GCD(10, 20, 40)’ is ‘10’.
+
+				Triplet 2 - ‘(0, 1, 3)’:
+				The ‘GCD(10, 20, 80)’ is ‘10’.
+
+				Triplet 3 - ‘(0, 2, 3)’:
+				The ‘GCD(10, 40, 80)’ is ‘10’.
+
+				Triplet 4 - ‘(1, 2, 3)’:
+				The ‘GCD(20, 40, 80)’ is ‘20’.
+
+				So, the count of unique beautiness values of the Tricky Triplets is ‘2’.
+
+				Test case 2:
+				Here, there is no Tricky Triplet. So, the count of unique beautiness values of the Tricky Triplets is ‘0’.
+				Sample Input 2:
+				2
+				5
+				2 4 8 16 32
+				2
+				3 5
+				Sample Output 2:
+				3
+				0
+
+			// Not Optimized:
+				bool isPrime(int n){
+					for(int i=2; i <= (n/2); i++)
+						if(n % i == 0)
+							return 0;	
+					return 1;
+				}
+
+				void primeFactor (int n, set<int> &s,  int start) {
+					if(n == 0) return;
+					
+					if(isPrime(n)){
+						// this means the current n is prime so insert it
+						s.insert(n);
+						return ;
+					}
+
+					if(n % start == 0){
+						s.insert(start);
+						primeFactor(n/start, s, start);
+					}else{
+						start++;
+						if(start > n/2)
+							return;
+						primeFactor(n, s, start);
+					}    
+				}
+
+				long long trickyTriplets (int n, vector <int> &a) {
+					set<int> s;
+					
+					for(int i=0; i < n-2; i++){
+						for(int j=i+1; j < n-1; j++){
+							for(int k=j+1; k < n; k++){
+								set<int> s1, s2, s3;
+
+								primeFactor(a[i], s1, 2);
+								primeFactor(a[j], s2, 2);
+								primeFactor(a[k], s3, 2);
+
+								if(s1 == s2  && s2 == s3){
+									int val = __gcd(a[i], __gcd(a[j], a[k]));
+									s.insert(val);
+								}
+							}
+						}
+					}
+
+					return s.size();
+				}
+
+			// Optimized:
+				❌Pending
+			
+	1018)
 	
-	1011) 
+	1019)
 	
-	1012) 
+	1020)
+	
+	1021)
+	
+	1022)
+	
+	1023)
+	
+	1024)
+	
+	1025)
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
