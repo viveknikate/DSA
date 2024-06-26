@@ -1,0 +1,161 @@
+#include<bits/stdc++.h>
+#include <iostream>
+using namespace std;
+
+class TreeNode{
+    public:
+        int data;
+        TreeNode *left;
+        TreeNode *right;
+    
+    TreeNode(int data){
+        this -> data = data;
+        left = right = NULL;
+    }
+};
+TreeNode* GenerateTree(){
+    
+    std::cout << "Enter curNode: " << std::endl;
+    int val;
+    cin>>val;
+    if(val == -1)
+        return NULL;
+    
+    TreeNode* node = new TreeNode(val);
+    std::cout << "Enter left node for "<< val << std::endl;
+    node -> left = GenerateTree();
+    
+    std::cout << "Enter right node for "<< val << std::endl;
+    node -> right = GenerateTree();
+    
+    return node;
+}
+void showTree(TreeNode *r){
+    queue<TreeNode *> q;
+    q.push(r);
+    
+    while(!q.empty()){
+        TreeNode *temp = q.front();
+        q.pop();                
+        
+        cout<<temp -> data <<"\t";
+        
+        if(temp -> left)    
+            q.push(temp -> left);
+        
+        if(temp -> right)
+            q.push(temp -> right);
+    }
+}
+void showTreeDetailed(TreeNode *r){
+    queue<TreeNode *>  q;
+    
+    q.push(r);
+    q.push(NULL);
+    
+    while(!q.empty()) {
+        TreeNode *t = q.front();
+        q.pop();
+        
+        if(t == NULL){
+            std::cout << std::endl;
+            if(!q.empty())
+                q.push(NULL);
+        }else{
+            std::cout << t -> data << "\t";
+            if(t -> left)
+                q.push(t -> left);
+                
+            if(t -> right)
+                q.push(t -> right);
+        }
+    }
+}
+
+void inOrder(TreeNode *r){
+    if(r == NULL)
+        return ;
+        
+    inOrder(r -> left);
+    std::cout << r -> data << "\t";
+    inOrder(r -> right);
+}
+
+void preOrder(TreeNode *r){
+    if(r == NULL)
+        return ;
+        
+    std::cout << r -> data << "\t";
+    preOrder(r -> left);
+    preOrder(r -> right);
+}
+
+void postOrder(TreeNode *r){
+    if(r == NULL)
+        return ;
+        
+    postOrder(r -> left);
+    postOrder(r -> right);
+    std::cout << r -> data << "\t";
+}
+
+int main() {
+    TreeNode *root = GenerateTree();
+    showTree(root);
+    cout<<endl;
+    showTreeDetailed(root);
+    
+    std::cout << std::endl;
+    std::cout << "inOrder Recursion: " << std::endl;
+    inOrder(root);
+    
+    std::cout <<endl << "inOrder Iterative: " << std::endl;
+    stack<TreeNode *> st;
+    TreeNode *temp = root;
+    
+    // considering root is never be NULL.
+    while(temp or !st.empty()){                                 // while(temp != NULL || !st.empty()){
+        while(temp){
+            st.push(temp);
+            temp = temp -> left;
+        }
+        temp = st.top();
+        st.pop();
+        cout<< temp -> data << "\t";
+        temp = temp -> right;
+    }
+    
+    std::cout << std::endl;
+    std::cout << "preOrder: " << std::endl;
+    preOrder(root);
+    
+    std::cout <<endl << "preOrder Iterative:" << std::endl;
+    temp = root;
+    while(temp or !st.empty()){
+        
+        while(temp){
+            std::cout << temp -> data << "\t";
+            st.push(temp);
+            temp = temp -> left;
+        }
+        
+        temp = st.top();
+        st.pop();
+        temp = temp -> right;
+    }
+    
+    std::cout << std::endl;
+    std::cout << "postOrder: " << std::endl;
+    postOrder(root);
+    
+    temp = root;
+    while(temp or !st.empty()){
+        while(temp){
+            st.push(temp);
+            temp = temp -> left;
+        }
+        temp = st.top();
+        temp = temp -> right;
+    }
+    return 0;
+}

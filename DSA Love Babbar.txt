@@ -13365,7 +13365,7 @@ Lecture-29: Dynamic Memory Allocation of 2D Arrays
 Lecture-30: Macros, Global Variables, Inline Functions & Default Args
 	-#include<iostream>
 		-here #include is a preprocessor directive, tell compiler to add built-in functionality in code
-		-like, cout<< function we use to print the output on screen but to access this fuction we have to add iostream.
+		-like, cout<< function we use to print the output on screen but to access this function we have to add iostream.
 
 		double PI = 3.14;
 		-affect on performance, very very small(negligible).
@@ -13561,7 +13561,7 @@ Lecture-30: Macros, Global Variables, Inline Functions & Default Args
 
 	-Global Variable:
 		-BAD Practice/ don't use
-		-all fuction can changes its value of variable.
+		-all function can changes its value of variable.
 		-same variables(memory location) any function can access.
 		-you can use Reference Variable concept.
 
@@ -13625,7 +13625,7 @@ Lecture-30: Macros, Global Variables, Inline Functions & Default Args
 		-don't create extra memory for (pass by value) function argument.
 		-its like macro only, when function having one line code then you can use inline keyword, compiler accept this
 		-if function is of 2 to 3 lines of code then sometime compiler accept the function as inline or sometime don't.
-		-if fuction is more than 3 lines then compiler don't consider it as inline function, but code executes without any error.
+		-if function is more than 3 lines then compiler don't consider it as inline function, but code executes without any error.
 		eg.	
 			#include <iostream>
 			using namespace std;
@@ -24145,7 +24145,7 @@ Lecture-138: Maximum Rectangle with all 1's || DP Series
 			}
 
 		-Using class:
-			-here int x, y & Sum function is private by default we can't access them in main fuction.
+			-here int x, y & Sum function is private by default we can't access them in main function.
 			-need to change the visibility.
 			//ERROR  
 				#include <iostream>
@@ -34334,7 +34334,7 @@ POTD:-[Problem of the Day]
 				vector<int> palidromes;
 
 				for(int i=1; i<=n; i++) {
-					//this will work we used so many built in fuction,
+					//this will work we used so many built in function,
 					//so TLE will be there.
 					// string s = to_string(i);
 					// reverse(s.begin(), s.end());
@@ -103784,11 +103784,235 @@ POTD:-[Problem of the Day]
 				}
 			};	
 
-	1040) 
+	1040) Left Rotate Matrix K times:
+		Problem Statement:
+			You are given an integer k and matrix mat. Rotate the elements of the given matrix to the left k times and return the resulting matrix.
+			Examples:
+				Input: k=1, mat=[[1,2,3],[4,5,6],[7,8,9]]
+				Output:
+				2 3 1
+				5 6 4
+				8 9 7
+				Explanation: Rotate the matrix by one
+				1 2 3       2 3 1
+				4 5 6  =>  5 6 4
+				7 8 9       8 9 7
+			Input: k=2, mat=[[1,2,3],[4,5,6],[7,8,9]]
+				Output:
+				3 1 2
+				6 4 5
+				9 7 8
+				Explanation: After rotating the matrix looks like
+				1 2 3       2 3 1       3 1 2
+				4 5 6  =>  5 6 4  =>   6 4 5
+				7 8 9       8 9 7       9 7 8
+
+			Expected Time Complexity: O(n*m)
+			Expected Auxillary Space: O(n*m)
+
+			Constraints:
+				1<= mat.size, mat[0].size, mat[i][j] <=1000
+				1<=k<=10000
+
+		class Solution {
+			public:
+			vector<vector<int>> rotateMatrix(int k, vector<vector<int>> mat) {
+				// if(k >= mat[0].size())
+				k %= mat[0].size();
+				
+				for(auto &row: mat)
+					rotate(row.begin(), row.begin()+k, row.end());
+					
+				return mat;
+			}
+		};
+
+		// Without using Rotate function:
+			class Solution {
+				public:
+				vector<vector<int>> rotateMatrix(int k, vector<vector<int>> mat) {
+					// if(k >= mat[0].size())
+					int col = mat[0].size();
+					k %= col;
+					
+					for(auto &row: mat){
+						vector<int> cur = row;
+						int j=0;
+						for(int i=k; i<col; i++)
+							row[j++] = cur[i];
+						
+						for(int i=0; i<k; i++)
+							row[j++] = cur[i];
+					}
+					return mat;
+				}
+			};
+
+	1041) Count Number of Bad Pairs:
+		Problem Statement:
+			You are given a 0-indexed integer array nums. A pair of indices (i, j) is a bad pair if i < j and j - i != nums[j] - nums[i].
+			Return the total number of bad pairs in nums.		
+			Example 1:
+				Input: nums = [4,1,3,3]
+				Output: 5
+				Explanation: The pair (0, 1) is a bad pair since 1 - 0 != 1 - 4.
+				The pair (0, 2) is a bad pair since 2 - 0 != 3 - 4, 2 != -1.
+				The pair (0, 3) is a bad pair since 3 - 0 != 3 - 4, 3 != -1.
+				The pair (1, 2) is a bad pair since 2 - 1 != 3 - 1, 1 != 2.
+				The pair (2, 3) is a bad pair since 3 - 2 != 3 - 3, 1 != 0.
+				There are a total of 5 bad pairs, so we return 5.
+			Example 2:
+				Input: nums = [1,2,3,4,5]
+				Output: 0
+				Explanation: There are no bad pairs.
+			
+			Constraints:
+				1 <= nums.length <= 10^5
+				1 <= nums[i] <= 10^9
+
+		// Not Optimized:
+			class Solution {
+				public:
+				long long countBadPairs(vector<int>& nums) {
+					long long cnt=0;
+
+					for(int i=0; i<nums.size()-1; i++){
+						for(int j=i; j<nums.size(); j++){
+							if(j-i != nums[j]-nums[i])
+								cnt++;
+						}            
+					}
+					return cnt;
+				}
+			};
+
+		// Optimized:
+			❌Pending	
 	
-	1041)	
+	1042) Coverage of all Zeros in a Binary Matrix:
+		Problem Statement:
+			Given a binary matrix contains 0s and 1s only, we need to find the sum of coverage of all zeros of the matrix where coverage for a particular 0 is defined as a total number of ones around a zero in left, right, up and bottom directions.
+			Examples:
+			Input:
+			matrix = [[0, 1, 0],
+					[0, 1, 1],
+					[0, 0, 0]]
+			Output: 6
+			Explanation: There are a total of 6 coverage are there
+
+			Input: 
+			matrix = [[0, 1]]
+			Output: 1
+			Explanation: There are only 1 coverage.
+			
+			Expected Time Complexity: O(n * m)
+			Expected Space Complexity: O(1)
+
+			Constraints:
+				1 <= matrix.size, matrix[0].size <= 100
+
+		class Solution {
+			public:
+			bool isValidPoints(int a, int b, int r, int c, vector<vector<int>>& m){
+				if((a >= 0 && a < r) && (b >=0 && b < c) && m[a][b] == 1)
+					return 1;
+				return 0;
+			}
+			int findCoverage(vector<vector<int>>& matrix) {
+				int cnt=0;
+				int r = matrix.size(), c = matrix[0].size();
+				
+				for(int i=0; i<r; i++){
+					for(int j=0; j<c; j++){
+						if(matrix[i][j] == 0){
+							// check all 4 sides
+							if(isValidPoints(i,j-1, r, c, matrix))
+							cnt++;
+							
+							if(isValidPoints(i,j+1, r, c, matrix))
+							cnt++;
+							
+							if(isValidPoints(i-1,j, r, c, matrix))
+							cnt++;
+							
+							if(isValidPoints(i+1,j, r, c, matrix))
+							cnt++;
+						}
+					}
+				}
+				return cnt;
+			}
+		};
+
+	#CodeChef Starters-140
+		1043) Yoga Day:
+			Problem Statement:
+				Surya Namaskar, also known as Sun Salutation, is a series of 12 yoga poses performed in a sequence.
+				Chef repeats this sequence of yoga poses multiple times during his session.
+				Given that Chef has performed 𝑁 yoga poses, find the number of rounds of Surya Namaskar he completed during the session.
+				Input Format
+				The input will contain a single integer 𝑁 denoting the number of yoga poses Chef performed during his session.
+				Output Format
+				Output the number of rounds of Surya Namaskar Chef completed during the session.
+				Constraints
+				1≤N≤100
+				Sample 1:
+				Input
+				55
+				Output
+				4
+				Explanation:
+				Chef completed 
+				4
+				4 rounds of Surya Namaskar comprising of 4⋅12=48
+				The fifth round was incomplete since Chef performed only 7 poses in that round.
+				Sample 2:
+				Input
+				11
+				Output
+				0
+				Explanation:
+				Chef performed 11 yoga poses whereas each Surya Namaskar consists of 12 poses. Thus, he did not complete even 1 round of Surya Namaskar.
+				Sample 3:
+				Input
+				24
+				Output
+				2
+				Explanation:
+				Since Chef performed 24 yoga poses and each Surya Namaskar consists of 12 poses, he completed 2 rounds of Surya Namaskar.
+
+			#include <bits/stdc++.h>
+			using namespace std;
+			int main() {
+				int n;
+				std::cin >> n;
+				cout<< n /12 ;
+				return 0;
+			}
+
+	1044) 
 	
-	1042)	
+	1045)
+	
+	1046)
+	
+	1047)
+	
+	1048)
+	
+	1049)
+	
+	1050)
+	
+	1051)
+	
+	1052)
+	
+	1053)
+	
+	1054)
+	
+	1055)
 	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
