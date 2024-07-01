@@ -40857,7 +40857,7 @@ POTD:-[Problem of the Day]
 			return n;
 		}
 	
-	188) Power Set:❌Pending
+	188) Power Set:
 		Problem Statement
 			You are given a sorted array of 'N' integers. You have to generate the power set for
 			this array where each subset of this power set is individually sorted.
@@ -40921,6 +40921,27 @@ POTD:-[Problem of the Day]
 			}
 			return ans;
 		}
+
+		// Recursive:
+			#include <bits/stdc++.h>
+			void GenerateSet(vector<int> &v, vector<vector<int>> &ans,vector<int> t, int i){
+				if(i >= v.size()){
+					ans.push_back(t);
+					return ;
+				}
+				GenerateSet(v, ans, t, i+1);
+
+				t.push_back(v[i]);
+				GenerateSet(v, ans, t, i+1);
+			}
+
+			vector<vector<int>> pwset(vector<int>v) {
+				vector<vector<int>> ans;
+				vector<int> temp;
+
+				GenerateSet(v, ans, temp, 0);
+				return ans;
+			}
 	
 	189) Radix Sort:
 		Constraints:
@@ -48511,6 +48532,14 @@ POTD:-[Problem of the Day]
 				return "ODD";
 			return "EVEN";
 		}
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			string maximumDifference(int n, vector<int>& arr) {
+				sort(arr.begin(), arr.end());
+				return ((arr[arr.size()-1] - arr[0]) & 1) ? "ODD" : "EVEN";
+				// return ((arr.back() - arr[0]) & 1) ? "ODD" : "EVEN";
+			}
 	
 	286) Find duplicate rows in a binary matrix:
 		Problem Statement:
@@ -103990,29 +104019,243 @@ POTD:-[Problem of the Day]
 				return 0;
 			}
 
-	1044) 
-	
-	1045)
-	
-	1046)
-	
-	1047)
+	1044) Ninja and power of 2
+		Problem statement
+			Ninja loves playing with numbers. So one day, he wants to arrange a few numbers in the ‘N’ number of rows. The first row contains 1 number, the second row has two numbers, the third row has 4 numbers, and so on.
+			Ninja starts placing numbers in increasing order, with absolute difference 1, starting from 1 and continuing till he encounters 9, and then he again restarts from 1.
+			You are given an integer ‘N’ denoting the given number of rows. Can you print the pattern Ninja wants to create?
+			Pattern for N = 4:
+			1
+			23
+			4567
+			89123456
+			Constraints:
+				1 <= T <= 5
+				1 <= N <= 15
+				Where ‘T’ denotes number of test cases and ‘N’ is the given integer denoting the given number of rows.
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				3
+				4
+				Sample Output 1 :
+				1
+				23
+				4567
+				1
+				23
+				4567
+				89123456
+				Explanation for Sample Input 1 :
+				In the first test case, we are required to create a pattern consisting of 3 lines. First-line contains ‘1’. From the second line, we have to place a number one more than the previous value. So we place 2.Then we put 2 and move to the following line because this line will contain only 2 elements. In the following line, we have to place 4 numbers, so we place 4, 5, 6, and 7.
+				In the second test case, we are required to create a pattern consisting of 4 lines. First-line contains ‘1’. From the second line, we have to place a number one more than the previous value. So we place 2.Then we put 2 and 3 and move to the following line because this line will contain only 2 elements. In the following line, we have to place 4 numbers, so we place 4, 5, 6, and 7.In the last line, we have to place 8 numbers, so we place 8, 9, 1, 2, 3, 4, 5, and 6.
+				Sample Input 2 :
+				2
+				7
+				2
+				Sample Output 2 :
+				1
+				23
+				4567
+				89123456
+				7891234567891234
+				56789123456789123456789123456789
+				1234567891234567891234567891234567891234567891234567891234567891
+				1
+				23
+
+		#include <bits/stdc++.h> 
+		vector<vector<int>> numberPattern(int n) {
+			vector<vector<int>> ans(n);
+			int cnt = 1, repeate=1;
+
+			for(int i=0; i<n; i++){
+				int itr = repeate;
+				vector<int> temp;
+				while(itr--){
+						if(cnt > 9)
+						cnt =1;
+						temp.push_back(cnt++);
+				}
+				repeate = repeate * 2;
+				ans[i]= temp;
+
+				ans[i].push_back(-1);         // actually this is not mandatory here, but question is not proper.
+			}
+			return ans;
+		}
+
+	1045) Identical Linked Lists:
+		https://www.geeksforgeeks.org/problems/identical-linked-lists/1
+		Problem statement:
+			Given the two singly Linked Lists respectively. The task is to check whether two linked lists are identical or not. 
+			Two Linked Lists are identical when they have the same data and with the same arrangement too. If both Linked Lists are identical then return true otherwise return false. 
+			Examples:
+				Input:
+				LinkedList1: 1->2->3->4->5->6
+				LinkedList2: 99->59->42->20
+				Output: false
+				Explanation:
+
+				As shown in figure linkedlists are not identical.
+				Input:
+				LinkedList1: 1->2->3->4->5
+				LinkedList2: 1->2->3->4->5
+				Output: true
+				Explanation: 
+				
+				As shown in figure both are identical.
+
+			Expected Time Complexity: O(n)
+			Expected Auxilliary Space: O(1)
+
+			Constraints:
+				1 <= length of lists <= 10^3
+
+		/*
+			Structure of the node of the linked list is as
+			struct Node {
+				int data;
+				struct Node *next;
+				Node(int x) {
+						data = x;
+						next = NULL;
+				}
+			};
+		*/
+
+		// Function to check whether two linked lists are identical or not.
+		bool areIdentical(struct Node *head1, struct Node *head2) {
+			while(head1 && head2){
+				if(head1 -> data != head2 -> data)
+						return 0;
+				head1 = head1 -> next;
+				head2 = head2 -> next;
+			}
+			
+			if(head1 == NULL && head2 == NULL)
+				return 1;
+			return 0;
+		}
+
+	1046) Delete node in Doubly Linked List:
+		Problem statement:
+			Given a doubly Linked list and a position. The task is to delete a node from a given position (position starts from 1) in a doubly linked list and return the head of the doubly Linked list.
+			Examples:
+			Input: LinkedList = 1 <--> 3 <--> 4, x = 3
+			Output: 1 3  
+			Explanation: 
+			After deleting the node at position 3 (position starts from 1),the linked list will be now as 1 <--> 3.
+			
+			Input: LinkedList = 1 <--> 5 <--> 2 <--> 9, x = 1
+			Output: 5 2 9
+			Explanation:
+
+			Expected Time Complexity: O(n)
+			Expected Auxilliary Space: O(1)
+
+			Constraints:
+				2 <= size of the linked list(n) <= 10^5
+				1 <= x <= n
+				1 <= node.data <= 10^9
+
+		/* Structure of Node
+			struct Node {
+				int data;
+				struct Node *next;
+				struct Node *prev;
+
+				Node(int x){
+						data = x;
+						next = NULL;
+						prev = NULL;
+				}
+			};
+		*/
+
+		class Solution {
+			public:
+			Node* deleteNode(Node* head, int x) {
+				// if its start position
+				if(x == 1){
+						head = head -> next;
+						head -> prev = NULL;
+						return head;
+				}
+				
+				Node* temp = head;
+				while(--x)
+						temp = temp -> next;
+						
+				// it confirms that its last node
+				if(temp -> next == NULL)
+						temp -> prev -> next = NULL, temp -> prev = NULL;
+				else
+						temp -> prev -> next = temp -> next, 
+						temp -> next -> prev = temp -> prev,
+						temp -> next = temp -> prev = NULL;
+				
+				return head;
+			}
+		};
+
+	1047) Three Consecutive Odds:
+		Problem statement:
+			Given an integer array arr, return true if there are three consecutive odd numbers in the array. Otherwise, return false.        
+			Example 1:
+				Input: arr = [2,6,4,1]
+				Output: false
+				Explanation: There are no three consecutive odds.
+			Example 2:
+				Input: arr = [1,2,34,3,4,5,7,23,12]
+				Output: true
+				Explanation: [5,7,23] are three consecutive odds.
+			Constraints:
+				1 <= arr.length <= 1000
+				1 <= arr[i] <= 1000
+		
+		class Solution {
+			public:
+			bool threeConsecutiveOdds(vector<int>& arr) {
+				int cnt =0;
+				for(int i=0; i<arr.size(); i++){
+						if(arr[i]&1)
+							cnt++;
+						else
+							cnt=0;
+						
+						if(cnt == 3)
+							return 1;
+				}
+				return 0;
+			}
+		};
 	
 	1048)
 	
 	1049)
-	
+
 	1050)
-	
+
 	1051)
-	
+
 	1052)
-	
+
 	1053)
-	
+
 	1054)
-	
+
 	1055)
+
+	1056)
+
+	1057)
+
+	1058)
+
+	1059)
+
+	1060)
 	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
