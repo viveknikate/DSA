@@ -104494,13 +104494,261 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	1052) 
+	1052) Subtract The Product And Sum Of Digits Of An Integer:
+		Problem statement
+			You are given an integer number ‘N’, and your task is to return the difference between the product of its digits and the sum of its digits.
+			Note:
+			You do not need to print anything; it has already been taken care of. Just implement the given function.
+			For Example :
+			Input: N = 234
+			Output: 15 
+			Explanation: 
+			Product of digits = 2 * 3 * 4 = 24 
+			Sum of digits = 2 + 3 + 4 = 9 
+			Result = 24 - 9 = 15
+			Constraints :
+				1 <= T <= 3000
+				1 <= N <= 10^5
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				234
+				4421
+				Sample Output 1 :
+				15
+				21
+				Explanation For Sample Input 1 :
+				Product of digits = 2 * 3 * 4 = 24 
+				Sum of digits = 2 + 3 + 4 = 9 
+				Result = 24 - 9 = 15
 
-	1053)
+				Product of digits = 4 * 4 * 2 * 1 = 32 
+				Sum of digits = 4 + 4 + 2 + 1 = 11
+				Result = 32 - 11 = 21
+				Sample Input 2 :
+				1
+				87
+				Sample Output 2 :
+				41
 
-	1054)
+		#include <bits/stdc++.h> 
+		int findProductSumDifference(int n){
+			int sum=0, prod=1;
+			while(n){
+				sum += n%10;
+				prod *= n%10;
+				n /= 10;
+			}
+			return prod - sum;
+		}
 
-	1055)
+	1053) Delete Kth Node From End:
+		https://www.naukri.com/code360/problems/delete-kth-node-from-end-in-linked-list_799912
+		Problem statement
+			You have been given a singly Linked List of 'N' nodes with integer data and an integer 'K'.
+			Your task is to remove the 'K'th node from the end of the given Linked List and return the head of the modified linked list.
+			Example:
+				Input : 1 -> 2 -> 3 -> 4 -> 'NULL'  and  'K' = 2
+				Output: 1 -> 2 -> 4 -> 'NULL'
+			Explanation:
+				After removing the second node from the end, the linked list become 1 -> 2 -> 4 -> 'NULL'.
+			Sample Input 1 :
+				6 3
+				1 2 3 4 5 6 
+				Sample Output 1 :
+				1 2 3 5 6
+				Explanation for Sample Input 1:
+				In the given linked list the node with data ‘4’ will be removed as this is the 3rd node from the end of the Linked List.
+				Sample Input 2 :
+				3 3
+				1 2 3
+				Sample Output 2 :
+				2 3
+			Constraints :
+				1 <= 'N' <= 10^3
+				1 <= 'K' <= 'N'
+				1 <= 'data' <= 10^3
+				Time Limit: 1 sec.
+
+		/*
+			Following is the class structure of the Node class:
+			class Node {
+				public:
+					int data;
+					Node *next;
+				Node(){
+					this -> data = 0;
+					next = NULL;
+				}
+				Node(int data){
+					this->data = data;
+					this->next = NULL;
+				}
+				Node(int data, Node* next) {
+					this->data = data;
+					this->next = next;
+				}
+			};
+		*/
+
+		int getLength(Node* h){
+			int l=0;
+			while(h)
+				l++, h = h -> next;
+
+			return l;
+		}
+
+		Node* reverse(Node* h){
+			Node* cur = h;
+			Node* prev = NULL;
+
+			while(cur){
+				Node *up = cur -> next;
+				cur -> next = prev;
+		
+				prev = cur;
+				cur = up;
+			}
+			return prev;
+		}
+
+		Node *removeKthNode(Node *head, int K) {
+			int length = getLength(head);
+
+			if(K == length)
+				return head -> next;
+
+			head = reverse(head);
+			if(K == 1){
+				head = head -> next;
+				head = reverse(head);
+				return head;
+			}
+
+			Node* cur = head;
+			Node* prev = nullptr;
+			while(--K){
+				prev = cur;
+				cur = cur -> next;
+			}
+
+			prev -> next = cur -> next;
+			head = reverse(head);
+			return head;
+		}
+
+	1054) Merge Nodes in Between Zeros:
+		Problem Statement:
+			You are given the head of a linked list, which contains a series of integers separated by 0's. The beginning and end of the linked list will have Node.val == 0.
+			For every two consecutive 0's, merge all the nodes lying in between them into a single node whose value is the sum of all the merged nodes. The modified list should not contain any 0's.
+			Return the head of the modified linked list.
+
+			Example 1:
+				Input: head = [0,3,1,0,4,5,2,0]
+				Output: [4,11]
+				Explanation: 
+				The above figure represents the given linked list. The modified list contains
+				- The sum of the nodes marked in green: 3 + 1 = 4.
+				- The sum of the nodes marked in red: 4 + 5 + 2 = 11.
+			Example 2:
+				Input: head = [0,1,0,3,0,2,2,0]
+				Output: [1,3,4]
+				Explanation: 
+				The above figure represents the given linked list. The modified list contains
+				- The sum of the nodes marked in green: 1 = 1.
+				- The sum of the nodes marked in red: 3 = 3.
+				- The sum of the nodes marked in yellow: 2 + 2 = 4.
+
+			Constraints:
+				The number of nodes in the list is in the range [3, 2 * 10^5].
+				0 <= Node.val <= 1000
+				There are no two consecutive nodes with Node.val == 0.
+				The beginning and end of the linked list have Node.val == 0.
+
+		/**
+		* Definition for singly-linked list.
+		* struct ListNode {
+		*     int val;
+		*     ListNode *next;
+		*     ListNode() : val(0), next(nullptr) {}
+		*     ListNode(int x) : val(x), next(nullptr) {}
+		*     ListNode(int x, ListNode *next) : val(x), next(next) {}
+		* };
+		*/
+		class Solution {
+			public:
+			ListNode* mergeNodes(ListNode* head) {
+				ListNode* ans = head -> next;
+				ListNode* prevPtr = head -> next;
+				
+				ListNode* temp = head -> next;
+
+				int sum =0;
+				while(temp){
+					if(temp -> val == 0){
+						prevPtr -> val = sum;
+						prevPtr -> next = temp -> next;
+						prevPtr = temp -> next;
+						sum = 0;
+					}else
+						sum += temp -> val;
+					
+					temp = temp -> next;
+				}
+				return ans;
+			}
+		};
+
+	#CN WeeklyContest-133:
+		1055) Append to Disrupt:
+			Problem statement
+				You are given an array 'A' of 'N' integers numbered from '0' to 'N - 1'. It is guaranteed that the array 'A' is sorted in non-decreasing order.
+				Determine the maximum element from the array 'A' such that after appending it to the end of the array, the array is no longer sorted in non-decreasing order. If no such element exists, return -1.
+				Example:
+				N = 3
+				A = [1, 3, 3]
+				We can append 'A[0]' to the array. So, the resulting array is ['1', '3', '3', '1'], which is not sorted in non-decreasing order.
+				It can be proved that there is no element greater than '1' in the array 'A' such that after appending it to the end of the array, the array is no longer sorted in non-decreasing order.
+				So, the answer for this case is '1'.
+				Constraints:
+					1 <= 'N' <= 10^5
+					1 <= 'A[i]' <= 10^5
+					Time limit: 1 sec
+				Sample input 1:
+					2
+					2
+					4 4
+					3
+					4 10 11
+					Sample output 1:
+					-1
+					10
+					Explanation of sample input 1:
+					For test case 1:
+					It can be proved that there is no element in the array 'A' such that after appending it to the end of the array, the array is no longer sorted in non-decreasing order.
+					So, the answer for this case is '-1'. 
+
+					For test case 2:
+					We can append 'A[1]' to the array. So, the resulting array is ['4', '10', '11', '10'], which is not sorted in non-decreasing order.
+					It can be proved that there is no element greater than '10' in the array 'A' such that after appending it to the end of the array, the array is no longer sorted in non-decreasing order.
+					So, the answer for this case is '10'.
+					Sample input 2:
+					2
+					5
+					4 5 5 7 7
+					9
+					1 1 1 1 2 2 2 3 3
+					Sample output 2:
+					5
+					2
+
+			int canYouDisrupt(int n, vector<int> &v) {
+				for(int i=v.size()-2; i >=0; i--)
+					if(v[i] < v[i+1])
+						return v[i];
+				return -1;
+			}
 
 	1056)
 
