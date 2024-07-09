@@ -57931,7 +57931,6 @@ POTD:-[Problem of the Day]
 			return -1;
 		}
 
-
 		int findPivote(vector<int> a, int s, int e){
 			while(s < e){
 				int mid = (s+e)/2;
@@ -104824,11 +104823,236 @@ POTD:-[Problem of the Day]
 			}
 		};			
 
-	1058) 
+	1058) Search in Rotated Sorted Array (Refer Q.390)
+		Problem statement:
+			Given a sorted (in ascending order) and rotated array arr of distinct elements which may be rotated at some point and given an element key, the task is to find the index of the given element key in the array arr. The whole array arr is given as the range to search.
+			Rotation shifts elements of the array by a certain number of positions, with elements that fall off one end reappearing at the other end.
+			Note:- 0-based indexing is followed & returns -1 if the key is not present.
+			Examples :
+				Input: arr[] = [5, 6, 7, 8, 9, 10, 1, 2, 3], key = 10
+				Output: 5
+				Explanation: 10 is found at index 5.
+				Input: arr[] = [3, 5, 1, 2], key = 6
+				Output: -1
+				Explanation: There is no element that has value 6.
 
-	1059)
+			Expected Time Complexity: O(log n)
+			Expected Auxiliary Space: O(1)
 
-	1060)
+			Constraints:
+				1 ≤ arr.size() ≤ 10^6
+				0 ≤ arr[i] ≤ 10^6
+				1 ≤ key ≤ 10^5
+
+		class Solution {
+			public:
+			int search(vector<int>& arr, int key) {
+				if(find(arr.begin(), arr.end(), key) != arr.end())
+					return find(arr.begin(), arr.end(), key) - arr.begin();
+				return -1;
+			}
+		};
+
+	1059) Magic in CPP:
+		Problem Statement:
+			This Module is all about pointers and how they can be cleverly employed to solve typical CPP problems.
+			Given two integers A and B. The task is to swap two numbers. Swapping here means to interchange the values of A and B.
+			Example 1:
+				Input:
+				A = 3 
+				B = 5
+				Output: 
+				5 3
+				Explanation:
+				Here, A = 3 and B = 5.
+				After swapping A = 5 and B = 3.
+
+			Your Task:
+				Your task is to complete the two swap() functions, such that values of A and B gets interchanged.
+
+			Constraints:
+				1 <= A, B <= 10^6
+
+		//User function Template for C++
+		// Function to swap A and B
+		// using pointers
+		void swap(int *A, int *B){
+			// Your code here
+			int t = *A;
+			*A = *B;
+			*B = t;
+		}
+
+		// Function to swap A and B
+		// using reference
+		void swap(int &A, int &B){
+			// Your code here
+			int t = A;
+			A = B;
+			B = t;
+		}
+
+	1060) Two Dimensional World:
+		Problem Statement:
+			In CPP we can't pass 2D arrays in normal way to a function. The array has to be declared in a special way.
+			Given a 2D array A[][] of size N x N consisting of integers. The task is to print all the elements in matrix (row and column order) form.
+			Example 1:
+			Input:
+			3
+			1 2 3
+			4 5 6
+			7 8 9
+			Output: 
+			1 2 3
+			4 5 6
+			7 8 9
+			Explanation:
+			Elements of 2D array in row-column order 
+			are as mentioned in Sample Output.
+			
+			Your Task:
+				Your task is to complete the function twoDimensional() that takes two parameters: 2D array mat and N. You need to write the parameter for 2D array and print matrix.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 100
+				1 <= A[i][j] <= 10^6
+
+		//{ Driver Code Starts
+		//Initial Template for C++
+		#include <iostream>
+		using namespace std;
+		// } Driver Code Ends
+		//User function Template for C++
+
+		/* Function to take input for 2D array elements
+		* Note : Mention matrix in argument also.
+		* N : size of matrix
+		*/
+		void twoDimensional(int **a,int N){
+			
+			// Loop to iterate through matrix
+			for(int i = 0;i<N;i++){
+				for(int j = 0;j<N;j++){
+					// Your code here
+					cout<<a[i][j]<<" ";
+				}
+				cout << endl;
+			}
+		}
+
+		//{ Driver Code Starts.
+		// Driver code
+		int main() {
+			
+			int testcase;
+			cin >> testcase;
+			
+			while(testcase--){
+				int N;
+				cin >> N;
+				
+				// Declaring mat as pointer to pointer
+				int **mat;
+			
+				// mat pointer contains array of pointer to array
+				mat = new int*[N];
+				
+				// Taking input to mat[][]
+				for(int i = 0;i<N;i++){
+					mat[i] = new int[N];
+				}
+				
+				for(int i = 0;i<N;i++){
+					for(int j = 0;j<N;j++){
+						cin >> mat[i][j];
+					}
+				}
+				
+				twoDimensional(mat, N);   
+			}
+			
+			return 0;
+		}
+		// } Driver Code Ends
+
+	1061) Delete Array:
+		Problem Statement:
+			Here, we'll learn the delete keyword that's used to clear the dynamically allocated memory in CPP.
+			Given a dynamic array A of size N. The task is to find the sum of array elements.
+			Example 1:
+				Input:
+				N = 5
+				A[] = 1 2 3 4 5
+				Output: 
+				15
+				1
+				Explanation:
+				Sum of array elements is 15 
+				(1 + 2 + 3 + 4 + 5). The first
+				element is 1.
+
+			Your Task:
+				Just comment the line that is deallocating the array. Driver code will output the sum of array elements and in next line prints the first array element(A[0]).
+			Constraints:
+				1 <= N <= 100
+				1 <= A[i] <= 10^5
+
+		//{ Driver Code Starts
+		//Initial Template for C++
+
+		#include <iostream>
+		using namespace std;
+
+		int main() {
+			int testcase;
+			cin >> testcase;
+			
+			while(testcase--){
+				int N;
+				cin >> N;
+				
+				// Declaring dynamic 1D array
+				int *arr = new int[N];
+				for(int i = 0;i<N;i++)
+					cin >> arr[i];
+				
+				int sum = 0;
+				for(int i = 0;i<N;i++{
+				sum += arr[i];
+
+		// } Driver Code Ends
+		//User function Template for C++
+
+		// Code to delete the array
+		// Task is to comment the line which deletes 
+		// the array such that required output is printed
+		// delete[] arr; //comment this line so memory doesn't get deallocated
+
+		//{ Driver Code Starts.
+				cout << sum << endl;    
+				cout << arr[0] << endl;
+			}
+			return 0;
+		}
+		// } Driver Code Ends
+
+	1062) 
+	
+	1063)
+	
+	1064)
+	
+	1065)
+	
+	1066)
+	
+	1067)
+	
+	1068)
+	
+	1069)
+	
+	1070)
 	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
