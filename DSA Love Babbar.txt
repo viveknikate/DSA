@@ -101010,7 +101010,7 @@ POTD:-[Problem of the Day]
 		// Optimized:
 			❌Pending
 	
-	998)	Patching Array:
+	998) Patching Array:
 		Problem Statement:
 			Given a sorted integer array nums and an integer n, add/patch elements to the array such that any number in the range [1, n] inclusive can be formed by the sum of some elements in the array.
 			Return the minimum number of patches required.		
@@ -101196,8 +101196,8 @@ POTD:-[Problem of the Day]
 			Following is the class structure of the Node class:
 				class Node {
 					public:
-					int data;
-					Node *next;
+						int data;
+						Node *next;
 					Node(int data) {
 						this->data = data;
 						this->next = NULL;
@@ -101229,6 +101229,33 @@ POTD:-[Problem of the Day]
 					h2 = h2 -> next;
 				}
 			}
+			return head;
+		}
+
+		// or
+		Node *findPartiton(Node*head, int x) {
+			vector<int> v1;
+			vector<int> v2;
+			
+			Node* t = head;
+			while(t){
+				int val = t -> data;
+				if(val < x)
+					v1.push_back(val);
+				else
+					v2.push_back(val);
+				t = t -> next;
+			}
+
+			t = head;
+			int i=0;
+			while(i < v1.size())
+				t -> data = v1[i++], t = t -> next;
+			
+			i = 0;
+			while(i < v2.size())
+				t -> data = v2[i++], t = t -> next;
+
 			return head;
 		}
 
@@ -105276,17 +105303,277 @@ POTD:-[Problem of the Day]
 			return ans;
 		}
 
-	1065)
+	1065) Segregate 0s and 1s:
+		Problem Statement:
+			Given an array arr consisting of only 0's and 1's in random order. Modify the array in-place to segregate 0s onto the left side and 1s onto the right side of the array.
+			Examples :
+				Input: arr[] = [0, 0, 1, 1, 0]
+				Output: [0, 0, 0, 1, 1]
+				Explanation:  After segregation, all the 0's are on the left and 1's are on the right. Modified array will be [0, 0, 0, 1, 1].
+				Input: arr[] = [1, 1, 1, 1]
+				Output: [1, 1, 1, 1]
+				Explanation: There are no 0s in the given array, so the modified array is [1, 1, 1, 1]
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 ≤ arr.size() ≤ 10^6
+				0 ≤ arr[i] ≤ 1
+
+		class Solution {
+			public:
+			void segregate0and1(vector<int> &arr) {
+				// counts of zero's
+				int cnt=0;
+				for(int i: arr)
+					if(i == 0)
+						cnt++;
+					
+				// placing all zero's first 
+				int i = cnt;
+				while(cnt--)
+					arr[cnt] = 0; 
+					
+				// then one's
+				while(i < arr.size())
+					arr[i++] = 1;
+			}
+		};
+
+	1066) Remaining String:
+		Problem statement:
+			Given a string s without spaces, a character ch and an integer count. Your task is to return the substring that remains after the character ch has appeared count number of times.
+			Note:  Assume upper case and lower case alphabets are different. “”(Empty string) should be returned if it is not possible, or the remaining substring is empty.
+
+			Examples:
+				Input: s = "Thisisdemostring", ch = 'i', count = 3
+				Output: ng
+				Explanation: The remaining substring of s after the 3rd
+				occurrence of 'i' is "ng", hence the output is ng.
+				Input: s = "Thisisdemostri", ch = 'i', count = 3
+				Output: ""
+				Explanation: The 3rd occurence of 'i' is at the last index. In this case the remaining substring is empty, hence we return empty string.
+				Input: s = "abcd", ch = 'x', count = 2
+				Output: ""
+				Explanation: The character x is not present in the string, hence we return empty string.
+			Expected Time Complexity: O(|s|)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1<= s.length()<=10^5
+				1<=count<=s.length()
+				s[i] is both upper case and lower case
+
+		class Solution {
+			public:
+			string printString(string s, char ch, int count) {
+				while(count--){
+					int pos = s.find(ch);
+					if(pos == string::npos)
+						return "";
+					s = s.substr(pos + 1);
+				}
+				return s;
+			}
+		};
 	
-	1066)
+	1067) Concatenate The Largest Digit
+		Problem statement
+			You are given three non-zero numbers ‘A’, ‘B’, and ‘C’. The task is to find the number formed by concatenating the largest digit from each of these numbers in the order of ‘A’, ‘B’, and ‘C’.
+			For Example :
+			A = 5678, B = 45 and C = 769
+			The largest digit in ‘A’ is ‘8’, ‘B’ is ‘5’, and ‘C’ is ‘9’. The new number formed by concatenating the largest digit from each of these numbers is ‘859’. So, the answer is ‘859’.
+			Constraints :
+				1 <= T <= 10^4
+				1 <= A, B, C <= 10^6
+
+				Time limit: 1 Sec
+			Sample Input 1 :
+			2
+			4554 292 123567
+			90909 111 876
+			Sample Output 1 :
+			597
+			918
+			Explanation Of Sample Input 1 :
+			Test Case 1:
+			a = 4554, b = 292 and c = 123567
+			The largest digit in ‘a’ is ‘5’, ‘b’ is ‘9’, and ‘c’ is ‘7’. The new number formed by concatenating the largest digit from each of these numbers is ‘597’. So, the answer is ‘597’. 
+
+			Test Case 2:
+			a = 90909, b = 111 and c = 876
+			The largest digit in ‘a’ is ‘9’, ‘b’ is ‘1’, and ‘c’ is ‘8’. The new number formed by concatenating the largest digit from each of these numbers is ‘918’. So, the answer is ‘918’.
+			Sample Input 2 :
+			2
+			324865 123 456
+			1 22 333
+			Sample Output 2 :
+			836
+			123
+
+		#include <bits/stdc++.h> 
+		int concatLargestDigit(int a, int b, int c) {
+			string s = to_string(a);
+			int ans = *max_element(s.begin(), s.end()) - '0';
+
+			s = to_string(b);
+			ans = ans * 10 + *max_element(s.begin(), s.end()) - '0';
+			
+			s = to_string(c);
+			ans = ans * 10 + *max_element(s.begin(), s.end()) - '0';
+
+			return ans;
+		}
 	
-	1067)
+	1068) Largest Prime Factor:
+		Problem statement
+			You are given a positive integer ‘n’. Your task is to find the largest prime factor of this given positive integer.
+
+			Note :
+			If there is no prime factor of a given integer, then print -1.
+			Constraints :
+				1 <= T <= 50
+				1 <= n <= 10^9
+				Where ‘T’ is the number of test cases and ‘n’ is the size of the array.
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				5 
+				27
+				Sample Output 1 :
+				5
+				3
+				Explanation of the Sample Input1 :
+				Test case 1:
+				5 is a prime number, so its largest prime is 5 itself  
+
+				Test case 2:
+				Prime factorization of 27 is 3*3*3.
+				Thus, it's an only prime factor is 3.
+				Sample Input 2 :
+				2
+				14
+				30
+				Sample Output 2 :
+				7
+				5
+				Explanation of the Sample Input 2 :
+				Test case 1 :
+				Prime factorization of 14 is 2*7.
+				It has two prime factors, 2 and 7, the largest prime number out of them is 7.
+
+				Test case 2 :
+				Prime factorization of 30 is 2*3*5.
+				It has three prime factors, 2, 3, and 5, the largest of them is 5.
+
+		#include <bits/stdc++.h> 
+		bool isPrime(int n){
+			for(int i=2; i<= (n/2); i++)
+				if(n % i == 0)
+					return 0;
+			return 1;
+		}
+		
+		int largestPrimeFactor(int n) {
+			if(n == 1) return -1;
+
+			if(isPrime(n)) return n;
+
+			int ans = -1;
+			for(int i=2; i <= (n/2); i++){
+				if(isPrime(i) && (n % i == 0))
+					ans = i;
+			}
+			return ans;
+		}
 	
-	1068)
+	1069) Partition List: (Refer Q 1000)
+		Problem statement
+			You are given a Singly Linked List of integers with a head pointer. Every node of the Linked List has a value written on it.
+			A sample Linked List
+			Now you have been given an integer value ‘K’. Your task is to rearrange this linked list such that the following conditions hold true :
+			1. All nodes that have a value less than ‘K’ must come before the nodes that have a value greater than equal to ‘K’.
+			2. All nodes must maintain the original relative order as they have present in the original linked list after rearrangement.
+			Sample Input 1:
+			2
+			3 6 2 7 9 -1
+			6
+			1 3 8 7 -1
+			8
+			Sample Output 1:
+			3 2 6 7 9
+			1 3 7 8
+			Explanation for sample input 1:
+			Test case 1:
+			The given linked list is shown below and K = 6.
+
+			We can rearrange this linked as 3 -> 2 -> 6 -> 7 -> 9
+			Nodes having a value less than ‘K’ = [3, 2]
+			Nodes having a value greater than or equal to ‘K’ = [6, 7, 9]
+			Here [3, 2] comes before [6, 7, 9], therefore, the final list will be [3, 2, 6, 7, 9].
+
+			Test case 2:
+			The given linked list is shown below and K = 8.
+
+			We can rearrange this linked as 1 -> 3 -> 7 -> 8
+			Nodes having a value less than ‘K’ = [1, 3, 7]
+			Nodes having a value greater than or equal to ‘K’ = [8]
+			Here [1, 3, 7] comes before [8], therefore, the final list will be [1, 3, 7, 8].
+			Sample Input 2:
+			1
+			1 2 3 7 -1
+			5
+			Sample Output 2:
+			1 2 3 7
+			Explanation for sample input 1:
+			Test case 1:
+			The given linked list is shown below and K = 5
+
+			We can rearrange this linked as 1 -> 2 -> 3 -> 7
+			Nodes having value less than ‘K’ = [1, 2, 3]
+			Nodes having value greater than or equal to ‘K’ = [7]
+			Here [1, 2, 3] comes before [7],  therefore, the final list will be [1, 2, 3, 7].
+
+		/****************************************************************
+			Following is the class structure of the LinkedListNode class:
+			template <typename T>
+			class LinkedListNode {
+				public:
+					T data;
+					LinkedListNode<T> *next;
+				LinkedListNode(T data) {
+					this->data = data;
+					this->next = NULL;
+				}
+			};
+		*****************************************************************/
+
+		LinkedListNode<int> * partitionList(LinkedListNode<int> *head, int k) {
+			vector<int> v1, v2;
+			LinkedListNode<int>* t = head;
+			while(t){
+				if(t -> data < k){
+					v1.push_back(t -> data);
+				}else{
+					v2.push_back(t -> data);
+				}
+				t = t -> next;
+			}
+
+			t = head;
+			int i=0;
+			while(i < v1.size())
+				t -> data = v1[i++], t = t->next;
+
+			i=0;
+			while(i < v2.size())
+				t -> data = v2[i++], t = t->next;
+
+			return head;
+		}
 	
-	1069)
-	
-	1070)
+	1070) 
 	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
