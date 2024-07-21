@@ -105573,7 +105573,82 @@ POTD:-[Problem of the Day]
 			return head;
 		}
 	
-	1070) 
+	1070) Maximum product subset of an array:
+		Problem Statement:
+			Given an array arr. The task is to find and return the maximum product possible with the subset of elements present in the array.
+			Note:
+				The maximum product can be a single element also.
+				Since the product can be large, return it modulo 109 + 7.
+			Examples:
+				Input: arr[] = [-1, 0, -2, 4, 3]
+				Output: 24
+				Explanation: Maximum product will be ( -1 * -2 * 4 * 3 ) = 24
+				Input: arr[] = [-1, 0]
+				Output: 0
+				Explanation: Maximum product will be ( -1 * 0) = 0
+				Input: arr[] = [5]
+				Output: 5
+				Explanation: Maximum product will be 5.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(1)
+
+			Constraints:
+				1 <= arr.size() <= 2 * 10^4
+				-10 <= arr[i] <= 10
+
+		class Solution {
+			public:
+			void subSeq(vector<int> a, vector<vector<int>> &ans, vector<int> t, int i){
+				if(i >= a.size()){
+					ans.push_back(t);
+					return ;
+				}
+				
+				subSeq(a, ans, t, i+1);
+				t.push_back(a[i]);
+				subSeq(a, ans, t, i+1);
+			}
+			long long int findMaxProduct(vector<int>& arr) {
+				vector<vector<int>> v;
+				vector<int> t;
+				subSeq(arr, v, t, 0);
+				
+				int mod = 1e9+7;
+				long long int mx = 0, prod=1;
+				
+				for(auto row: v){
+					for(int i: row)
+						prod = (prod * i) % mod;
+						
+					mx = max(mx, prod);
+					prod = 1;
+				}
+				return mx;
+			}
+		};
+	
+	1071)
+
+	1072)
+	
+	1073)
+	
+	1074)
+	
+	1075)
+	
+	1076)
+	
+	1077)
+	
+	1078)
+	
+	1079)
+	
+	1080)
+	
+	1081)
 	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
