@@ -105730,10 +105730,100 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 		};
+
+	1073) Count Minimum Swaps:
+		Problem Statement:
+			Given a binary string S (0-based index) of length N. You can swap any two digits of the string. Your task is to find the minimum number of swaps required to rearrange the string such that the sum of digits at even positions is equal to the sum of digits at odd positions. If it is not possible, return -1.
+			Example 1:
+			Input: S = 1010
+			Output: 1
+			Explanation: Initially, the sum of digits at even positions is: 1 + 1 = 2, and the sum of digits at odd positions is: 0 + 0 = 0. You can swap digits at indices 0 and 1 to make both sums equal.
+
+			Example 2:
+			Input: S = 111
+			Output: -1
+			Explanation: There is no way to rearrange the string such that the sum of digits at even positions equals the sum of digits at odd positions.
+
+			Your Task:
+				The task is to complete the function minSwaps() which takes a binary string S as input parameter and returns the minimum number of swaps to make both sums equal or -1 if it is not possible. 
+
+			Constraints:
+				1 ≤ N ≤ 10^5
+
+		class Solution {
+			public:
+			int minSwaps(string s) {
+				int e,o;
+				e = o = 0;
+				for(int i=0; i<s.length(); i++){
+					if(i&1){
+						s[i] - '0' ? o++ : NULL;
+					}else{
+						s[i] - '0' ? e++ : NULL;
+					}
+				}
+				// cout<<e<<"\t"<<o;
+				if((e+o) & 1)   return -1;
+				return abs(e-o) / 2;
+			}
+		};
 	
-	1073) 
-	
-	1074)
+	#LeetCode WeeklyContest-410:
+		1074) Snake in Matrix:
+			Problem Statement:
+				There is a snake in an n x n matrix grid and can move in four possible directions. Each cell in the grid is identified by the position: grid[i][j] = (i * n) + j.
+				The snake starts at cell 0 and follows a sequence of commands.
+				You are given an integer n representing the size of the grid and an array of strings commands where each command[i] is either "UP", "RIGHT", "DOWN", and "LEFT". It's guaranteed that the snake will remain within the grid boundaries throughout its movement.
+				Return the position of the final cell where the snake ends up after executing commands.
+
+				Example 1:
+				Input: n = 2, commands = ["RIGHT","DOWN"]
+				Output: 3
+				Explanation:
+							0	1
+							2	3
+
+				Example 2:
+				Input: n = 3, commands = ["DOWN","RIGHT","UP"]
+				Output: 1
+				Explanation:
+					0	1	2
+					3	4	5
+					6	7	8
+				Constraints:
+					2 <= n <= 10
+					1 <= commands.length <= 100
+					commands consists only of "UP", "RIGHT", "DOWN", and "LEFT".
+					The input is generated such the snake will not move outside of the boundaries.
+
+			class Solution {
+				public:
+				int finalPositionOfSnake(int n, vector<string>& commands) {
+					vector<vector<int>> grid;
+					int cnt=0;
+					for(int i=0; i<n; i++){
+						vector<int> temp;
+						for(int j=0; j<n; j++)
+							temp.push_back(cnt++);
+						grid.push_back(temp);
+					}
+					int i,j;
+					i=j=0;
+
+					for(string s: commands){
+						if(s == "RIGHT"){
+							j++;
+						}else if(s == "UP"){
+							i--;
+						}else if(s == "DOWN"){
+							i++;
+						}else{
+							j--;
+						}
+					}
+					return grid[i][j];
+				}
+			};
 	
 	1075)
 	
