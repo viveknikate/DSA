@@ -31772,6 +31772,15 @@ POTD:-[Problem of the Day]
 				return -1;
 		}
 
+		#include <bits/stdc++.h> 
+		int findCase(char ch) {
+			if(!isalpha(ch))
+				return -1;
+			else if(isupper(ch))
+				return 1;
+			return 0;
+		}
+
 	70) Two Repeated Elements:
 		You are given an array of N+2 integer elements. 
 			All elements of the array are in the range 1 to N. 
@@ -94316,6 +94325,30 @@ POTD:-[Problem of the Day]
 				return store;
 			}
 		};
+
+		// Using DFS (Depth First Search) approach
+			class Solution {
+				public:
+				void solve(int currNum, int n, vector<int> &res){
+					if(currNum > n) return ;
+					for(int i=0; i<=9; i++){
+						int newNum = currNum * 10 + i;
+						if(newNum > n) return ;
+						res.push_back(newNum);
+						solve(newNum, n, res);
+					}
+				}
+				vector<int> lexicalOrder(int n) {
+					vector<int> res;
+
+					for(int i=1; i<=9; i++){
+						if(i > n) continue;
+						res.push_back(i);
+						solve(i, n, res);
+					}
+					return res;
+				}
+			};
 	
 	901) Swap two nibbles in a byte:
 		Problem Statement:
@@ -106530,7 +106563,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	1085) Find length of Loop
+	1085) Find length of Loop:
 		Problem statement:
 			Given the head of a linked list, determine whether the list contains a loop. If a loop is present, return the number of nodes in the loop, otherwise return 0.
 			Note: 'c' is the position of the node which is the next pointer of the last node of the linkedlist. If c is 0, then there is no loop.
@@ -106704,11 +106737,231 @@ POTD:-[Problem of the Day]
 			// Optimized:
 				❌Pending
 			
-	1088)
-	
-	1089)
-	
-	1090)
+	#LeetCode BiweeklyContest-139:
+		1088) Find Indices of Stable Mountains
+			Problem statement:
+				There are n mountains in a row, and each mountain has a height. You are given an integer array height where height[i] represents the height of mountain i, and an integer threshold.
+				A mountain is called stable if the mountain just before it (if it exists) has a height strictly greater than threshold. Note that mountain 0 is not stable.
+				Return an array containing the indices of all stable mountains in any order.		
+				Example 1:
+				Input: height = [1,2,3,4,5], threshold = 2
+				Output: [3,4]
+				Explanation:
+					Mountain 3 is stable because height[2] == 3 is greater than threshold == 2.
+					Mountain 4 is stable because height[3] == 4 is greater than threshold == 2.
+				Example 2:
+					Input: height = [10,1,10,1,10], threshold = 3
+					Output: [1,3]
+				Example 3:
+					Input: height = [10,1,10,1,10], threshold = 10
+					Output: []
+
+				Constraints:
+					2 <= n == height.length <= 100
+					1 <= height[i] <= 100
+					1 <= threshold <= 100
+			
+			class Solution {
+				public:
+				vector<int> stableMountains(vector<int>& height, int threshold) {
+					vector<int> stableCnt;
+					int n = height.size();
+
+					for(int i=1; i<n; i++){
+						if(height[i-1] > threshold)
+							stableCnt.push_back(i);
+					}
+					return stableCnt;
+				}
+			};
+		
+	1089) K-th Smallest in Lexicographical Order:
+		Problem statement:
+			Given two integers n and k, return the kth lexicographically smallest integer in the range [1, n].
+			Example 1:
+				Input: n = 13, k = 2
+				Output: 10
+				Explanation: The lexicographical order is [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9], so the second smallest number is 10.
+			Example 2:
+				Input: n = 1, k = 1
+				Output: 1
+			Constraints:
+				1 <= k <= n <= 10^9
+		
+		// Not Optimized:
+			class Solution {
+				public:
+				int findKthNumber(int n, int k) {
+					vector<int> hold;
+					for(int i=1; i<=n; i++)
+						hold.push_back(i);
+
+					vector<string> str_hold;
+					for(int i=1; i<=n; i++){
+						string s = to_string(hold[i-1]);
+						str_hold.push_back(s);
+					}
+					sort(begin(str_hold), end(str_hold));
+					return stoi(str_hold[k-1]);
+				}
+			};
+
+		// Little bit Optimized (Memory Limit Exceeded [MLE]):
+			class Solution {
+				public:
+				void solve(int currNum, int n, vector<int> &ans){
+					if(currNum > n) return ;
+					ans.push_back(currNum);
+					
+					for(int i=0; i<10; i++){
+						int newN = currNum*10 + i;
+						if(newN > n) return ;
+						solve(newN, n, ans);
+					}
+				}
+				int findKthNumber(int n, int k) {
+					vector<int> res;
+					for(int i=1; i<10; i++)
+						solve(i, n, res);
+					
+					return res[k-1];
+				}
+			};
+
+		// Optimized:
+			❌Pending
+
+	#LeetCode WeeklyContest-416
+		1090) Report Spam Message:
+			Problem statement:
+				You are given an array of strings message and an array of strings bannedWords.
+				An array of words is considered spam if there are at least two words in it that exactly match any word in bannedWords.
+				Return true if the array message is spam, and false otherwise.
+				
+				Example 1:
+					Input: message = ["hello","world","leetcode"], bannedWords = ["world","hello"]
+					Output: true
+					Explanation:
+					The words "hello" and "world" from the message array both appear in the bannedWords array.
+
+				Example 2:
+					Input: message = ["hello","programming","fun"], bannedWords = ["world","programming","leetcode"]
+					Output: false
+					Explanation:
+					Only one word from the message array ("programming") appears in the bannedWords array.
+
+				Constraints:
+					1 <= message.length, bannedWords.length <= 10^5
+					1 <= message[i].length, bannedWords[i].length <= 15
+					message[i] and bannedWords[i] consist only of lowercase English letters.
+
+			class Solution {
+				public:
+				bool reportSpam(vector<string>& message, vector<string>& bannedWords) {
+					map<string, int> Fr;
+					for(string s: message)
+						Fr[s]++;
+					
+					set<string> s(bannedWords.begin(), bannedWords.end());
+
+					int cnt=0;
+					for(auto it: s){
+						if(Fr[it] >= 2)
+							return 1;
+
+						if(Fr[it] >= 1)
+							cnt++;
+
+						if(cnt >= 2)
+							return 1;
+					}
+					return 0;
+				}
+			};
+
+	1091) Rank Transform of an Array:
+		Problem Statement:
+			Given an array of integers arr, replace each element with its rank.
+			The rank represents how large the element is. The rank has the following rules:
+			Rank is an integer starting from 1.
+			The larger the element, the larger the rank. If two elements are equal, their rank must be the same.
+			Rank should be as small as possible.
+		
+			Example 1:
+			Input: arr = [40,10,20,30]
+			Output: [4,1,2,3]
+			Explanation: 40 is the largest element. 10 is the smallest. 20 is the second smallest. 30 is the third smallest.
+
+			Example 2:
+			Input: arr = [100,100,100]
+			Output: [1,1,1]
+			Explanation: Same elements share the same rank.
+
+			Example 3:
+			Input: arr = [37,12,28,9,100,56,80,5,12]
+			Output: [5,3,4,2,8,6,7,1,3]
+			
+			Constraints:
+				0 <= arr.length <= 10^5
+				-10^9 <= arr[i] <= 10^9
+
+		// Not Optimized:
+			class Solution {
+				public:
+				vector<int> arrayRankTransform(vector<int>& arr) {
+					vector<int> t = arr;
+					sort(t.begin(), t.end());
+
+					vector<int> rankStore;
+					int n = arr.size();
+					int cnt=0;
+
+					for(int i=0; i<n; i++){
+						if(i==0){
+							cnt++;
+							rankStore.push_back(cnt);
+						}else{
+							if(t[i-1] == t[i]){
+								rankStore.push_back(cnt);
+							}else{
+								cnt++;
+								rankStore.push_back(cnt);
+							}
+						}
+					}
+
+					vector<int> ans(n);
+					for(int i=0; i<n; i++){
+						int val = t[i], rank = rankStore[i];
+						for(int j=0; j<n; j++){
+							if(arr[j] == val)
+								ans[j] = rank;
+						}
+					}
+					return ans;  
+				}
+			};
+		
+		// Optimized:
+			❌Pending
+
+1092) 
+
+1093) 
+
+1094) 
+
+1095) 
+
+1096) 
+
+1097) 
+
+1098) 
+
+1099) 
+
+1100) 	
 POTD-END
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
