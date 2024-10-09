@@ -22732,7 +22732,7 @@ Lecture-61: Queue FAANG Interview Questions
 ---------------------------------------------------------------------------------------------------------
 	31/05/24
 Lecture 62: Binary Trees & its Representation || Different types of Traversals
-	Binary Tree is a non-linear data structure where each node has at most two children [might be 0 or 1 or 2 childrens, but not more than 2] (one on left & one on right).
+	Binary Tree is a non-linear data structure where each node has at most two children [might be 0 or 1 or 2 childrens, but not more than 2. (one on left & one on right).
 	figure:
 									 1
 									 │
@@ -22760,6 +22760,11 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 			int data;
 			Node* left;
 			Node* right;
+
+			Node(int val){
+				data = val;
+				left = right = NULL;
+			}
 		}
 
 		// Use any below method to implement Nodes of tree
@@ -22878,69 +22883,65 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 		// 1 2 4 8 -1 -1 9 -1 -1 5 10 -1 -1 11 -1 -1 3 6 12 -1 -1 13 -1 -1 7 -1 14 -1 -1
 
 		class Node{
-		public:
-			int data;
-			Node *left;
-			Node *right;
-		
-		Node(int data){
-			this -> data = data;
-			right = left = NULL;
-		}
+			public:
+				int data;
+				Node *left;
+				Node *right;
+			
+			Node(int data){
+				this -> data = data;
+				right = left = NULL;
+			}
 		};
 
 		Node* TreeCreation(){
-		std::cout << "Enter data: ";
-		int data;
-		cin>>data;
-		
-		if(data == -1)
-			return NULL;
-		
-		Node *n = new Node(data);
-		std::cout << "Enter data on left of "<< data << std::endl;
-		n -> left = TreeCreation();
-		
-		
-		std::cout << "Enter data on right of "<< data << std::endl;
-		n -> right = TreeCreation();
-
-		return n;
+			std::cout << "Enter data: ";
+			int data;
+			cin>>data;
+			
+			if(data == -1)
+				return NULL;
+			
+			Node *n = new Node(data);
+			std::cout << "Enter data on left of "<< data << std::endl;
+			n -> left = TreeCreation();		
+			
+			std::cout << "Enter data on right of "<< data << std::endl;
+			n -> right = TreeCreation();
+			return n;
 		}
 
 		void LevelOrderTraversal(Node *r){
-		queue<Node *> q;
-		q.push(r);
-		q.push(NULL);
-		
-		std::cout << std::endl;
-		while(!q.empty()){
-			Node *temp = q.front();
-			q.pop();
+			queue<Node *> q;
+			q.push(r);
+			q.push(NULL);
 			
-			if(temp == NULL){
-				std::cout << std::endl;
-				if(!q.empty())
-					q.push(NULL);
-			}else{
-
-				cout<< temp -> data << "\t";
+			std::cout << std::endl;
+			while(!q.empty()){
+				Node *temp = q.front();
+				q.pop();
 				
-				if(temp -> left)
-					q.push(temp -> left);
-				if(temp -> right)
-					q.push(temp -> right);
+				if(temp == NULL){
+					std::cout << std::endl;
+					if(!q.empty())
+						q.push(NULL);
+				}else{
+					cout<< temp -> data << "\t";
+					
+					if(temp -> left)
+						q.push(temp -> left);
+					if(temp -> right)
+						q.push(temp -> right);
+				}
 			}
-		}
 		}
 
 		int main() {
-		
-		Node *root = NULL;
-		root = TreeCreation();
-		LevelOrderTraversal(root);
-		
-		return 0;
+			Node *root = NULL;
+			root = TreeCreation();
+			LevelOrderTraversal(root);
+			
+			return 0;
 		}
 
 	HomeWork: #Reverse Level Order Traversal: (Refer Q.927 form POTD section)
@@ -23108,6 +23109,174 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 		Code: Iterative Approach
 			❌Pending
 
+	Build from LevelOrderTraversal:
+		#include <iostream>
+		#include<queue>
+		using namespace std;
+			//                  1
+			//         2                  3
+			//     4           5       6    7
+
+			// 1 2 3 4 5 6 7 -1 -1 -1 -1 -1 -1 -1 -1
+		class Node {
+			public:
+				int data;
+				Node *left, *right;
+				
+			Node(int val) {
+				data = val;
+				left = right = NULL;
+			}
+		};
+
+		Node *buildTreeFromLevelOrderTraversal(){
+			int val;
+			std::cout << "Enter root value: " << std::endl;
+			cin >> val;
+			
+			if(val == -1) return NULL;
+				
+			queue<Node *> q;
+			Node *root = new Node(val);
+			q.push(root);
+			
+			while(!q.empty()){
+				Node *cur = q.front();
+				q.pop();
+				
+				int vL;
+				std::cout << "Enter left data: "<< cur -> data << "\t";
+				cin>>vL;
+				
+				if(vL != -1){
+					cur -> left = new Node(vL);
+					q.push(cur -> left);
+				}
+				
+				int vR;
+				std::cout << "Enter right data: "<< cur -> data << "\t";
+				cin>>vR;
+				
+				if(vR != -1){
+					cur -> right = new Node(vR);
+					q.push(cur -> right);
+				}
+			}
+			return root;
+		}
+
+		void Display(Node* root){
+			queue<Node *> q;
+			if(root == NULL) return ;
+			
+			q.push(root);
+			q.push(NULL);
+			
+			while(!q.empty()){
+				Node *t = q.front();
+				q.pop();
+				
+				if(t == NULL){
+					std::cout << std::endl;
+					if(!q.empty())  q.push(NULL);
+				} 
+				else{
+					std::cout << t -> data; 
+					if(t -> left != NULL)
+						q.push(t -> left);
+					if(t -> right) q.push(t -> right);
+				}
+			}
+		}
+
+		int main() {
+			Node *root = buildTreeFromLevelOrderTraversal();
+			std::cout << "The tree is : " << std::endl;
+			
+			Display(root);
+			return 0;
+		}
+
+		#Practice:
+			#include <iostream>
+			#include<queue>
+			using namespace std;
+
+			struct Node{
+				int data;
+				Node *left, *right;
+				
+				Node(int val){
+					data = val;
+					left = right = NULL;
+				}
+			};
+
+			Node* Build_From_Level_Order_Traversal(){
+				int r;
+				std::cout << "Enter Root: ";
+				cin>>r;
+				
+				if(r == -1) return NULL;
+				
+				queue<Node *>q;
+				Node *root = new Node(r);
+				q.push(root);
+				
+				while(!q.empty()){
+					Node *cur = q.front();
+					q.pop();
+					
+					int v;
+					cout<<"Enter left child for "<<cur -> data << "\t";
+					cin >> v;
+					
+					if(v != -1) {
+						Node *t = new Node(v);
+						cur -> left = t;
+						q.push(cur -> left);
+					}
+					
+					cout<<"Enter right child for "<<cur -> data << "\t";
+					cin >> v;
+					
+					if(v != -1){
+						Node *t = new Node(v);
+						cur -> right = t;
+						q.push(cur -> right);
+					} 
+				}
+				return root;
+			}
+
+			void Display_Tree(Node *root){
+				if(!root) return ;                  // (root == NULL) its same as (!root)
+				
+				queue<Node *>q;
+				q.push(root);
+				q.push(NULL);
+			
+				while(!q.empty()){
+					Node *cur =q.front();
+					q.pop();
+					
+					if(cur){            // cur != NULL
+						std::cout << cur -> data << "\t";
+						if(cur -> left) q.push(cur -> left);
+						if(cur -> right) q.push(cur -> right);
+					}else{
+						if(!q.empty())  q.push(NULL);
+						std::cout << std::endl;
+					}
+				}
+			}
+
+			int main() {
+				Node *root = Build_From_Level_Order_Traversal();
+				Display_Tree(root);
+				return 0;
+			}
+
 	Q. Count Leaf Nodes:
 		https://www.naukri.com/code360/problems/count-leaf-nodes_893055
 		Problem statement
@@ -23190,6 +23359,31 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 			return cnt;
 		}
 
+		// or
+			void Counter(BinaryTreeNode<int> *r, int &c){
+				if(r == nullptr) return;
+
+				queue<BinaryTreeNode<int> *> q;
+				q.push(r);
+
+				while(!q.empty()){
+					BinaryTreeNode<int> *n = q.front();
+					q.pop();
+
+					if(!n -> left && !n -> right)           // if(n -> left == nullptr && n -> right == nullptr)
+						c++;
+					
+					if(n -> left)   q.push(n -> left);
+					if(n -> right)   q.push(n -> right);
+				}
+			}
+
+			int noOfLeafNodes(BinaryTreeNode<int> *root){
+				int cnt =0;
+				Counter(root, cnt);
+				return cnt;
+			}
+
 	Types of Binary Tree
 		Binary Tree can be classified into multiples types based on multiple factors:
 		On the basis of Number of Children
@@ -23209,8 +23403,1122 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 			B Tree
 			B+ Tree
 			Segment Tree
----------------------------------------------------------------------------------------------------------
 
+	#Skewed Binary Tree:
+		- A skewed binary tree is a type of binary tree in which all the nodes have only either one child or no child.
+		#Types of Skewed Binary trees There are 2 special types of skewed tree:
+			1) Left Skewed Binary Tree:
+				These are those skewed binary trees in which all the nodes are having a left child or no child at all. It is a left side dominated tree. All the right children remain as null.
+
+			2) Right Skewed Binary Tree: 
+				These are those skewed binary trees in which all the nodes are having a right child or no child at all. It is a right side dominated tree. All the left children remain as null.
+		- In a skewed binary tree, each node has exactly one child, either all left or all right.
+---------------------------------------------------------------------------------------------------------
+	05/10/2024
+Lecture 63: Binary Tree FAANG Interview Questions || Part-1:
+	Q.1. Height of Binary Tree:
+		Problem Statement:
+			Given a binary tree, find its height.
+			Example 1:
+			Input:
+				 1
+				/ \
+			    2   3
+			Output: 2
+
+			Example 2:
+			Input:
+				2
+				 \
+				  1
+				 /
+				3
+			Output: 3   
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function height() which takes root node of the tree as input parameter and returns an integer denoting the height of the tree. If the tree is empty, return 0. 
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(N)
+
+			Constraints:
+				1 <= Number of nodes <= 10^5
+				1 <= Data of a node <= 10^9
+
+		//User function template for C++
+		/*
+			struct Node {
+				int data;
+				struct Node* left;
+				struct Node* right;
+				
+				Node(int x){
+					data = x;
+					left = right = NULL;
+				}
+			};
+		*/
+
+		class Solution{
+		public:
+		void Traverse(Node *node, int cnt, int &mxHT){
+			if(!node) return;
+			
+			mxHT = max(mxHT, cnt);
+			Traverse(node -> left, cnt+1, mxHT);
+			Traverse(node -> right, cnt+1, mxHT);
+		}
+		
+		//Function to find the height of a binary tree.
+		int height(struct Node* node){
+			int cnt, mx;
+			cnt=mx=1;
+
+			Traverse(node, cnt, mx);
+			return mx;
+		}
+		};
+
+		// or
+			class Solution{
+				public:
+				//Function to find the height of a binary tree.
+				int height(struct Node* node){
+					
+					if(!node)   return 0;
+					
+					int left, right;
+					left = height(node -> left);
+					right = height(node -> right);
+					
+					return max(left, right) + 1;
+				}
+			};
+
+	Q.2. Diameter of a Binary Tree:
+		Problem Statement:
+			The diameter of a tree (sometimes called the width) is the number of nodes on the longest path between two end nodes. The diagram below shows two trees each with diameter nine, the leaves that form the ends of the longest path are shaded (note that there is more than one path in each tree of length nine, but no path longer than nine nodes).
+
+			Example 1:
+			Input:
+				 1
+				/  \
+			    2    3
+			Output: 3
+
+			Example 2:
+			Input:
+				  10
+				/   \
+			    20    30
+			   /  \ 
+			  40   60
+			Output: 4
+
+			Your Task:
+				You need to complete the function diameter() that takes root as parameter and returns the diameter.
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(Height of the Tree).
+
+			Constraints:
+				1 <= Number of nodes <= 10000
+				1 <= Data of a node <= 1000
+
+		// Not Optimized:
+			/* Tree node structure  used in the program
+				struct Node {
+				int data;
+				struct Node* left;
+				struct Node* right;
+
+				Node(int x){
+					data = x;
+					left = right = NULL;
+				}
+				}; 
+			*/
+			class Solution {
+				public:
+				int height(Node* n){
+					if(!n) return 0;
+					
+					int left = height(n -> left);
+					int right = height(n -> right);
+					
+					return max(left, right) + 1;
+				}
+
+				// Function to return the diameter of a Binary Tree.
+				int diameter(Node* root) {
+					if(!root) return 0;
+					
+					int leftSide = diameter(root -> left);
+					int rightSide = diameter(root -> right);
+					int combine = height(root -> left) + height(root -> right) + 1;          // adding 1 for root node
+
+					return max(max(leftSide, rightSide), combine);
+				}
+			};
+
+		// Optimized:
+			class Solution {
+				public:
+				pair<int, int> diameterFast(Node* root){
+					if(!root) return make_pair(0,0);
+					
+					pair<int, int> leftSide = diameterFast(root -> left);
+					pair<int, int> rightSide = diameterFast(root -> right);
+					
+					int left_diameter = leftSide.first;
+					int right_diameter = rightSide.first;
+					int height = leftSide.second + rightSide.second + 1;
+					
+					int diameter = max(max(left_diameter, right_diameter), height);
+					int ht = max(leftSide.second, rightSide.second) + 1;
+					
+					return make_pair(diameter, ht);
+				}
+			
+				// Function to return the diameter of a Binary Tree.
+				int diameter(Node* root) {
+					return diameterFast(root).first;
+				}
+			};
+
+	Q.3. Balanced Tree Check:
+		Problem Statement:
+			Given a binary tree, find if it is height balanced or not.  A tree is height balanced if difference between heights of left and right subtrees is not more than one for all nodes of tree. 
+			Examples:
+			Input:
+				 1
+				/
+			    2
+				\
+				 3 
+			Output: 0
+			Explanation: The max difference in height of left subtree and right subtree is 2, which is greater than 1. Hence unbalanced
+
+			Input:
+			  	  10
+				/    \
+			    20    30 
+			   /   \
+			  40   60
+			Output: 1
+			Explanation: The max difference in height of left subtree and right subtree is 1. Hence balanced. 
+
+			Constraints:
+				1 <= Number of nodes <= 10^5
+				1 <= Data of a node <= 10^9
+
+			Expected time complexity: O(N)
+			Expected auxiliary space: O(h) , where h = height of tree
+
+		/* A binary tree node structure
+			struct Node {
+				int data;
+				struct Node* left;
+				struct Node* right;
+				
+				Node(int x){
+					data = x;
+					left = right = NULL;
+				}
+			};
+		*/
+
+		class Solution{
+			public:
+			int height(Node* n){
+				if(!n) return 0;
+				return max(height(n -> left), height(n -> right)) + 1;
+			}
+			//Function to check whether a binary tree is balanced or not.
+			bool isBalanced(Node *root) {
+				if(!root)   return 1;
+				
+				bool left = isBalanced(root -> left);
+				bool right = isBalanced(root -> right);
+				
+				bool diff = abs(height(root -> left) - height(root -> right)) <= 1;
+
+				if(left && right && diff) return 1;
+				return 0;
+			}
+		};
+
+		// More Optimized:
+			class Solution{
+				public:
+				pair<bool, int> check(Node *root){
+					if(!root) return {1,0};
+					
+					pair<bool, int> left = check(root -> left);
+					pair<bool, int> right = check(root -> right);
+					
+					bool leftAns = left.first;
+					bool rightAns = right.first;
+					bool diff = abs(left.second - right.second) <= 1;
+					
+					pair<bool, int> ans;
+					ans.second = max(left.second, rig   ht.second) + 1;
+					
+					if(leftAns && rightAns && diff){
+						ans.first = 1;
+						return ans;
+					}
+					
+					ans.first = 0;
+					return ans;
+				}
+				//Function to check whether a binary tree is balanced or not.
+				bool isBalanced(Node *root) {
+					return check(root).first;
+				}
+			};
+
+	Q.4. Identical Trees:
+		Problem Statement:
+			Given two binary trees, the task is to find if both of them are identical or not.
+			Note: You need to return true or false, the printing is done by the driver code.
+
+			Example 1:
+			Input:
+				  1          1
+				/   \      /   \
+			    2     3    2     3
+			Output: 
+			Yes
+			Explanation: 
+			There are two trees both having 3 nodes and 2 edges, both trees are identical having the root as 1, left child of 1 is 2 and right child of 1 is 3.
+			Example 2:
+
+			Input:
+				  1        1
+				/  \     /  \
+			    2    3   3    2
+			Output: 
+			No
+			Explanation: There are two trees both having 3 nodes and 2 edges, but both trees are not identical.
+
+			Your task:
+				Since this is a functional problem you don't have to worry about input, you just have to complete the function isIdentical() that takes two roots as parameters and returns true or false. The printing is done by the driver code.
+
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(Height of the Tree).
+
+			Constraints:
+				1 <= Number of nodes <= 10^5
+				1 <=Data of a node <= 10^9
+
+		/* A binary tree node
+			struct Node {
+				int data;
+				struct Node* left;
+				struct Node* right;
+				
+				Node(int x){
+					data = x;
+					left = right = NULL;
+				}
+			};
+		*/
+		class Solution {
+			public:
+			//Function to check if two trees are identical.
+			bool isIdentical(Node *r1, Node *r2) {
+				if(!r1 && !r2) return 1;                      // if(r1 == NULL && r2 == NULL) return 1;
+				if((!r1 && r2) || (r1 && !r2)) return 0;      // if((r1 == NULL && r2 != NULL) || (r1 != NULL && r2 == NULL)) return 0;
+				if(r1 -> data != r2 -> data) return 0;
+				
+				return (isIdentical(r1 -> right, r2 -> right) && isIdentical(r1 -> left, r2 -> left));
+			}
+		};
+
+	Q.5. Sum Tree:
+		Problem Statement:
+			Given a Binary Tree. Check for the Sum Tree for every node except the leaf node. Return true if it is a Sum Tree otherwise, return false.
+			A SumTree is a Binary Tree where the value of a node is equal to the sum of the nodes present in its left subtree and right subtree. An empty tree is also a Sum Tree as the sum of an empty tree can be considered to be 0. A leaf node is also considered a Sum Tree.
+
+			Examples :
+			Input:
+				  3
+				/   \    
+			    1     2
+			Output: true
+			Explanation: The sum of left subtree and right subtree is 1 + 2 = 3, which is the value of the root node. Therefore,the given binary tree is a sum tree.
+
+			Input:
+			 	  10
+				/    \
+			    20	30
+			  /   \ 
+			 10    10
+			Output: false
+			Explanation: The given tree is not a sum tree. For the root node, sum of elements in left subtree is 40 and sum of elements in right subtree is 30. Root element = 10 which is not equal to 30+40.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(Height of the Tree)
+
+			Constraints:
+				2 ≤ number of nodes ≤ 10^5
+				1 ≤ node value ≤ 10^5
+				
+		/*  Tree node
+			struct Node {
+				int data;
+				Node* left, * right;
+			}; 
+		*/
+		// Should return true if tree is Sum Tree, else false
+		class Solution {
+		public:
+		pair<bool, int> TEST(Node* n){
+			pair<bool, int> ans;
+			
+			if(!n) return {1, 0};               // return {true, 0};  
+			if(!n -> left && !n -> right){
+				ans.first = 1;
+				ans.second = n -> data;
+				return ans;
+			}
+			
+			pair<bool, int>  leftSide = TEST(n -> left);
+			pair<bool, int>  rightSide = TEST(n -> right);
+			
+			ans.first = leftSide.first && rightSide.first;
+			ans.second = leftSide.second + rightSide.second;
+			
+			if(ans.second == (n -> data) && ans.first) return {1, ans.second+ans.second};   		// return {true, ans.second+ans.second};   // adding current node's value to compensate the total sum from left & right
+			return {0, ans.second};             // return {false, ans.second};
+		}
+		bool isSumTree(Node* root) {
+			return TEST(root).first;
+		}
+		};
+---------------------------------------------------------------------------------------------------------
+	06/10/24
+Lecture 64: Binary Tree FAANG Interview Questions || Part-2:
+	Q.1. ZigZag Tree Traversal:
+		Problem Statement:
+			Given a binary tree with n nodes. Find the zig-zag level order traversal of the binary tree.
+			In zig zag traversal starting from the first level go from left to right for odd-numbered levels and right to left for even-numbered levels.
+
+			Example 1:
+			Input:
+					  1
+					/    \
+				    2      3
+				   / \    /  \
+				  4   5  6    7
+			Output:
+				1 3 2 4 5 6 7
+			Explanation:
+				For level 1 going left to right, we get traversal as {1}.
+				For level 2 going right to left, we get traversal as {3,2}.
+				For level 3 going left to right, we get traversal as {4,5,6,7}.
+				Merging all this traversals in single array we get {1,3,2,4,5,6,7}
+
+			Example 2:
+			Input:
+					    7
+					 /     \
+				     9       7
+			    	   /   \    /   
+				  8     8  6     
+				/  \
+			    10   9 
+			Output:
+			7 7 9 8 8 6 9 10 
+			Explanation:
+				For level 1 going left to right, we get traversal as {7}.
+				For level 2 going right to left, we get traversal as {7,9}.
+				For level 3 going left to right, we get traversal as {8,8,6}.
+				For level 4 going right to left, we get traversal as {9,10}.
+				Merging all this traversals in single array we get {7,7,9,8,8,6,9,10}.
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function zigZagTraversal() which takes the root node of the Binary Tree as its input and returns a list containing the node values as they appear in the zig-zag level-order traversal of the tree.
+
+			Expected Time Complexity: O(n).
+			Expected Auxiliary Space: O(n).
+
+			Constraints:
+				1 <= n <= 10^5
+		
+		//User function Template for C++
+		/*Structure of the node of the binary tree is as
+		struct Node {
+			int data;
+			Node *left;
+			Node *right;
+
+			Node(int val) {
+				data = val;
+				left = right = NULL;
+			}
+		};
+		*/
+
+		class Solution{
+		public:
+		//Function to store the zig zag order traversal of tree in a list.
+			vector <int> zigZagTraversal(Node* root) {
+				
+				queue<Node*> q;
+				q.push(root);
+				q.push(NULL);
+				
+				queue<Node*> q2;
+				q2.push(root);
+				q2.push(NULL);
+				
+				
+				while(!q.empty()){
+					Node * cur = q.front();
+					q.pop();
+					
+					if(!cur){
+						if(!q.empty()){
+							q.push(NULL);
+							q2.push(NULL);
+						} 
+					}else{
+						if(cur -> left){
+							q.push(cur -> left);
+							q2.push(cur -> left);
+						}
+						
+						if(cur -> right){
+							q.push(cur -> right);
+							q2.push(cur -> right);
+						} 
+					}
+				}
+				
+				int curCnt = 1;
+				vector<int> ans,t;
+				
+				while(!q2.empty()){
+					Node* cur = q2.front();
+					q2.pop();
+					
+					if(!cur){
+						if(curCnt % 2 == 0){
+							reverse(t.begin(), t.end());
+							ans.insert(ans.end(), t.begin(), t.end());
+							t.clear();
+						}
+						curCnt++;
+					}else{
+						if(curCnt&1){
+							ans.push_back(cur -> data);
+						}else{
+							t.push_back(cur -> data);
+						}
+					}
+				}
+				return ans;
+			}
+		};
+
+		// or
+			class Solution{
+				public:
+				//Function to store the zig zag order traversal of tree in a list.
+				vector <int> zigZagTraversal(Node* root) {
+					vector<int> ans;
+					
+					queue<Node*> q;
+					if(!root) return ans;
+					
+					q.push(root);
+					bool direction = true;
+					
+					while(!q.empty()){
+						int size = q.size();
+						vector<int> t(size);
+						
+						for(int i=0; i<size; i++){
+							Node *cur = q.front();
+							q.pop();
+							
+							int index = direction ? i :size-1-i; 
+							t[index] = cur -> data;
+							
+							if(cur -> left) q.push(cur -> left);
+							if(cur -> right) q.push(cur -> right);
+						}
+						
+						direction = !direction;
+						ans.insert(ans.end(), t.begin(), t.end());
+					}
+					return ans;
+				}
+			};
+
+	Q.2. Tree Boundary Traversal:
+		Problem Statement:
+			Given a Binary Tree, find its Boundary Traversal. The traversal should be in the following order: 
+			Left boundary nodes: defined as the path from the root to the left-most node ie- the leaf node you could reach when you always travel preferring the left subtree over the right subtree. 
+			Leaf nodes: All the leaf nodes except for the ones that are part of left or right boundary.
+			Reverse right boundary nodes: defined as the path from the right-most node to the root. The right-most node is the leaf node you could reach when you always travel preferring the right subtree over the left subtree. Exclude the root from this as it was already included in the traversal of left boundary nodes.
+			Note: If the root doesn't have a left subtree or right subtree, then the root itself is the left or right boundary. 
+
+			Example 1:
+			Input:
+				  1 
+				/   \
+			    2     3  
+			   / \   / \ 
+			  4   5 6   7
+				/ \
+			    8   9
+			
+			Output: 1 2 4 8 9 6 7 3
+			Example 2:
+			Input:
+				    1
+				   /
+				  2
+				/   \
+			    4     9
+			  /  \     \
+			 6    5     3
+					 / \
+					7   8
+
+			Output: 1 2 4 6 5 7 8
+
+			Your Task:
+				This is a function problem. You don't have to take input. Just complete the function boundary() that takes the root node as input and returns an array containing the boundary values in anti-clockwise.
+
+			Expected Time Complexity: O(N). 
+			Expected Auxiliary Space: O(Height of the Tree).
+
+			Constraints:
+				1 ≤ Number of nodes ≤ 10^5
+				1 ≤ Data of a node ≤ 10^5
+
+		/* A binary tree Node
+			struct Node {
+				int data;
+				Node* left, * right;
+			}; 
+		*/
+
+		class Solution {
+			public:
+			void LeftNodes(Node* n, vector<int> &ans){
+				if(!n || (n -> left == NULL && n -> right == NULL)) return ;
+				
+				ans.push_back(n -> data);
+				if(n -> left) 
+					LeftNodes(n -> left, ans);
+				else
+					LeftNodes(n -> right, ans);
+			}
+			
+			void RightNodes(Node* n, vector<int> &ans){
+				if(!n || (n -> left == NULL && n -> right == NULL)) return ;
+				
+				if(n -> right) 
+					RightNodes(n -> right, ans);
+				else
+					RightNodes(n -> left, ans);
+				ans.push_back(n -> data);
+			}
+			
+			void LeafNodes(Node* n, vector<int> &ans){
+				if(!n) return ;
+				
+				if(!n -> left && !n -> right)
+					ans.push_back(n -> data);
+				else{
+					LeafNodes(n -> left, ans);
+					LeafNodes(n -> right, ans);
+				}
+			}  
+			
+			vector<int> boundary(Node *root) {
+				// finding the left side nodes
+				vector<int> ans;
+				
+				// we need this condition if we are passing just a root to a LeafNodes function
+				// if(!root -> left && !root -> right) return {root -> data};
+				
+				// ans.push_back(root -> data);
+				// LeftNodes(root -> left, ans);
+				// LeafNodes(root, ans);
+				// RightNodes(root -> right, ans);
+				
+				// we are passing left side & right side to a LeafNodes function, so we don't need above extra if condition.
+				ans.push_back(root -> data);
+				LeftNodes(root -> left, ans);
+				
+				LeafNodes(root -> left, ans);
+				LeafNodes(root -> right, ans);
+				
+				RightNodes(root -> right, ans);
+				
+				return ans;
+			}
+		};
+
+	Q.3. Vertical Tree Traversal:
+		Problem Statement:
+			Given a Binary Tree, find the vertical traversal of it starting from the leftmost level to the rightmost level.
+			If there are multiple nodes passing through a vertical line, then they should be printed as they appear in level order traversal of the tree.
+			Example 1:
+			Input:
+                           1
+                         /   \
+                       2       3
+                     /   \   /   \
+                   4      5 6      7
+                              \      \
+                               8      9           
+			Output: 
+				4 2 1 5 6 3 8 7 9 
+
+			Example 2:
+			Input:
+                           1
+                        /    \
+                       2       3
+                     /    \      \
+                    4      5      6
+			Output: 4 2 1 5 3 6
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function verticalOrder() which takes the root node as input parameter and returns an array containing the vertical order traversal of the tree from the leftmost to the rightmost level. If 2 nodes lie in the same vertical level, they should be printed in the order they appear in the level order traversal of the tree.
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(N)
+			Constraints:
+				1 <= Number of nodes <= 3*10^4
+
+		class Solution {
+			public:
+			//Function to find the vertical order traversal of Binary Tree.
+			vector<int> verticalOrder(Node *root) {
+				vector<int> ans;
+				if(!root) return ans;
+				
+				// <level, elements>
+				map<int, vector<int>> mp;
+				
+				// <node, horizontalDistance>
+				queue<pair<Node*, int>> q;
+				q.push(make_pair(root, 0));
+				
+				while(!q.empty()){
+					pair<Node*, int> temp = q.front();
+					q.pop();
+					
+					Node *cur = temp.first;
+					int hd = temp.second;
+					
+					mp[hd].push_back(cur -> data);
+					
+					if(cur -> left) q.push({cur -> left, hd-1});
+					if(cur -> right) q.push(make_pair(cur -> right, hd+1));
+				}
+				
+				for(auto i: mp)
+					for(auto j: i.second)
+						ans.push_back(j);
+
+				// for(auto i: mp)
+				//	ans.insert(ans.end(), i.second.begin(), i.second.end());
+				return ans;
+			}
+		};
+
+	Q.4. Top View of Binary Tree:
+		Problem Statement:
+			Given below is a binary tree. The task is to print the top view of binary tree. Top view of a binary tree is the set of nodes visible when the tree is viewed from the top. For the given below tree
+			       1
+			    /     \
+			   2       3
+			  /  \    /  \
+			4    5   6    7
+
+			Top view will be: 4 2 1 3 7
+			Note: Return nodes from leftmost node to rightmost node. Also if 2 nodes are outside the shadow of the tree and are at same position then consider the left ones only(i.e. leftmost). 
+			For ex - 1 2 3 N 4 5 N 6 N 7 N 8 N 9 N N N N N will give 8 2 1 3 as answer. Here 8 and 9 are on the same position but 9 will get shadowed.
+
+			Example 1:
+			Input:
+     			  1
+     			 / \
+     			2   3
+			Output: 2 1 3
+			
+			Example 2:
+			Input:
+ 				       10
+ 				    /      \
+ 				  20        30
+ 				 /   \    /    \
+ 				40   60  90    100
+			Output: 40 20 10 30 100
+			Your Task:
+				Since this is a function problem. You don't have to take input. Just complete the function topView() that takes root node as parameter and returns a list of nodes visible from the top view from left to right.
+			Expected Time Complexity: O(NlogN)
+			Expected Auxiliary Space: O(N).
+
+			Constraints:
+				1 ≤ N ≤ 10^5
+				1 ≤ Node Data ≤ 10^5
+
+		/*
+			struct Node {
+				int data;
+				Node* left;
+				Node* right;
+			};
+		*/
+		class Solution {
+			public:
+			//Function to return a list of nodes visible from the top view 
+			//from left to right in Binary Tree.
+			vector<int> topView(Node *root) {
+				vector<int> ans;
+				map<int, int> mp;
+				if(!root) return ans;
+				
+				// <node, horizontalDistance
+				queue<pair<Node*, int>> q;
+				q.push({root, 0});
+				
+				while(!q.empty()){
+					auto t = q.front();
+					q.pop();
+					
+					Node* cur = t.first;
+					int hd = t.second;
+					
+					if(mp.find(hd) == mp.end()) mp[hd] = cur -> data;
+					
+					if(cur -> left) q.push({cur -> left, hd-1});
+					if(cur -> right) q.push({cur -> right, hd+1});
+				}
+				
+				for(auto i: mp)
+					ans.push_back(i.second);
+				return ans;
+			}
+		};
+
+	Q.5. Bottom View of Binary Tree:
+		Problem Statement:
+			Given a binary tree, return an array where elements represent the bottom view of the binary tree from left to right.
+			Note: If there are multiple bottom-most nodes for a horizontal distance from the root, then the latter one in the level traversal is considered. For example, in the below diagram, 3 and 4 are both the bottommost nodes at a horizontal distance of 0, here 4 will be considered.
+
+                            20
+                          /    \
+                        8       22
+                      /   \     /   \
+                    5      3 4     25
+                           /    \      
+                       10       14
+			For the above tree, the output should be 5 10 4 14 25.
+			Examples :
+			Input:
+			       1
+			     /   \
+			    3     2
+			Output: 3 1 2
+			Explanation: First case represents a tree with 3 nodes and 2 edges where root is 1, left child of 1 is 3 and right child of 1 is 2.
+			Thus bottom view of the binary tree will be 3 1 2.
+			Input:
+			         10
+			       /    \
+			      20    30
+			     /  \
+			    40   60
+			Output: 40 20 60 30
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+			Constraints:
+				1 <= Number of nodes <= 10^5
+				1 <= Data of a node <= 10^5
+		
+		class Solution {
+			public:
+			vector <int> bottomView(Node *root) {
+				vector <int> ans;
+				
+				if(!root) return ans;
+				map<int, int> mp;
+				
+				queue<pair<Node*, int>> q;
+				q.push(make_pair(root, 0));
+				
+				while(!q.empty()){
+					auto t = q.front();
+					q.pop();
+					
+					Node* cur = t.first;
+					int hd = t.second;
+					
+					mp[hd] = cur -> data;
+					
+					if(cur -> left) q.push(make_pair(cur -> left, hd-1));
+					if(cur -> right) q.push(make_pair(cur -> right, hd+1));
+				}
+				
+				for(pair<int, int> t: mp)
+					ans.push_back(t.second);	
+				return ans;
+			}
+		};
+
+	Q.6. Diagonal Tree Traversal:
+		Problem Statement:
+			Given a Binary Tree, print the diagonal traversal of the binary tree.
+			Consider lines of slope -1 passing between nodes. Given a Binary Tree, print all diagonal elements in a binary tree belonging to same line.
+			If the diagonal element are present in two different subtress then left subtree diagonal element should be taken first and then right subtree. 
+			Example 1:
+			Input :
+			            8
+			         /     \
+			        3      10
+			      /   \      \
+			     1     6     14
+			         /   \   /
+			        4     7 13
+			Output : 8 10 14 3 6 7 13 1 4
+			Diagonal Traversal of binary tree : 
+			8 10 14 3 6 7 13 1 4
+			Your Task:
+				You don't need to read input or print anything. The task is to complete the function diagonal() that takes the root node as input argumets and returns the diagonal traversal of the given tree.
+
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(N),	Here N is number of nodes.
+			Constraints:
+				1 <= Number of nodes<= 10^5
+				1 <= Data of a node<= 10^5
+	
+		// Iterative approach:
+			vector<int> diagonal(Node *root) {
+				vector<int> ans;
+				if(!root) return ans;
+				
+				queue<Node*> q;
+				q.push(root);
+				
+				while(!q.empty()){
+					Node* cur = q.front();
+					q.pop();	
+					while(cur){
+						ans.push_back(cur -> data);
+						
+						if(cur -> left) q.push(cur -> left);
+						cur = cur -> right;
+					}
+				}
+				return ans;
+			}
+
+		// Recursive approach:
+			void solve(Node* root, map<int, vector<int>> &mp, int lvl){
+			if(!root) return;
+			
+			mp[lvl].push_back(root -> data);
+			
+			if(root -> left) solve(root -> left, mp, lvl+1);
+			if(root -> right) solve(root -> right, mp, lvl);
+			}
+
+			vector<int> diagonal(Node *root) {
+			vector<int> ans;
+			map<int, vector<int>> mp;
+			
+			// (node, map, level)
+			solve(root, mp, 0);
+			
+			for(auto i: mp)
+				ans.insert(ans.end(), i.second.begin(), i.second.end());
+			return ans;
+			}
+
+	Q.7. Right View of Binary Tree:
+		Problem Statement:
+			Given a Binary Tree, find Right view of it. Right view of a Binary Tree is set of nodes visible when tree is viewed from right side. Return the right view as a list. 
+			Right view of following tree is 1 3 7 8.
+
+				   1
+				/     \
+			    2       3
+			  /   \    / \
+			 4     5  6   7
+			  \
+			   8
+			Examples :
+
+			Input:
+			   1
+			 /   \
+			3     2
+			Output: 1 2
+			Input:
+				 10
+				/   \
+			   20    30
+			 /   \
+			40   60 
+			Output: 10 30 60
+
+			Expected Time Complexity: O(n).
+			Expected Auxiliary Space: O(Height of the Tree).
+
+			Constraints:
+				1 ≤ Number of nodes ≤ 10^5
+				0 ≤ Data of a node ≤ 10^5
+
+		/* A binary tree node has data, pointer to left child and a pointer to right child 
+		struct Node {
+			int data;
+			struct Node* left;
+			struct Node* right;
+			
+			Node(int x){
+				data = x;
+				left = right = NULL;
+			}
+		}; */
+		// Iterative approach
+			// Should return  right view of tree
+			class Solution {
+			public:
+			//Function to return list containing elements of right view of binary tree.
+			vector<int> rightView(Node *root) {
+				vector<int> ans;
+				queue<Node*> q;
+				
+				q.push(root);
+				q.push(NULL);
+				int val;
+				
+				while(!q.empty()){
+					Node* cur = q.front();
+					q.pop();
+					
+					if(!cur){
+						if(!q.empty()) q.push(NULL);
+						ans.push_back(val);
+					}else{
+						val = cur -> data;
+						if(cur -> left) q.push(cur -> left);
+						if(cur -> right) q.push(cur -> right);
+					}
+				}
+				return ans;
+			}
+			};
+
+		// Recursive approach
+			class Solution {
+				public:
+				void solve(Node* root, vector<int> &ans, int lvl){
+					if(!root) return;
+					
+					if(lvl == ans.size())
+						ans.push_back(root -> data);
+						
+					if(root -> right) solve(root -> right, ans, lvl+1); 
+					if(root -> left) solve(root -> left, ans, lvl+1); 
+				}
+				//Function to return list containing elements of right view of binary tree.
+				vector<int> rightView(Node *root) {
+					vector<int> ans;
+					solve(root, ans, 0);
+					return ans;
+				}
+			};
+
+	Q.8. Left View of Binary Tree:
+		Problem Statement:
+			Given a Binary Tree, return its Left view. The left view of a Binary Tree is a set of nodes visible when the tree is visited from the Left side. If no left view is possible, return an empty array.
+			Examples :
+			Input: root[] = [1, 2, 3, 4, 5, 6, 7, N, 8]
+				   1
+				/     \
+			    2       3
+			 /    \    /  \
+			4      5  6    7
+			 \
+			  8   
+			Output: [1, 2, 4, 8]
+			Explanation: When we view the tree from the left side, we can only see the nodes 1, 2, 4, and 8.
+
+			Input: root[] = [1, 3, N, N, 4]
+			Output: [1, 3, 4]
+			
+			Input: root[] = [N]
+			Output: []
+			
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+
+			Constraints:
+				0 <= Number of nodes <= 10^5
+				0 <= Data of a node <= 10^5
+
+		/* A binary tree node
+			struct Node {
+				int data;
+				struct Node* left;
+				struct Node* right;
+				
+				Node(int x){
+					data = x;
+					left = right = NULL;
+				}
+			};
+		*/
+		// Iterative approach
+			//Function to return a list containing elements of left view of the binary tree.
+			vector<int> leftView(Node *root) {
+				vector<int> ans;
+				queue<Node*> q;
+				q.push(root);
+				q.push(NULL);
+				ans.push_back(root -> data);
+				
+				while(!q.empty()){
+					Node* cur = q.front();
+					q.pop();
+					
+					if(!cur){
+						if(!q.empty()){
+							ans.push_back(q.front() -> data);
+							q.push(NULL);
+						}  
+					}else{
+						if(cur -> left) q.push(cur -> left);
+						if(cur -> right) q.push(cur -> right);
+					}	
+				}
+				return ans;
+			}
+
+		// Recursive approach
+			void solve(Node* root, vector<int> &ans, int lvl){
+				if(!root) return;
+				if(lvl == ans.size())
+					ans.push_back(root -> data);
+					
+				if(root -> left) solve(root -> left, ans, lvl+1); 
+				if(root -> right) solve(root -> right, ans, lvl+1); 
+			}
+			//Function to return a list containing elements of left view of the binary tree.
+			vector<int> leftView(Node *root) {
+				vector<int> ans;
+				// node, vetor_to_return, level
+				solve(root, ans, 0);
+				return ans;
+			}
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
