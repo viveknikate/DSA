@@ -24519,7 +24519,429 @@ Lecture 64: Binary Tree FAANG Interview Questions || Part-2:
 				return ans;
 			}
 ---------------------------------------------------------------------------------------------------------
+Lecture 65: Binary Tree FAANG Interview Questions || Part-3:
+	Q.1. Sum of nodes on the longest path from root to leaf node:
+		Problem Statement:
+			Given a binary tree having n nodes. Find the sum of all nodes on the longest path from root to any leaf node. If two or more paths compete for the longest path, then the path having maximum sum of nodes will be considered.
+			Example 1:
+			Input: 
+			         4        
+			       /   \       
+			      2     5      
+			     / \   / \     
+			    7   1 2   3    
+			       /
+			      6
+			Output: 13
+			Explanation:
+			         4        
+			       /   \       
+			      2     5      
+			     / \   / \     
+			    7   1 2   3  
+			       /
+			      6
+			The highlighted nodes (4, 2, 1, 6) above are part of the longest root to leaf path having sum = (4 + 2 + 1 + 6) = 13
+			Example 2:
+			Input: 
+			          1
+			        /   \
+			       2     3
+			      / \   / \
+			     4   5 6   7
+			Output: 
+			11
+			Explanation:
+			Use path 1->3->7, with sum 11.
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function sumOfLongRootToLeafPath() which takes root node of the tree as input parameter and returns an integer denoting the sum of the longest root to leaf path of the tree.
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+
+			Constraints:
+				1 <= n <= 10^5
+				0 <= data of each node <= 10^4
+
+		/*
+			structure of the node of the binary tree is as
+			struct Node {
+				int data;
+				struct Node *left;
+				struct Node *right;
+
+				Node(int x) {
+					data = x;
+					left = NULL;
+					right = NULL;
+				}
+			};
+		*/
+		class Solution {
+			public:
+			void mxLongPathSum(Node* root, int curSum, int &mxSum, int curLen, int &mxLen){
+				if(!root) return ;
+				
+				curSum += root -> data;
+				if((!root -> left && !root -> right) && curLen >= mxLen){
+					if(curLen > mxLen) mxSum = curSum;
+					else mxSum = max(mxSum, curSum);
+					mxLen = curLen;
+				}
+				
+				mxLongPathSum(root -> left, curSum, mxSum, curLen+1, mxLen);
+				mxLongPathSum(root -> right, curSum, mxSum, curLen+1, mxLen);
+			}
+			int sumOfLongRootToLeafPath(Node *root) {
+				int mxSum, curSum, curLen, mxLen;
+				mxSum = curSum = curLen = mxLen = 0;
+				
+				mxLongPathSum(root, curSum, mxSum, curLen+1, mxLen);
+				return mxSum;
+			}
+		};
+
+	Q.2. LCA in Binary Tree:
+		Problem Statement:
+			Given a Binary Tree with all unique values and two nodes value, n1 and n2. The task is to find the lowest common ancestor of the given two nodes. We may assume that either both n1 and n2 are present in the tree or none of them are present.
+			LCA: It is the first common ancestor of both the nodes n1 and n2 from bottom of tree.
+			Example 1:
+			Input:
+			n1 = 2 , n2 = 3  
+			       1 
+			      / \ 
+			     2   3
+			Output: 1
+			Explanation:
+			LCA of 2 and 3 is 1.
+			Example 2:
+			Input:
+			n1 = 3 , n2 = 4
+		           5    
+		          /    
+		         2  
+		        / \  
+		       3   4
+			Output: 2
+			Explanation:
+			LCA of 3 and 4 is 2. 
+			Example 3:
+			Input:
+			n1 = 5 , n2 = 4
+		           5    
+		          /    
+		         2  
+		        / \  
+		       3   4
+			Output: 5
+			Explanation:
+			LCA of 5 and 4 is 5. 
+			Your Task:
+				You don't have to read, input, or print anything. Your task is to complete the function lca() that takes nodes, n1, and n2 as parameters and returns the LCA node as output. 
+
+			Expected Time Complexity:O(N).
+			Expected Auxiliary Space:O(Height of Tree).
+			Constraints:
+				1 ≤ Number of nodes ≤ 10^5
+				1 ≤ Data of a node ≤ 10^5
+
+		/* A binary tree node
+			struct Node {
+				int data;
+				struct Node* left;
+				struct Node* right;
+				
+				Node(int x){
+					data = x;
+					left = right = NULL;
+				}
+			};
+		*/
+		class Solution {
+			public:
+			//Function to return the lowest common ancestor in a Binary Tree.
+			Node* lca(Node* root ,int n1 ,int n2 ) {
+				if(root -> data == n1 || root -> data == n2) return root;
+
+				Node* leftAns = NULL;
+				Node* rightAns = NULL;
+				
+				if(root -> left) leftAns = lca(root -> left, n1, n2);
+				if(root -> right) rightAns = lca(root -> right, n1, n2);
+				
+				if(leftAns && rightAns) return root;
+				else if(leftAns && !rightAns) return leftAns;
+				else if(!leftAns && rightAns) return rightAns;
+				else return NULL;
+			}
+		};
+
+		// Practiced:
+			class Solution {
+				public:
+				//Function to return the lowest common ancestor in a Binary Tree.
+				Node* lca(Node* root ,int n1 ,int n2 ) {
+					if(!root) return NULL;
+					if(root -> data == n1 || root -> data == n2) return root;
+					
+					Node* left = lca(root -> left, n1, n2);
+					Node* right = lca(root -> right, n1, n2);
+					
+					if(left && right) return root;			// if both side (left & right) are not null then current element (root), will be the answer
+					else if(!left && right) return right;		// if left is null then right side will be passed as answer
+					else return left;						// else left side is answer		(in short, the side which is not null will passed as answer)
+				}
+			};
+
+	Q.3. K Sum Paths:
+		Problem Statement:
+			Given a binary tree and an integer k, the task is to count the number of paths in the tree such that the sum of the nodes in each path equals k. A path can start from any node and end at any node and must be downward only.
+			Examples:
+			Input: Tree =    1  	
+						/   \                          
+					    2     3
+			k = 3                               
+			Output: 2
+			Explanation:
+			Path 1 : 1 + 2 = 3
+			Path 2 : only leaf node 3
+			
+			Input: Tree = 8  k = 7  
+			            /   \
+			          4      5
+			         /   \       \
+			       3     2       2                        
+			      /   \     \                    
+			    3    -2    1       
+			Output: 3
+			Input Tree =
+					  7 
+				     /   \
+				    4     5 
+				  /   \    \
+				 3     2    2 
+				/ \   / \  
+			    0  -2 N   1 
+			k=7
+			output: 5
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(height of Tree)
+			Constraints:
+				1 ≤ number of nodes ≤ 2*10^4
+				-10^5 ≤ node value ≤ 10^5
+				-10^9 ≤ k ≤ 10^9
+
+		// User function template for C++
+		/*
+			struct Node {
+				int data;
+				Node *left;
+				Node *right;
+
+				Node(int val) {
+					data = val;
+					left = right = NULL;
+				}
+			};
+		*/
+		class Solution {
+			public:
+			void solve(Node* root, int k, int &cnt, vector<int> pathValues){
+				if(!root)  return ;
+				pathValues.push_back(root -> data);
+				
+				solve(root -> left, k, cnt, pathValues);        // left
+				solve(root -> right, k, cnt, pathValues);       // right
+				
+				int sum = 0;
+				for(int i=pathValues.size()-1; i>=0; i--){
+					sum += pathValues[i];
+					if(sum == k) cnt++;
+				}
+			}
+			int sumK(Node *root, int k) {
+				vector<int> pathValues;
+				int cnt=0;
+				
+				solve(root, k, cnt, pathValues);
+				return cnt;
+			}
+		};
+
+	Q.4. Kth Ancestor in a Tree:
+		Problem Statement:
+			Given a binary tree of size  N, a node, and a positive integer k., Your task is to complete the function kthAncestor(), the function should return the kth ancestor of the given node in the binary tree. If there does not exist any such ancestor then return -1.
+			Note:
+				1. It is guaranteed that the node exists in the tree.
+				2. All the nodes of the tree have distinct values.
+
+			Example 1:
+				 1
+				/ \
+			    2   3
+			   / \
+			  4	 5
+			Input:
+			K = 2 Node = 4
+			Output: 1
+			Explanation:
+			Since, K is 2 and node is 4, so we
+			first need to locate the node and
+			look k times its ancestors.
+			Here in this Case node 4 has 1 as his
+			2nd Ancestor aka the Root of the tree.
+			Example 2:
+
+			Input:
+			k=1 
+			node=3
+				 1
+				/ \
+			    2   3
+			Output:
+			1
+			Explanation:
+			K=1 and node=3 ,Kth ancestor of node 3 is 1.
+			Your Task:
+				You are asked to complete the function kthAncestor() which accepts root of the tree, k and node as input parameters, and returns the kth ancestor of Node which contains node as its value.
+
+			Expected Time Complexity: O(N)
+			Expected Auxiliary Space: O(N)
+			Constraints:
+				1<=N<=10^5
+				1<= K <= 100
+				1 <= Node.data <= N
+
+		    Structure of the node of the binary tree is as
+		
+		//User function Template for C++
+		/*
+			struct Node {
+				int data;
+				struct Node *left, *right;
+			};
+		*/
+
+		void traverse(Node* root, vector<int> &path, int node){
+			if(!root) return;
+			path.push_back(root -> data);
+			if(root -> data == node)	return ;
+		
+			traverse(root -> left, path, node);
+			traverse(root -> right, path, node);
+
+			if(path.back() != node) path.pop_back();
+		}
+		int kthAncestor(Node *root, int k, int node) {
+		int ans = -1;
+		vector<int> pathOfK;
+		traverse(root, pathOfK, node);
+		
+		int i=pathOfK.size()-1;
+		while(k--) --i;
+		
+		if(i>=0) ans = pathOfK[i];
+		return ans;
+		}
+
+		// Approach-2
+			/*
+				Structure of the node of the binary tree is as
+				struct Node {
+					int data;
+					struct Node *left, *right;
+				};
+			*/
+
+			int solve(Node* n, int &k, int search_value){
+				if(!n) return -1;
+
+				if(n -> data == search_value) return search_value;
+
+				int left = solve(n -> left, k, search_value);
+				int right = solve(n -> right, k, search_value);
+			
+				if(left != -1 && right == -1){
+					k--;
+					if(k < 0) return left;
+					return n -> data;
+				}
+
+				if(left == -1 && right != -1){
+					k--;
+					if(k < 0) return right;
+					return n -> data;
+				}
+				return -1;
+			}
+
+			int kthAncestor(Node *root, int k, int node) {
+				// if(!root || (root -> data == node)) return -1;
+				int ans = solve(root, k, node);
+				return (k > 0) ? -1 : ans;
+			}
+
+	Q.5. Maximum sum of Non-adjacent nodes:
+		Problem Statement:
+			Given a binary tree with a value associated with each node, we need to choose a subset of these nodes such that sum of chosen nodes is maximum under a constraint that no two chosen node in subset should be directly connected that is, if we have taken a node in our sum then we can’t take its any children or parents in consideration and vice versa.
+			Example 1:
+			Input:
+			     11
+			    /  \
+			   1    2
+			Output: 11
+			Explanation: The maximum sum is sum of
+			node 11.
+			Example 2:
+			Input:
+			        1
+			      /   \
+			     2     3
+			    /     /  \
+			   4     5    6
+			Output: 16
+			Explanation: The maximum sum is sum of
+			nodes 1 4 5 6 , i.e 16. These nodes are
+			non adjacent.
+			Your Task:
+				You don't need to read input or print anything. You just have to complete function getMaxSum() which accepts root node of the tree as parameter and returns the maximum sum as described.
+
+			Expected Time Complexity: O(Number of nodes in the tree).
+			Expected Auxiliary Space: O(Height of the Tree).
+			Constraints:
+				1 ≤ Number of nodes in the tree ≤ 10000
+				1 ≤ Value of each node ≤ 100000
+
+		//Node Structure
+		/*
+			struct Node {
+				int data;
+				Node* left;
+				Node* right;
+			};
+		*/
+		class Solution{
+			public:
+			pair<int, int> solve(Node* root){
+				if(!root) return {0,0};
+				
+				auto left = solve(root -> left);
+				auto right = solve(root -> right);
+				
+				int first = left.second + right.second + root -> data;
+				int second = max(left.first, left.second) + max(right.first, right.second);
+				return {first, second};
+			};
+			//Function to return the maximum sum of non-adjacent nodes.
+			int getMaxSum(Node *root) {
+				auto ans = solve(root);
+				return max(ans.first, ans.second);
+			}
+		};
 ---------------------------------------------------------------------------------------------------------
+Lecture 66: Construct a Binary Tree from InOrder/PreOrder/PostOrder Traversal:
+	
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -97386,6 +97808,30 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 		};
+
+		// or concise:
+			class Solution {
+				public:
+				//Function to return the level order traversal of a tree.
+				vector<int> levelOrder(Node* root) {
+					vector<int> ans;
+					if(!root) return ans;
+					
+					queue<Node*> q;
+					q.push(root);
+					
+					while(!q.empty()){
+						Node* cur = q.front();
+						q.pop();
+						
+						ans.push_back(cur -> data);
+						
+						if(cur -> left) q.push(cur -> left);
+						if(cur -> right) q.push(cur -> right);
+					}
+					return ans;
+				}
+			};
 	
 	927) Reverse Level Order Traversal:
 		Problem Statement:
@@ -108253,13 +108699,248 @@ POTD:-[Problem of the Day]
 		// Optimized:
 			❌Pending
 
-1092) 
+	#GFG Weekly-176:
+		1092) Geek String:
+			Problem Statement:
+				You are given a string s consisting of lowercase English letters. Your task is to determine if there exists a subsequence in s that matches the string "geek".
+				A subsequence is a sequence that can be derived from another string by deleting some or no elements without changing the order of the remaining elements.
+				Return true if there is a subsequence of "geek" in the given string, otherwise return false.
+				Example 1:
+					Input:
+					s = "abcgeekd"
+					Output: 
+					true
+					Explanation: 
+					The subsequence "geek" appears in the string s, abcgeekd. Hence, we return true
+				Example 2:
+					Input:
+					s = "abcgreed"
+					Output: 
+					false
+					Explanation: 
+					There is no subsequence of "geek" present in the string. Hence, we return false
 
-1093) 
+				Your Task:
+					You don’t need to read input or print anything. Your task is to implement the function hasGeekSubsequence. This function should take a string s as input and return a boolean value True if the subsequence "geek" exists, otherwise False.
 
-1094) 
+				Constraints:
+					1 ≤ |s| ≤ 10^5
+					The input string s consists only of lowercase English letters.
 
-1095) 
+			class Solution {
+				public:
+				bool hasGeekSubsequence(string str) {
+					string s = "geek";
+					int i=0;
+					for(char ch:str)
+						if(ch == s[i]) i++;
+					return (i < 4) ? 0: 1;
+				}
+			};
+
+		1093) Palindromic Substrings:
+			Problem Statement:
+				Given a string s and an integer k, your task is to find the total number of substrings of length k in s such that the characters in the substring can be rearranged to form a palindrome. A string is called a palindrome if it reads the same backward as forward.
+				Example 1:
+				Input:
+				s = "aabb"
+				k = 2
+				Output: 
+				2
+				Explanation: 
+				The substrings of length 2 are: “aa”, “ab”, “bb”. Out of these, “aa” and “bb” can be rearranged to form a palindrome.
+
+				Example 2:
+				Input:
+				s = "abcde"
+				k = 3
+				Output: 
+				0
+				Explanation: 
+				The substrings of length 3 are: “abc”, “bcd”, “cde”. None of these can be rearranged to form a palindrome.
+
+				Your Task:
+					You don’t need to read input or print anything. Your task is to complete the function countPalindromicSubstrings which takes the string s and the integer k as input and returns the total number of substrings of length k in which the characters can be rearranged to form a palindrome.
+
+				Constraints:
+					1 ≤ len(s) ≤ 10^5
+					1 ≤ k ≤ len(s)
+					The input strings consists only of lowercase English letters.
+
+			// Not Optimized:
+				class Solution {
+					public:
+					bool CanBePalin_AfterReArrangement(string &s){
+						// here the logic is there should be every char in even number of times, 
+						// except any one char in odd number of times in string s to satisfy this palindromic condition
+						map<char, int> CharCnt;
+						for(char ch: s)
+							CharCnt[ch]++;
+						
+						// keep track of chars occurs in odd no.of times, ideally there should be one char only.
+						int oddTimes = 0;
+						for(auto i: CharCnt)
+							if(i.second&1)
+								oddTimes++;
+						
+						return (oddTimes > 1) ? 0 : 1;
+					}
+					int countPalindromicSubstrings(string str, int k) {
+						// window size will be k
+						int s = 0, n=str.size(), cnt=0;
+						while(s <= (n-k)){
+							string t = str.substr(s, k);
+							// cout<<t <<"\t"<< s << "\t" <<endl;
+							if(CanBePalin_AfterReArrangement(t)) cnt++;
+							s++;
+						}
+						return cnt;
+					}
+				};
+			
+			// Optimized: (Sliding Window)
+				class Solution {
+					public:
+					bool isReArranged_Palindrom(auto map){
+						int oddTimes=0;
+						for(auto i: map)
+							if(i.second&1) oddTimes++;
+							
+						return (oddTimes > 1) ? 0 : 1;
+					}
+					int countPalindromicSubstrings(string s, int k) {
+						map<char, int> Fr;
+						int cnt=0, i = 0, n=s.size();
+						
+						// created first window
+						while(i < k)
+							Fr[s[i++]]++;
+							
+						if(isReArranged_Palindrom(Fr)) cnt++;
+
+						int j=0;
+						while(i < n){
+							Fr[s[i++]]++;
+							Fr[s[j++]]--;
+							if(isReArranged_Palindrom(Fr)) cnt++;
+						}
+						return cnt;
+					}
+				};
+
+			// Without using map:
+				❌Pending
+
+		1094) Odd Subarrays:
+			Problem Statement:
+				Given an array arr, return the count of even-length subarrays that contain an odd number of odd elements.
+				Example 1:
+				Input:
+				n = 3
+				arr = [1, 2, 3]
+				Output: 
+				2
+				Explanation: 
+				The subarrays of even length are [1, 2] and [2, 3]. Both contain exactly 1 odd element.
+
+				Example 2:
+				Input:
+				n = 5
+				arr = [4, 2, 3, 2, 1]
+				Output: 
+				4
+				Explanation: 
+				Subarrays are [4,2,3,2] (1 odd element and length 4),
+				[2,3], [3,2], [2,1] (1 odd element and length 2).
+				Your Task:
+					You don't need to read input or print anything. Your task is to complete the function countoddSubarrays() which takes integer n and an array arr as input and returns the count of subarrays with even length having odd number of odd elements.
+				Constraints:
+					1 ≤ n ≤ 10^5
+					1 ≤ arr[i] ≤ 10^9
+
+			// Not Optimized:
+				class Solution {
+					public:
+					bool checkOddSubArray(vector<int> &n){
+						int oddTimes=0;
+						for(int i: n)
+							if(i&1)
+								oddTimes++;		
+						return (oddTimes&1) ? 1 : 0;
+					}
+					long long countoddSubarrays(int n, vector<int> &arr) {
+						long long ans=0;
+						for(int i=0; i < (n-1); i++){                   // or for(int i=0; i <= (n-2); i++)    
+							int j = i;
+							vector<int> t;
+							for(j; j<n; j+=2){
+								t.push_back(arr[j]);
+								if(j+1 < n){
+									t.push_back(arr[j+1]);
+									if(checkOddSubArray(t)) ans++;
+								}
+							}
+						}   
+						return ans;
+					}
+				};
+
+			// Optimized:
+				❌Pending
+
+		1095) Subarray Occurences:
+			Problem Statement:
+				You are given an array arr of length n, and you are provided with q queries. Each query is in the form of three integers L, R, and K. Your task is to count the occurrences of the integer K in the subarray of arr ranging from index L to R (both inclusive). You should return an answer array of size q containing the answer for each query where ith index in the answer array denotes the answer for the ith query.
+				Example 1:
+				Input:
+				n = 7
+				q = 2
+				arr = [1, 2, 2, 3, 2, 4, 1]
+				queries = [[1, 4, 2], [0, 6, 1]]
+				Output: 
+				[3,2]
+				Explanation: 
+				For the first query [1, 4, 2], the subarray from index 1 to 4 is [2, 2, 3, 2]. The number '2' appears 3 times.
+				For the second query [0, 6, 1], the subarray from index 0 to 6 is [1, 2, 2, 3, 2, 4, 1]. The number '1' appears 2 times.
+
+				Example 2:
+				Input:
+				n = 4
+				q = 3
+				arr = [5, 5, 5, 5]
+				queries = [[0, 3, 5], [1, 2, 5], [0, 1, 6]]
+				Output: 
+				[4,2,0]
+				Explanation: 
+				For the first query [0, 3, 5], the subarray is [5, 5, 5, 5], and '5' appears 4 times.
+				For the second query [1, 2, 5], the subarray is [5, 5], and '5' appears 2 times.
+				For the third query [0, 1, 6], the subarray is [5, 5], and '6' does not appear, so the answer is 0.
+				Your Task:
+					You need to implement the function countOccurrences. For each query, you need to count the occurrences of the integer K in the subarray of arr ranging from index L to R (both inclusive), and return a list of size q where each element corresponds to the answer for that query.
+
+				Constraints:
+					1 ≤ n ≤ 10^5: The length of the array arr.
+					1 ≤ q ≤ 10^5: The number of queries.
+					0 ≤ l ≤ r < n: Valid range for the subarray.
+					0 ≤ k ≤ 10^9: The value of k for each query.
+
+			// Not Optimized:
+				class Solution {
+					public:
+					vector<int> countOccurrences(int n, int q, vector<int> &arr, vector<vector<int>> &queries) {
+						vector<int> ans;
+						for(auto i: queries){
+							int l = i[0], r=i[1], k=i[2], cnt=0;
+							for(int j=l; j <= r; j++)
+								if(arr[j] == k) cnt++;
+							ans.push_back(cnt);
+						}
+						return ans;
+					}
+				};
+
+			// Optimized:
+				❌Pending
 
 1096) 
 
