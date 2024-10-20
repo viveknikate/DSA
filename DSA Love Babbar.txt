@@ -22982,7 +22982,86 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 			RLOT(root, ans);                // RLOT = Reverse Level Order Traversal
 			return ans;
 		}
+
+		// or using vector:
+			vector<int> reverseLevelOrder(Node *root) {
+				queue<Node *> q;
+				queue<Node*> hold;
+				q.push(root);
+				q.push(NULL);
+				hold.push(root);
+				hold.push(NULL);
+
+				while(!q.empty()){
+					Node *cur = q.front();
+					q.pop();
+					
+					if(cur == nullptr){
+						if(!q.empty()){
+							hold.push(NULL);
+							q.push(NULL);
+						}
+					}else{
+						if(cur -> left) q.push(cur -> left), hold.push(cur -> left) ;
+						if(cur -> right) q.push(cur -> right), hold.push(cur -> right);
+					}
+				}
+
+				vector<vector<int>> v;
+				vector<int> t;
+				while(!hold.empty()){
+					Node *cur = hold.front();
+					hold.pop();
+					
+					if(cur == NULL){
+						v.push_back(t);
+						t.clear();
+					}else{
+						t.push_back(cur -> data);
+					}
+				}
+				vector<int> ans;
+				for(int i = v.size() -1; i>=0; i--)
+					for(int j=0; j<v[i].size(); j++)
+						ans.push_back(v[i][j]);
+				
+				// for above for loop
+				return ans;
+			}
 	
+		// or using stack & vector:
+			vector<int> reverseLevelOrder(Node *root) {
+				queue<Node *> q;
+				q.push(root);
+				q.push(NULL);
+				stack<vector<int>> st;
+				st.push({root -> data});
+				vector<int> t;
+
+				while(!q.empty()){
+					Node *cur = q.front();
+					q.pop();
+					
+					if(cur == nullptr){
+						if(!q.empty()){
+							q.push(NULL);
+							st.push(t);
+							t.clear();
+						}
+					}else{
+						if(cur -> left) q.push(cur -> left), t.push_back(cur -> left -> data);
+						if(cur -> right) q.push(cur -> right), t.push_back(cur -> right -> data);
+					}
+				}
+
+				vector<int> ans;
+				while(!st.empty()){
+					ans.insert(ans.end(), st.top().begin(), st.top().end());
+					st.pop();
+				}
+				return ans;
+			}
+
 	Tyes of Traversal:
 		1) In-Order
 		2) Pre-Order
@@ -24519,6 +24598,7 @@ Lecture 64: Binary Tree FAANG Interview Questions || Part-2:
 				return ans;
 			}
 ---------------------------------------------------------------------------------------------------------
+	13/10/24
 Lecture 65: Binary Tree FAANG Interview Questions || Part-3:
 	Q.1. Sum of nodes on the longest path from root to leaf node:
 		Problem Statement:
@@ -24834,15 +24914,15 @@ Lecture 65: Binary Tree FAANG Interview Questions || Part-3:
 			if(path.back() != node) path.pop_back();
 		}
 		int kthAncestor(Node *root, int k, int node) {
-		int ans = -1;
-		vector<int> pathOfK;
-		traverse(root, pathOfK, node);
-		
-		int i=pathOfK.size()-1;
-		while(k--) --i;
-		
-		if(i>=0) ans = pathOfK[i];
-		return ans;
+			int ans = -1;
+			vector<int> pathOfK;
+			traverse(root, pathOfK, node);
+			
+			int i=pathOfK.size()-1;
+			while(k--) --i;
+			
+			if(i>=0) ans = pathOfK[i];
+			return ans;
 		}
 
 		// Approach-2
@@ -24940,7 +25020,298 @@ Lecture 65: Binary Tree FAANG Interview Questions || Part-3:
 			}
 		};
 ---------------------------------------------------------------------------------------------------------
+	18/10/24
 Lecture 66: Construct a Binary Tree from InOrder/PreOrder/PostOrder Traversal:
+	Q.1. Construct Tree from Inorder & Preorder:
+		Problem Statement:
+			Given two arrays of inorder and preorder traversal of size n. Construct a tree using the inorder and preorder arrays and return the root node of the constructed tree.
+			Example 1:
+			Input:
+			n = 4
+			inorder[] = {1 6 8 7}
+			preorder[] = {1 6 7 8}
+			Output: 8 7 6 1
+
+			Example 2:
+			Input:
+			n = 6
+			inorder[] = {3 1 4 0 5 2}
+			preorder[] = {0 1 3 4 2 5}
+			Output: 3 4 1 5 2 0
+			Explanation: The tree will look like
+			       0
+			    /     \
+			   1       2
+			 /   \    /
+			3    4   5
+			Your Task:
+				Your task is to complete the function buildTree() which takes 3 arguments(inorder traversal array, preorder traversal array, and size of tree n) and returns the root node to the tree constructed. You are not required to print anything and a new line is added automatically (The post order of the returned tree is printed by the driver's code.)
+
+			Expected Time Complexity: O(n*n).
+			Expected Auxiliary Space: O(n).
+			Constraints:
+				1<= n <=1000
+				inorder and preorder arrays contain unique values
+
+		/*Complete the code here.
+			Node is as follows:
+			struct Node {
+				int data;
+				Node* left;
+				Node* right;
+			};
+		*/
+		class Solution{
+			public:
+			int findInInorder(int in[], int ele, int n){
+				for(int i=0; i<n; i++)
+					if(in[i] == ele) return i;
+				return -1;
+			}
+			Node* solve(int in[], int pre[], int n, int start, int end, int &index){
+				if(index >= n || end < start) return NULL;
+				int element = pre[index++];
+				Node* root = new Node(element);
+				
+				int pos = findInInorder(in, element, n);
+				root -> left = solve(in, pre, n, start, pos-1, index);
+				root -> right = solve(in, pre, n, pos+1, end, index);
+				
+				return root;
+			}
+			Node* buildTree(int in[],int pre[], int n) {
+				int index = 0;
+				return solve(in, pre, n, 0, n-1, index);
+			}
+		};
+
+	Q.2. Binary Tree from Inorder and Postorder:
+		Problem Statement:
+			Given inorder and postorder traversals of a binary tree(having n nodes) in the arrays inorder[] and postorder[] respectively. The task is to construct a unique binary tree from these traversals and return its root.
+			Driver code will print the preorder traversal of the constructed tree.
+
+			Note: The inorder and postorder traversals contain unique values, and every value present in the postorder traversal is also found in the inorder traversal.
+
+			Examples:
+			Input: inorder[] = [4, 8, 2, 5, 1, 6, 3, 7], postorder[] = [8, 4, 5, 2, 6, 7, 3, 1]
+			Output: [1, 2, 4, 8, 5, 3, 6, 7]
+			Explanation: For the given postorder and inorder traversal of tree the resultant binary tree will be
+			          1
+			       /      \
+			     2        3
+			   /  \      /  \
+			  4   5     6    7
+			   \
+			    8
+			Input: inorder[] = [9, 5, 2, 3, 4], postorder[] = [5, 9, 3, 4, 2]
+			Output: [2, 9, 5, 4, 3]
+			Explanation: The resultant binary tree will be
+			      2
+			   /     \
+			  9      4
+			   \     /
+			    5   3
+			Constraints:
+				1 <= number of nodes <= 10^3
+				1 <= in[i], post[i] <= 10^6
+
+		/* Tree node structure
+			struct Node {
+				int data;
+				struct Node* left;
+				struct Node* right;
+
+				Node(int x){
+					data = x;
+					left = right = NULL;
+				}
+			};
+		*/
+
+		class Solution {
+			public:
+			// Function to return a tree created from postorder and inoreder traversals.
+			Node* solve(vector<int> &in, vector<int> &post, int s, int e, int &idx){
+				if(idx < 0 || s > e) return NULL;
+				
+				int element = post[idx--], n = in.size();
+				Node* root = new Node(element);
+				int position = -1;
+
+				for(int i=s; i<=e; i++)
+					if(in[i] == element){
+						position = i;
+						break;
+					}
+				
+				root -> right = solve(in, post, position+1, e, idx);
+				root -> left = solve(in, post, s,position-1, idx);
+				return root;
+			}
+			Node* buildTree(vector<int> inorder, vector<int> postorder) {
+				int n = postorder.size();
+				int index = n-1;
+				return solve(inorder, postorder, 0, n-1, index);
+			}
+		};
+
+	// we can use map for above codes to find the position of element instead of for loop looping for every function call
+	Q. From Inorder & Postorder:
+		class Solution {
+			public:
+			map<int, int> positions;
+			// Function to return a tree created from postorder and inoreder traversals.
+			Node* solve(vector<int> &in, vector<int> &post, int s, int e, int &idx){
+				if(idx < 0 || s > e) return NULL;
+				
+				int element = post[idx--], n = in.size();
+				Node* root = new Node(element);
+				
+				int position = positions[element];
+				root -> right = solve(in, post, position+1, e, idx);
+				root -> left = solve(in, post, s,position-1, idx);
+				return root;
+			}
+			Node* buildTree(vector<int> inorder, vector<int> postorder) {
+				int n = postorder.size(), index = n-1;
+				
+				for(int i=0; i<n; i++) positions[inorder[i]] = i;
+				return solve(inorder, postorder, 0, n-1, index);
+			}
+		};
+---------------------------------------------------------------------------------------------------------
+	19/10/24
+Lecture 67: Minimum Time to BURN the Entire Binary Tree:
+	Q. Burning Tree:
+		Problem Statement:
+			Given a binary tree and a node data called target. Find the minimum time required to burn the complete binary tree if the target is set on fire. It is known that in 1 second all nodes connected to a given node get burned. That is its left child, right child, and parent.
+			Note: The tree contains unique values.
+			Examples : 
+			Input:      
+			         1
+			       /   \
+			     2      3
+			   /  \      \
+			  4    5      6
+			      / \      \
+			     7   8      9
+			                  \
+			                  10
+			Target Node = 8
+			Output: 7
+			Explanation: If leaf with the value 8 is set on fire. 
+			After 1 sec: 5 is set on fire.
+			After 2 sec: 2, 7 are set to fire.
+			After 3 sec: 4, 1 are set to fire.
+			After 4 sec: 3 is set to fire.
+			After 5 sec: 6 is set to fire.
+			After 6 sec: 9 is set to fire.
+			After 7 sec: 10 is set to fire.
+			It takes 7s to burn the complete tree.
+			Input:      
+			          1
+			        /   \
+			      2      3
+			    /  \      \
+			   4    5      7
+			  /    / 
+			 8    10
+			Target Node = 10
+			Output: 5
+			Expected Time Complexity: O(number of nodes)
+			Expected Auxiliary Space: O(height of tree)
+
+			Constraints:
+				1 ≤ number of nodes ≤ 10^5
+				1 ≤ values of nodes ≤ 10^5
+
+		/*
+			struct Node {
+				int data;
+				Node *left;
+				Node *right;
+
+				Node(int val) {
+					data = val;
+					left = right = NULL;
+				}
+			};
+		*/
+		class Solution {
+			public:
+			map<Node*, Node*> nodeTheirParent;
+			Node* findTarget_nodeToParentMapping(Node* n, int tar){
+				Node* res = NULL;
+				
+				// Level Order Traversal
+				queue<Node*> q;
+				q.push(n);
+				nodeTheirParent[n] = NULL;		
+				while(!q.empty()) {
+					Node* front = q.front();
+					q.pop();
+					
+					if(front -> data == tar) res = front;           // finding the position of target in tree 
+					if(front -> left){
+						nodeTheirParent[front -> left] = front;
+						q.push(front -> left);
+					}
+					
+					if(front -> right) {
+						nodeTheirParent[front -> right] = front;
+						q.push(front -> right);
+					}
+				}
+				return res;
+			}
+			void burning(Node* targetNode, int &ans){
+				map<int, bool> visited;
+				queue<Node*> q;
+				q.push(targetNode);
+				visited[targetNode -> data] = 1;
+				
+				while(!q.empty()){
+					int size = q.size();
+					int flag = 0;               // we never pushed anything into queue
+					
+					for(int i=0; i<size; i++){      
+						Node* front = q.front();
+						q.pop();
+						
+						// if left side is present & its not visited then consider it
+						if(front -> left && !visited[front -> left -> data]){
+							flag = 1;               // pushed, some change happened in queue
+							q.push(front -> left);
+							visited[front -> left -> data] = 1;
+						}
+						
+						// if right side is present & its not visited then consider it
+						if(front -> right && !visited[front -> right -> data]){           
+							flag = 1;
+							q.push(front -> right);
+							visited[front -> right -> data] = 1;
+						}
+						
+						// if parent are NOT visited then consider them also
+						if(nodeTheirParent[front] && !visited[nodeTheirParent[front] -> data]){
+							flag = 1;
+							q.push(nodeTheirParent[front]);
+							visited[nodeTheirParent[front] -> data] = 1;
+						}
+					}
+					if(flag) ans++;
+				}
+			}
+			int minTime(Node* root, int target) {
+				int time=0;
+				Node* targetNode = findTarget_nodeToParentMapping(root, target);
+				burning(targetNode, time);
+				return time;
+			}
+		};
+---------------------------------------------------------------------------------------------------------
+	20/10/24
+Lecture 68: Morris Traversal Flatten a Binary tree to Linked List:
 	
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
@@ -57127,6 +57498,45 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 	
+		// Concise:
+			vector<int> sumInRanges(vector<int> &arr, int n, vector<vector<long long>> &queries, int q) {
+				vector<int> ans;
+				int mod = 1e9+7;
+				vector<int> t = arr;
+				for(auto i: queries){
+					long long l = i[0]-1, r = i[1];
+					long long sum = 0;
+					
+					while(t.size() < r) t.insert(t.end(), arr.begin(), arr.end());
+					while(l < r) sum = (sum + t[l++]) % mod;
+
+					ans.push_back(sum);
+				}
+				return ans;
+			}
+		
+		// Little bit Optimized: (Reminder/ modulus technique)
+			#define ll long long 
+			vector<int> sumInRanges(vector<int> &arr, int n, vector<vector<long long>> &queries, int q) {
+				vector<int> ans;
+				int mod = 1e9+7;
+
+				for(auto i: queries){
+					ll s = i[0], e = i[1];
+					ll diff = e - s + 1;        // repeate
+					
+					ll startingIndex = s - 1;
+					startingIndex %= n;
+					ll sum = 0;
+					while(diff--){
+						if(startingIndex >= n) startingIndex=0;
+						sum = (sum + arr[startingIndex++]) % mod;
+					}
+					ans.push_back(sum);
+				}
+				return ans;
+			}
+		
 		//Optimized:
 			/*
 				Time Complexity:O(Q+N).
@@ -108829,7 +109239,38 @@ POTD:-[Problem of the Day]
 				};
 
 			// Without using map:
-				❌Pending
+				class Solution {
+					public:
+					bool ReArrangement_can_form_palindrome(vector<int> &freq){
+						// this loop always runs 26 times, coz size of freq is 26.
+						int oddCnt=0;
+						for(int i: freq)
+							if(i&1) oddCnt++;
+						
+						return (oddCnt > 1) ? 0 : 1;
+					}
+					int countPalindromicSubstrings(string s, int k) {	
+						// default value for all char occurrence is 0
+						vector<int> freq(26, 0);        // string only contains the 26 alphabates, mapper
+						
+						// creating first window
+						int i, cnt=0;
+						for(i=0; i<k; i++)
+							freq[s[i] - 'a']++;                     // s[i] is 'a' then this will map to 0.
+						
+						if(ReArrangement_can_form_palindrome(freq)) cnt++;
+						int n=s.size();
+						
+						while(i < n){
+							freq[s[i] - 'a']++;
+							freq[s[i-k] - 'a']--;
+							
+							if(ReArrangement_can_form_palindrome(freq)) cnt++;
+							i++;
+						}
+						return cnt;
+					}
+				};
 
 		1094) Odd Subarrays:
 			Problem Statement:
@@ -108858,7 +109299,7 @@ POTD:-[Problem of the Day]
 					1 ≤ n ≤ 10^5
 					1 ≤ arr[i] ≤ 10^9
 
-			// Not Optimized:
+			// Not Optimized: TC: O(n³)
 				class Solution {
 					public:
 					bool checkOddSubArray(vector<int> &n){
@@ -108881,6 +109322,32 @@ POTD:-[Problem of the Day]
 								}
 							}
 						}   
+						return ans;
+					}
+				};
+
+			// Not Optimized: TC: O(n²)
+				class Solution {
+					public:
+					long long countoddSubarrays(int n, vector<int> &arr) {
+						long long ans =0;
+						
+						for(int i=0; i<n; i++){
+							
+							int oddElementCnt=0;
+							for(int j=i; j<n; j+=2){
+								if(arr[j]&1) oddElementCnt++;
+								
+								// this will always ensure that the size of subarray will always even
+								if(j+1 >= n)
+								break;
+								
+								if(arr[j+1]&1)
+								oddElementCnt++;
+
+								if(oddElementCnt&1) ans++;
+							}
+						}
 						return ans;
 					}
 				};
