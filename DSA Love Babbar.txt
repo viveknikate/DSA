@@ -23062,7 +23062,7 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 				return ans;
 			}
 
-	Tyes of Traversal:
+	Tyes of Traversal: (Recursion)
 		1) In-Order
 		2) Pre-Order
 		3) Post-Order
@@ -23098,9 +23098,8 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 				int data;
 				cin>> data;
 				
-				if(data == -1)
-					return NULL;
-					
+				if(data == -1) return NULL;
+
 				TreeNode *curNode = new TreeNode(data);
 				std::cout << "Enter data on left of " << data << std::endl;
 				curNode -> left = GenerateTree();
@@ -23181,12 +23180,248 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 				return 0;
 			}
 	
-	HomeWork: solve below traversals without using recursion instead use iterative approach
+	HomeWork: solve below traversals without using recursion instead use iterative approachdsa
 		1) In-Order
 		2) Pre-Order
 		3) Post-Order
 		Code: Iterative Approach
-			❌Pending
+		Q.1. Iterative Inorder:	(POTD 1096)
+			Problem Statement:
+				Given a binary tree. Find the inorder traversal of the tree without using recursion.
+				Example 1
+				Input:
+					   1
+					/    \
+				    2     3
+				  /   \
+				 4     5
+				Output: 4 2 5 1 3
+				Explanation:
+				Inorder traversal (Left->Root->Right) of 
+				the tree is 4 2 5 1 3.
+				Example 2
+				Input:
+				  	    8
+					/        \
+				    1          5
+					\       /  \
+					 7     10   6
+					  \   /
+					  10 6
+				Output: 1 7 10 8 6 10 5 6
+				Explanation:
+				Inorder traversal (Left->Root->Right) 
+				of the tree is 1 7 10 8 6 10 5 6.
+				Your task:
+					You don't need to read input or print anything. Your task is to complete the function inOrder() which takes the root of the tree as input and returns a list containing the inorder traversal of the tree, calculated without using recursion.
+
+				Expected time complexity: O(N)
+				Expected auxiliary space: O(N)
+
+				Constraints:
+					1 <= Number of nodes <= 10^5
+					1 <= Data of a node <= 10^5
+			/* Tree Node
+				struct Node {
+					int data;
+					Node* left;
+					Node* right;
+				};
+			*/
+			class Solution {
+				public:
+				vector<int> inOrder(Node* root) {
+					vector<int> ans;
+					stack<Node*> st;
+					
+					while(root or !st.empty()){                                 // while(root != NULL || !st.empty()){}		//  while(root or not st.empty()){}              // while(root != NULL || st.empty() != true) {}
+						while(root){
+							st.push(root);
+							root = root -> left;
+						}
+						root = st.top();
+						st.pop();
+						ans.push_back(root -> data);
+						root = root -> right;
+					}
+					return ans;
+				}
+			};
+						
+		Q.2. Preorder traversal (Iterative):
+			Problem Statement:
+				Given a Binary tree. Find the preorder traversal of the tree without using recursion.
+				Example 1:
+				Input:
+						       1
+						     /   \
+						    2     3
+						  /  \
+						 4    5
+				Output: 1 2 4 5 3
+				Explanation:
+				Preorder traversal (Root->Left->Right) of 
+				the tree is 1 2 4 5 3.
+				Example 2
+				Input:
+						      8
+						  /       \
+						 1         5
+						  \       /  \
+						   7     10   6
+						    \   /
+						    10 6
+				Output: 8 1 7 10 5 10 6 6 
+				Explanation:
+				Preorder traversal (Root->Left->Right) 
+				of the tree is 8 1 7 10 5 10 6 6.
+				Your task:
+					You don't need to read input or print anything. Your task is to complete the function preOrder() which takes the root of the tree as input and returns a list containing the preorder traversal of the tree, calculated without using recursion.
+				Expected time complexity: O(N)
+				Expected auxiliary space: O(N)
+				Constraints:
+					1 ≤ Number of nodes ≤ 10^5
+					1 ≤ Data of a node ≤ 10^5
+
+			/* Tree Node
+				struct Node {
+					int data;
+					Node* left;
+					Node* right;
+				};
+			*/
+			class Solution{
+				public:
+				vector<int> preOrder(Node* root) {
+					vector<int> ans;
+					stack<Node*> st;
+					
+					while(root or !st.empty()){
+						while(root){
+							st.push(root);
+							ans.push_back(root -> data);
+							root = root -> left;
+						}
+						root = st.top();
+						st.pop();
+						root = root -> right;
+					}
+					return ans;
+				}
+			};
+
+			// Using stack
+				class Solution{
+					public:
+					vector<int> preOrder(Node* root) {
+						vector<int> ans;
+						if(not root) return ans;
+						
+						stack<Node*>st;
+						st.push(root);
+						while(not st.empty()){                  // while(!st.empty()){
+							Node* cur = st.top();
+							ans.push_back(cur -> data);
+							st.pop();
+							
+							if(cur -> right) st.push(cur -> right);
+							if(cur -> left) st.push(cur -> left);
+						}
+						return ans;
+					}
+				};
+
+			// Using Morris Traversal
+				class Solution{
+					public:
+					vector<int> preOrder(Node* root) {
+						vector<int> ans;
+						if(!root) return ans;           // if(root == NULL) return ans;
+						
+						while(root){
+							if(root -> left){
+								Node* predecessor = root -> left;
+								
+								// keep going until you finds NULL or root again.
+								while(predecessor -> right && predecessor -> right != root)             // while(predecessor -> right != NULL && predecessor -> right != root)
+									predecessor = predecessor -> right;
+								
+								if(predecessor -> right == root){               	// encountered the cycle (loop) in tree need to disconnect it.
+									predecessor -> right = NULL;
+									root = root -> right;
+								}else{        								// means right of predecessor is NULL, making connection to root
+									predecessor -> right = root;
+									ans.push_back(root -> data);
+									root = root -> left;   
+								}
+							}else{
+								ans.push_back(root -> data);
+								root = root -> right;
+							}
+						}
+						return ans;
+					}
+				};
+
+		Q.3. Postorder traversal (Iterative):
+			Problem Statement:
+				Given a binary tree. Find the postorder traversal of the tree without using recursion. Return a list containing the postorder traversal of the tree, calculated without using recursion.
+				Examples :
+				Input:
+					           1
+					         /   \
+					        2     3
+					      /  \
+					     4    5
+				Output: 4 5 2 3 1
+				Explanation: Postorder traversal (Left->Right->Root) of the tree is 4 5 2 3 1.
+				Input:
+				               8
+				          /         \
+				         1           5
+				          \        /   \
+				           7      10    6
+				            \    /
+				             10 6
+				Output: 10 7 1 6 10 6 5 8 
+				Explanation: Postorder traversal (Left->Right->Root) of the tree is 10 7 1 6 10 6 5 8 .
+				Expected time complexity: O(n)
+				Expected auxiliary space: O(n)
+				Constraints:
+					1 <= Number of nodes <= 10^5
+					1 <= Data of a node <= 10^5
+					
+			/* Tree Node
+				struct Node {
+					int data;
+					Node* left;
+					Node* right;
+				};
+			*/
+			class Solution{
+				public:
+				vector<int> postOrder(Node* root) {
+					stack<Node*> st1, st2;
+					vector<int> ans;
+					
+					if(!root) return ans;
+					st1.push(root);
+					
+					while(!st1.empty()){
+						Node* cur = st1.top();
+						st1.pop();
+						st2.push(cur);
+						if(cur -> left) st1.push(cur -> left);
+						if(cur -> right) st1.push(cur -> right);
+					}
+					
+					while(!st2.empty()){
+						ans.push_back(st2.top() -> data);
+						st2.pop();
+					}
+					return ans;
+				}
+			};
 
 	Build from LevelOrderTraversal:
 		#include <iostream>
@@ -25312,7 +25547,174 @@ Lecture 67: Minimum Time to BURN the Entire Binary Tree:
 ---------------------------------------------------------------------------------------------------------
 	20/10/24
 Lecture 68: Morris Traversal Flatten a Binary tree to Linked List:
-	
+	Q. Iterative Inorder:
+		Problem Statement:
+			Given a binary tree. Find the inorder traversal of the tree without using recursion.
+			Example 1
+			Input:
+			          1
+			        /    \
+			       2       3
+			     /   \
+			    4     5
+			Output: 4 2 5 1 3
+			Explanation:
+			Inorder traversal (Left->Root->Right) of 
+			the tree is 4 2 5 1 3.
+			Example 2
+			Input:
+				    8
+				/        \
+			    1          5
+				\       /  \
+				 7    10   6
+			       \   /
+				  10 6
+			Output: 1 7 10 8 6 10 5 6
+			Explanation:
+			Inorder traversal (Left->Root->Right) 
+			of the tree is 1 7 10 8 6 10 5 6.
+
+			Your task:
+				You don't need to read input or print anything. Your task is to complete the function inOrder() which takes the root of the tree as input and returns a list containing the inorder traversal of the tree, calculated without using recursion.
+
+			Expected time complexity: O(N)
+			Expected auxiliary space: O(N)
+
+			Constraints:
+				1 <= Number of nodes <= 10^5
+				1 <= Data of a node <= 10^5
+
+		// Morris Traversal: TC: O(N) & SC: O(1)
+			/* Tree Node
+				struct Node {
+					int data;
+					Node* left;
+					Node* right;
+				};
+			*/
+			class Solution {
+				public:
+				vector<int> inOrder(Node* root) {
+					vector<int> ans;
+					
+					while(root){
+						if(root -> left){
+							Node* pred = root -> left;
+							while(pred -> right && pred -> right != root) pred = pred -> right;			// keep going to right till you encounter NULL or same address as root is standing
+							
+							if(pred -> right){          // if not NULL
+								pred -> right = NULL;			// make it NULL
+								ans.push_back(root -> data);
+								root = root -> right;
+							}else{
+								pred -> right = root;
+								root = root -> left;
+							}
+						}else{
+							ans.push_back(root -> data);
+							root = root -> right;
+						}
+					}
+					return ans;
+				}
+			};
+
+		// Or
+			class Solution {
+				public:
+				vector<int> inOrder(Node* root) {
+					vector<int> ans;
+					stack<Node*> st;
+					while(root or !st.empty()){                                 // while(root != NULL || !st.empty()) {}
+						while(root){
+							st.push(root);
+							root = root -> left;
+						}
+						root = st.top();
+						st.pop();
+						ans.push_back(root -> data);
+						root = root -> right;
+					}
+					return ans;
+				}
+			};
+
+	Q. Flatten binary tree to linked list:
+		Problem Statement:
+			Given the root of a binary tree, flatten the tree into a "Linked list":
+			The "linked list" should use the same Node class where the right child pointer points to the next node in the list and the left child pointer is always null.
+			The "linked list" should be in the same order as a pre-order traversal of the binary tree.
+			Examples:
+			Input: 
+			      1
+			    /   \
+			   2     5
+			  / \     \
+			 3   4     6
+			Output : 1 2 3 4 5 6 
+			Explanation: After flattening, the tree looks like this - 
+			 1
+			  \
+			   2
+			    \
+			     3
+			      \
+			       4
+			        \ 
+			         5 
+			          \
+			           6
+			Here, left of each node points to NULL and right contains the next node in preorder.The inorder traversal of this flattened tree is 1 2 3 4 5 6.
+			Input :
+			   1
+			  / \
+			 3   4
+			    /
+			   2
+			    \
+			     5 
+			Output : 
+			1 3 4 2 5 
+			Explanation : After flattening, the tree looks like this -
+			    1
+			     \
+			      3
+			       \
+			        4
+			         \
+			          2
+			           \ 
+			            5 
+			Here, left of each node points to NULL and right contains the next node in preorder.The inorder traversal of this flattened tree is 1 3 4 2 5.
+			Expected Time Complexity: O(n)
+			Expected Space Complexity: O(1)
+			Constraints :
+				1<= number of nodes in binary tree <= 10^5
+				1<= data of nodes <= 10^5
+
+		// Using Morring Algorithm:
+			class Solution {
+				public:
+				void flatten(Node *root) {
+					while(root){
+						if(root -> left){
+							Node* pred = root -> left;
+							
+							while(pred -> right) pred = pred -> right;
+							
+							pred -> right = root -> right;
+							root -> right = root -> left;
+							root -> left = NULL;
+						}
+						root = root -> right;
+					}
+				}
+			};
+---------------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -108792,7 +109194,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	#LeetCode WeeklyContest-415
+	#LeetCode WeeklyContest-415:
 		1086) The Two Sneaky Numbers of Digitville:
 			Problem Statement:
 				In the town of Digitville, there was a list of numbers called nums containing integers from 0 to n - 1. Each number was supposed to appear exactly once in the list, however, two mischievous numbers sneaked in an additional time, making the list longer than usual.
@@ -108995,7 +109397,7 @@ POTD:-[Problem of the Day]
 		// Optimized:
 			❌Pending
 
-	#LeetCode WeeklyContest-416
+	#LeetCode WeeklyContest-416:
 		1090) Report Spam Message:
 			Problem statement:
 				You are given an array of strings message and an array of strings bannedWords.
@@ -109409,16 +109811,451 @@ POTD:-[Problem of the Day]
 			// Optimized:
 				❌Pending
 
-1096) 
+	1096) Inorder Traversal:
+		https://www.naukri.com/code360/problems/inorder-traversal_3839605
+		Problem Statement:
+			You have been given a Binary Tree of 'n' nodes, where the nodes have integer values. Your task is to return the In-Order traversal of the given binary tree.
+			For example :
+			For the given binary tree:
+				  1
+				/   \
+			    3     4
+			   / \   / \
+			  5   2 7   8
+			The Inorder traversal will be [5, 3, 2, 1, 7, 4, 6].
+			Sample Input 1 :
+			1 2 3 -1 -1 -1  6 -1 -1
+			Sample Output 1 :
+			2 1 3 6
+			Explanation of Sample Output 1 :
+			The given binary tree is shown below:
+				 1
+				/ \
+			    2   3
+				    \
+					6
+			Inorder traversal of given tree = [2, 1, 3, 6]
+			Sample Input 2 :
+			1 2 4 5 3 -1 -1 -1 -1 -1 -1
+			Sample Output 2 :
+			5 2 3 1 4
+			Explanation of Sample Output 2 :
+			The given binary tree is shown below:
+				 1
+				/ \
+			    2   4
+			   / \
+			  5   3
 
-1097) 
+			Inorder traversal of given tree = [5, 2, 3, 1, 4]
+			Expected time complexity: The expected time complexity is O(n).
+			Constraints :
+				1 <= 'n' <= 10^5
+				0 <= 'data' <= 10^5     
+			where 'n' is the number of nodes and 'data' denotes the node value of the binary tree nodes.
+			Time limit: 1 sec
+		/*
+		Following is Binary Tree Node structure:
+			class TreeNode {
+				public:
+				int data;
+				TreeNode *left, *right;
+				TreeNode() : data(0), left(NULL), right(NULL) {}
+				TreeNode(int x) : data(x), left(NULL), right(NULL) {}
+				TreeNode(int x, TreeNode *left, TreeNode *right) : data(x), left(left), right(right) {}
+			};
+		*/
+		vector<int> getInOrderTraversal(TreeNode *root) {
+			vector<int> ans;
+			if(!root) return ans;
+			stack<TreeNode*> st;
 
-1098) 
+			while(root or !st.empty()){
+				while(root){
+					st.push(root);
+					root = root -> left;            
+				}
+				TreeNode* cur = st.top();
+				st.pop();
+				
+				ans.push_back(cur -> data);
+				cur = cur -> right;
+				root = cur;
+			}
+			return ans;
+		}
 
-1099) 
+	1097) Occurence of an integer in a Linked List:
+		Problem Statement:
+			Given a singly linked list and a key, count the number of occurrences of the given key in the linked list.
+			Examples:
+			Input: Linked List: 1->2->1->2->1->3->1, key = 1
+			Output: 4
+			Explanation: 1 appears 4 times. 
+			Input: Linked List: 1->2->1->2->1, key = 3
+			Output: 0
+			Explanation: 3 appears 0 times.
 
-1100) 	
-POTD-END
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(1)
+			Constraints:
+				1 ≤ number of nodes, key ≤ 10^5
+				1 ≤ data of node ≤ 10^5
+
+		/*
+			Node is defined as
+			struct node {
+				int data;
+				struct node* next;
+
+				node(int x){
+					data = x;
+					next = NULL;
+				}
+			}*head;
+		*/
+		class Solution {
+			public:
+			int count(struct Node* head, int key) {
+				int cnt=0;
+				while(head){
+					if(head -> data == key) cnt++;
+					head = head -> next;
+				}
+				return cnt;
+			}
+		};
+
+	1098) Triplet Family:
+		Problem Statement:
+			Given an array arr of integers. Find whether three numbers are such that the sum of two elements equals the third element.
+			Example:
+			Input: arr[] = [1, 2, 3, 4, 5]
+			Output: true
+			Explanation: The pair (1, 2) sums to 3.
+			Input: arr[] = [5, 3, 4]
+			Output: false
+			Explanation: No triplets satisfy the condition.
+			Expected Time Complexity: O(n2)
+			Expected Auxilary Space: O(1)
+			Constraints:
+				1 <= arr.size() <= 10^3
+				0 <= arr[i] <= 10^5
+
+		// TC: O(n³)
+			class Solution {
+				public:
+				bool findTriplet(vector<int>& arr) {
+					sort(arr.begin(), arr.end());
+					int n = arr.size();
+					for(int i=0; i<n-1; i++){
+						for(int j=i+1; j<n;  j++){
+							for(int k=j+1; k<n; k++)
+								if(arr[i]+arr[j] == arr[k])
+									return 1;
+						}
+					}
+					return 0;
+				}
+			};
+
+		// TC: O(n²)
+			class Solution {
+				public:
+				bool findTriplet(vector<int>& arr) {
+					map<int, int> exist;
+					for(int i: arr) exist[i]++;
+					
+					int n = arr.size();
+					for(int i=0; i<n-1; i++){
+						for(int j=i+1; j<n;  j++)
+							if(exist[arr[i]+arr[j]])                // if exist contain non-zero value then if condition gets executed 
+								return 1;                          // or if exist contain the zero value then it gets skipped.
+					}
+					return 0;
+				}
+			};
+
+		// TC: O(n²log(n)), BinarySearch
+			class Solution {
+				public:
+				bool findTriplet(vector<int>& arr) {
+					int n = arr.size();
+					sort(arr.begin(), arr.end());
+					
+					for(int i=n-1; i>=0; i--){
+						int s = 0, e = i-1;
+						while(s < e){
+							int sum = arr[s]+arr[e];
+							if(sum == arr[i]) return 1;
+							else if(sum > arr[i]) e--;
+							else s++;
+						}
+					}
+					return 0;
+				}
+			};
+
+	1099) Alternative Sorting:
+		Problem Statement:
+			Given an array arr of distinct integers. Rearrange the array in such a way that the first element is the largest and the second element is the smallest, the third element is the second largest and the fourth element is the second smallest, and so on.
+			Examples:
+			Input: arr[] = [7, 1, 2, 3, 4, 5, 6]
+			Output: [7, 1, 6, 2, 5, 3, 4]
+			Explanation: The first element is first maximum and second element is first minimum and so on.
+			Input: arr[] = [1, 6, 9, 4, 3, 7, 8, 2]
+			Output: [9, 1, 8, 2, 7, 3, 6, 4]
+			Explanation: The first element is first maximum and second element is first minimum and so on.
+			Expected Time Complexity: O(nlogn).
+			Expected Auxiliary Space: O(n).
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				1 ≤ arr[i] ≤ 10^5
+
+		class Solution {
+			public:
+			vector<int> alternateSort(vector<int>& arr) {
+				vector<int> ans;
+				sort(arr.begin(), arr.end());
+				int n = arr.size();
+				int s=0,e=n-1;
+				int flag = 1;
+				
+				while(s <= e){
+					if(flag){
+						ans.push_back(arr[e--]);
+						flag = 0;
+					}else{
+						ans.push_back(arr[s++]);
+						flag = 1;
+					}
+
+					// or
+					/*
+						if(flag) ans.push_back(arr[e--]), flag = 0;
+						else ans.push_back(arr[s++]), flag = 1;
+					*/
+				}
+				return ans;
+			}
+		};
+
+		class Solution {
+			public:
+			vector<int> alternateSort(vector<int>& arr) {
+				vector<int> ans;
+				sort(arr.begin(), arr.end());
+				int n = arr.size(), s=0, e=n-1;
+				
+				while(s < e){
+					ans.push_back(arr[e--]);
+					ans.push_back(arr[s++]);
+				}
+				// if the length of arr is odd so need to insert any one of s or e
+				if(n&1) ans.push_back(arr[e]);					// ans.push_back(arr[sz]);
+				return ans;
+			}
+		};
+
+	1100) Find the Sum of Last N nodes of the Linked List:
+		Problem Statement:
+			Given a single linked list, calculate the sum of the last n nodes.
+			Note: It is guaranteed that n <= number of nodes.
+			Examples:
+			Input: Linked List: 5->9->6->3->4->10, n = 3
+			Output: 17
+			Explanation: The sum of the last three nodes in the linked list is 3 + 4 + 10 = 17.
+
+			Input: Linked List: 1->2, n = 2
+			Output: 3
+			Explanation: The sum of the last two nodes in the linked list is 2 + 1 = 3.
+			Constraints:
+				1 <= number of nodes, n <= 10^5
+				1 <= node->data <= 10^3
+
+		class Solution {
+			public:
+			/*Structure of the node of the linled list is as
+				struct Node {
+					int data;
+					struct Node* next;
+
+					Node(int x){
+						data = x;
+						next = NULL;
+					}
+				};
+			*/
+			int sumOfLastN_Nodes(struct Node* head, int n) {
+				int ans=0, counter=0;
+				Node* temp = head;
+				
+				while(head){
+					ans += head -> data;
+					counter++;
+					if(counter > n){
+						ans -= temp -> data;
+						temp = temp -> next;
+					}
+					head = head -> next;
+				}
+				return ans;
+			}
+		};
+
+		// Using stack:
+			class Solution {
+				public:
+				int sumOfLastN_Nodes(struct Node* head, int n) {
+					stack<int> st;
+					while(head){
+						st.push(head -> data);
+						head = head -> next;
+					}
+
+					int ans = 0;
+					while(n--){
+						ans += st.top();
+						st.pop();
+					} 
+
+					/*
+						while(head) st.push(head -> data), head = head -> next;
+						while(n--) ans += st.top(), st.pop();
+					*/
+					return ans;
+				}
+			};
+
+		// Using Recursion:
+			class Solution {
+				public:
+				void LastN(Node* H, int &a, int &Last_N_sum){
+					if(!H) return;
+					LastN(H -> next, a, Last_N_sum);
+					if(Last_N_sum > 0){
+						a += H -> data;
+						Last_N_sum--;
+					}
+				}
+				int sumOfLastN_Nodes(struct Node* head, int n) {
+					if(n <= 0) return 0;
+					int ans =0;
+					LastN(head, ans, n);
+					return ans;
+				}
+			};
+
+		// Using Recursion pointers:
+			class Solution {
+				public:
+				void LastN(Node* H, int *a, int *Last_N_sum){
+					if(!H) return;
+					LastN(H -> next, a, Last_N_sum);
+					if(*Last_N_sum > 0){
+						*a += H -> data;
+						--*Last_N_sum;
+					}
+				}
+				int sumOfLastN_Nodes(struct Node* head, int n) {
+					if(n <= 0) return 0;
+					int ans =0;
+					LastN(head, &ans, &n);
+					return ans;
+				}
+			};
+
+	#LeetCode WeeklyContest-421:
+		1101) Total Characters in String After Transformations I:
+			Problem Statement:
+				You are given a string s and an integer t, representing the number of transformations to perform. In one transformation, every character in s is replaced according to the following rules:
+				If the character is 'z', replace it with the string "ab".
+				Otherwise, replace it with the next character in the alphabet. For example, 'a' is replaced with 'b', 'b' is replaced with 'c', and so on.
+				Return the length of the resulting string after exactly t transformations.
+				Since the answer may be very large, return it modulo 109 + 7.
+				Example 1:
+				Input: s = "abcyy", t = 2
+				Output: 7
+				Explanation:
+				First Transformation (t = 1):
+				'a' becomes 'b'
+				'b' becomes 'c'
+				'c' becomes 'd'
+				'y' becomes 'z'
+				'y' becomes 'z'
+				String after the first transformation: "bcdzz"
+				Second Transformation (t = 2):
+				'b' becomes 'c'
+				'c' becomes 'd'
+				'd' becomes 'e'
+				'z' becomes "ab"
+				'z' becomes "ab"
+				String after the second transformation: "cdeabab"
+				Final Length of the string: The string is "cdeabab", which has 7 characters.
+				Example 2:
+				Input: s = "azbk", t = 1
+				Output: 5
+				Explanation:
+				First Transformation (t = 1):
+				'a' becomes 'b'
+				'z' becomes "ab"
+				'b' becomes 'c'
+				'k' becomes 'l'
+				String after the first transformation: "babcl"
+				Final Length of the string: The string is "babcl", which has 5 characters.
+				Constraints:
+					1 <= s.length <= 10^5
+					s consists only of lowercase English letters.
+					1 <= t <= 10^5
+
+			// Not Optimized:
+				class Solution {
+					public:
+					int lengthAfterTransformations(string s, int t) {
+						int mod = 1e9+7;
+						while(t--){
+							string ans;
+							for(char ch: s){
+								if(ch == 'z') ans += "ab";
+								else ans += ++ch;
+							}
+							s = ans;
+						}
+						long long len = s.length();
+						return len%mod;
+					}
+				};
+
+			// Optimized:
+				❌Pending
+
+1102)
+
+1103)
+
+1104)
+
+1105)
+1106)
+1107)
+1108)
+1109)
+1110)
+1111)
+1112)
+1113)
+1114)
+1115)
+1116)
+1117)
+1118)
+1119)
+1120)
+1121)
+1122)
+1123)
+1124)
+1125)
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
 	1) Plus Minus:
