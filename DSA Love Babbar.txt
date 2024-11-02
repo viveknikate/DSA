@@ -25712,7 +25712,71 @@ Lecture 68: Morris Traversal Flatten a Binary tree to Linked List:
 				}
 			};
 ---------------------------------------------------------------------------------------------------------
+Lecture 69: Binary Search Tree & its Implementation || Insertion, Deletion & Searching a Node:
+	
 
+	Q. Search In BST:
+		Problem Statement:
+			There is a Binary Search Tree (BST) consisting of ‘N’ nodes. Each node of this BST has some integer data.
+			You are given the root node of this BST, and an integer ‘X’. Return true if there is a node in BST having data equal to ‘X’, otherwise return false.
+			A binary search tree (BST) is a binary tree data structure that has the following properties:
+			1. The left subtree of a node contains only nodes with data less than the node’s data.
+			2. The right subtree of a node contains only nodes with data greater than the node’s data.
+			3. The left and right subtrees must also be binary search trees.
+			Note:
+			It is guaranteed that all nodes have distinct data.
+			Sample Input 1:
+			7 8
+			4 2 6 1 3 5 7 -1 -1 -1 -1 -1 -1 -1 -1
+			Sample Output 1:
+			False
+			Explanation For Sample Input 1:
+			There is no node having data 8. See the problem statement for the picture of this BST.
+			Sample Input 2:
+			4 1
+			3 1 5 -1 2 -1 -1 -1 -1
+			Sample Output 2:
+			True
+			Explanation For Sample Input 1:
+			There is a left node, and it has data 1. Thus, we should print ‘True’. 
+			Constraints:
+				1 <= N <= 10000
+				0 <= X <= 10^9
+				0 <= DATA <=10^9
+
+			Where ‘N’ is the number of nodes in the BST, ‘X’ is a given integer and ‘DATA’ is the data contained in each node of BST.
+			Time limit: 1 sec	
+		/*
+			Following is the Binary Tree node structure:
+			template <typename T>
+			class BinaryTreeNode {
+				public:
+					T data;
+					BinaryTreeNode<T> *left, *right;
+					BinaryTreeNode() : data(0), left(NULL), right(NULL) {}
+					BinaryTreeNode(T x) : data(x), left(NULL), right(NULL) {}
+					BinaryTreeNode(T x, BinaryTreeNode<T> *left, BinaryTreeNode<T> *right) : data(x), left(left), right(right) {}
+			};
+		*/
+		// Iterative Approach: TC: O(H), SC: O(1), Where 'H' is the height of the given BST.
+			bool searchInBST(BinaryTreeNode<int> *root, int x) {
+				while(root){
+					if(root -> data == x) return 1;
+					else if(root -> data < x) root = root -> right;
+					else root = root -> left;
+				}
+				return 0;
+			}
+
+		// Recursive Approach: TC O(H), SC: O(H)
+			bool searchInBST(BinaryTreeNode<int> *root, int x) {
+				if(!root) return 0;
+
+				if(root -> data == x) return 1;
+				else if(root -> data < x) return searchInBST(root -> right, x);
+				else return searchInBST(root -> left, x);
+				return 0;
+			}
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
@@ -110229,16 +110293,473 @@ POTD:-[Problem of the Day]
 			// Optimized:
 				❌Pending
 
-1102)
+	1102) Remove duplicates in array:
+		Problem Statement:
+			Given an array arr consisting of positive integer numbers, remove all duplicate numbers.
+			Example:
+				Input: arr[] = [2, 2, 3, 3, 7, 5] 
+				Output: [2, 3, 7, 5]
+				Explanation: After removing the duplicates 2 and 3 we get 2 3 7 5.
 
-1103)
+				Input: arr[] = [2, 2, 5, 5, 7, 7] 
+				Output: [2, 5, 7]
+				Input: arr[] = [8, 7] 
+				Output: [8, 7]
+			Constraints:
+				1<= arr.size() <=10^6
+				2<= arr[i] <=100
 
-1104)
+		// TC: O(n²) & SC: O(n)
+			class Solution {
+				public:
+				vector<int> removeDuplicate(vector<int>& arr) {
+					vector<int> ans;
+					int n = arr.size();
+					ans.push_back(arr[0]);
+					
+					// if the current element of input array not found in ans array then push that element into ans array.
+					for(int i=1; i<n; i++)
+						if(find(ans.begin(), ans.end(), arr[i]) == ans.end()) ans.push_back(arr[i]);
+					
+					return ans;
+				}
+			};
 
-1105)
-1106)
-1107)
+		// TC: O(n) & SC: (n)
+			class Solution {
+				public:
+				vector<int> removeDuplicate(vector<int>& arr) {
+					vector<int> ans, maps (99, 0);
+					for(int i: arr) maps[i-2]++;
+
+					for(int i: arr){
+						if(maps[i-2]){
+							maps[i-2] = 0;
+							ans.push_back(i);
+						}
+					}
+					return ans;
+				}
+			};
+
+		// Using set
+			class Solution {
+				public:
+				vector<int> removeDuplicate(vector<int>& arr) {
+					vector<int> ans;
+					set<int> st;
+
+					for(int i: arr){
+						if(st.find(i) == st.end()){
+							st.insert(i);
+							ans.push_back(i);
+						}
+					}
+					return ans;
+				}
+			};
+
+	1103) Pairs with difference k:
+		Problem Statement:
+			Given an array arr[] of positive integers. Find the number of pairs of integers whose difference equals a given number k.
+			Note: (a, b) and (b, a) are considered the same. Also, the same numbers at different indices are considered different.
+			Examples:
+			Input: arr[] = [1, 5, 3, 4, 2], k = 3
+			Output: 2
+			Explanation: There are 2 pairs with difference 3,the pairs are {1, 4} and {5, 2} 
+			Input: arr[] = [8, 12, 16, 4, 0, 20], k = 4
+			Output: 5
+			Explanation: There are 5 pairs with difference 4, the pairs are {0, 4}, {4, 8}, {8, 12}, {12, 16} and {16, 20}.
+			Constraints:
+				1 <= arr.size() <= 10^6
+				1 <= k <= 10^6
+				0 <= arr[i] <= 10^6
+
+		// Not Optimized:
+			class Solution {
+				public:
+				/* Returns count of pairs with difference k  */
+				int countPairsWithDiffK(vector<int>& arr, int k) {
+					int cnt=0, n = arr.size();
+					for(int i=0; i<n; i++)
+						for(int j=i+1; j<n; j++)
+							if(abs(arr[i] - arr[j]) == k) cnt++;
+					
+					return cnt;
+				}
+			};
+
+		// Optimized:
+		class Solution {
+			public:
+			/* Returns count of pairs with difference k  */
+			int countPairsWithDiffK(vector<int>& arr, int k) {
+				int cnt=0;
+				int i, j, n = arr.size();
+				i=j=0;
+				sort(arr.begin(), arr.end());
+
+				while(j < n){
+					int val = arr[j] - arr[i];
+					if(val == k){
+						int ele1 = arr[i], ele2 = arr[j];
+						int cnt1, cnt2;
+						cnt1 = cnt2 = 0;
+						
+						while(i < n && ele1 == arr[i]){
+							i++;
+							cnt1++;
+						}
+						
+						while(j < n && ele2 == arr[j]){
+							j++;
+							cnt2++;
+						}
+						
+						// if both elements are equal then total pairs will form is total count - 1 
+						// & the coming answer's sum 
+						// if total is 5 then -1 is 5-1 = 4
+						// so total pairs (4 * (4 + 1))/2
+						if(ele1 == ele2){
+							int total = cnt1+cnt2;
+							total--;
+							
+							cnt += (total * (total+1))/2;
+							// cnt += (cnt1 * (cnt1 - 1))/2
+						}else{
+							cnt += cnt1 * cnt2;
+						}
+						
+					} 
+					else if(val < k) j++;
+					else i++;
+				}
+				return cnt;
+			}
+		};
+
+	1104) Insert in Sorted way in a Sorted DLL:
+		Problem Statement:
+			Given a sorted doubly linked list and an element x, you need to insert the element x into the correct position in the sorted Doubly linked list(DLL).
+			Note: The DLL is sorted in ascending order
+			Example:
+			Input: LinkedList: 3->5->8->10->12 , x = 9
+			Output: 3->5->8->9->10->12
+			Explanation: Here node 9 is inserted in the Doubly Linked-List.
+			Input: LinkedList: 1->4->10->11 , x = 15
+			Output: 1->4->10->11->15
+			Constraints:
+				1 <= number of nodes <= 10^3
+				1 <= node -> data , x <= 10^4
+		
+		/*structure of the node of the DLL is as
+			struct Node {
+				int data;
+				struct Node* prev, *next;
+			};
+		*/
+		// function should insert a new node in sorted way in
+		// a sorted doubly linked list
+		// Return the head after insertion
+		class Solution {
+			public:
+			Node* sortedInsert(Node* head, int x) {
+				Node* temp = head;
+				Node* last = NULL;
+				
+				while(temp){
+					if(temp -> data > x) break;
+					
+					last = temp;
+					temp = temp -> next;
+				}
+				
+				Node* NewOne = new Node();
+				NewOne -> data = x;
+				
+				// if the element is belongs to end, then temp will be NULL
+				if(!temp) {
+					last -> next = NewOne;
+					NewOne -> prev = last;
+				}else if(!last) {                   // if the element is belongs to start, then last will be NULL
+					NewOne -> prev = last;
+					NewOne -> next = temp;
+					return NewOne;
+				}else{                              // if the element is belongs to Middle, then temp will be NULL
+					temp -> prev = NewOne;
+					NewOne -> next = temp;
+					NewOne -> prev = last;
+					last -> next = NewOne;
+				}
+				return head;
+			}
+		};
+
+		class Solution {
+			public:
+			Node* sortedInsert(Node* head, int x) {
+				Node* newNode = new Node();
+				newNode -> data = x;
+				newNode -> prev = newNode -> next = NULL;
+
+				// at start
+				if(!head || head -> data >= x){
+					newNode -> next = head;
+					head -> prev = newNode;
+					return newNode;
+				}
+
+				Node *temp = head, *last = NULL;
+				while(temp){
+					if(temp -> data > x) break;
+					
+					last = temp;
+					temp = temp -> next;
+				}
+
+				if(!temp){                      // if temp is NULL then node belongs to end
+					last -> next = newNode;
+					newNode -> prev = last;
+				}else{                              // belongs to mid somewhere
+					newNode -> next = temp;
+					newNode -> prev = last;
+					last -> next = newNode;
+					temp -> prev = newNode;
+				}
+				return head;
+			}
+		};
+
+	1105) Modify the Array:
+		Problem Statement:
+			Given an array arr. Return the modified array in such a way that if the current and next numbers are valid numbers and are equal then double the current number value and replace the next number with 0. After the modification, rearrange the array such that all 0's are shifted to the end.
+			Note:
+				1. Assume ‘0’ as the invalid number and all others as a valid number.
+				2. The sequence of the valid numbers is present in the same order.
+			Example:
+			Input: arr[] = [2, 2, 0, 4, 0, 8] 
+			Output: [4, 4, 8, 0, 0, 0] 
+			Explanation: At index 0 and 1 both the elements are the same. So, we will change the element at index 0 to 4 and the element at index 1 is 0 then we will shift all the zeros to the end of the array. So, the array will become [4, 4, 8, 0, 0, 0].
+			Input: arr[] = [0, 2, 2, 2, 0, 6, 6, 0, 0, 8] 
+			Output: [4, 2, 12, 8, 0, 0, 0, 0, 0, 0]
+			Explanation: At index 5 and 6 both the elements are the same. So, we will change the element at index 5 to 12 and the element at index 6 is 0. We will change the element at index 1 to 4 and the element at index 2 is 0. Then we shift all the zeros to the end of the array. So, array will become [4, 2, 12, 8, 0, 0, 0, 0, 0, 0].
+
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				1 ≤ arr[i] ≤ 10^6
+
+		class Solution {
+			public:
+			vector<int> modifyAndRearrangeArray(vector<int> &arr) {
+				int n = arr.size();
+				
+				for(int i=1; i<n; i++){
+					if(arr[i] == arr[i-1] && arr[i] != 0){
+						arr[i-1] *= 2;
+						arr[i] = 0;
+						i++;
+					}
+				}
+				
+				int cnt=0, j=0, i;
+				for(i=0; i<n; i++){
+					if(arr[i] == 0) cnt++;
+					else arr[j++] = arr[i];
+				}
+				
+				for(j; j<n; j++) arr[j] = 0;
+				return arr;
+			}
+		};
+
+		// shifting zero approach:
+			class Solution {
+				public:
+				vector<int> modifyAndRearrangeArray(vector<int> &arr) {
+					int n = arr.size();		
+					for(int i=1; i<n; i++){
+						if(arr[i] == arr[i-1] && arr[i] != 0){
+							arr[i-1] *= 2;
+							arr[i] = 0;
+							i++;
+						}
+					}
+					
+					// keeps the track of zeros
+					int j=0;           
+					for(int i=0; i<n; i++)
+						// if non-zero element
+						if(arr[i]) swap(arr[i], arr[j++]);                 // swapping with zero element & increment it
+					return arr;
+				}
+			};
+
+	1106) Circular Sentence:
+		Problem Statement:
+			A sentence is a list of words that are separated by a single space with no leading or trailing spaces.
+			For example, "Hello World", "HELLO", "hello world hello world" are all sentences.
+			Words consist of only uppercase and lowercase English letters. Uppercase and lowercase English letters are considered different.
+
+			A sentence is circular if:
+				The last character of a word is equal to the first character of the next word.
+				The last character of the last word is equal to the first character of the first word.
+			For example, "leetcode exercises sound delightful", "eetcode", "leetcode eats soul" are all circular sentences. However, "Leetcode is cool", "happy Leetcode", "Leetcode" and "I like Leetcode" are not circular sentences.
+			Given a string sentence, return true if it is circular. Otherwise, return false.
+			Example 1:
+			Input: sentence = "leetcode exercises sound delightful"
+			Output: true
+			Explanation: The words in sentence are ["leetcode", "exercises", "sound", "delightful"].
+			- leetcode's last character is equal to exercises's first character.
+			- exercises's last character is equal to sound's first character.
+			- sound's last character is equal to delightful's first character.
+			- delightful's last character is equal to leetcode's first character.
+			The sentence is circular.
+
+			Example 2:
+			Input: sentence = "eetcode"
+			Output: true
+			Explanation: The words in sentence are ["eetcode"].
+			- eetcode's last character is equal to eetcode's first character.
+			The sentence is circular.
+
+			Example 3:
+			Input: sentence = "Leetcode is cool"
+			Output: false
+			Explanation: The words in sentence are ["Leetcode", "is", "cool"].
+			- Leetcode's last character is not equal to is's first character.
+			The sentence is not circular.
+			
+			Constraints:
+				1 <= sentence.length <= 500
+				sentence consist of only lowercase and uppercase English letters and spaces.
+				The words in sentence are separated by a single space.
+				There are no leading or trailing spaces.
+
+		// TC: O(n) & SC: O(n)
+			class Solution {
+				public:
+				bool isCircularSentence(string sentence) {
+					vector<string> v;
+
+					// extracting all words from sentence
+					istringstream iss(sentence);
+					string s;
+
+					// storing all words separately into v
+					while(iss >> s) v.push_back(s);
+
+					// check
+					int n = v.size();
+					for(int i=0; i<n; i++){
+						string cur = v[i];
+						string next;
+						
+						// if the i is last string
+						if(i == n-1) next = v[0];
+						else next = v[i+1];
+
+						if(cur[cur.size()-1] != next[0]) return 0;
+					}
+
+					// instad above for loop
+					/*
+					for(int i=0; i<n; i++){
+						char cur = v[i].front();
+						if(cur != last) return 0;
+						last = v[i].back();
+					}
+					*/
+					return 1;
+				}
+			};
+
+		// TC: O(n) & SC: O(1)
+			class Solution {
+				public:
+				bool isCircularSentence(string sentence) {
+					int n = sentence.size();
+					for(int i=0; i<n; i++)
+						if(sentence[i] == ' ' && (sentence[i-1] != sentence[i+1])) return 0;
+					return sentence[0] == sentence[n-1];
+				}
+			};
+
+	1107) Kth distance:
+		Problem Statement:
+			Given an unsorted array arr and a number k which is smaller than size of the array. Find if the array contains duplicates within k distance.
+			Examples:
+			Input: arr[] = [1, 2, 3, 4, 1, 2, 3, 4] and k = 3
+			Output: false
+			Explanation: All duplicates are more than k distance away.
+			Input: arr[] = [1, 2, 3, 1, 4, 5] and k = 3
+			Output: true
+			Explanation: 1 is repeated at distance 3.
+			Constraints:
+				1 ≤ arr.size() ≤` 10^6
+				1 ≤ k < arr.size()
+				1 ≤ arr[i] ≤ 10^`5
+
+		// TC: O(n * k) & SC: O(1):
+			class Solution {
+				public:
+				bool checkDuplicatesWithinK(vector<int>& arr, int k) {
+					int n=arr.size();
+
+					for(int i=0; i<n; i++){
+						int range = k, j=i+1;
+						while(range && j < n){
+							if(arr[j++] == arr[i]) return 1;
+							range--;
+						}
+					}
+					return 0;
+				}
+			};
+
+		// Optimized: TC: O(n) & SC: O(k), Using map
+			class Solution {
+				public:
+				bool checkDuplicatesWithinK(vector<int>& arr, int k) {
+					map<int, int> maps;
+					
+					// first k window
+					int i=0;
+					while(i <= k){
+						maps[arr[i]]++;
+						if(maps[arr[i++]] > 1) return 1;
+					} 
+					
+					int j=0, n = arr.size();
+					while(i < n){
+						maps[arr[j++]]--;
+						maps[arr[i]]++;
+						if(maps[arr[i++]] > 1) return 1;
+					}
+					return 0;
+				}
+			};
+		
+		// Using set:
+			class Solution {
+				public:
+				bool checkDuplicatesWithinK(vector<int>& arr, int k) {
+					int n=arr.size();
+					set<int> st;
+
+					for(int i=0; i<n; i++){
+						if(st.find(arr[i]) != st.end()) return 1;
+						
+						st.insert(arr[i]);
+						if((i-k) >= 0) st.erase(arr[i-k]);				// if(i >= k)
+					}
+					return 0;
+				}
+			};
+
 1108)
+
 1109)
 1110)
 1111)
