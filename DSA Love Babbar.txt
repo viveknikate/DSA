@@ -30394,6 +30394,14 @@ Lecture-138: Maximum Rectangle with all 1's || DP Series
 			std::cout << "is vector have value 100? " << ((it3 != v.end()) ? "Yes" : "No") << std::endl;
 			return 0;
 		}
+
+	// typedef, using & #define
+		- smaller syntax for larger things
+		using MinHeap = priority_queue<int, vector<int>, greater<int>>;			// Or
+		#define MinHeap priority_queue<int, vector<int>, greater<int>>			// or
+		typedef priority_queue<int, vector<int>, greater<int>> MinHeap;
+
+		MinHeap pq;  // Simpler syntax for min-heap
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array
@@ -102526,7 +102534,31 @@ POTD:-[Problem of the Day]
 						nums[i++] = 2;  
 				}
 			};
-	
+
+		// Or
+			class Solution {
+				public:
+				void sort012(vector<int>& arr) {
+					int ones, zeros, twos;
+					zeros = ones = twos = 0;
+					
+					for(int i: arr)
+						if(i == 0) zeros++;
+						else if(i == 1) ones++;
+						else twos++;
+					
+					int i;
+					for(i=0; i<zeros; i++)
+						arr[i] = 0;
+					
+					for(; i<zeros+ones; i++)
+						arr[i] = 1;
+						
+					for(; i<zeros+ones+twos; i++)
+						arr[i] = 2;
+				}
+			};
+
 		// DNF 0s 1s 2s:
 			class Solution {
 				public:
@@ -112733,13 +112765,182 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1129)
+	1129) K Sized Subarray Maximum:
+		Problem Statement:
+			Given an array arr[] of integers and an integer k, your task is to find the maximum value for each contiguous subarray of size k. The output should be an array of maximum values corresponding to each contiguous subarray.
+			Examples:
+			Input: arr[] = [1, 2, 3, 1, 4, 5, 2, 3, 6], k = 3
+			Output: [3, 3, 4, 5, 5, 5, 6] 
+			Explanation: 
+			1st contiguous subarray = [1 2 3] max = 3
+			2nd contiguous subarray = [2 3 1] max = 3
+			3rd contiguous subarray = [3 1 4] max = 4
+			4th contiguous subarray = [1 4 5] max = 5
+			5th contiguous subarray = [4 5 2] max = 5
+			6th contiguous subarray = [5 2 3] max = 5
+			7th contiguous subarray = [2 3 6] max = 6
+			Input: arr[] = [8, 5, 10, 7, 9, 4, 15, 12, 90, 13], k = 4
+			Output: [10, 10, 10, 15, 15, 90, 90]
+			Explanation: 
+			1st contiguous subarray = [8 5 10 7], max = 10
+			2nd contiguous subarray = [5 10 7 9], max = 10
+			3rd contiguous subarray = [10 7 9 4], max = 10
+			4th contiguous subarray = [7 9 4 15], max = 15
+			5th contiguous subarray = [9 4 15 12], max = 15
+			6th contiguous subarray = [4 15 12 90], max = 90
+			7th contiguous subarray = [15 12 90 13], max = 90
+			Input: arr[] = [5, 1, 3, 4, 2, 6], k = 1
+			Output: [5, 1, 3, 4, 2, 6]
+			Explanation: 
+			When k = 1, each element in the array is its own subarray, so the output is simply the same array
+			Constraints:
+				1 ≤ arr.size() ≤ 10^6
+				1 ≤ k ≤ arr.size()
+				0 ≤ arr[i] ≤ 10^9
 
-1130)
+		// Not Optimized:
+			class Solution {
+				public: // Function to find maximum of each subarray of size k.
+				vector<int> maxOfSubarrays(vector<int>& arr, int k) {
+					vector<int> ans;
+					int n = arr.size();
+					
+					for(int i=0; i<=n-k; i++){
+						int t = k, curMx = arr[i];
+						
+						while(t--) curMx = max(curMx, arr[i+t]);
+						ans.push_back(curMx);
+					}
+					return ans;
+				}
+			};
 
-1131)
+		// Optimized:
+			❌Pending
+
+	1130) Strings Rotations of Each Other:
+		Problem Statement:
+			You are given two strings of equal lengths, s1 and s2. The task is to check if s2 is a rotated version of the string s1.
+			Note: The characters in the strings are in lowercase.
+			Examples :
+			Input: s1 = "abcd", s2 = "cdab"
+			Output: true
+			Explanation: After 2 right rotations, s1 will become equal to s2.
+			Input: s1 = "aab", s2 = "aba"
+			Output: true
+			Explanation: After 1 left rotation, s1 will become equal to s2.
+			Input: s1 = "abcd", s2 = "acbd"
+			Output: false
+			Explanation: Strings are not rotations of each other.
+			Constraints:
+				1 <= s1.size(), s2.size() <= 10^5		
+
+		// Not Optimized:
+			class Solution {
+				public: // Function to check if two strings are rotations of each other or not.
+				bool areRotations(string &s1, string &s2) {
+					string t = s1 + s1;		
+					if(t.find(s2) != string::npos) return 1;
+					return 0;
+					// return ((s1+s1).find(s2) != string::npos);
+				}
+			};
+
+			//or
+			
+			class Solution {
+				public:
+				// Function to check if two strings are rotations of each other or not.
+				bool areRotations(string &s1, string &s2) {
+					int iterate = s1.size()-1;
+					if(s1 == s2) return 1;
+					while(iterate--){
+						s1 = s1.substr(1) + s1[0];          // extracting all chars except the first one
+						if(s1 == s2) return 1;
+					}
+					return 0;
+				}
+			};
+
+		// Optimized:
+			❌Pending
+
+	1131) Find H-Index:
+		Problem Statement:
+			Given an integer array citations[], where citations[i] is the number of citations a researcher received for the ith paper. The task is to find the H-index.
+			H-Index is the largest value such that the researcher has at least H papers that have been cited at least H times.
+			Examples:
+			Input: citations[] = [3, 0, 5, 3, 0]
+			Output: 3
+			Explanation: There are at least 3 papers (3, 5, 3) with at least 3 citations.
+			Input: citations[] = [5, 1, 2, 4, 1]
+			Output: 2
+			Explanation: There are 3 papers (with citation counts of 5, 2, and 4) that have 2 or more citations. However, the H-Index cannot be 3 because there are not 3 papers with 3 or more citations.
+			Input: citations[] = [0, 0]
+			Output: 0
+			Constraints:
+				1 ≤ citations.size() ≤ 10^6
+				0 ≤ citations[i] ≤ 10^6
+
+		// TC: O(n) & SC: (n)
+			class Solution {
+				public: // Function to find hIndex
+				int hIndex(vector<int>& citations) {
+					int n = citations.size();
+					vector<int> heights (n+1, 0);
+					
+					for(int i=0; i<n; i++){
+						// if(citations[i] > n){
+						//     heights[n]++;
+						// }else{
+						//     heights[citations[i]]++;
+						// }
+						// or 
+						heights[min(citations[i], n)]++;
+					}
+					
+					int count = 0;
+					for(int i=n; i>=0; i--){
+						count += heights[i];
+						if(count >= i) return i;
+					}
+					return 0;
+				}
+			}
+
+		// TC: O(n) & SC: O(1)
+			class Solution {
+				public: // Function to find hIndex
+				int hIndex(vector<int>& citations) {
+					int minHt = 0, n = citations.size();
+					sort(begin(citations), end(citations));
+					for(int i=n-1; i>=0; i--){
+						if(citations[i] < n-i)
+							break;
+						minHt = n-i;
+					}
+					return  minHt;
+				}
+			};
+
+		// Or
+			class Solution {
+				public: // Function to find hIndex
+				int hIndex(vector<int>& cit) {
+					sort(begin(cit), end(cit), greater<int>());     // sorting in descending order
+					int n = cit.size(), ans = 0;
+					for(int i=0; i<n; i++){
+						if(cit[i]  < i+1) break;
+						ans = i+1;
+					}
+					return ans;
+				}
+			};
+
 1132)
+
 1133)
+
 1134)
 1135)
 1136)
