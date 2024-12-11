@@ -23974,7 +23974,7 @@ Lecture 63: Binary Tree FAANG Interview Questions || Part-1:
 					bool diff = abs(left.second - right.second) <= 1;
 					
 					pair<bool, int> ans;
-					ans.second = max(left.second, rig   ht.second) + 1;
+					ans.second = max(left.second, right.second) + 1;
 					
 					if(leftAns && rightAns && diff){
 						ans.first = 1;
@@ -26778,11 +26778,297 @@ Lecture 70: Binary SearchTree FAANG Interview Questions || Part-1:
 				return root;
 			}
 ---------------------------------------------------------------------------------------------------------
+	11/12/24
 Lecture 71: Binary SearchTree FAANG Interview Questions || Part-2:
 	Q.1. Two Sum IV - Input is a BST: (refer POTD:1063)
 
-	Q.2.  
+	Q.2. Flatten BST To A Sorted List:
+		Problem Statement:
+			You have been given a Binary Search Tree (BST). Your task is to flatten the given BST to a sorted list. More formally, you have to make a right-skewed BST from the given BST, i.e., the left child of all the nodes must be NULL, and the value at the right child must be greater than the current node.
+			A binary search tree (BST), also called an ordered or sorted binary tree, is a rooted binary tree whose internal nodes each store a value greater than all the values in the node's left subtree and less than those in its right subtree.
+			Follow Up :
+				Can you solve this in O(N) time and O(H)  space complexity?
+			Constraints :
+				1 <= T <= 100
+				1 <= N <= 5000
+				0 <= node.data <= 10^9, (where node data != -1)
 
+			Where 'N' denotes the number of nodes in the given tree.
+			Time Limit: 1 second
+			Sample Input 1
+			2
+			10 6 12 2 8 11 15 -1 -1 -1 -1 -1 -1 -1 -1
+			5 -5 8 -1 -1 -1 -1
+			Sample Output 1
+			2 -1 6 -1 8 -1 10 -1 11 -1 12 -1 15 -1 -1
+			-5 -1 5 -1 8 -1 -1
+			Explanation for Sample Input 1
+			For the first test case, the given BST is depicted below.
+			So, after flattening, the BST is transposed as the below figure.
+			For the second test case, the given BST is depicted below.
+			So, after flattening, the BST is transposed as the below figure.
+			Sample Input 2
+			2
+			5 3 7 -1 -1 6 8 -1 -1 -1 -1
+			2 1 -1 -1 -1
+			Sample output 2
+			3 -1 5 -1 6 -1 7 -1 8 -1 -1
+			1 -1 2 -1 -1
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			/***********************************************************
+				Following is the Binary Tree node structure
+				template <typename T>
+				class TreeNode {
+					public :
+					T data;
+					TreeNode<T> *left, *right;
+					TreeNode(T data) {
+						this -> data = data;
+						left = right = NULL;
+					}
+					~TreeNode() {
+						if(left) delete left;
+						if(right) delete right;
+					}
+				};
+			************************************************************/
+			void inorder(TreeNode<int> *n, vector<TreeNode<int>*> &a){
+				if(!n) return;
+
+				inorder(n->left, a);
+				a.push_back(n);
+				inorder(n->right, a);
+			}
+			TreeNode<int>* flatten(TreeNode<int>* root) {
+				vector<TreeNode<int>*> hold;
+				inorder(root, hold);
+				root = hold[0];         // at least one element is always there.
+				root -> left = NULL;
+				TreeNode<int> *Tail = root;
+
+				int n = hold.size();
+				for(int i=1; i<n; i++){
+					TreeNode<int>* cur = hold[i];
+					Tail -> right = cur;
+					Tail = Tail -> right;
+					Tail -> left = NULL;
+				}
+				return root;
+			}
+		
+		// Optimized: (just used the normal int type here so reduce the time overhead)
+			void inorder(TreeNode<int> *n, vector<int> &a){
+				if(!n) return;
+
+				inorder(n->left, a);
+				a.push_back(n->data);
+				inorder(n->right, a);
+			}
+			TreeNode<int>* flatten(TreeNode<int>* root) {
+				vector<int> hold;
+				inorder(root, hold);
+				root = new TreeNode<int>(hold[0]);         // at least one element is always there.
+				root -> left = NULL;
+				TreeNode<int> *Tail = root;
+
+				int n = hold.size();
+				for(int i=1; i<n; i++){
+					TreeNode<int>* cur = new TreeNode<int>(hold[i]);
+					Tail -> right = cur;
+					Tail = Tail -> right;
+					Tail -> left = NULL;
+				}
+				return root;
+			}
+
+		// Optimized:
+			void inorder(TreeNode<int> *n, TreeNode<int>* &T){
+				if(!n) return;
+
+				inorder(n -> left, T);
+				TreeNode<int> * NewNode = new TreeNode<int>(n -> data);
+				T -> right = NewNode;
+				NewNode -> left = NULL;
+				T = T -> right;
+				inorder(n -> right, T);
+			}
+
+			TreeNode<int>* flatten(TreeNode<int>* root) {
+				TreeNode<int> *Dummy = new TreeNode<int>(-1);
+				TreeNode<int> *Tail = Dummy;
+				inorder(root, Tail);
+				return Dummy -> right;
+			}
+	
+	Q.3. Preorder traversal of a BST:
+		https://www.naukri.com/code360/problems/preorder-traversal-to-bst_893111
+		Problem Statement:
+			You have been given an array/list 'PREORDER' representing the preorder traversal of a BST with 'N' nodes. All the elements in the given array have distinct values.
+			Your task is to construct a binary search tree that matches the given preorder traversal.
+			A binary search tree (BST) is a binary tree data structure that has the following properties:
+			• The left subtree of a node contains only nodes with data less than the node’s data.
+			• The right subtree of a node contains only nodes with data greater than the node’s data.
+			• Both the left and right subtrees must also be binary search trees.
+			Note:
+			It is guaranteed that a BST can be always constructed from the given preorder traversal. Hence, the answer will always exist.
+			Example:
+			From PREORDER = [20, 10, 5, 15, 13, 35, 30, 42] , the following BST can be constructed:
+			example
+			Constraints :
+			1 <= T <= 100
+			1 <= N <= 5000
+			0 <= data <= 10^5
+			Where 'data' denotes data contained in the nodes of the binary search tree.
+			Time Limit: 1 sec
+			Sample Input 1:
+			1
+			6
+			10 4 3 7 40 55 
+			Sample Output 1:
+			3 5 7 10 40 50
+			Explanation For Sample Output1:
+			From the given preorder traversal, the following BST can be constructed:
+			The inorder traversal of the given BST is [1, 4, 7, 10, 40, 55].
+			Sample Input 2:
+			2
+			7
+			15 10 7 13 21 20 25 
+			3
+			1 2 4
+			Sample Output 2:
+			7 10 13 15 20 21 25
+			1 2 4
+
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			/*
+				Following is the class structure of BinaryTreeNode class for referance:
+				class BinaryTreeNode {
+					public : 
+					T data;
+					BinaryTreeNode<T> *left, *right;
+					BinaryTreeNode(T data) {
+						this -> data = data;
+						left = right = NULL;
+					}
+					~BinaryTreeNode() {
+						if (left) delete left;
+						if (right) delete right;
+					}
+				};
+			*/
+			BinaryTreeNode<int>* insertIntoBST(BinaryTreeNode<int>*n, int i){
+				if(!n){
+					BinaryTreeNode<int> *newNode = new BinaryTreeNode<int>(i);
+					return newNode;
+				}
+				if(n->data < i) n -> right = insertIntoBST(n->right, i);
+				else n -> left = insertIntoBST(n->left, i);
+				return n;
+			}
+			BinaryTreeNode<int>* preorderToBST(vector<int> &preorder) {
+				BinaryTreeNode<int> *root = NULL;
+				for(int i: preorder){
+					root = insertIntoBST(root, i);
+				}
+				return root;
+			}
+
+		// Optimized:
+			BinaryTreeNode<int> *solve(int mn, int mx, int &index, vector<int> &pre){
+				if(index >= pre.size() || pre[index] < mn || pre[index] > mx) return NULL;
+
+				BinaryTreeNode<int> *root = new BinaryTreeNode<int>(pre[index++]);
+				root -> left = solve(mn, root->data, index, pre);
+				root -> right = solve(root->data, mx, index, pre);
+				return root;
+			}
+			BinaryTreeNode<int>* preorderToBST(vector<int> &preorder) {
+				int index=0;
+				return solve(INT_MIN, INT_MAX, index, preorder);
+			}
+
+		// from preorder generate inorder & from using them generate tree ❌Pending
+
+	Q.4. Normal BST To Balanced BST:
+		https://www.naukri.com/code360/problems/normal-bst-to-balanced-bst_920472
+		Problem statement:
+			You have been given a binary search tree of integers with ‘N’ nodes. Your task is to convert it into a balanced BST with the minimum height possible.
+			A binary search tree (BST) is a binary tree data structure that has the following properties.
+			• The left subtree of a node contains only nodes with data less than the node’s data.
+			• The right subtree of a node contains only nodes with data greater than the node’s data.
+			• Both the left and right subtrees must also be binary search trees.
+			A Balanced BST is defined as a BST, in which the height of two subtrees of every node differs no more than 1.
+			For Example:
+			For the given BST:
+			The modified BST will be:
+			Sample Input 1:
+			1
+			10 6 -1 4 -1 -1 -1
+			Sample output 1:
+			4 6 10
+			Explanation of Sample output 1:
+			The tree can be represented as follows:
+			After converting this tree to balanced BST. It will look like this:   
+			The inorder traversal of the modified tree will be 4 6 10. Since the inorder is sorted. Hence, it is a valid BST. 
+			Sample Input 2:
+			2 
+			10 5 -1 -1 -1
+			20 -1 -1
+			Sample output 2:
+			5 10 
+			20
+			Constraint :
+				1 <= T <= 100
+				1 <= N <= 10^5
+				0 <= data <= 10^8
+				Where 'data' denotes the value of nodes of BST.
+				Time Limit: 1 sec
+
+		/*************************************************************
+			Following is the Binary Serach Tree node structure
+			template <typename T>
+			class TreeNode {
+				public:
+				T data;
+				TreeNode<T> *left, *right;
+				TreeNode(T data) {
+					this -> data = data;
+					left = right = NULL;
+				}
+				~TreeNode() {
+					if (left) delete left;
+					if (right) delete right;
+				}
+			};
+		*************************************************************/
+		void inorder(TreeNode<int> *root, vector<int> &hold){
+			if(!root) return;
+			inorder(root->left, hold);
+			hold.push_back(root -> data);
+			inorder(root->right, hold);
+		}
+		TreeNode<int> *ShiftToBalancedBST(vector<int> &v, int s, int e){
+			if(s > e) return NULL;
+
+			int mid = (s+e)/2;
+			int val = v[mid];
+			TreeNode<int> *root = new TreeNode<int>(val);
+			root -> left = ShiftToBalancedBST(v, s, mid-1);
+			root -> right = ShiftToBalancedBST(v, mid+1, e);
+			return root;
+		}
+		TreeNode<int>* balancedBst(TreeNode<int>* root) {
+			vector<int> hold;
+			inorder(root, hold);
+			return ShiftToBalancedBST(hold, 0, hold.size()-1);
+		}
+---------------------------------------------------------------------------------------------------------
+	12/12/24
+Lecture 72: Merge 2 Binary Search Trees:
+	
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -58279,25 +58565,40 @@ POTD:-[Problem of the Day]
 				-10^9 <= nums[i] <= 10^9
 				-10^9 <= target <= 10^9
 				Only one valid answer exists.
+			Follow-up: Can you come up with an algorithm that is less than O(n2) time complexity?
 
-		class Solution {
-			public:
-			vector<int> twoSum(vector<int>& nums, int target) {
-				vector<int> ans;
-				
-				for(int i=0;i<nums.size(); i++){
-					for(int j=i+1; j<nums.size(); j++){
-						if(nums[i]+nums[j] == target){
-							ans.push_back(i);
-							ans.push_back(j);
-							return ans;
+		// TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				vector<int> twoSum(vector<int>& nums, int target) {
+					vector<int> ans;
+					
+					for(int i=0;i<nums.size(); i++){
+						for(int j=i+1; j<nums.size(); j++){
+							if(nums[i]+nums[j] == target){
+								ans.push_back(i);
+								ans.push_back(j);
+								return ans;
+							}
 						}
 					}
+					return ans;
 				}
-				return ans;
+			};
+
+		// Optimized: TC: O(n) & SC: O(1):
+			vector<int> twoSum(vector<int>& nums, int target) {
+				map<int, int> mp;
+				int n = nums.size();
+
+				for(int i=0; i<n; i++){
+					int remain = target - nums[i];
+					if(mp.count(remain)) return {i, mp[remain]};
+					mp[nums[i]] = i;
+				}
+				return {}; // No Solution present
 			}
-		};
-	
+
 	354) Palindrome Number:
 		Problem Statement:
 			Given an integer x, return true if x is a palindrome, and false otherwise.
@@ -109019,15 +109320,11 @@ POTD:-[Problem of the Day]
 			class BinaryTreeNode {
 				public : 
 				T data;
-				BinaryTreeNode<T> *left;
-				BinaryTreeNode<T> *right;
-
+				BinaryTreeNode<T> *left, *right;
 				BinaryTreeNode(T data) {
 					this -> data = data;
-					left = NULL;
-					right = NULL;
+					left = right = NULL;
 				}
-				
 			};
 		***************/
 		void InOrderTraversal(BinaryTreeNode<int>* r, vector<int> &v){
@@ -109055,24 +109352,24 @@ POTD:-[Problem of the Day]
 		}
 
 		// Not Optimized: TC: O(n²) & SC: O(n)
-		void InOrderTraversal(BinaryTreeNode<int>* r, vector<int> &v){
-			if(r == NULL)
-				return;
+			void InOrderTraversal(BinaryTreeNode<int>* r, vector<int> &v){
+				if(r == NULL)
+					return;
 
-			InOrderTraversal(r -> left, v);
-			v.push_back(r -> data);
-			InOrderTraversal(r -> right, v);    
-		}
-		bool twoSumInBST(BinaryTreeNode<int>* root, int target) {
-			vector<int> v;
-			InOrderTraversal(root, v);                 // InOrderTraversal will generate the BST as sorted array
-			int n = v.size();
-			for(int i=0; i<n; i++)
-				for(int j=i+1; j<n; j++)
-					if(v[i] + v[j] == target) return 1;
+				InOrderTraversal(r -> left, v);
+				v.push_back(r -> data);
+				InOrderTraversal(r -> right, v);    
+			}
+			bool twoSumInBST(BinaryTreeNode<int>* root, int target) {
+				vector<int> v;
+				InOrderTraversal(root, v);                 // InOrderTraversal will generate the BST as sorted array
+				int n = v.size();
+				for(int i=0; i<n; i++)
+					for(int j=i+1; j<n; j++)
+						if(v[i] + v[j] == target) return 1;
 
-			return 0;
-		}
+				return 0;
+			}
 
 	1064) Reverse DLL nodes in groups:
 		Problem statement
@@ -113770,7 +114067,87 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-1140)
+	1140) Merge Without Extra Space:
+		Problem Statement:
+			Given two sorted arrays a[] and b[] of size n and m respectively, the task is to merge them in sorted order without using any extra space. Modify a[] so that it contains the first n elements and modify b[] so that it contains the last m elements.
+			Examples:
+			Input: a[] = [2, 4, 7, 10], b[] = [2, 3]
+			Output:
+			2 2 3 4
+			7 10
+			Explanation: After merging the two non-decreasing arrays, we get, 2 2 3 4 7 10
+			Input: a[] = [1, 5, 9, 10, 15, 20], b[] = [2, 3, 8, 13]
+			Output:
+			1 2 3 5 8 9
+			10 13 15 20
+			Explanation: After merging two sorted arrays we get 5 10 12 18 20.
+			Input: a[] = [0, 1], b[] = [2, 3]
+			Output:
+			0 1
+			2 3
+			Explanation: After merging two sorted arrays we get 0 1 2 3.
+			Constraints:
+				1 <= a.size(), b.size() <= 10^5
+				0 <= a[i], b[i] <= 10^7
+
+		// Using Extra space:
+			class Solution {
+				public:
+				void mergeArrays(vector<int>& a, vector<int>& b) {
+					vector<int> hold;
+					int n = a.size(), m = b.size();
+					int i,j;
+					i = j = 0;
+					
+					while(i < n and j<m){
+						if(a[i] <= b[j]) hold.push_back(a[i++]);
+						else hold.push_back(b[j++]);
+					}
+					
+					while(i < n) hold.push_back(a[i++]);
+					while(j < m) hold.push_back(b[j++]);
+					
+					i = j = 0;
+					while(i < n) a[i] = hold[i++];
+					while(j < m) b[j] = hold[i+j++];
+				}
+			};
+
+		// Without using extra space:
+			class Solution {
+				public:
+				void mergeArrays(vector<int>& a, vector<int>& b) {
+					int Bsize = b.size();
+					a.insert(a.end(), b.begin(), b.end());
+					sort(a.begin(), a.end());
+					
+					while(Bsize){
+						b[Bsize-1] = a.back();
+						Bsize--;
+						a.pop_back();
+					}
+				}
+			};
+			// or
+				class Solution {
+					public:
+					void mergeArrays(vector<int>& a, vector<int>& b) {
+						// Logic:
+						// all larger elements should be inside array B
+						// all smaller elements inside array A
+						// both array are sorted, 
+						// to pick all larger elements from array A need to start from ending
+						// to pick all smaller elements from array B start from beginning.
+						
+						int i,j;
+						i=a.size()-1, j=0;
+						int n = b.size();
+						while(i >=0 && j<n && a[i] > b[j]) swap(a[i--], b[j++]);
+						
+						sort(a.begin(), a.end());
+						sort(b.begin(), b.end());
+					}
+				};
 
 1141)
 
