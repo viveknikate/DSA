@@ -6493,7 +6493,6 @@ Lecture-14: Binary Search Interview Questions | Problem set-2
 			}
 
 		1). Search K In Rotated Sorted Array
-
 			//Linear way O(n) time complexity,
 				int search(vector<int>& arr, int n, int k)
 				{
@@ -26895,13 +26894,24 @@ Lecture 71: Binary SearchTree FAANG Interview Questions || Part-2:
 				inorder(n -> right, T);
 			}
 
+			// above method we are creating the NewNode taking extra spaces instead that we can do this (Partially Accepted)
+				void inorder(TreeNode<int> *n, TreeNode<int>* &T){
+					if(!n) return;
+
+					inorder(n->left, T);
+					T -> right = n;
+					n -> left = NULL;
+					T = T->right;
+					inorder(n->right, T);
+				}
+
 			TreeNode<int>* flatten(TreeNode<int>* root) {
 				TreeNode<int> *Dummy = new TreeNode<int>(-1);
 				TreeNode<int> *Tail = Dummy;
 				inorder(root, Tail);
 				return Dummy -> right;
 			}
-	
+
 	Q.3. Preorder traversal of a BST:
 		https://www.naukri.com/code360/problems/preorder-traversal-to-bst_893111
 		Problem Statement:
@@ -27067,8 +27077,133 @@ Lecture 71: Binary SearchTree FAANG Interview Questions || Part-2:
 		}
 ---------------------------------------------------------------------------------------------------------
 	12/12/24
-Lecture 72: Merge 2 Binary Search Trees:
+Lecture 72: Merge 2 Binary Search Trees: (Refer POTD: 1143)
+	Problem statement
+		You are given two binary search trees of integers having ‘N’ and ‘M’ nodes. Return an array that contains elements of both BST in sorted order.
+		A binary search tree (BST) is a binary tree data structure with the following properties.
+		• The left subtree of a node contains only nodes with data less than the node’s data.
+		• The right subtree of a node contains only nodes with data greater than the node’s data.
+		• Both the left and right subtrees must also be binary search trees.
+		Sample Input 1:
+		2 1 3 -1 -1 -1 -1
+		4 -1 -1
+		Sample Output 1:
+		1 2 3 4 
+		Explanation For Sample Output 1:
+		The given BST are:-
+		The output will be 1 2 3 4
+		Sample Input 2:
+		4 2 7 -1 3 -1 -1 -1 -1  
+		5 1 7 -1 -1 -1 -1
+		Sample Output 2:
+		1 2 3 4 5 7 7 
+		Constraints:
+			1 <= 'N', 'M' <= 10^5
+			Time Limit: 1 sec
+
+	/*************************************************************
+		Following is the Binary Tree node structure:
+		class TreeNode {
+			public:
+			int data;
+			TreeNode *left, *right;
+			TreeNode() : data(0), left(NULL), right(NULL) {}
+			TreeNode(int x) : data(x), left(NULL), right(NULL) {}
+			TreeNode(int x, TreeNode *left, TreeNode *right) : data(x), left(left), right(right) {}
+		};
+	*************************************************************/
+	void inorder(TreeNode* n, vector<int> &a){
+		if(!n) return;
+		inorder(n->left, a);
+		a.push_back(n->data);
+		inorder(n->right, a);
+	}
+	vector<int> mergeBST(TreeNode *root1, TreeNode *root2) {
+		vector<int> ans;
+		inorder(root1, ans);
+		inorder(root2, ans);
+		sort(ans.begin(), ans.end());
+		return ans;
+	}
+
+	// or
+		vector<int> mergeBST(TreeNode *root1, TreeNode *root2) {
+			vector<int> a1, a2, merged;
+			inorder(root1, a1);
+			inorder(root2, a2);
+
+			int i,j, n=a1.size(), m=a2.size();
+			i=j=0;
+			while(i<n and j<m){
+				if(a1[i] <= a2[j]) merged.push_back(a1[i++]);
+				else merged.push_back(a2[j++]);
+			}
+			while(i < n) merged.push_back(a1[i++]);
+			while(j < m) merged.push_back(a2[j++]);
+			return merged;
+		}
 	
+	// or:
+		void inorder(TreeNode* n, vector<int> &v){
+			if(!n) return;
+
+			inorder(n->left, v);
+			v.push_back(n->data);
+			inorder(n->right, v);
+		}
+		void ConvertToLinkedList(TreeNode* cur, TreeNode* &T){
+			if(!cur) return;
+			ConvertToLinkedList(cur->left, T);
+			T->right = cur;
+			T = cur;
+			T->left = NULL;
+			ConvertToLinkedList(cur->right, T);
+		}
+		TreeNode* merge2LLs(TreeNode* f, TreeNode* s){
+			TreeNode* H = new TreeNode(-1);
+			TreeNode* T = H;
+
+			while(f and s){
+				if(f->data <= s->data){
+					T -> right = f;
+					T = f;
+					f = f->right;
+				}else{
+					T->right = s;
+					T = s;
+					s = s->right;
+				}
+			}
+
+			while(f){
+				T -> right = f;
+				T = f;
+				f = f -> right;
+			}
+
+			while(s){
+				T -> right = s;
+				T = s;
+				s = s -> right;
+			}
+			return H->right;
+		}
+		vector<int> mergeBST(TreeNode *root1, TreeNode *root2) {
+			TreeNode* first = new TreeNode(-1);
+			TreeNode* Tail = first;
+			ConvertToLinkedList(root1, Tail);
+
+			TreeNode* second = new TreeNode(-1);
+			Tail = second;
+			ConvertToLinkedList(root2, Tail);
+
+			first = merge2LLs(first->right, second->right);
+			vector<int> ans;
+			inorder(first, ans);
+			return ans;
+		}
+---------------------------------------------------------------------------------------------------------
+
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -62007,6 +62142,17 @@ POTD:-[Problem of the Day]
 				return Freq[x];
 			}
 
+		// or
+			class Solution {
+				public:
+				int countFreq(vector<int>& arr, int target) {
+					int startIndex = lower_bound(arr.begin(), arr.end(), target) - arr.begin();
+					int endIndex = upper_bound(arr.begin(), arr.end(), target) - arr.begin();
+					return endIndex - startIndex;
+					// return upper_bound(arr.begin(), arr.end(), target) - lower_bound(arr.begin(), arr.end(), target); 
+				}
+			};
+
 		// Optimized:
 			#include<bits/stdc++.h>
 			int firstIndex(vector<int> a, int x){
@@ -62142,6 +62288,21 @@ POTD:-[Problem of the Day]
 				return (value == -1) ? a.size() : value;
 			}
 
+		//Or
+			class Solution {
+				public:
+				int upperBound(vector<int>& arr, int target) {
+					int s=0, e=arr.size();
+					while(s < e){
+						int mid = s + (e-s)/2;
+						// int mid = e + (s-e)/2;
+						if(arr[mid] > target) e = mid;
+						else s = mid + 1;
+					}
+					return e;
+				}
+			};
+
 	395) Implement Lower Bound:
 		Problem Statement:
 			You are given an array 'arr' sorted in non-decreasing order and a number 'x'.
@@ -62171,18 +62332,12 @@ POTD:-[Problem of the Day]
 				6
 				1 2 2 3 3 5
 				2
-
-
 				Sample Output 2:
 				1
-
-
 				Sample Input 3:
 				6
 				1 2 2 3 3 5
 				7
-
-
 				Sample Output 3:
 				6
 			Expected Time Complexity:
@@ -62244,6 +62399,64 @@ POTD:-[Problem of the Day]
 
 			int lowerBound(vector<int> arr, int n, int x) {
 				return (BinarySearchLower(arr, x) == -1) ? arr.size() : BinarySearchLower(arr, x);
+			}
+
+		Problem Statement:
+			Given a sorted array arr[] and a number target, the task is to find the lower bound of the target in this given array. The lower bound of a number is defined as the smallest index in the sorted array where the element is greater than or equal to the given number.
+			Note: If all the elements in the given array are smaller than the target, the lower bound will be the length of the array. 
+			Examples :
+			Input:  arr[] = [2, 3, 7, 10, 11, 11, 25], target = 9
+			Output: 3
+			Explanation: 3 is the smallest index in arr[] where element (arr[3] = 10) is greater than or equal to 9.
+			Input: arr[] = [2, 3, 7, 10, 11, 11, 25], target = 11
+			Output: 4
+			Explanation: 4 is the smallest index in arr[] where element (arr[4] = 11) is greater than or equal to 11.
+			Input: arr[] = [2, 3, 7, 10, 11, 11, 25], target = 100
+			Output: 7
+			Explanation: As no element in arr[] is greater than 100, return the length of array.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^6
+				1 ≤ arr[i] ≤ 10^6
+				1 ≤ target ≤ 10^6
+
+		// TC: O(n):
+			class Solution {
+				public:
+				int lowerBound(vector<int>& arr, int target) {
+					int n = arr.size();
+					for(int i=0; i<n; i++)
+						if(arr[i] >= target) return i;
+					return arr.size();
+				}
+			};
+
+		// TC: O(log(n)):
+			class Solution {
+				public:
+				int lowerBound(vector<int>& arr, int target) {
+					int s=0, e = arr.size()-1, index = -1;
+					while(s <= e) {
+						int mid = (s+e)/2;
+						if(arr[mid] >= target){
+							index = mid;
+							e = mid-1;
+						}else{
+							s = mid + 1;
+						}
+					}
+					return (index == -1) ? arr.size() : index;
+				}
+			};
+
+		// or:
+			int lowerBound(vector<int>& arr, int target) {
+				int s = 0, e = arr.size();
+				while (s < e) {
+					int mid = s + (e - s) / 2;
+					if (arr[mid] < target) s = mid + 1;  // Target is larger, search the right half
+					else e = mid;  // Target is smaller or equal, search the left half
+				}
+				return s;
 			}
 
 	396) Rearrange Array Elements by Sign:
@@ -86514,7 +86727,6 @@ POTD:-[Problem of the Day]
 				}
 
 				Node<int>* curTail = ansH;
-
 				while(first && second){
 					if(first -> data <= second -> data){
 						curTail -> next = first;
@@ -86533,19 +86745,16 @@ POTD:-[Problem of the Day]
 					curTail -> next = first;
 				else
 					curTail -> next = second;
-				
 				return ansH;
 			}
 		}
 
 		// or
-			
 			Node<int>* solve(Node<int>* first, Node<int>* second){
 				if(first -> next == nullptr){
 					first -> next = second;
 					return first;
 				}
-
 				Node<int>* cur1 = first, *next1 = first -> next;
 				Node<int>* cur2 = second, *next2 = second -> next;
 
@@ -86565,7 +86774,6 @@ POTD:-[Problem of the Day]
 							next1 = next1->next; 
 							cur1 = cur1->next;
 						}
-
 						// else point the last node of first list to the remaining nodes of
 						// second list.
 						else {
@@ -86574,7 +86782,6 @@ POTD:-[Problem of the Day]
 						}
 					}
 				}
-
 				return first;
 			}
 
@@ -86591,6 +86798,66 @@ POTD:-[Problem of the Day]
 					}
 				}
 			}
+
+		// or
+			Problem Statement:
+				Given two sorted linked lists consisting of nodes respectively. The task is to merge both lists and return the head of the merged list.
+				Examples:
+				Input: LinkedList1: 5->10->15->40, ListedList2: 2->3->20
+				Output: 2->3->5->10->15->20->40
+				Explanation:
+				Input: LinkedList1: 1->1, LinkedList2: 2->4
+				Output: 1->1->2->4
+				Explanation:
+				Expected Time Complexity: O(n+m)
+				Expected Auxilliary Space: O(1)
+
+				Constraints:
+					1 <= no. of nodes<= 10^5
+					0 <= node->data <= 10^5		
+			/* Link list Node
+				struct Node {
+					int data;
+					struct Node *next;
+					Node(int x) {
+						data = x;
+						next = NULL;
+					}
+				};
+			*/
+			class Solution {
+				public:
+				Node* sortedMerge(Node* head1, Node* head2) {
+					Node *H = new Node(-1), *T = H;
+					
+					while(head1 and head2){
+						if(head1->data < head2->data) T->next = head1, T = head1, head1 = head1->next;
+						else T->next = head2, T = head2, head2 = head2->next;
+					}
+					while(head1) T -> next = head1, T=head1, head1 = head1->next;
+					while(head2) T -> next = head2, T=head2, head2 = head2->next;
+					return H -> next;
+				}
+			};
+
+		// or
+			class Solution {
+				public:
+				Node* sortedMerge(Node* head1, Node* head2) {
+					Node *H, *T;
+					if(head1->data < head2->data) H = head1, T = head1, head1 = head1 -> next;
+					else H = head2, T = head2, head2 = head2 -> next;
+					
+					while(head1 && head2){
+						if(head1->data < head2->data) T->next=head1, head1 = head1->next, T=T->next;
+						else T->next=head2, head2=head2->next, T=T->next;
+					}
+					
+					if(head1) T->next = head1;
+					else T->next = head2;
+					return H;
+				}
+			};
 
 	745) Maximum sum of hour glass:
 		Problem Statement:
@@ -109054,6 +109321,16 @@ POTD:-[Problem of the Day]
 			}
 		};
 
+		//or
+			class Solution {
+				public:
+				int search(vector<int>& arr, int key) {
+					auto itr = find(arr.begin(), arr.end(), key);
+					if(itr != arr.end()) return itr - arr.begin();
+					return -1;
+				}
+			};
+
 	1059) Magic in CPP:
 		Problem Statement:
 			This Module is all about pointers and how they can be cleverly employed to solve typical CPP problems.
@@ -114149,15 +114426,398 @@ POTD:-[Problem of the Day]
 					}
 				};
 
-1141)
+	1141) Preorder to BST:
+		Problem Statement:
+			Given an array arr[] of N nodes representing preorder traversal of some BST. You have to build the BST  from the given preorder traversal. 
+			In Pre-Order traversal, the root node is visited before the left child and right child nodes.
+			Example 1:
+			Input:
+			N = 5
+			arr[]  = {40,30,35,80,100}
+			Output: 35 30 100 80 40
+			Explanation: PreOrder: 40 30 35 80 100
+			Therefore, the BST will be:
+					   40
+					/      \
+				   30      80
+					\        \   
+					 35      100
+			Hence, the postOrder traversal will
+			be: 35 30 100 80 40
+			Example 2:
+			Input:
+			N = 8
+			arr[]  = {40,30,32,35,80,90,100,120}
+			Output: 35 32 30 120 100 90 80 40
+			Your Task:
+			You need to complete the given function and return the root of the tree. The driver code will then use this root to print the post order traversal.
+			Expected Time Complexity: O(N).
+			Expected Auxiliary Space: O(N).
+			Constraints:
+				1 <= N <= 10^3
+				1 <= arr[i] <= 10^4
 
-1142)
+		/*
+			typedef struct Node{
+				int data;
+				struct Node *left, *right;
+			} Node;
+			// A utility function to create a new tree node
+			Node* newNode( int data ) {
+				Node* temp = (Node *)malloc( sizeof( Node ) );
+				temp->data = data;
+				temp->left = temp->right = NULL;
+				return temp;
+			}
+		*/
+		class Solution {
+			public: // Function that constructs BST from its preorder traversal.
+			Node* GenerateBST(int pre[], int size, int mn, int mx, int &i){
+				if(i >= size || pre[i] < mn || pre[i] > mx) return NULL;
+				
+				Node* root = newNode(pre[i++]);
+				root -> left = GenerateBST(pre, size, mn, root->data, i);
+				root -> right = GenerateBST(pre, size, root->data, mx, i);
+				return root;
+			}
+			Node* Bst(int pre[], int size) {
+				int index = 0;
+				return GenerateBST(pre, size, INT_MIN, INT_MAX, index);
+			}
+		};
 
-1143)
+	1142) Sorted and Rotated Minimum: (Refer POTD: 297)
+		Problem Statement:
+			A sorted array of distinct elements arr[] is rotated at some unknown point, the task is to find the minimum element in it. 
+			Examples:
+			Input: arr[] = [5, 6, 1, 2, 3, 4]
+			Output: 1
+			Explanation: 1 is the minimum element in the array.
+			Input: arr[] = [3, 1, 2]
+			Output: 1
+			Explanation: Here 1 is the minimum element.
+			Input: arr[] = [4, 2, 3]
+			Output: 2
+			Explanation: Here 2 is the minimum element.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^6
+				1 ≤ arr[i] ≤ 10^9
+		class Solution {
+			public:
+			int findMin(vector<int>& arr) {
+				int s=0, e = arr.size()-1;
+				while(s < e){
+					int mid = (s+e)/2;
+					if(arr[mid] < arr[e]) e = mid;
+					else s = mid + 1;
+				}
+				return arr[s];
+			}
+		};
 
-1144)
+	1143) Binary Tree to DLL:
+		Problem Statement:
+			Given a Binary Tree (BT), convert it to a Doubly Linked List (DLL) in place. The left and right pointers in nodes will be used as previous and next pointers respectively in converted DLL. The order of nodes in DLL must be the same as the order of the given Binary Tree. The first node of Inorder traversal (leftmost node in BT) must be the head node of the DLL.
+			Note: h is the tree's height, and this space is used implicitly for the recursion stack.
+			Examples:
+			Input:
+				   1
+				 /   \
+				3     2
+			Output:
+			3 1 2 
+			2 1 3
 
-1145)
+			Explanation: DLL would be 3<=>1<=>2
+			Input:
+					10
+				  /   \
+				20    30
+			  /   \
+			 40   60
+			Output:
+			40 20 60 10 30 
+			30 10 60 20 40
+
+			Explanation:  DLL would be 40<=>20<=>60<=>10<=>30.
+			Expected Time Complexity: O(no. of nodes)
+			Expected Space Complexity: O(height of the tree)
+			Constraints:
+				1 ≤ Number of nodes ≤ 10^5
+				0 ≤ Data of a node ≤ 10^5
+		/*
+			struct Node {
+				int data;
+				struct Node *left, *right;
+				Node(int x){
+					data = x;
+					left = right = NULL;
+				}
+			};
+		*/
+		// TC: O(n) & SC: O(n or H), where H is the height of tree. due to recursion stack
+		// This function should return head to the DLL
+		class Solution {
+			public:
+			Node *H, *T;
+			Solution() {
+				H = new Node(-1);
+				T = H;
+			}
+			void inorder(Node* n, Node* &T){
+				if(!n) return;
+				
+				inorder(n->left, T);
+				T -> right = n;
+				n -> left = T;
+				T = T -> right;
+				inorder(n->right, T);
+			}
+			Node* bToDLL(Node* root) {
+				inorder(root, T);
+				H = H -> right;
+				H -> left -> right = NULL;
+				H -> left = NULL;
+				return H;
+			}
+		};
+		// or using right side first
+		class Solution {
+			public:
+			void ConvertToDLL(Node* root, Node* &H){
+				if(!root) return;
+
+				// traversing the right side first, coz the list should be in sorted order
+				// and we are pushing head one by one to left side of tree
+				ConvertToDLL(root -> right, H);
+				
+				root -> right = H;
+				if(H) H -> left = root;
+			
+				H = root;
+				ConvertToDLL(root -> left, H);
+			}
+			Node* bToDLL(Node* root) {
+				Node* Head = NULL;
+				ConvertToDLL(root, Head);
+				return Head;
+			}
+		};
+
+		// or using left side first
+			class Solution {
+				public:
+				void ToDLL(Node* root, Node* &T, Node* &H){
+					if(!root) return;
+					ToDLL(root->left, T, H);
+					
+					if(T){
+						T -> right = root;
+						root -> left = T;
+						T = root;
+					}else{
+						H = T = root;
+					}
+					ToDLL(root->right, T, H);
+				}
+				Node* bToDLL(Node* root) {
+					Node *H, *T;
+					H = T = NULL;
+					ToDLL(root, T, H);
+					return H;
+				}
+			};
+
+		// Using dummy node:
+			class Solution {
+				public:
+				void ToDLL(Node* root, Node* &T){
+					if(!root) return;
+					
+					ToDLL(root->left, T);
+					T -> right = root;
+					root -> left = T;
+					T = root;
+					ToDLL(root->right, T);
+				}
+				Node* bToDLL(Node* root) {
+					Node *H = new Node(-1);
+					Node *T = H;
+					ToDLL(root, T);
+					
+					// making first's nodes prev pointer NULL
+					H -> right -> left = NULL;
+					return H -> right;
+				}
+			};
+
+		// TC: O(n) & SC(1), Using Morris Traversal
+			class Solution {
+				public:
+				Node* bToDLL(Node* root) {
+					Node *H, *T;
+					H = T = NULL;
+					// Using Morris Traversal
+					
+					while(root){
+						if(root -> left){            // left Node is present then process it
+							Node* pred = root -> left;
+							
+							while(pred->right && pred->right != root) pred = pred -> right;
+							
+							if(pred -> right == NULL){          // this means need to make the connection
+								pred -> right = root;
+								root = root -> left;
+							}else{                              // this means we already made the connection now its time to add it to DLL
+								// T -> right = root;          // this right side connection were already made while attching right pointer during Morris traversal
+								root -> left = T;
+								T = root;
+								root = root -> right;
+							}
+						}else{                          // if not present then add current Node to DLL
+							if(T){
+								T -> right = root;
+								root -> left = T;
+								T = root;
+							}else{                      // if current node is first node
+								H = T = root;
+							}
+							root = root -> right;
+						}
+					}
+					return H;
+				}
+			};
+
+	1144) Sorted Linked List to BST:
+		Problem Statement:
+			Given a Singly Linked List which has data members sorted in ascending order. Construct a Balanced Binary Search Tree which has same data members as the given Linked List.
+			Note: There might be nodes with the same value.
+			Examples:
+			Input: Linked List: 1->2->3->4->5->6->7
+			Output: 4 2 1 3 6 5 7
+			Explanation : The BST formed using elements of the linked list is -
+					4
+				/   \
+				2     6
+			/  \   / \
+			1   3  5   7  
+			Hence, preorder traversal of this tree is 4 2 1 3 6 5 7
+			Input: Linked List : 1->2->3->4		
+			Ouput: 3 2 1 4
+			Explanation: The BST formed using elements of the linked list is -
+			Hence, the preorder traversal of this tree is 3 2 1 4
+			Expected Time Complexity: O(n)
+			Expected Auxiliary Space: O(n)
+			Constraints:
+				1 ≤ Number of Nodes ≤ 10^6
+				1 ≤ Value of each node ≤ 10^6
+
+		// TC: O(n) & SC: O(n)
+			/*
+			struct LNode { //Linked List
+				int data;
+				struct LNode* next;
+				LNode(int x){
+					data = x;
+					next = NULL; }
+			};
+			struct TNode {   //Tree
+				int data;
+				struct TNode* left;
+				struct TNode* right;
+				TNode(int x){
+					data=x;
+					left=right=NULL; 
+				}
+			}; */
+			class Solution {
+				public:
+				TNode*  GenerateTreed(vector<int> &hold, int s, int e){
+					if(s > e) return NULL;
+					
+					int mid = (s+e+1)/2;
+					TNode* root = new TNode(hold[mid]);
+					root -> left = GenerateTreed(hold, s, mid-1);
+					root -> right = GenerateTreed(hold, mid+1, e);
+					return root;
+				}
+				TNode *sortedListToBST(LNode *head) {
+					vector<int> hold;
+					// stored all elements into hold vector
+					while(head) hold.push_back(head->data), head = head -> next;
+					return GenerateTreed(hold, 0, hold.size()-1);
+				}
+			};
+
+		// TC: O(n log(n)) & SC: O(log(n))
+			class Solution {
+				public:
+				TNode *sortedListToBST(LNode *H) {
+					if(!H) return NULL;
+					if(H -> next == NULL) return new TNode(H -> data);
+					
+					LNode *slow, *fast, *prev;
+					slow = fast = prev = H;
+					
+					// finding the mid element
+					while(fast and fast -> next){
+						prev = slow;
+						fast = fast -> next -> next;
+						slow = slow -> next;
+					}
+					
+					TNode* root = new TNode(slow->data);
+					prev->next = NULL;
+					root->left = sortedListToBST(H);
+					root->right = sortedListToBST(slow->next);
+					return root;
+				}
+			};
+
+	1145) K-th element of two Arrays:
+		Problem Statement:
+			Given two sorted arrays a[] and b[] and an element k, the task is to find the element that would be at the kth position of the combined sorted array.
+			Examples :
+			Input: a[] = [2, 3, 6, 7, 9], b[] = [1, 4, 8, 10], k = 5
+			Output: 6
+			Explanation: The final combined sorted array would be [1, 2, 3, 4, 6, 7, 8, 9, 10]. The 5th element of this array is 6.
+			Input: a[] = [100, 112, 256, 349, 770], b[] = [72, 86, 113, 119, 265, 445, 892], k = 7
+			Output: 256
+			Explanation: Combined sorted array is [72, 86, 100, 112, 113, 119, 256, 265, 349, 445, 770, 892]. The 7th element of this array is 256.
+			Constraints:
+				1 <= a.size(), b.size() <= 10^6
+				1 <= k <= a.size() + b.size()
+				0 <= a[i], b[i] < 10^8
+
+		class Solution {
+			public:
+			int kthElement(vector<int>& a, vector<int>& b, int k) {
+				int n = a.size(), m = b.size();
+				int i, j;
+				i = j = 0;
+				while(i < n and j < m){
+					k--;
+					if(a[i] < b[j]){
+						if(k == 0) return a[i];
+						i++;
+					}else{
+						if(k == 0) return b[j];
+						j++;
+					} 
+				}
+				while(i < n){
+					k--;
+					if(k == 0) return a[i];
+					i++;
+				}
+				while(j < m){
+					k--;
+					if(k == 0) return b[j];
+					j++;
+				}
+			}
+		};
 
 1146)
 
