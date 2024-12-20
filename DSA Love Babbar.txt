@@ -6697,9 +6697,9 @@ Lecture-15: Allocation Problem || Aggressive Cows Problem || Binary Search Advan
 			HW- https://www.codingninjas.com/studio/problems/allocate-books_1090540
 		2). Painter partition
 			HW.
-		3). Aggressive cows
+		3). Aggressive cows (Refer POTD: 1147)
 
-	COME BACK TO THIS LECTURE AGAIN. 
+	COME BACK TO THIS LECTURE AGAIN.
 ---------------------------------------------------------------------------------------------------------
 	15/08/23
 Lecture-16: Selection Sort
@@ -19745,11 +19745,11 @@ Lecture-50: Check Palindrome in Linked List
 	-> Refer Q.747 from POTD section
 ---------------------------------------------------------------------------------------------------------
 	28/04/24
-Lecture 51: Add 2 Numbers represented by Linked Lists
+Lecture-51: Add 2 Numbers represented by Linked Lists
 	-> Refer Q.759 && Q.763 from POTD section
 ---------------------------------------------------------------------------------------------------------
 	28/04/24
-Lecture 52: Clone a Linked List with Random Pointers
+Lecture-52: Clone a Linked List with Random Pointers
 	-> Refer Q.760 from POTD section
 ---------------------------------------------------------------------------------------------------------
 	02/05/24
@@ -22730,7 +22730,7 @@ Lecture-61: Queue FAANG Interview Questions
 			❌Pending
 ---------------------------------------------------------------------------------------------------------
 	31/05/24
-Lecture 62: Binary Trees & its Representation || Different types of Traversals
+Lecture-62: Binary Trees & its Representation || Different types of Traversals
 	Binary Tree is a non-linear data structure where each node has at most two children [might be 0 or 1 or 2 childrens, but not more than 2. (one on left & one on right).
 	figure:
 									 1
@@ -23728,7 +23728,7 @@ Lecture 62: Binary Trees & its Representation || Different types of Traversals
 		- In a skewed binary tree, each node has exactly one child, either all left or all right.
 ---------------------------------------------------------------------------------------------------------
 	05/10/2024
-Lecture 63: Binary Tree FAANG Interview Questions || Part-1:
+Lecture-63: Binary Tree FAANG Interview Questions || Part-1:
 	Q.1. Height of Binary Tree:
 		Problem Statement:
 			Given a binary tree, find its height.
@@ -23897,7 +23897,7 @@ Lecture 63: Binary Tree FAANG Interview Questions || Part-1:
 				}
 			};
 
-	Q.3. Balanced Tree Check:
+	Q.3. Balanced Tree Check: (Refer POTD: 1148)
 		Problem Statement:
 			Given a binary tree, find if it is height balanced or not.  A tree is height balanced if difference between heights of left and right subtrees is not more than one for all nodes of tree. 
 			Examples:
@@ -23947,7 +23947,7 @@ Lecture 63: Binary Tree FAANG Interview Questions || Part-1:
 			}
 			//Function to check whether a binary tree is balanced or not.
 			bool isBalanced(Node *root) {
-				if(!root)   return 1;
+				if(!root) return 1;
 				
 				bool left = isBalanced(root -> left);
 				bool right = isBalanced(root -> right);
@@ -24110,7 +24110,7 @@ Lecture 63: Binary Tree FAANG Interview Questions || Part-1:
 		};
 ---------------------------------------------------------------------------------------------------------
 	06/10/24
-Lecture 64: Binary Tree FAANG Interview Questions || Part-2:
+Lecture-64: Binary Tree FAANG Interview Questions || Part-2:
 	Q.1. ZigZag Tree Traversal:
 		Problem Statement:
 			Given a binary tree with n nodes. Find the zig-zag level order traversal of the binary tree.
@@ -24833,7 +24833,7 @@ Lecture 64: Binary Tree FAANG Interview Questions || Part-2:
 			}
 ---------------------------------------------------------------------------------------------------------
 	13/10/24
-Lecture 65: Binary Tree FAANG Interview Questions || Part-3:
+Lecture-65: Binary Tree FAANG Interview Questions || Part-3:
 	Q.1. Sum of nodes on the longest path from root to leaf node:
 		Problem Statement:
 			Given a binary tree having n nodes. Find the sum of all nodes on the longest path from root to any leaf node. If two or more paths compete for the longest path, then the path having maximum sum of nodes will be considered.
@@ -25255,7 +25255,7 @@ Lecture 65: Binary Tree FAANG Interview Questions || Part-3:
 		};
 ---------------------------------------------------------------------------------------------------------
 	18/10/24
-Lecture 66: Construct a Binary Tree from InOrder/PreOrder/PostOrder Traversal:
+Lecture-66: Construct a Binary Tree from InOrder/PreOrder/PostOrder Traversal:
 	Q.1. Construct Tree from Inorder & Preorder:
 		Problem Statement:
 			Given two arrays of inorder and preorder traversal of size n. Construct a tree using the inorder and preorder arrays and return the root node of the constructed tree.
@@ -25415,7 +25415,7 @@ Lecture 66: Construct a Binary Tree from InOrder/PreOrder/PostOrder Traversal:
 		};
 ---------------------------------------------------------------------------------------------------------
 	19/10/24
-Lecture 67: Minimum Time to BURN the Entire Binary Tree:
+Lecture-67: Minimum Time to BURN the Entire Binary Tree:
 	Q. Burning Tree:
 		Problem Statement:
 			Given a binary tree and a node data called target. Find the minimum time required to burn the complete binary tree if the target is set on fire. It is known that in 1 second all nodes connected to a given node get burned. That is its left child, right child, and parent.
@@ -25545,7 +25545,7 @@ Lecture 67: Minimum Time to BURN the Entire Binary Tree:
 		};
 ---------------------------------------------------------------------------------------------------------
 	20/10/24
-Lecture 68: Morris Traversal Flatten a Binary tree to Linked List:
+Lecture-68: Morris Traversal Flatten a Binary tree to Linked List:
 	Q. Iterative Inorder:
 		Problem Statement:
 			Given a binary tree. Find the inorder traversal of the tree without using recursion.
@@ -25712,7 +25712,7 @@ Lecture 68: Morris Traversal Flatten a Binary tree to Linked List:
 			};
 ---------------------------------------------------------------------------------------------------------
 	23/11/24
-Lecture 69: Binary Search Tree & its Implementation || Insertion, Deletion & Searching a Node:
+Lecture-69: Binary Search Tree & its Implementation || Insertion, Deletion & Searching a Node:
 	// Binary Search Tree:
 		#include <iostream>
 		#include <queue>
@@ -26371,8 +26371,8 @@ Lecture 69: Binary Search Tree & its Implementation || Insertion, Deletion & Sea
 		};		
 --------------------------------------------------------------------------------------------------------
 	24/11/24
-Lecture 70: Binary SearchTree FAANG Interview Questions || Part-1:
-	Q.1. Partial BST:
+Lecture-70: Binary SearchTree FAANG Interview Questions || Part-1:
+	Q.1. Partial BST: (Refer POTD: 1146)
 		https://www.naukri.com/code360/problems/validate-bst_799483
 		Problem statement
 			Given a binary tree with N number of nodes, check if that input tree is Partial BST (Binary Search Tree) or not. If yes, return true, return false otherwise.
@@ -26778,7 +26778,7 @@ Lecture 70: Binary SearchTree FAANG Interview Questions || Part-1:
 			}
 ---------------------------------------------------------------------------------------------------------
 	11/12/24
-Lecture 71: Binary SearchTree FAANG Interview Questions || Part-2:
+Lecture-71: Binary SearchTree FAANG Interview Questions || Part-2:
 	Q.1. Two Sum IV - Input is a BST: (refer POTD:1063)
 
 	Q.2. Flatten BST To A Sorted List:
@@ -27077,7 +27077,7 @@ Lecture 71: Binary SearchTree FAANG Interview Questions || Part-2:
 		}
 ---------------------------------------------------------------------------------------------------------
 	12/12/24
-Lecture 72: Merge 2 Binary Search Trees: (Refer POTD: 1143)
+Lecture-72: Merge 2 Binary Search Trees: (Refer POTD: 1143)
 	Problem statement
 		You are given two binary search trees of integers having ‘N’ and ‘M’ nodes. Return an array that contains elements of both BST in sorted order.
 		A binary search tree (BST) is a binary tree data structure with the following properties.
@@ -27203,7 +27203,266 @@ Lecture 72: Merge 2 Binary Search Trees: (Refer POTD: 1143)
 			return ans;
 		}
 ---------------------------------------------------------------------------------------------------------
+	16/12/24
+Lecture-73: Largest BST in a Binary Tree:
+	Q. Size of Largest BST in Binary Tree:
+		Problem Statement:
+			You have been given a Binary Tree of 'N' nodes, where the nodes have integer values. Your task is to return the size of the largest subtree of the binary tree which is also a BST.
+			A binary search tree (BST) is a binary tree data structure which has the following properties.
+			• The left subtree of a node contains only nodes with data less than the node’s data.
+			• The right subtree of a node contains only nodes with data greater than the node’s data.
+			• Both the left and right subtrees must also be binary search trees.
+			Example:
+			Given binary tree:
+			In the given binary tree, subtree rooted at 2 is a BST and its size is 3.
+			Sample Input 1 :
+			2 1 3 -1 -1 -1 -1
+			Sample Output 1:
+			3
+			Explanation for Sample 1:
+			In the given binary tree, subtree rooted at 2 is a BST and its size is 3.
 
+			Sample Input 2 :
+			50 -1 20 -1 30 -1 40 -1 50 -1 -1
+			Sample Output 2:
+			4
+			Constraints :
+				1 <= 'N' <= 10^5
+				0 <= 'data' <= 10^5     
+			where 'N' is the number of nodes and 'data' denotes the node value of the binary tree nodes.
+			Time limit: 1 sec
+
+		// Not Optimized:
+			/*
+				Following is Binary Tree Node structure:
+				class TreeNode {
+					public:
+					int data;
+					TreeNode *left, *right;
+					TreeNode() : data(0), left(NULL), right(NULL) {}
+					TreeNode(int x) : data(x), left(NULL), right(NULL) {}
+					TreeNode(int x, TreeNode *left, TreeNode *right) : data(x), left(left), right(right) {}
+				};
+			*/
+			void INORDER(TreeNode* n, vector<int> &v){
+				if(!n) return;
+				INORDER(n->left, v);
+				v.push_back(n->data);
+				INORDER(n->right, v);
+			}
+			void solve(TreeNode *TreeRoot, int &s) {
+				if(!TreeRoot) return;
+				vector<int> hold;
+				INORDER(TreeRoot, hold);
+				if (is_sorted(hold.begin(), hold.end())){
+					s = max(s, (int)hold.size());
+					return;
+				}
+				solve(TreeRoot->left, s);
+				solve(TreeRoot->right, s);
+			}
+			int largestBST(TreeNode * root){
+				int mx=0;
+				solve(root, mx);
+				return mx;
+			}
+
+		// Optimized:
+			struct INFO{
+				int mini, maxi, size;
+				bool isBST;
+			};
+			INFO solve(TreeNode* n, int &size){
+				if(!n) return {INT_MAX, INT_MIN, 0, true};
+				INFO left = solve(n->left, size);
+				INFO right = solve(n->right, size);
+
+				INFO currNode;
+				currNode.size = left.size+right.size+1;
+				currNode.maxi = max(n->data, right.maxi);
+				currNode.mini = min(n->data, left.mini);
+
+				if((left.isBST and right.isBST) and (left.maxi <= n->data and n->data <= right.mini)){
+					currNode.isBST = true;
+					size = max(size, currNode.size);
+				}else{
+					currNode.isBST = false;
+				}
+				return currNode;
+			}
+			int largestBST(TreeNode * root){
+				int mxSize=0;
+				INFO I = solve(root, mxSize);
+				return mxSize;    
+			}
+
+		// Class:
+			class INFO{
+				public:
+				int mnn, mx, cnt;
+				bool isBST = false;
+			};
+
+			INFO Solve(TreeNode* cur, int &count){
+				if(!cur) return {INT_MAX, INT_MIN, 0, true};
+
+				INFO left = Solve(cur->left, count);
+				INFO right = Solve(cur->right, count);
+
+				INFO curNodeInfo;
+				curNodeInfo.mnn = min(cur->data, left.mnn);
+				curNodeInfo.mx = max(cur->data, right.mx);
+				curNodeInfo.cnt = left.cnt + right.cnt + 1;
+
+				if(left.isBST && right.isBST && cur->data >= left.mx && cur->data <= right.mnn){
+					curNodeInfo.isBST = true;
+					count = max(count, curNodeInfo.cnt);
+					return curNodeInfo;
+				}
+				return curNodeInfo;
+			}
+
+			int largestBST(TreeNode * root){
+				int Largest = 0;
+				Solve(root, Largest);
+				return Largest;   
+			}
+---------------------------------------------------------------------------------------------------------
+	16/12/24
+Lecture-74: Heaps in C++:
+	A Heap is a complete binary tree data structure that satisfies the heap property: for every node, the value of its children is greater than or equal to its own value.
+	Heaps are usually used to implement priority queues, where the smallest (or largest) element is always at the root of the tree.
+
+	CBT(Complete Binary Tree): A complete binary tree is a type of binary tree where all levels are completely filled, except possibly the last level. 
+								nodes in the last level are as far left as possible	
+	
+	- in CBT the leaf nodes starts from index (n/2 + 1), where n is no.of nodes in tree
+	examples of Complete Binary Tree (CBT):
+				         4				|      	  4				|	   4
+				       /   \			|       /    \			|	  /  \
+				     6       7			|      6      7			|    6    7
+				    / \     /  \ 		|     / \    / 			|	/ \   / \
+				   9   10  11  15		|    9   10 11  		|  9  10 11  12
+				  /					    |						|
+				 14					    |						|
+		here leaf nodes are
+		(8/2 + 1) = 5
+		so, total leaf node in CBT
+		=totalsize - leafNodestart+1
+		= 8 - 5 + 1 = 4.
+		above tree have 4 leaf nodes
+	
+	examples of min-Heap:
+					     		|	min-heap		|			min-Heap
+				 1				|    				|			     1
+			   /   \			|		5 			|		       /   \
+		      3     6			|					|		     3       6
+		    /   \				|					|		    / \     / \
+		   5	9				|		     		|		   5   9   8   7
+
+	- in min-Heap the parent is always lesser or equal to childs it must be CBT.
+	- the max-heap is the opposite of min-heap
+	Heap:
+		❌Pending
+
+	Q.1. Build Min Heap:
+		https://www.naukri.com/code360/problems/build-min-heap_1171167
+		Problem statement
+			You are given an array 'ARR' of integers having 'N' elements. Your task is to convert the input array into a min-Binary Heap.
+			A min-Binary heap is a complete binary tree in which the value of each internal node is smaller than or equal to the values of the children of that node.
+			Note :
+			1. Input array follows 0 - based indexing. 
+			2. After constructing the min-heap, the Left child of the 'i-th' node should be present at the (2*i + 1)-th index if it exists.
+			3. After constructing the min-heap, the Right child of the 'i-th' node should be present at the (2*i + 2)-th index if it exists.
+			4. Note that you do not need to create a tree, just update the array.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^4
+				-10^9 <= ARR[i] <= 10^9
+				Where 'ARR[i]' denotes the 'i-th' element of the array 'ARR'.
+				Time Limit: 1 sec
+			Sample Input 1 :
+				2
+				5
+				9 3 2 6 7 
+				4
+				1 3 2 4
+				Sample Output 1 :
+				1
+				1
+				Explanation For Sample Input 1 :
+				For the first test case:
+				One possible min-heap representation of the input array is the array [ 2, 3, 6, 7, 9 ]. Note that other arrays like [ 2, 6, 3, 9, 7 ], [ 2, 3, 6, 9, 7 ] also represent min-heap.
+				For the second test case: 
+				The input array is already a min-heap, so we do not need to modify it.
+				Sample Input 2 :
+				2
+				5
+				1 3 5 4 6
+				3
+				8 9 0
+				Sample Output 2 :
+				1 
+				1
+				Explanation For Sample Input 2 :
+				For the first test case:
+				One possible min-heap representation of the input array is the array [ 1, 3, 5, 4, 6 ] which is the same as the input array. 
+				For the second test case: 
+				One possible min-heap representation of the input array is the array [ 0, 8, 9 ].
+
+		#include <bits/stdc++.h>
+		void Heapify(vector<int> &a, int i){
+			int leftNodeIndex = 2*i+1;
+			int rightNodeIndex = 2*i+2;
+			int smaller = i;
+
+			if(leftNodeIndex < a.size() and a[i] > a[leftNodeIndex]){
+				swap(a[i], a[leftNodeIndex]);
+				smaller = leftNodeIndex;
+			}
+
+			if(smaller != i) Heapify(a, smaller);
+
+			if(rightNodeIndex < a.size() and a[i] > a[rightNodeIndex]){
+				swap(a[i], a[rightNodeIndex]);
+				smaller = rightNodeIndex;
+			}
+
+			if(smaller == i) return;
+			Heapify(a, smaller);    
+		}
+		vector<int> buildMinHeap(vector<int> &arr) {
+			// the leaf nodes in array starts from (n/2)th index of node to till n
+			// so we can skip the process for them
+			int n = arr.size();
+			for(int i=n/2-1; i>=0; i--) Heapify(arr, i);   
+			return arr;   
+		}
+
+		// Or
+			#include <bits/stdc++.h>
+			void Heapify(vector<int> &a, int i){
+				int leftNodeIndex = 2*i+1;
+				int rightNodeIndex = 2*i+2;
+				int smaller = i, n = a.size();
+
+				if(leftNodeIndex < n and a[smaller] > a[leftNodeIndex]) smaller = leftNodeIndex;
+					
+				if(rightNodeIndex < n and a[smaller] > a[rightNodeIndex]) smaller = rightNodeIndex;
+
+				if(smaller == i) return;
+				swap(a[i], a[smaller]);
+				Heapify(a, smaller);
+			}
+			vector<int> buildMinHeap(vector<int> &arr) {
+				int n = arr.size();
+				for(int i=n/2-1; i>=0; i--) Heapify(arr, i);  
+				return arr;   
+			}
+
+	Q.2. Build Heap (Max Heap): (Refer POTD: 1150)
+
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -67851,8 +68110,8 @@ POTD:-[Problem of the Day]
 				1 <= r, c <= 100
 				0 <= matrix[i] <= 100
 
-		class Solution {   
-		public: 
+		class Solution {
+			public:
 			//Function to return a list of integers denoting spiral traversal of matrix.
 			vector<int> spirallyTraverse(vector<vector<int>> m, int r, int c) {
 				vector<int> ans;
@@ -67896,6 +68155,48 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 		};
+	
+		// or
+			class Solution {
+				public:
+				vector<int> spirallyTraverse(vector<vector<int>> &mat) {
+					vector<int> ans;
+					int SC, EC, SR, ER;				
+					// SC: Start column,  EC: End column
+					// SR: Start row, ER: End row
+					SC = SR = 0;
+					EC = mat[0].size()-1;
+					ER = mat.size()-1;
+
+					int total = (EC+1) * (ER+1);
+					while(total){
+						for(int i=SC; i<=EC and total; i++){
+							total--;
+							ans.push_back(mat[SR][i]);
+						}
+						SR++;
+						
+						for(int i=SR; i<=ER and total; i++){
+							total--;
+							ans.push_back(mat[i][EC]);
+						}
+						EC--;
+						
+						for(int i=EC; i>=SC and total; i--){
+							total--;
+							ans.push_back(mat[ER][i]);
+						}
+						ER--;
+						
+						for(int i=ER; i>=SR and total; i--){
+							total--;
+							ans.push_back(mat[i][SC]);
+						}
+						SC++;
+					}
+					return ans;
+				}
+			};	
 
 	466) Rotating an Array:
 		https://www.geeksforgeeks.org/problems/reversal-algorithm5340/1
@@ -114775,6 +115076,30 @@ POTD:-[Problem of the Day]
 				}
 			};
 
+		// TC: O(n) & SC: O(log(n)): ❌Pending
+			int countNodes(LNode* h){
+				int cnt = 0;
+				while(h){
+					cnt++;
+					h = h -> next;
+				}
+				return cnt;
+			}  
+			TNode* Tree(LNode* &L, int n){
+				if(n <= 0 || !L) return NULL;
+				
+				TNode* left = Tree(L, n/2);
+				TNode* root = new TNode(L->data);
+				root -> left = left;
+				
+				L = L -> next;
+				root -> right = Tree(L, n-n/2-1);
+				return root;
+			}
+			TNode *sortedListToBST(LNode *head) {
+				return Tree(head, countNodes(head));
+			}
+
 	1145) K-th element of two Arrays:
 		Problem Statement:
 			Given two sorted arrays a[] and b[] and an element k, the task is to find the element that would be at the kth position of the combined sorted array.
@@ -114819,15 +115144,382 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-1146)
+	1146) Check for BST:
+		Problem Statement:
+			Given the root of a binary tree. Check whether it is a BST or not.
+			Note: We are considering that BSTs can not contain duplicate Nodes.
+			A BST is defined as follows:
 
-1147)
+			The left subtree of a node contains only nodes with keys less than the node's key.
+			The right subtree of a node contains only nodes with keys greater than the node's key.
+			Both the left and right subtrees must also be binary search trees.
+			Examples:
 
-1148)
+			Input: root[] = [2, 1, 3, N, N, N, 5]
+				2
+			/    \
+			1      3
+					\
+					5
+			Output: true 
+			Explanation: 
+			The left subtree of every node contains smaller keys and right subtree of every node contains greater. Hence, the tree is a BST.
+			Input: root[] = [2, N, 7, N, 6, N, 9]
+			2
+			\
+			7
+				\
+				6
+				\
+				9
+			Output: false 
+			Explanation: 
+			Since the node with value 7 has right subtree nodes with keys less than 7, this is not a BST. 
+			Input: root[] = [10, 5, 20, N, N, 9, 25]
+			10
+			/    \
+			5      20
+				/   \
+				9     25
+			Output: false
+			Explanation: The node is present in the right subtree of 10, but it is smaller than 10.
+			Constraints:
+				1 ≤ number of nodes ≤ 10^5
+				1 ≤ node->data ≤ 10^9
 
-1149)
+		class Solution {
+			public: // Function to check whether a Binary Tree is BST or not.
+			void inorder(Node* n, vector<int> &v){
+				if(!n) return;
+				
+				inorder(n -> left, v);
+				v.push_back(n->data);
+				inorder(n -> right, v);
+			}
+			bool isBST(Node* root) {
+				vector<int> hold;
+				inorder(root, hold);
+				if(is_sorted(hold.begin(), hold.end())) return 1;
+				return 0;
+			}
+		};
 
-1150)
+		// or
+		class Solution {
+			public:// Function to check whether a Binary Tree is BST or not.
+			bool valid(Node* root, int s, int e){
+				if(!root) return 1;
+				if(root->data < s or root->data > e) return 0;
+				return valid(root->left, s, root->data) and valid(root->right, root->data, e);
+			}
+			bool isBST(Node* root) {
+				return valid(root, INT_MIN, INT_MAX);
+			}
+		};
+
+	1147) Aggressive Cows:
+		Problem Statement:
+			You are given an array with unique elements of stalls[], which denote the position of a stall. You are also given an integer k which denotes the number of aggressive cows. Your task is to assign stalls to k cows such that the minimum distance between any two of them is the maximum possible.
+			Examples :
+			Input: stalls[] = [1, 2, 4, 8, 9], k = 3
+			Output: 3
+			Explanation: The first cow can be placed at stalls[0], 
+			the second cow can be placed at stalls[2] and 
+			the third cow can be placed at stalls[3]. 
+			The minimum distance between cows, in this case, is 3, which also is the largest among all possible ways.
+			Input: stalls[] = [10, 1, 2, 7, 5], k = 3
+			Output: 4
+			Explanation: The first cow can be placed at stalls[0],
+			the second cow can be placed at stalls[1] and
+			the third cow can be placed at stalls[4].
+			The minimum distance between cows, in this case, is 4, which also is the largest among all possible ways.
+			Input: stalls[] = [2, 12, 11, 3, 26, 7], k = 5
+			Output: 1
+			Explanation: Each cow can be placed in any of the stalls, as the no. of stalls are exactly equal to the number of cows.
+			The minimum distance between cows, in this case, is 1, which also is the largest among all possible ways.
+			Constraints:
+				2 <= stalls.size() <= 10^6
+				0 <= stalls[i] <= 10^8
+				1 <= k <= stalls.size()
+
+		// Brute Force:
+			class Solution {
+				public:
+				int aggressiveCows(vector<int> &stalls, int k) {
+					sort(stalls.begin(), stalls.end());
+					int minum = 0, n = stalls.size(), curDist = 1;
+					while(1){
+						int cows = k-1;    // one cow is already placed at 
+						int prev = 0;
+						for(int i=1; i<n and cows; i++){
+							if(stalls[i] - stalls[prev] >= curDist){
+								prev = i;
+								cows--;
+							}
+						}
+						if(cows)       // if still cows remain means we cant afford this curDist
+							break; 
+						minum = curDist;
+						curDist++;
+					}
+					return minum;
+				}
+			};
+		
+		// Optimized (Binary Search):
+			class Solution {
+				public:
+				bool isPossibleToPlaceCows(vector<int> &v, int cows, int dist){
+					int prevIndex = 0, n=v.size();
+					cows--;  // first cow placed at 0th index.
+					
+					for(int i=1; i<n and cows; i++){
+						if(v[i] - v[prevIndex] >= dist){
+							prevIndex = i;
+							cows--;
+						}
+						/*
+							if(v[i] - v[prevIndex] < dist) continue;
+							prevIndex = i;
+							cows--;
+						*/
+					}
+					if(cows) return 0;
+					return 1;
+				}
+				int aggressiveCows(vector<int> &stalls, int k) {
+					sort(stalls.begin(), stalls.end());
+					int low = 0, high = stalls.back() - stalls.front();     // this is the range of distance (max possible distance is diff between end & start value)
+					while(low <= high){
+						int curDistance = (low+high)/2;
+						if(isPossibleToPlaceCows(stalls, k, curDistance)) low = curDistance + 1;
+						else high = curDistance - 1;
+					}
+					return high;
+				}
+			};
+
+	1148) Is Height Balanced Binary Tree:
+		Problem Statement:
+			You are given the root node of a binary tree.
+			Return 'true' if it is a height balanced binary tree.
+			Note:
+			Height of a tree is the maximum number of nodes in a path from the node to the leaf node.
+			An empty tree is a height-balanced tree. A non-empty binary tree is a height-balanced binary tree if
+			1. The left subtree of a binary tree is already the height-balanced tree.
+			2. The right subtree of a binary tree is also the height-balanced tree.
+			3. The difference between heights of left subtree and right subtree must not more than ‘1’.
+			Example:
+			Input: Consider the binary tree given below:
+			Output: 'true'
+			Explanation:
+			Consider subtree at Node ( 7 ) 
+			Left subtree height is ‘0’ and right subtree height is ‘0’, the absolute height difference is ‘0-0 = 0’ and ‘0’ is not more than ‘1’ so subtree at Node ( 7 ) is a height-balanced binary tree. 
+			Same for subtrees at Nodes ( 5, 6 ). 
+			Consider subtree at Node ( 4 ) 
+			Left subtree height is ‘1’ and right subtree height is ‘0’, the absolute height difference is ‘1-0 = 1’ and ‘1’ is not more than ‘1’ so subtree at Node ( 4 ) is a height-balanced binary tree.
+			Same for subtree at Node ( 3)
+			Consider subtree at Node ( 2 ) 
+			Left subtree height is ‘2’ and right subtree height is ‘1’, the absolute height difference is ‘2-1 = 1’ and ‘1’ is not more than ‘1’ so subtree at Node ( 2 ) is a height-balanced binary tree.
+			Consider subtree at Node ( 1 ) 
+			Left subtree height is ‘3’ and right subtree height is ‘2’, the absolute height difference is ‘3-2 = 1’ and ‘1’ is not more than ‘1’ so subtree at Node ( 1 ) is a height-balanced binary tree.
+			Because the root node ( 1 ) is a height-balanced binary tree, so the complete tree is height-balanced.
+			Sample Input 1:
+			1 2 3 4 -1 -1 -1 -1 5 -1 -1
+			Expected Answer:
+			false
+			Output on console:
+			false
+			Explanation of sample input 1:
+			Consider the root  Node ( 1 ) 
+			Left subtree height is ‘3’ ( 1->2->4->5) and right subtree height is ‘1’ ( 1->3), the absolute height difference is ‘2-1 = 2’ and ‘2’ is more than ‘1’ so subtree at Node ( 1 ) is not a height-balanced binary tree.
+			Hence we return ‘false’.
+			Sample Input 2:
+			1 2 3 4 -1 -1 5 -1 -1 -1 -1
+			Expected Answer:
+			true
+			Output on console:
+			true
+			Explanation of sample input 2:
+			Consider the subtree at Node ( 4 ) 
+			Left subtree height is ‘0’ and right subtree height is ‘0’, the absolute height difference is ‘0-0 = 0’ and ‘0’ is not more than ‘1’ so subtree at Node ( 4 ) is a height-balanced binary tree.
+			Same for subtree at Node ( 5 ).
+			Consider the subtree at Node ( 2 ) 
+			Left subtree height is ‘1’ and right subtree height is ‘0’, the absolute height difference is ‘1-0 = 1’ and ‘1’ is not more than ‘1’ so subtree at Node ( 2 ) is a height-balanced binary tree.
+			Same for subtree at Node ( 3 ).
+			Consider the subtree at Node ( 1 ) 
+			Left subtree height is ‘2’ (1->2->4) and right subtree height is ‘2’ (1->3->5), the absolute height difference is ‘2-2 = 0’ and ‘0’ is not more than ‘1’ so subtree at Node ( 1 ) is a height-balanced binary tree.
+			Hence root node (1) is a height-balanced binary tree that’s why the complete tree is a height-balanced binary tree. 
+			Hence we return ‘true’.
+			Expected Time Complexity:
+			Try to do this in O(n).
+			Constraints:
+			0 <= n <= 10000
+			Where 'n' is the total number of nodes in the binary tree.
+			Time Limit: 1 sec
+		
+		/************************************************************
+			Following is the TreeNode class structure
+			template <typename T>
+			class TreeNode {
+				public:
+				T val;
+				TreeNode<T> *left, *right;
+				TreeNode(T val) {
+					this->val = val;
+					left = right = NULL;
+				}
+			};
+		************************************************************/
+		bool BalancedHelper(TreeNode<int>* n, int &H){
+			if(!n) return true;
+
+			int leftH, rightH;
+			leftH = rightH = 0;
+			bool isLeftBalanced = BalancedHelper(n->left, leftH);
+			bool isRightBalanced = BalancedHelper(n->right, rightH);
+
+			H = max(leftH, rightH) + 1;
+			if(!isLeftBalanced or !isRightBalanced) return false;
+			return abs(leftH - rightH) <= 1;
+		}
+		bool isBalancedBT(TreeNode<int>* root){
+			int height=0;
+			return BalancedHelper(root, height);
+		}
+
+		// or
+			pair<bool, int> Solver(TreeNode<int>* n){
+				if(!n) return {true, 0};                    // returning the height & the balanced status of current node
+
+				pair<bool, int> leftSide = Solver(n->left);
+				pair<bool, int> rightSide = Solver(n->right);
+
+				pair<bool, int> curNode;
+				curNode.first = leftSide.first and rightSide.first and abs(leftSide.second - rightSide.second) <= 1;
+				curNode.second = max(leftSide.second, rightSide.second) + 1;
+				return curNode;
+			}
+			bool isBalancedBT(TreeNode<int>* root){
+				return Solver(root).first;
+			}
+
+	1149) Kth Missing Positive Number in a Sorted Array:
+		Problem Statement:
+			Given a sorted array of distinct positive integers arr[], we need to find the kth positive number that is missing from arr[].  
+			Examples :
+			Input: arr[] = [2, 3, 4, 7, 11], k = 5
+			Output: 9
+			Explanation: Missing are 1, 5, 6, 8, 9, 10… and 5th missing number is 9.
+			Input: arr[] = [1, 2, 3], k = 2
+			Output: 5
+			Explanation: Missing are 4, 5, 6… and 2nd missing number is 5.
+			Input: arr[] = [3, 5, 9, 10, 11, 12], k = 2
+			Output: 2
+			Explanation: Missing are 1, 2, 4, 6… and 2nd missing number is 2.
+			Constraints:
+				1 <= arr.size() <= 10^5
+				1 <= k <= 10^5
+				1 <= arr[i]<= 10^6
+
+		class Solution {
+			public:
+			int kthMissing(vector<int> &arr, int k) {
+				int cnt = 1, n=arr.size();
+				int i=0;
+				while(i<n){
+					if(arr[i] == cnt) i++;
+					else k--;
+					if(k == 0) return cnt;
+					cnt++;
+				}
+				return arr.back()+k; 
+			}
+		};
+
+		// or using space:
+			class Solution {
+				public:
+				int kthMissing(vector<int> &arr, int k) {
+					int cnt = 1, n=arr.size(), i=0;
+					vector<int> hold;
+					while(i<n){
+						if(arr[i] == cnt) i++;
+						else hold.push_back(cnt);
+						if(hold.size() == k) return hold.back();			// return cnt;
+						cnt++;
+					}
+					return arr.back()+(k-hold.size()); 
+				}
+			};
+
+1150) Build Heap (Max HEAP)
+	https://www.naukri.com/code360/problems/build-heap_975375
+	Problem statement
+		You are given an integer array with N elements. Your task is to build a max binary heap from the array.
+		A max-heap is a complete binary tree in which the value of each internal node is greater than or equal to the values of the children of that node.
+		Note :
+		You do not need to print anything, just return the vector representation of the heap such that the input array follows 0 - based indexing and :
+		The left child of the ith node is at (2 * i + 1)th index.
+		The right child of the ith node is at (2 * i + 2)th index.
+		Parent of the node present at ith index is at (i - 1) / 2 indexes.
+		Constraints :
+			1 <= T <= 10
+			1 <= N <= 10^4
+			-10^9 <= data <= 10^9 
+		Sample Input 1:
+			1
+			5
+			4 10 3 5 1
+			Sample Output 1:
+			1
+			Explanation For Sample Input 1:
+			One possible max-heap representation of array = 10 5 3 4 1
+			Sample Input 2:
+			1
+			11
+			1 3 5 4 6 13 10 9 8 15 17
+			Sample Output 2:
+			1
+
+	#include <bits/stdc++.h> 
+	void MAX_HEAP(vector<int> &a, int i){
+		int n = a.size(), currentMaxElementIndex = i;
+		int leftIndex = 2*i+1;
+		int rightIndex = 2*i+2;
+
+		if(leftIndex < n and a[currentMaxElementIndex] < a[leftIndex]) currentMaxElementIndex = leftIndex;
+		if(rightIndex < n and a[currentMaxElementIndex] < a[rightIndex]) currentMaxElementIndex = rightIndex;
+
+		if(currentMaxElementIndex == i) return;
+		swap(a[i], a[currentMaxElementIndex]);
+		MAX_HEAP(a, currentMaxElementIndex);
+	}
+	vector<int> buildHeap(vector<int> arr, int n) {
+		for(int i=n/2-1; i>=0; i--) MAX_HEAP(arr, i);
+		return arr;
+	}
+
+1151) 
+
+1152)
+
+1153)
+
+1154)
+
+1155)
+
+1156)
+
+1157)
+
+1158)
+
+1159)
+
+1160)
+
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
 	1) Plus Minus:
