@@ -27334,7 +27334,7 @@ Lecture-74: Heaps in C++:
 	Heaps are usually used to implement priority queues, where the smallest (or largest) element is always at the root of the tree.
 
 	CBT(Complete Binary Tree): A complete binary tree is a type of binary tree where all levels are completely filled, except possibly the last level. 
-								nodes in the last level are as far left as possible	
+								nodes in the last level are as far left as possible	(in last level nodes filled from left side).
 	
 	- in CBT the leaf nodes starts from index (n/2 + 1), where n is no.of nodes in tree
 	examples of Complete Binary Tree (CBT):
@@ -27362,8 +27362,103 @@ Lecture-74: Heaps in C++:
 
 	- in min-Heap the parent is always lesser or equal to childs it must be CBT.
 	- the max-heap is the opposite of min-heap
+	- Building min-Heap or max-Heap will take O(n) time complexity. & O(n) space complexity.
+	// inserting element into Heap TC: O(log n)
 	Heap:
-		❌Pending
+		#include <bits/stdc++.h>
+		using namespace std;
+		class MAX_HEAP{
+			public:
+				int arr[1000]={0};
+				int size=0;
+			
+			// TC: O(log n)
+			void insert(int val){
+				int index = ++size;
+				arr[index] = val;     
+				while(index > 1){
+					int parent = index/2;
+					if(arr[index] <= arr[parent]) return;
+					swap(arr[index], arr[parent]), index = parent; 
+				}
+			}
+			// TC: O(log n)
+			void deleteFromHeap(){
+				if(size == 0){
+					std::cout << "HEAP is empty, Nothing to Delete" << std::endl;
+					return;
+				}
+				arr[1] = arr[size--];
+				
+				// propagat the root to its proper place
+				int index = 1;
+				while(index < size){
+					int curIndex = index;
+					int leftSide = 2*index, rightSide = 2*index+1;
+					
+					if(leftSide <= size and arr[curIndex] < arr[leftSide]) curIndex = leftSide;
+					if(rightSide <= size and arr[curIndex] < arr[rightSide]) curIndex = rightSide;
+					
+					if(curIndex == index) return;
+					swap(arr[curIndex], arr[index]);
+					index = curIndex;
+				}
+			}
+			void PrintHeap(){
+				if(size == 0){
+					std::cout << "HEAP is empty, Nothing to print" << std::endl;
+					return;
+				}
+				for(int i=1; i<=size; i++)
+					cout<<arr[i]<<"\t";
+				cout<<endl;
+			}
+			void TopElement(){
+				std::cout << "Top element in Heap: ";
+				if(size >= 1) std::cout << arr[1] << std::endl;
+				else std::cout << "Heap is empty" << std::endl;
+			}
+		};
+		int main() {
+			MAX_HEAP h;
+			// h.insert(50);
+			// h.insert(55);
+			// h.insert(53);
+			// h.insert(52);
+			// h.insert(54);
+			h.insert(60);
+			h.insert(70);
+			h.insert(100);
+			h.insert(90);
+			h.insert(80);
+			h.PrintHeap();
+			
+			h.TopElement();
+			h.deleteFromHeap();
+			h.PrintHeap();
+			
+			h.TopElement();
+			h.deleteFromHeap();
+			h.PrintHeap();
+			
+			h.TopElement();
+			h.deleteFromHeap();
+			h.PrintHeap();
+			
+			h.TopElement();
+			h.deleteFromHeap();
+			h.PrintHeap();
+			
+			h.TopElement();
+			h.deleteFromHeap();
+			h.PrintHeap();
+			return 0;
+		}
+
+	#Heapify Algorithm:
+		- Converting the given array into min or max Heap.
+		- we can just process the non-leaf nodes here. if we consider 0-based index, non-leaf nodes starts from  (n/2).
+		  or if 1-based indexing then non-leaf nodes starts from (n/2)+1.
 
 	Q.1. Build Min Heap:
 		https://www.naukri.com/code360/problems/build-min-heap_1171167
@@ -27415,19 +27510,15 @@ Lecture-74: Heaps in C++:
 			int leftNodeIndex = 2*i+1;
 			int rightNodeIndex = 2*i+2;
 			int smaller = i;
-
 			if(leftNodeIndex < a.size() and a[i] > a[leftNodeIndex]){
 				swap(a[i], a[leftNodeIndex]);
 				smaller = leftNodeIndex;
 			}
-
 			if(smaller != i) Heapify(a, smaller);
-
 			if(rightNodeIndex < a.size() and a[i] > a[rightNodeIndex]){
 				swap(a[i], a[rightNodeIndex]);
 				smaller = rightNodeIndex;
 			}
-
 			if(smaller == i) return;
 			Heapify(a, smaller);    
 		}
@@ -27462,7 +27553,112 @@ Lecture-74: Heaps in C++:
 
 	Q.2. Build Heap (Max Heap): (Refer POTD: 1150)
 
+	# Heap Sort: TC: O(n log(n))
+		#include <iostream>
+		using namespace std;
+		void TO_MAX_HEAP(int a[], int index, int size){
+			int leftSide = 2*index+1, rightSide = 2*index+2;
+			int largeIndex = index;
+			
+			if(leftSide < size and a[largeIndex] < a[leftSide]) largeIndex = leftSide;
+			if(rightSide < size and a[largeIndex] < a[rightSide]) largeIndex = rightSide;
+
+			if(largeIndex == index) return;
+			swap(a[largeIndex], a[index]);
+			TO_MAX_HEAP(a, largeIndex, size);
+		}
+		void MX_HP(int a[], int &index, int val){
+			int size = index;
+			a[index++] = val;
+			
+			while(size > 0){
+				int parent = (size&1) ? size/2 : (size-1)/2;
+				if(a[parent] > a[size]) return;
+				swap(a[parent], a[size]);
+				size = parent;
+			}
+		}
+		void HEAP_SORT(int a[], int n){
+			int lastIndex = n-1;                  // this is considering as size of array
+			while(lastIndex > 0){
+				swap(a[0], a[lastIndex]);
+				TO_MAX_HEAP(a, 0, lastIndex);
+				lastIndex--;                      // decrementing the size of array
+			} 
+		}
+		inline void PRINT(int a[], int n){
+			for(int i=0; i<n; i++)
+				cout<<a[i]<<"\t";
+			std::cout << std::endl;
+		}
+		int main() {
+			int arr[] = {8, 7, 9, 5, 1, 2, 3, 6, 4, 10};
+			int n = 10;
+			std::cout << "Process half nodes" << std::endl;
+			for(int i=n/2-1; i>=0; i--) TO_MAX_HEAP(arr, i, n);
+			PRINT(arr, n);
+			
+			// processing all nodes, this has bit different sequence
+			int new_arr[] = {8, 7, 9, 5, 1, 2, 3, 6, 4, 10};
+			std::cout << "Process all nodes" << std::endl;
+			int index=0;
+			for(int i=0; i<n; i++) MX_HP(new_arr, index, new_arr[i]);
+			PRINT(new_arr, n);
+			
+			std::cout << "\n Sorted order" << std::endl;
+			HEAP_SORT(arr, n);
+			PRINT(arr, n);
+			return 0;
+		}
+
+	# Priority Queue:
+		MAX-HEAP:
+			#include <iostream>
+			#include <queue>
+			using namespace std;
+			int main() {
+				priority_queue<int> pq;
+				pq.push(31);
+				pq.push(74);
+				pq.push(93);
+				pq.push(23);
+				pq.push(5);
+				
+				std::cout << "is pq empty?: "<<boolalpha<< (pq.empty() ? "YES" : "NO") << std::endl;
+				std::cout << "Top element: "<< pq.top() << "\t Size: "<< pq.size() << std::endl;             pq.pop();
+				std::cout << "Top element: "<< pq.top() << "\t Size: "<< pq.size() << std::endl;            pq.pop();
+				std::cout << "Top element: "<< pq.top() << "\t Size: "<< pq.size() << std::endl;            pq.pop();
+				std::cout << "Top element: "<< pq.top() << "\t Size: "<< pq.size() << std::endl;            pq.pop();
+				std::cout << "Top element: "<< pq.top() << "\t Size: "<< pq.size() << std::endl;            pq.pop();
+				std::cout << "is pq empty?: "<<boolalpha<< (pq.empty() ? "YES" : "NO") << std::endl;
+				return 0;
+			}
+		
+		MIN-HEAP:
+			#include <iostream>
+			#include <queue>
+			using namespace std;
+			int main() {
+				priority_queue<int, vector<int>, greater<int>> pq;
+				pq.push(4);
+				pq.push(2);
+				pq.push(1);
+				pq.push(3);
+				pq.push(5);
+				
+				std::cout << "is pq empty?: "<<boolalpha<< (pq.empty() ? "YES" : "NO") << std::endl;
+				std::cout << "Top element: "<< pq.top() << "\t Size: "<< pq.size() << std::endl             pq.pop();
+				std::cout << "Top element: "<< pq.top() << "\t Size: "<< pq.size() << std::endl;            pq.pop();
+				std::cout << "Top element: "<< pq.top() << "\t Size: "<< pq.size() << std::endl;            pq.pop();
+				std::cout << "Top element: "<< pq.top() << "\t Size: "<< pq.size() << std::endl;            pq.pop();
+				std::cout << "Top element: "<< pq.top() << "\t Size: "<< pq.size() << std::endl;            pq.pop();
+				std::cout << "is pq empty?: "<<boolalpha<< (pq.empty() ? "YES" : "NO") << std::endl;
+				return 0;
+			}
 ---------------------------------------------------------------------------------------------------------
+Lecture 75: Heaps in C++:
+	
+
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -61142,21 +61338,17 @@ POTD:-[Problem of the Day]
 			Given an array arr[] and an integer K where K is smaller than size of array, 
 			the task is to find the Kth smallest element in the given array. It is given that all array elements are distinct.
 			Note :-  l and r denotes the starting and ending index of the array.
-
 			Example 1:
-
 			Input:
 			N = 6
 			arr[] = 7 10 4 3 20 15
 			K = 3
 			L=0 R=5
-
 			Output : 7
 			Explanation :
 			3rd smallest element in the given 
 			array is 7.
 			Example 2:
-
 			Input:
 			N = 5
 			arr[] = 7 10 4 20 15
@@ -61166,11 +61358,8 @@ POTD:-[Problem of the Day]
 			4th smallest element in the given 
 			array is 15.
 			Your Task:
-			You don't have to read input or print anything. 
-			Your task is to complete the function kthSmallest() which takes the array arr[], 
-			integers l and r denoting the starting and ending index of the array and 
-			an integer K as input and returns the Kth smallest element.
-			
+			You don't have to read input or print anything. Your task is to complete the function kthSmallest() which takes the array arr[], 
+			integers l and r denoting the starting and ending index of the array and an integer K as input and returns the Kth smallest element.
 			
 			Expected Time Complexity: O(n*log(n))
 			Expected Auxiliary Space: O(log(n))
@@ -61270,6 +61459,34 @@ POTD:-[Problem of the Day]
 				}
 			};
 	
+		Problem Statement:
+			Given an array arr[] and an integer k where k is smaller than the size of the array, the task is to find the kth smallest element in the given array.
+			Follow up: Don't solve it using the inbuilt sort function.
+			Examples :
+			Input: arr[] = [7, 10, 4, 3, 20, 15], k = 3
+			Output:  7
+			Explanation: 3rd smallest element in the given array is 7.
+			Input: arr[] = [2, 3, 1, 20, 15], k = 4 
+			Output: 15
+			Explanation: 4th smallest element in the given array is 15.
+			Expected Time Complexity: O(n+(max_element) )
+			Expected Auxiliary Space: O(max_element)
+			Constraints:
+				1 <= arr.size <= 10^6
+				1<= arr[i] <= 10^6
+				1 <= k <= n
+
+		// using sort:
+			class Solution {
+				public: // arr : given array // k : find kth smallest element and return using this function
+				int kthSmallest(vector<int> &arr, int k) {
+					sort(arr.begin(), arr.end());
+					return arr[k-1];
+				}
+			};
+		
+		
+
 	379) Kth Largest Element in an Array:
 		Problem statement:
 			Given an integer array nums and an integer k, return the kth largest element in the array.
@@ -112678,6 +112895,29 @@ POTD:-[Problem of the Day]
 					return arr;
 				}
 			};
+		
+		// or
+		class Solution {
+			public:
+			vector<int> modifyAndRearrangeArray(vector<int> &arr) {
+				int n=arr.size();
+				for(int i=0; i<n-1; i++)
+					if(arr[i] != 0 and arr[i] == arr[i+1])
+						arr[i] =  2 * arr[i], arr[i+1] = 0;
+				
+				int j=0;
+				// for(int i=0; i<n; i++)
+				//     if(arr[i] != 0) arr[j++] = arr[i];
+					
+				// for(j; j<n; j++) arr[j] = 0;
+				
+				//or
+				for(int i=0; i<n; i++)
+					if(arr[i]) swap(arr[i], arr[j++]);
+				
+				return arr;
+			}
+		};
 
 	1106) Circular Sentence:
 		Problem Statement:
@@ -115453,56 +115693,172 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1150) Build Heap (Max HEAP)
-	https://www.naukri.com/code360/problems/build-heap_975375
-	Problem statement
-		You are given an integer array with N elements. Your task is to build a max binary heap from the array.
-		A max-heap is a complete binary tree in which the value of each internal node is greater than or equal to the values of the children of that node.
-		Note :
-		You do not need to print anything, just return the vector representation of the heap such that the input array follows 0 - based indexing and :
-		The left child of the ith node is at (2 * i + 1)th index.
-		The right child of the ith node is at (2 * i + 2)th index.
-		Parent of the node present at ith index is at (i - 1) / 2 indexes.
-		Constraints :
-			1 <= T <= 10
-			1 <= N <= 10^4
-			-10^9 <= data <= 10^9 
-		Sample Input 1:
+	1150) Build Heap: (Max HEAP):
+		https://www.naukri.com/code360/problems/build-heap_975375
+		Problem statement
+			You are given an integer array with N elements. Your task is to build a max binary heap from the array.
+			A max-heap is a complete binary tree in which the value of each internal node is greater than or equal to the values of the children of that node.
+			Note :
+			You do not need to print anything, just return the vector representation of the heap such that the input array follows 0 - based indexing and :
+			The left child of the ith node is at (2 * i + 1)th index.
+			The right child of the ith node is at (2 * i + 2)th index.
+			Parent of the node present at ith index is at (i - 1) / 2 indexes.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^4
+				-10^9 <= data <= 10^9 
+			Sample Input 1:
+				1
+				5
+				4 10 3 5 1
+				Sample Output 1:
+				1
+				Explanation For Sample Input 1:
+				One possible max-heap representation of array = 10 5 3 4 1
+				Sample Input 2:
+				1
+				11
+				1 3 5 4 6 13 10 9 8 15 17
+				Sample Output 2:
+				1
+
+		#include <bits/stdc++.h> 
+		void MAX_HEAP(vector<int> &a, int i){
+			int n = a.size(), currentMaxElementIndex = i;
+			int leftIndex = 2*i+1;
+			int rightIndex = 2*i+2;
+
+			if(leftIndex < n and a[currentMaxElementIndex] < a[leftIndex]) currentMaxElementIndex = leftIndex;
+			if(rightIndex < n and a[currentMaxElementIndex] < a[rightIndex]) currentMaxElementIndex = rightIndex;
+
+			if(currentMaxElementIndex == i) return;
+			swap(a[i], a[currentMaxElementIndex]);
+			MAX_HEAP(a, currentMaxElementIndex);
+		}
+		vector<int> buildHeap(vector<int> arr, int n) {
+			for(int i=n/2-1; i>=0; i--) MAX_HEAP(arr, i);
+			return arr;
+		}
+
+	1151) Rotate by 90 degree: (Refer POTD: 460):
+		Problem Statement:
+			Given a square mat[][]. The task is to rotate it by 90 degrees in clockwise direction without using any extra space.
+			Examples:
+			Input: mat[][] = [[1 2 3], [4 5 6], [7 8 9]]
+			Output:
+			7 4 1 
+			8 5 2
+			9 6 3
+			Input: mat[][] = [1 2], [3 4]
+			Output:
+			3 1 
+			4 2
+			Input: mat[][] = [[1]]
+			Output:
 			1
-			5
-			4 10 3 5 1
-			Sample Output 1:
+			Constraints:
+				1 ≤ mat.size() ≤ 1000
+				1 <= mat[][] <= 100
+		/* matrix : given input matrix, you are require
+		to change it in place without using extra space */
+
+		// Using extra space:
+			void rotate(vector<vector<int> >& mat) {
+				vector<vector<int>> ans;
+				int n = mat.size();
+				for(int col=0; col<n; col++){
+					vector<int> temp;
+					for(int row=n-1; row>=0; row--)
+						temp.push_back(mat[row][col]);
+					ans.push_back(temp);
+				}
+				mat = ans;
+			}	
+
+		void rotate(vector<vector<int> >& mat) {
+		// convert the rows to columns (transpose)
+		int n=mat.size();
+		for(int i=0; i<n; i++)
+			for(int j=i; j<n; j++)
+				swap(mat[i][j], mat[j][i]);
+		
+		// swap vertically, traverse till half row to achieve, & complete column will cover
+		for(int r=0; r<n; r++)
+			for(int c=0; c<(n/2); c++)
+				swap(mat[r][c], mat[r][n-c-1]);
+		}
+
+	1152) Convert Min Heap to Max Heap: (Refer POTD: 1150)
+		Problem Statement:
+			You are given an array arr of N integers representing a min Heap. The task is to convert it to max Heap.
+			A max-heap is a complete binary tree in which the value in each internal node is greater than or equal to the values in the children of that node. 
+			Example 1:
+			Input:
+			N = 4
+			arr = [1, 2, 3, 4]
+			Output:
+			[4, 2, 3, 1]
+			Explanation:
+			The given min Heap:
+					1
+				/   \
+				2       3
+			/
+			4
+			Max Heap after conversion:
+					4
+				/   \
+				2     3
+			/
 			1
-			Explanation For Sample Input 1:
-			One possible max-heap representation of array = 10 5 3 4 1
-			Sample Input 2:
-			1
-			11
-			1 3 5 4 6 13 10 9 8 15 17
-			Sample Output 2:
-			1
+			Example 2:
+			Input:
+			N = 5
+			arr = [3, 4, 8, 11, 13]
+			Output:
+			[13, 11, 8, 3, 4]
+			Explanation:
+			The given min Heap:
+					3
+				/   \
+				4      8
+			/   \ 
+			11     13
+			Max Heap after conversion:
+					13
+				/    \
+				11      8
+			/   \ 
+			3     4
+	
+			Your Task:
+			Complete the function int convertMinToMaxHeap(), which takes integer N and array represented minheap as input and converts it to the array representing maxheap. You don't need to return or print anything, modify the original array itself.
+			Note: Only an unique solution is possible under the expected time complexity.
+			Expected Time Complexity: O(N * log N)
+			Expected Auxiliary Space: O(N)
+			Constraints:
+				1 <= N <= 10^5
+				1 <= arr[i] <= 10^9
 
-	#include <bits/stdc++.h> 
-	void MAX_HEAP(vector<int> &a, int i){
-		int n = a.size(), currentMaxElementIndex = i;
-		int leftIndex = 2*i+1;
-		int rightIndex = 2*i+2;
+		class Solution{
+			public:
+			void To_MAX_HEAP(vector<int> &a, int index){
+				int leftSide = 2*index+1, rightSide = 2*index+2;
+				int n = a.size();
+				int mxElement = index;
+				
+				if(leftSide < n and a[leftSide] > a[mxElement]) mxElement = leftSide;
+				if(rightSide < n and a[rightSide] > a[mxElement]) mxElement = rightSide;
 
-		if(leftIndex < n and a[currentMaxElementIndex] < a[leftIndex]) currentMaxElementIndex = leftIndex;
-		if(rightIndex < n and a[currentMaxElementIndex] < a[rightIndex]) currentMaxElementIndex = rightIndex;
-
-		if(currentMaxElementIndex == i) return;
-		swap(a[i], a[currentMaxElementIndex]);
-		MAX_HEAP(a, currentMaxElementIndex);
-	}
-	vector<int> buildHeap(vector<int> arr, int n) {
-		for(int i=n/2-1; i>=0; i--) MAX_HEAP(arr, i);
-		return arr;
-	}
-
-1151) 
-
-1152)
+				if(mxElement == index) return;
+				swap(a[mxElement], a[index]);
+				To_MAX_HEAP(a, mxElement);
+			}
+			void convertMinToMaxHeap(vector<int> &arr, int N){
+				for(int i=N/2-1; i>=0; i--)
+					To_MAX_HEAP(arr, i);
+			}
+		};
 
 1153)
 
@@ -115520,6 +115876,8 @@ POTD:-[Problem of the Day]
 
 1160)
 
+---------------------------------------------------------------------------------------------------------
+# 450 DSA Sheet Following:
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
 	1) Plus Minus:
