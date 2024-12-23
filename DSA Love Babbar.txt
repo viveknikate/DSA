@@ -27656,8 +27656,89 @@ Lecture-74: Heaps in C++:
 				return 0;
 			}
 ---------------------------------------------------------------------------------------------------------
+	22/12/24
 Lecture 75: Heaps in C++:
-	
+	Q.1. Kth Smallest: (Refer POTD: 378)
+		// Using Priority Queue:
+		class Solution {
+			public:
+			int kthSmallest(vector<int> &arr, int k) {
+				int i=0, n=arr.size();
+				priority_queue<int> pq;         // of size k
+				while(k--)  pq.push(arr[i++]);
+				for(i; i<n; i++)
+					if(arr[i] < pq.top()) pq.pop(), pq.push(arr[i]);
+				return pq.top();
+			}
+		};
+
+	Q.2. Is Binary Tree Heap: (Refer POTD: 1155 - 1160)
+		// Structure of node
+		/*struct Node {
+			int data;
+			Node *left, *right;
+			Node(int val) {
+				data = val;
+				left = right = NULL;
+			}
+		};*/
+
+		class Solution {
+			public:
+			// Morris algorithm Count1 function
+			int Count1(Node* root){
+				int cnt=0;    
+				while(root){
+					if(root -> left){
+						Node* pred = root->left;
+						while(pred->right && pred->right != root)
+							pred = pred -> right;
+						if(pred->right){
+							pred->right = NULL;
+							cnt++;                      // whenever going to right side, need to count the nodes here
+							root = root -> right;
+						}else{
+							pred->right = root;
+							root = root -> left;
+						}
+					}else{
+						cnt++;                          // whenever going to right side, need to count the nodes here
+						root = root -> right;
+					}
+				}
+				return cnt;
+			}
+			// Recursive Count
+			int Count(Node* root){
+				if(!root) return 0;
+				return Count(root->left) + Count(root->right) + 1;
+			}
+			bool isCBT(Node* root, int index, int cnt){
+				if(!root) return 1;
+				if(index >= cnt) return 0;
+				return isCBT(root->left, 2*index+1, cnt) and isCBT(root->right, 2*index+2, cnt);
+			}
+			bool isMaxHeap(Node* root){
+				// leaf node or current root is NULL
+				if(!root or (!root->left and !root->right)) return 1;
+				
+				// only the left part is present
+				if(root -> right == NULL) return root->data > root->left->data;
+				
+				bool left = isMaxHeap(root -> left);
+				bool right = isMaxHeap(root -> right);
+				
+				return left and right and root->data >= root->left->data and root->data >= root->right->data;
+			}
+			bool isHeap(struct Node* tree) {
+				int TotalNodes = Count(tree);  // Count1(tree);
+				return isCBT(tree, 0, TotalNodes) && isMaxHeap(tree);
+			}
+		};
+
+	Q.3. Merge two binary Max heaps:
+		Problem Statement:
+
 
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
@@ -61478,15 +61559,13 @@ POTD:-[Problem of the Day]
 
 		// using sort:
 			class Solution {
-				public: // arr : given array // k : find kth smallest element and return using this function
+				public: // arr : given array, k : find kth smallest element and return using this function
 				int kthSmallest(vector<int> &arr, int k) {
 					sort(arr.begin(), arr.end());
 					return arr[k-1];
 				}
 			};
 		
-		
-
 	379) Kth Largest Element in an Array:
 		Problem statement:
 			Given an integer array nums and an integer k, return the kth largest element in the array.
@@ -61520,7 +61599,38 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-		Can you solve it without sorting? ❌Pending
+		int findKthLargest(vector<int>& nums, int k) {
+			sort(nums.rbegin(), nums.rend());           // sorted in descending order
+			return nums[k-1];
+		}
+
+		Can you solve it without sorting?
+			// Using priority queue:
+			class Solution {
+				public:
+				int findKthLargest(vector<int>& nums, int k) {
+					priority_queue<int, vector<int>, greater<int>> minHeap;
+					int i=0, n=nums.size();
+					while(k--) minHeap.push(nums[i++]);
+					for(; i<n; i++)
+						if(nums[i] > minHeap.top()) minHeap.pop(), minHeap.push(nums[i]);
+					
+					return minHeap.top();           // contains the kth largest element
+				}
+			};
+		
+			class Solution {
+				public:
+				int kthSmallest(vector<int> &arr, int k) {
+					priority_queue<int> pq;         // of size k
+					int n = arr.size();
+					for(int i=0; i<n; i++) pq.push(arr[i]);
+
+					int remove = n-k;
+					while(remove--) pq.pop();
+					return pq.top();
+				}
+			};
 
 	380) Top K Frequent Elements:
 		Problem Statement:
@@ -113913,7 +114023,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	1123) Smallest Positive Missing Number:
+	1123) Smallest Positive Missing Number: (Refer POTD: 4)
 		Problem Statement:
 			You are given an integer array arr[]. Your task is to find the smallest positive number missing from the array.
 			Note: Positive number starts from 1. The array can have negative integers too.
@@ -115860,21 +115970,504 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-1153)
+	1153) Search in a Row-Column sorted matrix:
+		Problem Statement:
+			Given a 2D integer matrix mat[][] of size n x m, where every row and column is sorted in increasing order and a number x, the task is to find whether element x is present in the matrix.
+			Examples:
+			Input: mat[][] = [[3, 30, 38],[20, 52, 54],[35, 60, 69]], x = 62
+			Output: false
+			Explanation: 62 is not present in the matrix, so output is false.
+			Input: mat[][] = [[18, 21, 27],[38, 55, 67]], x = 55
+			Output: true
+			Explanation: 55 is present in the matrix.
+			Input: mat[][] = [[1, 2, 3],[4, 5, 6],[7, 8, 9]], x = 3
+			Output: true
+			Explanation: 3 is present in the matrix.
+			Constraints:
+				1 <= n, m <=1000
+				1 <= mat[i][j] <= 10^9
+				1<= x <= 10^9
+		
+		// Brute Force: TC: O(n²)
+			class Solution {
+				public:
+				bool matSearch(vector<vector<int>> &mat, int x) {
+					int n=mat.size(), m = mat[0].size();
+					for(int i=0; i<n; i++)
+						for(int j=0; j<m; j++)
+							if(mat[i][j] == x) return 1;
+					return 0;
+				}
+			};
 
-1154)
+		// Optimized: TC: O(n+m)
+			class Solution {
+				public:
+				bool matSearch(vector<vector<int>> &mat, int x) {
+					// Bottom left
+					// int n=mat.size()-1, m = mat[0].size()-1;
+					// int row = n, col = 0;
+					// while(row >= 0 and col <= m){
+					//     if(mat[row][col] == x) return 1;
+					//     else if(mat[row][col] < x) col++;
+					//     else row--;
+					// }
+					// return 0;
+					
+					// or Top right
+					int n=mat.size(), m = mat[0].size()-1;
+					int row = 0, col = m;
+					while(row < n && col >=0){
+						if(mat[row][col] == x) return 1;
+						else if(mat[row][col] > x) col--;
+						else row++;
+					}
+					return 0;
+				}
+			};
 
-1155)
+	1154) k largest elements: (Refer POTD: 398)
+		Problem Statement:
+			Given an array arr[] of positive integers and an integer k, Your task is to return k largest elements in decreasing order. 
+			Examples
+			Input: arr[] = [12, 5, 787, 1, 23], k = 2
+			Output: [787, 23]
+			Explanation: 1st largest element in the array is 787 and second largest is 23.
+			Input: arr[] = [1, 23, 12, 9, 30, 2, 50], k = 3 
+			Output: [50, 30, 23]
+			Explanation: Three Largest elements in the array are 50, 30 and 23.
+			Input: arr[] = [12, 23], k = 1
+			Output: [23]
+			Explanation: 1st Largest element in the array is 23.
+			Constraints:
+				1 ≤ k ≤ arr.size() ≤ 10^6
+				1 ≤ arr[i] ≤ 10^6
+		
+		// Using Sorting O(n*log n)
+			class Solution {
+				public:
+				vector<int> kLargest(vector<int>& arr, int k) {
+					vector<int> ans;
+					sort(arr.rbegin(), arr.rend());      // rbegin() & rend() for sorting in descending order
+					int i=0;
+					while(k--)
+						ans.push_back(arr[i++]);
+					return ans;
+				}
+			};
 
-1156)
+	1155) Count Complete Binary Tree Nodes:
+		Problem statement
+			Given a complete binary tree, you are supposed to return the number of nodes in the given tree.
+			In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible.
+			For example:
+			For the binary trees in the image below.
+			The left tree in the image is not a complete binary tree that’s why it is invalid and the right tree in the image is a valid complete binary tree which contains total 6 nodes.
+			Constraints:
+			1 <= T <= 100
+			0 <= N <= 3000
+			0 <= val <= 10^5
+			Where ‘T’ is the number of test cases, and ‘N’ is the total number of nodes in the binary tree, and “val” is the value of the binary tree node
+			Time Limit: 1 sec
+			Sample Input 1:
+			2
+			1 2 3 4 -1 -1 -1 -1 -1
+			1 2 -1 -1 -1
+			Sample Output 1:
+			4 
+			2 
+			Explanation of Sample Input 1:
+			For the first test case, the total number of nodes is 4.
 
-1157)
+			For the second test case, the total number of nodes is 2.
+			Sample Input 2:
+			2
+			2 1 -1 -1 -1
+			0 1 2 4 5 3 6 7 -1 -1 -1 -1 -1 -1 -1 -1 -1
+			Sample Output 2:
+			2
+			8 
+			Explanation of Sample Input 2:
+			For the first test case, the total number of nodes is 2.
+			For the second test case, the total number of nodes is 8.
 
-1158)
+		#include <bits/stdc++.h> 
+		/************************************************************
+			Following is the Binary Tree node class
+			template <typename T = int>
+			class TreeNode {
+				public: 
+				T data;
+				TreeNode<T> *left, *right;
+				TreeNode(T val) {
+					this->data = val;
+					left = right = NULL;
+				}
+				~TreeNode() {
+					if (left != NULL) delete left;
+					if (right != NULL) delete right;
+				}
+			};
+		************************************************************/
+		// TC: O(n) & SC:O(h)
+			int countNodes(TreeNode<int> *root) {
+				if(!root) return 0;
+				return 1 + countNodes(root->left) + countNodes(root->right);
+			}
+			// Using In-order:
+				void InOrder(TreeNode<int>* n, int &cnt){
+					if(!n) return;
+					InOrder(n->left, cnt);
+					cnt++;
+					InOrder(n->right, cnt);
+				}
+				int countNodes(TreeNode<int> *root) {
+					int cnt=0;
+					InOrder(root, cnt);
+					return cnt;
+				}
+			// Using Pre-order:
+				void PreOrder(TreeNode<int>* n, int &cnt){
+					if(!n) return;
+					cnt++;							// Node countend first then going for left then right
+					PreOrder(n->left, cnt);
+					PreOrder(n->right, cnt);
+				}
+				int countNodes(TreeNode<int> *root) {
+					int cnt=0;
+					PreOrder(root, cnt);
+					return cnt;
+				}
+			// Using Post-order:
+				void PostOrder(TreeNode<int>* n, int &cnt){
+					if(!n) return;
+					PostOrder(n->left, cnt);				// going for left first then right then counting the nodes
+					PostOrder(n->right, cnt);
+					cnt++;
+				}
+				int countNodes(TreeNode<int> *root) {
+					int cnt=0;
+					PostOrder(root, cnt);
+					return cnt;
+				}
 
-1159)
+		// Using Morris: TC: O(n) & SC: (1)
+			int countNodes(TreeNode<int> *root) {
+				int cnt=0;
+				while(root){
+					if(root -> left){
+						TreeNode<int>* pred = root -> left;
+						// keep going till you finds NULL or root node
+						while(pred -> right and pred->right != root) pred = pred -> right;
 
-1160)
+						// if you found root, then already made connection so now need to break the connection
+						if(pred->right){
+							pred -> right = NULL;
+							cnt++;
+							root = root -> right;
+						}else{  // NULL case
+							pred -> right = root;
+							root = root -> left;
+						}
+					}else{
+						cnt++;
+						root = root -> right;
+					}
+				}
+				return cnt;
+			}
+
+	1156) Count Complete Tree Nodes: (Refer POTD: 1155)
+		Problem Statement:
+			Given the root of a complete binary tree, return the number of the nodes in the tree.
+			According to Wikipedia, every level, except possibly the last, is completely filled in a complete binary tree, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+				Design an algorithm that runs in less than O(n) time complexity. [O(Log(N)²)]
+			Example 1:
+			Input: root = [1,2,3,4,5,6]
+			Output: 6
+			Example 2:
+			Input: root = []
+			Output: 0
+			Example 3:
+			Input: root = [1]
+			Output: 1
+			Constraints:
+				The number of nodes in the tree is in the range [0, 5 * 10^4].
+				0 <= Node.val <= 5 * 10^4
+				The tree is guaranteed to be complete.
+
+		/**
+		* Definition for a binary tree node.
+		* struct TreeNode {
+		*     int val;
+		*     TreeNode *left;
+		*     TreeNode *right;
+		*     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+		*     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+		*     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+		* };
+		*/
+		// Better: TC: O(Log(N)²) & SC: O(log N)
+		class Solution {
+			public:
+			int countNodes(TreeNode* root) {
+				if(!root) return 0;
+				return 1 + countNodes(root->left) + countNodes(root->right);
+			}
+		};
+
+	1157) Count Number of Nodes in a Binary Tree: (Refer POTD: 1156)
+		Problem Statement:
+			You are given the root of a complete binary tree. Your task is to find the count of nodes.
+			A complete binary tree is a binary tree whose, all levels except the last one are completely filled, the last level may or may not be completely filled and Nodes in the last level are as left as possible.
+			Design an algorithm that runs better than O(n).
+			Example:
+			Input: 
+			root = [1,2,3,4,5,6]
+			Output: 
+			6
+			Explanation: 
+			There are a total of 6 nodes in the given tree.
+
+			Your Task:
+			Complete the function int cnt_nodes(Node *root), which takes the pointer of the root of the given Binary tree and returns the count of its number of nodes.
+			Expected Time Complexity: O((LogN)2).
+			Expected Auxiliary Space: O(Log N).
+			Constraints:
+			0 <= N (number of nodes) <= 5 * 10^4 
+			0 <= value of nodes <= 5 * 10^4
+			The tree is guaranteed to be complete.
+
+		class Solution {
+			public:
+			int countNodes(Node* root) {
+				if(!root) return 0;
+				return 1 + countNodes(root->left) + countNodes(root->right);
+			}
+		};
+		// Better: TC: O(Log(N)²) and SC: O(Log N)
+			class Solution {
+				public:
+				int RIGHT_HEIGHT(Node* n){
+					int ht=0;
+					while(n) ht++, n = n->right;
+					return ht;
+				}
+				int LEFT_HEIGHT(Node* n){
+					int ht=0;
+					while(n) ht++, n = n->left;
+					return ht;
+				}
+				int COUNT(Node* root){
+					if(!root) return 0;
+					
+					int leftH = LEFT_HEIGHT(root);
+					int rightH = RIGHT_HEIGHT(root);
+					
+					if(leftH == rightH) return pow(2,leftH)-1;
+					return 1 + COUNT(root->left) + COUNT(root->right);
+				}
+				int countNodes(Node* root) {
+					return COUNT(root);
+				}
+			};
+
+	1158) Check Whether Binary tree Is Complete:
+		Problem Statement:
+			You are given a binary tree. Your task is to check whether the given binary tree is a Complete Binary tree or not.
+			A Complete Binary tree is a binary tree whose every level, except possibly the last, is completely filled, and all nodes in the last level are placed at the left end.
+			Example of a complete binary tree :
+				The first line of input contains an integer 'T' representing the number of test cases. Then the test cases follow.
+				The only line of each test case contains elements in the level order form. The line consists of values of nodes separated by a single space. In case a node is null, we take -1 in its place.
+			Output Format :
+			For each test case, print 1 if the given Binary Tree is a complete Binary Tree, otherwise, print 0.
+			Constraints :
+				1 <= T <= 100
+				1 <= N <= 3000
+				1 <= data <= 10^5 and data!=-1
+				Where ‘N’ is the total number of nodes in the binary tree, and 'data' is the value of the binary tree node
+			Time Limit: 1 sec
+			Sample Input 1 :
+			2
+			1 3 2 4 -1 -1 -1 -1 -1
+			1 2 3 -1 -1 4 5 -1 -1 -1 -1 
+			Sample Output 1 :
+			1
+			0
+			Explanation Of Sample Input 1 :
+			For the first test case: 
+			The given Binary Tree is a Complete Binary Tree. Hence, the answer is 1 in this case.
+			For the second test case: 
+			The given Binary Tree is not a complete Binary Tree. Hence, the answer is 0 in this case. 
+			Sample Input 2 :
+			2
+			1 2 -1 -1 -1
+			5 7 8 -1 2 -1 -1 -1 -1
+			Sample Output 2 :
+			1
+			0
+
+		#include <bits/stdc++.h> 
+		/************************************************************
+			Following is the TreeNode class structure
+			template <typename T>
+			class TreeNode {
+			public:
+				T data;
+				TreeNode<T> *left, *right;
+				TreeNode(T data) {
+					this->data = data;
+					left = right = NULL;
+				}
+			};
+		************************************************************/
+		int count(TreeNode<int>* n){
+			if(!n) return 0;
+			return 1 + count(n->left) + count(n->right);
+		}
+		bool isCBT(TreeNode<int>* cur, int index, int cnt){
+			if(!cur) return 1;
+			if(index >= cnt) return 0;
+			return isCBT(cur->left, 2*index+1, cnt) && isCBT(cur->right, 2*index+2, cnt);
+		}
+		int isCompleteBinaryTree(TreeNode<int> *root) {
+			int totalNodes = count(root);
+			return isCBT(root, 0, totalNodes);      // current node, current index, total nodes
+		}
+
+	1159) Check Completeness of a Binary Tree: (Refer POTD: 1158)
+		Problem Statement:
+			Given the root of a binary tree, determine if it is a complete binary tree.
+			In a complete binary tree, every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+			Example 1:
+			Input: root = [1,2,3,4,5,6]
+			Output: true
+			Explanation: Every level before the last is full (ie. levels with node-values {1} and {2, 3}), and all nodes in the last level ({4, 5, 6}) are as far left as possible.
+			Example 2:
+			Input: root = [1,2,3,4,5,null,7]
+			Output: false
+			Explanation: The node with value 7 isn't as far left as possible.
+			Constraints:
+				The number of nodes in the tree is in the range [1, 100].
+				1 <= Node.val <= 1000
+
+		/**
+		* Definition for a binary tree node.
+		* struct TreeNode {
+		*     int val;
+		*     TreeNode *left, *right;
+		*     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+		*     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+		*     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+		* };
+		*/
+		class Solution {
+			public:
+			int COUNT(TreeNode* n){
+				if(!n) return 0;
+				return 1 + COUNT(n->left) + COUNT(n->right);
+			}
+			bool IsCBT(TreeNode* root, int i, int cnt){
+				if(!root) return 1;
+				if(i >= cnt) return 0;
+				return IsCBT(root->left, 2*i+1, cnt) && IsCBT(root->right, 2*i+2, cnt);
+			}
+			bool isCompleteTree(TreeNode* root) {
+				int totalNodes = COUNT(root);
+				return IsCBT(root, 0, totalNodes);
+			}
+		};	
+
+	1160) Complete Binary Tree: (Refer POTD: 1159)
+		Problem Statement:
+			Given a Binary Tree, check whether the given Binary Tree is Complete Binary Tree or not. A complete binary tree is a binary tree in which every level, except possibly the last, is completely filled, and all nodes should be as much close to left as possible.
+			Examples:
+			Input: root = [1, 2, 3]
+			Output: true
+			Explanation: The given tree is complete binary tree.
+			Input: root = [1, 2, 3, 4, N, 5, 6]
+			Output: false
+			Explanation: The given tree is not complete binary tree because in last level all nodes are not at left.
+			Constraints:
+				1<=number of node<=10^5
+				0 <= node -> data <= 10^6
+
+		// Checking position of NULL – O(n) Time and O(n) Space
+		class Solution {
+			public:
+			bool isCompleteBT(Node* root) {
+				if(!root) return 1;
+				queue<Node*> q;
+				q.push(root);
+				bool NULL_Encounter = false;
+				while(!q.empty()){
+					Node* cur = q.front();
+					q.pop();
+					if(cur == NULL){                    // if(!cur)
+						NULL_Encounter = true;
+					}else{
+						// if we came across this block after encountering the NULL, then it means its not CBT
+						if(NULL_Encounter) return 0;
+						q.push(cur -> left);
+						q.push(cur -> right);
+					}
+				}
+				return 1;
+			}
+		};
+
+	1161) Search in a row-wise sorted matrix: (Refer POTD: 1153)
+		Problem Statement:
+			Given a row-wise sorted 2D matrix mat[][] of size n x m and an integer x, find whether element x is present in the matrix.
+			Note: In a row-wise sorted matrix, each row is sorted in itself, i.e. for any i, j within bounds, mat[i][j] <= mat[i][j+1].
+			Examples :
+			Input: mat[][] = [[3, 4, 9],[2, 5, 6],[9, 25, 27]], x = 9
+			Output: true
+			Explanation: 9 is present in the matrix, so the output is true.
+			Input: mat[][] = [[19, 22, 27, 38, 55, 67]], x = 56
+			Output: false
+			Explanation: 56 is not present in the matrix, so the output is false.
+			Input: mat[][] = [[1, 2, 9],[65, 69, 75]], x = 91
+			Output: false
+			Explanation: 91 is not present in the matrix.
+			Constraints:
+				1 <= n, m <= 1000
+				1 <= mat[i][j] <= 10^5
+				1 <= x <= 10^5
+		
+		// TC: O(n*m) & SC: O(1)
+			class Solution {
+				public: // Function to search a given number in row-column sorted matrix.
+				bool searchRowMatrix(vector<vector<int>> &mat, int x) {
+					int n = mat.size(), m =mat[0].size();
+					for(int i=0; i<n; i++)
+						for(int j=0; j<m; j++)
+							if(mat[i][j] == x) return 1;
+					return 0;
+				}
+			};
+
+		// TC: O(n* log(m)) & SC: O(1)
+			class Solution {
+				public: // Function to search a given number in row-column sorted matrix.
+				bool searchRowMatrix(vector<vector<int>> &mat, int x) {
+					int n = mat.size();
+					for(int i=0; i<n; i++)
+						if(mat[i].back() >= x and binary_search(mat[i].begin(), mat[i].end(), x)) return 1;
+					return 0;
+				}
+			};
+
+1162)
+1163)
+1164)
+1165)
+1166)
+1167)
+1168)
+1169)
+1170)
+
 
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following:
