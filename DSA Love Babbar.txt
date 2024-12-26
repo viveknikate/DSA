@@ -27738,8 +27738,254 @@ Lecture 75: Heaps in C++:
 
 	Q.3. Merge two binary Max heaps:
 		Problem Statement:
+			Given two binary max heaps as arrays, merge the given heaps to form a new max heap.
+			Example 1:
+			Input  : 
+			n = 4 m = 3
+			a[] = {10, 5, 6, 2}, 
+			b[] = {12, 7, 9}
+			Output : 
+			{12, 10, 9, 2, 5, 7, 6}
+			Explanation :
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function mergeHeaps() which takes the array a[], b[], its size n and m, as inputs and return the merged max heap. Since there can be multiple solutions, therefore, to check for the correctness of your solution, your answer will be checked by the driver code and will return 1 if it is correct, else it returns 0.
+			Expected Time Complexity: O(n.Logn)
+			Expected Auxiliary Space: O(n + m)
+			Constraints:
+				1 <= n, m <= 10^5
+				1 <= a[i], b[i] <= 2*10^5
 
+		class Solution{
+			public:
+			void Heapify(vector<int> &a, int index){
+				int leftIndex = 2*index + 1;
+				int rightIndex = 2*index + 2;
+				int LargeElementIndex = index;
+				
+				if(leftIndex < a.size() and a[leftIndex] > a[LargeElementIndex]) LargeElementIndex = leftIndex;
+				if(rightIndex < a.size() and a[rightIndex] > a[LargeElementIndex]) LargeElementIndex = rightIndex;
+				
+				if(LargeElementIndex == index) return;
+				swap(a[index], a[LargeElementIndex]);
+				Heapify(a, LargeElementIndex);
+			}
+			vector<int> mergeHeaps(vector<int> &a, vector<int> &b, int n, int m) {
+				a.insert(a.end(), b.begin(), b.end());        
+				// for 0-based indexing the non-leaf nodes starts from n/2-1
+				n = a.size();
+				for(int i=n/2-1; i>=0; i--) Heapify(a, i);
+				return a;
+			}
+		};
 
+	Q.4. Minimum Cost of ropes:
+		Problem Statement:
+			Given an array, arr[] of rope lengths, connect all ropes into a single rope with the minimum total cost. The cost to connect two ropes is the sum of their lengths. 
+			Examples:
+			Input: arr[] = [4, 3, 2, 6]
+			Output: 29
+			Explanation: We can connect the ropes in following ways.
+			1) First connect ropes of lengths 2 and 3. Which makes the array [4, 5, 6]. Cost of this operation 2 + 3 = 5. 
+			2) Now connect ropes of lengths 4 and 5. Which makes the array [9, 6]. Cost of this operation 4 + 5 = 9.
+			3) Finally connect the two ropes and all ropes have connected. Cost of this operation 9 + 6 =15. Total cost is 5 + 9 + 15 = 29. This is the optimized cost for connecting ropes. 
+			Other ways of connecting ropes would always have same or more cost. For example, if we connect 4 and 6 first (we get three rope of 3, 2 and 10), then connect 10 and 3 (we gettwo rope of 13 and 2). Finally we connect 13 and 2. Total cost in this way is 10 + 13 + 15 = 38.
+			Input: arr[] = [4, 2, 7, 6, 9]
+			Output: 62 
+			Explanation: First, connect ropes 4 and 2, which makes the array [6, 7, 6, 9]. Cost of this operation 4 + 2 = 6. 
+			Next, add ropes 6 and 6, which results in [12, 7, 9]. Cost of this operation 6 + 6 = 12.
+			Then, add 7 and 9, which makes the array [12,16]. Cost of this operation 7 + 9 = 16. And
+			finally, add these two which gives [28]. Hence, the total cost is 6 + 12 + 16 + 28 = 62.
+			Input: arr[] = [10]
+			Output: 0
+			Explanation: Since there is only one rope, no connections are needed, so the cost is 0.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				1 ≤ arr[i] ≤ 10^6
+
+		// Not Optimized: TC: O(n² log n) & SC: O(n)
+			class Solution {
+				public: // Function to return the minimum cost of connecting the ropes.
+				int minCost(vector<int>& arr) {
+					// always picking the first 2 elements (2 smallest elements from array)
+					sort(arr.begin(), arr.end());
+					int cost = 0;
+					while(arr.size() > 1){
+						int val = arr[0] + arr[1];
+						cost += val;
+						arr.push_back(val);
+						arr.erase(arr.begin(), arr.begin()+2);  // first 2 elements
+						sort(begin(arr), end(arr));
+					}
+					return cost;
+				}
+			};
+
+			// or using rebegin & rend
+				int minCost(vector<int>& arr) {
+					// always picking the 2 elements (2 smallest elements from array)
+					sort(arr.rbegin(), arr.rend());
+					int cost = 0, n=arr.size();
+					while(arr.size() > 1){
+						int val = arr.back(); 
+						arr.pop_back();
+						val += arr.back();
+						arr.pop_back();	
+						cost += val;
+						arr.push_back(val);
+						sort(rbegin(arr), rend(arr));
+					}
+					return cost;
+				}
+
+		// Optimized: TC: O(n log(n)) & SC: O(n):
+			int minCost(vector<int>& arr) {
+				priority_queue<int, vector<int>, greater<int>> pq (arr.begin(), arr.end());
+				// for(int i: arr)
+				//     pq.push(i);
+				int cost = 0;
+				while(pq.size() > 1){
+					int val = pq.top();
+					pq.pop();
+					val += pq.top();
+					pq.pop();
+					cost += val;
+					pq.push(val);
+				}
+				return cost;
+			}
+
+	Q.5. Convert BST to Min Heap: (HW)
+		Problem statement
+			You are given a 'ROOT' of a binary search tree of integers. The given BST is also a complete binary tree.
+			Your task is to convert the given binary search tree into a Min Heap and print the preorder traversal of the updated binary search tree.
+			Note:
+			Binary Search Tree is a node-based binary tree data structure that has the following properties:
+			1. The left subtree of a node contains only nodes with keys lesser than the node’s key.
+			2. The right subtree of a node contains only nodes with keys greater than the node’s key.
+			3. The left and right subtree each must also be a binary search tree.
+			A Binary Heap is a Binary Tree with the following property:
+			1. It’s a complete tree (all levels are filled except possibly the last level and the last level has all keys as left as possible). This property of Binary Heap makes them suitable to be stored in an array.
+			A Binary Heap is either Min Heap or Max Heap. In a Min Binary Heap, the key at the root must be minimum among all keys present in Binary Heap. The same property must be recursively true for all nodes in Binary Tree. Max Binary Heap is similar to Min Heap.
+			For example:
+			Given:- BST’s ‘ROOT’ = 4 2 6 -1 -1 -1 -1 
+			Then the min-heap in pre-order fashion would be 2 4 6.
+			Sample Input 1:
+			1
+			8 5 10 2 6 -1 -1 -1 -1 -1 7 -1 -1
+			10 7 11 1 8 -1 -1 -1 -1 -1 -1 
+			Sample Output 1:
+			2 5 6 7 8 10
+			1 7 8 10 11
+			Explanation of sample input 1:
+			Test-Case 1 : 
+			Converting the BST into min-heap and its pre-order printing would look like: 2 5 6 7 8 10.
+			Test-Case 2 :
+			Converting the BST into min-heap and its pre-order printing would look like: 2 5 6 7 8 10.
+			Sample Input 2:
+			2
+			4 2 6 1 3 5 7 -1 -1 -1 -1 -1 -1 -1 -1
+			2 1 3 -1 -1 -1 -1
+			Sample Output 2:
+			1 2 3 4 5 6 7
+			1 2 3 
+
+		#include <bits/stdc++.h> 
+		/*************************************************************
+			Following is the Binary Tree node structure:
+			class BinaryTreeNode {		
+				public :
+				int data;
+				BinaryTreeNode* left, *right;
+				BinaryTreeNode(int data) {
+					this -> left = this -> right = NULL;
+					this -> data = data;
+				}
+			};
+		*************************************************************/
+		void inorder(BinaryTreeNode*n, vector<int> &v){
+			if(!n) return;
+			inorder(n->left, v);
+			v.push_back(n->data);
+			inorder(n->right, v);
+		}
+		void traversePre_orderly_PlaceValues(BinaryTreeNode* n, vector<int> &v, int &i){
+			if(!n) return;
+			
+			n->data = v[i++];
+			traversePre_orderly_PlaceValues(n->left, v, i);
+			traversePre_orderly_PlaceValues(n->right, v, i);
+		}
+		BinaryTreeNode* convertBST(BinaryTreeNode* root) {
+			vector<int> hold;
+			inorder(root, hold);
+			int index=0;
+			traversePre_orderly_PlaceValues(root, hold, index);
+			return root;
+		}
+
+	Q.6. BST to max heap: (Extra)
+		Problem Statement:
+			Given a Binary Search Tree. Convert a given BST into a Special Max Heap with the condition that all the values in the left subtree of a node should be less than all the values in the right subtree of the node. This condition is applied on all the nodes in the so converted Max Heap.
+			Example 1:
+			Input :
+			       4
+			     /   \
+			    2     6
+			  /  \   /  \
+			 1   3  5    7  
+			Output : 1 2 3 4 5 6 7 
+			Exaplanation :
+			       7
+			     /   \
+			    3     6
+			  /   \  /   \
+			 1    2 4     5
+			The given BST has been transformed into a
+			Max Heap and it's postorder traversal is
+			1 2 3 4 5 6 7.
+			Your task :
+			You don't need to read input or print anything. Your task is to complete the function convertToMaxHeapUtil() which takes the root of the tree as input and converts the BST to max heap.
+			Note : The driver code prints the postorder traversal of the converted BST.
+			Expected Time Complexity : O(n)
+			Expected Auxiliary Space : O(n)
+			Constraints : 1 ≤ n ≤ 10^5
+
+		/*struct Node {
+			int data;
+			Node *left, *right;
+		};*/
+		class Solution{
+			public:
+			void inorder(Node* root, vector<int> &h){
+				if(!root) return;
+				inorder(root->right, h);
+				h.push_back(root->data);
+				inorder(root->left, h);
+			}
+			void Pre_order_LEFT(Node* n, vector<int> &v, int &index){
+				if(!n) return;
+				n->data = v[index++];
+				Pre_order_LEFT(n -> right, v, index);
+				Pre_order_LEFT(n -> left, v, index);
+			}
+			void convertToMaxHeapUtil(Node* root) {
+				// store the inorder (which will be sorted)
+				// should be in decreasing order coz max heap needs larger elements first
+				// inorder will traverse from right to left then it will be in descending order
+				vector<int> hold;
+				inorder(root, hold);
+				// traverse pre_orderly from right side first & replace the nodes values
+				int start=0;
+				Pre_order_LEFT(root, hold, start);
+			}    
+		};
+---------------------------------------------------------------------------------------------------------
+	26/12/24
+Lecture 76: Heaps in C++ || Interview Questions || Part - 2:
+	
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -52796,8 +53042,29 @@ POTD:-[Problem of the Day]
 					return 1;
 			}
 			return 0;
-		}	
-	
+		}
+
+		// Brute force: TC: O(n²)
+			#include <bits/stdc++.h>
+			bool isPeriodic(string s) {
+				int n = s.size();
+				for (int i = 0; i < n / 2; i++) {
+					string cur = s.substr(0, i + 1);
+					bool flag = 1;
+					int j = i + 1;
+					while (j + i < n) {
+						string cur2 = s.substr(j, i + 1);
+						if (cur != cur2) {
+							flag = 0;
+							break;
+						}
+						j+=cur.size();
+					}
+					if (flag) return 1;
+				}
+				return 0;
+			}	
+		
 	282) Minimum Number of Steps to Make Two Strings Anagram:
 		Problem Statement:
 			You are given two strings of the same length s and t. 
@@ -59257,7 +59524,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-		// Optimized: TC: O(n) & SC: O(1):
+		// Optimized: TC: O(n) & SC: O(n):
 			vector<int> twoSum(vector<int>& nums, int target) {
 				map<int, int> mp;
 				int n = nums.size();
@@ -91741,6 +92008,20 @@ POTD:-[Problem of the Day]
 			}
 			return ans;
 		}
+
+		//or
+		#include<bits/stdc++.h>
+		typedef long long ll;
+		// using ll = long;
+		ll transactions(vector<int> &money) {
+			ll mx = 0;
+			ll cnt = 0;
+			for(int i: money){
+				cnt += i;
+				mx = max(cnt, mx);
+			}
+			return mx;
+		}
 	
 	797) Count vowels, consonants, and spaces:
 		Problem statement
@@ -116458,17 +116739,346 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1162)
-1163)
-1164)
-1165)
-1166)
+	1162) Maximum Width In Binary Tree:
+		https://www.naukri.com/code360/problems/maximum-width-in-binary-tree_763671
+		Problem statement
+			You have been given a Binary Tree of integers. You are supposed to return the maximum width of the given Binary Tree. The maximum width of the tree is the maximum width among all the levels of the given tree.
+			The width of one level is defined as the length between the leftmost and the rightmost, non-null nodes in the level, where the null nodes in between the leftmost and rightmost are excluded into length calculation.
+			For example :
+			For the given binary tree
+			The maximum width will be at the third level with the length of 3, i.e. {4, 5, 6}.
+			Sample Input 1 :
+			1 2 3 4 -1 5 6 -1 7 -1 -1 -1 -1 -1 -1
+			Sample Output 1 :
+			3
+			Explanation of Sample Input 1 :
+			The maximum width will be at the third level with the length of 3, i.e. {4, 5, 6}.
+			Sample Input 2 :
+			2 7 5 2 6 -1 9 -1 -1 5 11 4 -1 -1 -1 -1 -1 -1 -1
+			Sample Output 2 :
+			3
+			Constraints :
+				0 <= 'N' <= 5 * 10 ^ 5
+				0 <= 'DATA' <= 10 ^ 6 and data != -1
+				Where ‘N’ is the total number of nodes in the binary tree, and 'DATA' is the value of the binary tree node.
+				Time Limit: 1sec.
+
+		// TC: O(n) & SC: O(w), where w is the maximum width of the tree. In the worst case, this can be O(n).
+		/************************************************************
+			Following is the TreeNode class structure
+			template <typename T>
+			class TreeNode {
+				public:
+				T val;
+				TreeNode<T> *left, *right;
+				TreeNode(T val) {
+					this->val = val;
+					left = right = NULL;
+				}
+			};
+		************************************************************/
+		void LOT(TreeNode<int>* n, int &cnt){
+			if(!n) return;
+			queue<TreeNode<int>*> q;
+			q.push(n);
+			q.push(NULL);
+			cnt=1;
+
+			while(!q.empty()){
+				TreeNode<int>* cur = q.front();
+				q.pop();
+
+				if(cur){
+					if(cur->left) q.push(cur->left);
+					if(cur->right) q.push(cur->right);
+				}else{
+					cnt = max(cnt, (int)q.size());
+					if(!q.empty()) q.push(NULL);
+				}
+			}
+		}
+		int getMaxWidth(TreeNode<int> *root) {
+			int mxWd = 0;
+			LOT(root, mxWd);
+			return mxWd;
+		}
+
+	1163) Maximum width of a Binary Tree (Refer POTD: 1162)
+		Problem statement
+			You are given an arbitrary binary tree consisting of N nodes, where each node is associated with a certain value, your task is to find the maximum width of the given tree.
+			Width of a binary tree is defined as the maximum width of all levels.
+			For example, consider the following binary tree: 
+			For the above tree, width of level 1 is 1, width of level 2 is 2, width of level 3 is 3 and width of level 4 is 1. So the maximum width of the tree is 3.
+			Constraints:
+				1 <= T <= 100
+				0 <= N <= 3000
+				-10^6 <= data <= 10^6 and data != -1
+				Where ‘T’ is the number of test cases, ‘N’ is the total number of nodes in the binary tree, and “data” is the value of the binary tree node.
+				Time Limit: 1sec
+			Sample Input 1:
+				2
+				5 6 2 4 3 -1 -1 9 7 -1 -1 -1 -1 -1 -1
+				1 -1 -1
+				Sample Output 1:
+				2
+				1
+				Explanation of Sample Input 1:
+				For the first test case, the width of 1st level is 1 and for the remaining levels it is 2. So, the maximum width of the binary tree is 2.
+				For the second test case, the binary tree has only one level having 1 element i.e. root. Hence, the maximum width of the binary tree is 1.
+				Sample Input 2:
+				2
+				1 2 3 4 5 6 7 8 9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+				1 2 3 4 5 -1 -1 -1 -1 -1 -1
+				Sample Output 2:
+				4
+				2
+
+		#include <bits/stdc++.h> 
+		/*******************************************
+		Following is the BinaryTreeNode structure
+			template<typename T>
+			class BinaryTreeNode {
+				public:
+				T data;
+				BinaryTreeNode<T> *left, *right;
+				BinaryTreeNode(T data) {
+					this->data = data;
+					left = right = NULL;
+				}
+			};
+		********************************************/
+		void LOT(BinaryTreeNode<int>* n, int &cnt){
+			if(!n) return;
+			queue<BinaryTreeNode<int>*> q;
+			q.push(n);
+			q.push(NULL);
+			cnt=1;
+
+			while(!q.empty()){
+				BinaryTreeNode<int>* cur = q.front();
+				q.pop();
+
+				if(cur){
+					if(cur->left) q.push(cur->left);
+					if(cur->right) q.push(cur->right);
+				}else{
+					cnt = max(cnt, (int)q.size());
+					if(!q.empty()) q.push(NULL);
+				}
+			}
+		}
+		int getMaxWidth(BinaryTreeNode<int> *root) {
+			int mxWd = 0;
+			LOT(root, mxWd);
+			return mxWd;
+		}
+	
+		// Using Extra array: TC: O(n) & SC: O(n)
+			void LOT(BinaryTreeNode<int>* n, vector<vector<int>> &h){
+				if(!n) return;
+				queue<BinaryTreeNode<int>*> q;
+				q.push(n);
+				q.push(NULL);
+				h.push_back({n->data});
+				vector<int> t;
+
+				while(!q.empty()){
+					BinaryTreeNode<int>* cur = q.front();
+					q.pop();
+
+					if(cur){
+						if(cur->left) q.push(cur->left), t.push_back(cur->left->data);
+						if(cur->right) q.push(cur->right), t.push_back(cur->right->data);;
+					}else{
+						h.push_back(t);
+						t.clear();
+						if(!q.empty()) q.push(NULL);
+					}
+				}
+			}
+			int getMaxWidth(BinaryTreeNode<int> *root) {
+				vector<vector<int>> hold;
+				LOT(root, hold);
+				
+				int mx = 0;
+				for(vector<int> cur: hold)
+					// mx = max(mx, static_cast<int>(cur.size()));
+					mx = max(mx, (int)cur.size());
+				return mx;
+			}
+
+	1164) Award Ceremony:
+		Problem statement
+			The recent coding contest on Coding Ninjas featured ‘N’ contestants, scoring a certain amount of points. The score of the contestants is given in the array ‘ARR’. As the competition head, you are assigned to rewards the participants with a gift card concerning the following criteria:
+			1. There should be at least a participant getting a reward.
+			2. Participants who scored 0 should not get any rewards.
+			3. All participants who scored more than or equal to the minimum score decided should get rewarded.
+			Your task is to calculate the number of ways to get a subset of participants who will receive a reward.
+			Example:
+			Input: ‘N’ = 5 and ‘ARR’ = [1, 2, 3, 1, 0]
+			Output: 3
+			Explanation: There are three ways to select a subset:
+			A: 3rd participant will get a reward. When minimum score to get a reward is 3.
+			B: 2nd and 3rd participants will get rewards. When minimum score to get a reward is 2.
+			C: 1st, 2nd, 3rd, and 5th participants will get rewards. When minimum score to get a reward is 1.
+			Constraints :
+				1 <= ‘T’ <= 10
+				1 <= ‘N’ <= 10^4
+				0 <= ‘ARR[i]’ <= 10^18
+				Time Limit: 1 sec
+			Sample Input 1 :
+			2
+			2
+			0 2
+			3
+			2 3 3 
+			Sample Output 1 :
+			1
+			2
+			Explanation Of Sample Input 1 :
+			In the first test case, there is only a single possibility by which we can reward the contestants and it can be done by rewarding the 2nd contestant. Hence, the output is 1.
+			In the second test case, we can give rewards in 2 ways i.e., by giving them to 2nd and 3rd contestants or by providing rewards to all the three contestants. Hence, the output is 2.
+			Sample Input 2 :
+			2
+			1
+			100     
+			4
+			1 1 1 1
+			Sample Output 2 :
+			1
+			1
+			Explanation Of Sample Input 2 :
+			In the first test case, there is only a single contestant. Hence, the output is 1.
+			In the second test case, we will be giving rewards to all four contestants. Hence, the output is 1.
+
+		#include <bits/stdc++.h> 
+		int getTotalRewards(int n, vector < int > arr) {
+			set<int> hold (arr.begin(), arr.end());
+			// if set contains the zero then subset will decremented by 1
+			auto itr = hold.begin();
+			return (*itr == 0) ? hold.size()-1:hold.size();
+			//return (*hold.begin() == 0) ? hold.size()-1:hold.size();
+		}
+		
+	1165) Two Sum - Pair with Given Sum:
+		Problem Statement:
+			Given an array arr[] of positive integers and another integer target. Determine if there exists two distinct indices such that the sum of there elements is equals to target.
+			Examples:
+			Input: arr[] = [1, 4, 45, 6, 10, 8], target = 16
+			Output: true
+			Explanation: arr[3] + arr[4] = 6 + 10 = 16.
+			Input: arr[] = [1, 2, 4, 3, 6], target = 11
+			Output: false
+			Explanation: None of the pair makes a sum of 11.
+			Constraints:
+				1 ≤ arr.size ≤ 10^5
+				1 ≤ arr[i] ≤ 10^5
+				1 ≤ target ≤ 2*10^5
+
+		// Not Optimized: TC: O(n²) & SC: O(n)
+			class Solution {
+				public:
+				bool twoSum(vector<int>& arr, int target) {
+					int n = arr.size();
+					for(int i=0; i<n; i++)
+						for(int j=i+1; j<n; j++)
+							if(arr[i]+arr[j] == target) return 1;
+					return 0;
+				}
+			};
+
+		// Optimized: TC: O(n log(n)) & SC: O(1)
+			class Solution {
+				public:
+				bool twoSum(vector<int>& arr, int target) {
+					int n = arr.size();
+					sort(begin(arr), end(arr));
+					int s=0, e=n-1;
+					while(s < e){
+						int val = arr[s] + arr[e];
+						if (val == target) return 1;
+						else if(val < target) s++;
+						else e--;
+					}
+					return 0;
+				}
+			};
+		
+		// Optimized: TC: O(n) & SC: O(n)
+			class Solution {
+				public:
+				bool twoSum(vector<int>& arr, int target) {
+					unordered_set<int> s;
+					for(int i: arr){
+						int complement = target - i;
+						if(s.find(complement) != s.end()) return 1;
+						s.insert(i);
+					}
+					return 0;
+				}
+			};
+
+	1166) Rotate a Matrix by 180 Counterclockwise:
+		Problem Statement:
+			Given a 2D square matrix mat[][] of size n x n, turn it by 180 degrees without using extra space.
+			Note: You must rotate the matrix in place and modify the input matrix directly.
+			Examples:
+			Input: mat[][] = [[1, 2],
+							[3, 4]]
+			Output: [[4, 3], 
+					[2, 1]]
+			Input:  mat[][] = [[1, 2, 3, 4], 
+							[5, 6, 7 ,8], 
+							[9, 10, 11, 12],
+							[13, 14, 15, 16]]
+			Output: [[16, 15, 14, 13], 
+					[12, 11, 10, 9], 
+					[8, 7, 6, 5], 
+					[4, 3, 2, 1]]
+			Constraints:
+				1 ≤ n ≤ 500
+				0 <= mat[i][j] <= 10^4
+
+		// TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				void rotateMatrix(vector<vector<int>>& mat) {
+					int row=mat.size(), cols = mat[0].size();
+					// swap half part vertically
+					for(int i=0; i<row; i++)
+						for(int j=0; j<cols/2; j++)
+							swap(mat[i][j], mat[i][cols-1-j]);
+
+					// whatever output is there swap the half part of it horizontally
+					for(int i=0; i<row/2; i++)
+						for(int j=0; j<cols; j++)
+							swap(mat[i][j], mat[row-1-i][j]);
+					// or first horizontally then vertically also OK
+				}
+			};
+
+		// TC: O(n²) & SC: O(n²)
+			class Solution {
+				public:
+				void rotateMatrix(vector<vector<int>>& mat) {
+					vector<vector<int>> hold;
+					int rows = mat.size(), cols=mat[0].size();
+					for(int i=rows-1; i>=0; i--){
+						vector<int> t;
+						for(int j=cols-1; j>=0; j--) t.push_back(mat[i][j]);
+						hold.push_back(t);
+					}
+					mat = hold;
+				}
+			};
+
 1167)
+
 1168)
+
 1169)
+
 1170)
-
-
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following:
 ---------------------------------------------------------------------------------------------------------
