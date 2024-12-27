@@ -24748,8 +24748,35 @@ Lecture-64: Binary Tree FAANG Interview Questions || Part-2:
 					return ans;
 				}
 			};
+		
+		// Recursive:
+			class Solution {
+				public:
+				void inorder(Node* n, vector<vector<int>> &v, int i){
+					if(!n) return;
+					if(i >= v.size()){
+						vector<int> t;
+						t.push_back(n->data);
+						v.push_back(t);
+					}else{
+						v[i].push_back(n->data);
+					}
+					i++;
+					inorder(n->left, v, i);
+					inorder(n->right, v, i);
+				}
+				//Function to return list containing elements of right view of binary tree.
+				vector<int> rightView(Node *root) {
+					vector<vector<int>> hold;
+					inorder(root, hold, 0);
+					
+					vector<int> ans;
+					for(vector<int> &cur: hold) ans.push_back(cur.back());
+					return ans;
+				}
+			};
 
-	Q.8. Left View of Binary Tree:
+	Q.8. Left View of Binary Tree: (Refer POTD: 1037)
 		Problem Statement:
 			Given a Binary Tree, return its Left view. The left view of a Binary Tree is a set of nodes visible when the tree is visited from the Left side. If no left view is possible, return an empty array.
 			Examples :
@@ -24780,8 +24807,7 @@ Lecture-64: Binary Tree FAANG Interview Questions || Part-2:
 		/* A binary tree node
 			struct Node {
 				int data;
-				struct Node* left;
-				struct Node* right;
+				struct Node* left, *right;
 				
 				Node(int x){
 					data = x;
@@ -27982,9 +28008,307 @@ Lecture 75: Heaps in C++:
 ---------------------------------------------------------------------------------------------------------
 	26/12/24
 Lecture 76: Heaps in C++ || Interview Questions || Part - 2:
-	
+	Q.1. K-th Largest Sum Subarray:
+		Problem statement:
+			Given an array of integers, find the Kth largest sum subarray For example, given the array [1, -2, 3, -4, 5] and K = 2, the 2nd largest sum subarray would be [3, -4, 5], which has a sum of 4.
+			Please note that a subarray is the sequence of consecutive elements of the array.
+			Sample Input 1 :
+			2
+			3 3
+			3 -2 5
+			2 2
+			4 1
+			Sample output 1 :
+			3
+			4
+			Explanation of Sample output 1 :
+			For the first test case, 
+			Sum of [0, 0] = 3
+			Sum of [0, 1] = 1
+			Sum of [0, 2] = 6
+			Sum of [1, 1] = -2
+			Sum of [1, 2] = 3
+			Sum of [2, 2] = 5
+			All sum of subarrays are {6, 5, 3, 3, 1, -2} where the third largest element is 3.
+			For the second test case, 
+			Sum of [0, 0] = 4
+			Sum of [0, 1] = 5
+			Sum of [1, 1] = 1
+			All sum of subarrays are {5, 4, 1} where the second largest element is 4.
+			Sample Input 2 :
+			2
+			4 10
+			5 4 -8 6
+			3 1
+			1 2 3
+			Sample output 2 :
+			-8
+			6
+			Explanation of Sample output 2 :
+			For the first test case, among the sum of all the subarray, the tenth-largest sum will be -8.
+			For the second test case, among the sum of all the subarray, the largest sum will be 6.
 
+		// TC: O(n² log n) & SC: O(n²)
+			#include<bits/stdc++.h>
+			int getKthLargest(vector<int> &arr, int k) {
+				vector<int> hold;
+				int n = arr.size();
+				for(int i=0; i<n; i++){
+					int sum=0;
+					for(int j=i; j<n;  j++){
+						sum += arr[j];
+						hold.push_back(sum);
+					}
+				}
+				// sort(hold.rbegin(), hold.rend());		// sorting in descending order
+				sort(begin(hold), end(hold), greater<int>());		// sorting in descending order
+				return hold[k-1];		// kth largest sum
+			}
+
+		// Using Min-Heap: TC: O(n² log k) & SC: O(k)
+			#include<bits/stdc++.h>
+			int getKthLargest(vector<int> &arr, int k) {
+				priority_queue<int, vector<int>, greater<int>> minHP;
+				int n = arr.size();
+				for(int i=0; i<n; i++){
+					int sum=0;
+					for(int j=i; j<n;  j++){
+						sum += arr[j];
+						if(minHP.size() >= k){
+							if(minHP.top() < sum){
+								minHP.pop();
+								minHP.push(sum);
+							} 
+						}else{
+							minHP.push(sum);
+						}
+					}
+				}
+				return minHP.top();		// kth largest sum
+			}
+
+	Q.2. Merge K Sorted Arrays:
+		Problem statement:
+			You have been given ‘K’ different arrays/lists, which are sorted individually (in ascending order). You need to merge all the given arrays/list such that the output array/list should be sorted in ascending order.
+			Constraints :
+				1 <= T <= 5
+				1 <= K <= 5
+				1 <= N <= 20
+				-10^5 <= DATA <= 10^5
+				Time Limit: 1 sec 
+			Sample Input 1:
+			1
+			2
+			3 
+			3 5 9 
+			4 
+			1 2 3 8   
+			Sample Output 1:
+			1 2 3 3 5 8 9 
+			Explanation of Sample Input 1:
+			After merging the two given arrays/lists [3, 5, 9] and [ 1, 2, 3, 8], the output sorted array will be [1, 2, 3, 3, 5, 8, 9].
+			Sample Input 2:
+			1
+			4
+			3
+			1 5 9
+			2
+			45 90
+			5
+			2 6 78 100 234
+			1
+			0
+			Sample Output 2:
+			0 1 2 5 6 9 45 78 90 100 234
+			Explanation of Sample Input 2 :
+			After merging the given arrays/lists [1, 5, 9], [45, 90], [2, 6, 78, 100, 234] and [0], the output sorted array will be [0, 1, 2, 5, 6, 9, 45, 78, 90, 100, 234].
+
+		// TC: O(n log n) & SC: O(n), where n= rows*cols.
+			#include <bits/stdc++.h> 
+			vector<int> mergeKSortedArrays(vector<vector<int>>&kArrays, int k) {
+				vector<int> ans;
+				// storing all kArrays into single array then sorting it
+				for(vector<int> v: kArrays) ans.insert(ans.end(), v.begin(), v.end());
+				sort(ans.begin(), ans.end());
+				return ans;
+			}
+
+		// Using Heap: TC: O((n*k) log (n*k)) & SC: O(n*k)
+			#include <bits/stdc++.h> 
+			vector<int> mergeKSortedArrays(vector<vector<int>>&kArrays, int k) {
+				vector<int> ans;
+				// using min-heap coz when we retrive the elements, then it should be in ascending order, first will be smallest
+				priority_queue<int, vector<int>, greater<int>> minHP;
+				for(vector<int> &cur: kArrays){
+					for(int i: cur)
+						minHP.push(i);
+				}
+				while(!minHP.empty()) ans.push_back(minHP.top()), minHP.pop(); 
+				return ans;
+			}
+
+		// HEAP: TC: O(n log k) & SC: O(n):
+			#include <bits/stdc++.h> 
+			using pii = pair<int, pair<int, int>>;
+			vector<int> mergeKSortedArrays(vector<vector<int>>&kArrays, int k) {
+				vector<int> ans;
+				priority_queue<pii, vector<pii>, greater<pii>> pq;
+				for(int i=0; i<k; i++)
+					pq.push({kArrays[i][0], {i,0}});
+				
+				while(!pq.empty()){
+					int val = pq.top().first;
+					int row = pq.top().second.first;
+					int col = pq.top().second.second;
+					pq.pop();
+
+					ans.push_back(val);
+					if(col+1 < kArrays[row].size()) pq.push({kArrays[row][col+1], {row, col+1}});
+				}
+				return ans;
+			}
+
+	Q.3. Merge k sorted lists: (Refer POTD: 853)
+		// Using Heap: TC: O(n log(k)) & SC: O(k)
+			struct Comparator{
+				bool operator()(Node* a, Node* b){
+					return a->data > b->data;
+				}
+			};
+			Node* mergeKLists(vector<Node*> &listArray){
+				Node *H, *T;
+				H = T = NULL;
+				priority_queue<Node*, vector<Node*>, Comparator> minHP;
+				int n = listArray.size();
+				for(int i=0; i<n; i++) minHP.push(listArray[i]);
+
+				while(!minHP.empty()){
+					Node *cur = minHP.top();
+					if(!H){
+						H = T = cur;
+					}else{
+						T -> next = cur;
+						T = cur;
+					}
+					minHP.pop();
+					if(cur -> next) minHP.push(cur -> next);
+				}
+				return H;
+			}
 ---------------------------------------------------------------------------------------------------------
+	27/12/24
+Lecture 77: Heaps Hard Interview Questions || Part - 3:
+	Q.1. Smallest Range From K Sorted List:
+		Problem statement
+			You are given ‘K’ lists containing non-negative integers. Each list has a size ‘N’ and is sorted in non-decreasing order. You need to find the minimum length of a range such that at least one element of each list must be included in that range.
+			For exampe :
+			If we have 3 lists as [1, 10, 11], [2, 3, 20], [5, 6, 12] then the [1, 5] is the range that includes 1 from the first list, 2,3 from the second list, and 5 from the third list i.e, this range contains at least one element from each list.
+			Constraints :
+				1 <= 'T' <= 50
+				1 <= 'N' <= 10 ^ 4  
+				1 <= 'K' <= 10 ^ 4  
+				1 <= 'N' * 'K' <= 10 ^ 4
+				1 <= 'VAL' <= 10 ^ 9
+				Where 'VAL' is the value of any element of any list.
+				Time Limit: 1 sec
+			Sample Input 1 :
+			2
+			3 2
+			2 4 5
+			5 6 7
+			2 3
+			1 1
+			9 12
+			4 9
+			Sample Output 1 :
+			1
+			9
+			Explanation For Sample Input 1 :
+			Test case 1 :
+			The given list are [2, 4, 5], [5, 6, 7]. The range [5, 5] will include 5 which is present in both the list and hence the length of this range is 1. This is the only possible range having the minimum length.
+			Test case 2 :
+			The given list are [1, 1], [9, 12], [4, 9]. The range [1, 9] will include 1 which is present in the first list, and 9 which include in both the second and third list  The length of the range is 9 (9 - 1 + 1 = 9).
+			Sample Input 2 :
+			2
+			3 3
+			4 7 30
+			1 2 12
+			20 40 50
+			5 1
+			3 6 8 12 31
+			Sample Output 2 :
+			14
+			1
+			Explanation For Sample Input 2 :
+			Test case 1 :
+			The given list are [4, 7, 30], [1, 2, 12] and [20, 40, 50]. The range [7, 20], hence the length of this range is 14. This is the only possible range having the minimum length.
+
+			Test case 2 :
+			The range [3, 3] will include 3 which is present in the first list. The length of the range is 1. Infect, we can select any of element present in first list as there is only one list given to us.		
+		// Not Optimized: TC: O(n³ * k³) & SC:O(1)
+			#include <climits>
+			int kSorted(vector<vector<int>> &a, int k, int n) {
+				int smallestRange = INT_MAX;
+				for(int i=0; i<k; i++){
+					for(int j=0; j<n; j++){
+					
+						for(int z=0; z<k; z++){
+							for(int t=0; t<n; t++){
+								int mx = max(a[i][j], a[z][t]);
+								int mn = min(a[i][j], a[z][t]);
+								int range = mx - mn + 1;
+								int f;
+								
+								for(f=0; f<k; f++){
+									bool isValid = 0;
+									for(int s=0; s<n; s++)
+										if(a[f][s]<= mx and a[f][s] >= mn){
+											isValid = 1;
+											break;
+										}
+									if(isValid == 0) break;
+								}
+								if(f == k) smallestRange = min(smallestRange, range);
+							}
+						}
+					}
+				}
+				return smallestRange;
+			}
+		
+		// or TC: O((max-min)² * k * n) & SC: O(1)
+			#include<bits/stdc++.h>
+			int kSorted(vector<vector<int>> &a, int k, int n) {
+			int mainMx = INT_MIN, mainMin = INT_MAX;
+			for(vector<int> &cur: a){
+				mainMx = max(mainMx, (int)*max_element(cur.begin(), cur.end()));
+				mainMin = min(mainMin, (int)*min_element(cur.begin(), cur.end()));
+			}
+			int Range = INT_MAX;
+			for(int i=mainMin; i<=mainMx; i++){
+				for(int j=i; j<=mainMx; j++){
+					int x;
+					for(x=0; x<k; x++){
+						bool isWorked=0;
+						for(int y=0; y<n; y++){
+							if(i <= a[x][y] and a[x][y] <= j){
+								isWorked = 1;
+								break;
+							}
+						}
+						if(isWorked == 0) break;
+					}
+					if(x == k){
+						Range = min(Range, j-i+1);
+						break;
+					} 
+				}
+			}
+			return  Range;
+			}
+
+		// Optimized:
+						
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
@@ -96149,7 +96473,6 @@ POTD:-[Problem of the Day]
 				}
 			};
 		*/
-
 		// used extra space
 		/* TC: O(n * log n) & SC: O(n*m) */
 		Node* mergeKLists(vector<Node*> &listArray){
@@ -96186,9 +96509,62 @@ POTD:-[Problem of the Day]
 			}
 			return head;
 		}
+		//or
+		Node* mergeKLists(vector<Node*> &listArray){
+			Node* Head = listArray[0];
+			Node* Tail = Head;
+			vector<int> v;
+			int i=1, n=listArray.size();
 
-		// without using extra space:
-			❌Pending
+			while(Tail){
+				v.push_back(Tail->data);
+				if(!Tail->next and i < n) Tail->next = listArray[i++];
+				Tail = Tail -> next;
+			}
+
+			sort(v.begin(), v.end());
+			Tail = Head, i=0;
+			while(Tail){
+				Tail -> data = v[i++];
+				Tail = Tail -> next;
+			}
+			return Head;
+		}
+		// without using extra space: TC: O(N*k), where, k is size of largest linkedList, SC: O(1)
+			Node* mergeKLists(vector<Node*> &listArray){
+				Node* HEAD = listArray[0];
+				Node* Tail = HEAD;
+				int i=1, n = listArray.size();
+				while(i < n){
+					Node* cur = listArray[i++];
+					Tail = HEAD;
+
+					// merging the current list with previous one
+					Node* temp = NULL;
+					if(Tail -> data > cur -> data){
+						temp = HEAD = cur;
+						cur = cur -> next;
+					}else{
+						temp = HEAD = Tail;
+						Tail = Tail -> next;
+					}
+
+					while(Tail and cur){
+						if(Tail -> data < cur -> data){
+							temp -> next = Tail;
+							temp = Tail;
+							Tail = Tail -> next;
+						}else{
+							temp -> next = cur;
+							temp = cur;
+							cur = cur -> next;
+						}
+					}
+					// which part is non-null attache the next to it.
+					cur ? temp -> next = cur : temp -> next = Tail;
+				}
+				return HEAD;
+			}
 
 	#AtCoder BeginnerContest-354
 		854) A - Exponential Plant:
@@ -109007,19 +109383,17 @@ POTD:-[Problem of the Day]
 				Time limit: 1sec
 
 		vector<int> printLeftView(BinaryTreeNode<int>* root) {
-			if(root == nullptr)
-				return {};              // empty vector
-
+			if(root == nullptr) return {};              // empty vector
 			vector<int> ans;
 			queue<BinaryTreeNode<int>* > q;
 			q.push(root);
 			q.push(nullptr);
 
 			int lastVal, once;
+			lastVal = once = 1;           // just randomly assigned
 			while(!q.empty()){
 				BinaryTreeNode<int> * t = q.front();
 				q.pop();
-				
 				if(t == nullptr){
 					ans.push_back(lastVal);
 					once = 1;                       // flag to keep the track of we left side elements to be inserted into ans vector
@@ -109030,15 +109404,39 @@ POTD:-[Problem of the Day]
 						once =0;
 						lastVal = t -> data;
 					}
-					if(t -> left)
-						q.push(t -> left);
-					
-					if(t -> right)
-						q.push(t -> right);
+					if(t -> left) q.push(t -> left);
+					if(t -> right) q.push(t -> right);
 				}
 			}
 			return ans;
 		}
+
+		// Recursive:
+			class Solution {
+				public:
+				void traverseTree(Node* n, vector<vector<int>> &a, int i){
+					if(!n) return;
+					
+					if(i >= a.size()){
+						vector<int> t;
+						t.push_back(n->data);
+						a.push_back(t);
+					}else{
+						a[i].push_back(n->data);
+					}
+					i++;
+					traverseTree(n->left, a,i);
+					traverseTree(n->right, a, i);
+				}
+				vector<int> leftView(Node *root) {
+					vector<vector<int>> hold;
+					traverseTree(root, hold, 0);
+					
+					vector<int> ans;
+					for(vector<int> &cur: hold) ans.push_back(cur[0]);
+					return ans;
+				}
+			};
 
 	1038) Minimum Number of K Consecutive Bit Flips:
 		Problem Statement:
@@ -117072,9 +117470,123 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1167)
+	1167) Count pairs with given sum:
+		Problem Statement:
+			Given an array arr[] and an integer target. You have to find numbers of pairs in array arr[] which sums up to given target.
+			Examples:
+			Input: arr[] = [1, 5, 7, -1, 5], target = 6 
+			Output: 3
+			Explanation: Pairs with sum 6 are (1, 5), (7, -1) and (1, 5). 
+			Input: arr[] = [1, 1, 1, 1], target = 2 
+			Output: 6
+			Explanation: Pairs with sum 2 are (1, 1), (1, 1), (1, 1), (1, 1), (1, 1).
+			Input: arr[] = [10, 12, 10, 15, -1], target = 125
+			Output: 0
+			Constraints:
+				1 <= arr.size() <= 10^5
+				-10^4 <= arr[i] <= 10^4
+				1 <= target <= 10^4
 
-1168)
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				int countPairs(vector<int> &arr, int target) {
+					int cnt=0, n = arr.size();
+					for(int i=0; i<n; i++)
+						for(int j=i+1; j<n; j++)
+							if(arr[i]+arr[j] == target) cnt++;
+					return cnt;
+				}
+			};
+
+		// Optimized: TC: O(n) & SC: O(n)
+			class Solution {
+				public:
+				int countPairs(vector<int> &arr, int target) {
+					int cnt=0;
+					unordered_map<int, int> mp;
+					for(int i: arr) {
+						int complement = target - i;
+						if(mp.find(complement) != mp.end()) cnt += mp[complement];
+						mp[i]++;
+					}
+					return cnt;
+				}
+			};
+
+	1168) k-th Smallest in BST:
+		Problem Statement:
+			Given a BST and an integer k. Find the kth smallest element in the BST using O(1) extra space. If there is no kth smallest element present then return -1.
+			Examples:
+			Input: root = [2, 1, 3] k = 2
+			2
+			/   \
+			1     3
+			Output: 2
+			Explanation: 2 is the 2nd smallest element in the BST
+			Input: root = [2, 1, 3] k = 5
+				2
+			/  \
+			1    3
+			Output: -1
+			Explanation: There is no 5th smallest element in the BST as the size of BST is 3
+			Input: root = [5, 1, 3] k = 1
+				5
+			/   \
+			1     3
+			Output: 1
+			Explanation: 1 is the 2nd smallest element in the BST
+			Constraints:
+				1 <= number of nodes <= 10^5
+				1 <= node->data <= 10^5
+
+		/*Complete the function below
+		struct Node {
+			int data;
+			Node *left, *right;
+			Node(int val) {
+				data = val;
+				left = right = NULL;
+			}
+		};
+		*/
+		// Using Extra Space:
+			class Solution {
+				public:
+				void inorder(Node* root, vector<int> &hold){
+					if(!root) return;
+					inorder(root->left, hold);
+					hold.push_back(root->data);
+					inorder(root->right, hold);
+				}
+				// Return the Kth smallest element in the given BST
+				int KthSmallestElement(Node *root, int K) {
+					// find inorder, this will be sorted by default
+					vector<int> hold;           // we are using O(n) space here, where n is the no.of nodes in BST
+					inorder(root, hold);
+					return (K>hold.size())  ? -1 : hold[K-1];
+				}
+			};
+		// Without using Space:
+			class Solution {
+				public:
+				void inorder(Node* root, int &k, int &val){
+					if(!root) return;		
+					inorder(root->left, k, val);
+					k--;
+					if(k <= 0){                                     
+						if(k == 0) val = root->data;                
+						return;
+					} 
+					inorder(root->right, k, val);
+				}
+				// Return the Kth smallest element in the given BST
+				int KthSmallestElement(Node *root, int K) {
+					int val = -1;
+					inorder(root, K, val);
+					return val;
+				}
+			};
 
 1169)
 
