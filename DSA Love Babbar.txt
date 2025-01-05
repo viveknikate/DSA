@@ -4247,7 +4247,7 @@ Lecture-8: Switch case & functions
 			
 			--default case is not mandatory, if its there in code then GOOD, if its not then NO WORRIES.
 			--default case is better to keep at last,
-		->		
+		->
 			Include break after default: 
 				If you want the switch statement to exit immediately after the default case is executed, 
 				you should include a break statement. This prevents the program from continuing to execute 
@@ -4530,7 +4530,7 @@ Lecture-8: Switch case & functions
 							return 0;
 						}
 
-				Even Odd function:
+				Even Odd function: (Refer POTD: 1175)
 					#include <iostream>
 					using namespace std;
 
@@ -28624,7 +28624,7 @@ Lecture-138: Maximum Rectangle with all 1's || DP Series
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
-Love Babbar Contests:
+Love Babbar Contests: ❌Pending
 	1) https://www.naukri.com/code360/contests/love-babbar-contest-l
 		A) Apple Shop with Ninja:
 			Problem statement
@@ -40393,7 +40393,7 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 
-	109)	Day 1: ENG vs NZ: Interesting Toss
+	109) Day 1: ENG vs NZ: Interesting Toss
 		Problem Statement
 			In the inaugural match between ENG and NZ, the ICC has replaced the traditional coin flip with a unique game.
 			The ICC has provided a set of coins, where 'X" coins are valued at 10 rupees and Y' coins are valued at 75 rupees.
@@ -44686,7 +44686,7 @@ POTD:-[Problem of the Day]
 			return ans;
 		}
 
-	162)	Secret Omen Patten:
+	162) Secret Omen Patten:
 		Problem  Statement:
 			Your task is to determine whether there exists a "secret pattern" within the
 			array, and if so, return '1'; otherwise, return '0'.
@@ -48691,7 +48691,7 @@ POTD:-[Problem of the Day]
 			return ansHolder;
 		}
 
-	217)	Largest Odd Number in String:
+	217) Largest Odd Number in String:
 		Problem Statement:
 			You are given a string num, representing a large integer. 
 			Return the largest-valued odd integer (as a string) that is a 
@@ -48812,7 +48812,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	219)	Transpose Matrix:
+	219) Transpose Matrix:
 		Problem Statement:
 			Given a 2D integer array matrix, return the transpose of matrix.
 			The transpose of a matrix is the matrix flipped over its main diagonal, 
@@ -48862,7 +48862,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 	
-	220)	Count the loop: ❌Pending
+	220) Count the loop: ❌Pending
 		-Count the no.of times loop will iterate.
 		Problem statement
 			Alice and Bob recently studied bitwise operators and were extremely fascinated
@@ -60490,7 +60490,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 		
-		//Optimized1:
+		//Optimized:
 			class Solution {
 				public:
 				bool containsDuplicate(vector<int>& nums) {
@@ -118385,7 +118385,757 @@ POTD:-[Problem of the Day]
 				return mxlen;
 			}
 
-1172)
+	1172) Subarrays with sum K:
+		Problem Statement:
+			Given an unsorted array of integers, find the number of continuous subarrays having sum exactly equal to a given number k.
+			Examples:
+			Input: arr = [10, 2, -2, -20, 10], k = -10
+			Output: 3
+			Explaination: Subarrays: arr[0...3], arr[1...4], arr[3...4] have sum exactly equal to -10.
+			Input: arr = [9, 4, 20, 3, 10, 5], k = 33
+			Output: 2
+			Explaination: Subarrays: arr[0...2], arr[2...4] have sum exactly equal to 33.
+			Input: arr = [1, 3, 5], k = 0
+			Output: 0
+			Explaination: No subarray with 0 sum.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				-10^3 ≤ arr[i] ≤ 10^3
+				-10^7 ≤ k ≤ 10^7
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				int countSubarrays(vector<int> &arr, int k) {
+					int cnt=0, n=arr.size();
+					for(int i=0; i<n; i++){
+						int curS=0;
+						for(int j=i; j<n; j++){
+							curS += arr[j];
+							if(curS == k) cnt++;
+						}
+					}
+					return cnt;
+				}
+			};
+		// Optimized:
+			❌Pending
+
+	1173) Count Vowel Strings in Ranges:
+		Problem Statement:
+			You are given a 0-indexed array of strings words and a 2D array of integers queries.
+			Each query queries[i] = [li, ri] asks us to find the number of strings present in the range li to ri (both inclusive) of words that start and end with a vowel.
+			Return an array ans of size queries.length, where ans[i] is the answer to the ith query.
+			Note that the vowel letters are 'a', 'e', 'i', 'o', and 'u'.
+			Example 1:
+			Input: words = ["aba","bcb","ece","aa","e"], queries = [[0,2],[1,4],[1,1]]
+			Output: [2,3,0]
+			Explanation: The strings starting and ending with a vowel are "aba", "ece", "aa" and "e".
+			The answer to the query [0,2] is 2 (strings "aba" and "ece").
+			to query [1,4] is 3 (strings "ece", "aa", "e").
+			to query [1,1] is 0.
+			We return [2,3,0].
+
+			Example 2:
+			Input: words = ["a","e","i"], queries = [[0,2],[0,1],[2,2]]
+			Output: [3,2,1]
+			Explanation: Every string satisfies the conditions, so we return [3,2,1].
+		
+			Constraints:
+				1 <= words.length <= 10^5
+				1 <= words[i].length <= 40
+				words[i] consists only of lowercase English letters.
+				sum(words[i].length) <= 3 * 10^5
+				1 <= queries.length <= 10^5
+				0 <= li <= ri < words.length
+		// Not Optimized: TC: O(n*q) & SC: O(n)
+			class Solution {
+				public:
+				bool isStartEndWithVowel(int index, vector<string> &w){
+					return (w[index].front() == 'a' or 
+							w[index].front() == 'e' or 
+							w[index].front() == 'i' or 
+							w[index].front() == 'o' or 
+							w[index].front() == 'u') and
+							(w[index].back() == 'a' or 
+								w[index].back() == 'e' or
+								w[index].back() == 'i' or
+								w[index].back() == 'o' or
+								w[index].back() == 'u');
+				}
+				vector<int> vowelStrings(vector<string>& words, vector<vector<int>>& queries) {
+					vector<int> ans;
+					for(auto i: queries){
+						int start = i[0], end = i[1];
+						int cnt=0;
+						while(start <= end) if(isStartEndWithVowel(start++, words)) cnt++;
+						ans.push_back(cnt);
+					}
+					return ans;   
+				}
+			};
+		// Optimized: TC: O(n + q) and SC: O(n)
+			class Solution {
+				public:
+				bool isStartEndWithVowel(string &w){
+					return (w.front() == 'a' or 
+							w.front() == 'e' or 
+							w.front() == 'i' or 
+							w.front() == 'o' or 
+							w.front() == 'u') and
+							(w.back() == 'a' or 
+							w.back() == 'e' or
+							w.back() == 'i' or
+							w.back() == 'o' or
+							w.back() == 'u');
+				}
+				vector<int> vowelStrings(vector<string>& words, vector<vector<int>>& queries) {
+					vector<int> ans;
+					// generating prefix sum
+					vector<int> hold;
+					int sum=0;
+					for(int i=0; i<words.size(); i++){
+						if(isStartEndWithVowel(words[i])) sum++;
+						hold.push_back(sum);
+					}
+					for(auto i: queries){
+						int start = i[0], end = i[1];
+						int cnt = hold[end];
+						if(start > 0) cnt -= hold[start-1];
+						ans.push_back(cnt);
+					}
+					return ans;   
+				}
+			};
+
+	1174) Remainder Evaluation:
+		Problem Statement:
+			Given two positive integers num1 and num2, the task is to find the remainder when num1 is divided by num2.
+			Example 1:
+			Input:
+			num1 = 5 num2 = 3
+			Output:
+			2
+			Explanation:
+			The remainder after dividing 5 by 3 is: 2.
+			Example 2:
+			Input:
+			num1 = 5 num2 = 10
+			Output:
+			5
+			Explanation:
+			5 cannot be divided by 10 so it is 
+			the Remainder.
+			Your Task:  
+				You don't need to read input or print anything. Your task is to complete the function findRemainder() which takes two integer num1 and num2 as an input parameter and return the remainder when num1 is divided by num2.
+
+			Expected Time Complexity: O(1)
+			Expected Auxiliary Space: O(1)
+			Constraints:
+			0 <= num1 <= 10^6
+			1 <= num2 <= 10^6
+		#Approach-1: // using % operator
+			class Solution {
+				public: 
+				int findRemainder(int num1,int num2) {
+					return num1 % num2;
+				}
+			};
+		#Approach-2: // using '*' & '/' Operator
+			class Solution {
+				public:
+				int findRemainder(int num1,int num2) {
+					return num1 - (num1/num2) * num2;
+				}
+			};
+		#Approach-3: // using loop
+			class Solution {
+				public: // using loops
+				int findRemainder(int num1,int num2) {
+					// need to handle the -ve case
+					if(num1 < 0) num1 = -1 * num1;
+					if(num2 < 0) num2 = -1 * num2;
+					while(num1 >= num2) num1 -= num2;
+					return num1;
+				}
+			};
+		#Approach-4: // using Loop
+			class Solution {
+				public: // using loops
+				int findRemainder(int num1,int num2) {
+					int i=1, prod = 0;
+					if(num1 < 0) num1 = -1 * num1;
+					if(num2 < 0) num2 = -1 * num2;
+					
+					while(prod <= num1) prod = i * num2, i++;
+					return num1 - (prod - num2) ;
+				}
+			};
+
+	1175) Odd or Even:
+		Problem Statement:
+			Given a positive integer n, determine whether it is odd or even. Return a string "even" if the number is even and "odd" if the number is odd.
+			Examples:
+			Input: n = 15
+			Output: odd
+			Explanation: The number is not divisible by 2
+			Input: n = 44
+			Output: even
+			Explanation: The number is divisible by 2
+				Expected Time Complexity: O(1)
+				Expected Auxiliary Space: O(1)
+			Constraints:
+				0 <= n <= 10^4
+		#Approach-1:
+			class Solution {
+				public: // using & operator
+				string oddEven(int n) {
+					return (n&1) ? "odd" : "even";
+				}
+			};
+		#Approach-2:
+			class Solution {
+				public: // using % operator
+				string oddEven(int n) {
+					return (n%2) ? "odd" : "even";
+				}
+			};
+		#Approach-3:
+			class Solution {
+				public: // without using any operator
+				string oddEven(int n) {
+					bool isEven = 1;
+					// to handle -ve case
+					if(n < 0) n = -1 * n;
+					
+					while(n--) isEven = !isEven;
+					return (isEven) ? "even" : "odd";
+				}
+			};
+		#Approach-4:
+			class Solution {
+				public: // without using any operator
+				string oddEven(int n) {
+					return (n == n/2*2) ? "even" : "odd";
+				}
+			};
+		#Approach-5:
+			class Solution {
+				public: // without using any operator
+				string oddEven(int n) {
+					string s = to_string(n);
+					return (s.back() == '1' or s.back() == '3' or s.back() == '5' or s.back() == '7' or s.back() == '9') ? "odd" : "even";
+				}
+			};
+		#Approach-6:
+			class Solution {
+				public: // without using any operator
+				string oddEven(int n) {
+					string s = bitset<32>(n).to_string();
+					return (s.back() == '1') ? "odd" : "even";
+				}
+			};
+
+	1176) Count Subarrays with given XOR:
+		Problem Statement:
+			Given an array of integers arr[] and a number k, count the number of subarrays having XOR of their elements as k.
+			Examples: 
+			Input: arr[] = [4, 2, 2, 6, 4], k = 6
+			Output: 4
+			Explanation: The subarrays having XOR of their elements as 6 are [4, 2], [4, 2, 2, 6, 4], [2, 2, 6], and [6]. Hence, the answer is 4.
+			Input: arr[] = [5, 6, 7, 8, 9], k = 5
+			Output: 2
+			Explanation: The subarrays having XOR of their elements as 5 are [5] and [5, 6, 7, 8, 9]. Hence, the answer is 2.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				0 ≤ arr[i] ≤10^5
+				0 ≤ k ≤ 10^5
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				long subarrayXor(vector<int> &arr, int k) {
+					long cnt=0, n = arr.size();
+					for(int i=0; i<n; i++){
+						int cur=0;
+						for(int j=i; j<n; j++){
+							cur ^= arr[j];
+							if(cur == k) cnt++;
+						}
+					}
+					return cnt;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1177) Longest Subarray With Sum K:(Easy)
+		Problem statement
+			You are given an array 'a' of size 'n' and an integer 'k'.
+			Find the length of the longest subarray of 'a' whose sum is equal to 'k'.
+			Example :
+			Input: ‘n’ = 7 ‘k’ = 3
+			‘a’ = [1, 2, 3, 1, 1, 1, 1]
+			Output: 3
+			Explanation: Subarrays whose sum = ‘3’ are:
+			[1, 2], [3], [1, 1, 1] and [1, 1, 1]
+			Here, the length of the longest subarray is 3, which is our final answer.
+			Sample Input 1 :
+			7 3
+			1 2 3 1 1 1 1
+			Sample Output 1 :
+			3
+			Explanation Of Sample Input 1 :
+			Subarrays whose sum = ‘3’ are:
+			[1, 2], [3], [1, 1, 1] and [1, 1, 1]
+			Here, the length of the longest subarray is 3, which is our final answer.
+			Sample Input 2 :
+			4 2
+			1 2 1 3
+			Sample Output 2 :
+			1
+			Sample Input 3 :
+			5 2
+			2 2 4 1 2 
+			Sample Output 3 :
+			1
+			Expected time complexity :
+			The expected time complexity is O(n).
+			Constraints :
+				1 <= 'n' <= 5 * 10^6
+				1 <= 'k' <= 10^18
+				0 <= 'a[i]' <= 10^9
+				Time Limit: 1-second
+		// TC: O(n²) & SC: O(1)
+			typedef long long ll;
+			int longestSubarrayWithSumK(vector<int> a, ll k) {
+				ll mxlen=0, n = a.size();
+				for(int i=0; i<n; i++){
+					ll sum=0;
+					for(int j=i; j<n; j++){
+						sum += a[j];
+						if(sum == k) mxlen = max(mxlen *1ll, 1ll * j-i+1);			// to find the max of 2 long long values multiply with 1LL to both numbers
+						if(sum > k) break;
+					}
+				}
+				return mxlen;
+			}
+		// Optimized: It just contains the +ve numbers so sliding window will work, TC: O(n) & SC: O(1)
+			#include<bits/stdc++.h>
+			using ll = long long;
+			int longestSubarrayWithSumK(vector<int> a, ll k) {
+				int start, end, n=a.size();
+				ll sum =0, mxlen=0;
+				start = end = 0;
+				while(end < n){
+					if(sum <= k){
+						if(sum == k) mxlen = max(mxlen, 1ll * (end - start));
+						sum += a[end++];
+					}else{
+						sum -= a[start++];
+					}
+				}
+				if(sum == k) mxlen = max(mxlen, 1ll * (end-start));
+				return mxlen;
+			}
+
+	1178) Longest Subarray With Sum K: (Medium)
+		Problem statement
+			Ninja and his friend are playing a game of subarrays. They have an array ‘NUMS’ of length ‘N’. Ninja’s friend gives him an arbitrary integer ‘K’ and asks him to find the length of the longest subarray in which the sum of elements is equal to ‘K’.
+			Ninjas asks for your help to win this game. Find the length of the longest subarray in which the sum of elements is equal to ‘K’.
+			If there is no subarray whose sum is ‘K’ then you should return 0.
+			Example:
+			Input: ‘N’ = 5,  ‘K’ = 4, ‘NUMS’ = [ 1, 2, 1, 0, 1 ]
+			Output: 4
+			There are two subarrays with sum = 4, [1, 2, 1] and [2, 1, 0, 1]. Hence the length of the longest subarray with sum = 4 is 4.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^5
+				-10^6 <= NUMS[i] <= 10^6
+				-10^6 <= K <= 10^6
+				Sum of N Over all the Test cases <= 10^5
+				Time Limit: 1 sec
+			Sample Input 1 :
+			2
+			3 5
+			2 3 5
+			3 1
+			-1 1 1
+			Sample Output 1 :
+			2
+			3
+			Explanation Of Sample Input 1 :
+			For the first case:
+			There are two subarrays with sum = 5, [2, 3] and [5]. Hence the length of the longest subarray is 2.
+			For the second case:
+			Longest subarray with sum = 1 is [1, -1, 1].
+			Sample Input 2 :
+			2
+			3 4
+			1 1 1
+			3 2
+			-50 0 52
+			Sample Output 2 :
+			0 
+			3
+			
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			#include <bits/stdc++.h> 
+			int getLongestSubarray(vector<int>& nums, int k){
+				int n = nums.size(), mxlen=0;
+				for(int i=0; i<n; i++){
+					int CurS=0;
+					for(int j=i; j<n; j++){
+						CurS += nums[j];
+						if(CurS == k) mxlen = max(mxlen, j-i+1);
+					}
+				}
+				return mxlen;
+			}
+		//Optimized: ❌Pending
+
+	1179) Count all triplets with given sum in sorted array: (Refer POTD: 1108)
+		Problem Statement:
+			Given a sorted array arr[] and a target value, the task is to count triplets (i, j, k) of valid indices, such that arr[i] + arr[j] + arr[k] = target and i < j < k.
+			Examples:
+			Input: arr[] = [-3, -1, -1, 0, 1, 2], target = -2
+			Output: 4
+			Explanation: Two triplets that add up to -2 are:
+			arr[0] + arr[3] + arr[4] = (-3) + 0 + (1) = -2
+			arr[0] + arr[1] + arr[5] = (-3) + (-1) + (2) = -2
+			arr[0] + arr[2] + arr[5] = (-3) + (-1) + (2) = -2
+			arr[1] + arr[2] + arr[3] = (-1) + (-1) + (0) = -2
+			Input: arr[] = [-2, 0, 1, 1, 5], target = 1
+			Output: 0
+			Explanation: There is no triplet whose sum is equal to 1. 
+			Constraints:
+				3 ≤ arr.size() ≤ 10^3
+				-10^5 ≤ arr[i], target ≤ 10^5
+
+		// Not Optimized: TC: O(n³) & SC: O(1)
+			class Solution {
+				public:
+				int countTriplets(vector<int> &arr, int target) {
+					int cnt=0, n = arr.size();
+					for(int i=0; i<n-2; i++)
+						for(int j=i+1; j<n-1; j++)
+							for(int k=j+1; k<n; k++)
+								if(arr[i]+arr[j]+arr[k] == target) cnt++;
+					return cnt;
+				}
+			};
+		// Optimized: ❌Pending
+		
+	1180) Find the closest pair from two arrays:
+		Problem Statement:
+			Given two sorted arrays arr and brr and a number x, find the pair whose sum is closest to x and the pair has an element from each array. In the case of multiple closest pairs return any one of them.
+			Note: Can return the two numbers in any manner. The driver code takes care of the printing of the closest difference.
+			Example 1:
+			Input : N = 4, M = 4
+			arr[ ] = {1, 4, 5, 7}
+			brr[ ] = {10, 20, 30, 40} 
+			X = 32
+			Output : 
+			1, 30
+			Explanation:
+			The closest pair whose sum is closest
+			to 32 is {1, 30} = 31.
+			Example 2:
+			Input : N = 4, M = 4
+			arr[ ] = {1, 4, 5, 7}
+			brr[ ] = {10, 20, 30, 40}
+			X = 50 
+			Output : 
+			7, 40 
+			Explanation: 
+			The closest pair whose sum is closest
+			to 50 is {7, 40} = 47.
+			Your Task:
+			You only need to complete the function printClosest() that takes an array (arr), another array (brr), size of array arr (N), size of array brr (M), and return the array of two integers whose sum is closest to X. The driver code takes care of the printing of the closest difference.
+			Expected Time Complexity: O(N+M).
+			Expected Auxiliary Space: O(1).
+			Constraints:
+				1 ≤ N, M ≤ 10^5
+				1 ≤ A[i], B[i] ≤ 10^9
+		// Not Optimized: TC: O(n²) & SC:O(1)
+			class Solution{
+				public:
+				vector<int> printClosest(int arr[], int brr[], int n, int m, int x) {
+					int v1, v2, diff = INT_MAX;
+					for(int i=0; i<n; i++){
+						for(int j=0; j<m; j++){
+							int sum = arr[i]+brr[j], curClose = abs(sum - x);
+							if(curClose < diff)
+								diff = curClose, v1 = arr[i], v2 = brr[j];
+						}
+					}
+					return {v1,v2};
+				}
+			};
+		// Optimized: TC: O(n+m) & SC: O(1)
+			class Solution{
+				public:
+				vector<int> printClosest(int arr[], int brr[], int n, int m, int x) {
+					int v1=0, v2=0, diff = INT_MAX, right=n-1, left =0;
+					while(right >=0 and left < m){
+						int val = abs(arr[right]+brr[left]-x);
+						if(val < diff){
+							diff = val;
+							v1 = arr[right], v2 = brr[left];
+						}
+						
+						if(arr[right]+brr[left] > x) right--;
+						else left++;
+					}
+					// cout<<v1<<"\t"<<v2;
+					return {v1, v2};
+				}
+			};
+
+	1181) Indexes of Subarray Sum:
+		Problem Statement:
+			Given an array arr[] containing only non-negative integers, your task is to find a continuous subarray (a contiguous sequence of elements) whose sum equals a specified value target. You need to return the 1-based indices of the leftmost and rightmost elements of this subarray. You need to find the first subarray whose sum is equal to the target.
+			Note: If no such array is possible then, return [-1].
+			Examples:
+			Input: arr[] = [1, 2, 3, 7, 5], target = 12
+			Output: [2, 4]
+			Explanation: The sum of elements from 2nd to 4th position is 12.
+			Input: arr[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], target = 15
+			Output: [1, 5]
+			Explanation: The sum of elements from 1st to 5th position is 15.
+			Input: arr[] = [5, 3, 4], target = 2
+			Output: [-1]
+			Explanation: There is no subarray with sum 2.
+			Constraints:
+				1 <= arr.size()<= 10^6
+				0 <= arr[i] <= 10^3
+				0 <= target <= 10^9
+		// TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				vector<int> subarraySum(vector<int> &arr, int target) {
+					int left, right, n = arr.size();
+					left = right = -1;
+					for(int i=0; i<n; i++){
+						int s = 0, flag=0;
+						for(int j=i; j<n; j++){
+							s += arr[j];
+							if(s == target){
+								left = i+1, right = j+1;
+								flag =1;
+								break;
+							} 
+							if(s > target) break;
+						}
+						if(flag) break;
+					}
+					if(left == -1) return {left};
+					return {left, right};
+				}
+			};
+		// TC: O(n) & SC: O(1)
+			class Solution {
+				public:
+				vector<int> subarraySum(vector<int> &arr, int target) {
+					int left, right, n = arr.size();
+					left = right = -1;
+					int s,e, sum=0;
+					s=e=0;
+					while(e < n){
+						sum += arr[e++];
+						while(sum > target and s < e) sum -= arr[s++];
+						
+						if(sum == target){
+							left = s+1, right = e;
+							break;
+						}
+					}
+					return (left == -1) ? vector<int>{-1} : vector<int>{left, right};
+				}
+			};
+
+	1182) Subarray range with given sum: (Refer POTD: 1172)
+		Problem Statement:
+			Given an unsorted array of integers arr[], and a target tar, determine the number of subarrays whose elements sum up to the target value.
+			Examples:
+			Input: arr[] = [10, 2, -2, -20, 10] , tar = -10
+			Output: 3
+			Explanation: Subarrays with sum -10 are: [10, 2, -2, -20], [2, -2, -20, 10] and [-20, 10].
+			Input: arr[] = [1, 4, 20, 3, 10, 5] , tar = 33
+			Output: 1
+			Explanation: Subarray with sum 33 is: [20,3,10].
+			Expected Time Complexity: O(n)
+			Expected Auxilary Space: O(n)
+			Constraints:
+				1 <= arr.size() <= 10^6
+				-10^5 <= arr[i] <= 10^5
+				-10^5 <= tar <= 10^5
+		int subArraySum(vector<int>& arr, int tar) {
+			unordered_map<int, int> mp;
+			mp[0] = 1;      // if we encounter the sum 0 then its subarray where target sum
+			int cnt=0, pref=0;
+			for(int i: arr){
+				pref += i;
+				if(mp.count(pref - tar))
+					cnt += mp[pref-tar];
+				
+				mp[pref]++;
+			}
+			return cnt;
+		}
+
+	1183) Shifting Letters I:
+		Problem Statement:
+			You are given a string s of lowercase English letters and an integer array shifts of the same length.
+			Call the shift() of a letter, the next letter in the alphabet, (wrapping around so that 'z' becomes 'a').
+			For example, shift('a') = 'b', shift('t') = 'u', and shift('z') = 'a'.
+			Now for each shifts[i] = x, we want to shift the first i + 1 letters of s, x times.
+			Return the final string after all such shifts to s are applied.
+			Example 1:
+			Input: s = "abc", shifts = [3,5,9]
+			Output: "rpl"
+			Explanation: We start with "abc".
+			After shifting the first 1 letters of s by 3, we have "dbc".
+			After shifting the first 2 letters of s by 5, we have "igc".
+			After shifting the first 3 letters of s by 9, we have "rpl", the answer.
+
+			Example 2:
+			Input: s = "aaa", shifts = [1,2,3]
+			Output: "gfd"
+			
+			Constraints:
+				1 <= s.length <= 10^5
+				s consists of lowercase English letters.
+				shifts.length == s.length
+				0 <= shifts[i] <= 10^9
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				string shiftingLetters(string s, vector<int>& shifts) {
+					int n = s.size();
+					for(int i=0; i<n; i++){
+						int cnt = shifts[i];			// less Optimized
+						// int cnt = shifts[i] % 26;       // Little more optimized, there will be 26 chars.
+						while(cnt--){
+							for(int j=0; j<=i; j++){
+								if(s[j] == 'z') s[j] = 'a';
+								else s[j]++;
+							}
+						}
+					}
+					return s;
+				}
+			};
+		// Optimized: Suffix Sum: TC: O(n) & SC: O(n)
+			class Solution {
+				public:
+				string shiftingLetters(string s, vector<int>& shifts) {
+					int sum=0, n = shifts.size();
+					vector<int> Suffix (n, 0);
+					for(int i=n-1; i>=0; i--){
+						sum += shifts[i] % 26;
+						Suffix[i] = sum % 26;               // taking modulo coz we have 26 chars in alphabates
+					}    
+					for(int i=0; i<n; i++){
+						int cnt = Suffix[i];
+						while(cnt--){
+							if(s[i] == 'z') s[i] = 'a';
+							else s[i]++;
+						}
+					}
+					return s;
+				}
+			};
+
+	1184) Shifting Letters II:
+		Problem Statement:
+			You are given a string s of lowercase English letters and a 2D integer array shifts where shifts[i] = [starti, endi, directioni]. For every i, shift the characters in s from the index starti to the index endi (inclusive) forward if directioni = 1, or shift the characters backward if directioni = 0.
+			Shifting a character forward means replacing it with the next letter in the alphabet (wrapping around so that 'z' becomes 'a'). Similarly, shifting a character backward means replacing it with the previous letter in the alphabet (wrapping around so that 'a' becomes 'z').
+			Return the final string after all such shifts to s are applied.
+			Example 1:
+			Input: s = "abc", shifts = [[0,1,0],[1,2,1],[0,2,1]]
+			Output: "ace"
+			Explanation: Firstly, shift the characters from index 0 to index 1 backward. Now s = "zac".
+			Secondly, shift the characters from index 1 to index 2 forward. Now s = "zbd".
+			Finally, shift the characters from index 0 to index 2 forward. Now s = "ace".
+			Example 2:
+			Input: s = "dztz", shifts = [[0,0,0],[1,1,1]]
+			Output: "catz"
+			Explanation: Firstly, shift the characters from index 0 to index 0 backward. Now s = "cztz".
+			Finally, shift the characters from index 1 to index 1 forward. Now s = "catz".
+			Constraints:
+				1 <= s.length, shifts.length <= 5 * 10^4
+				shifts[i].length == 3
+				0 <= starti <= endi < s.length
+				0 <= directioni <= 1
+				s consists of lowercase English letters.
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				string shiftingLetters(string s, vector<vector<int>>& shifts) {
+					for(auto shift: shifts){
+						int start = shift[0], end = shift[1], direction = shift[2];
+						while(end >= start){
+							if(direction){
+								if(s[end] == 'z') s[end] = 'a';
+								else s[end]++;
+							}else{
+								if(s[end] == 'a') s[end] = 'z';
+								else s[end]--;
+							}
+							end--;
+						}
+					}
+					return s;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1185) Count Pairs whose sum is less than target:
+		Problem Statement:
+			Given an array arr[] and an integer target. You have to find the number of pairs in the array whose sum is strictly less than the target.
+			Examples:
+			Input: arr[] = [7, 2, 5, 3], target = 8
+			Output: 2
+			Explanation: There are 2 pairs with sum less than 8: (2, 5) and (2, 3). 
+			Input: arr[] = [5, 2, 3, 2, 4, 1], target = 5
+			Output: 4
+			Explanation: There are 4 pairs whose sum is less than 5: (2, 2), (2, 1), (3, 1) and (2, 1).
+			Input: arr[] = [2, 1, 8, 3, 4, 7, 6, 5], target = 7
+			Output: 6
+			Explanation: There are 6 pairs whose sum is less than 7: (2, 1), (2, 3), (2, 4), (1, 3), (1, 4) and (1, 5).
+			Constraints:
+				1 <= arr.size() <= 10^5
+				0 <= arr[i] <= 10^4
+				1 <= target <= 10^4
+		// Not Optimized: TC: O(n²) & SC:O(1)
+			int countPairs(vector<int> &arr, int target) {
+				int cnt=0, n =arr.size();
+				for(int i=0; i<n; i++)
+					for(int j=i+1; j<n; j++)
+						if(arr[i]+arr[j] < target) cnt++;
+				return cnt;
+			}
+		// Optimized: TC: O(n*log n) & SC:O(1)
+			class Solution {
+				public:
+				int countPairs(vector<int> &arr, int target) {
+					int cnt=0, start=0, end=arr.size()-1;
+					sort(arr.begin(), arr.end());
+					while(start < end){
+						if(arr[start] + arr[end] < target){
+							cnt += end - start;
+							start++;
+						}else{
+							end--;
+						}
+					}
+					return cnt;
+				}
+			};
+
+1186)
+1187)
+1188)
+1189)
+1190)
 
 
 ---------------------------------------------------------------------------------------------------------
