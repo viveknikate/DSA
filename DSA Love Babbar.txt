@@ -26510,7 +26510,6 @@ Lecture-70: Binary SearchTree FAANG Interview Questions || Part-1:
 			a.push_back(n -> data);
 			inorder(n -> right, a);
 		}
-
 		pair<int, int> predecessorSuccessor(TreeNode *root, int key) {
 			int pre, succ;
 			pre = succ = -1;
@@ -28529,10 +28528,155 @@ Lecture 77: Heaps Hard Interview Questions || Part - 3:
 				return (res.size() == n) ? res : "not possible";
 			}
 ---------------------------------------------------------------------------------------------------------
+	7/01/25
 Lecture 78: Hashmaps in C++:
-HASH_TABLE Homework coding ninja all questions ❌Pending
----------------------------------------------------------------------------------------------------------
+	1) map:
+		- the data will be stored in sorted order ascending.
+		#include<map>
+		TC: O(log n) for Insertion/ Deletion/ Searching
+		eg.
+		#include <iostream>
+		#include<map>
+		using namespace std;
+		int main() {
+			// insertion
+			map<string, int> mp;
+			pair<string, int> p = make_pair("Vivek", 1);
+			mp.insert(p);
+			pair<string, int> p2 = {"Mahesh", 1};
+			mp.insert(p2);
+			pair<string, int> p3("Nikate", 1);
+			mp.insert(p3);
+			mp["Test"] = 1;
+			mp["asdf"] =  45;
+			mp["Asdf"] =  23;
+			
+			map<string, int> :: iterator itr = mp.begin();
+			while(itr != mp.end())
+				cout<<itr->first<<"\t"<<itr->second<<endl, itr++;
+			return 0;
+		}
+	2) unordered_map:
+		- the data will be stored random order.
+		#include<unordered_map>
+		TC: O(1) for Insertion/ Deletion/ Searching
+		eg.
+		#include <iostream>
+		#include<unordered_map>
+		using namespace std;
+		int main() {
+			unordered_map<string, int> mp;
+			
+			// insertion
+			mp["asdf"] =  45;
+			pair<string, int> p = make_pair("Vivek", 1);
+			mp.insert(p);
+			pair<string, int> p2 = {"Mahesh", 1};
+			mp.insert(p2);
+			pair<string, int> p3("Nikate", 1);
+			mp.insert(p3);
+			mp["Test"] = 1;
+			
+			// searching
+			std::cout << "searching: " << std::endl;
+			cout<<"Vivek: "<<mp["Vivek"]<<endl;
+			std::cout << "Nikate: " << mp["Nikate"] << std::endl;
+			
+			// this will work only if there is entry with this key
+			// std::cout << mp.at("Random") << std::endl;        // this won't work 
+			std::cout << "Test " <<mp.at("Test") << std::endl;        // this will work 
+			std::cout << "new key" <<mp["Random"] << std::endl;         // it makes the new entry with 0 as value
+			
+			//size
+			std::cout <<"Size: "<< mp.size() << std::endl;
+			
+			// is the key present
+			std::cout << "Is Vivek key present: " << mp.count("Vivek") << std::endl;
+			std::cout << "Is case key present: " << mp.count("case") << std::endl;
+			
+			// erase
+			mp.erase("Test");
+			std::cout << "size: " << mp.size() << std::endl;
+			
+			// Data
+			for(auto &[key, value]: mp) // this syntax is valid after c++17                         
+				cout<< key << "\t" << value<<endl;
 
+			for(auto &[key, value]: mp) value++;
+
+			cout<<endl;
+			for(auto i: mp)             // better use below
+				cout<< i.first << "\t" << i.second <<endl;
+			
+			// using iterator
+			for (unordered_map<string, int>::iterator itr = mp.begin(); itr != mp.end(); ++itr) 
+				cout<<itr->first<<"\t"<<itr->second<<endl;
+			return 0;
+		}
+	
+	Q.1. Maximum Frequency Number:
+		Problem statement
+			Ninja is given an array of integers that contain numbers in random order. He needs to write a program to find and return the number which occurs the maximum times in the given input. He needs your help to solve this problem.
+			If two or more elements contend for the maximum frequency, return the element which occurs in the array first i.e. whose index is lowest.
+			For example,
+			For 'arr' = [ 1, 2, 3, 1, 2]. you need to return 1.
+			Constraints:
+				1 <= T <= 5
+				1 <= N <= 10000
+				-10 ^ 3 <= |arr| <= 10 ^ 3
+				Time Limit: 1 sec
+			Sample Input 1:
+			1 
+			13
+			2 12 2 11 -12 2 -1 2 2 11 12 2 -6 
+			Sample Output 1:
+			2
+			Explanation of Sample Input 1:
+			Test case 1:
+			For the first test case of sample output 1, as we start traveling the array, ‘2’ has the highest frequency, hence our answer is ‘2’.
+			Sample Input 2:
+			2 
+			3
+			4 -5 1
+			4
+			1 -2 1 -2
+			Sample Output 2:
+			4
+			-2
+			Explanation of Sample Input 2:
+			Test case 1:
+			For the first test case of sample output 2, as all the elements have only occurred once, so we will take the first element that has occurred once. Therefore our output will be ‘4’.
+			Test case 2:
+			-2 has the highest frequency.
+		int maximumFrequency(vector<int> &arr, int n) {
+			unordered_map<int, int> Freq;
+			for(int i: arr) Freq[i]++;
+			int ans=0, mxCnt=0;
+			for(int i: arr)
+				if(Freq[i] > mxCnt){
+					ans = i;
+					mxCnt = Freq[i];
+				}
+			return ans;
+		}
+
+	Concept:
+		- Bucket array
+		- Hash Code
+		- Compression Function
+		- Collisions
+		- Collisions
+			- Open Hashing (separate chaining)
+			- Closed addressing
+				-Linear Probing
+				- Quadratic Probing
+	HASH_TABLE Homework coding ninja all questions ❌Pending 
+	https://www.naukri.com/code360/problem-lists/love-babbar-dsa-sheet-problems?practice_topic[]=Hash%20Table&difficulty[]=Easy&sort_entity=company_count&sort_order=DESC
+	Q.1. Majority element: (Refer POTD: 273)
+---------------------------------------------------------------------------------------------------------
+	8/01/25
+Lecture 79: Trie & its Implementation:
+	
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -56121,7 +56265,7 @@ POTD:-[Problem of the Day]
 			return mxAns;
 		}
 	
-	308) Majority element:
+	308) Majority element: (Refer POTD: 273)
 		Problem statement
 			You have been given an array/list 'ARR' consisting of 'N' integers. 
 			Your task is to find the majority element in the array. If there is no majority element present, print -1.
@@ -60284,7 +60428,7 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-	352) Majority Element:
+	352) Majority Element:(Refer POTD: 308)
 		Problem Statement:
 			Given an array nums of size n, return the majority element.
 			The majority element is the element that appears more than [n/2⌋ times. 
@@ -115926,6 +116070,7 @@ POTD:-[Problem of the Day]
 			❌Pending
 
 	1133) Predecessor And Successor In BST:
+		https://www.naukri.com/code360/problems/_893049
 		Problem statement
 			You have been given a binary search tree of integers with ‘N’ nodes. You are also given 'KEY' which represents data of a node of this tree.
 			Your task is to return the predecessor and successor of the given node in the BST.
@@ -119131,12 +119276,159 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1186)
-1187)
-1188)
+	1186) Sum Pair closest to target:
+		Problem Statement:
+			Given an array arr[] and a number target, find a pair of elements (a, b) in arr[], where a<=b whose sum is closest to target.
+			Note: Return the pair in sorted order and if there are multiple such pairs return the pair with maximum absolute difference. If no such pair exists return an empty array.
+			Examples:
+			Input: arr[] = [10, 30, 20, 5], target = 25
+			Output: [5, 20]
+			Explanation: As 5 + 20 = 25 is closest to 25.
+			Input: arr[] = [5, 2, 7, 1, 4], target = 10
+			Output: [2, 7]
+			Explanation: As (4, 7) and (2, 7) both are closest to 10, but absolute difference of (2, 7) is 5 and (4, 7) is 3. Hence, [2, 7] has maximum absolute difference and closest to target. 
+			Input: arr[] = [10], target = 10
+			Output: []
+			Explanation: As the input array has only 1 element, return an empty array.
+			Constraints:
+				1 <= arr.size() <= 2*10^5
+				0 <= target<= 2*10^5
+				0 <= arr[i] <= 10^5
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				vector<int> sumClosest(vector<int>& arr, int target) {
+					int n = arr.size();
+					if(n == 1) return {};
+					int s, e, diff=INT_MAX;
+					s = e = 0;
+					for(int i=0; i<n; i++){
+						for(int j=i+1; j<n; j++){
+							int val = arr[i]+arr[j];
+							int curDiff = abs(val - target);
+							if(diff > curDiff){
+								diff = curDiff;
+								s = min(arr[i], arr[j]);
+								e = max(arr[i], arr[j]);
+							}else if(diff == curDiff){
+								int Range = abs(s - e);
+								int curRange = abs(arr[i] - arr[j]);
+								if(curRange > Range){
+									s = min(arr[i], arr[j]);
+									e = max(arr[i], arr[j]);
+								}
+							}
+						}
+					}
+					return {s, e};
+				}
+			};
+		// Optimized: TC: O(n*log(n) + n) & SC: (1)
+			class Solution {
+				public:
+				vector<int> sumClosest(vector<int>& arr, int target) {
+					int n = arr.size();
+					if(n == 1) return {};
+					sort(arr.begin(), arr.end());
+					int s=arr[0], e=arr[1], start=0, end=n-1, diff = INT_MAX;
+					while(start < end){
+						int val = arr[start]+arr[end];
+						int CurDiff = abs(val - target);
+						if(diff > CurDiff){
+							diff = CurDiff;
+							s = arr[start], e = arr[end];
+						}else if(diff == CurDiff){
+							int Range = abs(s-e), CurRange = abs(arr[start]-arr[end]);
+							if(Range < CurRange) s = arr[start], e = arr[end];
+						}
+						if(val > target) end--;
+						else start++;
+					}
+					return {s, e};
+				}
+			};
+
+	1187) Minimum Number of Operations to Move All Balls to Each Box:
+		Problem Statement:
+			You have n boxes. You are given a binary string boxes of length n, where boxes[i] is '0' if the ith box is empty, and '1' if it contains one ball.
+			In one operation, you can move one ball from a box to an adjacent box. Box i is adjacent to box j if abs(i - j) == 1. Note that after doing so, there may be more than one ball in some boxes.
+			Return an array answer of size n, where answer[i] is the minimum number of operations needed to move all the balls to the ith box.
+			Each answer[i] is calculated considering the initial state of the boxes.
+			Example 1:
+			Input: boxes = "110"
+			Output: [1,1,3]
+			Explanation: The answer for each box is as follows:
+			1) First box: you will have to move one ball from the second box to the first box in one operation.
+			2) Second box: you will have to move one ball from the first box to the second box in one operation.
+			3) Third box: you will have to move one ball from the first box to the third box in two operations, and move one ball from the second box to the third box in one operation.
+			Example 2:
+			Input: boxes = "001011"
+			Output: [11,8,5,4,3,4]
+			Constraints:
+				n == boxes.length
+				1 <= n <= 2000
+				boxes[i] is either '0' or '1'.
+		// TC: O(n²) & SC: O(n)
+			class Solution {
+				public:
+				vector<int> minOperations(string boxes) {
+					vector<int> ans;
+					int n = boxes.size();
+					for(int i=0; i<n; i++){
+						int Steps=0;
+						for(int j=0; j<n; j++) if(boxes[j] == '1') Steps += abs(j-i);
+						ans.push_back(Steps);
+					}
+					return ans;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1188) String Matching in an Array:
+		Problem Statement:
+			Given an array of string words, return all strings in words that is a substring of another word. You can return the answer in any order.
+			A substring is a contiguous sequence of characters within a string
+			Example 1:
+			Input: words = ["mass","as","hero","superhero"]
+			Output: ["as","hero"]
+			Explanation: "as" is substring of "mass" and "hero" is substring of "superhero".
+			["hero","as"] is also a valid answer.
+			Example 2:
+			Input: words = ["leetcode","et","code"]
+			Output: ["et","code"]
+			Explanation: "et", "code" are substring of "leetcode".
+			Example 3:
+			Input: words = ["blue","green","bu"]
+			Output: []
+			Explanation: No string of words is substring of another string.
+
+			Constraints:
+				1 <= words.length <= 100
+				1 <= words[i].length <= 30
+				words[i] contains only lowercase English letters.
+				All the strings of words are unique.
+		// TC: O(n²) & SC: O(n)
+			class Solution {
+				public:
+				vector<string> stringMatching(vector<string>& words) {
+					vector<string> ans;
+					int n = words.size();
+					for(int i=0; i<n; i++){
+						for(int j=0; j<n; j++){
+							if(i == j) continue;
+							if(words[j].find(words[i]) != string::npos){
+								ans.push_back(words[i]);
+								break;
+							}
+						}
+					}
+					return ans;
+				}
+			};
+		// Optimized: ❌Pending
+
 1189)
 1190)
-
 
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following:
