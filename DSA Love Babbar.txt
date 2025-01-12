@@ -20144,7 +20144,28 @@ Lecture-55: Stack Interview Questions
 
 				Where 'N' is the length of the input string 'S'.
 				Time Limit: 1 sec
-		
+		Problem Statement:
+			Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+			An input string is valid if:
+			Open brackets must be closed by the same type of brackets.
+			Open brackets must be closed in the correct order.
+			Every close bracket has a corresponding open bracket of the same type.
+			Example 1:
+			Input: s = "()"
+			Output: true
+			Example 2:
+			Input: s = "()[]{}"
+			Output: true
+			Example 3:
+			Input: s = "(]"
+			Output: false
+			Example 4:
+			Input: s = "([])"
+			Output: true
+			Constraints:
+				1 <= s.length <= 10^4
+				s consists of parentheses only '()[]{}'.
+
 		// Using map:
 			bool isValidParenthesis(string s) {
 				stack<char> st;
@@ -20179,6 +20200,18 @@ Lecture-55: Stack Interview Questions
 				}
 				return st.empty();
 			}
+
+		// using Stack:
+			class Solution {
+				public:
+				bool isValid(string s) {
+					stack<char> st;
+					for(char ch: s)
+						if(!st.empty() and ((ch == ')' and st.top() == '(') or (ch == ']' and st.top() == '[') or (ch == '}' and st.top() == '{'))) st.pop();
+						else st.push(ch);
+					return st.size() == 0;
+				}
+			};
 
 	Q.4. Insert An Element At Its Bottom In A Given Stack:
 		Refer Q. 263 from POTD section
@@ -28559,7 +28592,7 @@ Lecture 78: Hashmaps in C++:
 	2) unordered_map:
 		- the data will be stored random order.
 		#include<unordered_map>
-		TC: O(1) for Insertion/ Deletion/ Searching
+		TC: O(1) in average case, for Insertion/ Deletion/ Searching. in WORST CASE the TC: O(l) where, l is the lenght of string
 		eg.
 		#include <iostream>
 		#include<unordered_map>
@@ -28676,7 +28709,626 @@ Lecture 78: Hashmaps in C++:
 ---------------------------------------------------------------------------------------------------------
 	8/01/25
 Lecture 79: Trie & its Implementation:
-	
+	Trie:
+		A Trie, also known as a prefix tree, is a tree-like data structure used to store a dynamic set of strings. It is particularly useful for efficient retrieval of keys in a large dataset of strings.
+		The Trie data structure is a tree-like data structure used for storing a dynamic set of strings. It is commonly used for efficient retrieval and storage of keys in a large dataset. The structure supports operations such as insertion, search, and deletion of keys, making it a valuable tool in fields like computer science and information retrieval.
+	eg.
+		#Parentheses Initialization: 
+		Parentheses Initialization data(ch) (Constructor Initialization List): This is used in the constructor to initialize the data member of the TrieNode object with the value of ch that is passed as an argument to the constructor.
+		- The parentheses syntax (data(ch)) is a constructor initialization list. 
+		- It directly initializes the data member before the body of the constructor is executed.
+		It’s efficient because it directly initializes the member variable without invoking a default constructor first and then assigning a value.
+		If no value is passed, you can use a default value (e.g., data('\0') or data() to initialize it to '\0').
+		TrieNode(char ch = '\0') : data(ch), isTerminal(false) {
+			for (int i = 0; i < 26; i++) {
+				children[i] = nullptr;
+			}
+		}
+		#Brace Initialization {} (List Initialization): 
+			This is used in your example to initialize arrays or other aggregate types. For example, {nullptr} is used to initialize the children array.
+			Brace initialization (also known as list initialization) is used to initialize arrays or aggregate types like structs. This syntax is safer and prevents accidental narrowing conversions (e.g., trying to assign a double to an int).
+			When used for an array (children{nullptr}), it initializes all the elements of the array to the provided value (in this case, nullptr).
+			It is a more modern C++ approach, available from C++11 and onward, which avoids issues like uninitialized variables.
+			eg.
+			TrieNode(char ch = '\0') : data(ch), children{nullptr} {}		
+		Parentheses (()):
+			Used in constructor initialization lists to initialize class members.
+			The initialization is done directly and efficiently.
+			It’s often used for simple types like integers, characters, or references.
+			Example:
+				TrieNode(char ch) : data(ch) {}  // Initializes `data` with the value of `ch`
+		Braces ({}):
+			Used for list initialization of arrays or aggregate types like structs, arrays, and std::vector.
+			Braces can initialize all elements in an array or an aggregate type in one go, as shown in the example where the array of pointers (children) is initialized with nullptr for all elements.
+			Example:
+				TrieNode(char ch) : children{nullptr} {}  // Initializes all elements of `children` to nullptr
+		Parentheses (()) in the constructor initialization list are used to directly initialize individual members (like data), and you pass the value to them.
+		Braces ({}) are used for initializing arrays or structures, and they allow you to initialize all elements of an array or struct in one step.
+	Trie structure:
+		class TrieNode{
+			public:
+			char data;
+			TrieNode* children[26];
+			bool isTerminal;
+			// \0 called the null character, passing by default.\
+			// constructor
+			TrieNode(char ch = '\0'){
+				data = ch;
+				isTerminal = false;
+				for(int i=0; i<26; i++) children[i] = NULL;
+			}
+		};
+	Option 1: Using a Loop:
+		you can loop through the array and set each pointer to nullptr:
+		TrieNode(char ch) {
+			data = ch;
+			for (int i = 0; i < 26; ++i) {
+				children[i] = nullptr;
+			}
+		}
+	Option 2: Using List Initialization (C++11 and later)
+		You can also use list initialization to set all elements to nullptr like this:
+		TrieNode(char ch) : data(ch), children{nullptr} {}
+		This initializes all 26 elements in the children array to nullptr. This approach is more concise and still correct.
+	// c++ 11 or later version supports this 
+		TrieNode(char ch = '\0') : data(ch), children{NULL}, isTerminal(false) {};
+	Basic operations on Trie Data Structure:
+		Following are some of the basic operations performed on a Trie data structure:
+		Operation 					Description  								Time Complexity 		Space Complexity
+			Insert 				Inserts a new word into the trie. 					O(n)					O(n)
+			Search 				Searches for a word in the trie. 					O(n)					O(1)
+			Delete 				Removes a word from the trie.						O(n)					O(1)
+			StartsWith			Checks if there is any word in the trie 
+									that starts with the given prefix				O(m)					O(1)
+		Here, n represents the length of the word and m represents the length of the prefix.
+	Trie advantage: trie used in giving suggestions
+	Implementation:
+		// Removal in trie space optimize approach ❌Pending
+		#include <iostream>
+		using namespace std;
+		class TrieNode{
+			public:
+			char data;
+			TrieNode* children[26];
+			bool isTerminal;
+			// \0 called the null character, passing by default.
+			TrieNode(char ch = '\0'){
+				data = ch;
+				for(int i=0; i<26; i++) children[i]=NULL; 
+				isTerminal = false;
+			};
+		};
+		class Trie{
+			// the methods before the public are private.
+			TrieNode* root = new TrieNode();
+			bool searchInTrie(TrieNode* root, string s){
+				if(s.empty()) return root->isTerminal;
+				
+				int index = s[0] - 'a';
+				// present
+				if(root->children[index] != NULL) return searchInTrie(root->children[index], s.substr(1));
+				// absent
+				else return 0;
+			}
+			bool checkPrefixTrie(TrieNode* root, string s){
+				if(s.empty()) return 1;
+				
+				int index = s[0] - 'a';
+				//present 
+				if(root->children[index] != NULL) return checkPrefixTrie(root->children[index], s.substr(1));
+				// absent
+				else return 0;
+			}
+			bool deleteFromTrie(TrieNode* root, string s){
+				if(s.empty()){
+					root -> isTerminal = false;
+					return 1;
+				}
+				int index = s[0] - 'a';
+				// present
+				if(root -> children[index] != NULL) return deleteFromTrie(root -> children[index], s.substr(1));
+				// absent
+				else {
+					std::cout << "Given words doesn't even exists in Trie, delete operation Aborted" << std::endl;
+					return 0;
+				}
+			}
+			void insertIntoTrie(TrieNode* root, string s){
+				if(s.empty()){
+					root -> isTerminal = true;
+					return;
+				} 
+				
+				int index = s[0] - 'a';                 // means this character exists
+				TrieNode *child = NULL;
+				if(root -> children[index] != NULL){
+					child = root -> children[index];
+				}else{
+					child = new TrieNode(s[0]);
+					root -> children[index] = child;
+				}
+				insertIntoTrie(child, s.substr(1));
+			}
+			void printer(TrieNode* root, string &s){
+				if(root->isTerminal) std::cout << s << std::endl;    
+				for(int i=0; i<26; i++){
+					// present
+					TrieNode* cur = root -> children[i];
+					if(cur != NULL){
+						s.push_back(cur->data);
+						printer(cur, s);
+						s.pop_back();
+					}
+				}
+			}
+			public:
+			void insertWord(string s){
+				insertIntoTrie(root, s);
+			}
+			bool search(string s){
+				return searchInTrie(root, s);
+			}
+			bool deleteString(string s){
+				return deleteFromTrie(root, s);
+			}
+			bool prefixPresent(string pref){
+				return checkPrefixTrie(root, pref);
+			}
+			void print(){
+				string s;
+				printer(root, s);
+			}
+		};
+		int main() {
+			Trie T;
+
+			// insertion
+			T.insertWord("vivek");
+			T.insertWord("mahesh");
+			T.insertWord("aai");
+			T.insertWord("momo");
+			T.insertWord("tp");
+			T.insertWord("munshi");
+			T.insertWord("test");
+			T.insertWord("sample");
+			
+			// searching
+			std::cout <<"is vivek present: "<< T.search("vivek") << std::endl;
+			std::cout <<"is viv present: "<< T.search("viv") << std::endl;
+			std::cout <<"is nikate present: "<< T.search("nikate") << std::endl;
+			
+			// deletion HomeWork
+			std::cout <<"is test present: "<< T.search("test") << std::endl;
+			T.deleteString("test");
+			std::cout <<"is test present: "<< T.search("test") << std::endl;
+			
+			std::cout <<"is sample present: "<< T.search("sample") << std::endl;
+			T.deleteString("sample");
+			std::cout <<"is sample present: "<< T.search("sample") << std::endl;
+			
+			std::cout <<"is powerterminal present: "<< T.search("powerterminal") << std::endl;
+			T.deleteString("powerterminal");
+			std::cout <<"is powerterminal present: "<< T.search("powerterminal") << std::endl;
+			
+			// prefix searching
+			std::cout <<"is viv pref present: "<< T.prefixPresent("viv") << std::endl;
+			std::cout <<"is gif pref present: "<< T.prefixPresent("gif") << std::endl;
+			
+			// Printing whole Trie
+			std::cout << "\n Content of Trie: " << std::endl;
+			T.print();
+			T.insertWord("nikate");
+
+			std::cout << "\n Content of Trie: " << std::endl;
+			T.print();
+			return 0;
+		}
+	Q.1. Implement Trie: 
+		https://www.naukri.com/code360/problems/implement-trie_631356
+		Problem statement:
+			Implement Trie Data Structure to support these operations:
+			insert(word) - To insert a string "word" in Trie
+			search(word) - To check if string "word" is present in Trie or not.
+			startsWith(word) - To check if there is any string in the Trie that starts with the given prefix string "word".
+			Three type of queries denote these operations:
+			Type 1: To insert a string "word" in Trie. 1 word
+			Type 2: To check if the string "word" is present in Trie or not. 2 word
+			Type 3: To check if there is any string in the Trie that starts with the given prefix string "word". 3 word
+			Constraints :
+				1 <= Q <= 5*10^4
+				1 <= W <= 10
+			Where 'Q' is the number of queries, and 'W' is the length of the "word".
+			All input of "word" will consist of only lowercase letters a-z.
+			Sample Input 1 :
+			5
+			1 hello
+			1 help
+			2 help
+			3 hel
+			2 hel 
+			Sample Output 1 :
+			true
+			true
+			false
+			Explanation to Sample Input 1 :
+			Query 1: "hello" is inserted
+			Query 2: "help" is inserted
+			Query 3: "true" is printed as "help" is present
+			Query 4: "true" is printed as "hello" and "help" is present having the prefix "hel"
+			Query 5: "false" is printed as "hel" is not present
+			Sample Input 2 :
+			10
+			1 aaaa
+			1 aaaaaa
+			1 bcd
+			2 aaaaa
+			3 aaaaa
+			3 bc
+			2 bc
+			1 bc
+			3 bcda
+			2 bc
+			Sample Output 2 :
+			false
+			true
+			true
+			false
+			false
+			true
+			Explanation to Sample Input 2 :
+			Query 1: "aaaa" is inserted
+			Query 2: "aaaaaa" is inserted
+			Query 3: "bcd" is inserted
+			Query 4: "false" is printed as "aaaaa" is not present
+			Query 5: "true" is printed as "aaaaaa" is present having the prefix "aaaaa"
+			Query 6: "true" is printed as "bcd" is present having the prefix "bc"
+			Query 7: "false" is printed as "bc" is not present
+			Query 8: "bc" is inserted
+			Query 9: "false" is printed as no word is present having the prefix "bcda"
+			Query 10: "true" is printed as "bc" is present
+		/*
+			Your Trie object will be instantiated and called as such:
+			Trie* obj = new Trie();
+			obj->insert(word);
+			bool check2 = obj->search(word);
+			bool check3 = obj->startsWith(prefix);
+		*/
+		struct TrieNode{
+			char data;
+			TrieNode* childrens[26];
+			bool endOfWord;
+
+			// initializing all childrens at once with {NULL}
+			TrieNode(char ch = '\0') : data(ch), childrens{nullptr}, endOfWord(false) {}
+		};
+		class Trie {
+			void insertIntoTrie(TrieNode* root, string s){
+				if(s.empty()){
+					root->endOfWord = true;
+					return;
+				}
+				// present
+				int index = s[0]-'a';
+				if(root->childrens[index]){
+					insertIntoTrie(root->childrens[index], s.substr(1));
+				}else{
+					TrieNode* cur = new TrieNode(s[0]);
+					root -> childrens[index] = cur;
+					insertIntoTrie(cur, s.substr(1));
+				}
+			}
+			bool searchInTrie(TrieNode* root, string s){
+				if(s.empty()) return root -> endOfWord;
+				int idx = s[0] - 'a';
+				if(root -> childrens[idx]) return searchInTrie(root->childrens[idx], s.substr(1));
+				else return 0;
+			}
+			bool WordStartsWith(TrieNode* root, string s){
+				if(s.empty()) return 1;
+				int idx = s[0] - 'a';
+				if(root -> childrens[idx]) return WordStartsWith(root->childrens[idx], s.substr(1));
+				else return 0;
+			}
+
+			public:
+			TrieNode* root;
+			/** Initialize your data structure here. */
+			Trie() {
+				root = new TrieNode();
+			}
+
+			/** Inserts a word into the trie. */
+			void insert(string word) {
+				insertIntoTrie(root, word);
+			}
+
+			/** Returns if the word is in the trie. */
+			bool search(string word) {
+				return searchInTrie(root, word);
+			}
+
+			/** Returns if there is any word in the trie that starts with the given prefix. */
+			bool startsWith(string prefix) {
+				return WordStartsWith(root, prefix);
+			}
+		};
+	Extra: Recursive Approach
+		Q.2. Trie Implementation:
+			Problem statement:
+				Implement a Trie Data Structure which supports the following three operations:
+				Operation 1 - insert(word) - To insert a string WORD in the Trie.
+				Operation 2-  search(word) - To check if a string WORD is present in Trie or not.
+				Operation 3-  startsWith(word) - To check if there is a string that has the prefix WORD.
+				Trie is a data structure that is like a tree data structure in its organisation. It consists of nodes that store letters or alphabets of words, which can be added, retrieved, and deleted from the trie in a very efficient way.
+				In other words, Trie is an information retrieval data structure, which can beat naive data structures like Hashmap, Tree, etc in the time complexities of its operations.
+				The above figure is the representation of a Trie. New words that are added are inserted as the children of the root node. 
+				Alphabets are added in the top to bottom fashion in parent to children hierarchy. Alphabets that are highlighted with blue circles are the end nodes that mark the ending of a word in the Trie.
+				For Example:-
+				Type = ["insert", "search"], Query = ["coding", "coding].
+				We return ["null", "true"] as coding is present in the trie after 1st operation.
+				Detailed explanation ( Input/output format, Notes, Images )
+				Sample Input 1 :
+				5
+				insert insert search search startWith
+				coding ninjas coding ninja ninja
+				Sample Output 1 :
+				null null true false true
+				Explanation to Sample Input 1 :
+				Query 1: "coding" is inserted
+				Query 2: "ninjas" is inserted
+				Query 3: "true" is printed as "coding" is present
+				Query 4: "false" is printed as "ninja" is not present, but "ninjas" is present.
+				Query 5: "true" is printed as there is a word "ninjas" that starts with "ninja".
+				Sample Input 2 :
+				3
+				insert search startWith
+				book books b
+				Sample Output 2 :
+				null false true
+				Constraints :
+					1 <= 'Q' <= 10^4
+					1 <= | WORD | <= 2000
+			/*
+				Definition of TrieNode class.
+				class TrieNode {
+					public:
+					TrieNode * children[26];
+					bool isEnd;
+					TrieNode() {
+						isEnd=false;
+						for(int i=0;i<26;i++) children[i]=NULL;
+					}
+				};
+			*/
+			TrieNode* root = new TrieNode();
+			void insertIntoTrie(TrieNode* root, string s){
+				if(s.empty()){
+					root->isEnd = true;
+					return;
+				} 
+				TrieNode *child = NULL;
+				int i = s[0] - 'a';
+				if(root -> children[i]) child = root -> children[i];
+				else{
+					child = new TrieNode();
+					root -> children[i] = child;
+				} 
+				insertIntoTrie(child, s.substr(1));
+			}
+			void solution::insert(string word) {
+				insertIntoTrie(root, word);
+			}
+			bool searchInTrie(TrieNode* root, string s){
+				if(s.empty()) return root -> isEnd;
+				int i = s[0] - 'a';
+				if(root->children[i]) return searchInTrie(root->children[i], s.substr(1));
+				else return 0;
+			}
+			bool solution::search(string word) {
+				return searchInTrie(root, word);
+			}
+			bool validPrefix(TrieNode* root, string s){
+				if(s.empty()) return 1;
+				int i = s[0] - 'a';
+				if(root->children[i]) return validPrefix(root->children[i], s.substr(1));
+				else return 0;
+			}
+			bool solution::startsWith(string word) {
+				return validPrefix(root, word);
+			}
+		Q.3. Insert and Search in a Trie:
+			Problem Statement:
+				Complete the Insert and Search functions for a Trie Data Structure. 
+				Insert: Accepts the Trie's root and a string, modifies the root in-place, and returns nothing.
+				Search: Takes the Trie's root and a string, returns true if the string is in the Trie, otherwise false.
+				Note: To test the correctness of your code, the code-judge will be inserting a list of N strings called into the Trie, and then will search for the string key in the Trie. The code-judge will generate 1 if the key is present in the Trie, else 0.
+				Example 1:
+				Input:
+				n = 8
+				list[] = {the, a, there, answer, any, by, bye, their}
+				key = the
+				Output: 1
+				Explanation: 
+				"the" is present in the given set of strings. 
+				Example 2:
+				Input:
+				n = 8
+				list[] = {the, a, there, answer, any, by, bye, their}
+				key = geeks
+				Output: 0
+				Explanation: 
+				"geeks" is not present in the
+				given set of strings.
+				Your Task:
+					You do not have to take any input or print anything. Complete insert and search functions. 
+					Expected Time Complexity: O(M+|key|)
+					Expected Auxiliary Space: O(M)
+					Here M = sum of the length of all strings which are present in the list[] 
+				Constraints:
+					1 <= N <= 10^4
+					1 <= length of list[i] <= 30
+					All strings will constitute of lowercase alphabets only.
+			/*
+				// trie node
+				struct TrieNode {
+					struct TrieNode *children[ALPHABET_SIZE];
+					// isLeaf is true if the node represents
+					// end of a word
+					bool isLeaf;
+				};
+			*/
+			class Solution {
+				public:
+				//Function to insert string into TRIE.
+				void insert(struct TrieNode *root, string key) {
+					if(key.empty()){
+						root->isLeaf = true; 
+						return;
+					} 
+					TrieNode* child = NULL;
+					int i = key[0] - 'a';
+					if(root->children[i]) child = root -> children[i];
+					else{
+						child = new TrieNode();
+						root -> children[i] = child;
+					}
+					insert(child, key.substr(1));
+				}	
+				//Function to use TRIE data structure and search the given string.
+				bool search(struct TrieNode *root, string key) {
+					if(key.empty()) return root -> isLeaf;
+					int i = key[0]-'a';
+					if(root -> children[i]) return search(root->children[i], key.substr(1));
+					else return 0;
+				}
+			};
+		Q.4. Implement Trie (Prefix Tree):
+			Problem Statement:
+				A trie (pronounced as "try") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.
+				Implement the Trie class:
+				Trie() Initializes the trie object.
+				void insert(String word) Inserts the string word into the trie.
+				boolean search(String word) Returns true if the string word is in the trie (i.e., was inserted before), and false otherwise.
+				boolean startsWith(String prefix) Returns true if there is a previously inserted string word that has the prefix prefix, and false otherwise.
+				Example 1:
+				Input
+				["Trie", "insert", "search", "search", "startsWith", "insert", "search"]
+				[[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]
+				Output
+				[null, null, true, false, true, null, true]
+				Explanation
+				Trie trie = new Trie();
+				trie.insert("apple");
+				trie.search("apple");   // return True
+				trie.search("app");     // return False
+				trie.startsWith("app"); // return True
+				trie.insert("app");
+				trie.search("app");     // return True
+				Constraints:
+					1 <= word.length, prefix.length <= 2000
+					word and prefix consist only of lowercase English letters.
+					At most 3 * 104 calls in total will be made to insert, search, and startsWith.
+			/**
+			* Your Trie object will be instantiated and called as such:
+			* Trie* obj = new Trie();
+			* obj->insert(word);
+			* bool param_2 = obj->search(word);
+			* bool param_3 = obj->startsWith(prefix);
+			*/
+			struct TrieNode{
+				char data;
+				bool isEndOfWord;
+				TrieNode* childrens[26];
+				TrieNode(char ch = '\0'): data(ch), isEndOfWord(false), childrens{NULL} {}
+			};
+			class Trie {
+				public:
+				TrieNode* root; 
+				Trie() {
+					root = new TrieNode();
+				}
+				void insertIntoTrie(TrieNode* t, string s){
+					if(s.empty()){
+						t -> isEndOfWord = true;
+						return;
+					}
+					TrieNode* child = NULL;
+					int i = s[0] - 'a';
+					if(t->childrens[i]) child = t -> childrens[i];
+					else{
+						child = new TrieNode(s[0]);
+						t -> childrens[i] =  child;
+					}
+					insertIntoTrie(child, s.substr(1));
+				}
+				void insert(string word) {
+					insertIntoTrie(root, word);
+				}
+				bool searchInTrie(TrieNode* t, string s){
+					if(s.empty()) return t->isEndOfWord;
+					int i = s[0] - 'a';
+					if(t -> childrens[i]) return searchInTrie(t -> childrens[i], s.substr(1));
+					else return 0;
+				}
+				bool search(string word) {
+					return searchInTrie(root, word);
+				}
+				bool checkPrefixInTrie(TrieNode* t, string s){
+					if(s.empty()) return 1;
+					int i = s[0] - 'a';
+					if(t -> childrens[i]) return checkPrefixInTrie(t -> childrens[i], s.substr(1));
+					else return 0;
+				}
+				bool startsWith(string prefix) {
+					return checkPrefixInTrie(root, prefix);
+				}
+			};
+			// Iterative approach:
+				class TrieNode{
+					public:
+					char data;
+					bool isEndOfWord;
+					TrieNode* childrens[26];
+					TrieNode(char ch = '\0') {
+						data = ch;
+						isEndOfWord = false;
+						for(int i=0; i<26; i++) childrens[i]=NULL;
+					}
+				};
+				class Trie {
+					TrieNode* root;
+					public:
+					Trie() {
+						root = new TrieNode();
+					}
+					void insert(string word) {
+						TrieNode* Traversal = root;
+						for(char ch: word){
+							int i = ch - 'a';
+							if(Traversal -> childrens[i]) Traversal = Traversal -> childrens[i];
+							else{
+								TrieNode* cur = new TrieNode(ch);
+								Traversal -> childrens[i] = cur;
+								Traversal = cur;
+							}
+						}
+						Traversal -> isEndOfWord = true;
+					} 
+					bool search(string word, bool ReceivedInputFromPrefix = false) {
+						TrieNode* Traversal = root;
+						for(char ch: word){
+							int i = ch - 'a';
+							if(Traversal -> childrens[i]) Traversal=Traversal->childrens[i];
+							else return 0;
+						}
+						if(ReceivedInputFromPrefix) return 1;
+						return Traversal -> isEndOfWord;
+					}
+					bool startsWith(string prefix) {
+						return search(prefix, true);
+					}
+				};
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -119075,6 +119727,25 @@ POTD:-[Problem of the Day]
 					return {left, right};
 				}
 			};
+		// or
+			class Solution {
+				public:
+				vector<int> subarraySum(vector<int> &arr, int target) {
+					// int found = -1, s, e;
+					// s = e = 0;
+					int n = arr.size();
+					for(int i=0; i<n; i++){
+						int sum=0;
+						for(int j=i; j<n; j++){
+							sum += arr[j];
+							if(sum == target) return {i+1, j+1};
+							if(sum > target) break;
+						}
+					}
+					// return (found == -1) ? vector<int>{-1} : vector<int>{s, e};
+					return {-1};
+				}
+			}
 		// TC: O(n) & SC: O(1)
 			class Solution {
 				public:
@@ -119427,11 +120098,365 @@ POTD:-[Problem of the Day]
 			};
 		// Optimized: ❌Pending
 
-1189)
-1190)
+	1189) Count the number of possible triangles:
+		Problem Statement:
+			Given an integer array arr[]. Find the number of triangles that can be formed with three different array elements as lengths of three sides of the triangle. 
+			A triangle with three given sides is only possible if sum of any two sides is always greater than the third side.
+			Examples:
+			Input: arr[] = [4, 6, 3, 7]
+			Output: 3
+			Explanation: There are three triangles possible [3, 4, 6], [4, 6, 7] and [3, 6, 7]. Note that [3, 4, 7] is not a possible triangle.  
+			Input: arr[] = [10, 21, 22, 100, 101, 200, 300]
+			Output: 6
+			Explanation: There can be 6 possible triangles: [10, 21, 22], [21, 100, 101], [22, 100, 101], [10, 100, 101], [100, 101, 200] and [101, 200, 300]
+			Input: arr[] = [1, 2, 3]
+			Output: 0
+			Explanation: No triangles are possible.
+			Constraints:
+				3 <= arr.size() <= 10^3
+				1 <= arr[i] <= 10^5
+		// Not Optimized: TC: O(n³) & SC: O(1)
+			class Solution {
+				public: // Function to count the number of possible triangles.
+				int countTriangles(vector<int>& arr) {
+					int cnt=0, n = arr.size();
+					for(int i=0; i<n-2; i++)
+						for(int j=i+1; j<n-1; j++)
+							for(int k=j+1; k<n; k++){
+								int f = arr[i], s = arr[j], t = arr[k];
+								if((f+s)>t and (s+t)>f and (f+t)>s) cnt++;
+							}
+					return cnt;
+				}
+			};
+		// Optimized: TC: O(n²*log n) & SC: O(1)
+			int countTriangles(vector<int>& arr) {
+				int cnt=0, n = arr.size();
+				sort(arr.begin(), arr.end());
+				for(int i=2; i<n; i++){
+					int left = 0, right = i-1;
+					while(left < right){
+						if(arr[left]+arr[right]>arr[i]) cnta += right - left, right--;
+						else left++;
+					}
+				}
+				return cnt;
+			}
 
+	1190) Counting Words With a Given Prefix:
+		Problem Statement:
+			You are given an array of strings words and a string pref.
+			Return the number of strings in words that contain pref as a prefix.
+			A prefix of a string s is any leading contiguous substring of s.
+			Example 1:
+			Input: words = ["pay","attention","practice","attend"], pref = "at"
+			Output: 2
+			Explanation: The 2 strings that contain "at" as a prefix are: "attention" and "attend".
+			Example 2:
+			Input: words = ["leetcode","win","loops","success"], pref = "code"
+			Output: 0
+			Explanation: There are no strings that contain "code" as a prefix.
+			Constraints:
+				1 <= words.length <= 100
+				1 <= words[i].length, pref.length <= 100
+				words[i] and pref consist of lowercase English letters.
+
+		// TC: O(n*m) & SC: O(1):
+			class Solution {
+				public:
+				int prefixCount(vector<string>& words, string pref) {
+					int cnt=0;
+					for(string s: words){
+						if(s.size() < pref.size()) continue;
+						int i=0, n = pref.size();
+						bool notValid = 1;
+						while(i < n){
+							if(pref[i] != s[i]){
+								notValid = 0;
+								break;
+							}
+							i++;
+						}
+						if(notValid) cnt++;
+					}
+					return cnt;
+				}
+			};
+		// or using substr() method
+			class Solution {
+				public:
+				int prefixCount(vector<string>& words, string pref) {
+					int cnt=0, n = pref.size();
+					for(string s: words)
+						if(s.size() >= n and s.substr(0, n) == pref) cnt++;
+					return cnt;
+				}
+			};
+		// or using compare() method:
+		class Solution {
+			public:
+			int prefixCount(vector<string>& words, string pref) {
+				int cnt=0, n = pref.size();
+				for(string s: words)
+					if(s.size() >= n and s.compare(0, n, pref) == 0) cnt++; 		// if(s.size() >= n and !s.compare(0, n, pref)) cnt++;		
+				return cnt;
+			}
+		};
+
+	1191) Count distinct elements in every window:
+		Problem Statement:
+			Given an integer array arr[] and a number k. Find the count of distinct elements in every window of size k in the array.
+			Examples:
+			Input: arr[] = [1, 2, 1, 3, 4, 2, 3], k = 4
+			Output:  [3, 4, 4, 3]
+			Explanation: Window 1 of size k = 4 is 1 2 1 3. Number of distinct elements in this window are 3. 
+			Window 2 of size k = 4 is 2 1 3 4. Number of distinct elements in this window are 4.
+			Window 3 of size k = 4 is 1 3 4 2. Number of distinct elements in this window are 4.
+			Window 4 of size k = 4 is 3 4 2 3. Number of distinct elements in this window are 3.
+			Input: arr[] = [4, 1, 1], k = 2
+			Output: [2, 1]
+			Explanation: Window 1 of size k = 2 is 4 1. Number of distinct elements in this window are 2. 
+			Window 2 of size k = 2 is 1 1. Number of distinct elements in this window is 1. 
+			Input: arr[] = [1, 1, 1, 1, 1], k = 3
+			Output: [1, 1, 1]
+			Constraints:
+				1 <= k <= arr.size() <= 10^5
+				1 <= arr[i] <= 10^5
+		// Not Optimized: TC: O(n * k * log k) & SC: O(n/k)	
+			class Solution {
+				public:
+				vector<int> countDistinct(vector<int> &arr, int k) {
+					vector<int> ans;
+					int n = arr.size();
+					for(int i=0; i<=n-k; i++){
+						set<int> s(arr.begin()+i, arr.begin()+i+k);
+						ans.push_back(s.size());
+					}
+					return ans;
+				}
+			};	
+		// Optimized: TC: O(n) & SC:O(max(k, n/k))
+			class Solution {
+				public:
+				vector<int> countDistinct(vector<int> &arr, int k) {
+					vector<int> ans;
+					unordered_map<int, int> Freq;
+					int n = arr.size();
+					// created k size window
+					for(int i=0; i<k; i++) Freq[arr[i]]++;
+					ans.push_back(Freq.size());
+					
+					int j=0;
+					for(int i=k; i<n; i++){
+						Freq[arr[j]]--;
+						if(Freq[arr[j]] == 0) Freq.erase(arr[j]);
+						j++;
+						
+						Freq[arr[i]]++;
+						ans.push_back(Freq.size());
+					}
+					return ans;
+				}
+			};
+		// or TC: O(n * k) & SC: O(n+k)
+			vector<int> countDistinct(vector<int> &arr, int k) {
+				vector<int> ans;
+				int n = arr.size();
+				for(int i=0; i<=n-k; i++){
+					unordered_set<int> s(arr.begin()+i, arr.begin()+i+k);
+					ans.push_back(s.size());
+				}
+				return ans;
+			}
+
+	1192) Word Subsets:
+		Problem Statement:
+			You are given two string arrays words1 and words2.
+			A string b is a subset of string a if every letter in b occurs in a including multiplicity.
+			For example, "wrr" is a subset of "warrior" but is not a subset of "world".
+			A string a from words1 is universal if for every string b in words2, b is a subset of a.
+			Return an array of all the universal strings in words1. You may return the answer in any order.
+			Example 1:
+			Input: words1 = ["amazon","apple","facebook","google","leetcode"], words2 = ["e","o"]
+			Output: ["facebook","google","leetcode"]
+			Example 2:
+			Input: words1 = ["amazon","apple","facebook","google","leetcode"], words2 = ["l","e"]
+			Output: ["apple","google","leetcode"]
+			Constraints:
+				1 <= words1.length, words2.length <= 10^4
+				1 <= words1[i].length, words2[i].length <= 10
+				words1[i] and words2[i] consist only of lowercase English letters.
+				All the strings of words1 are unique.
+		// Not Optimized: TC: O(n1∗m1+n2∗m2+n1∗n2∗m2) & SC: O(n1∗k1+n2∗k2+n1)
+			class Solution {
+				public:
+				vector<string> wordSubsets(vector<string>& words1, vector<string>& words2) {
+					vector<pair<string, unordered_map<char, int>>> hold1, hold2;
+					for(string s: words1){
+						unordered_map<char, int> Freq;
+						for(char ch: s) Freq[ch]++;
+						hold1.push_back({s, Freq});
+					}
+					for(string s: words2){
+						unordered_map<char, int> Freq;
+						for(char ch: s) Freq[ch]++;
+						hold2.push_back({s, Freq});
+					}
+					
+					int n = words1.size();
+					vector<string> ans;
+					for(int i=0; i<n; i++){
+						bool isAllowed = true;
+						for(int j=0; j<words2.size(); j++){
+							unordered_map<char, int> cur = hold2[j].second;
+							for(auto z: cur){
+								int curFreq = z.second;
+								if(hold1[i].second[z.first] < curFreq){
+									isAllowed = false;
+									break;
+								}
+							}
+							if(!isAllowed) break;
+						}
+						if(isAllowed) ans.push_back(words1[i]);
+					}
+					return ans;
+				}
+			};
+		// Optimized: Using max Frequency array, TC: O(n2×m2+n1×m1) & SC: O(n1)
+			class Solution {
+				public:
+				vector<string> wordSubsets(vector<string>& words1, vector<string>& words2) {
+					vector<string> ans;
+					vector<char> mxFreqEachCharWords2 (26,0);  // setting all values to zeros
+					for(string s: words2){
+						vector<char> curFreq(26, 0);
+						for(char ch: s) curFreq[ch - 'a']++;
+						for(int i=0; i<26; i++) mxFreqEachCharWords2[i] = max(mxFreqEachCharWords2[i], curFreq[i]);
+					}
+					int n = words1.size();
+					for(string cur: words1){
+						vector<int> CurFreq(26, 0);
+						for(char ch: cur) CurFreq[ch-'a']++;
+
+						bool isUniversal = true;
+						for(int i=0; i<26; i++)
+							if(CurFreq[i] < mxFreqEachCharWords2[i]){
+								isUniversal = false;
+								break;
+							}
+						if(isUniversal) ans.push_back(cur);
+					}        
+					return ans;
+				}
+			};
+
+	1193) Longest substring with distinct characters:
+		Problem Statement:
+			Given a string s, find the length of the longest substring with all distinct characters. 
+			Examples:
+			Input: s = "geeksforgeeks"
+			Output: 7
+			Explanation: "eksforg" is the longest substring with all distinct characters.
+			Input: s = "aaa"
+			Output: 1
+			Explanation: "a" is the longest substring with all distinct characters.
+			Input: s = "abcdefabcbb"
+			Output: 6
+			Explanation: The longest substring with all distinct characters is "abcdef", which has a length of 6.
+			Constraints:
+				1<= s.size()<=3*10^4
+				All the characters are in lowercase.
+		// TC: O(n²) & SC: O(n), where l is the longest length of substring
+			class Solution {
+				public:
+				int longestUniqueSubstr(string &s) {
+					int longest=0, n = s.size();
+					for(int i=0; i<n; i++){
+						unordered_set<char> set;
+						for(int j=i; j<n; j++){
+							set.insert(s[j]);
+							if(j-i+1 > set.size()) break;
+							longest = max(longest, j-i+1);
+						}
+					}
+					return longest;
+				}
+			};
+		// TC: O(n) & SC: O(n), Using Sliding Window technique:
+			int longestUniqueSubstr(string &s) {
+				unordered_map<char, int> Freq;
+				int size, start, end, n = s.size();
+				start = end = size = 0;
+				while(end < n){
+					Freq[s[end]]++;
+					while(Freq[s[end]] > 1){
+						Freq[s[start]]--;
+						if(!Freq[s[start]])                     // if(Freq[s[start]] == 0) 
+							Freq.erase(s[start]);
+						start++;
+					}
+					size = max(size, end-start+1);
+					end++;
+				}
+				return size;
+			}
+		// TC: O(n) & SC:(1)
+			int longestUniqueSubstr(string &s) {
+				vector<bool> visited(26, false);
+				int left, right, mx, n = s.size();
+				left = right = mx = 0;
+				while(right < n){
+					while(visited[s[right] - 'a']) visited[s[left++] - 'a'] = false;
+					visited[s[right] - 'a'] = true;
+					mx = max(mx, right - left + 1);
+					right++;
+				}
+				return mx;
+			}
+
+	1194) Construct K Palindrome Strings:
+		Problem Statement:
+			Given a string s and an integer k, return true if you can use all the characters in s to construct k palindrome strings or false otherwise.
+			Example 1:
+			Input: s = "annabelle", k = 2
+			Output: true
+			Explanation: You can construct two palindromes using all characters in s.
+			Some possible constructions "anna" + "elble", "anbna" + "elle", "anellena" + "b"
+			Example 2:
+			Input: s = "leetcode", k = 3
+			Output: false
+			Explanation: It is impossible to construct 3 palindromes using all the characters of s.
+			Example 3:
+			Input: s = "true", k = 4
+			Output: true
+			Explanation: The only possible solution is to put each character in a separate string.
+			Constraints:
+				1 <= s.length <= 10^5
+				s consists of lowercase English letters.
+				1 <= k <= 10^5
+		// TC: O(n) & SC: O(1), where, n is the size of string
+			class Solution {
+				public:
+				bool canConstruct(string s, int k) {
+					if(s.size() < k) return 0;
+					// if(s.size() == k) return 1;
+					vector<int> Freq (26, 0);
+					for(char ch: s) Freq[ch-'a']++;
+					int oddCnt=0;
+					for(int i=0; i<26; i++) if(Freq[i]&1) oddCnt++;
+					return (oddCnt>k) ? false : true;
+				}
+			};
+
+1195) Check if a Parentheses String Can Be Valid: ❌Pending
+1196)
+1197)
+1198)
+1199)
+1200)
 ---------------------------------------------------------------------------------------------------------
-# 450 DSA Sheet Following:
+# 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
 	1) Plus Minus:
