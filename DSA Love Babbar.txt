@@ -29492,6 +29492,188 @@ Lecture 80: Longest Common Prefix Problem || Tries:
 					return ans;
 				}
 ---------------------------------------------------------------------------------------------------------
+	13/01/25
+Lecture 81: Implement a Phone Directory Using Trie:
+	Q. Implement a phone directory:
+		Problem statement
+			You are given a list/array of strings which denotes the contacts that exist in your phone directory. The search query on a string ‘str’ which is a query string displays all the contacts which are present in the given directory with the prefix as ‘str’. One special property of the search function is that when a user searches for a contact from the contact list then suggestions (contacts with prefix as the string entered so for) are shown after the user enters each character.
+			Note :
+			If no suggestions are found, return an empty 2D array.
+			For Example :
+			In the above example everytime we enter a character, a few suggestions display the strings which contain the entered string as prefixes.
+			Constraints :
+				1 <= T <= 50
+				1 <= N <= 100
+				1 <= len <= 10
+				ARR[i] contains lowercase English alphabets.
+				All the given strings contain lowercase English alphabets.
+				Time Limit: 1 sec.
+			Sample Input 1 :
+			2
+			5
+			cod coding codding code coly
+			coding
+			2
+			ninjas coding
+			ninja
+			Sample Output 1 :
+			cod coding codding code coly
+			cod coding codding code coly
+			cod coding codding code coly
+			coding
+			coding
+			coding
+			ninjas
+			ninjas
+			ninjas
+			ninjas
+			ninjas
+			Explanation to Sample Input 1 :
+			In the first test case, 
+			The suggestions for “c” is {“cod”, “coding”, “codding”, “code”, “coly”}.
+			The suggestions for “co” is {“cod”, “coding”, “codding”, “code”, “coly”}.
+			The suggestions for “cod” is {“cod”, “coding”, “codding”, “code”, “coly”}.
+			The suggestion for “codi” is {“coding”}.
+			The suggestion for “codin” is {“coding”}.
+			The suggestion for “coding” is {“coding”}.
+			In the second test case, 
+			The suggestion for “n” is {“ninjas”}.
+			The suggestion for “ni” is {“ninjas”}.
+			The suggestion for “nin” is {“ninjas”}.
+			The suggestion for “ninj” is {“ninjas”}.
+			The suggestion for “ninja” is {“ninjas”}.
+			Sample Input 2 :
+			3
+			2
+			coding ninjas
+			cell
+			2
+			ab abc
+			a
+			2
+			ab abc
+			b
+			Sample Output 2 :
+			coding
+			ab abc
+			No suggestions found
+			Explanation to Sample Input 2 :
+			In the first test case, 
+			The suggestion for “c” is {“coding”}.
+			For the rest of the letters, there are no suggestions.
+			In the second test case,
+			The suggestion for “a” is {“ab”, “abc”}.
+			In the third test case, no suggestions are found.
+		// TC: O(m * n * L) & SC: O(n * m)
+			where, m is length of queryStr
+				n is length of contactList
+				L is length of each word, extracting the substring
+			#include<bits/stdc++.h>
+			vector<vector<string>> phoneDirectory(vector<string>&contactList, string &queryStr) {
+				vector<vector<string>> ans;
+				int i=1;
+				string temp;
+				for(char ch: queryStr){
+					temp.push_back(ch);
+					set<string> hold;
+					for(int z=0; z<contactList.size(); z++){
+						if(i > contactList[z].size()) continue;
+						string cur = contactList[z].substr(0,i);
+						if(cur == temp) hold.insert(contactList[z]);
+					}
+					if(hold.empty()) continue;
+					vector<string> V(hold.begin(), hold.end());
+					ans.push_back(V);
+					i++;
+				}
+				return ans;
+			}
+		// Using Trie: TC: O(L * M²) & SC: O(M*N)
+			#include<bits/stdc++.h>
+			class TrieNode{
+				public:
+				bool endOfWord;
+				TrieNode* childs[26];
+				TrieNode(): endOfWord(false){
+					memset(childs, 0, sizeof(childs));       
+					// this memset bit tricky use fill or loop to set all chlidren to NULL
+					// while using memset use sizeof operator 
+					// NULL -  this NULL is doesn't work properly in fill so use nullptr
+					// fill(begin(childs), end(childs), NULL);
+					// fill(begin(childs), end(childs), nullptr);
+				}
+			};
+			class Trie{
+				TrieNode* root = new TrieNode();
+				public:
+				// Constructor
+				Trie() {}
+				// De-structor to Freeup the memory
+				~Trie(){
+					deleteTrieNodes(root);
+				}
+				// Deleting the TrieNode
+				void deleteTrieNodes(TrieNode* n){
+					if(!n) return;
+					for(int i=0; i<26; i++) deleteTrieNodes(n->childs[i]);
+					delete n;
+				}
+				// inserting into trie
+				void insert(string s){
+					TrieNode* Traversal = root;
+					for(char ch: s){
+						int i = ch - 'a';
+						// if child is NULL
+						if(!Traversal->childs[i]){
+							TrieNode* t1 = new TrieNode();
+							Traversal->childs[i] = t1;
+						}
+						Traversal = Traversal -> childs[i];
+					}
+					Traversal->endOfWord = true;
+				}
+				// search Prefix
+				void extractWordsWithPrefix(string s, vector<string> &v){
+					TrieNode* Traversal = root;
+					// taking common part
+					for(char ch: s){
+						int i = ch - 'a';
+						if(!Traversal->childs[i]) return;
+						Traversal = Traversal -> childs[i];
+					}
+					suggetions(Traversal, s, v);
+				}
+				void suggetions(TrieNode* n, string pref, vector<string> &v){
+					if(n->endOfWord) v.push_back(pref);
+					for(int i=0; i<26; i++){
+						if(n->childs[i]){
+							pref.push_back(i+'a');      // converting index to char
+							suggetions(n->childs[i], pref, v);
+							pref.pop_back();
+						}
+					}
+				}
+			};
+			vector<vector<string>> phoneDirectory(vector<string>&contactList, string &queryStr) {
+				Trie* T = new Trie();
+				for(string s: contactList) T->insert(s);
+				string s;
+				vector<vector<string>> ans;
+				for(char ch: queryStr){
+					s.push_back(ch);
+					vector<string> temp;
+					T->extractWordsWithPrefix(s, temp);
+					if(!temp.empty()) ans.push_back(temp);
+				}
+				delete T;
+				return ans;
+			}
+---------------------------------------------------------------------------------------------------------
+	14/01/25
+Lecture 82: Rat in Maze Problem || Backtracking Day 1:
+	
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -120744,7 +120926,50 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1197)
+	1197) Equilibrium Point:
+		Problem Statement:
+			Given an array arr[] of non-negative numbers. The task is to find the first equilibrium point in the array.
+			The equilibrium point in an array is an index (0-based indexing) such that the sum of all elements before that index is the same as the sum of elements after it. Return -1 if no such point exists. 
+			Examples:
+			Input: arr[] = [1, 2, 0, 3]
+			Output: 2 
+			Explanation: The sum of left of index 2 is 1 + 2 = 3 and sum on right of index 2 is 0 + 3 = 3.
+			Input: arr[] = [1, 1, 1, 1]
+			Output: -1
+			Explanation: There is no equilibrium index in the array.
+			Input: arr[] = [-7, 1, 5, 2, -4, 3, 0]
+			Output: 3
+			Explanation: The sum of left of index 3 is -7 + 1 + 5 = -1 and sum on right of index 3 is -4 + 3 + 0 = -1.
+			Constraints:
+				3 <= arr.size() <= 10^6
+				0 <= arr[i] <= 10^9
+		// Not Optimized: TC: O(n²) & SC:O(1)
+			class Solution {
+				public: // Function to find equilibrium point in the array.
+				int findEquilibrium(vector<int> &arr) {
+					int n=arr.size();
+					for(int i=0; i<n; i++){
+						int Lsum, Rsum;
+						Lsum = Rsum = 0;
+						for(int j=i+1; j<n; j++) Rsum += arr[j];
+						for(int j=i-1; j>=0; j--) Lsum += arr[j];
+						if(Lsum == Rsum) return i;
+					}
+					return -1;
+				}
+			};
+		// Optimized: TC: O(n) & SC:O(1)
+			int findEquilibrium(vector<int> &arr) {
+				int n=arr.size();
+				int Rsum = accumulate(arr.begin(), arr.end(), 0), Lsum=0;
+				for(int i=0; i<n; i++){
+					Rsum -= arr[i];
+					if(Lsum == Rsum) return i;
+					Lsum += arr[i];
+				}
+				return -1;
+			}
+
 1198)
 1199)
 1200)
