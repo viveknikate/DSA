@@ -28592,7 +28592,7 @@ Lecture 78: Hashmaps in C++:
 	2) unordered_map:
 		- the data will be stored random order.
 		#include<unordered_map>
-		TC: O(1) in average case, for Insertion/ Deletion/ Searching. in WORST CASE the TC: O(l) where, l is the lenght of string
+		TC: O(1) in average case, for Insertion/ Deletion/ Searching. in WORST CASE the TC: O(l) where, l is the length of string
 		eg.
 		#include <iostream>
 		#include<unordered_map>
@@ -29328,6 +29328,169 @@ Lecture 79: Trie & its Implementation:
 						return search(prefix, true);
 					}
 				};
+---------------------------------------------------------------------------------------------------------
+	13/01/25
+Lecture 80: Longest Common Prefix Problem || Tries:
+	Q.1. Longest Common Prefix:
+		Problem Statement:
+			You are given an array ‘ARR’ consisting of ‘N’ strings. Your task is to find the longest common prefix among all these strings. If there is no common prefix, you have to return an empty string.
+			A prefix of a string can be defined as a substring obtained after removing some or all characters from the end of the string.
+			For Example:
+			Consider ARR = [“coding”, ”codezen”, ”codingninja”, ”coders”]
+			The longest common prefix among all the given strings is “cod” as it is present as a prefix in all strings. Hence, the answer is “cod”.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 3000
+				1 <= |ARR[i]| <=1000
+				Each string consists of only lowercase letters.
+				Time limit: 1 sec
+			Sample Input 1:
+			2
+			4
+			coding codezen codingninja coder
+			3
+			night ninja nil 
+			Sample Output 1:
+			cod
+			ni
+			Explanation of sample input 1:
+			For the first test case, 
+			The longest common prefix among all the given strings is “cod” as it is present as a prefix in all strings. Hence, the answer is “cod”.
+
+			For the second test case,
+			The longest common prefix among all the given strings is “ni” as it is present as a prefix in all strings. Hence, the answer is “ni”.
+			Sample Input 2:
+			2
+			3
+			applejuice applepie apple
+			4
+			car cus cart carat
+			Sample Output 2:
+			apple
+			c
+		// TC: O(m * n), where m is length of first string & n is size of string array & SC: O(1)
+			string longestCommonPrefix(vector<string> &arr, int n) {
+				string ans, first = arr[0];
+				for(int j=0; j<first.size(); j++){
+					bool yes = false;
+					for(int i=1; i<n; i++)
+						if(arr[i].size() <= j or arr[i][j] != first[j]){
+							yes = true;
+							break;
+						}
+					if(yes) break;
+					ans.push_back(first[j]);
+				}
+				return ans;
+			}
+		// TC: O(n+(m*n)), where m is the min length of string from string array & SC: O(1)
+			string longestCommonPrefix(vector<string> &arr, int n) {
+				// there will be at one string always present
+				int minLen = arr[0].size();
+				string s = arr[0], ans;
+				for(string s: arr) minLen = min(minLen, (int)s.size());
+				
+				for(int i=0; i<minLen; i++){
+					for(int j=0; j<n; j++)
+						if(arr[j][i] != s[i])
+							return ans;
+					ans.push_back(s[i]);
+				}
+				return ans;
+			}
+		// Not Optimized:
+			// Using Trie: Partially Accepted: TC: O(L*N), where L is length of string & N is no.of string in array & SC: O(L*N)
+				struct TrieNode{
+					bool isEndOfWord;
+					TrieNode* childs[26];
+					TrieNode() : isEndOfWord(false), childs{NULL} {}
+				};
+				struct Trie{
+					TrieNode* root = new TrieNode();
+					void insert(string s){
+						TrieNode* Traversal = root;
+						for(char ch: s){
+							int i = ch-'a';
+							if(!Traversal->childs[i]){
+								TrieNode* cur = new TrieNode();
+								Traversal -> childs[i] = cur;
+							} 
+							Traversal = Traversal -> childs[i];
+						}
+						Traversal -> isEndOfWord = true;
+					}
+					void longestSamePrefix(int &i, string &s){
+						TrieNode* Traversal = root;
+						for(char ch: s){
+							// except the curIndex all should be NULL
+							int curIndex = ch - 'a';
+							for(int j=0; j<26; j++){
+								if(Traversal -> childs[j] == NULL || j == curIndex) continue;
+								else return;
+							}
+							Traversal = Traversal -> childs[curIndex];
+							i++;
+						}
+					}
+				};
+				string longestCommonPrefix(vector<string> &arr, int n) {
+					// there will be at one string always present
+					string s = arr[0];
+					Trie* T = new Trie();
+					for(string s: arr) T->insert(s);
+					int i=0;
+					T->longestSamePrefix(i, s);
+					return s.substr(0,i);
+				}
+			// or: Memory Release:
+				struct TrieNode{
+					bool isEndOfWord;
+					TrieNode* childs[26];
+					int childCnt;
+					TrieNode() : childCnt(0), isEndOfWord(false), childs{NULL} {}
+				};
+				struct Trie{
+					TrieNode* root = new TrieNode();
+					~Trie(){
+						deleteTrieNode(root);
+					}
+					void deleteTrieNode(TrieNode* n){
+						if(!n) return;
+						for(int i=0; i<26; i++) deleteTrieNode(n -> childs[i]);
+						delete n;
+					}
+					void insert(string s){
+						TrieNode* Traversal = root;
+						for(char ch: s){
+							int i = ch-'a';
+							if(!Traversal->childs[i]){
+								TrieNode* cur = new TrieNode();
+								Traversal -> childs[i] = cur;
+								Traversal -> childCnt++;
+							} 
+							Traversal = Traversal -> childs[i];
+						}
+						Traversal -> isEndOfWord = true;
+					}
+					void longestSamePrefix(string &s, string &ans){
+						TrieNode* Traversal = root;
+						for(char ch: s){
+							if(Traversal -> childCnt == 1) ans.push_back(ch);
+							else return;
+							Traversal = Traversal -> childs[ch -'a'];
+						}
+					}
+				};
+				string longestCommonPrefix(vector<string> &arr, int n) {
+					// there will be at one string always present
+					string s = arr[0];
+					Trie* T = new Trie();
+					for(string s: arr) T->insert(s);
+					string ans;
+					T->longestSamePrefix(s, ans);
+					delete T;
+					return ans;
+				}
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
@@ -39822,7 +39985,7 @@ POTD:-[Problem of the Day]
 				return mx - arr.begin();
 			}
 
-	92) Container With Most Water:
+	92) Container With Most Water: (Refer POTD: 764)
 		Given a sequence of 'N' space-separated non-negative integers A [1], A [2], A [3]…....A [i].....A[n]. Where each
 		number of the sequence represents the height of the line drawn at point '. Hence on the cartesian plane,
 		each line is drawn from coordinate (I',O) to coordinate ('i', 'A[i]'), here 'i' ranges from 1 to 'N'. Find two lines,
@@ -39832,7 +39995,6 @@ POTD:-[Problem of the Day]
 			height of the two lines which define the container.
 			2. Do not print anything, you just need to return the area of the container with maximum
 			water
-		
 		Sample Input 1 :
 			2
 			5
@@ -39877,8 +40039,6 @@ POTD:-[Problem of the Day]
 				Sample Output 2 :
 				24
 				2
-
-
 		//Not Optimized:
 			int maxArea(vector<int>& height) {
 				int ans=0;
@@ -39892,7 +40052,6 @@ POTD:-[Problem of the Day]
 				}
 				return ans;
 			}
-
 		//Optimized:
 			int maxArea(vector<int>& height) {
 				int left=0;
@@ -39914,7 +40073,52 @@ POTD:-[Problem of the Day]
 				}
 				return mxArea;
 			}
-			
+		Problem Statement:
+			Given an array arr[] of non-negative integers, where each element arr[i] represents the height of the vertical lines, find the maximum amount of water that can be contained between any two lines, together with the x-axis.
+			Note: In the case of a single vertical line it will not be able to hold water.
+			Examples:
+			Input: arr[] = [1, 5, 4, 3]
+			Output: 6
+			Explanation: 5 and 3 are 2 distance apart. So the size of the base is 2. Height of container = min(5, 3) = 3. So, total area to hold water = 3 * 2 = 6.
+			Input: arr[] = [3, 1, 2, 4, 5]
+			Output: 12
+			Explanation: 5 and 3 are 4 distance apart. So the size of the base is 4. Height of container = min(5, 3) = 3. So, total area to hold water = 4 * 3 = 12.
+			Input: arr[] = [2, 1, 8, 6, 4, 6, 5, 5]
+			Output: 25 
+			Explanation: 8 and 5 are 5 distance apart. So the size of the base is 5. Height of container = min(8, 5) = 5. So, the total area to hold water = 5 * 5 = 25.
+			Constraints:
+				1<= arr.size() <=10^5
+				1<= arr[i] <=10^4
+		// Not Optimized: TC:O(n²) & SC: O(1)
+			class Solution {
+				public:
+				int maxWater(vector<int> &arr) {
+					int mx=0, n=arr.size();
+					for(int i=0; i<n; i++){
+						for(int j=i+1;j<n; j++){
+							int dist = j - i;
+							int val = min(arr[i], arr[j]);
+							mx = max(mx, val*dist);
+						}
+					}
+					return mx;
+				}
+			};
+		// Optimized: TC: O(n) & SC:O(1)
+			class Solution {
+				public:
+				int maxWater(vector<int> &arr) {
+					int mx = 0;
+					int low = 0, high=arr.size()-1;
+					while(low < high){
+						mx = max(mx, min(arr[low], arr[high]) * (high - low));
+						if(arr[low] < arr[high]) low++;
+						else high--;
+					}
+					return mx;
+				}
+			};
+
 	93) Interesting Alphabets:
 		As a part of its competition, the school will conduct a codeathon, Lock the Code, where it has been given a
 		value, and the participants have to decode it.
@@ -120449,8 +120653,97 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1195) Check if a Parentheses String Can Be Valid: ❌Pending
-1196)
+	1195) Check if a Parentheses String Can Be Valid: ❌Pending
+
+	1196) Minimum Length of String After Operations:
+		Problem Statement:
+			You are given a string s.
+			You can perform the following process on s any number of times:
+			Choose an index i in the string such that there is at least one character to the left of index i that is equal to s[i], and at least one character to the right that is also equal to s[i].
+			Delete the closest character to the left of index i that is equal to s[i].
+			Delete the closest character to the right of index i that is equal to s[i].
+			Return the minimum length of the final string s that you can achieve.
+			Example 1:
+			Input: s = "abaacbcbb"
+			Output: 5
+			Explanation:
+			We do the following operations:
+			Choose index 2, then remove the characters at indices 0 and 3. The resulting string is s = "bacbcbb".
+			Choose index 3, then remove the characters at indices 0 and 5. The resulting string is s = "acbcb".
+			Example 2:
+			Input: s = "aa"
+			Output: 2
+			Explanation:
+			We cannot perform any operations, so we return the length of the original string.
+			Constraints:
+				1 <= s.length <= 2 * 10^5
+				s consists only of lowercase English letters.
+
+		// Not Optimized: TC: O(n²) & SC: O(1) : TLE & OLE (Output Limit Exceeded)
+			class Solution {
+				public:
+				int minimumLength(string s) {
+					for(int i=1; i<s.size()-1;){
+						int notFound = 1;
+						int start, end;
+						for(int j=i-1; j>=0; j--)
+							if(s[j] == s[i]){
+								notFound = 0;
+								start = j;
+								break;
+							} 
+						if(notFound){
+							i++;
+							continue;
+						} 
+						notFound = 1;
+						for(int j=i+1; j<s.size(); j++)
+							if(s[i]==s[j]){
+								notFound=0;
+								end = j;
+								break;
+							}
+						if(notFound) {
+							i++;
+							continue;
+						}
+						s.erase(s.begin()+start);
+						s.erase(s.begin()+end-1);
+					}
+					return s.size();
+				}
+			};
+		// Optimized: TC: O(n) & SC:O(n)
+			class Solution {
+				public:
+				int minimumLength(string s) {
+					unordered_map<char, int> Freq;
+					for(char ch: s) Freq[ch]++;
+					int len = 0;
+					for(auto itr: Freq){
+						int val = itr.second;
+						if(val&1) len++;
+						else len += 2;
+					}
+					return len;
+				}
+			};
+		// TC: O(n) & SC(1):
+			class Solution {
+				public:
+				int minimumLength(string s) {
+					vector<int> Freq (26, 0);
+					for(char ch: s) Freq[ch - 'a']++;
+					int len = 0;
+					for(int i: Freq){
+						if(i == 0) continue;
+						if(i&1) len++;
+						else len += 2;
+					}
+					return len;
+				}
+			};
+
 1197)
 1198)
 1199)
