@@ -15974,11 +15974,10 @@ Lecture-39: Permutations of a String
 ---------------------------------------------------------------------------------------------------------
 	01/03/2024
 Lecture-40: Rat in a Maze Problem
-	Q. Rat in a Maze Problem - I:
+	Q. Rat in a Maze Problem - I: (Refer POTD: 514)
 		Problem statement:
 			Consider a rat placed at (0, 0) in a square matrix of order N * N. It has to reach the destination at (N - 1, N - 1). Find all possible paths that the rat can take to reach from source to destination. The directions in which the rat can move are 'U'(up), 'D'(down), 'L' (left), 'R' (right). Value 0 at a cell in the matrix represents that it is blocked and rat cannot move to it while value 1 at a cell in the matrix represents that rat can be travel through it.
 			Note: In a path, no cell can be visited more than one time. If the source cell is 0, the rat cannot move to any other cell.
-
 			Example 1:
 			Input:
 			N = 4
@@ -16006,14 +16005,11 @@ Lecture-40: Rat in a Maze Problem
 			Your Task:  
 			You don't need to read input or print anything. Complete the function printPath() which takes N and 2D array m[ ][ ] as input parameters and returns the list of paths in lexicographically increasing order. 
 			Note: In case of no path, return an empty list. The driver will output "-1" automatically.
-
 			Expected Time Complexity: O(3^(N^2)).
 			Expected Auxiliary Space: O(L * X), L = length of the path, X = number of paths.
-
 			Constraints:
 				2 ≤ N ≤ 5
 				0 ≤ m[i][j] ≤ 1
-		
 		class Solution{
 			private:
 				bool CanIVisit(int r, int c, vector<vector<int>> vis, vector<vector<int>> main){
@@ -16077,8 +16073,113 @@ Lecture-40: Rat in a Maze Problem
 				return ans;
 			}
 		};
+	// Dry Run:
+		class Solution {
+			public:
+			inline bool areValidToVisit(int i, int j, int size, vector<vector<bool>> &vis, vector<vector<int>> &mat){
+				return i >=0 and i < size and j >=0 and j < size and !vis[i][j] and mat[i][j];
+			}
+			void PATH(vector<vector<int>> &mat, int row, int col, int n, vector<vector<bool>> &visited, string &s,vector<string> &ans){
+				if(row == n-1 && col == n-1){
+					ans.push_back(s);
+					return;
+				}
+				// conditions
+				// row & cols should be between 0 to n-1 {inclusive, [0,n-1)} 
+				// visited[row][col] must be false and mat[row][col] must be 1 to pass
+				visited[row][col] = true;
+				int R, C;
+				// going for UP
+				R = row-1, C = col;
+				if(areValidToVisit(R, C, n, visited, mat)){
+					s.push_back('U');
+					PATH(mat, R, C, n, visited, s, ans);
+					s.pop_back();
+				}
 
-	// Dry Run ❌Pending
+				// going for RIGHT
+				R = row, C = col+1;
+				if(areValidToVisit(R, C, n, visited, mat)){
+					s.push_back('R');
+					PATH(mat, R, C, n, visited, s, ans);
+					s.pop_back();
+				}
+				
+				// going for DOWN
+				R = row+1, C = col;
+				if(areValidToVisit(R, C, n, visited, mat)){
+					s.push_back('D');
+					PATH(mat, R, C, n, visited, s, ans);
+					s.pop_back();
+				}
+				
+				// going for LEFT
+				R = row, C = col-1;
+				if(areValidToVisit(R, C, n, visited, mat)){
+					s.push_back('L');
+					PATH(mat, R, C, n, visited, s, ans);
+					s.pop_back();
+				}
+				visited[row][col] = false;
+			}
+			vector<string> findPath(vector<vector<int>> &mat) {
+				vector<string> ans;
+				int n = mat.size();
+				if(mat.empty() || mat[0][0] == 0 || mat[n-1][n-1] == 0) return ans;
+				
+				vector<vector<bool>> visited (n, vector<bool>(n, false));
+				string s;
+				PATH(mat, 0, 0, n, visited, s, ans);
+				return ans;
+			}
+		};
+	// Without using Visited extra array:
+		class Solution {
+			public:
+			inline bool canVisit(vector<vector<int>> &mat, int r, int c){
+				return r >=0 and r < mat.size() and c >=0 and c < mat.size() and mat[r][c];
+			}
+			void PATHS(vector<vector<int>> &mat, int r, int c, string &s, vector<string> &ans){
+				if(r == mat.size()-1 and c == mat.size()-1){
+					ans.push_back(s);
+					return;
+				}
+				mat[r][c] = 0;
+				// go UP
+				if(canVisit(mat, r-1, c)){
+					s.push_back('U');
+					PATHS(mat, r-1, c, s, ans);
+					s.pop_back();
+				}
+				// go RIGHT
+				if(canVisit(mat, r, c+1)){
+					s.push_back('R');
+					PATHS(mat, r, c+1, s, ans);
+					s.pop_back();
+				}
+				// go DOWN
+				if(canVisit(mat, r+1, c)){
+					s.push_back('D');
+					PATHS(mat, r+1, c, s, ans);
+					s.pop_back();
+				}
+				// go LEFT
+				if(canVisit(mat, r, c-1)){
+					s.push_back('L');
+					PATHS(mat, r, c-1, s, ans);
+					s.pop_back();
+				}
+				mat[r][c] = 1;
+			}
+			vector<string> findPath(vector<vector<int>> &mat) {
+				vector<string> ans;
+				int n = mat.size();
+				if(mat.empty() or !mat[0][0] or !mat[n-1][n-1]) return ans;
+				string s;
+				PATHS(mat, 0, 0, s, ans);
+				return ans;
+			}
+		};
 ---------------------------------------------------------------------------------------------------------
 	09/03/2024
 Lecture-41: Time & Space Complexity of Recursive Algorithms: ❌Pending
@@ -29671,8 +29772,96 @@ Lecture 81: Implement a Phone Directory Using Trie:
 ---------------------------------------------------------------------------------------------------------
 	14/01/25
 Lecture 82: Rat in Maze Problem || Backtracking Day 1:
-	
+	Q. Rat In A Maze: (Refer Lect-40)
+		Problem statement:
+			You are given a starting position for a rat which is stuck in a maze at an initial point (0, 0) (the maze can be thought of as a 2-dimensional plane). The maze would be given in the form of a square matrix of order 'N' * 'N' where the cells with value 0 represent the maze’s blocked locations while value 1 is the open/available path that the rat can take to reach its destination. The rat's destination is at ('N' - 1, 'N' - 1). Your task is to find all the possible paths that the rat can take to reach from source to destination in the maze. The possible directions that it can take to move in the maze are 'U'(up) i.e. (x, y - 1) , 'D'(down) i.e. (x, y + 1) , 'L' (left) i.e. (x - 1, y), 'R' (right) i.e. (x + 1, y).
+			Note:
+			Here, sorted paths mean that the expected output should be in alphabetical order.
+			For Example:
+			Given a square matrix of size 4*4 (i.e. here 'N' = 4):
+			1 0 0 0
+			1 1 0 0
+			1 1 0 0
+			0 1 1 1 
+			Expected Output:
+			DDRDRR DRDDRR 
+			i.e. Path-1: DDRDRR and Path-2: DRDDRR
+			The rat can reach the destination at (3, 3) from (0, 0) by two paths, i.e. DRDDRR and DDRDRR when printed in sorted order, we get DDRDRR DRDDRR.
+			Constraints:
+				2 <= N <= 5
+				0 <= MATRIX[i][j] <= 1
+				Where N is the size of the square matrix.
+				Time Limit: 1sec
+			Sample Input 1:
+			4
+			1 0 0 0 
+			1 1 0 1
+			1 1 0 0
+			0 1 1 1
+			Sample Output 1:
+			DDRDRR DRDDRR
+			Explanation For Sample Input 1:
+			The rat can reach the destination at (3, 3) from (0, 0) by two paths, i.e. DRDDRR and DDRDRR when printed in sorted order, we get DDRDRR DRDDRR.
+			Sample Input 2:
+			2
+			1 0
+			1 0
+			Sample Output 2:
+			[]
+			Explanation For Sample Input 2:
+			As no valid path exists in Sample input 2 so we return an empty list.
+	// TC: O(4^n² + k log k), where, k is length of possible paths & SC: O(n²)
+		#include <bits/stdc++.h> 
+		void PATHS(vector<vector<int>> &arr, int r, int c, string s, vector<string> &ans){
+			// we can't visit here
+			if(r < 0 or r >= arr.size() or c < 0 or c > arr.size() or !arr[r][c]) return;
+			if(r == arr.size()-1 and c == arr.size()-1){
+				ans.push_back(s);
+				return;
+			}
+
+			arr[r][c] = 0;
+			PATHS(arr, r-1, c, s+"U", ans);         // UP
+			PATHS(arr, r, c+1, s+"R", ans);         // RIGHT
+			PATHS(arr, r+1, c, s+"D", ans);         // DOWN
+			PATHS(arr, r, c-1, s+"L", ans);         // LEFT
+			arr[r][c] = 1;
+		}
+		vector<string> searchMaze(vector<vector<int>> & arr, int n) {
+			vector<string> ans;
+			if(arr.empty() or !arr[0][0] or !arr[n-1][n-1]) return ans;
+			PATHS(arr, 0, 0, "", ans);
+			sort(ans.begin(), ans.end());
+			return ans;
+		}
+		// without sorting:
+			#include <bits/stdc++.h> 
+			void PATHS(vector<vector<int>> &arr, int r, int c, string s, vector<string> &ans){
+				// we can't visit here
+				if(r < 0 or r >= arr.size() or c < 0 or c > arr.size() or !arr[r][c]) return;
+				if(r == arr.size()-1 and c == arr.size()-1){
+					ans.push_back(s);
+					return;
+				}
+
+				arr[r][c] = 0;
+				PATHS(arr, r+1, c, s+"D", ans);         // DOWN
+				PATHS(arr, r, c-1, s+"L", ans);         // LEFT
+				PATHS(arr, r, c+1, s+"R", ans);         // RIGHT
+				PATHS(arr, r-1, c, s+"U", ans);         // UP
+				arr[r][c] = 1;
+			}
+			vector<string> searchMaze(vector<vector<int>> & arr, int n) {
+				vector<string> ans;
+				if(arr.empty() or !arr[0][0] or !arr[n-1][n-1]) return ans;
+				PATHS(arr, 0, 0, "", ans);
+
+				// if we traverse path in D->L->R->U then it will be in sorted order automatically
+				// sort(ans.begin(), ans.end());
+				return ans;
+			}
 ---------------------------------------------------------------------------------------------------------
+
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
@@ -120970,7 +121159,67 @@ POTD:-[Problem of the Day]
 				return -1;
 			}
 
-1198)
+	1198) Find the Prefix Common Array of Two Arrays:
+		Problem Statement:
+			You are given two 0-indexed integer permutations A and B of length n.
+			A prefix common array of A and B is an array C such that C[i] is equal to the count of numbers that are present at or before the index i in both A and B.
+			Return the prefix common array of A and B.
+			A sequence of n integers is called a permutation if it contains all integers from 1 to n exactly once.
+			Example 1:
+				Input: A = [1,3,2,4], B = [3,1,2,4]
+				Output: [0,2,3,4]
+				Explanation: At i = 0: no number is common, so C[0] = 0.
+				At i = 1: 1 and 3 are common in A and B, so C[1] = 2.
+				At i = 2: 1, 2, and 3 are common in A and B, so C[2] = 3.
+				At i = 3: 1, 2, 3, and 4 are common in A and B, so C[3] = 4.
+			Example 2:
+				Input: A = [2,3,1], B = [3,1,2]
+				Output: [0,1,3]
+				Explanation: At i = 0: no number is common, so C[0] = 0.
+				At i = 1: only 3 is common in A and B, so C[1] = 1.
+				At i = 2: 1, 2, and 3 are common in A and B, so C[2] = 3.
+			Constraints:
+				1 <= A.length == B.length == n <= 50
+				1 <= A[i], B[i] <= n
+				It is guaranteed that A and B are both a permutation of n integers.
+		// TC: O(n²) & SC: O(n)
+			class Solution {
+				public:
+				vector<int> findThePrefixCommonArray(vector<int>& A, vector<int>& B) {
+					vector<int> ans;
+					int n = A.size();
+					for(int i=0; i<n; i++){
+						unordered_set<int> s;
+						int cnt=0;
+						for(int j=0; j<=i; j++){
+							if(s.count(A[j])) cnt++;
+							s.insert(A[j]);
+							if(s.count(B[j])) cnt++;
+							s.insert(B[j]);
+						}
+						ans.push_back(cnt);
+					}
+					return ans;
+				}
+			};
+		// TC: O(n) & SC: O(n)
+			class Solution {
+				public:
+				vector<int> findThePrefixCommonArray(vector<int>& A, vector<int>& B) {
+					int cnt=0, n = A.size();
+					vector<int> ans;
+					unordered_set<int> s;
+					for(int i=0; i<n; i++){
+						if(s.count(A[i])) cnt++;
+						else s.insert(A[i]);
+						if(s.count(B[i])) cnt++;
+						else s.insert(B[i]);
+						ans.push_back(cnt);
+					}
+					return ans;   
+				}
+			};
+
 1199)
 1200)
 ---------------------------------------------------------------------------------------------------------
