@@ -121431,6 +121431,17 @@ POTD:-[Problem of the Day]
 							len = max(len, ones == zeros ? j-i+1 : 0);
 						}
 					}
+					// or
+					/*
+					for(int i=0; i<n; i++){
+						int ones, zeros;
+						ones = zeros = 0;
+						for(int j=i; j<n; j++){
+							arr[j] ? ones++ : zeros++;
+							len = max(len, ones == zeros ? j-i+1 : 0);
+						}
+					}
+					*/
 					return len;
 				}
 			};
