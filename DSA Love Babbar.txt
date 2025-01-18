@@ -29945,7 +29945,39 @@ Lecture 83: N-Queen Problem || Backtracking Day 2:
 			solve(0, ans, board, n);
 			return ans;
 		}
-	// Optimization using hashMap ❌Pending
+	// Optimization using hashMap:
+		class Solution{
+			public:
+			unordered_map<int, bool> rowNum, colNum, lowerDiagonal, upperDiagonal;
+			bool curIndexSafe(int row, int col, vector<vector<int>> &board){
+				return !(rowNum[row] || colNum[col] || lowerDiagonal[row+col] || upperDiagonal[row-col]);
+			}
+			void solve(int col, vector<vector<int>> &ans, vector<vector<int>> &board, int size){
+				if(col == size){
+					vector<int> temp;
+					for(int i=0; i<size; i++)
+						for(int j=0; j<size; j++)
+							if(board[j][i]) temp.push_back(j+1);
+					ans.push_back(temp);
+					return;
+				}
+				for(int row=0; row<size; row++){
+					if(curIndexSafe(row, col, board)){
+						rowNum[row] = colNum[col] = lowerDiagonal[row+col] = upperDiagonal[row-col] = 1;
+						board[row][col] = 1;
+						solve(col+1, ans, board, size);
+						board[row][col] = 0;
+						rowNum[row] = colNum[col] = lowerDiagonal[row+col] = upperDiagonal[row-col] = 0;
+					}
+				}
+			}
+			vector<vector<int>> nQueen(int n) {
+				vector<vector<int>> ans;
+				vector<vector<int>> board(n, vector<int>(n, 0));
+				solve(0, ans, board, n);
+				return ans;
+			}
+		};
 ---------------------------------------------------------------------------------------------------------
 	17/01/25
 Lecture 84: Sudoku Solver Problem || Backtracking Day 3:
@@ -29991,7 +30023,59 @@ Lecture 84: Sudoku Solver Problem || Backtracking Day 3:
 			In each row, each of the digits 1-9 is occurring exactly once.
 			In each column, each of the digits 1-9 is occurring exactly once.
 			In each 3x3 sub-grids of the grid, each of the digits is occurring exactly once.
+	// TC: O(9ⁿ), where n is the no.of empty cells & SC: O(1), max recursive call stack is O(81).
+		#include <bits/stdc++.h> 
+		bool isRightToKeep(int r, int c, vector<vector<int>>& sudo, int val){
+			for(int i=0; i<9; i++){
+				// row
+				if(sudo[r][i] == val) return 0;
+				// col
+				if(sudo[i][c] == val) return 0;
+				// 3x3 matrix
+				if(sudo[3*(r/3) + i/3][3*(c/3) + i%3] == val) return 0;
 
+				// or
+				/*
+					 // 3x3 matrix
+					// finding the starting index of 3x3 grid
+					int startRow = (r/3)*3;					// row - (row % 3)
+					int startCol = (c/3)*3;					// col - (col % 3)
+					for(int i=0; i<3; i++){
+						for(int j=0; j<3; j++){   
+							if(sudo[startRow + i][startCol + j] == val) return 0;
+						}
+					}
+				*/
+			}
+			return 1;
+		}
+		bool solve(vector<vector<int>>& sudoku){
+			int n = 9;  // size of matrix
+			for(int row=0; row<n; row++) {
+				for(int col=0; col<n; col++) {
+					if(!sudoku[row][col]){
+						for(int val=1; val<10; val++){        // trying to keep values between 1 to 9
+							if(isRightToKeep(row, col, sudoku, val)){
+								sudoku[row][col] = val;
+								bool Further = solve(sudoku);
+								if(Further) return true;
+								else {
+								// mis-placing happened somewhere, instead of placing
+								// x in any cell we place y & this y is must used in
+								// same column or row Or inside 3x3 matrix
+								sudoku[row][col] = 0;         // backtrack
+								}
+							}
+						}
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		void solveSudoku(vector<vector<int>>& sudoku) {
+			solve(sudoku);
+		}
 ---------------------------------------------------------------------------------------------------------
 Lecture 85: Introduction to Graphs || Creation and Implementation:
 	
@@ -121451,12 +121535,193 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-1201)
-1202)
-1203)
-1204)
+	1201) Reverse a linked list: (Refer POTD: 693, 730)
+		Problem Statement:
+			Given the head of a linked list, the task is to reverse this list and return the reversed head.
+			Examples:
+			Input: head: 1 -> 2 -> 3 -> 4 -> NULL
+			Output: head: 4 -> 3 -> 2 -> 1 -> NULL
+			Input: head: 2 -> 7 -> 10 -> 9 -> 8 -> NULL
+			Output: head: 8 -> 9 -> 10 -> 7 -> 2 -> NULL
+			Input: head: 10 -> NULL
+			Output: 10 -> NULL
+			Constraints:
+				1 <= number of nodes, data of nodes <= 10^5
+		/* Linked List Node structure:
+			struct Node {
+				int data;
+				struct Node *next;
+			}
+		*/
+		class Solution {
+			public:
+			Node* reverseList(struct Node* head) {
+				if(!head) return NULL;
+				Node *Temp = NULL, *cur = head, *nxt = head -> next;
+				cur -> next = Temp;
+				Temp = cur;
+				while(nxt){
+					cur = nxt;
+					nxt = nxt -> next;
+					cur -> next = Temp;
+					Temp = cur;
+				}
+				return Temp;
+			}
+		};
+		// Using Recursion:
+			class Solution {
+				public:
+				void solve(Node* &H, Node* &cur, Node* &prev){
+					if(!cur){
+						H = prev;
+						return ;
+					}
+					Node* temp = prev;
+					prev = cur;
+					cur = cur -> next;
+					prev -> next = temp;
+					solve(H, cur, prev);
+				}
+				Node* reverseList(struct Node* head) {
+					Node *cur = head, *prev = NULL;
+					solve(head, cur, prev);
+					return head;
+				}
+			};
+
+	1202) N-Queens (Refer Lect-83)
+		Problem Statement:
+			The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other.
+			Given an integer n, return all distinct solutions to the n-queens puzzle. You may return the answer in any order.
+			Each solution contains a distinct board configuration of the n-queens' placement, where 'Q' and '.' both indicate a queen and an empty space, respectively.
+			Example 1:
+			Input: n = 4
+			Output: [[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]]
+			Explanation: There exist two distinct solutions to the 4-queens puzzle as shown above
+			Example 2:
+			Input: n = 1
+			Output: [["Q"]]
+			Constraints:
+				1 <= n <= 9
+		// TC: O(N!) SC: O(N)
+			class Solution {
+				public:
+				bool isSafeToKeep(int row, int col, vector<string> &board){
+					// coz we must keept the queens before the current index, after the current index we haven't even reached 
+					// row check from current index to till 0, needs to be check.
+					// predecrement is very essential here.
+					int i=row;
+					while(i) if(board[--i][col] == 'Q') return 0;
+
+					// col check, 
+					i = col;
+					while(i) if(board[row][--i] == 'Q') return 0;
+
+					// diagonal from cur to left side upper
+					i=row; int j = col;
+					while(i >=0 and j >=0) if(board[i--][j--] == 'Q') return 0;
+					
+					// diagonal from cur to left side lower
+					i=row, j = col;
+					while(i < board.size() and j >=0) if(board[i++][j--] == 'Q') return 0;
+					// default
+					return 1;
+				}
+				void solve(int col, vector<vector<string>> &ans, vector<string> &board, int n){
+					if(col == n){
+						ans.push_back(board);
+						return;
+					}
+					for(int i=0; i<n; i++){
+						if(isSafeToKeep(i, col, board)){
+							board[i][col] =  'Q';
+							solve(col+1, ans, board, n);
+							board[i][col] =  '.';
+						}
+					}
+				}
+				vector<vector<string>> solveNQueens(int n) {
+					vector<vector<string>> ans;
+					vector<string> board (n, string(n, '.'));
+					solve(0, ans, board, n);
+					return ans;
+				}
+			};
+
+	1203) Rotate a Linked List: (Refer POTD: 781, Constraint are different)
+		Problem Statement:
+			Given the head of a singly linked list, your task is to left rotate the linked list k times.
+			Examples:
+			Input: head = 10 -> 20 -> 30 -> 40 -> 50, k = 4
+			Output: 50 -> 10 -> 20 -> 30 -> 40
+			Explanation:
+			Rotate 1: 20 -> 30 -> 40 -> 50 -> 10
+			Rotate 2: 30 -> 40 -> 50 -> 10 -> 20
+			Rotate 3: 40 -> 50 -> 10 -> 20 -> 30
+			Rotate 4: 50 -> 10 -> 20 -> 30 -> 40
+			Input: head = 10 -> 20 -> 30 -> 40 , k = 6
+			Output: 30 -> 40 -> 10 -> 20 
+			Constraints:
+				1 <= number of nodes <= 10^5
+				0 <= k <= 10^9
+				0 <= data of node <= 10^9
+		// Not Optimized:TC: O(n) & SC: O(n)
+			class Solution {
+				public:
+				Node* rotate(Node* head, int k) {
+					Node* temp = head;
+					while(k-- and temp){
+						temp = temp -> next;
+						if(!temp) temp = head;
+					}
+					
+					// pushing first last elements
+					vector<int> v;
+					Node* go = temp;
+					Node* save = go;
+					while(go) v.push_back(go->data), go = go -> next;
+					
+					temp = head;
+					while(temp != save) v.push_back(temp->data), temp = temp->next;
+					
+					temp = head;
+					int i=0;
+					while(temp) temp->data = v[i++], temp = temp -> next;
+					return head;
+				}
+			};
+		// Optimized:
+			class Solution {
+				public:
+				int LEN(Node* n, Node* &T){
+					int cnt = 0;
+					while(n) cnt++, T = n, n = n->next;
+					return cnt;
+				}
+				Node* rotate(Node* head, int k) {
+					Node* Tail = NULL;
+					// finding the lenght of list & saving the Tail
+					int len = LEN(head, Tail);
+					k %= len;
+					Node* temp = head;
+					while(k--){
+						Tail -> next = temp;
+						head = head -> next;
+						temp -> next = NULL;
+						Tail = temp;
+						temp = head;
+					}
+					return head;
+				}
+			};
+
+1204) 
+
 1205)
+
 1206)
+
 1207)
 1208)
 1209)
