@@ -30600,7 +30600,165 @@ Lecture 86: BFS Traversal in Graph:
 			}
 		};
 ---------------------------------------------------------------------------------------------------------
+	22/01/25
+Lecture 87: DFS Traversal in Graph:
+	- DFS - Depth First Search
+	Q. DFS Traversal:
+		Problem statement
+			Given an UNDIRECTED and DISCONNECTED graph G(V, E), containing 'V' vertices and 'E' edges, the information about edges is given using 'GRAPH' matrix, where i-th edge is between GRAPH[i][0] and GRAPH[i][1]. print its DFS traversal.
+			V is the number of vertices present in graph G and vertices are numbered from 0 to V-1. 
+			E is the number of edges present in graph G.
+			Note :
+			The Graph may not be connected i.e there may exist multiple components in a graph.
+			Constraints :
+				2 <= V <= 10^3
+				1 <= E <= (5 * (10^3))	
+				Time Limit: 1sec
+			Sample Input 1:
+			5 4
+			0 2
+			0 1
+			1 2
+			3 4
+			Sample Output 1:
+			2
+			0 1 2
+			3 4
+			Explanation For Sample Input 1:
+			If we do a DFS traversal from vertex 0 we will get a component with vertices [0, 2, 1]. If we do a DFS traversal from 3 we will get another component with vertices [3, 4]
+			Hence,  we have two disconnected components so on the first line, print 2. Now, print each component in increasing order. On the first line print 0 1 2 and on the second line, print 3 4.
+			[0 1 2] comes before [3 4] as the first vertex 0 from the first component is smaller than the first vertex 3 from the second component.
+			Sample Input 2:
+			9 7
+			0 1
+			0 2
+			0 5
+			3 6
+			7 4
+			4 8
+			7 8
+			Sample Output 2:
+			3
+			0 1 2 5
+			3 6
+			4 7 8
+		BFS:
+			void PrepareAdjacencyList(vector<vector<int>> &adjList, vector<vector<int>> &edges){
+				int E = edges.size();
+				// its undirected graph
+				for(int i=0; i<E; i++){
+					int p1 = edges[i][0], p2 = edges[i][1];
+					// both are connected to each other
+					adjList[p1].push_back(p2);
+					adjList[p2].push_back(p1);
+				}
+			}
+			void DFS(vector<int> &component, unordered_map<int, bool> &vis, vector<vector<int>> adj, int i){
+				// BFS way
+				queue<int> q;
+				q.push(i);
+				while(!q.empty()){
+					int val = q.front();
+					q.pop();
+					component.push_back(val);
+					for(int z: adj[val]){
+						if(!vis[z]) q.push(z);
+						vis[z] = 1;
+					}
+				}
+			}
+			vector<vector<int>> depthFirstSearch(int V, int E, vector<vector<int>> &edges) {
+				// adjacency list prepared
+				vector<vector<int>> adjList(V), ans;
+				PrepareAdjacencyList(adjList, edges);
+				unordered_map<int, bool> vis;
+				// disconnected graph
+				for(int i=0; i<V; i++){
+					if(!vis[i]){
+						vector<int> component;
+						vis[i] = 1;
+						DFS(component, vis, adjList, i);
+						ans.push_back(component);
+					}
+				}
+				return ans;
+			}
+		DFS:
+			void PrepareAdjacencyList(vector<vector<int>> &adjList, vector<vector<int>> &edges){
+				int E = edges.size();
+				// its undirected graph
+				for(int i=0; i<E; i++){
+					int p1 = edges[i][0], p2 = edges[i][1];
+					// both are connected to each other
+					adjList[p1].push_back(p2);
+					adjList[p2].push_back(p1);
+				}
+			}
+			void DFS(vector<int> &component, unordered_map<int, bool> &vis, vector<vector<int>> adj, int i){
+				vis[i] = 1;
+				component.push_back(i);
+				for(int remainingVertex: adj[i])
+					if(!vis[remainingVertex]) DFS(component, vis, adj, remainingVertex);
+			}
+			vector<vector<int>> depthFirstSearch(int V, int E, vector<vector<int>> &edges) {
+				// adjacency list prepared
+				vector<vector<int>> adjList(V), ans;
+				PrepareAdjacencyList(adjList, edges);
 
+				unordered_map<int, bool> vis;
+				// disconnected graph
+				for(int i=0; i<V; i++){
+					if(!vis[i]){
+						vector<int> component;
+						DFS(component, vis, adjList, i);
+						ans.push_back(component);
+					}
+				}
+				return ans;
+			}
+	Q. DFS of Graph:
+		Problem Statement:
+			Given a CONNECTED UNIDRECTED graph represented by an adjacency list adj, which is a vector of vectors where each adj[i] represents the list of vertices connected to vertex i. Perform a Depth First Traversal (DFS) starting from vertex 0, visiting vertices from left to right as per the adjacency list, and return a list containing the DFS traversal of the graph.
+			Note: Do traverse in the same order as they are in the adjacency list.
+			Examples:
+			Input: adj = [[2,3,1], [0], [0,4], [0], [2]]
+			Output: [0, 2, 4, 3, 1]
+			Explanation: Starting from 0, the DFS traversal proceeds as follows: 
+			Visit 0 → Output: 0 
+			Visit 2 (the first neighbor of 0) → Output: 0, 2 
+			Visit 4 (the first neighbor of 2) → Output: 0, 2, 4 
+			Backtrack to 2, then backtrack to 0, and visit 3 → Output: 0, 2, 4, 3 
+			Finally, backtrack to 0 and visit 1 → Final Output: 0, 2, 4, 3, 1
+			Input: adj = [[1, 2], [0, 2], [0, 1, 3, 4], [2], [2]]
+			Output: [0, 1, 2, 3, 4]
+			Explanation: Starting from 0, the DFS traversal proceeds as follows: 
+			Visit 0 → Output: 0 
+			Visit 1 (the first neighbor of 0) → Output: 0, 1 
+			Visit 2 (the first neighbor of 1) → Output: 0, 1, 2 
+			Visit 3 (the first neighbor of 2) → Output: 0, 1, 2, 3 
+			Backtrack to 2 and visit 4 → Final Output: 0, 1, 2, 3, 4
+			Constraints:
+				1 ≤ adj.size() ≤ 10^4
+				1 ≤ adj[i][j] ≤ 10^4
+		void DFS(vector<int> &ans, vector<vector<int>> &adj, unordered_map<int, int> &vis, int i){
+			ans.push_back(i);
+			vis[i] = 1;
+			for(int z: adj[i])
+				if(!vis[i]) DFS(ans, adj, vis, z);
+		}
+		vector<int> dfsOfGraph(vector<vector<int>>& adj) {
+			vector<int> ans;
+			unordered_map<int, int> vis;
+			// ans to store, adjacency list, starting point/ source of graph
+			DFS(ans, adj, vis, 0);
+			return ans;
+		}
+---------------------------------------------------------------------------------------------------------
+	23/01/25
+Lecture 88: Cycle Detection in Undirected Graphs || Using BFS and DFS:
+	
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
