@@ -19653,7 +19653,6 @@ Lecture-46: Linked List Questions: Reverse LL in "K group" && Check LL is Circul
 			head -> next = kReverse(curr, k);
 			return prev;
 		}
-
 		// Little Complex:
 			int len(Node *temp, int k){
 				int l =0;
@@ -30077,10 +30076,531 @@ Lecture 84: Sudoku Solver Problem || Backtracking Day 3:
 			solve(sudoku);
 		}
 ---------------------------------------------------------------------------------------------------------
+	19/01/25
 Lecture 85: Introduction to Graphs || Creation and Implementation:
+	- Graph is a data structure, consist of Nodes & edges
+	- Graph Data Structure is a collection of nodes connected by edges. It's used to represent relationships between different entities.
+	- A Graph is a non-linear data structure consisting of vertices and edges. 
+	  The vertices are sometimes also referred to as nodes and the edges are lines or arcs that connect any two nodes in the graph.
+	  More formally a Graph is composed of a set of vertices( V ) and a set of edges( E ). 
+	  The graph is denoted by G(V, E).
+	- Node - entity to store data
+	- edge - connecting nodes/ vertices
+	- Types:
+		1) Undirected - doesn't have direction (travel to both side)
+		     A
+			/ \
+	 	   B   C - E
+		    \ /
+		     D
+
+			Degree means connected edges
+			- Here, Degree(A) = 2		Degree(C) = 3	Degree(E) = 1
+					Degree(B) = 2		Degree(D) = 2
+		2) Directed - has direction
+				 A ————> B
+				 |	  ↗  ↑
+				 ↓  ↗	 |
+				 C —————> D
+			Degrees:
+				In-Degree: incoming directions
+					(A) = 0, (B) = 3, (C) = 1, (D) = 1
+				Out-Degree: outgoing directions
+					(A) = 2, (B) = 0, (C) = 2, (D) = 1
+		Weighted: values/ weight on edges of graph
+				 	4
+				 A —————> B
+			   	 |	 2 ↗  ↑
+			   2 ↓  ↗  	  |2
+				 C ——————> D
+					 1
+
+	- if given Directed/ Undirected graph, without weight, then we can assume that every edge has weight 1.		
+	- Weighted Directed graph
+	- Weighted Undirected graph
+	- Path:
+		sequence of nodes, where every nodes comes once only.
+		     A
+			/ \
+	 	   B   C - E
+		    \ /
+		     D
+		eg.
+			A -> C -> D 
+			A -> C -> D -> B
+			A -> C -> E
+			
+			but not this one, nodes repeated
+			✖️	A -> C -> E -> C 
+			✖️	A -> C -> D -> B -> A
+	- Weighted Cyclic Directed graph:
+		- weights on edges
+	- Cyclic Directed graph:
+		A ——→ B
+		↑	  |
+		|	  ↓			
+		C ←—— D				=> A ——> B ——> D ——> C ——> A
+		- here, if the edges contains the weight, then it will be called the Weighted Cyclic Directed graph
 	
+	- Acyclic Directed graph: doesn't forms the cycle in path.
+	- Weighted Acyclic Directed graph: doesn't forms the cycle in path & has weights on edges
+	- Graph representations:
+		1) Adjacency matrix (HomeWork):
+			- if the i'th node is connected j’th node then in matrix it will show 1 else 0
+			- this is Directed graph
+			- here u is connected v so it will be 1, but v is not connected to u so it will 0
+			  similarly, u is connected q, 
+			  			 q is connected r,
+			  			 r is connected p & v,
+						 v is connected P			 
+			 u ————→ v  
+			 | 		 ↑ ↘
+			 |		 |   p
+			 ↓	     | ↗
+			 q ————→ r
+
+			    U V P Q R
+			  ____________
+			U | 0 1 0 1 0
+			V | 0 0 1 0 0
+			P | 0 0 0 0 0
+			Q | 0 0 0 0 1
+			R | 0 1 1 0 0
+		Implementation:
+			#include <bits/stdc++.h>
+			using namespace std;
+			void Connect(vector<vector<int>> &m, int idx1, int idx2){
+				// its directed graph
+				m[idx1][idx2] = 1;
+				// for undirected graph, both are Connected to each other
+				// m[idx2][idx1] = 1;
+			}
+			int main() {
+				vector<char> nodes = {'U', 'V', 'P', 'Q', 'R'};         //  5 nodes
+				int n = nodes.size();
+				vector<vector<int>> mat (n, vector<int>(n, 0));
+				
+				// these are the edges
+				Connect(mat, 0, 1);         // u ——→ v
+				Connect(mat, 0, 3);         // u ——→ q 
+				Connect(mat, 1, 2);         // v ——→ p
+				Connect(mat, 3, 4);         // q ——→ r
+				Connect(mat, 4, 1);         // r ——→ v
+				Connect(mat, 4, 2);         // r ——→ p
+
+				// connection display
+				int i=0;
+				std::cout << "     ";
+				for(char ch: nodes)
+					cout<< ch << " ";
+				std::cout << std::endl;
+				for(auto a: mat){
+					cout<<nodes[i++]<<" —> ";
+					for(int j: a)
+						cout<<j<<" ";
+					std::cout << std::endl;
+				}
+				return 0;
+			}
+		// output:
+					U V P Q R 
+			U —> 0 1 0 1 0 
+			V —> 0 0 1 0 0 
+			P —> 0 0 0 0 0 
+			Q —> 0 0 0 0 1 
+			R —> 0 1 1 0 0 
+		2) Adjacency list:
+			- this is undirected graph
+			- both nodes are connected to each other
+			- for this the Adjacency matrix look like this
+				u is connected to v & q
+				v is connected to u, r & p
+				p is connected to v & r
+				q is connected to u & r
+				r is connected to v, p & q
+					 U V P Q R 
+				U —> 0 1 0 1 0 
+				V —> 1 0 1 0 1 
+				P —> 0 1 0 0 1 
+				Q —> 1 0 0 0 1 
+				R —> 0 1 1 1 0
+			 u ————— v  
+			 | 		 | \
+			 |		 |   p
+			 |	     | /
+			 q ————— r
+
+			- Using Adjacency list we can represent above graph, or 
+				u ----> v, q
+				v ----> u, r, p
+				p ----> v, r
+				q ----> u, r
+				r ----> v, p, q
+		-Implementation:
+			#include <bits/stdc++.h>
+			using namespace std;
+			void Connect(vector<vector<int>> &m, int idx1, int idx2){
+				// its undirected graph, both are Connected to each other
+				m[idx1][idx2] = 1;
+				m[idx2][idx1] = 1;
+			}
+			int main() {
+				vector<char> nodes = {'U', 'V', 'P', 'Q', 'R'};         //  5 nodes
+				int n = nodes.size();
+				vector<vector<int>> mat (n, vector<int>(n, 0));
+				
+				// these are the edges
+				Connect(mat, 0, 1);         // u ——→ v
+				Connect(mat, 0, 3);         // u ——→ q 
+				Connect(mat, 1, 2);         // v ——→ p
+				Connect(mat, 3, 4);         // q ——→ r
+				Connect(mat, 4, 1);         // r ——→ v
+				Connect(mat, 4, 2);         // r ——→ p
+
+				// connection display
+				int i=0;
+				for(auto a: mat){
+					cout<<nodes[i++]<<" —> ";
+					for(int j=0; j<n; j++){
+						if(a[j] == 1) 
+							cout<<nodes[j]<<" ";
+					}
+					std::cout << std::endl;
+				}
+				return 0;
+			}
+			// Output:
+				U —> V Q 
+				V —> U P R 
+				P —> V R 
+				Q —> U R 
+				R —> V P Q 
+	- Graph Implementation:
+			 0 ————— 1  
+			 | 		 | \
+			 |		 |   2
+			 |	     | /
+			 3 ————— 4
+		- Generic Graph for any datatype
+		#include <iostream>
+		#include <list>
+		#include <unordered_map>
+		using namespace std;
+		template <typename V>
+		class Graph{
+			public:
+			unordered_map<V, list<V>> adjacencyList;   
+			void addEdges(int vertex1, int vertex2, int direction = 0){             // if direction is 0 then its undirected graph else its directed graph
+				// for directed graph jut vertex1 contains vertex2
+				adjacencyList[vertex1].push_back(vertex2);
+				// for undirected graph vertex2 also contains vertex1
+				if(!direction) adjacencyList[vertex2].push_back(vertex1);
+			}
+			void printList(){
+				for(auto itr: adjacencyList){
+					std::cout << itr.first << "\t";
+					for(int i: itr.second)
+						std::cout << i << " ";
+					std::cout << std::endl;
+				}
+			}
+		};
+		int main() {
+			int n, e;
+			std::cout << "Enter no.of nodes ";
+			cin>>n;
+			std::cout << "Enter no.of edges ";
+			cin>>e;
+			
+			Graph<int> g;
+			for(int i=0; i<e; i++){
+				int v1, v2;
+				cin>>v1>>v2;
+				g.addEdges(v1, v2);         // defaultly this methods 3rd argument direction is 0 means undirected Graph
+			}
+			g.printList();
+			return 0;
+		}
+		output:
+			Enter no.of nodes 5
+			Enter no.of edges 6   
+			0 1
+			0 3
+			1 2
+			1 4
+			2 4
+			3 4
+			4       1 2 3 
+			2       1 4 
+			3       0 4 
+			1       0 2 4 
+			0       1 3 
+
+	Q. Creating and Printing:
+		TC: O(n+m) & SC: O(n+m)
+		Problem statement
+			You are given an undirected graph of 'N' nodes and 'M' edges. Your task is to create the graph and print the adjacency list of the graph. It is guaranteed that all the edges are unique, i.e., if there is an edge from 'X' to 'Y', then there is no edge present from 'Y' to 'X' and vice versa. Also, there are no self-loops present in the graph.
+			In graph theory, an adjacency list is a collection of unordered lists used to represent a finite graph. Each list describes the set of neighbors of a vertex in the graph.
+			For Example:
+			If 'N' = 3 and edges = {{2,1}, {2,0}}.
+			So, the adjacency list of the graph is stated below.
+			0 → 2
+			1 → 2
+			2 → 0 → 1
+			Sample Input 1:
+			4 3
+			1 2
+			0 3
+			2 3
+			Sample Output 1:
+			0 3
+			1 2
+			2 1 3
+			3 0 2
+			Explanation For Sample Input 1:
+			The graph is shown in the below figure.
+			So, the neighbour of node 0 is 3. So, in the first line, the first integer is 0 followed by its neighbour 3. Similarly in the second line, 1 is followed by its neighbour 2. 
+			In the third line, 2 is followed by its neighbours 1 and 3. And in the fourth line, 3 is followed by its neighbours 0 and 2.
+			Sample Input 2:
+			3 3
+			0 1
+			1 2
+			2 0
+			Sample Output 2:
+			0 1 2
+			1 0 2
+			2 0 1
+			Explanation For Sample Input 2:
+			The graph is shown in the below figure.
+			So, the neighbour of node 0 is 1 and 2. So, in the first line, the first integer is 0 followed by its neighbour 1 and 2. Similarly in the second line, 1 is followed by its neighbour 2 and 0. 
+			In the third line, 2 is followed by its neighbours 1 and 0. 
+			Constraints:
+			1 <= N <= 5000
+			1 <= M <= min(5000, (N * (N - 1)) / 2)
+			0 <= edges[i][0], edges[i][1] <= N-1
+			Time limit: 1 sec
+		vector<vector<int>> printAdjacency(int n, int m, vector<vector<int>> &edges) {
+			vector<vector<int>> hold(n);
+			for(int i=0; i<m; i++){
+				int u=edges[i][0], v=edges[i][1];
+				hold[u].push_back(v);
+				hold[v].push_back(u);
+			}
+			vector<vector<int>> adjList(n);
+			for(int i=0; i<n; i++){
+				adjList[i].push_back(i);
+				for(int j=0; j<hold[i].size(); j++)
+					adjList[i].push_back(hold[i][j]);
+			}
+			return adjList;
+		}
+		// or
+			vector<vector<int>> printAdjacency(int n, int m, vector<vector<int>> &edges) {
+				vector<vector<int>> ans(n);
+				for(int i=0; i<n; i++) ans[i].push_back(i);
+				for(int i=0; i<m; i++){
+					ans[edges[i][0]].push_back(edges[i][1]);
+					ans[edges[i][1]].push_back(edges[i][0]);
+				}
+				return ans;
+			}
 ---------------------------------------------------------------------------------------------------------
+	22/01/25
+Lecture 86: BFS Traversal in Graph:
+	- BFS - Breadth First Search
+	- Graph BFS traversals:
+	eg.
+		1)
+			0 --- 1 ---2 --- 3
+						\   /
+				 		  4
+			=> 0, 1, 2, 3, 4
+		2) 
+			0 ---- 3 ---- 1
+			  \           |
+			    2-------- 4
+			=> 0, 3, 2, 1, 4
+
+	Traversal: 0, 3, 1, 2, 4
+		using queue & visited map to keep track of visisted elements
+		source--→ 0 --- 3 --- 1 --- 2
+ 				   			   \
+							    4 
+
+	- Disconnected Graph: all graph we saw till now has single/ one component
+		component-1		component-2
+		  0 --- 1            3
+		   \   /
+		     2
+		- here 2 component are there, so this is disconnected graph.
+	TC: O(V+E) & SC: O(V)
+	Q. BFS in Graph:
+		Problem statement
+			Given an adjacency list representation of a directed graph with ‘n’ vertices and ‘m’ edges. Your task is to return a list consisting of Breadth-First Traversal (BFS) starting from vertex 0.
+			In this traversal, one can move from vertex 'u' to vertex 'v' only if there is an edge from 'u' to 'v'. The BFS traversal should include all nodes directly or indirectly connected to vertex 0.
+			Note:
+			The traversal should proceed from left to right according to the input adjacency list.
+			Example:
+			Adjacency list: { {1,2,3},{4}, {5}, {},{},{}}
+			The interpretation of this adjacency list is as follows:
+			Vertex 0 has directed edges towards vertices 1, 2, and 3.
+			Vertex 1 has a directed edge towards vertex 4.
+			Vertex 2 has a directed edge towards vertex 5.
+			Vertices 3, 4, and 5 have no outgoing edges.
+			We can also see this in the diagram below.
+			BFS traversal: 0 1 2 3 4 5
+			Sample Input 1:
+			8 7
+			0 1
+			0 2
+			0 3
+			1 4
+			1 7
+			2 5
+			3 6
+			Sample Output 1:
+			0 1 2 3 4 7 5 6
+			Explanation for sample input 1:
+			n = 8: There are 8 vertices in the graph, labeled from 0 to 7.
+			m = 7: There are 7 directed edges in the graph.
+			The directed edges are as follows:
+			Vertex 0 has directed edges towards vertices 1, 2, and 3.
+			Vertex 1 has directed edges towards vertices 4 and 7.
+			Vertex 2 has a directed edge towards vertex 5.
+			Vertex 3 has a directed edge towards vertex 6.
+			Vertices 4, 5, 6, and 7 have no outgoing edges.
+			Adjacency list: {{1,2,3}, {4,7}, {5}, {6}, {}, {}, {}, {}}. This is passed to the bfsTraversal function.
+			Sample Input 2:
+			4 4
+			0 1
+			0 2
+			1 2
+			0 3
+			Sample Output 2:
+			0 1 2 3
+			Constraints :
+				1 <= 'n', 'm' <= 10^4
+				Where 'n' is the number of vertices and 'm' is the number of edges.
+				Time Limit: 1 second
+		vector<int> bfsTraversal(int n, vector<vector<int>> &adj){
+			vector<int> bfs;
+			unordered_map<int, bool> visited;
+			// every nodes should visited atmost (max) once only
+			for(int i=0; i<n; i++) visited[i] = true;           // if true needs to visit
+
+			queue<int> q;
+			q.push(0);
+			// ensuring to visit all nodes
+			for(int i=0; i<n; i++){
+				if(visited[i]){
+					visited[i] = false;             // it should visit the same node/ vertex again
+					while(!q.empty()){
+						int val = q.front();
+						bfs.push_back(val);
+						q.pop();
+						for(int z: adj[val])
+							if(visited[z]){
+								q.push(z);
+								visited[z] = false;
+							} 
+					}
+				}
+			}
+			return bfs;
+		}
+		// using false value
+			vector<int> bfsTraversal(int n, vector<vector<int>> &adj){
+				vector<int> bfs;
+				unordered_map<int, bool> visited;
+				queue<int> q;
+				q.push(0);
+
+				// ensuring to visit all nodes, in-case of disconnected graph
+				for(int i=0; i<n; i++){
+					if(!visited[i]){
+						visited[i] = true;             // it should visit the same node/ vertex again
+						while(!q.empty()){
+							int val = q.front();
+							bfs.push_back(val);
+							q.pop();
+							for(int z: adj[val])
+								if(!visited[z]){
+									q.push(z);
+									visited[z] = true;
+								} 
+						}
+					}
+				}
+				return bfs;
+			}
+	Q. BFS of graph:
+		Problem Statement:
+			Given a undirected graph represented by an adjacency list adj, which is a vector of vectors where each adj[i] represents the list of vertices connected to vertex i. Perform a Breadth First Traversal (BFS) starting from vertex 0, visiting vertices from left to right according to the adjacency list, and return a list containing the BFS traversal of the graph.
+			Note: Do traverse in the same order as they are in the adjacency list.
+			Examples:
+			Input: adj = [[2,3,1], [0], [0,4], [0], [2]]
+			Output: [0, 2, 3, 1, 4]
+			Explanation: Starting from 0, the BFS traversal will follow these steps: 
+			Visit 0 → Output: 0 
+			Visit 2 (first neighbor of 0) → Output: 0, 2 
+			Visit 3 (next neighbor of 0) → Output: 0, 2, 3 
+			Visit 1 (next neighbor of 0) → Output: 0, 2, 3, 
+			Visit 4 (neighbor of 2) → Final Output: 0, 2, 3, 1, 4
+			Input: adj = [[1, 2], [0, 2], [0, 1, 3, 4], [2], [2]]
+			Output: [0, 1, 2, 3, 4]
+			Explanation: Starting from 0, the BFS traversal proceeds as follows: 
+			Visit 0 → Output: 0 
+			Visit 1 (the first neighbor of 0) → Output: 0, 1 
+			Visit 2 (the next neighbor of 0) → Output: 0, 1, 2 
+			Visit 3 (the first neighbor of 2 that hasn't been visited yet) → Output: 0, 1, 2, 3 
+			Visit 4 (the next neighbor of 2) → Final Output: 0, 1, 2, 3, 4
+			Input: adj = [[1], [0, 2, 3], [1], [1, 4], [3]]
+			Output: [0, 1, 2, 3, 4]
+			Explanation: Starting the BFS from vertex 0:
+			Visit vertex 0 → Output: [0]
+			Visit vertex 1 (first neighbor of 0) → Output: [0, 1]
+			Visit vertex 2 (first unvisited neighbor of 1) → Output: [0, 1, 2]
+			Visit vertex 3 (next neighbor of 1) → Output: [0, 1, 2, 3]
+			Visit vertex 4 (neighbor of 3) → Final Output: [0, 1, 2, 3, 4]
+			Constraints:
+				1 ≤ adj.size() ≤ 10^4
+				1 ≤ adj[i][j] ≤ 10^4
+		class Solution {
+			public: // Function to return Breadth First Traversal of given graph.
+			void BFS(vector<int> &ans, unordered_map<int, bool> &visited, vector<vector<int>> &adj, int i){
+				queue<int> q;
+				q.push(i);
+				visited[i]=1;
+				while(!q.empty()){
+					int val = q.front();
+					ans.push_back(val);
+					q.pop();
+					for(int z: adj[val]){
+						if(!visited[z]){
+							visited[z] = 1;
+							q.push(z);
+						}
+					}
+				}
+			}
+			vector<int> bfsOfGraph(vector<vector<int>> &adj) {
+				vector<int> ans;
+				// <node value, visited or not>
+				unordered_map<int, bool> visited;
+				// ans, visited map, adj list, source/ start index
+				BFS(ans, visited, adj, 0);
+				
+				// if its disconnected graph then we need to make sure that we visit all nodes, use below
+				// for(int i=0; i<adj.size(); i++){
+				//     if(!visited[i]){
+				//         BFS(ans, visited, adj, i);
+				//     }
+				// }
+				return ans;
+			}
+		};
 ---------------------------------------------------------------------------------------------------------
+
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -40270,7 +40790,45 @@ POTD:-[Problem of the Day]
 				}
 				return ans;
 			}
-		
+
+		Problem Statement:
+			Given an array, arr[] construct a product array, res[] where each element in res[i] is the product of all elements in arr[] except arr[i]. Return this resultant array, res[].
+			Note: Each element is res[] lies inside the 32-bit integer range.
+
+			Examples:
+
+			Input: arr[] = [10, 3, 5, 6, 2]
+			Output: [180, 600, 360, 300, 900]
+			Explanation: For i=0, res[i] = 3 * 5 * 6 * 2 is 180.
+			For i = 1, res[i] = 10 * 5 * 6 * 2 is 600.
+			For i = 2, res[i] = 10 * 3 * 6 * 2 is 360.
+			For i = 3, res[i] = 10 * 3 * 5 * 2 is 300.
+			For i = 4, res[i] = 10 * 3 * 5 * 6 is 900.
+			Input: arr[] = [12, 0]
+			Output: [0, 12]
+			Explanation: For i = 0, res[i] is 0.
+			For i = 1, res[i] is 12.
+			Constraints:
+				2 <= arr.size() <= 10^5
+				-100 <= arr[i] <= 100	
+		// Or
+			class Solution {
+				public:
+				vector<int> productExceptSelf(vector<int>& arr) {
+					int n = arr.size();
+					vector<int> ans, prefix(n,1), suffix(n,1);
+					for(int i=1; i<n; i++)
+						prefix[i] = prefix[i-1] * arr[i-1];
+					
+					for(int i=n-2; i>=0; i--)
+						suffix[i] = suffix[i+1] * arr[i+1];
+					
+					for(int i=0; i<n; i++)
+						ans.push_back(prefix[i]*suffix[i]);
+					return ans;
+				}
+			};
+
 	88) Swap Adjacent Bit Pairs:
 		Problem Statement
 			You are given an integer 'N'. Your task is to find the number formed after swapping each even bit of 'N' in its binary
@@ -90069,7 +90627,7 @@ POTD:-[Problem of the Day]
 				return head; 
 			}
 
-	744) Merge Two Sorted Linked Lists:
+	744) Merge Two Sorted Linked Lists: (Refer Lect-49)
 		Problem statement
 			You are given two sorted linked lists. You have to merge them to produce a combined sorted linked list. You need to return the head of the final linked list.
 			Note:
@@ -90099,7 +90657,6 @@ POTD:-[Problem of the Day]
 				1 3 6 10 -1
 				Sample Output 2
 				1 3 5 6 10 -1
-
 		#include <bits/stdc++.h>
 		/************************************************************
 			Following is the linked list node structure.
@@ -90120,7 +90677,6 @@ POTD:-[Problem of the Day]
 				}
 			};
 		************************************************************/
-		
 		Node<int>* sortTwoLists(Node<int>* first, Node<int>* second) {
 			if(first == NULL)
 				return second;
@@ -90160,7 +90716,6 @@ POTD:-[Problem of the Day]
 				return ansH;
 			}
 		}
-
 		// or
 			Node<int>* solve(Node<int>* first, Node<int>* second){
 				if(first -> next == nullptr){
@@ -91471,16 +92026,13 @@ POTD:-[Problem of the Day]
 			7->0->null
 			Explanation: 
 			For the given two linked list (0 0 6 3) and (0 7), after adding the two linked list resultant linked list will be (7 0).
-
 			Your Task:
 				The task is to complete the function addTwoLists() which has node reference of both the linked lists and returns the head of the sum list.   
-
 			Expected Time Complexity: O(n+m)
 			Expected Auxiliary Space: O(max(n,m)) for the resultant list.
 
 			Constraints:
 				1 <= n, m <= 10^4
-
 		/* node for linked list:
 			struct Node {
 				int data;
@@ -91491,7 +92043,6 @@ POTD:-[Problem of the Day]
 				}
 			};
 		*/
-
 		class Solution {
 			Node* reverse(Node* &h){
 				Node* cur = h;
@@ -91579,7 +92130,6 @@ POTD:-[Problem of the Day]
 				return main;
 			}
 		};
-
 		// Or using single loop
 			class Solution {
 				Node* reverse(Node* &h){
@@ -91649,7 +92199,70 @@ POTD:-[Problem of the Day]
 					return main;
 				}
 			};
-	
+
+		Add Number Linked Lists:
+			Problem Statement:
+				Given the head of two singly linked lists num1 and num2 representing two non-negative integers. The task is to return the head of the linked list representing the sum of these two numbers.
+				For example, num1 represented by the linked list : 1 -> 9 -> 0, similarly num2 represented by the linked list: 2 -> 5. Sum of these two numbers is represented by 2 -> 1 -> 5.
+				Note: There can be leading zeros in the input lists, but there should not be any leading zeros in the output list.
+				Examples:
+				Input: num1 = 4 - > 5, num2 = 3 -> 4 -> 5
+				Output:  3 -> 9 -> 0
+				Explanation: Given numbers are 45 and 345. There sum is 390.
+				Input: num1 = 0 -> 0 -> 6 -> 3, num2 = 0 -> 7 
+				Output: 7 -> 0 
+				Explanation: Given numbers are 63 and 7. There sum is 70.
+				Constraints:
+					1 <= size of both linked lists <= 10^6
+					0 <= elements of both linked lists <= 9
+			class Solution {
+				public:
+				Node* reverseList(Node* n){
+					Node* prev = NULL;
+					while(n){
+						Node* temp = n -> next;
+						n -> next = prev;
+						prev = n;
+						n = temp;
+					}
+					return prev;
+				}
+				Node* addTwoLists(Node* num1, Node* num2) {
+					num1 = reverseList(num1);
+					num2 = reverseList(num2);
+					Node *head, *tail;
+					head = tail = NULL;
+
+					// addition
+					int c = 0;
+					while(num1 or num2 or c){
+						int v1, v2;
+						v1 = v2 = 0;
+						
+						if(num1) v1 = num1->data;
+						if(num2) v2 = num2->data;
+						
+						int val = ( v1 + v2 + c);
+						c = val/10;
+						val %= 10;
+						Node* cur = new Node(val);
+						if(!tail){
+							tail = cur;
+							head = tail;
+						}else{
+							tail -> next = cur;
+							tail = cur;
+						}
+						if(num1) num1 = num1 -> next;
+						if(num2) num2 = num2 -> next;
+					}
+					head = reverseList(head);
+					// removing the leading zeros
+					while(head and head -> next and !head->data) head = head -> next;                     // (head->data == 0)
+					return head;
+				}
+			};
+
 	760) Clone a linked list with next and random pointer:
 		https://www.geeksforgeeks.org/problems/clone-a-linked-list-with-next-and-random-pointer/1
 		Problem Statement:
@@ -121727,11 +122340,188 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1204) 
+	1204) Sudoku Solver:
+		Problem Statement:
+			Write a program to solve a Sudoku puzzle by filling the empty cells.
+			A sudoku solution must satisfy all of the following rules:
+			Each of the digits 1-9 must occur exactly once in each row.
+			Each of the digits 1-9 must occur exactly once in each column.
+			Each of the digits 1-9 must occur exactly once in each of the 9 3x3 sub-boxes of the grid.
+			The '.' character indicates empty cells.
+			Example 1:
+			Input: board = [["5","3",".",".","7",".",".",".","."],["6",".",".","1","9","5",".",".","."],[".","9","8",".",".",".",".","6","."],["8",".",".",".","6",".",".",".","3"],["4",".",".","8",".","3",".",".","1"],["7",".",".",".","2",".",".",".","6"],[".","6",".",".",".",".","2","8","."],[".",".",".","4","1","9",".",".","5"],[".",".",".",".","8",".",".","7","9"]]
+			Output: [["5","3","4","6","7","8","9","1","2"],["6","7","2","1","9","5","3","4","8"],["1","9","8","3","4","2","5","6","7"],["8","5","9","7","6","1","4","2","3"],["4","2","6","8","5","3","7","9","1"],["7","1","3","9","2","4","8","5","6"],["9","6","1","5","3","7","2","8","4"],["2","8","7","4","1","9","6","3","5"],["3","4","5","2","8","6","1","7","9"]]
+			Explanation: The input board is shown above and the only valid solution is shown below:
+			Constraints:
+				board.length == 9
+				board[i].length == 9
+				board[i][j] is a digit or '.'.
+				It is guaranteed that the input board has only one solution.
+		class Solution {
+			public:
+			bool isSafeToKeep(int r, int c, vector<vector<char>> &board, char val){
+				// row and col
+				int n = 9;
+				for(int i=0; i<n; i++) if(board[i][c] == val or board[r][i] == val) return 0;
 
-1205)
+				int startRow = (r/3)*3, startCol = (c/3)*3;
+				for(int i=0; i<3; i++)
+					for(int j=0; j<3; j++)
+						if(board[i + startRow][j + startCol] == val) return 0;
+				return 1;
+			}
+			bool solve(vector<vector<char>>& board){
+				int n = 9;
+				for(int i=0; i<n; i++){
+					for(int j=0; j<n; j++){
+						if(board[i][j] == '.'){
+							for(char val = '1'; val <= '9'; val++){
+								if(isSafeToKeep(i, j, board, val)){
+									board[i][j] = val;
+									bool foundFit = solve(board);
+									if(foundFit) return true;
+									board[i][j] = '.';
+								}
+							}
+							// tried all values but doesn't fit any
+							return 0;
+						}
+					}
+				}
+				return 1;
+			}
+			void solveSudoku(vector<vector<char>>& board) {
+				solve(board);
+			}
+		};
 
-1206)
+	1205) Merge two sorted linked lists: (Refer POTD: 744)
+		Problem Statement:
+			Given the head of two sorted linked lists consisting of nodes respectively. The task is to merge both lists and return the head of the sorted merged list.
+			Examples:
+			Input: head1 = 5 -> 10 -> 15 -> 40, head2 = 2 -> 3 -> 20
+			Output: 2 -> 3 -> 5 -> 10 -> 15 -> 20 -> 40
+			Explanation:
+			Input: head1 = 1 -> 1, head2 = 2 -> 4
+			Output: 1 -> 1 -> 2 -> 4
+			Explanation:
+			Constraints:
+				1 <= no. of nodes<= 10^3
+				0 <= node->data <= 10^5
+		/* Link list Node
+			struct Node {
+			int data;
+			struct Node *next;
+
+			Node(int x) {
+				data = x;
+				next = NULL;
+			}
+			};
+		*/
+		class Solution {
+			public:
+			Node* sortedMerge(Node* head1, Node* head2) {
+				if(!head1) return head2;
+				if(!head2) return head1;
+				
+				Node* MainHead = NULL;
+				if(head1->data < head2->data){
+					MainHead = head1;
+					head1 = head1->next;
+				}else{
+					MainHead = head2;
+					head2 = head2->next;
+				}
+				Node* Tail = MainHead;
+				
+				while(head1 and head2){
+					if(head1->data < head2->data){
+						Tail->next = head1;
+						Tail = head1;
+						head1 = head1->next;
+					}else{
+						Tail->next = head2;
+						Tail = head2;
+						head2 = head2->next;
+					}
+				}
+				Tail->next = (head1) ? head1 : head2;
+				return MainHead;
+			}
+		};
+
+	1206) Linked List Group Reverse: (Refer Lect-46)
+		Problem Statement:
+			Given the head a linked list, the task is to reverse every k node in the linked list. If the number of nodes is not a multiple of k then the left-out nodes in the end, should be considered as a group and must be reversed.
+			Examples:
+			Input: head = 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8, k = 4
+			Output: 4 -> 2 -> 2 -> 1 -> 8 -> 7 -> 6 -> 5
+			Explanation: The first 4 elements 1, 2, 2, 4 are reversed first and then the next 4 elements 5, 6, 7, 8. Hence, the resultant linked list is 4 -> 2 -> 2 -> 1 -> 8 -> 7 -> 6 -> 5.
+			Input: head = 1 -> 2 -> 3 -> 4 -> 5, k = 3
+			Output: 3 -> 2 -> 1 -> 5 -> 4
+			Explanation: The first 3 elements 1, 2, 3 are reversed first and then left out elements 4, 5 are reversed. Hence, the resultant linked list is 3 -> 2 -> 1 -> 5 -> 4.
+			Constraints:
+				1 <= size of linked list <= 10^5
+				1 <= data of nodes <= 10^6
+				1 <= k <= size of linked list 
+		/*
+			Node is defined as
+			struct node {
+				int data;
+				struct Node* next;
+				Node(int x){
+					data = x;
+					next = NULL;
+				}
+			}*head;
+		*/
+		class Solution {
+			public:
+			Node *reverseKGroup(Node *head, int k) {
+				vector<vector<int>> v;
+				Node* t = head;
+				while(t){
+					int a = k;
+					vector<int> z;
+					while(t and a){
+						z.push_back(t->data);
+						t = t->next;
+						a--;
+					}
+					v.push_back(z);
+				}
+				t=head;
+				for(auto cur: v){
+					reverse(cur.begin(), cur.end());
+				for(int i: cur){
+					t->data = i;
+					t = t -> next;
+				}
+				}
+				return head;
+			}
+		};
+		// Using recursion:
+			class Solution {
+				public:
+				Node *reverseKGroup(Node *head, int k) {
+					if(!head or !head->next) return head;
+					
+					// reversing the k grp list
+					int cnt = k;
+					Node* cur = head, *prev = NULL;
+					while(cnt-- and cur){
+						Node *t = cur->next;
+						cur -> next = prev;
+						prev = cur;
+						cur = t;
+					}
+					
+					if(cur) head -> next = reverseKGroup(cur, k);
+					return prev;
+				}
+			};
 
 1207)
 1208)
