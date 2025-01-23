@@ -30886,8 +30886,104 @@ Lecture 88: Cycle Detection in Undirected Graphs || Using BFS and DFS:
 				return "No";
 			}
 ---------------------------------------------------------------------------------------------------------
+	23/01/25
 Lecture 89: Cycle Detection in Directed Graphs:
+	Q. Detect Cycle In A Directed Graph:
+		Problem statement:
+			You are given a directed graph having ‘N’ nodes. A matrix ‘EDGES’ of size M x 2 is given which represents the ‘M’ edges such that there is an edge directed from node EDGES[i][0] to node EDGES[i][1].
+			Find whether the graph contains a cycle or not, return true if a cycle is present in the given directed graph else return false.
+			For Example :
+			In the following directed graph has a cycle i.e. B->C->E->D->B.
+			Note :
+			1. The cycle must contain at least two nodes.
+			2. It is guaranteed that the given graph has no self-loops in the graph.
+			3. The graph may or may not be connected.
+			4. Nodes are numbered from 1 to N.
+			5. Your solution will run on multiple test cases. If you are using global variables make sure to clear them.
+			Constraints :
+				1 ≤ T ≤ 5
+				2 <= N <= 100
+				1 <= M <= min(100,N(N-1)/2)
+				1 <= EDGES[i][0], EDGES[i][1] <= N
+				Where ‘T’ is the number of test cases.
+				Time Limit: 1 sec
+			Sample Input 1 :
+			1
+			5
+			6
+			1 2
+			4 1
+			2 4
+			3 4
+			5 2
+			1 3
+			Sample Output 1 :
+			true
+			Explanation For Input 1 :
+			The given graph contains cycle 1 -> 3 -> 4 -> 1 or the cycle 1 -> 2 -> 4 -> 1.
+			Sample Input 2 :
+			2
+			5
+			4
+			1 2
+			2 3
+			3 4
+			4 5
+			2
+			1
+			1 2
+			Sample Output 2 :
+			false
+			false
+			Explanation For Input 2 :
+			The given graphs don’t contain any cycle.
+		// DFS: TC: O(n+e) & SC: O(n)
+			#include <bits/stdc++.h>
+			void PrepareAdjList(unordered_map<int, list<int>> &l,  vector<pair<int,int>> & edges){
+				// its directed graph
+				int n = edges.size();
+				for(int i=0; i<n; i++){
+					int start = edges[i].first, end = edges[i].second;
+					l[start].push_back(end);
+				}
+			}
+			bool isGraphCyclicDFS(int curVertex, unordered_map<int, list<int>> &adjacencyList,  unordered_map<int, bool> &vis, unordered_map<int, bool> &DFS_fun_call_vis){
+				vis[curVertex] = DFS_fun_call_vis[curVertex] = 1;
+				for(int neighbour: adjacencyList[curVertex]){
+					if(!vis[neighbour]){
+						if(isGraphCyclicDFS(neighbour, adjacencyList, vis, DFS_fun_call_vis)) return 1;
+					}else if(DFS_fun_call_vis[neighbour]) return 1;
+				}
+				DFS_fun_call_vis[curVertex] = 0;
+				return 0;
+			}
+			int detectCycleInDirectedGraph(int n, vector<pair<int,int>> & edges) {
+				// Prepare adjacency list
+				// <node, adjacent nodes>
+				unordered_map<int, list<int>> adjList;
+				PrepareAdjList(adjList, edges);
 
+				// its connected graph so by default for sure will visit all vertex from starting vertex, but its direction so might be 
+				// there will be some vertex which just has outDegrees, not inDegrees so we need to make sure that we visit all vertex
+				unordered_map<int, bool> vis;
+				unordered_map<int, bool> DFS_fun_call_vis;
+				// will start from 1 coz starting vertex is 1
+				for(int i=1; i<=n; i++){
+					if(!vis[i]){
+						if(isGraphCyclicDFS(i, adjList, vis, DFS_fun_call_vis)) return 1;
+					}
+				}
+				return 0;
+			}
+---------------------------------------------------------------------------------------------------------
+Lecture 90: Topological Sort (Using DFS):
+	- A Directed Acyclic Graph (DAG) is a directed graph that contains no cycles.
+	  Topological Sorting of DAG is a linear ordering of vertices such that 
+	  for every directed edge from vertex ‘u’ to vertex ‘v’, vertex ‘u’ comes before ‘v’ in the ordering. 
+	  Topological Sorting for a graph is not possible if the graph is not a DAG.
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
