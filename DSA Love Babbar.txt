@@ -605,7 +605,7 @@ Lecture-2: Write Your First Program in C++
 					
 					
 					preIncrement/ preDecrement means the value will get incremented or decremented before using.
-					value gets incresed or decresed first then it will gets used.
+					value gets incresed or decreased first then it will gets used.
 						++a;		//pretIncrement
 						--a;		//pretDecrement
 					
@@ -31074,8 +31074,84 @@ Lecture 90: Topological Sort (Using DFS):
 				}
 				return TopoAns;
 			}
+		// Practice:
+			#include <bits/stdc++.h>
+			void DFS(int curVertex, vector<int> &vis, vector<vector<int>> &adjList, stack<int> &st){
+				vis[curVertex] = 1;
+				for(int neighbour: adjList[curVertex]){
+					if(!vis[neighbour]){
+						DFS(neighbour, vis, adjList, st);
+					}
+				}
+				st.push(curVertex);
+			}
+			vector<int> topologicalSort(vector<vector<int>> &edges, int v, int e)  {
+				// adjacency list
+				vector<vector<int>> adjList(v);
+				for(int i=0; i<e; i++){
+					// directed graph
+					int start = edges[i][0], end = edges[i][1];
+					adjList[start].push_back(end);
+				}
+				vector<int> vis(v, 0);
+				stack<int> st;
+				for(int i=0; i<v; i++){
+					if(!vis[i]){
+						DFS(i, vis, adjList, st);
+					}
+				}
+				vector<int> ans;
+				while(!st.empty())
+					ans.push_back(st.top()), st.pop();
+				return ans;
+			}
+	- Better to use the fix length or size of any variable to reduce time, here instead of using unordered_map we can use vector
 ---------------------------------------------------------------------------------------------------------
+	24/01/25
+Lecture 91: Topological Sort (Using Kahn's Algorithm):
+	#Kahn's Algorithm:
+		- Count all vertex's inDegrees
+		- Push all vertex's whose inDegrees are zero into queue
+		- whatever you pushed into queue, pop them one by one
+		- before poping save them into array
+		- check their neighbors, if present decrease their inDegree count
+		- if inDegree count is zero push them into stack.
+		- keep performing last 4 step until queue gets empty
+	=> TC:O(N+E) & SC:O(N+E)
+	Q. Topological Sort: (Refer Q from previous Lecture-90)
+	#include <bits/stdc++.h>
+	vector<int> topologicalSort(vector<vector<int>> &edges, int v, int e)  {
+		// adjacency list
+		vector<vector<int>> adjList(v);
+		for(int i=0; i<e; i++){
+			// directed graph
+			int start = edges[i][0], end = edges[i][1];
+			adjList[start].push_back(end);
+		}
+		vector<int> inDegree(v, 0);
+		// determining the inDegree for every vertex
+		for(auto i: adjList)
+			for(int j: i) inDegree[j]++;
+		// push vertex whos indegree is zero
+		queue<int> q;
+		for(int i=0; i<v; i++)
+			if(inDegree[i] == 0) q.push(i);
+		vector<int> ans;
+		while(!q.empty()){
+			int frnt = q.front();
+			q.pop();
+			ans.push_back(frnt);
+			// neighbours
+			for(int neighbours: adjList[frnt]){
+				inDegree[neighbours]--;
+				if(inDegree[neighbours] == 0) q.push(neighbours);
+			}
+		}
+		return ans;
+	}
 ---------------------------------------------------------------------------------------------------------
+Lecture 92: Cycle Detection in Directed Graph || Using BFS
+
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
@@ -61556,7 +61632,7 @@ POTD:-[Problem of the Day]
 
 				// Run a loop from 1 to 2'N' - 1
 				for (int i = 1; i <= (2 * n - 1); i++) {
-					// Check condition for increse length or decrese length
+					// Check condition for increse length or decrease length
 					if (i <= n) {
 						// Append ' ' to 'str1'
 						str1.push_back(' ');
@@ -89500,7 +89576,6 @@ POTD:-[Problem of the Day]
 				return 0;
 			}
 		};
-
 		// or
 			class Solution {
 				public:
@@ -89516,6 +89591,20 @@ POTD:-[Problem of the Day]
 						slow = slow -> next;
 						if(slow == fast)
 							return 1;
+					}
+					return 0;
+				}
+			};
+		// Or
+			class Solution {
+				public: // Function to check if the linked list has a loop.
+				bool detectLoop(Node* head) {
+					Node* fast = head;
+					Node* slow = head;
+					while(fast and fast->next){
+						fast = fast -> next -> next;
+						slow = slow -> next;
+						if(fast == slow) return 1;
 					}
 					return 0;
 				}
