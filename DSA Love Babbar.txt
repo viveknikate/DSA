@@ -30756,8 +30756,138 @@ Lecture 87: DFS Traversal in Graph:
 ---------------------------------------------------------------------------------------------------------
 	23/01/25
 Lecture 88: Cycle Detection in Undirected Graphs || Using BFS and DFS:
-	
+	Q. Cycle Detection In Undirected Graph:
+		Problem statement
+			You have been given an undirected graph with 'N' vertices and 'M' edges. The vertices are labelled from 1 to 'N'.
+			Your task is to find if the graph contains a cycle or not.
+			A path that starts from a given vertex and ends at the same vertex traversing the edges only once is called a cycle.
+			Example :
+			In the below graph, there exists a cycle between vertex 1, 2 and 3. 
+			Note:
+			1. There are no parallel edges between two vertices.
+			2. There are no self-loops(an edge connecting the vertex to itself) in the graph.
+			3. The graph can be disconnected.
+			For Example :
+			Input: N = 3 , Edges =  [[1, 2], [2, 3], [1, 3]].
+			Output: Yes
+			Explanation : There are a total of 3 vertices in the graph. There is an edge between vertex 1 and 2, vertex 2 and 3 and vertex 1 and 3. So, there exists a cycle in the graph. 
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 5000
+				0 <= M <= min(5000, (N * (N - 1)) / 2)
+				1 <= edges[i][0] <= N 
+				1 <= edges[i][1] <= N
+				Time Limit: 1 sec
+			Sample Input 1:
+			1
+			3 2
+			1 2
+			2 3
+			Sample output 1:
+			No
+			Explanation of Sample output 1:
+			The above graph can be represented as 
+			There are a total of 3 vertices in the graph.There is an edge between vertex 1 and 2 and vertex 2 and 3. So, there is no cycle present in the graph. 
+			Sample Input 2:
+			2
+			4 0 
+			4 3
+			1 4
+			4 3
+			3 1
+			Sample output 2:
+			No
+			Yes
+		// BFS:
+			#include <unordered_map>
+			#include <queue>
+			void PrepareAdjacencyList(vector<vector<int>> &adjList, vector<vector<int>> &edges){
+				int e = edges.size();
+				for(int i=0; i<e; i++){
+					// considering 1-base indexing
+					int p1 = edges[i][0]-1, p2 = edges[i][1]-1;
+					adjList[p1].push_back(p2);
+					adjList[p2].push_back(p1);
+				}
+			}
+			bool BFSisCyclic(int sourceVertex, unordered_map<int, bool> &vis, vector<vector<int>> &adjList){
+				unordered_map<int, int> childs_parents;
+				childs_parents[sourceVertex] = -1;
+				
+				queue<int> q;
+				q.push(sourceVertex);
+				while(!q.empty()){
+					int val = q.front();
+					q.pop();
+					// pushing all values which are connected to val & marking all values parent as val.
+					for(int i: adjList[val]){
+						if(!vis[i]){
+							q.push(i);
+							vis[i] = 1;
+							childs_parents[i] = val;
+						}else if(childs_parents[val] != i){
+							return 1;           // loop found
+						}
+					}
+				}
+				return 0;
+			}
+			string cycleDetection (vector<vector<int>>& edges, int n, int m) {
+				// create adj list
+				vector<vector<int>> adjList(n);
+				PrepareAdjacencyList(adjList, edges);
+
+				unordered_map<int, bool> vis;
+				// handling disconnected graph component, ensuring to visit all nodes/ vertex
+				for(int i=0; i<n; i++){
+					if(!vis[i]){
+						vis[i] = 1;
+						if(BFSisCyclic(i, vis, adjList)) return "Yes";
+					}
+				}
+				return "No";
+			}
+		// DFS:
+			#include <unordered_map>
+			#include <queue>
+			void PrepareAdjacencyList(vector<vector<int>> &adjList, vector<vector<int>> &edges){
+				int e = edges.size();
+				for(int i=0; i<e; i++){
+					// considering 1-base indexing
+					int p1 = edges[i][0]-1, p2 = edges[i][1]-1;
+					adjList[p1].push_back(p2);
+					adjList[p2].push_back(p1);
+				}
+			}
+			bool DFSisCyclic(int curVertex, int ParentVertex, unordered_map<int, bool> &vis, vector<vector<int>> &adjList){
+				vis[curVertex] = 1;
+				for(int i: adjList[curVertex]){
+					if(!vis[i]){
+						vis[i] = 1;
+						if(DFSisCyclic(i, curVertex, vis, adjList)) return 1; 
+					}else if(ParentVertex != i)         // loop found
+						return 1; 
+				}
+				return 0;
+			}
+			string cycleDetection (vector<vector<int>>& edges, int n, int m) {
+				// create adj list
+				vector<vector<int>> adjList(n);
+				PrepareAdjacencyList(adjList, edges);
+
+				unordered_map<int, bool> vis;
+				// handling disconnected graph component, ensuring to visit all nodes/ vertex
+				for(int i=0; i<n; i++){
+					if(!vis[i]){
+						// curVertex, parent, visited, adjlist
+						if(DFSisCyclic(i, -1, vis, adjList)) return "Yes";
+					}
+				}
+				return "No";
+			}
 ---------------------------------------------------------------------------------------------------------
+Lecture 89: Cycle Detection in Directed Graphs:
+
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
@@ -89339,7 +89469,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	726)	Remove Duplicates:
+	726) Remove Duplicates:
 		Problem statement
 			Ninja is playing with numbers but hates when he gets duplicate numbers. Ninja is provided an array, and he wants to remove all duplicate elements and return the array, but he has to maintain the order in which the elements were supplied to him.
 			Constraints:
@@ -122681,7 +122811,106 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1207)
+	1207) Clone List with Next and Random (Refer POTD: 760)
+		Problem Statement:
+			You are given a special linked list with n nodes where each node has two pointers a next pointer that points to the next node of the singly linked list, and a random pointer that points to the random node of the linked list.
+			Construct a copy of this linked list. The copy should consist of the same number of new nodes, where each new node has the value corresponding to its original node. Both the next and random pointer of the new nodes should point to new nodes in the copied list, such that it also represent the same list state. None of the pointers in the new list should point to nodes in the original list.
+			Return the head of the copied linked list.
+			NOTE : Original linked list should remain unchanged.
+			Examples:
+			Input: head = [[1, 3], [3, 3], [5, NULL], [9, 3]] 
+			Output: head = [[1, 3], [3, 3], [5, NULL], [9, 3]] 
+			Explanation: 
+			Node 1 points to Node 2 as its NEXT and Node 3 as its RANDOM.
+			Node 2 points to Node 3 as its NEXT and Node 3 as its RANDOM.
+			Node 3 points to Node 4 as its NEXT and NULL as its RANDOM.
+			Node 4 points to NULL as its NEXT and Node 3 as its RANDOM.
+			Input: head = [[1, 3], [2, 1], [3, 5], [4, 3], [5, 2]]		
+			Output: head = [[1, 3], [2, 1], [3, 5], [4, 3], [5, 2]]
+			Explanation: 
+			Node 1 points to Node 2 as its NEXT and Node 3 as its RANDOM.
+			Node 2 points to Node 3 as its NEXT and Node 1 as its RANDOM.
+			Node 3 points to Node 4 as its NEXT and Node 5 as its RANDOM.
+			Node 4 points to Node 5 as its NEXT and Node 3 as its RANDOM.
+			Node 5 points to NULL as its NEXT and Node 2 as its RANDOM.
+			Input: head = [[7, NULL], [7, NULL]]
+			Output: head = [[7, NULL], [7, NULL]]
+			Explanation: 
+			Node 1 points to Node 2 as its NEXT and NULL as its RANDOM.
+			Node 2 points to NULL as its NEXT and NULL as its RANDOM.
+			Constraints:
+				1 <= n <= 100
+				0 <= node->data <= 1000
+		// 2 maps used
+			/* Link list Node
+				struct Node {
+					int data;
+					Node *next;
+					Node *random;
+
+					Node(int x) {
+						data = x;
+						next = NULL;
+						random = NULL;
+					}
+				};
+			*/
+			class Solution {
+				public:
+				Node *cloneLinkedList(Node *head) {
+					unordered_map<Node*, Node*> OriginalToNew, NewToOriginal;
+					
+					// create a new copy of LL
+					Node *H, *T, *temp=head;
+					H = T = NULL;
+					while(temp){
+						Node* cur = new Node(temp->data);
+						if(!T){
+							H = T = cur;
+						}else{
+							T -> next = cur;
+							T = cur;
+						}
+						NewToOriginal[cur] = temp;
+						OriginalToNew[temp] = cur;
+						temp = temp -> next;
+					}
+					
+					temp = H;
+					while(temp){
+						temp -> random = OriginalToNew[NewToOriginal[temp]->random];
+						temp = temp -> next;
+					}
+					return H;
+				}
+			};
+		// single map used
+		Node *cloneLinkedList(Node *head) {
+			unordered_map<Node*, Node*> ConnectOriginalToNew;
+			Node *H, *T, *temp = head;
+			H = T = NULL;
+			while(temp){
+				Node* cur = new Node(temp->data);
+				if(!T){
+					H = T = cur;
+				}else{
+					T -> next = cur;
+					T = cur;
+				}
+				ConnectOriginalToNew[temp] = cur;
+				temp = temp -> next;
+			}
+			
+			temp = head;
+			Node *clone = H;
+			while(temp){
+				clone -> random = ConnectOriginalToNew[temp->random];
+				temp = temp -> next;
+				clone = clone -> next;
+			}
+			return H;
+		}
+
 1208)
 1209)
 1210)
