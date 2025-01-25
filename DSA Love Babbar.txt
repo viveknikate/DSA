@@ -30812,8 +30812,7 @@ Lecture 88: Cycle Detection in Undirected Graphs || Using BFS and DFS:
 			}
 			bool BFSisCyclic(int sourceVertex, unordered_map<int, bool> &vis, vector<vector<int>> &adjList){
 				unordered_map<int, int> childs_parents;
-				childs_parents[sourceVertex] = -1;
-				
+				childs_parents[sourceVertex] = -1;		
 				queue<int> q;
 				q.push(sourceVertex);
 				while(!q.empty()){
@@ -31150,9 +31149,49 @@ Lecture 91: Topological Sort (Using Kahn's Algorithm):
 		return ans;
 	}
 ---------------------------------------------------------------------------------------------------------
+	24/01/25
 Lecture 92: Cycle Detection in Directed Graph || Using BFS
+	- Hint - Kahn's algorithm
+		   - Directed Acyclic Graph gives Topological sort (valid sequence)
+		   - Cyclic graph give invalid Topological sort sequence
+	Q. Detect Cycle In A Directed Graph: (Refer Lect-89)
+	=> TC: O(n+e) & SC: (n+e)
+		#include<queue>
+		int detectCycleInDirectedGraph(int n, vector<pair<int, int>> &edges) {
+			// adjacency list
+			vector<vector<int>> adjList(n);
+			for(auto i: edges){
+				int s = i.first-1, e = i.second-1;
+				// directed
+				adjList[s].push_back(e);
+			}
+			vector<int> InDegree(n, 0);
+			// indegree of each vertex
+			for(auto i: adjList)
+				for(int j: i) InDegree[j]++;
+			// 0 indegree
+			queue<int> q;
+			for(int i=0; i<n; i++)
+				if(InDegree[i] == 0) q.push(i);
+			int cnt = 0;
+			while(!q.empty()){
+				int frnt = q.front();
+				q.pop();
+				cnt++;
 
+				for(int z: adjList[frnt]){
+					InDegree[z]--;
+					if(InDegree[z] == 0) q.push(z);
+				}
+			}  
+			// if its valid topological sort, then cnt is equals to no.of vertex, else cnt will be more means its not valid 
+			// & if its not valid means it has cycle in it
+			return n!=cnt;
+		}
 ---------------------------------------------------------------------------------------------------------
+	24/01/25
+Lecture 93: Shortest Path in Undirected Graphs:
+	 
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -65899,7 +65938,6 @@ POTD:-[Problem of the Day]
 			Constraints :
 				1 <= |str| <= 10^3
 				Time Limit: 1 sec
-		
 		//Not Optimized:
 			bool checkLongPalin(string z){
 				for(int a=0; a<z.length()/2; a++)
@@ -65926,7 +65964,6 @@ POTD:-[Problem of the Day]
 				}
 				return ans;
 			}
-		
 		//Optimized: ❌Pending
 			/*
 				Time Complexity : O(N ^ 2)
@@ -70807,7 +70844,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
-	447) Longest Palindromic Substring:
+	447) Longest Palindromic Substring: (Refer POTD: 384)
 		Problem statement
 			You are given a string ‘S’ of length ‘N’.
 			You must return the longest palindromic substring in ‘S’.
@@ -70832,16 +70869,11 @@ POTD:-[Problem of the Day]
 				aaa
 				Explanation Of Sample Input 1 :
 				For test case 1:
-
 				‘S’ =’adccdb’
-
 				‘dccd’ is the longest palindromic substring, and it can be proved that it is the longest possible palindromic substring.
 				Hence we return ‘dccd’.
-
 				For test case 2:
-
 				‘S’ =’aaabbb’
-
 				‘aaa’ is the longest palindromic substring, and it can be proved that it is the longest possible palindromic substring.
 				Hence we return ‘dccd’.
 				‘Bbb’ is also a valid answer.
@@ -70861,9 +70893,9 @@ POTD:-[Problem of the Day]
 					if(s[i] != s[s.size()-1-i])
 						return 0;
 				return 1;
-				}
+			}
 
-				string longestPalindromicSubstring(string &s) {
+			string longestPalindromicSubstring(string &s) {
 				int i=0;
 				string ans = string (1, s[0]);
 				int cnt=1;
@@ -70881,7 +70913,6 @@ POTD:-[Problem of the Day]
 				}
 				return ans;
 			}
-	
 		// Optimized: ❌Pending
 			string longestPalindromicSubstring(string &s) {
 				// Preprocess the string to insert special characters to handle even-length palindromes
@@ -123188,9 +123219,402 @@ POTD:-[Problem of the Day]
 			return H;
 		}
 
-1208)
-1209)
-1210)
+	1208) Find Eventual Safe States:
+		Problem Statement:
+			There is a directed graph of n nodes with each node labeled from 0 to n - 1. The graph is represented by a 0-indexed 2D integer array graph where graph[i] is an integer array of nodes adjacent to node i, meaning there is an edge from node i to each node in graph[i].
+			A node is a terminal node if there are no outgoing edges. A node is a safe node if every possible path starting from that node leads to a terminal node (or another safe node).
+			Return an array containing all the safe nodes of the graph. The answer should be sorted in ascending order.
+			Example 1:
+			Illustration of graph
+			Input: graph = [[1,2],[2,3],[5],[0],[5],[],[]]
+			Output: [2,4,5,6]
+			Explanation: The given graph is shown above.
+			Nodes 5 and 6 are terminal nodes as there are no outgoing edges from either of them.
+			Every path starting at nodes 2, 4, 5, and 6 all lead to either node 5 or 6.
+			Example 2:
+			Input: graph = [[1,2,3,4],[1,2],[3,4],[0,4],[]]
+			Output: [4]
+			Explanation:
+			Only node 4 is a terminal node, and every path starting at node 4 leads to node 4.
+			Constraints:
+				n == graph.length
+				1 <= n <= 10^4
+				0 <= graph[i].length <= n
+				0 <= graph[i][j] <= n - 1
+				graph[i] is sorted in a strictly increasing order.
+				The graph may contain self-loops.
+				The number of edges in the graph will be in the range [1, 4 * 104].
+		// Not Optimized: TC: O(n²) & SC: O(n)
+			class Solution {
+				public:
+				bool isNodeSafe(int curVertex, vector<vector<int>> &graph, vector<bool> &call_track){
+					call_track[curVertex] = true;
+					for(int neighbour: graph[curVertex]){
+						if(call_track[neighbour]){
+							return 1;
+						}else{
+							// if previously there was no call for this node
+							if(isNodeSafe(neighbour, graph, call_track)) return 1;
+							call_track[neighbour] = 0;          // IMP backtrack to avoid conflict
+						}
+					}
+					return 0;
+				}
+				vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+					vector<int> ans;
+					int n=graph.size();
+					// visiting all nodes, DFS
+					for(int i=0; i<n; i++){
+						vector<bool> DFS_call(n, false);        // not visited any node
+						if(!isNodeSafe(i, graph, DFS_call))            // if loop not found then will push the node into vector
+							ans.push_back(i);
+					}
+					return ans;
+				}
+			};
+		// Optimized: ❌Pending
+		
+	1209) Topological sort: (Refer Lect-90, 91)
+		https://www.geeksforgeeks.org/problems/topological-sort/1
+		Problem Statement:
+			Given an adjacency list for a Directed Acyclic Graph (DAG) where adj[u] contains a list of all vertices v such that there exists a directed edge u -> v. Return topological sort for the given graph.
+			Topological sorting for Directed Acyclic Graph (DAG) is a linear ordering of vertices such that for every directed edge u -> v, vertex u comes before v in the ordering.
+			Note: As there are multiple Topological orders possible, you may return any of them. If your returned Topological sort is correct then the output will be 1 else 0.
+			Examples:
+			Input: adj = [[], [0], [0], [0]] 
+			Output: 1
+			Explanation: The output 1 denotes that the order is valid. Few valid Topological orders for the given graph are:
+			[3, 2, 1, 0]
+			[1, 2, 3, 0]
+			[2, 3, 1, 0]
+			Input: adj = [[], [3], [3], [], [0,1], [0,2]]
+			Output: 1
+			Explanation: The output 1 denotes that the order is valid. Few valid Topological orders for the graph are:
+			[4, 5, 0, 1, 2, 3]
+			[5, 2, 4, 0, 1, 3]
+			Constraints:
+			2  ≤  V  ≤  10^3
+			1  ≤  E  ≤  (V*(V-1))/2
+		// Using DFS:
+			class Solution {
+				public: // Function to return list containing vertices in Topological order.
+				void DFS(int curVertex, vector<bool> &vis, stack<int> &st, vector<vector<int>>& adj){
+					vis[curVertex] = 1;
+					for(int neighbour: adj[curVertex]){
+						if(!vis[neighbour]){
+							DFS(neighbour, vis, st, adj);
+						}
+					}
+					st.push(curVertex);
+				}
+				vector<int> topologicalSort(vector<vector<int>>& adj) {
+					// ensuring to visit all vertexes
+					int n = adj.size();
+					stack<int> st;
+					vector<bool> vis(n);
+					for(int i=0; i<n; i++){
+						if(!vis[i]) DFS(i, vis, st, adj);
+					}
+					
+					vector<int> ans;
+					while(!st.empty()){
+						ans.push_back(st.top());
+						st.pop();
+					}
+					return ans;
+				}
+			};
+		// Using BFS: Kahn's Algorithm
+			class Solution {
+				public:
+				// Function to return list containing vertices in Topological order.
+				vector<int> topologicalSort(vector<vector<int>>& adj) {
+					// determining the inDegrees
+					int n = adj.size();
+					vector<int> InDegrees(n, 0);
+					for(auto i: adj)
+						for(int j: i) InDegrees[j]++;
+					
+					queue<int> q;
+					// pushing element whose InDegrees are zero
+					for(int i=0; i<n; i++)
+						if(InDegrees[i] == 0) q.push(i);
+						
+					vector<int> ans;
+					while(!q.empty()){
+						int frnt = q.front();
+						ans.push_back(frnt);
+						q.pop();
+						for(int neighbour: adj[frnt]){
+							InDegrees[neighbour]--;
+							if(InDegrees[neighbour] == 0)
+								q.push(neighbour);
+						}
+					}
+					return ans;
+				}
+			};
+
+	1210) Find the first node of loop in linked list:
+		Problem Statement:
+			Given a head of the singly linked list. If a loop is present in the list then return the first node of the loop else return NULL.
+			Custom Input format:
+			A head of a singly linked list and a pos (1-based index) which denotes the position of the node to which the last node points to. If pos = 0, it means the last node points to null, indicating there is no loop.
+			Examples:
+			Input:
+			Output: 3
+			Explanation: We can see that there exists a loop in the given linked list and the first node of the loop is 3.
+			Input:
+			Output: -1
+			Explanation: No loop exists in the above linked list.So the output is -1.
+			Constraints:
+				1 <= no. of nodes <= 10^6
+				1 <= node->data <= 10^6 
+		/*
+		struct Node {
+			int data;
+			struct Node *next;
+			Node(int x) {
+				data = x;
+				next = NULL;
+			}
+		}
+		*/
+		// TC: O(n) & SC: O(n)
+		class Solution {
+			public:
+			Node* findFirstNode(Node* head) {
+				unordered_map<Node*, int> vis;
+				while(head){
+					if(vis[head]) return head;
+					vis[head] = 1;
+					head = head -> next;
+				}
+				return NULL;
+			}
+		};
+		// TC: O(n) & SC: O(1)
+			class Solution {
+				public:
+				Node* findFirstNode(Node* head) {
+					Node *fast, *slow;
+					fast = slow = head;
+					while(fast and fast->next){
+						fast = fast -> next -> next;
+						slow = slow -> next;
+						if(slow == fast) break;             // loop exist
+					}
+					// slow != fast loop doesn't exist
+					if(slow != fast) return NULL;
+					slow = head;
+					while(slow != fast){
+						fast = fast -> next;
+						slow = slow -> next;
+					}
+					return slow;                    // return fast;
+				}
+			};
+
+	1211) Longest Palindromic Substring: (Refer POTD: 447)
+		Problem Statement:
+			Given a string s, return the longest palindromic substring in s.
+			Example 1:
+			Input: s = "babad"
+			Output: "bab"
+			Explanation: "aba" is also a valid answer.
+			Example 2:
+			Input: s = "cbbd"
+			Output: "bb"
+			Constraints:
+				1 <= s.length <= 1000
+				s consist of only digits and English letters.
+		// TC: O(n³) & SC: O(n)
+			class Solution {
+				public:
+				bool isReverSame(string &s){
+					int i=0, j=s.size()-1;
+					while(i<j)
+						if(s[i++] != s[j--]) return 0;
+					return 1;
+				}
+				string longestPalindrome(string s) {
+					string ans;
+					int n = s.size();
+					for(int i=0; i<n; i++){
+						int z=1;
+						for(int j=i; j<n; j++){
+							string cur = s.substr(i, z++);
+							if(isReverSame(cur) and cur.length() > ans.length()){
+								ans = cur;
+							}
+						}
+					}
+					return ans;
+				}
+			};
+		//Optimized: ❌Pending		
+
+	1212) Undirected Graph Cycle: (Refer Lect-88)
+		Problem Statement:
+			Given an undirected graph with V vertices labelled from 0 to V-1 and E edges, check whether the graph contains any cycle or not. The Graph is represented as an adjacency list, where adj[i] contains all the vertices that are directly connected to vertex i.
+			NOTE: The adjacency list represents undirected edges, meaning that if there is an edge between vertex i and vertex j, both j will be adj[i] and i will be in adj[j].
+			Examples:
+			Input: adj = [[1], [0,2,4], [1,3], [2,4], [1,3]] 
+			Output: 1
+			Explanation: 
+			1->2->3->4->1 is a cycle.
+			Input: adj = [[], [2], [1,3], [2]]
+			Output: 0
+			Explanation: 
+			No cycle in the graph.
+			Constraints:
+				1 ≤ adj.size() ≤ 10^5
+		// DFS:
+			class Solution {
+				public: // Function to detect cycle in an undirected graph.
+				bool isCylicGraphDFS(int curVertex, vector<vector<int>> &adj, vector<bool> &vis, vector<int> &Parent){
+					vis[curVertex] = 1;
+					for(int neighbour: adj[curVertex]){
+						if(vis[neighbour]){
+							if(Parent[curVertex] != neighbour) return 1;
+						}else{
+							Parent[neighbour] = curVertex;
+							// will visit
+							if(isCylicGraphDFS(neighbour, adj, vis, Parent)) return 1;
+						}
+					}
+					return 0;
+				}
+				bool isCycle(vector<vector<int>>& adj) {
+					int n = adj.size();
+					// ensuring to visit all vertex
+					vector<bool> vis(n, false);
+					vector<int> Parent(n);      // default every body has parent as -1;
+					// will check this parent array if and only if we are visited the vertex
+					for(int i=0; i<n; i++){
+						if(!vis[i]){
+							if(isCylicGraphDFS(i, adj, vis, Parent))
+								return 1;
+						}
+					}
+					return 0;
+				}
+			};
+		// BFS:
+			class Solution {
+				public: // Function to detect cycle in an undirected graph.
+				bool BFS(int curVertex, vector<vector<int>>& adj, vector<int> &vis, vector<int> &parent){
+					vis[curVertex] = 1;
+					queue<int> q;
+					q.push(curVertex);
+					while(!q.empty()){
+						int frnt = q.front();
+						q.pop();
+						for(int neighbour: adj[frnt]){
+							if(vis[neighbour]){
+								if(parent[frnt] != neighbour) return 1;
+							}else{
+								vis[neighbour] = 1;
+								parent[neighbour] = frnt;
+								q.push(neighbour);
+							}
+						}
+					}
+					return 0;
+				}
+				bool isCycle(vector<vector<int>>& adj) {
+					int n = adj.size();
+					vector<int> vis(n, 0), parent(n, -1);
+					for(int i=0; i<n; i++){
+						if(!vis[i]){
+							if(BFS(i, adj, vis, parent)) return 1;
+						}
+					}
+					return 0;
+				}
+			};
+
+	1213) Cycle in a Directed Graph (Refer POTD: 89)
+		Problem Statement:
+			Given a Directed Graph with V vertices (Numbered from 0 to V-1) and E edges, check whether it contains any cycle or not.
+			The graph is represented as an adjacency list, where adj[i] contains a list of vertices that are directly reachable from vertex i. Specifically, adj[i][j] represents an edge from vertex i to vertex j.
+			Example 1:
+			Input:
+			Output: 1
+			Explanation: 3 -> 3 is a cycle
+			Example 2:
+			Input:
+			Output: 0
+			Explanation: no cycle in the graph
+			Constraints:
+				1 ≤ V, E ≤ 10^5
+		// DFS:
+			class Solution {
+				public: // Function to detect cycle in a directed graph.
+				bool DFS_Cycle(int cur, vector<vector<int>> &adj,  vector<int> &vis,  vector<int> &DFS_call){
+					vis[cur] = DFS_call[cur] = 1;
+					for(int neighbour: adj[cur]){
+						if(vis[neighbour]){
+							if(DFS_call[neighbour]) return 1;
+						}else{
+							if(DFS_Cycle(neighbour, adj, vis, DFS_call)) return 1;
+						}
+					}
+					DFS_call[cur] = 0;
+					return 0;
+				}
+				bool isCyclic(int V, vector<vector<int>> &adj) {
+					vector<int> vis(V, 0);
+					vector<int> DFS_call(V, 0);
+					for(int i=0; i<V; i++){
+						if(vis[i]){
+							if(DFS_call[i]) return 1;
+						}else{
+							if(DFS_Cycle(i, adj, vis, DFS_call)) return 1;
+						}
+					}
+					return 0;
+				}
+			};
+		// BFS:
+			class Solution {
+				public:
+				// Function to detect cycle in a directed graph.
+				bool isCyclic(int V, vector<vector<int>> adj) {
+					// to Check the Cyclicity in Directed graph use topological sort technique.
+					// BFS, if no.of nodes & cnt of topological sort nodes are equal then there is no cycle
+					vector<int> InDegrees(V, 0);
+					for(vector<int> &outer: adj)
+						for(int i: outer) InDegrees[i]++;
+					
+					queue<int> q;
+					for(int i=0; i<V; i++)
+						if(InDegrees[i] == 0) q.push(i);
+					
+					int cnt=0;
+					while(!q.empty()){
+						int frnt = q.front(); q.pop();
+						cnt++;
+						for(int neighbour: adj[frnt]){
+							InDegrees[neighbour]--;
+							if(InDegrees[neighbour]==0) q.push(neighbour);
+						}
+					}
+					return cnt != V;
+				}
+			};
+		
+
+1214)
+1215)
+1216)
+1217)
+1218)
+1219)
+1220)
+
+
+
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
