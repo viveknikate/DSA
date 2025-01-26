@@ -31191,7 +31191,98 @@ Lecture 92: Cycle Detection in Directed Graph || Using BFS
 ---------------------------------------------------------------------------------------------------------
 	24/01/25
 Lecture 93: Shortest Path in Undirected Graphs:
-	 
+	 Q. Shortest path in an unweighted graph:
+	 	Problem statement
+			The city of Ninjaland is analogous to the unweighted graph. The city has ‘N’ houses numbered from 1 to ‘N’ respectively and are connected by M bidirectional roads. If a road is connecting two houses ‘X’ and ‘Y’ which means you can go from ‘X’ to ‘Y’ or ‘Y’ to ‘X’. It is guaranteed that you can reach any house from any other house via some combination of roads. Two houses are directly connected by at max one road.
+			A path between house ‘S’ to house ‘T’ is defined as a sequence of vertices from ‘S’ to ‘T’. Where starting house is ‘S’ and the ending house is ‘T’ and there is a road connecting two consecutive houses. Basically, the path looks like this: (S , h1 , h2 , h3 , ... T). you have to find the shortest path from ‘S’ to ‘T’.
+			For example
+			In the below map of Ninjaland let say you want to go from S=1 to T=8, the shortest path is (1, 3, 8). You can also go from S=1 to T=8  via (1, 2, 5, 8)  or (1, 4, 6, 7, 8) but these paths are not shortest.
+			Constraints :
+				1 <= T <= 100
+				2 <= N <= 10 ^ 3
+				1 <= M <= min( N *(N - 1) / 2 , 1000 )
+				1 <= S, T <= N
+				Time Limit: 1 sec
+			Sample input 1 :
+			1
+			4 4
+			1 4
+			1 2
+			2 3
+			3 4
+			1 3
+			Sample Output 1 :
+			( 1 , 3 , 4 )
+			Explanation of Sample input 1 :
+			In the above graph there are two ways to go from 1 to 4 ,
+			( 1 , 2 , 3 , 4 ) and ( 1 , 3 , 4 ) but the second path is the shortest path.
+			Sample input 2 :
+			1
+			8 9
+			1 8
+			1 2
+			1 3
+			1 4
+			2 5
+			5 8 
+			3 8
+			4 6
+			6 7
+			7 8
+			Sample output 2 :
+			( 1 , 3 , 8 )
+		TC: O(n+e) & SC:O(n+e)
+		// BFS:
+			#include<unordered_map>
+			#include<list>
+			vector<int> shortestPath(vector<pair<int,int>> edges , int n , int m, int s , int t){
+				// adjacency list
+				unordered_map<int, list<int>> adjList;
+				for(int i=0; i<m; i++){
+					int start = edges[i].first, end = edges[i].second;
+					adjList[start].push_back(end);
+					adjList[end].push_back(start);
+				}
+
+				vector<int> parent(n+1, -1);
+				vector<int> vis(n+1, 0);
+				queue<int> q;
+				q.push(s);
+				vis[s]=1;
+				while(!q.empty()){
+					int frnt = q.front();
+					q.pop();
+					for(int neighbour: adjList[frnt]){
+						if(!vis[neighbour]){
+							parent[neighbour] = frnt;
+							vis[neighbour] = 1;
+							q.push(neighbour);
+						}
+					}
+				}
+				vector<int> ans;
+				int indx = t;
+				while(indx != s)
+					ans.push_back(indx), indx = parent[indx];
+				
+				// inserting last source node/ vertex
+				ans.push_back(indx);
+				int i=0, j=ans.size()-1;
+				
+				// reversing
+				while(i < j)
+					swap(ans[i++], ans[j--]);
+				return ans;
+			}
+---------------------------------------------------------------------------------------------------------
+	26/01/25
+Lecture 94: Shortest Path in Directed Acyclic Graphs:
+	
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -123603,9 +123694,80 @@ POTD:-[Problem of the Day]
 					return cnt != V;
 				}
 			};
-		
 
-1214)
+	1214) Remove loop in Linked List:
+		Problem Statement:
+			Given the head of a linked list that may contain a loop.  A loop means that the last node of the linked list is connected back to a node in the same list. The task is to remove the loop from the linked list (if it exists).
+			Custom Input format:
+			A head of a singly linked list and a pos (1-based index) which denotes the position of the node to which the last node points to. If pos = 0, it means the last node points to null, indicating there is no loop.
+			The generated output will be true if there is no loop in list and other nodes in the list remain unchanged, otherwise, false.
+			Examples:
+			Input: head = 1 -> 3 -> 4, pos = 2
+			Output: true
+			Explanation: The linked list looks like
+			A loop is present in the list, and it is removed.
+			Input: head = 1 -> 8 -> 3 -> 4, pos = 0
+			Output: true
+			Explanation: 
+			The Linked list does not contains any loop. 
+			Input: head = 1 -> 2 -> 3 -> 4, pos = 1
+			Output: true
+			Explanation: The linked list looks like 
+			A loop is present in the list, and it is removed.
+			Constraints:
+				1 ≤ size of linked list ≤ 10^5
+		// TC: O(n) & SC:O(n):
+				/*
+					structure of linked list node:
+					struct Node {
+						int data;
+						Node* next;
+						Node(int val) {
+							data = val;
+							next = NULL;
+						}
+					};
+				*/
+				class Solution {
+					public: // Function to remove a loop in the linked list.
+					void removeLoop(Node* head) {
+						unordered_map<Node*, int> vis;
+						while(head and head->next){
+							if(vis[head->next]) head -> next = NULL;
+							vis[head] = 1;
+							head = head -> next;
+						}
+					}
+				};
+		// TC: O(n) & SC:O(1):
+			class Solution {
+				public:
+				// Function to remove a loop in the linked list.
+				void removeLoop(Node* head) {
+					// cycle detection
+					Node* fast, *slow;
+					fast= slow = head;
+					while(fast and fast -> next){
+						fast = fast -> next -> next;
+						slow = slow -> next;
+						if(fast == slow) // cycle exist
+							break;
+					}
+					// fast reached to null or if they are same, then got broke the last loop so we reached here.
+					if(fast != slow) return; // no loop exist
+					fast = head;
+					
+					// if they are mating at starting point this condition required
+					if(fast == slow){
+						while(fast -> next != slow) fast = fast -> next;
+						fast->next = NULL;
+					}else{
+						while(slow -> next != fast->next) fast = fast -> next, slow = slow->next;
+						slow->next = NULL;
+					}
+				}
+			};
+
 1215)
 1216)
 1217)
