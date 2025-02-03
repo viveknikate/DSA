@@ -8318,7 +8318,7 @@ Lecture-20: LeetCode Practice:
 					return 0;
 				}
 
-			Without using builtint function:
+			Without using builtin function:
 				#include <iostream>
 				#include <vector>
 				#include <algorithm>
@@ -23889,7 +23889,6 @@ Lecture-63: Binary Tree FAANG Interview Questions || Part-1:
 			Constraints:
 				1 <= Number of nodes <= 10^5
 				1 <= Data of a node <= 10^9
-
 		//User function template for C++
 		/*
 			struct Node {
@@ -31276,10 +31275,96 @@ Lecture 93: Shortest Path in Undirected Graphs:
 			}
 ---------------------------------------------------------------------------------------------------------
 	26/01/25
-Lecture 94: Shortest Path in Directed Acyclic Graphs:
-	
-
+Lecture 94: Shortest Path in Directed Acyclic Graphs: (Refer POTD: 1220, 1221)
+	// TC: O(V+E) & SC: O(V+E)
+		#include <bits/stdc++.h>
+		using namespace std;
+		class Graph{
+			public:
+			// <vertex, list<destination, cost>>
+			unordered_map<int, list<pair<int, int>>> adj;
+			void addEdge(int start, int end, int cost){
+				pair<int, int> p = make_pair(end, cost);
+				adj[start].push_back(p);
+			}
+			
+			void printAdjList(){
+				std::cout << "Vertexes (Destination, cost/Weight)" << std::endl;
+				for(auto i: adj){
+					cout<<i.first<<"\t   ";
+					for(auto j: i.second){
+						cout<<"("<<j.first<<", "<<j.second<<"), ";
+					}
+					std::cout << std::endl;
+				}
+			}
+		};
+		int main() {
+			Graph G;
+			G.addEdge(0, 1, 5);
+			G.addEdge(0, 2, 3);
+			G.addEdge(1, 2, 2);
+			G.addEdge(1, 3, 6);
+			G.addEdge(2, 3, 7);
+			G.addEdge(2, 4, 4);
+			G.addEdge(2, 5, 2);
+			G.addEdge(3, 4, -1);
+			G.addEdge(4, 5, -2);
+			G.printAdjList();
+			int V = 6;
+			
+			// topological order BFS
+			// count the indegrees
+			vector<int> inDegree(V, 0);
+			for(auto i: G.adj)
+				for(auto j: i.second) inDegree[j.first]++;
+			
+			std::cout << "Indegree: " << std::endl;
+			for(int i=0; i<V; i++)
+				cout<<i<<"--->"<<inDegree[i]<<endl;
+				
+			queue<int> q;
+			// pushing Vertexes whose inDegree is zero, there will be at least one vertex whose inDegree zero,
+			// if there is not a single node/vertex whose inDegree is zero then its a cyclic Graph & topological sort doesn't work in cyclic Graph
+			for(int i=0; i<V; i++)
+				if(inDegree[i] == 0) q.push(i);
+				
+			vector<int> Topo_Order;
+			while(!q.empty()){
+				int cur = q.front();
+				q.pop();
+				Topo_Order.push_back(cur);
+				for(auto i: G.adj[cur]){
+					inDegree[i.first]--;
+					if(inDegree[i.first] == 0) q.push(i.first); 
+				}
+			}
+			
+			std::cout << "Topological order: " << std::endl;
+			for(int i: Topo_Order)
+				std::cout << i << " ";
+			
+			int src = 1;
+			vector<int> distances (V, INT_MAX);
+			distances[src] = 0;
+			
+			for(int i=0; i<V; i++){
+				int val = Topo_Order[i];
+				if(distances[val] != INT_MAX){
+					for(auto nbr: G.adj[val]){
+						distances[nbr.first] = min(distances[nbr.first], distances[val]+nbr.second);
+					}
+				}
+			}
+			std::cout << "\nDistances from src="<<src<<" to all other vertex" << std::endl;
+			// if its INT_MAX then we can't reach there
+			for(int i=0; i<V; i++)
+				std::cout << src <<" "<< i << " = " << distances[i]<<endl;
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
+Lecture 95: Dijkstra's Algorithm:
+	
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
@@ -73607,6 +73692,23 @@ POTD:-[Problem of the Day]
 					return 0;
 				}
 			};
+		// or
+			class Solution {
+				public:
+				bool checkInclusion(string s1, string s2) {
+					if(s1.size() > s2.size()) return 0;
+					vector<int> FreqS1(26, 0), FreqS2(26, 0);
+					for(char c: s1) FreqS1[c-'a']++;
+					int i=0, j=0;
+					while(j < s2.size()){
+						FreqS2[s2[j] - 'a']++;
+						if(j-i+1 > s1.size()) FreqS2[s2[i++] - 'a']--;
+						if(FreqS1 == FreqS2) return 1;
+						j++;
+					}
+					return 0;
+				}
+			};
 
 	482) Reduce Array:
 		Problem statement
@@ -105219,6 +105321,73 @@ POTD:-[Problem of the Day]
 				}
 			};
 	
+			Problem Statement:
+				Given a root of a binary tree with n nodes, the task is to find its level order traversal. Level order traversal of a tree is breadth-first traversal for the tree.
+				Examples:
+				Input: root[] = [1, 2, 3]
+						 1
+						/ \
+					   2   3
+				Output: [[1], [2, 3]]
+				Input: root[] = [10, 20, 30, 40, 50]
+								 10
+								/  \
+							   20  30
+							  /  \
+							40   50
+				Output: [[10], [20, 30], [40, 50]]
+				Input: root[] = [1, 3, 2, N, N, N, 4, 6, 5]
+					 1
+					/ \
+				   3   2
+						\
+						 4 
+					  	/ \
+					   6   5
+				Output: [[1], [3, 2], [4], [6, 5]]
+				Constraints:
+					1 ≤ number of nodes ≤ 10^5
+					0 ≤ node->data ≤ 10^9
+			/* A binary tree Node
+			class Node {
+				public:
+				int data;
+				Node *left, *right;
+				// Constructor
+				Node(int val) {
+					data = val;
+					left = right = nullptr;
+				}
+			};
+			*/
+			class Solution {
+				public:
+				vector<vector<int>> levelOrder(Node *root) {
+					vector<vector<int>> ans;
+					if(!root) return ans;
+				
+					queue<Node*> q;
+					q.push(root);
+					q.push(NULL);
+					vector<int> temp;
+					while(!q.empty()){
+						Node* cur = q.front();
+						q.pop();
+						if(cur){
+							temp.push_back(cur->data);
+							if(cur->left) q.push(cur->left);
+							if(cur->right) q.push(cur->right);
+						} 
+						else{
+							if(!q.empty()) q.push(NULL);
+							ans.push_back(temp);
+							temp.clear();
+						}
+					}
+					return ans;
+				}
+			};
+
 	927) Reverse Level Order Traversal:
 		Problem Statement:
 			Given a binary tree of size n, find its reverse level order traversal. ie- the traversal must begin from the last level.
@@ -109575,18 +109744,30 @@ POTD:-[Problem of the Day]
 				Explanation For Sample Input 2:
 				In the first test case, digit 4 is repeating first in the string. Digits 6,7,5 are also repeating but the digit 4 is repeating first among all.
 				In the second test case, digit 8 is repeating first in the string.
-
-		#include <bits/stdc++.h> 
-		int findFirstRepeatingDigit(string digitPattern) {
-			set<int> s;
-			for(char ch: digitPattern){
-				int n = ch - '0';
-				if(s.count(n))
-					return n;
-				s.insert(n);
+		// TC: O(N log N) & SC: (1)
+			#include <bits/stdc++.h> 
+			int findFirstRepeatingDigit(string digitPattern) {
+				set<int> s;
+				for(char ch: digitPattern){
+					int n = ch - '0';
+					if(s.count(n))
+						return n;
+					s.insert(n);
+				}
+				return -1;
 			}
-			return -1;
-		}
+		// TC: O(N) & SC: O(1)
+			#include <bits/stdc++.h> 
+			int findFirstRepeatingDigit(string digitPattern) {
+				unordered_set<char> s;
+				for(char ch: digitPattern){
+					if(s.insert(ch).second)
+						s.insert(ch);
+					else
+						return ch - '0';
+				}
+				return -1;
+			}
 
 	988) IPO:
 		Problem Statement:
@@ -123768,15 +123949,684 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1215)
-1216)
-1217)
-1218)
-1219)
-1220)
+	1215) LRU Cache:
+		Problem Statement:
+			Design a data structure that works like a LRU Cache. Here cap denotes the capacity of the cache and Q denotes the number of queries. Query can be of two types:
+			PUT x y: sets the value of the key x with value y
+			GET x: gets the key of x if present else returns -1.
+			The LRUCache class has two methods get() and put() which are defined as follows.
+			get(key): returns the value of the key if it already exists in the cache otherwise returns -1.
+			put(key, value): if the key is already present, update its value. If not present, add the key-value pair to the cache. If the cache reaches its capacity it should remove the least recently used item before inserting the new item.
+			In the constructor of the class the capacity of the cache should be initialized.
+			Examples:
+			Input: cap = 2, Q = 2, Queries = [["PUT", 1, 2], ["GET", 1]]
+			Output: [2]
+			Explanation: Cache Size = 2
+			["PUT", 1, 2] will insert the key-value pair (1, 2) in the cache,
+			["GET", 1] will print the value corresponding to Key 1, ie 2.
+			Input: cap = 2, Q = 8, Queries = [["PUT", 1, 2], ["PUT", 2, 3], ["PUT", 1, 5], ["PUT", 4, 5], ["PUT", 6, 7], ["GET", 4], ["PUT", 1, 2], ["GET", 3]]
+			Output: [5, -1]
+			Explanation: Cache Size = 2
+			["PUT", 1, 2] will insert the pair (1,2) in the cache.
+			["PUT", 2, 3] will insert the pair (2,3) in the cache: 1->2, 2->3(the most recently used one is kept at the rightmost position) 
+			["PUT", 1, 5] will replace the value of 1 from 2 to 5 : 2 -> 3, 1 -> 5
+			["PUT", 4, 5] : 1 -> 5, 4 -> 5 (Cache size is 2, hence we delete the least recently used key-value pair)
+			["PUT", 6, 7] : 4 -> 5, 6 -> 7 
+			["GET", 4] : Prints 5 (The cache now looks like 6 -> 7, 4->5)
+			["PUT", 1, 2] : 4 -> 5, 1 -> 2  (Cache size is 2, hence we delete the least recently used key-value pair)
+			["GET", 3] : No key value pair having key = 3. Hence, -1 is printed.
+			Constraints:
+				1 <= cap <= 10^3
+				1 <= Q <= 10^5
+				1 <= x, y <= 10^4
+		// design the class in the most optimal way
+		struct dll{
+			pair<int, int> data;
+			dll *prev, *nxt;
+			dll(int key, int val){
+				data.first = key;
+				data.second = val;
+				prev = nxt = NULL;
+			}
+		};
+		class LRUCache {
+			private:
+			int size, curSize;
+			dll *H, *T;
+			// 3 - cases
+			// 1 might be at start
+			// 2 might be at end 
+			// 3 might be at middle
+			void MoveThisNodeToEnd(dll *traverse){
+				// end
+				if(traverse == T) return;
+				// start
+				if(traverse == H){
+					H = H -> nxt;
+					H -> prev = NULL;
+				}else{      // middle
+					traverse -> nxt -> prev = traverse -> prev;
+					traverse -> prev -> nxt = traverse -> nxt;
+				}
+				T -> nxt = traverse;
+				traverse -> prev = T;
+				T = traverse;
+				T->nxt = NULL;
+				
+			}
+			void insertAtTail(dll *cur){
+				if(!H){
+					H = T = cur;
+				}else{
+					T -> nxt = cur;
+					cur -> prev = T;
+					T = cur;
+				}
+			}
+			void deleteHead(){
+				dll *temp = H;
+				H = H -> nxt;
+				H -> prev = temp -> nxt = temp -> prev = NULL;
+				delete temp;
+			}
+			public:
+			// Constructor for initializing the cache capacity with the given value.
+			LRUCache(int cap) {
+				size = cap;
+				curSize = 0;
+				H = T = NULL;
+			}
+			// Function to return value corresponding to the key.
+			int get(int key) {
+				dll *traverse = H;
+				while(traverse){
+					if(traverse -> data.first == key){
+						int val = traverse->data.second;
+						MoveThisNodeToEnd(traverse);
+						return val;
+					}
+					traverse = traverse->nxt;
+				}
+				return -1;
+			}
+			// Function for storing key-value pair.
+			void put(int key, int value) {
+				dll *temp = H;
+				while(temp){
+					if(temp->data.first == key){
+						temp -> data.second = value;
+						MoveThisNodeToEnd(temp);
+						return ;
+					}
+					temp = temp -> nxt;
+				}
+				dll *cur = new dll(key, value);
+				if(curSize < size){
+					insertAtTail(cur);
+					curSize++;
+				}else{
+					insertAtTail(cur);
+					deleteHead();
+				}
+			}
+		};
 
+	1216) Shortest Path in Undirected: (Refer Lect-93)
+		Problem Statement:
+			You are given an adjacency list, adj of Undirected Graph having unit weight of the edges, find the shortest path from src to all the vertex and if it is unreachable to reach any vertex, then return -1 for that vertex.
+			Examples :
+			Input: adj[][] = [[1, 3], [0, 2], [1, 6], [0, 4], [3, 5], [4, 6], [2, 5, 7, 8], [6, 8], [7, 6]], src=0
+			Output: [0, 1, 2, 1, 2, 3, 3, 4, 4]
+			Input: adj[][]= [[3], [3], [], [0, 1]], src=3
+			Output: [1, 1, -1, 0]
+			Input: adj[][]= [[], [], [], [4], [3], [], []], src=1
+			Output: [-1, 0, -1, -1, -1, -1, -1] 
+			Constraint:
+				1<=adj.size()<=10^4
+				0<=edges<=adj.size()-1
+		// Not Optimized:
+			class Solution {
+				public: // Function to find the shortest path from source to all other nodes
+				int shortest(vector<vector<int>>& adj, int src, int destination, int n){
+					vector<int> vis(n ,0);
+					vector<int> parent(n, -2);				// any randome value to reach
+					queue<int> q;
+					q.push(src);
+					vis[src] = 1;
+					while(!q.empty()){
+						int f = q.front();
+						q.pop();
+						for(int neigh: adj[f]){
+							if(!vis[neigh]){
+								vis[neigh] = 1;
+								parent[neigh] = f;
+								q.push(neigh);
+							}
+						}
+					}
+					
+					int cnt = 0;
+					while(destination != src) {
+						cnt++;
+						destination = parent[destination];
+						if(destination == -2)       // disconnected graph, can't reach destination
+							return -1;
+					}
+					return cnt;           //  last one will remains so, need to add src
+				}
+				vector<int> shortestPath(vector<vector<int>>& adj, int src) {
+					int n = adj.size();
+					vector<int> ans(n,-1);
+					for(int i=0; i<n; i++){
+						if(src == i) ans[i] = 0;
+						else{
+							// <list, src, destination>
+							int val = shortest(adj, src, i, n);
+							if(val != -1) ans[i] = val;
+						}
+					}
+					return ans;
+				}
+			};
+		// Optimized:
+			class Solution {
+				public:
+				// Function to find the shortest path from source to all other nodes
+				vector<int> shortestPath(vector<vector<int>>& adj, int src) {
+					// BFS gives the shortest path, Generate the parent array from source
+					int n = adj.size();
+					vector<int> parent(n, -1), vis (n, 0);
+					queue<int> q;
+					q.push(src);
+					vis[src] = 1;
+					// parent array created
+					while(!q.empty()){
+						int f = q.front();
+						q.pop();
+						for(int neighbour: adj[f]){
+							if(!vis[neighbour]){
+								q.push(neighbour);
+								vis[neighbour] = 1;
+								parent[neighbour] = f;
+							}
+						}
+					}
+					
+					vector<int> shortCuts (n, -1);
+					for(int i=0; i<n; i++){
+						int cur = i, cnt = 0;
+						while(parent[cur] != -1) cnt++, cur = parent[cur];
+						
+						// reached till source from destination
+						if(cur == src) shortCuts[i] = cnt;
+					}
+					return shortCuts;
+				}
+			};
 
+	1217) Implement Pow: (Refer POTD: 860)
+		Problem Statement:
+			Implement the function power(b, e), which calculates b raised to the power of e (i.e. be).
+			Examples:
+			Input: b = 3.00000, e = 5
+			Output: 243.00000
+			Input: b = 0.55000, e = 3
+			Output: 0.16638
+			Input: b = -0.67000, e = -7
+			Output: -16.49971
+			Constraints:
+				-100.0 < b < 100.0
+				-10^9 <= e <= 10^9
+				Either b is not zero or e > 0.
+				-10^4 <= be <= 10^4
+		// Not Optimized: TC:O(e) & SC:(1)
+			// Iterative
+				class Solution {
+					public:
+					double power(double b, int e) {
+						double t = 1;
+						bool isNegative = 0;
+						if(e < 0){
+							isNegative = 1;
+							e *= -1;
+						} 
+						while(e--) t *= b;
+						return (isNegative) ? 1/t : t;
+					}
+				};
+			// Recursive:
+			class Solution {
+				public:
+				double power(double b, int e) {
+					if(e == 0) return 1;
+					// IMP changing the recursive direction at start only
+					if(e < 0) return 1/power(b, -e);           // if its negative, making it +ve
+					return b * power(b, e-1);
+				}
+			};
+		// Optimized: TC: O(log e) & SC: O(log e)
+			double power(double b, int e) {
+				if(e == 0) return 1;
+				bool neg = 0;
+				if(e < 0) e *= -1, neg = 1;
+				double ans = b;
+				stack<double> st;
+				while(e/2){
+					if(e&1) st.push(ans);
+					ans *= ans;
+					e /= 2;
+				}
+				while(!st.empty()) ans *= st.top(), st.pop();
+				return (neg) ? 1/ans : ans;
+			}
+			// Recursive:
+				class Solution {
+					public:
+					double power(double b, int e) {
+						if(e == 0) return 1;
+						if(e < 0) return 1 / power(b, -e);
+						
+						double temp = power(b, e/2);
+						if(e&1) return b * temp * temp;
+						return temp * temp;
+					}
+				};
+		// Optimized: TC: O(log e) & SC: O(1) Using builtin function:
+			double power(double b, int e) {
+				return pow(b, e);
+			}
 
+	1218) N-Queen Problem: (Refer Lect-83)
+		class Solution {
+			public:
+			unordered_map<int, bool> rowPresent, colPresent, diagonalUp, diagonalDown;
+			bool SAFE(int row, int col){
+				// check the row, col, diagoanl up & down attack points
+				return !(colPresent[col] or rowPresent[row] or diagonalUp[row-col] or diagonalDown[row+col]);
+			}
+			void solve(vector<vector<int>> &ans, int n, int col, vector<vector<int>> &board){
+				if(col == n){
+					vector<int> temp;
+					for(int i=0; i<n; i++){
+						for(int j=0; j<n; j++){
+							if(board[j][i]){
+								temp.push_back(j+1);
+								break;
+							} 
+						}
+					}
+					ans.push_back(temp);
+					return ;
+				}
+				for(int row = 0; row<n; row++){
+					if(SAFE(row, col)){
+						rowPresent[row] = colPresent[col] = diagonalUp[row-col] = diagonalDown[row+col] = board[row][col] = 1;
+						solve(ans, n, col+1, board);
+						rowPresent[row] = colPresent[col] = diagonalUp[row-col] = diagonalDown[row+col] = board[row][col] = 0;
+					}
+				}
+			}
+			vector<vector<int>> nQueen(int n) {
+				vector<vector<int>> ans;
+				vector<vector<int>> board(n, vector<int>(n, 0));
+				solve(ans, n, 0, board);
+				return ans;
+			}
+		};
+
+	1219) Word Search:
+		Problem Statement:
+			You are given a two-dimensional mat[][] of size n*m containing English alphabets and a string word. Check if the word exists on the mat. The word can be constructed by using letters from adjacent cells, either horizontally or vertically. The same cell cannot be used more than once.
+			Examples :
+			Input: mat[][] = [['T', 'E', 'E'], ['S', 'G', 'K'], ['T', 'E', 'L']], word = "GEEK"
+			Output: true
+			Explanation:
+			The letter cells which are used to construct the "GEEK" are colored.
+			Input: mat[][] = [['T', 'E', 'U'], ['S', 'G', 'K'], ['T', 'E', 'L']], word = "GEEK"
+			Output: false
+			Explanation:
+			It is impossible to construct the string word from the mat using each cell only once.
+			Input: mat[][] = [['A', 'B', 'A'], ['B', 'A', 'B']], word = "AB"
+			Output: true
+			Explanation:
+			There are multiple ways to construct the word "AB".
+			Constraints:
+				1 ≤ n, m ≤ 100
+				1 ≤ L ≤ n*m
+
+		// TC: O(n*m*3^L), where n is no.of rows, m is no.of cols, L is length of word
+			class Solution {
+				public:
+				bool isSAFE(vector<vector<char>> &mat, vector<vector<int>> &vis, string &w, int r, int c, int i){
+					return r>=0 and r < mat.size() and c >=0 and c <mat[0].size() and w[i] == mat[r][c] and !vis[r][c];
+				}
+				bool solve(vector<vector<char>> &mat, string &word, vector<vector<int>> &vis, int r, int c, int i){
+					if(i+1 == word.size()) return 1;
+					vis[r][c] = 1;
+					
+					// check for UP
+					if(isSAFE(mat, vis, word, r-1, c, i+1)){
+						bool found = solve(mat, word, vis, r-1, c, i+1);
+						if(found) return 1;
+					}
+					// check for RIGHT
+					if(isSAFE(mat, vis, word, r, c+1, i+1)){
+						bool found = solve(mat, word, vis, r, c+1, i+1);
+						if(found) return 1;
+					}
+					// check for BOTTOM
+					if(isSAFE(mat, vis, word, r+1, c, i+1)){
+						bool found = solve(mat, word, vis, r+1, c, i+1);
+						if(found) return 1;
+					}
+					// check for LEFT
+					if(isSAFE(mat, vis, word, r, c-1, i+1)){
+						bool found = solve(mat, word, vis, r, c-1, i+1);
+						if(found) return 1;
+					}
+					
+					vis[r][c] = 0;
+					return 0;
+				}
+				bool isWordExist(vector<vector<char>>& mat, string& word) {
+					int r = mat.size(), c = mat[0].size();
+					vector<vector<int>> vis (r, vector<int>(c, 0));
+					for(int i=0; i<r; i++){
+						for(int j=0; j<c; j++){
+							if(word[0] == mat[i][j]){
+								bool found = solve(mat, word, vis, i, j, 0);
+								if(found) return 1;
+							}
+						}
+					}
+					return 0;
+				}
+			};
+
+	1220) Shortest Path in DAG: (Refer Lect-94)
+		Problem Statement:
+			You are given a directed acyclic graph of 'N' vertices(0 to 'N' - 1) and 'M' weighted edges.
+			Return an array that stores the distance(sum of weights) of the shortest path from vertex 0 to all vertices, and if it is impossible to reach any vertex, then assign -1 as distance.
+			For Example:
+			'N' = 3, 'M' = 3, 'edges' = [0, 1, 2], [1, 2, 3], [0, 2, 6]].
+			Distance (0 to 0) = 0.
+			Distance (0 to 1) = 2.
+			Distance (0 to 2) = 0->1 + 1->2 = 2+3 = 5.
+			So our answer is [0, 2, 5].
+			Sample Input 1:
+			3 3
+			2 0 4
+			0 1 3
+			2 1 2
+			Sample Output 1:
+			0 3 -1
+			Explanation of sample output 1:
+			Distance (0 to 0) = 0.
+			Distance (0 to 1) = 3.
+			Distance (0 to 2) = We cannot reach vertex 2 from 0.
+			So our answer is [0, 3, -1].
+			Sample Input 2:
+			4 4
+			2 1 5
+			0 2 3
+			0 1 2
+			2 3 1
+			Sample Output 2:
+			0 2 3 4
+			Constraints:
+				1 <= 'N', 'M' <= 10^5
+				1 <= edge weight <= 10^5
+				Time Limit: 1 sec
+		void DFS(vector<vector<pair<int, int>>> &list, vector<int> &vis, stack<int> &st, int i){
+			vis[i] = 1;
+			for(auto nbr: list[i]){
+				if(!vis[nbr.first]){
+					DFS(list, vis, st, nbr.first);
+				}
+			}
+			st.push(i);
+		}
+		vector<int> GenerateTopologicalSort(vector<vector<pair<int, int>>> &list){
+			int n = list.size();
+			vector<int> vis (n, 0);
+			stack<int> st;
+			for(int i=0; i<n; i++){
+				if(!vis[i]){
+					DFS(list, vis, st, i);
+				}
+			}
+			vector<int> ans;
+			while(!st.empty()){
+				ans.push_back(st.top());
+				st.pop();
+			}
+			return ans;
+		}
+		vector<int> shortestPathInDAG(int n, int m, vector<vector<int>> &edges) {
+			// creating adjacency list
+			vector<vector<pair<int, int>>> adjList (n);
+			for(auto cur: edges){
+				// its directed graph
+				int start = cur[0], end = cur[1], weight = cur[2];      // weight or cost
+				adjList[start].push_back({end, weight});
+			}    
+			// at start all are not able to reach
+			vector<int> shortDistance (n, INT_MAX);
+			vector<int> TopoSequence = GenerateTopologicalSort(adjList);
+			shortDistance[0] = 0;
+			for(int i=0; i<n; i++){
+				int val = TopoSequence[i];
+				if(shortDistance[val] != INT_MAX){
+					for(auto nbr: adjList[val]){
+						int curVertex = nbr.first;
+						int curDistance = nbr.second;
+						shortDistance[curVertex] = min(shortDistance[curVertex], curDistance + shortDistance[val]);
+					}
+				}
+			}
+			// if we are not able to find the path then will assign the -1 as question suggest
+			for(int i=0; i<n; i++)
+				if(shortDistance[i] == INT_MAX)
+					shortDistance[i] = -1;
+			return shortDistance;
+		}
+
+	1221) Shortest path in Directed Acyclic Graph:
+		Problem Statement:
+			Given a Directed Acyclic Graph of V vertices from 0 to n-1 and a 2D Integer array(or vector) edges[ ][ ] of length E, where there is a directed edge from edge[i][0] to edge[i][1] with a distance of edge[i][2] for all i.
+			Find the shortest path from src(0) vertex to all the vertices and if it is impossible to reach any vertex, then return -1 for that vertex.
+			Examples :
+			Input: V = 4, E = 2, edges = [[0,1,2], [0,2,1]]
+			Output: [0, 2, 1, -1]
+			Explanation: Shortest path from 0 to 1 is 0->1 with edge weight 2. Shortest path from 0 to 2 is 0->2 with edge weight 1. There is no way we can reach 3, so it's -1 for 3.
+			Input: V = 6, E = 7, edges = [[0,1,2], [0,4,1], [4,5,4], [4,2,2], [1,2,3], [2,3,6], [5,3,1]]
+			Output: [0, 2, 3, 6, 1, 5]
+			Explanation: Shortest path from 0 to 1 is 0->1 with edge weight 2. Shortest path from 0 to 2 is 0->4->2 with edge weight 1+2=3. Shortest path from 0 to 3 is 0->4->5->3 with edge weight 1+4+1=6. Shortest path from 0 to 4 is 0->4 with edge weight 1.Shortest path from 0 to 5 is 0->4->5 with edge weight 1+4=5.
+			Constraint:
+				1 <= V <= 100
+				1 <= E <= min((N*(N-1))/2,4000)
+				0 <= edgesi,0, edgesi,1 < n
+				0 <= edgei,2 <=105
+		class Solution {
+			public:
+			void DFS(unordered_map<int, vector<pair<int, int>>> &adj, vector<int> &vis, int i, stack<int> &st){
+				vis[i] = 0;
+				for(auto nbr: adj[i]){
+					if(vis[nbr.first]){
+						DFS(adj, vis, nbr.first, st);
+					}
+				}
+				st.push(i);
+			}
+			vector<int> shortestPath(int V, int E, vector<vector<int>>& edges) {
+				// Creating adj list
+				unordered_map<int, vector<pair<int, int>>> adj;
+				for(int i=0; i<E; i++){
+					int s = edges[i][0], e = edges[i][1], cost = edges[i][2];
+					adj[s].push_back({e, cost});
+				}
+				// topological order
+				vector<int> vis (V, 1);
+				stack<int> st;
+				for(int i=0; i<V; i++){
+					if(vis[i]){
+						DFS(adj, vis, i, st);
+					}
+				}
+				vector<int> distance (V, INT_MAX);
+				distance[0] = 0;
+				while(!st.empty()){
+					int cur = st.top();
+					st.pop();
+					if(distance[cur] != INT_MAX){
+						for(auto nbr: adj[cur]){
+							distance[nbr.first] = min(distance[nbr.first], distance[cur]+nbr.second);
+						}
+					}   
+				}
+				for(int i=0; i<V; i++)
+					if(distance[i] == INT_MAX) distance[i] = -1;
+				return distance;
+			}
+		};
+
+	1222) Unique Paths:
+		https://www.naukri.com/code360/problems/total-unique-paths_1081470
+		Problem statement
+			You are present at point ‘A’ which is the top-left cell of an M X N matrix, your destination is point ‘B’, which is the bottom-right cell of the same matrix. Your task is to find the total number of unique paths from point ‘A’ to point ‘B’.In other words, you will be given the dimensions of the matrix as integers ‘M’ and ‘N’, your task is to find the total number of unique paths from the cell MATRIX[0][0] to MATRIX['M' - 1]['N' - 1].
+			To traverse in the matrix, you can either move Right or Down at each step. For example in a given point MATRIX[i] [j], you can move to either MATRIX[i + 1][j] or MATRIX[i][j + 1].
+			Constraints:
+				1 ≤ T ≤ 100
+				1 ≤ M ≤ 15
+				1 ≤ N ≤ 15
+				Where ‘M’ is the number of rows and ‘N’ is the number of columns in the matrix. 
+				Time limit: 1 sec
+			Sample Input 1:
+			2
+			2 2
+			1 1
+			Sample Output 1:
+			2
+			1
+			Explanation of Sample Output 1:
+			In test case 1, we are given a 2 x 2 matrix, to move from matrix[0][0] to matrix[1][1] we have the following possible paths.
+			Path 1 = (0, 0) -> (0, 1) -> (1, 1)
+			Path 2 = (0, 0) -> (1, 0) -> (1, 1)
+			Hence a total of 2 paths are available, so the output is 2.
+			In test case 2, we are given a 1 x 1 matrix, hence we just have a single cell which is both the starting and ending point. Hence the output is 1.
+			Sample Input 2:
+			2
+			3 2
+			1 6
+			Sample Output 2:
+			3
+			1
+			Explanation of Sample Output 2:
+			In test case 1, we are given a 3 x 2 matrix, to move from matrix[0][0] to matrix[2][1] we have the following possible paths.
+			Path 1 = (0, 0) -> (0, 1) -> (1, 1) -> (2, 1)
+			Path 2 = (0, 0) -> (1, 0) -> (2, 0) -> (2, 1)
+			Path 3 =  (0, 0) -> (1, 0) -> (1, 1) -> (2, 1)
+			Hence a total of 3 paths are available, so the output is 3.
+			In test case 2, we are given a 1 x 6 matrix, hence we just have a single row to traverse and thus total path will be 1.
+		// Not Optimized: TC: O(2^(m+n)) & SC: O(m+n)
+			#include <bits/stdc++.h>
+			void solve(int m, int n, int curR, int curC, int &cnt){
+				if(curR == m and curC == n){
+					cnt++;
+					return;
+				}
+				if(curR > m or curC > n) return;
+				solve(m, n, curR+1, curC, cnt);
+				solve(m, n, curR, curC+1, cnt);
+			}
+			int uniquePaths(int m, int n) {
+				int uniPathCnt=0;
+				solve(m, n, 1, 1, uniPathCnt);
+				return uniPathCnt;
+			}
+		// Optimized: ❌Pending
+
+	1223) Height of Binary Tree: (Refer Lect-63)
+		Problem Statement:
+			Given a binary tree, find its height.
+			The height of a tree is defined as the number of edges on the longest path from the root to a leaf node. A leaf node is a node that does not have any children.
+			Examples:
+			Input: root[] = [12, 8, 18, 5, 11] 
+				12
+				/  \
+				8    18
+				/ \
+			5   11
+			Output: 2
+			Explanation: One of the longest path from the root (node 12) goes through node 8 to node 5, which has 2 edges.
+			Input: root[] = [1, 2, 3, 4, N, N, 5, N, N, 6, 7]  
+					1
+					/ \
+				2   3
+				/ 	\
+				4   	 5
+						/ \
+					6   7
+			Output: 3
+			Explanation: The longest path from the root (node 1) to a leaf node 6 with 3 edge.
+			Constraints:
+				1 <= number of nodes <= 10^5
+				0 <= node->data <= 10^5
+		/*
+		class Node {
+			public:
+			int data;
+			Node* left, *right;
+			Node(int val) {
+				data = val;
+				left = right = NULL;
+			}
+		};
+		*/
+		class Solution {
+			public: // Function to find the height of a binary tree.
+			void solve(Node* node, int cur, int &cnt){
+				if(!node) return;
+				cnt = max(cnt, cur);
+				solve(node->left, cur+1, cnt);
+				solve(node->right, cur+1, cnt);
+			}
+			int height(Node* node) {
+				int cnt=0;
+				solve(node, 0, cnt);
+				return cnt;
+			}
+		};
+		//or
+			class Solution {
+				public:	// Function to find the height of a binary tree.
+				int height(Node* node) {
+					if(!node) return 0;
+					int left, right;
+					left = right = 0;
+					
+					if(node->left) left = height(node->left)+1;
+					if(node->right) right = height(node->right)+1;
+					return max(left, right);
+				}
+			};
+		// or One Liner:
+			class Solution {
+				public:
+				// Function to find the height of a binary tree.
+				int height(Node* node) {
+					if(!node or (!node->left and !node->right)) return 0;
+					return max(height(node->left), height(node->right))+1;
+				}
+			};
+
+1224)
+1225)
+1226)
+1227)
+1228)
+1229)
+1230)
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
