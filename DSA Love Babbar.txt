@@ -23947,18 +23947,17 @@ Lecture-63: Binary Tree FAANG Interview Questions || Part-1:
 			Input:
 				 1
 				/  \
-			    2    3
+			   2    3
 			Output: 3
 
 			Example 2:
 			Input:
 				  10
 				/   \
-			    20    30
-			   /  \ 
-			  40   60
+			   20    30
+			  /  \ 
+			40   60
 			Output: 4
-
 			Your Task:
 				You need to complete the function diameter() that takes root as parameter and returns the diameter.
 			Expected Time Complexity: O(N).
@@ -24410,8 +24409,8 @@ Lecture-64: Binary Tree FAANG Interview Questions || Part-2:
 
 			Example 1:
 			Input:
-				  1 
-				/   \
+				   1 
+				 /   \
 			    2     3  
 			   / \   / \ 
 			  4   5 6   7
@@ -24421,15 +24420,15 @@ Lecture-64: Binary Tree FAANG Interview Questions || Part-2:
 			Output: 1 2 4 8 9 6 7 3
 			Example 2:
 			Input:
-				    1
-				   /
-				  2
-				/   \
+				     1
+				    /
+				   2
+				 /   \
 			    4     9
 			  /  \     \
 			 6    5     3
-					 / \
-					7   8
+					   / \
+					  7   8
 
 			Output: 1 2 4 6 5 7 8
 
@@ -46455,7 +46454,18 @@ POTD:-[Problem of the Day]
 				}
 				return ans;
 			}
-		
+			// or
+				#include <bits/stdc++.h> 
+				int squareRoot(int a) {
+					int ans = 0;
+					for(int i=0; i<=a; i++){
+						int val = i * i;
+						if(val < a) ans = val;
+						else if(val == a) return i;
+						else return i-1;
+					}
+					return 0;
+				}
 		//Optimized:
 			#include <bits/stdc++.h> 
 			int squareRoot(int a) {
@@ -124620,13 +124630,991 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1224)
-1225)
-1226)
-1227)
-1228)
-1229)
-1230)
+	1224) Diameter of a Binary Tree: (Refer Lect-63)
+		Problem Statement:
+			Given a binary tree, the diameter (also known as the width) is defined as the number of edges on the longest path between two leaf nodes in the tree. This path may or may not pass through the root. Your task is to find the diameter of the tree.
+			Examples:
+			Input: root[] = [1, 2, 3]
+			Output: 2
+			Explanation: The longest path has 2 edges (node 2 -> node 1 -> node 3).
+			Input: root[] = [5, 8, 6, 3, 7, 9]
+			Output: 4
+			Explanation: The longest path has 4 edges (node 3 -> node 8 -> node 5 -> node 6 -> node 9).
+			Constraints:
+				1 ≤ number of nodes ≤ 10^5
+				0 ≤ node->data ≤ 10^5
+		/*
+		class Node {
+			public:
+			int data;
+			Node *left, *right;
+			Node(int val) {
+				data = val;
+				left = right = NULL;
+			}
+		};
+		Node* newNode(int val) {
+			return new Node(val);
+		}
+		*/
+		class Solution {
+			public:
+			int D = 0;
+			int solve(Node* n){
+				if(!n) return 0;
+				int leftH = solve(n->left);
+				int rightH = solve(n->right);
+				D = max(D, leftH+rightH);
+				return max(leftH, rightH)+1;
+			}
+			int diameter(Node* root) {
+				solve(root);
+				return D;
+			}
+		};
+		// Not Optimized: TC: O(n²) & SC: O(h), where h is max height of tree
+			class Solution {
+				public:
+				int HT(Node* n){
+					if(!n) return 0;
+					int l = HT(n->left);
+					int r = HT(n->right);
+					return max(l, r)+1;
+				}
+				int diameter(Node* root) {
+					if(!root) return 0;
+					int LH = HT(root->left);
+					int RH = HT(root->right);
+					int dl = diameter(root->left);
+					int dr = diameter(root->right);
+					return max({LH+RH, dl, dr});
+				}
+			};
+
+	1225) Diameter Of Binary Tree:
+		https://www.naukri.com/code360/problems/diameter-of-the-binary-tree_920552
+		Problem statement
+			You are given a Binary Tree. Return the length of the diameter of the tree.
+			Note :
+			The diameter of a binary tree is the length of the longest path between any two end nodes in a tree.
+			The number of edges between two nodes represents the length of the path between them.
+			Example :
+			Input: Consider the given binary tree:
+			Output: 6
+			Explanation:
+			Nodes in the diameter are highlighted. The length of the diameter, i.e., the path length, is 6.
+			Detailed explanation ( Input/output format, Notes, Images )
+			Sample Input 1 :
+			1 2 3 4 7 -1 -1 -1 -1 -1 -1
+			Sample Output 1 :
+			3
+			Explanation of Sample Input 1 :
+			The binary tree in the given test case will look like
+			The length of the diameter of the above tree is the length of the path between nodes 4 and 3, i.e., 4->2->1->3. Hence the output will be 3.
+			Sample Input 2 :
+			1 2 3 -1 -1 -1 -1
+			Sample Output 2 :
+			2
+			Explanation of Sample Input 2 :
+			The binary tree in the given test case will look like
+			The length of the diameter of the above tree is the length of the path between nodes 2 and 3, i.e., 2.
+			Expected Time Complexity:
+			Try to do this in O(n).
+			Constraints:
+			1 <= n <= 10000
+			Where 'n' is the total number of nodes in the binary tree.
+			Time Limit: 1 sec
+		/************************************************************
+			Following is the TreeNode class structure
+			template <typename T>
+			class TreeNode {
+				public:
+				T data;
+				TreeNode<T> *left, *right;
+				TreeNode(T data) {
+					this->data = data;
+					left = right = NULL;
+				}
+			};
+		************************************************************/
+		int solve(TreeNode<int>* root, int &mx){
+			if(!root) return 0;
+			int leftH = solve(root->left, mx);
+			int rightH = solve(root->right, mx);
+			mx = max(mx, leftH+rightH);
+			return max(leftH, rightH)+1;
+		}
+		int diameterOfBinaryTree(TreeNode<int> *root){
+			int mx = 0;
+			solve(root, mx);
+			return mx;
+		}
+
+	1226) Diameter of Binary Tree:
+		Problem Statement:
+			Given the root of a binary tree, return the length of the diameter of the tree.
+			The diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.
+			The length of a path between two nodes is represented by the number of edges between them.
+			Example 1:
+			Input: root = [1,2,3,4,5]
+			Output: 3
+			Explanation: 3 is the length of the path [4,2,1,3] or [5,2,1,3].
+			Example 2:
+			Input: root = [1,2]
+			Output: 1
+			Constraints:
+				The number of nodes in the tree is in the range [1, 10^4].
+				-100 <= Node.val <= 100
+
+		// TC: O(n) & 
+				SC: O(n) incase of unbalanced tree
+				SC: O(log n) incase of balanced tree
+		/**
+		* Definition for a binary tree node.
+		* struct TreeNode {
+		*     int val;
+		*     TreeNode *left, *right;
+		*     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+		*     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+		*     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+		* };
+		*/
+		class Solution {
+			public:
+			int solve(TreeNode *root, int &mx){
+				if(!root) return 0;
+				int LH = solve(root->left, mx);
+				int RH = solve(root->right, mx);
+				mx = max(mx, LH+RH);
+				return max(LH, RH)+1;
+			}
+			int diameterOfBinaryTree(TreeNode* root) {
+				int mx=0;
+				solve(root, mx);
+				return mx;
+			}
+		};
+
+	1227) Mirror Tree:
+		Problem Statement:
+			Given a binary tree, convert the binary tree to its Mirror tree.
+			Mirror of a Binary Tree T is another Binary Tree M(T) with left and right children of all non-leaf nodes interchanged.     
+			Examples:
+			Input: root[] = [1, 2, 3, N, N, 4]
+			Output: [1, 3, 2, N, 4]
+			Explanation: 
+			In the inverted tree, every non-leaf node has its left and right child interchanged.
+			Input: root[] = [1, 2, 3, 4, 5]
+			Output: [1, 3, 2, N, N, 5, 4]
+			Explanation:
+			In the inverted tree, every non-leaf node has its left and right child interchanged.
+			Constraints:
+				1 ≤ number of nodes ≤ 10^5
+				1 ≤ node->data ≤ 10^5
+			// Full function Template for C++
+		/*
+		class Node {
+			public:
+			int data;
+			Node *left, *right;
+			Node(int x) {
+				data = x;
+				left = right = NULL;
+			}
+		};
+		*/
+		class Solution {
+			public:
+			// Function to convert a binary tree into its mirror tree.
+			void mirror(Node* node) {
+				if(!node) return;
+				mirror(node->left);
+				mirror(node->right);
+				Node* temp = node -> right;
+				node -> right = node -> left;
+				node -> left = temp;
+			}
+		};
+		// or
+			void mirror(Node* node) {
+				if(!node) return;
+				mirror(node->left);
+				mirror(node->right);
+				swap(node->left, node->right);
+			}
+		// or
+			void mirror(Node* node) {
+				if(!node) return;
+				swap(node->left, node->right);
+				mirror(node->left);
+				mirror(node->right);
+			}
+
+	1228) Construct Tree from Inorder & Preorder: (Refer Lect-66)
+		Problem Statement:
+			Given two arrays representing the inorder and preorder traversals of a binary tree, construct the tree and return the root node of the constructed tree.
+			Note: The output is written in postorder traversal.
+			Examples:
+			Input: inorder[] = [1, 6, 8, 7], preorder[] = [1, 6, 7, 8]
+			Output: [8, 7, 6, 1]
+				1
+				 \
+				  6
+				   \
+				    7
+				   /
+				  8
+			Explanation: The tree will look like
+			Input: inorder[] = [3, 1, 4, 0, 2, 5], preorder[] = [0, 1, 3, 4, 2, 5]
+			Output: [3, 4, 1, 5, 2, 0]
+					 0
+					/ \
+				   1   2
+				  / \	\
+				 3   4   5
+			Explanation: The tree will look like
+			Input: inorder[] = [2, 5, 4, 1, 3], preorder[] = [1, 4, 5, 2, 3]
+			Output: [2, 5, 4, 3, 1]
+					 1
+					/ \
+				   4   3
+				  /
+				 5
+				/
+			   2
+			Explanation: The tree will look like
+			Constraints:
+				1 ≤ number of nodes ≤ 10^3
+				0 ≤ nodes -> data ≤ 10^3
+				Both the inorder and preorder arrays contain unique values.
+		/*
+		Definition of the Node class
+		class Node {
+			public:
+			int data;
+			Node *left, *right;
+			Node(int x) {
+				data = x;
+				left = right = NULL;
+			}
+		};
+		*/
+		class Solution {
+			public:
+			Node* solve(vector<int> &in, vector<int> &pre, int &index, int s, int e){
+				if(s > e) return NULL;
+				Node* cur = new Node(pre[index]);
+				int i = find(in.begin(), in.end(), pre[index++]) - in.begin();
+				cur -> left = solve(in, pre, index, s, i-1);
+				cur -> right = solve(in, pre, index, i+1, e);
+				return cur;
+			}
+			// Function to build the tree from given inorder and preorder traversals
+			Node *buildTree(vector<int> &inorder, vector<int> &preorder) {
+				int i=0;
+				return solve(inorder, preorder, i, 0, inorder.size()-1);
+			}
+		};
+		// Using map:
+			class Solution {
+				public: // Function to build the tree from given inorder and preorder traversals
+				unordered_map<int, int> place;
+				void positioning(vector<int> &in){
+					int n = in.size();
+					for(int i=0; i<n; i++) place[in[i]] = i;
+				}
+				Node* solve(vector<int> &in, vector<int> &pre, int &index, int s, int e){
+					if(s > e) return NULL;
+					Node* cur = new Node(pre[index]);
+					int i = place[pre[index++]];
+					cur -> left = solve(in, pre, index, s, i-1);
+					cur -> right = solve(in, pre, index, i+1, e);
+					return cur;
+				}
+				Node *buildTree(vector<int> &inorder, vector<int> &preorder) {
+					int i=0;
+					positioning(inorder);
+					return solve(inorder, preorder, i, 0, inorder.size()-1);
+				}
+			};
+
+	1229) Inorder Traversal: (Refer Lect-66)
+		Problem Statement:
+			Given a Binary Tree, your task is to return its In-Order Traversal. An inorder traversal first visits the left child (including its entire subtree), then visits the node, and finally visits the right child (including its entire subtree).
+			Examples:
+			Input: root[] = [1, 2, 3, 4, 5] 
+				 1
+				/ \
+			   2   3
+			  / \
+			 4   5
+			Output: [4, 2, 5, 1, 3]
+			Explanation: The in-order traversal of the given binary tree is [4, 2, 5, 1, 3].
+			Input: root[] = [8, 1, 5, N, 7, 10, 6, N, 10, 6]
+					  8
+					/   \
+				   /     \
+				  / 	  \
+				 1          5
+				  \	       / \	
+				   7      10  6
+				  	\     /
+				     10  6
+			Output: [1, 7, 10, 8, 6, 10, 5, 6]
+			Explanation: The in-order traversal of the given binary tree is [1, 7, 10, 8, 6, 10, 5, 6].
+			Constraints:
+				1 <= number of nodes <= 10^5
+				0 <= node->data <= 10^5
+		/*
+		// Tree Node
+		class Node {
+			public:
+			int data;
+			Node* left, *right;
+
+			// Constructor to initialize a new node
+			Node(int val) {
+				data = val;
+				left = right = NULL;
+			}
+		};
+		*/
+		class Solution {
+			public:
+			void InOrder(Node* n, vector<int> &a){
+				if(!n) return;
+				InOrder(n->left, a);
+				a.push_back(n->data);
+				InOrder(n->right, a);
+			}
+			// Function to return a list containing the inorder traversal of the tree.
+			vector<int> inOrder(Node* root) {
+				vector<int> ans;
+				InOrder(root, ans);
+				return ans;
+			}
+		};
+		Follow Up: Try solving this with O(1) auxiliary space.
+			// Iterative using SC: O(h), where h is height of tree & h = n  where n is no.of nodes in tree, 
+			in worst case skew tree the space will be taken is equal to no.of nodes in tree
+			class Solution {
+				public: // Function to return a list containing the inorder traversal of the tree.
+				vector<int> inOrder(Node* root) {
+					vector<int> v;
+					stack<Node*> st;
+					Node* temp = root;
+					while(temp or !st.empty()){
+						if(temp){
+							while(temp->left){
+								st.push(temp);
+								temp = temp -> left;
+							}
+						}else{
+							temp = st.top();
+							st.pop();
+						}
+						v.push_back(temp->data);
+						temp = temp -> right;
+					}
+					return v;
+				}
+			};
+		// Using Morris Traversal with SC: O(1)
+			class Solution {
+				public:
+				// Function to return a list containing the inorder traversal of the tree.
+				vector<int> inOrder(Node* root) {
+					vector<int> v;
+					while(root){
+						Node* pred = root -> left;
+						if(pred){
+							while(pred->right and pred->right != root) pred = pred -> right;
+							if(pred->right == root){
+								v.push_back(root->data);
+								pred->right = NULL;
+								root = root -> right;
+							}else{
+								pred -> right = root;
+								root = root -> left;
+							} 
+						}else{
+							v.push_back(root -> data);
+							root = root -> right;
+						}
+					}
+					return v;
+				}
+			};
+
+	1230) Tree Boundary Traversal: (Refer Lect-64)
+		class Solution {
+			public:
+			vector<int> LeftBoundry(Node* n){
+				vector<int> a;
+				while(n){
+					// if last one is leaf node remove it
+					if(n->left or n->right) a.push_back(n->data);
+					n = n->left ?  n -> left : n -> right;
+				}
+				return a;
+			}
+			void inorder(Node* n, vector<int> &a){
+				if(!n) return;
+				if(!n->left and !n->right) a.push_back(n->data);
+				inorder(n->left, a);
+				inorder(n->right, a);
+			}
+			vector<int> LeafNodes(Node* n){
+				vector<int> a;
+				inorder(n, a);
+				return a;
+			}
+			vector<int> RightBoundry(Node* n){
+				vector<int> a;
+				while(n){
+					// if last one is leaf node remove it
+					if(n->left or n->right) a.push_back(n->data);
+					n = n->right ? n -> right : n -> left;
+				}
+				return a;
+			}
+			vector<int> boundaryTraversal(Node *root) {
+				vector<int> ans, left, right, leaf;
+				ans.push_back(root->data);
+				left = LeftBoundry(root->left);
+				ans.insert(ans.end(), left.begin(), left.end());
+				
+				leaf = LeafNodes(root->left);
+				ans.insert(ans.end(), leaf.begin(), leaf.end());
+				
+				leaf = LeafNodes(root->right);
+				ans.insert(ans.end(), leaf.begin(), leaf.end());
+				
+				right = RightBoundry(root->right);
+				reverse(right.begin(), right.end());
+				ans.insert(ans.end(), right.begin(), right.end());
+				return ans;
+			}
+		};
+
+	1231) Design a Number Container System
+		Problem Statement:
+			Design a number container system that can do the following:
+			Insert or Replace a number at the given index in the system.
+			Return the smallest index for the given number in the system.
+			Implement the NumberContainers class:
+			NumberContainers() Initializes the number container system.
+			void change(int index, int number) Fills the container at index with the number. If there is already a number at that index, replace it.
+			int find(int number) Returns the smallest index for the given number, or -1 if there is no index that is filled by number in the system.
+			Example 1:
+			Input
+			["NumberContainers", "find", "change", "change", "change", "change", "find", "change", "find"]
+			[[], [10], [2, 10], [1, 10], [3, 10], [5, 10], [10], [1, 20], [10]]
+			Output
+			[null, -1, null, null, null, null, 1, null, 2]
+			Explanation
+			NumberContainers nc = new NumberContainers();
+			nc.find(10); // There is no index that is filled with number 10. Therefore, we return -1.
+			nc.change(2, 10); // Your container at index 2 will be filled with number 10.
+			nc.change(1, 10); // Your container at index 1 will be filled with number 10.
+			nc.change(3, 10); // Your container at index 3 will be filled with number 10.
+			nc.change(5, 10); // Your container at index 5 will be filled with number 10.
+			nc.find(10); // Number 10 is at the indices 1, 2, 3, and 5. Since the smallest index that is filled with 10 is 1, we return 1.
+			nc.change(1, 20); // Your container at index 1 will be filled with number 20. Note that index 1 was filled with 10 and then replaced with 20. 
+			nc.find(10); // Number 10 is at the indices 2, 3, and 5. The smallest index that is filled with 10 is 2. Therefore, we return 2.
+			Constraints:
+				1 <= index, number <= 10^9
+				At most 105 calls will be made in total to change and find.
+		// Not Optimized: TC: O(n) & SC: (n)
+			/**
+			* Your NumberContainers object will be instantiated and called as such:
+			* NumberContainers* obj = new NumberContainers();
+			* obj->change(index,number);
+			* int param_2 = obj->find(number);
+			*/
+			class NumberContainers {
+				public:
+				map<int, int> mp;
+				NumberContainers() {}
+				void change(int index, int number) {
+					mp[index] = number;
+				}
+				int find(int number) {
+					for(auto itr: mp){
+						if(itr.second == number) return itr.first;
+					}
+					return -1;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1232) Square Root: (Refer POTD: 147)
+		Problem Statement:
+			Given a positive integer n, find the square root of n. If n is not a perfect square, then return the floor value.
+			Floor value of any number is the greatest Integer which is less than or equal to that number
+			Examples:
+			Input: n = 4
+			Output: 2
+			Explanation: Since, 4 is a perfect square, so its square root is 2.
+			Input: n = 11
+			Output: 3
+			Explanation: Since, 11 is not a perfect square, floor of square root of 11 is 3.
+			Input: n = 1
+			Output: 1
+			Constraints:
+				1 ≤ n ≤  3 x 10^4
+		// TC: O(n) & SC: O(1)
+			class Solution {
+				public: // x: element to find square root
+				int floorSqrt(int n) {
+					int i=0, ans = i;
+					while(i<=n){
+						if(i*i <= n) ans = i;
+						else break;
+						i++;
+					}
+					return ans;
+				}
+			};
+		// TC: O(1) & SC: O(1)
+			int floorSqrt(int n) {
+				return sqrt(n);
+			}
+
+	1233) Find Node:
+		Problem statement:
+			You are given a linked list with a cycle. You need to find and return the Nth node from where the cycle starts in the input Linked List (moving towards the head of the linked list).
+			The cycle is created by connecting the last element of Linked List (i.e., tail) to some other node given in input.
+			Return null if no such part exists.
+			The counting of nodes starts from 1.
+			For Example:
+			head = [5 , 4 , 0 , -1]
+			pos = 2
+			N = 1
+			You have to find the node where the cycle begins and return the Nth node from that point in the direction of the head.
+			Constraints :
+				1 <= T <= 50
+				1 <= X <= 10^4
+				-10^5 <= Node.val <= 10^5
+				1 <= N <= 10^5
+				Where ‘X’ is the number of nodes in the linked list.
+				Time Limit: 1 sec.
+			Sample Input 1 :
+			2
+			5 4 0 -1
+			2
+			1
+			9 8 1 2 5 14 -1
+			5
+			3
+			Sample Output 1 :
+			5
+			8
+			Explanation:
+			For test case one:- The cycle starts at 4. So the 1st node from 4 in the direction of the head is 5.
+			For test case two:- The cycle starts at 5. So the 3rd node from 5 in the direction of the head is 8.
+			Sample Input 2 :
+			2
+			1 2 3 4 5 6 7 8 -1
+			4
+			2
+			5 4 3 2 1 -1
+			3
+			4
+			Sample Output 2 :
+			2
+			null
+		// Not Optimized: TC: O(n) & SC:O(n)
+			#include <bits/stdc++.h> 
+			/*
+				Following is the node structure
+				class ListNode{
+					public:
+					int data;
+					ListNode* next;
+				};
+				ListNode* newListNode(int data){
+					ListNode *temp = new ListNode;
+					temp->data = data;
+					temp->next = NULL;
+					return temp;
+				}
+			*/
+			ListNode *findNode(ListNode *head, int n){
+				unordered_map<ListNode*, int> nodeIndex;
+				int cycleNode = 1;
+				ListNode* t = head;
+				while(t){
+					if(nodeIndex[t] != 0){
+						cycleNode = nodeIndex[t];
+						break;
+					}
+					nodeIndex[t] = cycleNode++;
+					t = t -> next;
+				}
+				if(n >= cycleNode) return NULL;
+				int moveFrwd = cycleNode - n;
+				t = head;
+				while(--moveFrwd)
+					t = t -> next;
+				return t;
+			}
+		// Optimized: TC: O(n) & SC: (1)
+			#include <bits/stdc++.h> 
+			/*
+				Following is the node structure
+				class ListNode{
+					public:
+					int data;
+					ListNode* next;
+				};
+				ListNode* newListNode(int data){
+					ListNode *temp = new ListNode;
+					temp->data = data;
+					temp->next = NULL;
+					return temp;
+				}
+			*/
+			ListNode *findNode(ListNode *head, int n){
+				if(!n) return NULL;
+				int cycleNode = 1;
+				ListNode *fst, *slow;
+				fst = slow = head;
+				while(fst and fst->next){
+					slow = slow->next;
+					fst = fst->next->next;
+					if(fst == slow) break;
+				}
+				slow = head;
+				if(fst != slow){
+					while(fst != slow){
+						cycleNode++;
+						fst = fst -> next;
+						slow = slow -> next;
+					}
+				}
+
+				if(n >= cycleNode) return NULL;
+				int moveFrwd = cycleNode - n;
+				ListNode* t = head;
+				while(--moveFrwd)
+					t = t -> next;
+				return t;
+			}
+
+	1234) Maximum path sum from any node:
+		Problem Statement:
+			Given a binary tree, the task is to find the maximum path sum. The path may start and end at any node in the tree.
+			Examples:
+			Input: root[] = [10, 2, 10, 20, 1, N, -25, N, N, N, N, 3, 4]
+			Output: 42
+			Explanation:
+							 10
+							/  \
+						   2   10
+						  / \	 \
+						20   1   -25
+								 / \
+								3   4
+			Max path sum is represented using green colour nodes in the above binary tree.
+			Input: root[] = [-17, 11, 4, 20, -2, 10]
+			Output: 31
+						 -17
+						/   \
+					  11     4
+					 / \    /
+					20 -2  10
+			Explanation: Max path sum is represented using green colour nodes in the above binary tree.
+			Constraints:
+				1 ≤ number of nodes ≤ 10^3
+				-10^4 ≤ node->data ≤ 10^4
+		/*
+		// Tree Node
+		class Node {
+			public:
+			int data;
+			Node *left, *right;
+			Node(int val) {
+				data = val;
+				left = right = NULL;
+			}
+		};
+		*/
+		class Solution {
+			public:
+			int solve(Node* n, int &ans){
+				if(!n) return 0;
+				int cur = n->data;
+				int l = max(0, solve(n->left, ans));
+				int r = max(0, solve(n->right, ans));
+				ans = max({ans, l+r+cur});
+				return max(l, r) + cur;
+			}
+			// Function to return maximum path sum from any node in a tree.
+			int findMaxSum(Node *root) {
+				int ans = INT_MIN;
+				solve(root, ans);
+				return ans;
+			}
+		};
+
+	1235) Maximum Width of Tree:
+		Problem Statement:
+			Given a Binary Tree, find the maximum width of it. Maximum width is defined as the maximum number of nodes at any level.
+			Examples:
+			Input: root = [1, 2, 3]
+				  1
+				 / \
+				2   3
+			Output: 2
+			Explanation: On the first level there is only one node 1. On the second level there are two nodes 2, 3 clearly it is the maximum number of nodes at any level
+			Input: root = [10, 20, 30, 40, 60]
+					 10
+					/  \
+				   20  30
+				  /  \
+				 40  60
+			Output: 2
+			Explanation: There is one node on level 1(10) There is two node on level 2(20, 30) There is two node on level 3(40, 60) Hence the answer is 2
+			Expected Time Complexity: O(n).
+			Expected Auxiliary Space: O(width of the tree).
+			Constraints:
+				1 <= number of nodes<= 10^5
+				0 <= node->data <= 10^5
+		/*  Structure of a Binary Tree
+		struct Node {
+			int data;
+			struct Node* left, *right;
+			Node(int x){
+				data = x;
+				left = right = NULL;
+			}
+		};
+		*/
+		class Solution {
+			public: // Function to get the maximum width of a binary tree.
+			int getMaxWidth(Node* root) {
+				int cnt=0, t=0;
+				if(!root) return cnt;
+				queue<Node*> q;
+				q.push(root);
+				cnt++;
+				q.push(NULL);
+				// Level Order Traversal
+				while(!q.empty()){
+					Node* cur = q.front();
+					q.pop();
+					if(cur){
+						if(cur->left) q.push(cur->left), t++;
+						if(cur->right) q.push(cur->right), t++;
+					}else{
+						if(!q.empty()){
+							cnt = max(cnt, t);
+							t = 0;
+							q.push(NULL);
+						}
+					}
+				}
+				return cnt;
+			}
+		};
+
+	1236) Maximum Width of Binary Tree:
+		Problem Statement:
+			Given the root of a binary tree, return the maximum width of the given tree. The maximum width of a tree is the maximum width among all levels.
+			The width of one level is defined as the length between the end-nodes (the leftmost and rightmost non-null nodes), where the null nodes between the end-nodes that would be present in a complete binary tree extending down to that level are also counted into the length calculation.
+			It is guaranteed that the answer will in the range of a 32-bit signed integer.
+			Example 1:
+
+			Input: root = [1,3,2,5,3,null,9]
+			Output: 4
+			Explanation: The maximum width exists in the third level with length 4 (5,3,null,9).
+			Example 2:
+
+			Input: root = [1,3,2,5,null,null,9,6,null,7]
+			Output: 7
+			Explanation: The maximum width exists in the fourth level with length 7 (6,null,null,null,null,null,7).
+			Example 3:
+
+			Input: root = [1,3,2,5]
+			Output: 2
+			Explanation: The maximum width exists in the second level with length 2 (3,2).		
+			Constraints:
+				The number of nodes in the tree is in the range [1, 3000].
+				-100 <= Node.val <= 100
+		// Using Level Order Traversal (LOT): Instead of using usigned int refer other approach with long long
+			/**
+			* Definition for a binary tree node.
+			* struct TreeNode {
+			*     int val;
+			*     TreeNode *left;
+			*     TreeNode *right;
+			*     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+			*     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+			*     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+			* };
+			*/
+			class Solution {
+				public:
+				int solve(TreeNode *root){
+					// Node, index
+					queue<pair<TreeNode*, unsigned int>> q;
+					q.push({root, 1});
+					unsigned int mx = 1, s, e, vis=1;
+					q.push({NULL, 0});
+					while(!q.empty()){
+						TreeNode* cur = q.front().first;
+						unsigned int index = q.front().second;
+						q.pop();
+						if(cur){
+							if(vis){
+								vis = 0;
+								s = index;
+							}
+							e = index;
+							if(cur->left) q.push({cur->left, index*2-1});
+							if(cur->right) q.push({cur->right, index*2});
+						}else{
+							if(!q.empty()){
+								q.push({NULL, 0});
+								vis = 1;
+							}
+							mx = max(mx, e - s + 1);
+						}
+					}
+					return mx;
+				}
+				int widthOfBinaryTree(TreeNode* root) {
+					if(!root) return 0;
+					return solve(root);
+				}
+			};
+		// or size_t:
+			class Solution {
+				public:
+				int solve(TreeNode *root){
+					// Node, index
+					queue<pair<TreeNode*, size_t>> q;
+					q.push({root, 1});
+					size_t mxWidth = 1;
+
+					while(!q.empty()){
+						size_t LeftNode = q.front().second, RightNode = q.back().second;
+						mxWidth = max(mxWidth, RightNode-LeftNode+1);
+						int size = q.size();
+						while(size--){
+							TreeNode* cur = q.front().first;
+							size_t index = q.front().second;
+							q.pop();
+							if(cur->left) q.push({cur->left, index*2-1});
+							if(cur->right) q.push({cur->right, index*2});
+						}
+					}
+					return mxWidth;
+				}
+				int widthOfBinaryTree(TreeNode* root) {
+					if(!root) return 0;
+					return solve(root);
+				}
+			};
+
+	1237) Vertical Width of a Binary Tree:
+		Problem statement:
+			Given a Binary Tree. You need to find and return the vertical width of the tree.
+			Examples :
+			Input:
+					1
+				/    \
+				2      3
+				/ \    /  \
+				4   5  6   7
+						\   \
+						8   9
+			Output: 6
+			Explanation: The width of a binary tree is
+			the number of vertical paths in that tree.
+			The above tree contains 6 vertical lines.
+			Input:
+				1
+				/  \
+			2    3
+			Output: 3
+			Explanation: The above tree has 3 vertical lines, hence the answer is 3.
+			Expected Time Complexity: O(nlogn)
+			Expected Auxiliary Space: O(height of the tree).
+			Constraints:
+				0 <= number of nodes <= 10^4
+		// TC: O(N) & SC: O(N)
+			class Solution {
+				public: // Function to find the vertical width of a Binary Tree.
+				unordered_map<int, int> ump;
+				void solve(Node* n, int i){
+					if(!n) return;
+					ump[i] = n->data;
+					solve(n->left, i-1);
+					solve(n->right, i+1);
+				}
+				int verticalWidth(Node* root) {
+					if(!root) return 0;
+					solve(root, 0);
+					return ump.size();
+				}
+			};
+		// TC: O(N) & SC: O(1), at worst case recursion will use stack space, which is SC: O(N)
+			class Solution {
+				public: // Function to find the vertical width of a Binary Tree.
+				void solve(Node* n, int i, int &minCol, int &mxCol){
+					if(!n) return;
+					minCol = min(minCol, i);
+					mxCol = max(mxCol, i);
+					solve(n->left, i-1, minCol, mxCol);
+					solve(n->right, i+1, minCol, mxCol);
+				}
+				int verticalWidth(Node* root) {
+					int minCol, mxCol;
+					minCol = mxCol = 0;
+					if(!root) return 0;
+					solve(root, 0, minCol, mxCol);
+					return mxCol - minCol + 1;
+				}
+			};
+		// Iterative: BFS:
+			class Solution {
+				public: // Function to find the vertical width of a Binary Tree.
+				int verticalWidth(Node* root) {
+					int mn, mx, width=0;
+					mx = mn = 0;
+					if(!root) return mn;                // return mx;
+					
+					queue<pair<Node*, int>> q;                 
+					q.push({root, 0});
+					while(!q.empty()){
+						int size = q.size();
+						width = max(width, mx-mn+1);
+						while(size--){
+							Node* cur = q.front().first;
+							int col = q.front().second;
+							q.pop();
+							
+							if(cur->left){
+								q.push({cur->left, col-1});
+								mn = min(mn, col-1);
+							} 
+							if(cur->right) {
+								q.push({cur->right, col+1});
+								mx = max(mx, col+1);
+							}
+						}
+					}
+					return width;
+				}
+			};
+
+1238)
+1239)
+1240)
+1241)
+1242)
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
