@@ -25129,8 +25129,7 @@ Lecture-65: Binary Tree FAANG Interview Questions || Part-3:
 			};
 		*/
 		class Solution {
-			public:
-			//Function to return the lowest common ancestor in a Binary Tree.
+			public: //Function to return the lowest common ancestor in a Binary Tree.
 			Node* lca(Node* root ,int n1 ,int n2 ) {
 				if(root -> data == n1 || root -> data == n2) return root;
 
@@ -25168,7 +25167,7 @@ Lecture-65: Binary Tree FAANG Interview Questions || Part-3:
 		Problem Statement:
 			Given a binary tree and an integer k, the task is to count the number of paths in the tree such that the sum of the nodes in each path equals k. A path can start from any node and end at any node and must be downward only.
 			Examples:
-			Input: Tree =    1  	
+			Input: Tree = 1  	
 						/   \                          
 					    2     3
 			k = 3                               
@@ -25186,7 +25185,7 @@ Lecture-65: Binary Tree FAANG Interview Questions || Part-3:
 			    3    -2    1       
 			Output: 3
 			Input Tree =
-					  7 
+					   7 
 				     /   \
 				    4     5 
 				  /   \    \
@@ -25202,7 +25201,6 @@ Lecture-65: Binary Tree FAANG Interview Questions || Part-3:
 				1 ≤ number of nodes ≤ 2*10^4
 				-10^5 ≤ node value ≤ 10^5
 				-10^9 ≤ k ≤ 10^9
-
 		// User function template for C++
 		/*
 			struct Node {
@@ -31362,9 +31360,165 @@ Lecture 94: Shortest Path in Directed Acyclic Graphs: (Refer POTD: 1220, 1221)
 			return 0;
 		}
 ---------------------------------------------------------------------------------------------------------
+	15/02/25
 Lecture 95: Dijkstra's Algorithm:
-	
+	Q. Dijkstra's shortest path:
+		https://www.naukri.com/code360/problems/dijkstra-s-shortest-path_920469
+		Problem statement
+			You have been given an undirected graph of ‘V’ vertices (labeled 0,1,..., V-1) and ‘E’ edges. Each edge connecting two nodes (‘X’,’Y’) will have a weight denoting the distance between node ‘X’ and node ‘Y’.
+			Your task is to find the shortest path distance from the source node, which is the node labeled as 0, to all vertices given in the graph.
+			Example:
+			Input:
+			4 5
+			0 1 5
+			0 2 8
+			1 2 9
+			1 3 2
+			2 3 6
+			In the given input, the number of vertices is 4, and the number of edges is 5.
+			In the input, following the number of vertices and edges, three numbers are given. The first number denotes node ‘X’, the second number denotes node ‘Y’ and the third number denotes the distance between node ‘X’ and ‘Y’.
+			As per the input, there is an edge between node 0 and node 1 and the distance between them is 5.
+			The vertices 0 and 2 have an edge between them and the distance between them is 8.
+			The vertices 1 and 2 have an edge between them and the distance between them is 9.
+			The vertices 1 and 3 have an edge between them and the distance between them is 2.
+			The vertices 2 and 3 have an edge between them and the distance between them is 6.
+			Note:
+			1. There are no self-loops(an edge connecting the vertex to itself) in the given graph.
+			2. There can be parallel edges i.e. two vertices can be directly connected by more than 1 edge.
+			Sample input 1
+			2
+			5 7
+			0 1 7
+			0 2 1
+			0 3 2
+			1 2 3
+			1 3 5 
+			1 4 1
+			3 4 7
+			4 5
+			0 1 5
+			0 2 8
+			1 2 9
+			1 3 2
+			2 3 6
+			Sample output 1
+			0 4 1 2 5
+			0 5 8 7
+			Explanation For Sample Output 1
+			Test case 1:
+			The source node is node 0.
+			The shortest distance from node 0 to node 0 is 0.
+			The shortest distance from node 0 to node 1 is 4. In the above figure, the green path represents this distance. The path goes from node 0->2->1, giving distance = 1+3=4.
+			The shortest distance from node 0 to node 2 is 1. In the above figure, the red path represents this distance. The path goes from node 0->2, giving distance = 1
+			The shortest distance from node 0 to node 3 is 2. In the above figure, the pink path represents this distance. The path goes from node 0->3, giving distance = 2.
+			The shortest distance from node 0 to node 4 is 5. In the above figure, the yellow path represents this distance. The path goes from node 0->2->1->4, giving distance = 1+3+1=5.
+			Test case 2:
+			The source node is node 0.
+			The shortest distance from node 0 to node 0 is 0.
+			The shortest distance from node 0 to node 1 is 5. In the above figure, the green path represents this distance. The path goes from node 0->1, giving distance = 5.
+			The shortest distance from node 0 to node 2 is 8. In the above figure, the pink path represents this distance. The path goes from node 0->2, giving distance = 8.
+			The shortest distance from node 0 to node 3 is 7. In the above figure, the yellow path represents this distance. The path goes from node 0->1->3, giving distance = 7.
+			Sample input 2:
+			2
+			9 14
+			0 1 4
+			0 7 8
+			1 2 8
+			1 7 11
+			2 3 7
+			2 5 4
+			2 8 2 
+			3 4 9
+			3 5 14
+			4 5 10
+			5 6 2
+			6 7 1
+			6 8 6 
+			7  8 7
+			5 7
+			0 1 7
+			0 2 3
+			1 2 1
+			1 3 2
+			1 4 6
+			2 3 4
+			3 4 4 
+			Sample output 2:
+			0 4 12 19 21 11 9 8 14
+			0 4 3 6 10
+		
+		// Using Set: TC: O((V+E) log V) & SC: O(V+E)
+		#include <bits/stdc++.h>
+		vector<int> dijkstra(vector<vector<int>> &vec, int vertices, int edges, int source) {
+			// creating adjacency list
+			vector<vector<pair<int, int>>> adj (vertices);
+			for(int i=0; i<edges; i++){
+				adj[vec[i][0]].push_back(make_pair(vec[i][1], vec[i][2]));
+				adj[vec[i][1]].push_back(make_pair(vec[i][0], vec[i][2]));
+			}
+			vector<int> dist (vertices, INT_MAX);
+			// distance from source to source
+			dist[source] = 0;
+			// <distance, Node>
+			set<pair<int, int>> st;
+			st.insert(make_pair(source, 0));
+			while(!st.empty()){
+				// retrive the start node from set (smallest distance)
+				pair<int, int> top = *st.begin();
+				int distance = top.first, VertexValue = top.second;
+				
+				// removing the top vertex/node
+				st.erase(st.begin());
+
+				// traverse neighbours
+				for(pair<int, int> nbr: adj[VertexValue]){
+					if(distance+nbr.second < dist[nbr.first]){
+						dist[nbr.first] = distance+nbr.second;
+						// is record with cur node present? if yes then remove it
+						auto isPresent = st.find({nbr.second, nbr.first});
+						if(isPresent != st.end()) st.erase(isPresent);
+						st.insert({dist[nbr.first], nbr.first}); 
+					}
+				}
+			}
+			return dist;
+		}
+		// Using Priority Queue: TC: O((V+E) log V) & SC: O(V+E):
+			#include <bits/stdc++.h> 
+			#define pi pair<int, int>
+			vector<int> dijkstra(vector<vector<int>> &vec, int vertices, int edges, int source) {
+				// creating adjacency list
+				vector<vector<pair<int, int>>> adj (vertices);
+				for(int i=0; i<edges; i++){
+					adj[vec[i][0]].push_back(make_pair(vec[i][1], vec[i][2]));
+					adj[vec[i][1]].push_back(make_pair(vec[i][0], vec[i][2]));
+				}
+				vector<int> dist (vertices, INT_MAX);
+				// distance from source to source
+				dist[source] = 0;
+				// <distance, Node>
+				priority_queue<pi, vector<pi>, greater<pi>> pq;
+				pq.push({0, source});
+				while(!pq.empty()){
+					// retrive the start node from set (smallest distance)
+					pair<int, int> top = pq.top();
+					int distance = top.first, VertexValue = top.second;
+					// removing the top vertex/node
+					pq.pop();
+
+					// traverse neighbours
+					for(pair<int, int> nbr: adj[VertexValue]){
+						if(distance+nbr.second < dist[nbr.first]){
+							dist[nbr.first] = distance+nbr.second;
+							pq.push({dist[nbr.first], nbr.first});
+						}
+					}
+				}
+				return dist;
+			}
 ---------------------------------------------------------------------------------------------------------
+Lecture 96: Minimum Spanning Tree || Prim's Algorithm:
+	
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
@@ -119880,21 +120034,21 @@ POTD:-[Problem of the Day]
 			The left subtree of every node contains smaller keys and right subtree of every node contains greater. Hence, the tree is a BST.
 			Input: root[] = [2, N, 7, N, 6, N, 9]
 			2
-			\
-			7
-				\
+			 \
+			  7
+			   \
 				6
-				\
-				9
+				 \
+				  9
 			Output: false 
 			Explanation: 
 			Since the node with value 7 has right subtree nodes with keys less than 7, this is not a BST. 
 			Input: root[] = [10, 5, 20, N, N, 9, 25]
-			10
+		      10
 			/    \
-			5      20
+		   5     20
 				/   \
-				9     25
+			   9     25
 			Output: false
 			Explanation: The node is present in the right subtree of 10, but it is smaller than 10.
 			Constraints:
@@ -121204,25 +121358,25 @@ POTD:-[Problem of the Day]
 			Given a BST and an integer k. Find the kth smallest element in the BST using O(1) extra space. If there is no kth smallest element present then return -1.
 			Examples:
 			Input: root = [2, 1, 3] k = 2
-			2
-			/   \
-			1     3
+			      2
+		    	 / \
+				1   3
 			Output: 2
 			Explanation: 2 is the 2nd smallest element in the BST
 			Input: root = [2, 1, 3] k = 5
-				2
-			/  \
-			1    3
+				 2
+				/ \
+			   1   3
 			Output: -1
 			Explanation: There is no 5th smallest element in the BST as the size of BST is 3
 			Input: root = [5, 1, 3] k = 1
-				5
-			/   \
-			1     3
+			   5
+			  / \
+			 1   3
 			Output: 1
 			Explanation: 1 is the 2nd smallest element in the BST
 			Constraints:
-				1 <= number of nodes <= 10^5
+				1 <= number of nodes, k <= 10^5
 				1 <= node->data <= 10^5
 
 		/*Complete the function below
@@ -125610,11 +125764,332 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1238)
-1239)
-1240)
-1241)
-1242)
+	1238) K Sum Paths: (Refer Lect-65)
+		// Not Optimized: TC: O(n²) & SC: O(n)
+			/*
+			struct Node {
+				int data;
+				Node *left, *right;
+				Node(int val) {
+					data = val;
+					left = right = NULL;
+				}
+			};
+			*/
+			class Solution {
+				public:
+				void check(Node* cur, int sum, int &cnt, int &k){
+					if(!cur) return;
+					sum += cur->data;
+					if(sum == k) cnt++;
+					check(cur->left, sum, cnt, k);
+					check(cur->right, sum, cnt, k);
+				}
+				int solve(Node* root, int k, int cnt, vector<Node*> &v){
+					int n = v.size();
+					int sum=0;
+					for(int i=0; i<n; i++) check(v[i], sum, cnt, k);
+					return cnt;
+				}
+				int sumK(Node *root, int k) {
+					if(!root) return 0;
+					int cnt = 0;
+					vector<Node*> v;
+					queue<Node*> q;
+					q.push(root);
+					v.push_back(root);
+					while(!q.empty()){
+						int s = q.size();
+						while(s--){
+							Node* cur = q.front();
+							q.pop();
+							if(cur->left) q.push(cur->left), v.push_back(cur->left);
+							if(cur->right) q.push(cur->right), v.push_back(cur->right);
+						}
+					}
+					return solve(root, k, cnt, v);
+				}
+			};
+
+	1239) Pair Sum in BST:
+		Problem Statement:
+			Given a Binary Search Tree(BST) and a target. Check whether there's a pair of Nodes in the BST with value summing up to the target. 
+			Examples:
+			Input: root = [7, 3, 8, 2, 4, N, 9], target = 12
+				7
+				/ \
+			3    8
+			/ \    \
+			2   4    9
+			Output: True
+			Explanation: In the binary tree above, there are two nodes (8 and 4) that add up to 12.
+			Input: root = [9, 5, 10, 2, 6, N, 12], target = 23
+					9
+					/ \
+				5  10
+				/ \	\
+				2   6	 12
+			Output: False
+			Explanation: In the binary tree above, there are no such two nodes exists that add up to 23.
+			Constraints:
+				1 ≤ Number of Nodes ≤ 10^5
+				1 ≤ target ≤ 10^6	
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				void inorder(Node* root, vector<int> &v){
+					if(!root) return;
+					inorder(root->left, v);
+					v.push_back(root->data);
+					inorder(root->right, v);
+				}
+				bool findTarget(Node *root, int target) {
+					vector<int> v;
+					inorder(root, v);
+					int n = v.size();
+					for(int i=0; i<n; i++)
+						for(int j=i+1;j<n; j++)
+							if(v[i]+v[j] == target) return 1;
+					return 0;
+				}
+			};
+		// Optimized: TC: O(n) & SC: O(n)
+			/* Node is as follows
+			class Node {
+				int data;
+				Node *left, *right;
+				Node(int val) {
+					data = val;
+					left = right = NULL;
+				}
+			};
+			*/
+			class Solution {
+				public:
+				void inorder(Node* root, vector<int> &v){
+					if(!root) return;
+					inorder(root->left, v);
+					v.push_back(root->data);
+					inorder(root->right, v);
+				}
+				bool findTarget(Node *root, int target) {
+					vector<int> v;
+					inorder(root, v);
+					int i, j;
+					i=0, j=v.size()-1;
+					while(i < j){
+						int val = v[i]+v[j];
+						if(val == target) return 1;
+						else if(val < target) i++;
+						else j--;
+					}
+					return 0;
+				}
+			};
+
+	1240) Fixing Two nodes of a BST:
+		Problem Statement:
+			Given the root of a Binary search tree(BST), where exactly two nodes were swapped by mistake. Your task is to fix (or correct) the BST by swapping them back. Do not change the structure of the tree.
+			Note: It is guaranteed that the given input will form BST, except for 2 nodes that will be wrong. All changes must be reflected in the original linked list.
+			Examples :
+			Input: root = [10, 5, 8, 2, 20]
+					10
+					/ \
+				   5   8
+				  / \
+				 2  20
+			Output: 1
+			Explanation: The nodes 20 and 8 were swapped. 
+			Input: root = [5, 10, 20, 2, 8]
+				 5
+				/ \
+			   10  20
+			  / \
+			 2   8
+			Output: 1 
+			Explanation: The nodes 10 and 5 were swapped.
+			Constraints:
+				1 ≤ Number of nodes ≤ 10^3
+		/*
+		class Node {
+			public:
+			int data;
+			Node *left, *right;
+			Node(int val) {
+				data = val;
+				left = right = NULL;
+			}
+		};
+		*/
+		// TC: O(n log n)  & SC:O(n)
+		class Solution {
+			public:
+			void inorder(Node* n, vector<int> &v){
+				if(!n) return;
+				inorder(n->left, v);
+				v.push_back(n->data);
+				inorder(n->right, v);
+			}
+			void inorderSet(Node* n, vector<int> &v, int &i){
+				if(!n) return;
+				inorderSet(n->left, v, i);
+				n->data = v[i++];
+				inorderSet(n->right, v, i);
+			}
+			void correctBST(Node* root) {
+				vector<int> v;
+				inorder(root, v);
+				sort(v.begin(), v.end());
+				int i=0;
+				inorderSet(root, v, i);
+			}
+		};
+			
+	1241) Lowest Common Ancestor in a BST: (Refer Lect-70)
+		Problem Statement:
+			Given a Binary Search Tree (with all values unique) and two nodes n1 and n2 (n1 != n2). You may assume that both nodes exist in the tree. Find the Lowest Common Ancestor (LCA) of the given two nodes in the BST.
+			LCA between two nodes n1 and n2 is defined as the lowest node that has both n1 and n2 as descendants (where we allow a node to be a descendant of itself).
+			Examples:
+			Input: root = [5, 4, 6, 3, N, N, 7, N, N, N, 8], n1 = 7, n2 = 8
+				 5
+				/ \
+			   4   6
+			  /     \
+			 3       7
+					  \
+					   8
+			Output: 7
+			Explanation: 7 is the closest node to both 7 and 8, which is also an ancestor of both the nodes.
+			Input: root = [20, 8, 22, 4, 12, N, N, N, N, 10, 14], n1 = 8, n2 = 14
+				20
+			   /  \
+  			  8   22
+			 / \
+			4  12
+			   / \
+			  10  14		
+			Output: 8
+			Explanation: 8 is the closest node to both 8 and 14, which is also an ancestor of both the nodes.
+			Input: root = [2, 1, 3], n1 = 1, n2 = 3
+				 2
+				/ \
+			   1   3
+			Output: 2
+			Explanation: 2 is the closest node to both 1 and 3, which is also an ancestor of both the nodes.
+			Constraints:
+				1 <= number of nodes <= 10^5
+				1 <= node->data <= 10^5
+				1 <= n1, n2 <= 10^5
+		/*  TC: O(log n) worst:O(n) & SC:O(h) & worst: O(n)
+		// Tree Node
+		class Node {
+			public:
+			int data;
+			Node* left, *right;
+			// Constructor to initialize a new node
+			Node(int val) {
+				data = val;
+				left = right = NULL;
+			}
+		};
+		*/
+		class Solution {
+			public:
+			Node* ANS(Node* root, Node* n1, Node* n2){
+				if(root->data == n1->data or root->data == n2->data or (root->data > n1->data and root->data < n2->data)) return root;
+				else if(root->data < n1->data) return ANS(root->right, n1, n2);
+				else /*(root->data > n2->data)*/ return ANS(root->left, n1, n2);
+			}
+			Node* LCA(Node* root, Node* n1, Node* n2) {
+				int a, b;
+				a = n1->data, b = n2->data;
+				n1->data = min(a,b);
+				n2->data = max(a,b);
+				return ANS(root, n1, n2);
+			}
+		};
+
+		// or
+		class Solution {
+			public:
+			Node* LCA(Node* root, Node* n1, Node* n2) {
+				if(root->data == n1->data or root->data == n2->data) return root;
+				else if(root->data < n1->data and root->data < n2->data) return LCA(root->right, n1, n2);
+				else if(root->data > n1->data and root->data > n2->data) return LCA(root->left, n1, n2);
+				return root;
+			}
+		};
+
+	1242) Serialize and deserialize a binary tree:
+		Problem Statement:
+			Serialization is to store a tree in an array so that it can be later restored and deserialization is reading tree back from the array. Complete the functions
+			serialize() : stores the tree into an array a and returns the array.
+			deSerialize() : deserializes the array to the tree and returns the root of the tree.
+			Note: Multiple nodes can have the same data and the node values are always positive integers. Your code will be correct if the tree returned by deSerialize(serialize(input_tree)) is same as the input tree. Driver code will print the in-order traversal of the tree returned by deSerialize(serialize(input_tree)).
+			Examples :
+			Input: root = [1, 2, 3]
+					1
+					/ \
+					2	3
+			Output: [2, 1, 3]
+			Input: root = [10, 20, 30, 40, 60, N, N]
+				 10
+				/  \ 
+			   20  30
+			  / \
+			40  60	
+			Output: [40, 20, 60, 10, 30]
+			Constraints:
+				1 <= Number of nodes <= 10^4
+				1 <= Data of a node <= 10^9
+		/* A binary tree node has data, pointer to left child and a pointer to right child
+		struct Node {
+			int data;
+			Node *left, *right;
+		}; */
+		// TC: O(N) & SC: O(N)
+		class Solution {
+			public: // Function to serialize a tree and return a list containing nodes of tree.
+			void PreOrder(Node* n, vector<int> &v){
+				if(!n){
+					v.push_back(-1);
+					return;
+				} 
+				v.push_back(n->data);
+				PreOrder(n->left, v);
+				PreOrder(n->right, v);
+			}
+			vector<int> serialize(Node *root) {
+				vector<int> v;
+				PreOrder(root, v);
+				return v;
+			}
+			// Function to deserialize a list and construct the tree.
+			Node *solve(vector<int> &a, int &i){
+				if(i >= a.size() or a[i] == -1) {
+					i++;
+					return NULL;
+				}
+				Node *cur = new Node(a[i++]);
+				cur -> left = solve(a, i);
+				cur -> right = solve(a, i);
+				return cur;
+			}
+			Node *deSerialize(vector<int> &arr) {
+				if(arr.empty()) return NULL;
+				int i=0;
+				return solve(arr, i);
+			}
+		};
+
+1243)
+1244)
+1245)
+1246)
+1247)
+1248)
+1249)
+1250)
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
