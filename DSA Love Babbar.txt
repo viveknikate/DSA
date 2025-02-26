@@ -20265,7 +20265,6 @@ Lecture-55: Stack Interview Questions
 			Constraints:
 				1 <= s.length <= 10^4
 				s consists of parentheses only '()[]{}'.
-
 		// Using map:
 			bool isValidParenthesis(string s) {
 				stack<char> st;
@@ -20283,7 +20282,6 @@ Lecture-55: Stack Interview Questions
 				}
 				return st.empty();
 			}
-
 		// without using map:
 			bool isValidParenthesis(string s) {
 				stack<char> st;
@@ -20300,7 +20298,6 @@ Lecture-55: Stack Interview Questions
 				}
 				return st.empty();
 			}
-
 		// using Stack:
 			class Solution {
 				public:
@@ -25446,8 +25443,7 @@ Lecture-66: Construct a Binary Tree from InOrder/PreOrder/PostOrder Traversal:
 			Node is as follows:
 			struct Node {
 				int data;
-				Node* left;
-				Node* right;
+				Node* left, * right;
 			};
 		*/
 		class Solution{
@@ -25464,8 +25460,7 @@ Lecture-66: Construct a Binary Tree from InOrder/PreOrder/PostOrder Traversal:
 				
 				int pos = findInInorder(in, element, n);
 				root -> left = solve(in, pre, n, start, pos-1, index);
-				root -> right = solve(in, pre, n, pos+1, end, index);
-				
+				root -> right = solve(in, pre, n, pos+1, end, index);	
 				return root;
 			}
 			Node* buildTree(int in[],int pre[], int n) {
@@ -31516,10 +31511,347 @@ Lecture 95: Dijkstra's Algorithm:
 				}
 				return dist;
 			}
+	// Practice:
+	Q. Longest Path In Directed Graph:
+		https://www.naukri.com/code360/problems/longest-path-in-directed-graph_1172157
+		Problem statement
+			You are given a Weighted Directed Acyclic Graph (DAG) consisting of ‘N’ nodes and ‘E’ directed edges. Nodes are numbered from 0 to ’N’-1. You are also given a source node ‘Src’ in it. Your task is to find the longest distances from ‘Src’ to all the nodes in the given graph.
+			Return an array of ‘N’ integers where ‘ith’ integer gives the maximum distance of the node ‘i’ from the source node ‘Src’.
+			A Directed Acyclic Graph (DAG) is a directed graph that contains no cycles.
+			Note:
+			Print -1 if a node is not reachable from the given source node.
+			Example:
+			Consider the following DAG consists of 5 nodes and 7 edges,  Let the source node ‘Src’ be 0.
+			Then the maximum distance of node 0 from the source node 0 is 0. (the distance of a node from itself is always 0).
+			The maximum distance of node 1 from the source node 0 is 3. The path that gives this maximum distance is 0 -> 1.
+			The maximum distance of node 2 from the source node 0 is 10. The path that gives this maximum distance is 0 -> 2.
+			The maximum distance of node 3 from the source node 0 is 15. The path that gives this maximum distance is 0 -> 2 -> 3.
+			The maximum distance of node 4 from the source node 0 is 54. The path that gives this maximum distance is 0 -> 1 -> 4.
+			Thus we should print 0 3 10 15 54
+			Constraints:
+				1 <= T <= 50
+				1 <= N <= 10^4
+				0 <= E <= 10^4
+				0 <= Src <= N-1
+				0 <= U, V <= N-1
+				1 <= W <= 10^5
+				Where ‘T’ is the total number of test cases, ‘N’, ‘E’, and ‘Src’ representing the number of nodes, number of edges, and the given source node in the given DAG respectively.  ‘U’, ‘V’, ‘W’ represents that there is a directed edge from node U to V having weight ‘W’. 
+			Time limit: 1 sec
+			Sample Input 1:
+			2
+			1 0 0
+			5 7 0
+			0 1 3
+			0 2 10
+			0 3 14
+			1 3 7
+			1 4 51
+			2 3 5
+			3 4 11
+			Sample Output 1:
+			0
+			0 3 10 15 54
+			Explanation of Sample Input 1:
+			Test case 1:
+			There is only one node, which is also the source node since the distance from the source node to itself is 0, so we will print only a single integer 0.
+			Test case 2:
+			See the problem statement for an explanation.
+			Sample Input 2:
+			2
+			5 4 2
+			0 1 1
+			0 2 1
+			1 2 1
+			3 4 1
+			5 4 0
+			0 1 1
+			0 2 1
+			1 2 1
+			3 4 1
+			Sample Output 2:
+			-1 -1 0 -1 -1
+			0  1  2 -1 -1
+		// Using Dijkstra algorithm: TC: O(V+E) & SC: O(V+E) paritially
+		#include <bits/stdc++.h> 
+		vector<int> findMaxDistances(int n, int src, vector<vector<int>> &edges) {
+			/*
+				Parameters of this function are -:
+				'n': Number of nodes in given directed graph.
+				'src': Source node.
+				'edges': list of all edges, such that the 'ith edge is a 
+						directed edge from 'edges[i][0]' to 'edges[i][1]' and have weight 'edges[i][2]'. 
+			*/
+			// creating adj list
+			int size = edges.size();
+			vector<list<pair<int, int>>> adjList(n);
+			for(int i=0; i<size; i++){
+				int u = edges[i][0], v = edges[i][1], weight = edges[i][2];
+				adjList[u].push_back({v, weight});
+			}
+			vector<int> mxDist (n, -1);
+			mxDist[src] = 0;
+			// <node, distance>
+			queue<pair<int, int>> q;
+			q.push({src, 0});
+			while(!q.empty()){
+				auto cur = q.front();
+				q.pop();
+				// visiting all their neighbours
+				for(auto nbr: adjList[cur.first]){
+					int val = nbr.second + cur.second;
+					if(mxDist[nbr.first] < val){
+						mxDist[nbr.first] = val;
+						q.push({nbr.first, val});
+					}
+				}
+			}
+			return mxDist;
+		}
+		// Using Topological sort:
+			#include <bits/stdc++.h> 
+			void topoSort(int i, stack<int> &st, vector<list<pair<int, int>>> &adjList, vector<int> &vis){
+				vis[i] = 1;
+				for(auto nbr: adjList[i]) if(!vis[nbr.first]) topoSort(nbr.first, st, adjList, vis);
+				st.push(i);
+			}
+			vector<int> findMaxDistances(int n, int src, vector<vector<int>> &edges) {
+				// creating adj list
+				int size = edges.size();
+				vector<list<pair<int, int>>> adjList(n);
+				for(int i=0; i<size; i++){
+					int u = edges[i][0], v = edges[i][1], weight = edges[i][2];
+					adjList[u].push_back({v, weight});
+				}
+				// Generating Topological order
+				vector<int> vis(n, 0);
+				stack<int> st;
+				for(int i=0; i<n; i++) if(!vis[i]) topoSort(i, st, adjList, vis);
+
+				vector<int> mxDist (n, -1);
+				mxDist[src] = 0;
+				while(!st.empty()){
+					int node = st.top();
+					st.pop();
+					if(mxDist[node] == -1) continue;
+					// visiting all their neighbours
+					for(auto nbr: adjList[node]){
+						int val = nbr.second + mxDist[node];
+						if(mxDist[nbr.first] < val) mxDist[nbr.first] = val;
+					}
+				}
+				return mxDist;
+			}
 ---------------------------------------------------------------------------------------------------------
+	18/02/25
 Lecture 96: Minimum Spanning Tree || Prim's Algorithm:
-	
+	Spanning Tree:
+		- When we convert graph into tree (Acyclic), so it contains N nodes & N-1 edges.
+		- Every node is reachable from any other node.
+		- The MST is the tree, which has minimum cost of weight out of all different forms of its tree,
+		eg.
+			this is graph:
+				      ²	 		 ³	
+				 0-----------1------2
+			     |		   / |     /
+			     |	 ⁸____/  |	  /
+				⁶|	 /		⁵|	 /⁷
+				 |	/		 |	/	
+				 ↓ /		 | /
+				 3	  		 4
+			Spanning Tree - 1 (should have N vertex & N-1 edges)		cost ==>  16 (sum of all weights)
+						²			³	
+					0------------1------2
+					|		     |					
+					|	         |
+				   ⁶|	  		⁵|	 
+					|	 		 |		
+					↓       	 | 
+					3	  		 4
+			Spanning Tree - 2 (should have N vertex & N-1 edges)		cost ==>  26
+				0 			 1		2
+				|		   / |     /
+				|	 ⁸____/  |	  /
+			   ⁶|	 /		⁵|	 /⁷
+				|	/		 |	/	
+				↓ /			 | /
+				3	  		 4
+			Spanning Tree - 3 (should have N vertex & N-1 edges)		cost ==>  18
+					²	 		 ³	
+				0-----------1------2
+						  / |
+					⁸____/  |
+				   /	   ⁵|
+				  /			|
+				 /			| 
+				3	  		4
+			Spanning Tree - 4 (should have N vertex & N-1 edges)		cost ==>  18
+					²	 		 ³	
+				0---------1---------2
+				|		           /
+				|	         	  /
+			   ⁶|	 			 / ⁷
+				|	 		 	/	
+				↓	  		   /
+				3	  		  4
+			Spanning Tree - 4 (should have N vertex & N-1 edges)		cost ==>  20
+					²	 		 ³	
+				0-----------1------2
+						  / 	  /
+					⁸____/ 	     /
+				   /		    / ⁷
+				  /			   /
+				 /			  /
+				3	  		 4
+			Spanning Tree - 5	cost ==>22
+				      ²	 		 
+				 0-----------1		2
+			     		   / |     /
+			     	 ⁸____/  |	  /
+					 /		⁵|	 /⁷
+				 	/		 |	/	
+				   /		 | /
+				 3	  		 4
+			Spanning Tree - 6	cost ==> 22
+				      	 		 ³	
+				 0			1------2
+			     |		   / |    
+			     |	 ⁸____/  |	  
+				⁶|	 /		⁵|	 
+				 |	/		 |		
+				 ↓ /		 |
+				 3	  		 4
+			Spanning Tree - 7	cost ==> 24
+				      	       ³	
+				 0			1------2
+			     |		   /       /
+			     |	 ⁸____/  	  /
+				⁶|	 /			 /⁷
+				 |	/		 	/	
+				 ↓ /		   /
+				 3	  		 4
+
+		 - out all other spanning tree the first one has mininmum cost, so the first is MST here.
+			Spanning Tree - 8	cost ==> 20
+				      ²	 		 
+				 0-----------1		2
+			     |		     |     /
+			     |	 		 |	  /
+				⁶|	 		⁵|	 / ⁷
+				 |			 |	/	
+				 ↓  		 | /
+				 3	  		 4
+		- out of these 8 different spanning tree of same tree the first one has mininmum cost, so the first is MST here.
+	Minimum Spanning Tree (MST):
+		A minimum spanning tree (MST) is defined as a spanning tree that has the minimum weight among all the possible spanning trees
+		A spanning tree is defined as a tree-like subgraph of a connected, undirected graph that includes all the vertices of the graph. Or, to say in Layman’s words, it is a subset of the edges of the graph that forms a tree (acyclic) where every node of the graph is a part of the tree.
+		The minimum spanning tree has all the properties of a spanning tree with an added constraint of having the minimum possible weights among all possible spanning trees. Like a spanning tree, there can also be many possible MSTs for a graph.
+
+	Q. Prim's MST:
+		Problem statement
+			You are given an undirected connected weighted graph having ‘N’ nodes numbered from 1 to 'N'. A matrix ‘E’ of size M x 2 is given which represents the ‘M’ edges such that there is an edge directed from node E[i][0] to node E[i][1]. You are supposed to return the minimum spanning tree where you need to return weight for each edge in the MST.
+			For example :
+			The MST (Minimum Spanning Tree) for the above graph is:
+			Constraints :
+			1 ≤ T ≤ 5
+			2 <= N <= 100
+			1 <= M <= min(1000, N(N - 1) / 2)
+			1 <= E[i][0], E[i][1] <= N
+			Time Limit: 1 sec
+			Sample Input 1 :
+			1
+			5 14
+			1 2 2
+			1 4 6
+			2 1 2
+			2 3 3
+			2 4 8
+			2 5 5
+			3 2 3
+			3 5 7
+			4 1 6
+			4 2 8
+			4 5 9
+			5 2 5
+			5 3 7
+			5 4 9
+			Sample Output 1 :
+			1 2 2
+			1 4 6
+			2 3 3
+			2 5 5
+			Explanation of Input 1 :
+			The Minimum spanning tree for the given graph will contain the edges: (1,2) with weight 2, (1,4) with weight 6, (2,3) with weight 3 and (2,5) with weight 5.
+			Sample Input 2 :
+			1
+			5 15
+			1 2 21
+			1 4 16
+			2 1 12
+			2 3 13
+			2 4 18
+			2 5 15
+			3 2 13
+			3 5 17
+			4 1 16
+			4 2 18
+			4 5 19
+			5 1 18
+			5 2 15
+			5 3 17
+			5 4 19
+			Sample Output 2 :
+			1 2 12
+			1 4 16
+			2 3 13
+			2 5 15
+			Explanation of Input 2 :
+			The Minimum spanning tree for the given graph will contain the edges: (1,2) with weight 12, (1,4) with weight 16, (2,3) with weight 13 and (2,5) with weight 15.
+		// TC: O(m + n²) & SC: O(m+n)
+			#include <bits/stdc++.h> 
+			vector<pair<pair<int, int>, int>> calculatePrimsMST(int n, int m, vector<pair<pair<int, int>, int>> &g) {
+				// creating a adjList
+				// <index, node, weight>
+				vector<vector<pair<int, int>>> adjList (n+1);
+				for(int i=0; i<m; i++){
+					// un-Directed graph
+					int u = g[i].first.first, v = g[i].first.second, w = g[i].second;
+					// cout<<u<<"\t"<<v<<"\t"<<w<<endl;
+					adjList[u].push_back({v, w});
+					adjList[v].push_back(make_pair(u, w));
+				}
+				// coz 1-based indexing
+				vector<int> dist(n+1, INT_MAX), parent(n+1, -1), MST (n+1, 0);
+				// considering Node-1 is source node here.
+				dist[1] = 0;
+				for(int i=1; i<n; i++){
+					int mini = INT_MAX, u=-1;
+					for(int j=1; j<=n; j++){
+						if(dist[j] < mini and MST[j] == 0){
+							mini = dist[j];
+							u = j;
+						}
+					}
+					// marking the min node visited
+					MST[u] = 1;
+					// visiting neighbour of u
+					for(auto it: adjList[u]){
+						int v = it.first, w = it.second;
+						if(dist[v] > w && MST[v] == 0){
+							parent[v] = u;
+							dist[v] = w;
+						}
+					}
+				}
+				vector<pair<pair<int, int>, int>> ans;
+				for(int i=2; i<=n; i++)
+					ans.push_back({{parent[i], i}, dist[i]});
+				return ans;
+			}	
+	// Using priority_queue:
+
 ---------------------------------------------------------------------------------------------------------
+Lecture 97: Kruskal's Algorithm || Disjoint Set || Union by Rank & Path Compression:
+
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
@@ -37511,7 +37843,6 @@ POTD:-[Problem of the Day]
 					1 <= 'n' <= 10^5
 					1 <= 'a[i]' <= 10^9
 					Time Limit: 1 sec
-
 		#include <bits/stdc++.h> 
 		vector<int> nextGreater(vector<int> &arr, int n) {
 			for(int i=0;i<n;i++){
@@ -37529,8 +37860,7 @@ POTD:-[Problem of the Day]
 				if(j==n)
 					arr[i] = -1;
 			}
-		}
-		
+		}	
 		//optimized
 		#include <bits/stdc++.h> 
 		vector<int> nextGreater(vector<int> &arr, int n) {
@@ -67396,7 +67726,6 @@ POTD:-[Problem of the Day]
 				4
 				Sample Output 1:
 				12 16 20 25
-
 		#include<bits/stdc++.h>
 		vector<int> kLargest(int arr[], int n, int k) {
 			sort(arr, arr+n);
@@ -67510,7 +67839,6 @@ POTD:-[Problem of the Day]
 				Sample Output 2:
 				0 1 2 2 10
 				12 20
-
 		#include <bits/stdc++.h> 
 		vector<int> Klargest(vector<int> &a, int k, int n) {
 			sort(a.begin(), a.end(), greater<int>());
@@ -120560,17 +120888,37 @@ POTD:-[Problem of the Day]
 			Constraints:
 				1 ≤ k ≤ arr.size() ≤ 10^6
 				1 ≤ arr[i] ≤ 10^6
-		
-		// Using Sorting O(n*log n)
+		// Using Sorting: TC: O(n*log n) & SC: O(k)
 			class Solution {
 				public:
 				vector<int> kLargest(vector<int>& arr, int k) {
-					vector<int> ans;
-					sort(arr.rbegin(), arr.rend());      // rbegin() & rend() for sorting in descending order
+					// sorting in descending order
+					// sort(arr.begin(), arr.end(), greater<int>());
+					// or
+					sort(arr.rbegin(), arr.rend());
+					vector<int> v;
 					int i=0;
-					while(k--)
-						ans.push_back(arr[i++]);
-					return ans;
+					while(k--) v.push_back(arr[i++]);
+					return v;
+				}
+			};
+			// or
+			vector<int> kLargest(vector<int>& arr, int k) {
+				sort(arr.rbegin(), arr.rend());
+				return vector<int> (arr.begin(), arr.begin()+k);
+			}
+		// Using Priority Queue: TC: O(n log n + k log k) & SC: O(n)
+			class Solution {
+				public:
+				vector<int> kLargest(vector<int>& arr, int k) {
+					priority_queue<int> mxHP;
+					vector<int> v;
+					for(int i: arr) mxHP.push(i);
+					while(k--){
+						v.push_back(mxHP.top());
+						mxHP.pop();
+					}
+					return v;
 				}
 			};
 
@@ -126082,16 +126430,649 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-1243)
-1244)
-1245)
-1246)
-1247)
-1248)
-1249)
-1250)
+	1243) K Closest Points to Origin:
+		Problem Statement:
+			Given an array of points where each point is represented as points[i] = [xi, yi] on the X-Y plane and an integer k, return the k closest points to the origin (0, 0).
+			The distance between two points on the X-Y plane is the Euclidean distance, defined as: 
+			sqrt( (x2 - x1)^2 + (y2 - y1)^2)
+			Note: You can return the k closest points in any order, driver code will sort them before printing.
+			Examples:
+			Input: k = 2, points[] = [[1, 3], [-2, 2], [5, 8], [0, 1]]
+			Output: [[-2, 2], [0, 1]]
+			Explanation: The Euclidean distances from the origin are:
+			Point (1, 3) = sqrt(10)
+			Point (-2, 2) = sqrt(8)
+			Point (5, 8) = sqrt(89)
+			Point (0, 1) = sqrt(1)
+			The two closest points to the origin are [-2, 2] and [0, 1].
+			Input: k = 1, points = [[2, 4], [-1, -1], [0, 0]]
+			Output: [[0, 0]]
+			Explanation: The Euclidean distances from the origin are:
+			Point (2, 4) = sqrt(20)
+			Point (-1, -1) = sqrt(2)
+			Point (0, 0) = sqrt(0)
+			The closest point to origin is (0, 0).
+			Constraints:
+				1 <= k <= points.size() <= 10^5
+				-10^4 <= xi, yi <= 10^4
+		// used Extra space: TC: O(n log n) & SC: O(n+k)
+		class Solution {
+			public:
+			vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+				vector<pair<int, vector<int>>> hold;
+				for(vector<int> cur: points){
+					int val = cur[0]*cur[0] + cur[1]*cur[1];
+					hold.push_back({val, cur});
+				}
+				sort(hold.begin(), hold.end());
+				vector<vector<int>> ans;
+				while(k--) ans.push_back(hold[k].second);
+				return ans;
+			}
+		};
+		// TC: O(n log n) & SC: O(1)
+			class Solution {
+				public:
+				static int sqr(vector<int> &a){
+					return a[0]*a[0] + a[1]*a[1];
+				}
+				static bool customSort(vector<int> &a, vector<int> &b){
+					return sqr(a) < sqr(b);
+				}
+				vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+					sort(points.begin(), points.end(), customSort);
+					return vector<vector<int>>(points.begin(), points.begin()+k);
+				}
+			};
+		// Using priority_queue: TC: O(n log k) & SC: O(k)
+			class Solution {
+				public:
+				int sqr(vector<int> &a){
+					return a[0]*a[0] + a[1]*a[1];
+				}
+				vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+					priority_queue<pair<int, vector<int>>> pq;
+					for(auto cur: points){
+						int dist = sqr(cur);
+						if(pq.size() < k) pq.push({dist, cur});
+						else{
+							if(pq.top().first > dist){
+								pq.pop();
+								pq.push({dist, cur});
+							} 
+						}
+					}
+					vector<vector<int>> ans;
+					while(!pq.empty())
+						ans.push_back(pq.top().second), pq.pop();
+					return ans;
+				}
+			};
+
+	1244) Merge K sorted linked lists (Refer POTD: 853)
+		Problem Statement:
+			Given an array arr[] of n sorted linked lists of different sizes. The task is to merge them in such a way that after merging they will be a single sorted linked list, then return the head of the merged linked list.
+			Examples:
+			Input: arr[] = [1 -> 2 -> 3, 4 -> 5, 5 -> 6, 7 -> 8]
+			Output: 1 -> 2 -> 3 -> 4 -> 5 -> 5 -> 6 -> 7 -> 8
+			Explanation:
+			The arr[] has 4 sorted linked list of size 3, 2, 2, 2.
+			1st list: 1 -> 2-> 3
+			2nd list: 4 -> 5
+			3rd list: 5 -> 6
+			4th list: 7 -> 8
+			The merged list will be:
+			Input: arr[] = [1 -> 3, 8, 4 -> 5 -> 6]
+			Output: 1 -> 3 -> 4 -> 5 -> 6 -> 8
+			Explanation:
+			The arr[] has 3 sorted linked list of size 2, 3, 1.
+			1st list: 1 -> 3
+			2nd list: 8
+			3rd list: 4 -> 5 -> 6
+			The merged list will be:
+			Constraints
+				1 <= total no. of nodes <= 10^5
+				1 <= node->data <= 10^3
+		/*Linked list Node structure
+		struct Node {
+			int data;
+			Node* next;
+			Node(int x){
+				data = x;
+				next = NULL;
+			}
+		};
+		*/
+		// Using extra space: TC: O(N * m) & SC:O(n*m)
+			class Solution {
+				public:
+				Node* mergeKLists(vector<Node*>& arr) {
+					vector<int> hold;
+					for(Node* cur: arr){
+						while(cur){
+							hold.push_back(cur->data);
+							cur = cur -> next;
+						}
+					}
+					Node *H, *T;
+					H = T = NULL;
+					sort(hold.begin(), hold.end());
+					for(int i: hold){
+						Node* cur = new Node(i);
+						if(!H){
+							H = T = cur;
+						}else{
+							T -> next = cur;
+							T = cur;
+						}
+					}
+					return H;
+				}
+			};
+
+		// Using priority_queue TC:O(N*m) & SC: O(m)
+			class CustomComparator{
+				public:
+				bool operator()(Node *a, Node *b){
+					return a->data > b->data;
+				}
+			};
+			class Solution {
+				public:
+				Node* mergeKLists(vector<Node*>& arr) {
+					priority_queue<Node*, vector<Node*>, CustomComparator> minHP;
+					for(Node* head: arr) minHP.push(head);
+					Node *H, *T;
+					H = T = NULL;
+					while(!minHP.empty()){
+						Node* cur = minHP.top();
+						minHP.pop();
+						if(cur->next) minHP.push(cur->next);
+						if(!H) H = T = cur;
+						else{
+							T->next = cur;
+							T = cur;
+						}
+					}
+					return H;
+				}
+			};
+
+	1245) Find median in a stream: (Refer Lect-77)
+		Problem Statement:
+			Given a data stream arr[] where integers are read sequentially, the task is to determine the median of the elements encountered so far after each new integer is read.
+			There are two cases for median on the basis of data set size.
+			1. If the data set has an odd number then the middle one will be consider as median.
+			2. If the data set has an even number then there is no distinct middle value and the median will be the arithmetic mean of the two middle values.
+			Examples:
+			Input:  arr[] = [5, 15, 1, 3, 2, 8]
+			Output: [5.0, 10.0, 5.0, 4.0, 3.0, 4.0] 
+			Explanation: 
+			After reading 1st element of stream – 5 -> median = 5.0
+			After reading 2nd element of stream – 5, 15 -> median = (5+15)/2 = 10.0 
+			After reading 3rd element of stream – 5, 15, 1 -> median = 5.0
+			After reading 4th element of stream – 5, 15, 1, 3 ->  median = (3+5)/2 = 4.0
+			After reading 5th element of stream – 5, 15, 1, 3, 2 -> median = 3.0
+			After reading 6th element of stream – 5, 15, 1, 3, 2, 8 ->  median = (3+5)/2 = 4.0
+			Input: arr[] = [2, 2, 2, 2]
+			Output: [2.0, 2.0, 2.0, 2.0]
+			Explanation: 
+			After reading 1st element of stream – 2 -> median = 2.0
+			After reading 2nd element of stream – 2, 2 -> median = (2+2)/2 = 2.0
+			After reading 3rd element of stream – 2, 2, 2 -> median = 2.0
+			After reading 4th element of stream – 2, 2, 2, 2 ->  median = (2+2)/2 = 2.0
+			Constraints:
+				1 <= arr.size() <= 10^5
+				1 <= x <= 10^6
+		// Not Optimized: TC: O(n² log n) & SC: O(n)
+			class Solution {
+				public:
+				vector<double> getMedian(vector<int> &arr) {
+					vector<double> ans, t;
+					int n = arr.size();
+					for(int i=0; i<n; i++){
+						t.push_back(arr[i]);
+						sort(t.begin(), t.end());
+						int size = t.size();
+						double d = (size&1) ? t[size/2] : (t[size/2]+t[size/2 - 1])/2;
+						ans.push_back(d);
+					}
+					return ans;
+				}
+			};
+		// Optimized: TC: (n log n) & SC: O(n) ❌Pending
+
+	1246) Parenthesis Checker: (Refer Lect-55)
+		Problem Statement:
+			Given a string s, composed of different combinations of '(' , ')', '{', '}', '[', ']', verify the validity of the arrangement.
+			An input string is valid if:
+				1. Open brackets must be closed by the same type of brackets.
+				2. Open brackets must be closed in the correct order.
+			Examples :
+			Input: s = "[{()}]"
+			Output: true
+			Explanation: All the brackets are well-formed.
+			Input: s = "[()()]{}"
+			Output: true
+			Explanation: All the brackets are well-formed.
+			Input: s = "([]"
+			Output: False
+			Explanation: The expression is not balanced as there is a missing ')' at the end.
+			Input: s = "([{]})"
+			Output: False
+			Explanation: The expression is not balanced as there is a closing ']' before the closing '}'.
+			Constraints:
+				1 ≤ s.size() ≤ 10^6
+				s[i] ∈ {'{', '}', '(', ')', '[', ']'}
+		// TC: O(n) & SC: O(n)
+			class Solution {
+				public:
+				bool isBalanced(string& s) {
+					stack<char> st;
+					for(char ch: s){
+						if(!st.empty()){
+							char c = st.top();
+							if((c == '(' and ch == ')') or (c == '[' and ch == ']') or (c=='{' and ch == '}')) st.pop();
+							else st.push(ch);
+						}else{
+							st.push(ch);
+						}
+					}
+					return !st.size() ? 1 : 0;
+					// return st.empty();
+				}
+			};
+
+	1247) Find Elements in a Contaminated Binary Tree:
+		Problem Statement:
+			Given a binary tree with the following rules:
+			root.val == 0
+			For any treeNode:
+			If treeNode.val has a value x and treeNode.left != null, then treeNode.left.val == 2 * x + 1
+			If treeNode.val has a value x and treeNode.right != null, then treeNode.right.val == 2 * x + 2
+			Now the binary tree is contaminated, which means all treeNode.val have been changed to -1.
+			Implement the FindElements class:
+			FindElements(TreeNode* root) Initializes the object with a contaminated binary tree and recovers it.
+			bool find(int target) Returns true if the target value exists in the recovered binary tree.
+			Example 1:
+			Input
+			["FindElements","find","find"]
+			[[[-1,null,-1]],[1],[2]]
+			   -1        recover to			0
+				 \		----------->		 \
+				 -1 						  2
+			Output
+			[null,false,true]
+			Explanation
+			FindElements findElements = new FindElements([-1,null,-1]); 
+			findElements.find(1); // return False 
+			findElements.find(2); // return True 
+			Example 2:
+			Input
+			["FindElements","find","find","find"]
+			[[[-1,-1,-1,-1,-1]],[1],[3],[5]]
+				-1								0
+				/ \      recover to			   / \
+			  -1  -1	------------->        1   2
+			  / \							 / \
+			-1  -1  						3   4
+			Output
+			[null,true,true,false]
+			Explanation
+			FindElements findElements = new FindElements([-1,-1,-1,-1,-1]);
+			findElements.find(1); // return True
+			findElements.find(3); // return True
+			findElements.find(5); // return False
+			Example 3:
+			Input
+			["FindElements","find","find","find","find"]
+			[[[-1,null,-1,-1,null,-1]],[2],[3],[4],[5]]
+				-1									0
+				  \	 								 \
+				   -1			recover to		      2
+				   /		  -------------->        /
+				 -1 								5
+				 /								   /
+			   -1								  11
+			Output
+			[null,true,false,false,true]
+			Explanation
+			FindElements findElements = new FindElements([-1,null,-1,-1,null,-1]);
+			findElements.find(2); // return True
+			findElements.find(3); // return False
+			findElements.find(4); // return False
+			findElements.find(5); // return True
+			Constraints:
+				TreeNode.val == -1
+				The height of the binary tree is less than or equal to 20
+				The total number of nodes is between [1, 104]
+				Total calls of find() is between [1, 104]
+				0 <= target <= 10^6
+		// Using Vector: TC: O(n) & SC: O(n)
+			/**
+			* Definition for a binary tree node.
+			* struct TreeNode {
+			*     int val;
+			*     TreeNode *left;
+			*     TreeNode *right;
+			*     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+			*     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+			*     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+			* };
+			*/
+			class FindElements {
+				public:
+				vector<int> hold;
+				void Correcting(TreeNode* tr, int v){
+					if(!tr) return;
+					tr -> val = v;
+					hold.push_back(v);
+					Correcting(tr->left, 2*v+1);
+					Correcting(tr->right, 2*v+2);
+				}
+				FindElements(TreeNode* root) {
+					Correcting(root, 0);
+				}
+				bool find(int target) {
+					return (std::find(hold.begin(), hold.end(), target) != hold.end());
+				}
+			};
+			/**
+			* Your FindElements object will be instantiated and called as such:
+			* FindElements* obj = new FindElements(root);
+			* bool param_1 = obj->find(target);
+			*/
+		// Using HasMap: TC: O(1) & SC: O(n)
+			class FindElements {
+				public:
+				unordered_map<int, int> isPresent;
+				void Correcting(TreeNode* tr, int v){
+					if(!tr) return;
+					tr -> val = v;
+					isPresent[v]++;
+					Correcting(tr->left, 2*v+1);
+					Correcting(tr->right, 2*v+2);
+				}
+				FindElements(TreeNode* root) {
+					Correcting(root, 0);
+				}
+				bool find(int target) {
+					return isPresent[target];
+				}
+			};
+
+	1248) Find Unique Binary String:
+		Problem Statement:
+			Given an array of strings nums containing n unique binary strings each of length n, return a binary string of length n that does not appear in nums. If there are multiple answers, you may return any of them.
+			Example 1:
+			Input: nums = ["01","10"]
+			Output: "11"
+			Explanation: "11" does not appear in nums. "00" would also be correct.
+			Example 2:
+			Input: nums = ["00","01"]
+			Output: "11"
+			Explanation: "11" does not appear in nums. "10" would also be correct.
+			Example 3:
+			Input: nums = ["111","011","001"]
+			Output: "101"
+			Explanation: "101" does not appear in nums. "000", "010", "100", and "110" would also be correct.
+			Constraints:
+				n == nums.length
+				1 <= n <= 16
+				nums[i].length == n
+				nums[i] is either '0' or '1'.
+				All the strings of nums are unique.
+		// TC: O(2^k * k * n) & SC: O(1)
+			class Solution {
+				public:
+				string findDifferentBinaryString(vector<string>& nums) {
+					int k = nums.size();
+					int n = 1 << k;
+					for(int i=0; i<n; i++){
+						string cur = bitset<16>(i).to_string().substr(16-k);
+						if(find(nums.begin(), nums.end(), cur) == nums.end()) return cur;
+					}
+					// we never reaches here.
+					throw;
+				}
+			};
+		// Using Cantor's Diagonal Argument: TC: O(n) & SC: O(1)
+			string findDifferentBinaryString(vector<string>& nums) {
+				string ans;
+				int n = nums.size();
+				for(int i=0; i<n; i++){
+					char ch = nums[i][i];
+					char coming = ch == '0' ? '1' : '0';
+					ans.push_back(coming);
+				}
+				return ans;
+			}
+
+	1249) Longest valid Parentheses: ❌Pending
+		Problem Statement:
+			Given a string s consisting of opening and closing parenthesis '(' and ')'. Find the length of the longest valid parenthesis substring.
+			A parenthesis string is valid if:
+			For every opening parenthesis, there is a closing parenthesis.
+			The closing parenthesis must be after its opening parenthesis.
+			Examples :
+			Input: s = "((()"
+			Output: 2
+			Explanation: The longest valid parenthesis substring is "()".
+			Input: s = ")()())"
+			Output: 4
+			Explanation: The longest valid parenthesis substring is "()()".
+			Input: s = "())()"
+			Output: 2
+			Explanation: The longest valid parenthesis substring is "()".
+			Constraints:
+				1 ≤ s.size() ≤ 10^6 
+				s consists of '(' and ')' only
+		// Not Optimized: TC: O(n³) & SC: O(n²)
+			class Solution {
+				public:
+				bool isValid(string &s){
+					stack<char> st;
+					int n = s.size();
+					for(int i=0; i<n; i++){
+						if(s[i] == '(') st.push(s[i]);
+						else{
+							if(st.empty()) return 0;
+							st.pop();
+						}
+					}
+					return st.empty();
+				}
+				int maxLength(string& s) {
+					int mxlen = 0, n=s.size();
+					vector<string> hold;
+					for(int i=0; i<n; i++){
+						string cur;
+						for(int j=i; j<n-1; j+=2){
+							cur.push_back(s[j]);
+							cur.push_back(s[j+1]);
+							hold.push_back(cur);
+						}
+					}
+					
+					for(string all: hold)
+						if(isValid(all)) mxlen = max(mxlen, (int)all.size());
+					return mxlen;
+				}
+			};
+		// Optimized: TC: O(n) & SC: O(1)
+			class Solution {
+				public:
+				int maxLength(string& s) {
+					stack<int>st;
+					st.push(-1);
+					int ans=0;
+					for(int i=0;i<s.length();i++){
+						if(s[i]=='(')
+						st.push(i);
+						else{
+							st.pop();
+							if(st.empty()) st.push(i);
+							else ans=max(ans,i-st.top());
+						}
+					}
+					return ans;
+				}
+			};
+
+	1250) Next Greater Element (Refer POTD: 30)
+		Problem Statement:
+			Given an array arr[ ] of integers, the task is to find the next greater element for each element of the array in order of their appearance in the array. Next greater element of an element in the array is the nearest element on the right which is greater than the current element.
+			If there does not exist next greater of current element, then next greater element for current element is -1. For example, next greater of the last element is always -1.
+			Examples
+				Input: arr[] = [1, 3, 2, 4]
+				Output: [3, 4, 4, -1]
+				Explanation: The next larger element to 1 is 3, 3 is 4, 2 is 4 and for 4, since it doesn't exist, it is -1.
+				Input: arr[] = [6, 8, 0, 1, 3]
+				Output: [8, -1, 1, 3, -1]
+				Explanation: The next larger element to 6 is 8, for 8 there is no larger elements hence it is -1, for 0 it is 1 , for 1 it is 3 and then for 3 there is no larger element on right and hence -1.
+				Input: arr[] = [10, 20, 30, 50]
+				Output: [20, 30, 50, -1]
+				Explanation: For a sorted array, the next element is next greater element also exxept for the last element.
+				Input: arr[] = [50, 40, 30, 10]
+				Output: [-1, -1, -1, -1]
+				Explanation: There is no greater element for any of the elements in the array, so all are -1.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^6
+				0 ≤ arr[i] ≤ 10^9
+		// TC: O(n) & SC:O(n)
+			vector<int> nextLargerElement(vector<int>& arr) {
+				int n = arr.size();
+				vector<int> ans (n, -1);
+				stack<int> st;
+				for(int i=n-1; i>=0; i--){
+					while(!st.empty()){
+						if(st.top() > arr[i]){
+							ans[i] = st.top();
+							break;
+						} 
+						else st.pop();
+					}
+					st.push(arr[i]);
+				}
+				return ans;
+			}
+
+	1251) Construct Binary Tree IV:
+		Problem Statement:
+			Given an integer array representing preorder traversal of a binary tree, and a boolean array that determines if the value at the corresponding index in the preorder sequence is a leaf node or an internal node, construct and return the full binary tree. A full binary tree is a tree in which every node has either 0 or 2 children.
+			Input:
+			preorder[] = [1, 2, 4, 5, 3, 6, 8, 9, 7]
+			isLeaf[]   = [0, 0, 1, 1, 0, 0, 1, 1, 1]	 (1 represents a leaf node, and 0 represents an internal node)
+			Output: Root of below binary tree
+			   1
+			 /   \
+			2	  3
+		   / \ 	 / \
+		  4	  5	6   7
+			   / \
+			  8	  9
+		/*
+			A binary tree node is defined as:
+			class Node {
+				public:
+				int data;									// data field
+				Node* left = nullptr, *right = nullptr;		// pointer to the left and right child
+				Node() {}
+				Node(int data): data(data) {}
+				Node(int data, Node *left, Node *right): data(data), left(left), right(right) {}
+			};
+		*/
+		class Solution {
+			public:
+			Node* constructor(vector<int> const &pre, vector<int> const &isLeaf, int &index){
+				if(index >= pre.size()) return NULL;
+				Node* cur = new Node(pre[index]);
+				if(isLeaf[index++]) return cur;
+				cur -> left = constructor(pre, isLeaf, index);
+				cur -> right = constructor(pre, isLeaf, index);
+				return cur;
+			}
+			Node* constructBinaryTree(vector<int> const &preorder, vector<int> const &isLeaf) {
+				int index=0;
+				return constructor(preorder, isLeaf, index);
+			}
+		};
+
+	1252) Maximum of minimum for every window size
+		Problem Statement:
+			Given an array of integers arr[], the task is to find the maximum of the minimum values for every possible window size in the array, where the window size ranges from 1 to arr.size().
+			More formally, for each window size k, determine the smallest element in all windows of size k, and then find the largest value among these minimums where 1<=k<=arr.size().
+			Examples :
+			Input: arr[] = [10, 20, 30, 50, 10, 70, 30]
+			Output: [70, 30, 20, 10, 10, 10, 10] 
+			Explanation: 
+				1. First element in output indicates maximum of minimums of all windows of size 1. Minimums of windows of size 1 are [10], [20], [30], [50], [10], [70] and [30]. Maximum of these minimums is 70. 
+				2. Second element in output indicates maximum of minimums of all windows of size 2. Minimums of windows of size 2 are [10], [20], [30], [10], [10], and [30]. Maximum of these minimums is 30. 
+				3. Third element in output indicates maximum of minimums of all windows of size 3. Minimums of windows of size 3 are [10], [20], [10], [10] and [10]. Maximum of these minimums is 20. 
+				Similarly other elements of output are computed.
+			Input: arr[] = [10, 20, 30]
+			Output: [30, 20, 10]
+				Explanation: First element in output indicates maximum of minimums of all windows of size 1. Minimums of windows of size 1 are [10] , [20] , [30]. Maximum of these minimums are 30 and similarly other outputs can be computed
+			Constraints:
+				1 <= arr.size() <= 10^5
+				1 <= arr[i] <= 10^6
+		// Purely Brute force: Not Optimized: TC:O(n³) & SC: O(n²)
+			class Solution {
+				public:
+				vector<int> maxOfMins(vector<int>& arr) {
+					vector<int> ans;
+					int n = arr.size();
+					for(int i=0; i<n; i++){
+						int size = i+1;
+						vector<int> temp2;
+						for(int j=0; j<n-i; j++){
+							int k = size, z=j;
+							vector<int> temp1;
+							while(k--) temp1.push_back(arr[z++]);
+							int v1 = *min_element(temp1.begin(), temp1.end());
+							temp2.push_back(v1);
+						}
+						int val = *max_element(temp2.begin(), temp2.end());
+						ans.push_back(val);
+					}
+					return ans;
+				}
+			};
+		// Little bit Optimized: TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				vector<int> maxOfMins(vector<int>& arr) {
+					vector<int> ans;
+					int n = arr.size();
+					for(int i=0; i<n; i++){
+						int size = i+1, v2 = INT_MIN;
+						for(int j=0; j<n-i; j++){
+							int k = size, z=j, v1=INT_MAX;
+							while(k--) v1 = min(v1, arr[z++]);
+							v2 = max(v2, v1);
+						}
+						ans.push_back(v2);
+					}
+					return ans;
+				}
+			};
+		// Optimized: ❌Pending
+
+1253)
+
+1254)
+
+1255)
+1256)
+1257)
+1258)
+1259)
+1260)
+
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
+---------------------------------------------------------------------------------------------------------
+# TechieDelight : https://www.techiedelight.com/ ❌Pending
 ---------------------------------------------------------------------------------------------------------
 #Hacker Rank Problems:
 	1) Plus Minus:
