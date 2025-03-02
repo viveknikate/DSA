@@ -31702,7 +31702,7 @@ Lecture 96: Minimum Spanning Tree || Prim's Algorithm:
 				  /			   /
 				 /			  /
 				3	  		 4
-			Spanning Tree - 5	cost ==>22
+			Spanning Tree - 5	cost ==> 22
 				      ²	 		 
 				 0-----------1		2
 			     		   / |     /
@@ -31729,8 +31729,6 @@ Lecture 96: Minimum Spanning Tree || Prim's Algorithm:
 				 |	/		 	/	
 				 ↓ /		   /
 				 3	  		 4
-
-		 - out all other spanning tree the first one has mininmum cost, so the first is MST here.
 			Spanning Tree - 8	cost ==> 20
 				      ²	 		 
 				 0-----------1		2
@@ -31740,12 +31738,16 @@ Lecture 96: Minimum Spanning Tree || Prim's Algorithm:
 				 |			 |	/	
 				 ↓  		 | /
 				 3	  		 4
-		- out of these 8 different spanning tree of same tree the first one has mininmum cost, so the first is MST here.
+			- out of these 8 different spanning tree of same tree the first one has mininmum cost, so the first is MST here.
 	Minimum Spanning Tree (MST):
 		A minimum spanning tree (MST) is defined as a spanning tree that has the minimum weight among all the possible spanning trees
 		A spanning tree is defined as a tree-like subgraph of a connected, undirected graph that includes all the vertices of the graph. Or, to say in Layman’s words, it is a subset of the edges of the graph that forms a tree (acyclic) where every node of the graph is a part of the tree.
 		The minimum spanning tree has all the properties of a spanning tree with an added constraint of having the minimum possible weights among all possible spanning trees. Like a spanning tree, there can also be many possible MSTs for a graph.
-
+	
+	- no.of spanning trees for COMPLETE UNDIRECTED GRAPH is nⁿ¯². complete graph means each vertex is connected to every other vertex
+	- if each edge has distinct weight then there will be only one & unique MST, else there might be more than one MST present.
+	- if graph is disconnected, then Spanning tree(ST) will not be possible.
+	- from complete graph you can remove maximum of (E-V+1) edges to make it spanning tree(ST), if you remove more than (e-v+1) then the graph will be disconnected.
 	Q. Prim's MST:
 		Problem statement
 			You are given an undirected connected weighted graph having ‘N’ nodes numbered from 1 to 'N'. A matrix ‘E’ of size M x 2 is given which represents the ‘M’ edges such that there is an edge directed from node E[i][0] to node E[i][1]. You are supposed to return the minimum spanning tree where you need to return weight for each edge in the MST.
@@ -31847,8 +31849,7 @@ Lecture 96: Minimum Spanning Tree || Prim's Algorithm:
 					ans.push_back({{parent[i], i}, dist[i]});
 				return ans;
 			}	
-	// Using priority_queue:
-
+		// Using priority_queue:
 ---------------------------------------------------------------------------------------------------------
 Lecture 97: Kruskal's Algorithm || Disjoint Set || Union by Rank & Path Compression:
 
@@ -52377,7 +52378,6 @@ POTD:-[Problem of the Day]
 			Given an array of integers Arr of size N and a number K. 
 			Return the maximum sum of a subarray of size K.
 			NOTE*: A subarray is a contiguous part of any given array.
-
 			Example 1:
 				Input:
 				N = 4, K = 2
@@ -52385,9 +52385,7 @@ POTD:-[Problem of the Day]
 				Output:
 				700
 				Explanation:
-				Arr3  + Arr4 =700,
-				which is maximum.
-
+				Arr3  + Arr4 =700, which is maximum.
 			Example 2:
 				Input:
 				N = 4, K = 4
@@ -52395,23 +52393,18 @@ POTD:-[Problem of the Day]
 				Output:
 				1000
 				Explanation:
-				Arr1 + Arr2 + Arr3 + Arr4 =1000,
-				which is maximum.
-
+				Arr1 + Arr2 + Arr3 + Arr4 =1000, which is maximum.
 			Your Task:
 				You don't need to read input or print anything. Your task is to complete the function 
 				maximumSumSubarray() which takes the integer K, 
 				vector Arr with size N, containing the elements of the array 
 				and returns the maximum sum of a subarray of size K.
-
 			Expected Time Complexity: O(N)
 			Expected Auxiliary Space: O(1)
-
 			Constraints:
-				1 <= N <= 105
-				1 <= Arri <= 105
+				1 <= N <= 10^5
+				1 <= Arr[i] <= 10^5
 				1 <= K <= N
-		
 		//not optimized
 			class Solution{
 				public:
@@ -52428,7 +52421,6 @@ POTD:-[Problem of the Day]
 					return mxr;
 				}
 			};
-
 		//optimized:
 			class Solution{   
 				public:
@@ -119265,16 +119257,14 @@ POTD:-[Problem of the Day]
 				1 ≤ k ≤ arr.size()
 				0 ≤ arr[i] ≤ 10^9
 
-		// Not Optimized:
+		// Not Optimized: TC: O(n*k) & SC: O(n-k+1)
 			class Solution {
 				public: // Function to find maximum of each subarray of size k.
 				vector<int> maxOfSubarrays(vector<int>& arr, int k) {
 					vector<int> ans;
 					int n = arr.size();
-					
 					for(int i=0; i<=n-k; i++){
 						int t = k, curMx = arr[i];
-						
 						while(t--) curMx = max(curMx, arr[i+t]);
 						ans.push_back(curMx);
 					}
@@ -119282,8 +119272,23 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-		// Optimized:
-			❌Pending
+		// Optimized: Using priority_queue: TC: O(n * log n) & SC:O(n)
+			vector<int> maxOfSubarrays(vector<int>& arr, int k) {
+				vector<int> ans;
+				int n = arr.size();
+				priority_queue<pair<int, int>> mxHP;
+				// creating first window of size k
+				for(int i=0; i<k; i++) mxHP.push({arr[i], i});
+				// storing the max value of first window of size k
+				ans.push_back(mxHP.top().first);
+				for(int i=k; i<n; i++){
+					mxHP.push({arr[i], i});
+					// if the top elements index is out of range
+					while(mxHP.top().second <= i - k) mxHP.pop();
+					ans.push_back(mxHP.top().first);
+				}
+				return ans;
+			}
 
 	1130) Strings Rotations of Each Other:
 		Problem Statement:
@@ -127058,17 +127063,620 @@ POTD:-[Problem of the Day]
 			};
 		// Optimized: ❌Pending
 
-1253)
+	1253) Maximum Absolute Sum of Any Subarray:
+		Problem Statement:
+			You are given an integer array nums. The absolute sum of a subarray [numsl, numsl+1, ..., numsr-1, numsr] is abs(numsl + numsl+1 + ... + numsr-1 + numsr).
+			Return the maximum absolute sum of any (possibly empty) subarray of nums.
+			Note that abs(x) is defined as follows:
+			If x is a negative integer, then abs(x) = -x.
+			If x is a non-negative integer, then abs(x) = x.
+			Example 1:
+			Input: nums = [1,-3,2,3,-4]
+			Output: 5
+			Explanation: The subarray [2,3] has absolute sum = abs(2+3) = abs(5) = 5.
+			Example 2:
+			Input: nums = [2,-5,1,-4,3,-2]
+			Output: 8
+			Explanation: The subarray [-5,1,-4] has absolute sum = abs(-5+1-4) = abs(-8) = 8.
+			Constraints:
+				1 <= nums.length <= 10^5
+				-10^4 <= nums[i] <= 10^4
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				int maxAbsoluteSum(vector<int>& nums) {
+					int mx = 0, n=nums.size();
+					for(int i=0; i<n; i++){
+						int s=0;
+						for(int j=i; j<n; j++){
+							s += nums[j];
+							mx = max(mx, abs(s));
+						}
+					}
+					return mx;
+				}
+			};
+		// Optimized: ❌Pending
 
-1254)
+	1254) Length of Longest Fibonacci Subsequence:
+		Problem Statement:
+			A sequence x1, x2, ..., xn is Fibonacci-like if: n >= 3
+			xi + xi+1 == xi+2 for all i + 2 <= n
+			Given a strictly increasing array arr of positive integers forming a sequence, return the length of the longest Fibonacci-like subsequence of arr. If one does not exist, return 0.
+			A subsequence is derived from another sequence arr by deleting any number of elements (including none) from arr, without changing the order of the remaining elements. For example, [3, 5, 8] is a subsequence of [3, 4, 5, 6, 7, 8].
+			Example 1:
+			Input: arr = [1,2,3,4,5,6,7,8]
+			Output: 5
+			Explanation: The longest subsequence that is fibonacci-like: [1,2,3,5,8].
+			Example 2:
+			Input: arr = [1,3,7,11,12,14,18]
+			Output: 3
+			Explanation: The longest subsequence that is fibonacci-like: [1,11,12], [3,11,14] or [7,11,18].
+			Constraints:
+				3 <= arr.length <= 1000
+				1 <= arr[i] < arr[i + 1] <= 10^9
+		// Not Optimized: TC: O(n⁴) & SC:O(1)
+			class Solution {
+				public:
+				void Check(vector<int>& arr, int i, int j, int &k, int &mxLen){
+					int n = arr.size();
+					// we only reach to this line when we have a length of at least 3.
+					// we are keeping 2, it should be 3, but increment operator will mess up
+					int curCnt=2;
+					for(; k<n; k++)
+						if(arr[i]+arr[j] == arr[k]){
+							i = j;
+							j = k;
+							curCnt++;
+						}
+					mxLen = max(mxLen, curCnt);
+				}
+				int lenLongestFibSubseq(vector<int>& arr) {
+					int mxLen=0, n=arr.size();
+					for(int i=0; i<n-2; i++)
+						for(int j=i+1; j<n-1; j++)
+							for(int k=j+1; k<n; k++)
+								if(arr[i]+arr[j] == arr[k])
+									Check(arr, i, j, k, mxLen);
+					return mxLen;        
+				}
+			};
+		// Optimized: ❌Pending
 
-1255)
-1256)
-1257)
-1258)
-1259)
-1260)
+	1255) Get Min from Stack:
+		Problem Statement:
+			Given q queries, You task is to implement the following four functions for a stack:
+			push(x) – Insert an integer x onto the stack.
+			pop() – Remove the top element from the stack.
+			peek() - Return the top element from the stack. If the stack is empty, return -1.
+			getMin() – Retrieve the minimum element from the stack in O(1) time. If the stack is empty, return -1.
+			Each query can be one of the following:
+			1 x : Push x onto the stack.
+			2 : Pop the top element from the stack.
+			3: Return the top element from the stack. If the stack is empty, return -1.
+			4: Return the minimum element from the stack.
+			Examples:
+			Input: q = 7, queries = [[1, 2], [1, 3], [3], [2], [4], [1, 1], [4]]
+			Output: [3, 2, 1]
+			Explanation: 
+			push(2): Stack is [2]
+			push(3): Stack is [2, 3]
+			peek(): Top element is 3
+			pop(): Removes 3, stack is [2]
+			getMin(): Minimum element is 2
+			push(1): Stack is [2, 1]
+			getMin(): Minimum element is 1
+			Input: q = 4, queries = [[1, 4], [1, 2], [4], [3]]
+			Output: [2, 2]
+			Explanation: 
+			push(4): Stack is [4]
+			push(2): Stack is [4, 2]
+			getMin(): Minimum element is 2
+			peek(): Top element is 2
+			Input: q = 5, queries = [[1, 10], [4], [1, 5], [4], [2]]
+			Output: [10, 5]
+			Explanation: 
+			push(10): Stack is [10]
+			getMin(): Minimum element is 10
+			push(5): Stack is [10, 5]
+			getMin(): Minimum element is 5
+			pop(): Removes 5, stack is [10]
+			Constraints:
+				1 <= q <= 10^5
+				0 <= values on the stack <= 10^9
+		// Not Optimized: TC:O(n) & SC:O(n)
+			class Solution {
+				public:
+				vector<int> v;
+				Solution() {
+					// code here
+				}
+				// Add an element to the top of Stack
+				void push(int x) {
+					// code here
+					v.push_back(x);
+				}
+				// Remove the top element from the Stack
+				void pop() {
+					// code here
+					if(v.empty()) return;
+					v.pop_back();
+				}
+				// Returns top element of the Stack
+				int peek() {
+					// code here
+					if(v.empty()) return -1;
+					return v.back();
+				}
+				// Finds minimum element of Stack
+				int getMin() {
+					// code here
+					if(v.size()) return *min_element(v.begin(), v.end());
+					return -1;
+				}
+			};
+		// Optimized: TC: O(1) & SC:(n)
+		class Solution {
+			public:
+			vector<int> v;
+			int mn = INT_MAX;
+			Solution() {}
+			// Add an element to the top of Stack
+			void push(int x) {
+				// code here
+				if(x < mn){
+					v.push_back(mn);
+					mn = x;
+				}
+				v.push_back(x);
+			}
+			// Remove the top element from the Stack
+			void pop() {
+				// code here
+				if(v.empty()) return;
+				if(mn == v.back()){
+					v.pop_back();
+					mn = v.back();
+				}
+				v.pop_back();
+			}
+			// Returns top element of the Stack
+			int peek() {
+				// code here
+				if(v.empty()) return -1;
+				return v.back();
+			}
+			// Finds minimum element of Stack
+			int getMin() {
+				// code here
+				if(v.size()) return mn;
+				return -1;
+			}
+		};
 
+	1256) Path With Minimum Effort:
+		https://www.geeksforgeeks.org/problems/path-with-minimum-effort/1
+		Problem Statement:
+			You are a hiker preparing for an upcoming hike. You are given heights[][], a 2D array of size rows x columns, where heights[row][col] represents the height of cell (row, col). You are situated in the top-left cell, (0, 0), and you hope to travel to the bottom-right cell, (rows-1, columns-1) (i.e., 0-indexed). You can move up, down, left, or right, and you wish to find the route with minimum effort.
+			Note: A route's effort is the maximum absolute difference in heights between two consecutive cells of the route.
+			Example 1:
+			Input:
+			row = 3
+			columns = 3 
+			heights = [[1,2,2],[3,8,2],[5,3,5]]
+			Output: 
+			2
+			Explaination: 
+			The route 1->3->5->3->5 has a maximum absolute difference of 2 in consecutive cells. This is better than the route 1->2->2->2->5, where the maximum absolute difference is 3.
+			Example 2:
+			Input:
+			row = 2
+			columns = 2 
+			heights = [[7,7],[7,7]]
+			Output: 
+			0
+			Explaination: 
+			Any route from the top-left cell to the bottom-right cell has a maximum absolute difference of 0 in consecutive cells.
+			Your Task:
+				You don't need to read input or print anything. Your task is to complete the function MinimumEffort() which takes intergers rows, columns, and the 2D array heights[][]  and returns the minimum effort required to travel from the top-left cell to the bottom-right cell.
+				Expected Time Complexity: O(rowsxcolumns)
+				Expected Space Complexity: O(rowsxcolumns)
+			Constraints:
+				1 <= rows, columns <= 100
+				rows == heights.length
+				columns == heights[i].length
+				0 <= heights[i][j] <= 10^6
+		// Not Optimized: Recursive Brute Force: TC: O(R*C) & SC: O(R*C)
+			class Solution {
+				public:
+				void solve(vector<vector<int>> &H, vector<vector<int>> &vis, int r, int c, int p, int val, int &a){
+					int n = H.size(), col = H[0].size();
+					if(r == n-1 and c == col-1){
+						val = max(val, abs(p-H[r][c]));
+						a=min(a, val);
+						return;
+					} 
+					if(r >= H.size() or c >= H[0].size() or r < 0  or c <0 or vis[r][c]) return;
+					vis[r][c] = 1;
+					val = max(val, abs(p-H[r][c]));
+					// UP
+					solve(H, vis, r-1, c, H[r][c], val, a);
+					// right
+					solve(H, vis, r, c+1, H[r][c], val, a);
+					// bottom
+					solve(H, vis, r+1, c, H[r][c], val, a);
+					// left
+					solve(H, vis, r, c-1, H[r][c], val, a);
+					vis[r][c]=0;
+				}
+				int MinimumEffort(int rows, int columns, vector<vector<int>> &heights) {
+					if(rows == 0 || columns == 0 || (rows == 1 and columns == 1)) return 0;
+					int ans = INT_MAX, prev = heights[0][0], cur = 0;
+					vector<vector<int>> vis(rows, vector<int>(columns, 0));
+					vis[0][0] = 1;
+					// going rightside
+					solve(heights, vis, 0, 1, prev, cur, ans);
+					// going downward
+					solve(heights, vis, 1, 0, prev, cur, ans);
+					return ans;
+				}
+			};
+		// Optimized: (Refer POTD: 1257)
+	1257) Path With Minimum Effort: (Refer POTD: 1256)
+		https://www.naukri.com/code360/problems/path-with-minimum-effort_1380958
+		Problem statement
+			You are given heights, a 2D array of size 'rows' x 'columns', where heights[row][col] represents the height of a cell (which would contain a row and column).
+			You are a Ninja training for an upcoming battle. You are situated in the top-left cell, (0, 0), and you hope to travel to the bottom-right cell, (rows-1, columns-1) (i.e., 0-indexed).
+			You can move up, down, left, or right, and you wish to find a route that requires the minimum time. A route's time is the maximum absolute difference in heights between two consecutive cells of the route.
+			You must return the minimum time required to travel from the top-left cell to the bottom-right cell.
+			For Example:
+			Input: 'heights' = [[1, 8, 8],[3, 8, 9],[5,3,5]]
+			Output: 2
+			Explanation: The route of [1,3,5,3,5] has a maximum absolute difference of 2 in consecutive cells.
+			Sample Input 1:
+			3 3
+			1 2 3
+			3 8 4
+			5 3 5
+			Sample output 1:
+			1 
+			Explanation:
+			The figure above describes the following heights list (array). 
+			Here, The route of [1,2,3,4,5] has a maximum absolute difference of 1 in consecutive cells, which is better than the route [1,3,5,3,5].
+			Sample Input 2:
+			3 3
+			1 3 1
+			9 9 3
+			9 9 1
+			Sample output 2:
+			2
+			Constraint :
+				rows == heights.length
+				columns == heights[i].length
+				1 <= rows, columns <= 100
+				1 <= heights[i][j] <= 10^6
+				Where ‘rows’ is the number of rows and ‘columns’ is the number of columns. 
+				Time Limit: 1 sec
+		// Optimized: ❌Pending
+
+	1258) Evaluation of Postfix Expression:	
+		Problem Statement:
+			You are given an array of strings arr that represents a valid arithmetic expression written in Reverse Polish Notation (Postfix Notation). Your task is to evaluate the expression and return an integer representing its value.
+			Key Details:
+			The valid operators are '+', '-', '*', and '/'.
+			Each operand is guaranteed to be a valid integer or another expression.
+			The division operation between two integers always rounds the result towards zero, discarding any fractional part.
+			No division by zero will occur in the input.
+			The input is a valid arithmetic expression in Reverse Polish Notation.
+			The result of the expression and all intermediate calculations will fit in a 32-bit signed integer.
+			Examples:
+			Input: arr = ["2", "3", "1", "*", "+", "9", "-"]
+			Output: -4
+			Explanation: If the expression is converted into an infix expression, it will be 2 + (3 * 1) – 9 = 5 – 9 = -4.
+			Input: arr = ["100", "200", "+", "2", "/", "5", "*", "7", "+"]
+			Output: 757
+			Explanation: If the expression is converted into an infix expression, it will be ((100 + 200) / 2) * 5 + 7  = 150 * 5 + 7 = 757.
+			Constraints:
+				1 <= arr.size() <= 10^5
+				arr[i] is either an operator: "+", "-", "*", or "/", or an integer in the range [-10^4, 10^4]
+		// TC: O(n) & SC:O(n)
+		class Solution {
+			public:
+			int evaluate(vector<string>& arr) {
+				stack<int> s;
+				for(string cur: arr){
+					if(cur == "+" or cur == "-" or cur == "*" or cur == "/"){
+						int v1 = s.top(); s.pop();
+						int v2 = s.top(); s.pop();
+						int ans = 0;
+						if(cur == "+"){
+							ans = v1 + v2;
+						}else if(cur == "*"){
+							ans = v1 * v2;
+						}else if(cur == "-"){
+							ans = v2 - v1;
+						}else{ //(cur == "/")
+							ans = v2 / v1;
+						}
+						s.push(ans);
+					}else{
+						s.push(stoi(cur));
+					}
+				}
+				return s.top();
+			}
+		};
+
+	1259) Merge Two 2D Arrays by Summing Values:
+		Problem Statement:
+			You are given two 2D integer arrays nums1 and nums2.
+			nums1[i] = [idi, vali] indicate that the number with the id idi has a value equal to vali.
+			nums2[i] = [idi, vali] indicate that the number with the id idi has a value equal to vali.
+			Each array contains unique ids and is sorted in ascending order by id.
+			Merge the two arrays into one array that is sorted in ascending order by id, respecting the following conditions:
+			Only ids that appear in at least one of the two arrays should be included in the resulting array.
+			Each id should be included only once and its value should be the sum of the values of this id in the two arrays. If the id does not exist in one of the two arrays, then assume its value in that array to be 0.
+			Return the resulting array. The returned array must be sorted in ascending order by id.
+			Example 1:
+			Input: nums1 = [[1,2],[2,3],[4,5]], nums2 = [[1,4],[3,2],[4,1]]
+			Output: [[1,6],[2,3],[3,2],[4,6]]
+			Explanation: The resulting array contains the following:
+			- id = 1, the value of this id is 2 + 4 = 6.
+			- id = 2, the value of this id is 3.
+			- id = 3, the value of this id is 2.
+			- id = 4, the value of this id is 5 + 1 = 6.
+			Example 2:
+			Input: nums1 = [[2,4],[3,6],[5,5]], nums2 = [[1,3],[4,3]]
+			Output: [[1,3],[2,4],[3,6],[4,3],[5,5]]
+			Explanation: There are no common ids, so we just include each id with its value in the resulting list.
+			Constraints:
+				1 <= nums1.length, nums2.length <= 200
+				nums1[i].length == nums2[j].length == 2
+				1 <= idi, vali <= 1000
+				Both arrays contain unique ids.
+				Both arrays are in strictly ascending order by id.
+		// TC: O(n1*n2 + (n1+n2) log (n1+n2)) & SC: O(n1+n2)
+			vector<vector<int>> mergeArrays(vector<vector<int>>& nums1, vector<vector<int>>& nums2) {
+				vector<vector<int>> ans = nums1;
+				for(auto v: nums2){
+					int id = v[0], val = v[1];
+					int found = 1;
+					for(auto &a: ans) {
+						if(a[0] == id){
+							a[1] += val;
+							found=0;
+						}
+					}
+					if(found) ans.push_back(v);                
+				}
+				sort(ans.begin(), ans.end());
+				return ans;
+			}
+		// TC: O(n1+n2) & SC: O(n1+n2)
+			class Solution {
+				public:
+				vector<vector<int>> mergeArrays(vector<vector<int>>& nums1, vector<vector<int>>& nums2) {
+					map<int, int> mp;
+					for(auto v: nums1) mp[v[0]] = v[1];
+					for(auto v: nums2) mp[v[0]] += v[1];
+					vector<vector<int>> ans;
+					for(auto cur: mp) ans.push_back({cur.first, cur.second}); 
+					return ans;
+				}
+			};
+		// Without Using Extra space: TC: O(n1+n2) & SC:O(1)
+			vector<vector<int>> mergeArrays(vector<vector<int>>& nums1, vector<vector<int>>& nums2) {
+				vector<vector<int>> ans;
+				int i, j, n1=nums1.size(), n2=nums2.size();
+				i=j=0;
+				while(i < n1 and j < n2){
+					if(nums1[i][0] < nums2[j][0]){
+						if(!ans.empty() and ans.back()[0] == nums1[i][0]) ans.back()[1] += nums1[i][1];
+						else ans.push_back(nums1[i]);
+						i++;
+					}else{
+						ans.push_back(nums2[j++]);
+					}
+				}
+				while(i < n1){
+					if(ans.back()[0] == nums1[i][0]) ans.back()[1] += nums1[i][1];
+					else ans.push_back(nums1[i]);
+					i++;
+				} 
+				while(j < n2) ans.push_back(nums2[j++]);
+				return ans;
+			}
+		// or Concise:
+			vector<vector<int>> mergeArrays(vector<vector<int>>& nums1, vector<vector<int>>& nums2) {
+				vector<vector<int>> ans;
+				int i, j, n1=nums1.size(), n2=nums2.size();
+				i=j=0;
+				while(i < n1 and j < n2){
+					int id1 = nums1[i][0], id2 = nums2[j][0], v1 = nums1[i][1], v2 = nums2[j][1];
+					if(id1 < id2) ans.push_back(nums1[i++]);
+					else if(id2 < id1) ans.push_back(nums2[j++]);
+					else ans.push_back({id1, v1+v2}), i++, j++;
+				}
+				while(i < n1) ans.push_back(nums1[i++]);
+				while(j < n2) ans.push_back(nums2[j++]);
+				return ans;
+			}
+
+	1260) Max Sum Subarray of size K: (Refer POTD: 221)
+		Problem Statement:
+			Given an array of integers arr[]  and a number k. Return the maximum sum of a subarray of size k. Note: A subarray is a contiguous part of any given array.
+			Examples:
+			Input: arr[] = [100, 200, 300, 400] , k = 2
+			Output: 700
+			Explanation: arr3  + arr4 = 700, which is maximum.
+			Input: arr[] = [100, 200, 300, 400] , k = 4
+			Output: 1000
+			Explanation: arr1 + arr2 + arr3 + arr4 = 1000, which is maximum.
+			Input: arr[] = [100, 200, 300, 400] , k = 1
+			Output: 400
+			Explanation: arr4 = 400, which is maximum.
+			Constraints:
+				1 <= arr.size() <= 10^6
+				1 <= arr[i]<= 10^6
+				1 <= k<= arr.size()
+		// Not Optimized: TC: O(n * k) & SC: O(1)
+			int maximumSumSubarray(vector<int>& arr, int k) {
+				int mxV = 0, n = arr.size();
+				for(int i=0; i<=n-k; i++){
+					int t = k, s=0;
+					while(t--) s += arr[i+t];
+					mxV = max(mxV, s);
+				}
+				return mxV;
+			}
+		// Optomized: Sliding Window: TC: (n) & SC: O(1)
+			int maximumSumSubarray(vector<int>& arr, int k) {
+				int mxV = 0, n = arr.size();
+				for(int i=0; i<k; i++) mxV += arr[i];
+				int cur = mxV;
+				for(int i=k; i<n; i++)
+					cur += arr[i], cur -= arr[i-k], mxV = max(mxV, cur);
+				return mxV;
+			}
+
+	1261) Finding the Subarray with Minimum Sum of Size K:
+		Problem Statement:
+			You are given an array of integers and you need to find a subarray of size K that has the minimum sum in all the subarray of size K.
+			Input Format
+				The first line contains two integers N and K, representing the size of the array and the size of the subarray, respectively.
+				The second line contains N space-separated integers representing the elements of the array.
+			Output Format
+				Output a single integer representing the minimum sum of a subarray of size K.
+			Constraints
+				1≤N≤10^5
+				1≤K≤N
+				0≤∣A[i]∣≤10^9
+			Sample 1:
+			Input
+			10 3
+			1 2 3 4 5 6 7 8 9 10
+			Output
+			6
+			Explanation:
+			The subarray with the minimum sum of size 3 is [1, 2, 3], and the sum is 6.
+			Sample 2:
+			Input
+			5 2
+			4 3 2 1 5
+			Output
+			3
+			Explanation:
+				The subarray with the minimum sum of size 2 is [1, 2], and the sum is 3.
+		#include <bits/stdc++.h>
+		using namespace std;
+		long long findMinSumSubarray(int n, int k, vector<int>& arr) {
+			long long minVal = 0;
+			for(int i=0; i<k; i++) minVal += arr[i];
+			
+			long long cur = minVal;
+			for(int i=k; i<n; i++) cur += arr[i], cur -= arr[i-k], minVal = min(cur, minVal);
+			return minVal;
+		}
+		int main() {
+			int n, k;
+			cin >> n >> k;
+			vector<int> arr(n);
+			for (int i = 0; i < n; i++) {
+				cin >> arr[i];
+			}
+			cout << findMinSumSubarray(n, k, arr) << endl;
+			return 0;
+		}
+
+	1262) Sum of minimum and maximum elements of all subarrays of size “K”:
+		Problem statement
+			You are given an array consisting of N integers, and an integer, K. Your task is to determine the total sum of the minimum element and the maximum element of all subarrays of size K.
+			Note :
+			The array may contain duplicate elements.
+			The array can also contain negative integers.
+			The size of the array is at least 2.
+			There exists at least one such subarray of size k.
+			Constraints :
+				1 <= T <= 10
+				1 <= N <= 10^5
+				1 <= K <= N
+				1 <= arr[i] <= 10^9
+			Time Limit: 1sec
+			Sample Input 1 :
+			1
+			5 3
+			1 2 3 4 5
+			Sample Output 1 :
+			18
+			Explanation for sample input 1 :
+			For the subarray starting from the 0th index and ending at the 2nd index, its minimum element is 1 and the maximum element is 3. Similarly, for the next subarray starting at the 1st index and ending at the 3rd index, the minimum value is 2 and the maximum is 4. And, for the last subarray, the minimum value is 3 and the maximum is 5. So, the total sum will be 1 + 3 + 2 + 4 + 3 + 5 = 18.
+			Sample Input 2 :
+			1
+			6 4
+			2 4 7 3 8 1
+			Sample Output 2 :
+			29
+			Explanation for sample input 2 :
+			For the subarray starting from the 0th index and ending at the 3rd index, its minimum element is 2 and the maximum element is 7. Similarly, for the next subarray starting at the 1st index and ending at the 4th index, the minimum value is 3 and the maximum is 8. And, for the last subarray, the minimum value is 1 and the maximum is 8. So, the total sum will be 2 + 7 + 3 + 8 + 1 + 8 = 29.
+		// Not Optimized: TC: O(n*k) & SC:O(1)
+			#include <bits/stdc++.h> 
+			long long sumOfMaxAndMin(vector<int> &nums, int n, int k) {
+				long long ans=0;
+				for(int i=0; i<=n-k; i++){
+					int mnV, mxV, t=k;
+					mnV = mxV = nums[i];
+					while(t--) mxV = max(mxV, nums[i+t]), mnV = min(mnV, nums[i+t]);
+					ans += (mnV + mxV);
+				}
+				return ans;
+			}
+		// Optimized: Using priority_queue: TC: O(n * log n) & SC: O(n)
+			#include <bits/stdc++.h>
+			#define pii pair<int, int>
+			long long sumOfMaxAndMin(vector<int> &nums, int n, int k) {
+				long long ans=0;
+				priority_queue<pii> mxHP;
+				priority_queue<pii, vector<pii>, greater<pii>> mnHP;
+
+				for(int i=0; i<k; i++) mxHP.push({nums[i], i}), mnHP.push({nums[i], i});
+				ans += mnHP.top().first + mxHP.top().first;
+				for(int i=k; i<n; i++){
+					mxHP.push({nums[i], i});
+					mnHP.push({nums[i], i});
+
+					// removing the elements which are out of range or window
+					while(mxHP.top().second <= i-k) mxHP.pop();
+					while(mnHP.top().second <= i-k) mnHP.pop();
+					ans += mnHP.top().first + mxHP.top().first;
+				}
+				return ans;
+			}
+		// Using Multiset: TC: O(n * log k) & SC: O(k)
+			#include <bits/stdc++.h>
+			long long sumOfMaxAndMin(vector<int> &nums, int n, int k) {
+				long long ans=0;
+				multiset<int> s;
+				for(int i=0; i<k; i++) s.insert(nums[i]);
+
+				int minV = *s.begin(), maxV = *s.rbegin(), startIndex = 0;
+				ans += minV + maxV;
+				for(int i=k; i<n; i++){
+					s.erase(s.find(nums[startIndex++]));
+					s.insert(nums[i]);
+					minV = *s.begin(), maxV = *s.rbegin();
+					ans += minV + maxV;
+				}
+				return ans;
+			}
+
+1263)
+1264)
+1265)
+1266)
+1267)
+1268)
+1269)
+1270)
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
