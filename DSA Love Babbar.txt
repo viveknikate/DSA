@@ -15568,15 +15568,12 @@ Lecture-37: Recursion-Subsets/ Subsequences of String
 		Given an integer array nums of unique elements, return all possible 
 		subsets(the power set).
 		The solution set must not contain duplicate subsets. Return the solution in any order.
-
 		Example 1:
 			Input: nums = [1,2,3]
 			Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
-
 		Example 2:
 			Input: nums = [0]
 			Output: [[],[0]]
-	
 		Constraints:
 			1 <= nums.length <= 10
 			-10 <= nums[i] <= 10
@@ -15672,7 +15669,6 @@ Lecture-37: Recursion-Subsets/ Subsequences of String
 				bbb
 				Sample Output 2:
 				b b b bb bb bb bbb
-
 		#include <bits/stdc++.h> 
 		void generator(string main, vector<string> &a, string s, int i){
 			if(i == main.size()){
@@ -15694,6 +15690,17 @@ Lecture-37: Recursion-Subsets/ Subsequences of String
 			string temp;
 			generator(str, ans, temp, 0);
 			return ans;
+		}
+
+	// or
+		void GenerateSubSequences(string &s, int idx, string cur, vector<string> &v){
+			if(idx > s.size()) return;
+			v.push_back(cur);
+			for(int i=idx; i<s.size(); i++){
+				cur.push_back(s[i]);
+				GenerateSubSequences(s, i+1, cur, v);
+				cur.pop_back();
+			}
 		}
 
 	HomeWork:
@@ -31848,12 +31855,317 @@ Lecture 96: Minimum Spanning Tree || Prim's Algorithm:
 				for(int i=2; i<=n; i++)
 					ans.push_back({{parent[i], i}, dist[i]});
 				return ans;
-			}	
-		// Using priority_queue:
----------------------------------------------------------------------------------------------------------
-Lecture 97: Kruskal's Algorithm || Disjoint Set || Union by Rank & Path Compression:
+			}
+			// Practice Map as adjList:
+				#include <bits/stdc++.h>
+				typedef pair<int, int> pii;
+				vector<pair<pair<int, int>, int>> calculatePrimsMST(int n, int m, vector<pair<pair<int, int>, int>> &g) {
+					// adjacency list
+					unordered_map<int, vector<pii>> adjList;
+					for(int i=0; i<m; i++){
+						int u = g[i].first.first, v = g[i].first.second, w = g[i].second;
+						adjList[u].push_back({v, w});
+						adjList[v].push_back({u, w});
+					}
 
+					vector<int> dist(n+1, INT_MAX), vis(n+1, 0), parent(n+1, -1);
+					int src = 1;
+					dist[src]=0;
+					for(int i=1; i<=n; i++){
+						int mini = INT_MAX, u = -1;
+						for(int z=1; z<=n; z++){
+							if(mini > dist[z] and !vis[z]){
+								mini = dist[z];
+								u = z;
+							}
+						}
+						vis[u] = 1;
+
+						for(auto nbr: adjList[u]){
+							int v = nbr.first, w = nbr.second;
+							if(w < dist[v] and !vis[v]){
+								dist[v] = w;
+								parent[v] = u;
+							}
+						}
+					}
+
+					vector<pair<pii, int>> ans;
+					for(int i=2; i<=n; i++){
+						int u = i, v = parent[i], w = dist[i];
+						ans.push_back({{u, v}, w});
+					}
+					return ans;
+				}
+		// Using priority_queue: TC: O((n+m) log n) & SC: O(m+n)
+			#include <bits/stdc++.h>
+			typedef pair<int, int> pii;
+			vector<pair<pair<int, int>, int>> calculatePrimsMST(int n, int m, vector<pair<pair<int, int>, int>> &g) {
+				// adjacency list
+				unordered_map<int, vector<pii>> adjList;
+				for(int i=0; i<m; i++){
+					int u = g[i].first.first, v = g[i].first.second, w = g[i].second;
+					adjList[u].push_back({v, w});
+					adjList[v].push_back({u, w});
+				}
+				vector<int> dist(n+1, INT_MAX), vis(n+1, 0), parent(n+1, -1);
+				int src = 1;
+				priority_queue<pii, vector<pii>, greater<pii>> minHP_dist;
+				dist[src] = 0;
+				minHP_dist.push({0, src});
+				while(!minHP_dist.empty()){
+					int u = minHP_dist.top().second;
+					minHP_dist.pop();
+					vis[u] = 1;
+
+					for(auto nbr: adjList[u]){
+						int v = nbr.first, w = nbr.second;
+						if(w < dist[v] and !vis[v]){
+							dist[v] = w;
+							minHP_dist.push({dist[v], v});
+							parent[v] = u;
+						}
+					}
+				}
+				vector<pair<pii, int>> ans;
+				for(int i=2; i<=n; i++){
+					int u = i, v = parent[i], w = dist[i];
+					ans.push_back({{u, v}, w});
+				}
+				return ans;
+			}
 ---------------------------------------------------------------------------------------------------------
+	09/03/25
+Lecture 97: Kruskal's Algorithm || Disjoint Set || Union by Rank & Path Compression:
+	# Disjoint Set:
+		- Type of data structure
+		- Used to confirm that given any 2 nodes are belongs to same component or different of graph.
+	- Two Main Operations:
+		1) findParent() or findSet()
+		2) Union() or UnionSet()
+	Graph: Disconnected graph
+		component = C
+			C1		 C2		 C3		 C4		 c5
+	nodes	1		 2		 3		 4 		 5
+	Parent	1		 2		 3		 4 		 5
+
+	#Union: After This operation the graphs component gets connected
+								parent		Graph
+		1) union(1,2)	----> 	 1			(1, 2)
+		2) union(4,5)	----> 	 4			(4, 5)
+		3) union(3,5)	----> 	 4			(4, 5, 3)
+		4) union(1,3)	----> 	 1			(1, 2, 3, 4, 5)
+	# Union by Rank & Path Compression:
+			C1		 C2		 C3		 C4		 C5		C6		C7
+	nodes	1		 2		 3		 4 		 5		 6		7
+	Parent	1		 2		 3		 4 		 5		 6		7
+	nodes	0	1	2	3	4	5	6	7
+	Rank    - 	0	0	0	0	0	0	0
+	1) Union(1,2)
+		- Parent of 1 is 1 and Parent of 2 is 2
+		- Rank of 1 is 0 and Rank of 2 is 0
+		- Ranks are SAME here, so 1 can become parent of 2 or viceversa
+		- parent[2] = 1;		// parent of 2 is one, so increase the rank of parent
+		- Rank[1]++;
+				C1		C3	C4	C5	C6	C7
+		nodes	(1,2)	3	4 	5	6	7
+		Parent	1		3	4 	5	6	7
+		nodes	0	1	3	4	5	6	7
+		Rank    - 	1	0	0	0	0	0
+	2) Union(2,3)
+		- Parent of 2 is 1 and Parent of 3 is 3
+		- Rank of 1 is 1 and Rank of 3 is 0
+		- Ranks are DIFFERENT here. 3 has lesser rank so parent[3] = 1
+		- attaching the smaller tree (less rank node) to bigger tree(high rank node). this will reduces the depth/ height of tree
+				C1			C4	C5	C6	C7
+		nodes	(1,2, 3)	4 	5	6	7
+		Parent	1			4 	5	6	7
+		nodes	0	1	4	5	6	7
+		Rank    - 	1	0	0	0	0
+	3) Union(4,5)
+		- Parent of 4 is 4 and Parent of 5 is 5
+		- Rank of 4 is 0 and Rank of 5 is 0
+		- Ranks are SAME here, so 4 can become parent of 5 or vicevers
+		- parent[5] = 4;		// parent of 5 is four, increase the rank of parent
+		- Rank[4]++;
+
+				C1			C4		C6	C7
+		nodes	(1,2, 3)	(4, 5)	6	7
+		Parent	1			4 		6	7
+		nodes	0	1	4	6	7
+		Rank    - 	1	1	0	0
+	4) Union(6,7)
+		- Parent of 6 is 6 and Parent of 7 is 7
+		- Rank of 6 is 0 and Rank of 7 is 0
+		- Ranks are SAME here, so 6 can become parent of 7 or vicevers
+		- parent[7] = 6;		// parent of 7 is six
+		- Rank[6]++;
+		
+				C1			C4		C6
+		nodes	(1, 2, 3)	(4, 5)	(6, 7)
+		Parent	1			4 		6
+
+		nodes	0	1	4	6	
+		Rank    - 	1	1	1
+	5) Union(5,6)
+		- Parent of 5 is 4 and Parent of 6 is 6
+		- Rank of 4 is 1 and Rank of 6 is 1
+		- Ranks are SAME here, so 4 can become parent of 6 or vice
+		- parent[6] = 4;		// parent of 6 is four
+		- Rank[4]++;
+				C1			C4		
+		nodes	(1, 2, 3)	(4, 5, 6, 7)
+		Parent	1			4
+
+		nodes	0	1	4	
+		Rank    - 	1	2
+	6) Union(3,7)
+		- ultimate parent of 3 is 1 and ultimate parent of 7 is 4
+		- Rank of 1 is 1 and Rank of 4 is 2
+		- Ranks are DIFFERENT here. 1 has lesser rank.
+		- Parent[1] = 4
+				C4		
+		nodes	(1, 2, 3, 4, 5, 6, 7)
+		Parent	4
+		nodes	0	4	
+		Rank    - 	2
+	Q. Disjoint set (Union-Find):
+		Problem Statement:
+			Given an array par[] that stores all number from 1 to n (both inclusive and sorted) and k queries.
+			The task is to do the following operations on array elements :
+			1. UNION x z : Perform union of x and z i.e. parent of z will become the parent of x.
+			2. FIND x: Find the ultimate parent of x and print it.
+			Note: Initially all are the parent of themselves.The ultimate parent is the topmost node such that par[node]=node.
+			Input: n = 5, k = 4, queries[] = {{find 4}, {find 1}, {unionSet 3 1}, {find 3}}
+			Output: 4 1 1
+			Explanation:
+			1. The parent of 4 is 4. Hence the output is 4.
+			2. The parent of 1 is 1. Hence the output is 1.
+			3. After performing unionSet 3 1, parent of 3 becomes 1, since, parent of 1 is currently 1 itself.
+			4. The parent of 3 is now 1. Hence, the output is 1.
+			Constraints:
+				1 <= n,k <= 100
+		/*Complete the functions below*/
+		int find(int par[], int x) {
+			if(par[x] == x) return x;
+			return par[x] = find(par, par[x]);
+		}
+		void unionSet(int par[], int x, int z) {
+			int u = find(par, x);
+			int v = find(par, z);
+			par[u] = v;
+		}		
+	Q. Minimum Spanning Tree:
+		Problem statement
+			You are given an undirected, connected and weighted graph G(V, E), consisting of V number of vertices (numbered from 0 to V-1) and E number of edges.
+			Find and print the total weight of the Minimum Spanning Tree (MST) using Kruskal's algorithm.
+			By definition, a minimum weight spanning tree is a subset of the edges of a connected, edge-weighted undirected graph that connects all the vertices together, without any cycles and with the minimum possible total edge weight.
+			Constraints :
+				2 <= V <= 10^5
+				1 <= E <= 3 * 10^5
+				0 <= X < N
+				0 <= Y < N
+				1 <= W <= 10^4
+			where V and E represent the number of vertices and edges respectively.
+			X and Y represent the vertices between which there is an edge.
+			W is the weight of the edge.
+			Time limit: 1sec
+			Sample Input 1 :
+			4 4
+			0 1 3
+			0 3 5
+			1 2 1
+			2 3 8
+			Sample Output 1 :
+			9
+			Explanation for Sample Input 1:
+			The edge (2,3) having weight 8 will be excluded from the MST. The total weight of the MST then will be 1 + 3 + 5 = 9.
+			Sample Input 2:
+			4 4
+			1 2 6
+			2 3 2
+			1 3 2
+			1 0 2
+			Sample Output 2:
+			6
+		// Using Prims algorithm:
+			#include<queue>
+			#include<climits>
+			typedef pair<int, int> pii;
+			int minimumSpanningTree(vector<vector<int>>& edges, int n) {
+				// Using Prim's Algorithm
+				vector<vector<pii>> adjList(n);
+				int e=edges.size();
+				for(int i=0; i<e; i++){
+					int u = edges[i][0], v = edges[i][1], wt = edges[i][2];
+					adjList[u].push_back({v, wt});
+					adjList[v].push_back({u, wt});
+				}
+				vector<int> vis(n, 0), parent(n, -1), dist(n, INT_MAX);
+				priority_queue<pii, vector<pii>, greater<pii>> minHP;
+				int src=0;
+				dist[src]=0;
+				minHP.push({0, src});
+				while(!minHP.empty()){
+					int u = minHP.top().second;
+					minHP.pop();
+					vis[u] = 1;
+					for(auto nbr: adjList[u]){
+						int v = nbr.first, wt = nbr.second;
+						if(!vis[v] and wt < dist[v]){
+						parent[v] = u;
+						dist[v] = wt;
+						minHP.push({wt, v});
+						}
+					}
+				}
+				// sum of dist array
+				int ans=0;
+				for(int i: dist) ans += i;
+				return ans;
+			}
+		// Using Kruskal's Algorithm: TC: O(m log m) & SC: O(n)	
+			#include<algorithm>
+			bool BasedOnWt(vector<int> &a, vector<int> &b){
+				return a[2] < b[2];				// strict check shold be there.
+			}
+			int FindParent(vector<int> &parent, int node){
+				if(parent[node] == node) return node;
+				return parent[node] = FindParent(parent, parent[node]);				// path compression logic
+			}
+			void UnionSet(int u, int v, vector<int> &parent, vector<int> &Rank){
+				int uP = FindParent(parent, u);
+				int vP = FindParent(parent, v);
+
+				if(Rank[uP] < Rank[vP]) parent[uP] = vP;
+				else if(Rank[uP] > Rank[vP]) parent[vP] = uP;
+				else parent[uP] = vP, Rank[vP]++;       // or else parent[vP] = uP, Rank[uP]++;
+			}
+			int minimumSpanningTree(vector<vector<int>>& edges, int n) {
+				// sort(edges.begin(), edges.end(), BasedOnWt);    // sorting the edges vector based on weights. weights lies in 3rd column ie. 2nd index
+				sort(edges.begin(), edges.end(), [](vector<int> &a, vector<int> &b){
+					return a[2] < b[2];
+				});
+				
+				vector<int> parent(n), Rank(n, 0);
+				for(int i=0; i<n; i++) parent[i] = i;
+				int e = edges.size(), ans=0;
+				for(int i=0; i<e; i++){
+					int u = edges[i][0], v = edges[i][1], wt = edges[i][2];
+					int uP = FindParent(parent, u), vP = FindParent(parent, v);
+					// if uP == vP  it means they belongs to same component of graph, we no joining.
+					// if they doesn't belong to same component, means they are disconnected so connect them
+					if(uP != vP){
+						ans += wt;
+						UnionSet(uP, vP, parent, Rank);
+					} 
+				}
+				return ans;
+			}	
+---------------------------------------------------------------------------------------------------------
+	10/03/25
+Lecture 98: Bridges in a Graph || C++ Placement Series
+
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -127669,14 +127981,543 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 
-1263)
-1264)
-1265)
-1266)
-1267)
-1268)
-1269)
-1270)
+	1263) Longest Bounded-Difference Subarray:
+		Problem Statement:
+			Given an array of positive integers arr[] and a non-negative integer x, the task is to find the longest sub-array where the absolute difference between any two elements is not greater than x.
+			If multiple such subarrays exist, return the one that starts at the smallest index.
+			Examples: 
+			Input: arr[] = [8, 4, 2, 6, 7], x = 4 
+			Output: [4, 2, 6] 
+			Explanation: The sub-array described by index [1..3], i.e. [4, 2, 6] contains no such difference of two elements which is greater than 4.
+			Input: arr[] = [15, 10, 1, 2, 4, 7, 2], x = 5 
+			Output: [2, 4, 7, 2] 
+			Explanation: The sub-array described by indexes [3..6], i.e. [2, 4, 7, 2] contains no such difference of two elements which is greater than 5. 
+			Constraints:
+				1 <= arr.size() <= 10^5
+				1 <= arr[i] <= 10^9
+				0 <= x<= 10^9
+		// Not Optimized: TC: O(n³) & SC: O(n)
+			bool isAbsoluteDiffIsLessThanX(vector<int> &t, int num, int x){
+				for(int i: t)
+					if(abs(i - num) > x) return 0;
+				return 1;
+			}
+			vector<int> longestSubarray(vector<int>& arr, int x) {
+				vector<int> ans;
+				int n = arr.size();
+				for(int i=0; i<n; i++){
+					vector<int> t = {arr[i]};
+					for(int j=i+1; j<n; j++){
+						if(isAbsoluteDiffIsLessThanX(t, arr[j], x)) t.push_back(arr[j]);
+						else break;
+					}
+					if(t.size() > ans.size()) ans = t;
+				}
+				return ans;
+			}
+			// or : TC: O(n²) & SC: O(n)
+				vector<int> longestSubarray(vector<int>& arr, int x) {
+					vector<int> ans;
+					int i, j, n = arr.size();
+					i = j = 0;
+					while(j < n){
+						int k = j;
+						while(k >= i){
+							if(abs(arr[j] - arr[k]) > x) i++;
+							else k--;
+						}
+						if(j - i + 1 > ans.size()){
+							ans.clear();
+							for(int z=i; z<=j; z++) ans.push_back(arr[z]);
+						}
+						j++;
+					}	
+					return ans;
+				}
+		// Optimized: ❌Pending
+			
+	1264) Partition Array According to Given Pivot:
+		Problem Statement:
+			You are given a 0-indexed integer array nums and an integer pivot. Rearrange nums such that the following conditions are satisfied:
+			Every element less than pivot appears before every element greater than pivot.
+			Every element equal to pivot appears in between the elements less than and greater than pivot.
+			The relative order of the elements less than pivot and the elements greater than pivot is maintained.
+			More formally, consider every pi, pj where pi is the new position of the ith element and pj is the new position of the jth element. If i < j and both elements are smaller (or larger) than pivot, then pi < pj.
+			Return nums after the rearrangement.
+			Example 1:
+			Input: nums = [9,12,5,10,14,3,10], pivot = 10
+			Output: [9,5,3,10,10,12,14]
+			Explanation: 
+			The elements 9, 5, and 3 are less than the pivot so they are on the left side of the array.
+			The elements 12 and 14 are greater than the pivot so they are on the right side of the array.
+			The relative ordering of the elements less than and greater than pivot is also maintained. [9, 5, 3] and [12, 14] are the respective orderings.
+			Example 2:
+			Input: nums = [-3,4,3,2], pivot = 2
+			Output: [-3,2,4,3]
+			Explanation: 
+			The element -3 is less than the pivot so it is on the left side of the array.
+			The elements 4 and 3 are greater than the pivot so they are on the right side of the array.
+			The relative ordering of the elements less than and greater than pivot is also maintained. [-3] and [4, 3] are the respective orderings.
+			Constraints:
+				1 <= nums.length <= 10^5
+				-10^6 <= nums[i] <= 10^6
+				pivot equals to an element of nums.
+		class Solution {
+			public:
+			vector<int> pivotArray(vector<int>& nums, int pivot) {
+				vector<int> LessPivot, Pivot, GreatPivot;
+				for(int i: nums)
+					if(i == pivot) Pivot.push_back(i);
+					else if(i < pivot) LessPivot.push_back(i);
+					else GreatPivot.push_back(i);
+
+				// vector<int> ans;
+				// ans.insert(ans.end(), LessPivot.begin(), LessPivot.end()); 
+				// ans.insert(ans.end(), Pivot.begin(), Pivot.end()); 
+				// ans.insert(ans.end(), GreatPivot.begin(), GreatPivot.end());
+				// return ans;
+				// or instead of above
+				LessPivot.insert(LessPivot.end(), Pivot.begin(), Pivot.end());
+				LessPivot.insert(LessPivot.end(), GreatPivot.begin(), GreatPivot.end());
+				return LessPivot;
+			}
+		};
+		// Optimized: Two Pointer
+			vector<int> pivotArray(vector<int>& nums, int pivot) {
+				int n = nums.size(), left=0, right=n-1;
+				vector<int> res (n, 0);
+				for(int i=0, j=n-1; i<n; i++, j--){
+					if(nums[i] < pivot) res[left++] = nums[i];
+					if(nums[j] > pivot) res[right--] = nums[j];
+				}
+				while(left <= right) res[left++] = pivot;
+				return res;
+			}
+
+	1265) Longest Common Subsequence:
+		Problem Statement:
+			Given two strings s1 and s2, return the length of their longest common subsequence (LCS). If there is no common subsequence, return 0.
+			A subsequence is a sequence that can be derived from the given string by deleting some or no elements without changing the order of the remaining elements. For example, "ABE" is a subsequence of "ABCDE".
+			Examples:
+				Input: s1 = "ABCDGH", s2 = "AEDFHR"
+				Output: 3
+				Explanation: The longest common subsequence of "ABCDGH" and "AEDFHR" is "ADH", which has a length of 3.
+				Input: s1 = "ABC", s2 = "AC"
+				Output: 2
+				Explanation: The longest common subsequence of "ABC" and "AC" is "AC", which has a length of 2.
+				Input: s1 = "XYZW", s2 = "XYWZ"
+				Output: 3
+				Explanation: The longest common subsequences of "XYZW" and "XYWZ" are "XYZ" and "XYW", both of length 3.
+			Constraints:
+				1<= s1.size(), s2.size() <=10^3
+				Both strings s1 and s2 contain only uppercase English letters.
+		// Not Optimized: TC:O(2ⁿ * 2^m) & SC: O(2ⁿ*n + 2^m * m) 
+			void GenerateSub(string &s, int ind, string cur, vector<string> &v){
+				if(ind > s.size()) return;
+				int n = s.size();
+				v.push_back(cur);
+				for(int i=ind; i<n; i++){
+					cur.push_back(s[i]);
+					GenerateSub(s, i+1, cur, v);
+					cur.pop_back();
+				}
+			}
+			int lcs(string &s1, string &s2) {
+				int mxLen = 0;
+				vector<string> v1, v2;
+				GenerateSub(s1, 0, "", v1);
+				GenerateSub(s2, 0, "", v2);
+				
+				for(int i=v1.size()-1; i>=0; i--)
+					if(find(v2.begin(), v2.end(), v1[i]) != v2.end()){
+						mxLen = max(mxLen, (int)v1[i].size());
+					}
+				return mxLen;
+			}
+		// Optimized: ❌Pending
+
+	1266) Find Missing and Repeated Values:
+		Problem Statement:
+			You are given a 0-indexed 2D integer matrix grid of size n * n with values in the range [1, n2]. Each integer appears exactly once except a which appears twice and b which is missing. The task is to find the repeating and missing numbers a and b.
+			Return a 0-indexed integer array ans of size 2 where ans[0] equals to a and ans[1] equals to b.
+			Example 1:
+			Input: grid = [[1,3],[2,2]]
+			Output: [2,4]
+			Explanation: Number 2 is repeated and number 4 is missing so the answer is [2,4].
+			Example 2:
+			Input: grid = [[9,1,7],[8,9,2],[3,4,6]]
+			Output: [9,5]
+			Explanation: Number 9 is repeated and number 5 is missing so the answer is [9,5].
+			Constraints:
+				2 <= n == grid.length == grid[i].length <= 50
+				1 <= grid[i][j] <= n * n
+				For all x that 1 <= x <= n * n there is exactly one x that is not equal to any of the grid members.
+				For all x that 1 <= x <= n * n there is exactly one x that is equal to exactly two of the grid members.
+				For all x that 1 <= x <= n * n except two of them there is exatly one pair of i, j that 0 <= i, j <= n - 1 and grid[i][j] == x.
+		vector<int> findMissingAndRepeatedValues(vector<vector<int>>& grid) {
+			int n = grid.size();
+			// 1-based indexing
+			vector<int> Freq (n*n+1, 0);
+			for(int i=0; i<n; i++)
+				for(int j=0; j<grid[i].size(); j++)
+					Freq[grid[i][j]]++;
+					
+			int repeated, missing;
+			repeated =  missing = 0;
+			for(int i=1; i<=n*n; i++)
+				if(Freq[i] == 0) missing = i;
+				else if(Freq[i] == 2) repeated = i;
+			
+			return {repeated, missing};
+		}
+
+	1267) Longest Palindromic Subsequence:
+		Problem Statement:
+			Given a string s, return the length of the longest palindromic subsequence.
+			A subsequence is a sequence that can be derived from the given sequence by deleting some or no elements without changing the order of the remaining elements.
+			A palindromic sequence is a sequence that reads the same forward and backward.
+			Examples:
+			Input: s = "bbabcbcab"
+			Output: 7
+			Explanation: Subsequence "babcbab" is the longest subsequence which is also a palindrome.
+			Input: s = "abcd"
+			Output: 1
+			Explanation: "a", "b", "c" and "d" are palindromic and all have a length 1.
+			Input: s = "agbdba"
+			Output: 5
+			Explanation: The longest palindromic subsequence is "abdba", which has a length of 5. The characters in this subsequence are taken from the original string "agbdba", and they maintain the order of the string while forming a palindrome.
+			Constraints:
+				1 ≤ s.size() ≤ 1000
+				The string contains only lowercase letters.
+		// Not Optimized: TC: O(2ⁿ * n) & SC:O(2ⁿ * n)
+			bool isPalindrom(string &s){
+				int i, j;
+				i=0, j = s.size()-1;
+				while(i < j) if(s[i++] != s[j--]) return 0;
+				return 1;
+			}
+			void GenerateSubSequences(string &s, int idx, string cur, vector<string> &v){
+				if(idx > s.size()) return;
+				v.push_back(cur);
+				for(int i=idx; i<s.size(); i++){
+					cur.push_back(s[i]);
+					GenerateSubSequences(s, i+1, cur, v);
+					cur.pop_back();
+				}
+			}
+			int longestPalinSubseq(string &s) {
+				vector<string> v;
+				GenerateSubSequences(s, 0, "", v);
+				int mx = 0;
+				for(string cur: v)
+					if(isPalindrom(cur))
+						mx = max(mx, (int)cur.size());
+				return mx;
+			}
+		// Space Not using:
+			bool isPalindrom(string &s){
+				int i, j;
+				i=0, j = s.size()-1;
+				while(i < j)
+					if(s[i++] != s[j--]) return 0;
+				return 1;
+			}
+			void GenerateSubSequences(string &s, int idx, string cur, int &mx){
+				if(idx > s.size()) return;
+				if(isPalindrom(cur)) mx = max(mx, (int)cur.size());
+				for(int i=idx; i<s.size(); i++){
+					cur.push_back(s[i]);
+					GenerateSubSequences(s, i+1, cur, mx);
+					cur.pop_back();
+				}
+			}
+			int longestPalinSubseq(string &s) {
+				vector<string> v;
+				int mx=0;
+				GenerateSubSequences(s, 0, "", mx);
+				return mx;
+			}
+		// Optimized: ❌Pending
+
+	1268) Closest Prime Numbers in Range:
+		Problem Statement:
+			Given two positive integers left and right, find the two integers num1 and num2 such that:
+			left <= num1 < num2 <= right .
+			Both num1 and num2 are prime numbers.
+			num2 - num1 is the minimum amongst all other pairs satisfying the above conditions.
+			Return the positive integer array ans = [num1, num2]. If there are multiple pairs satisfying these conditions, return the one with the smallest num1 value. If no such numbers exist, return [-1, -1].
+			Example 1:
+			Input: left = 10, right = 19
+			Output: [11,13]
+			Explanation: The prime numbers between 10 and 19 are 11, 13, 17, and 19.
+			The closest gap between any pair is 2, which can be achieved by [11,13] or [17,19].
+			Since 11 is smaller than 17, we return the first pair.
+			Example 2:
+			Input: left = 4, right = 6
+			Output: [-1,-1]
+			Explanation: There exists only one prime number in the given range, so the conditions cannot be satisfied.
+			Constraints:
+				1 <= left <= right <= 10^6
+		// Not Optimized: TC: O(n * m) & SC: O(p), where p is size of Primes array
+			bool isPrime(int n){
+				for(int i=2; i<n; i++) 				// for(int i=2; i<=n/2; i++) 
+					if(!(n%i)) return 0;
+				return 1;
+			}
+			vector<int> closestPrimes(int left, int right) {
+				vector<int> Primes;
+				for(int i=left; i<=right; i++)
+					if(isPrime(i)) Primes.push_back(i);
+				int gap = INT_MAX, n = Primes.size(), start, end;
+				start = end = -1;
+				for(int i=0; i<n-1; i++)
+					if(Primes[i+1] - Primes[i] < gap)
+						start = Primes[i], end = Primes[i+1], gap = end - start;
+				return {start, end};
+			}
+		// Optimized: Sieve Of Eratosthenes: TC: O(N * log(log N)) & SC: (N)
+			vector<int> closestPrimes(int left, int right) {
+				vector<int> sieve (right+1, 1);     // marked all numbers are prime
+				sieve[0] = sieve[1] = 0;            // 0 and 1 are not prime number, which we know.
+				for(int i=2; i<=right; i++){
+					if(sieve[i]){
+						for(int j=i*2; j<=right; j += i) sieve[j] = 0;
+					}
+				}
+				vector<int> Primes;
+				for(int i=left; i<=right; i++) if(sieve[i]) Primes.push_back(i);
+
+				int start, n=Primes.size(), end, gap = INT_MAX;
+				start = end = -1;
+				for(int i=1; i<n; i++)
+					if(Primes[i] - Primes[i-1] < gap) start = Primes[i-1], end = Primes[i], gap = end-start;
+
+				return {start, end};
+			}
+
+	1269) Longest Palindrome in a String:
+		Problem Statement:
+			Given a string s, your task is to find the longest palindromic substring within s.
+			A substring is a contiguous sequence of characters within a string, defined as s[i...j] where 0 ≤ i ≤ j < len(s).
+			A palindrome is a string that reads the same forward and backward. More formally, s is a palindrome if reverse(s) == s.
+			Note: If there are multiple palindromic substrings with the same length, return the first occurrence of the longest palindromic substring from left to right.
+			Examples :
+			Input: s = “forgeeksskeegfor” 
+			Output: “geeksskeeg”
+			Explanation: There are several possible palindromic substrings like “kssk”, “ss”, “eeksskee” etc. But the substring “geeksskeeg” is the longest among all.
+			Input: s = “Geeks” 
+			Output: “ee”
+			Explanation: "ee" is the longest palindromic substring of "Geeks". 
+			Input: s = “abc” 
+			Output: “a”
+			Explanation: "a", "b" and "c" are longest palindromic substrings of same length. So, the first occurrence is returned.
+			Constraints:
+				1 ≤ s.size() ≤ 10^3
+				s consist of only lowercase English letters.
+		// TC: O(n³) & SC: O(n)
+			bool isPalindrome(string &s){
+				int i, j;
+				i = 0, j=s.size()-1;
+				while(i < j) if(s[i++] != s[j--]) return 0;
+				return 1;
+			}
+			string longestPalindrome(string &s) {
+				string ans;
+				int n = s.size();   
+				for(int i=0; i<n; i++){
+					string cur;
+					for(int j=i; j<n; j++){
+						cur.push_back(s[j]);
+						if(cur.size() > ans.size() and isPalindrome(cur)) ans = cur;
+					}
+				}
+				return ans;
+			}
+		// Optimized: ❌Pending
+
+	1270) Palindrome SubStrings:
+		Problem Statement:
+			Given a string s, count all palindromic sub-strings present in the string. The length of the palindromic sub-string must be greater than or equal to 2. 
+			Examples
+			Input: s = "abaab"
+			Output: 3
+			Explanation: All palindromic substrings are : "aba" , "aa" , "baab".
+			Input: s = "aaa"
+			Output: 3
+			Explanation: All palindromic substrings are : "aa", "aa", "aaa".
+			Input: s = "abbaeae"
+			Output: 4
+			Explanation: All palindromic substrings are : "bb" , "abba" , "aea", "eae".
+			Constraints:
+				2 ≤ s.size() ≤ 10^3
+				string contains only lowercase english characters
+		// Not Optimized: TC: O(n³) & SC: O(n)
+			bool isPalindrome(string &s){
+				int i=0, j=s.size()-1;
+				while(i < j) if(s[i++] != s[j--]) return 0;
+				return 1;
+			}
+			int countPS(string &s) {
+				int cnt=0, n = s.size();
+				for(int i=0; i<n-1; i++){
+					string cur;
+					cur.push_back(s[i]);
+					for(int j=i+1; j<n; j++){
+						cur.push_back(s[j]);
+						if(isPalindrome(cur)) cnt++;
+					}
+				}
+				return cnt;
+			}
+		// Optimized: ❌Pending
+
+	1271) Minimum Spanning Tree - Kruskal's Algorithm: (Refer Lect-97)
+		Problem Statement:
+			Given a weighted, undirected, and connected graph with V vertices and E edges, the task is to find the sum of the weights of the edges in the Minimum Spanning Tree (MST) of the graph using Kruskal's Algorithm. The graph is represented as an edge list edges[][], where edges[i] = [u, v, w] denotes an undirected edge between u and v with weight w.
+			Input: V = 3, E = 3, edges[][] = [[0, 1, 5], [1, 2, 3], [0, 2, 1]]
+			Output: 4
+			Explanation:
+			The Spanning Tree resulting in a weight of 4 is shown above.
+			Input: V = 2, E = 1, edges = [[0, 1, 5]]
+			Output: 5 
+			Explanation: Only one Spanning Tree is possible which has a weight of 5.
+			Constraints:
+				2 ≤ V ≤ 1000
+				V-1 ≤ E ≤ (V*(V-1))/2
+				1 ≤ w ≤ 1000
+				The graph is connected and doesn't contain self-loops & multiple edges.
+		// While sorting be sure that it should sort the array strictly in ascending order don't use <= operator
+		class Solution {
+			public:
+			int FindParent(vector<int> &parent, int u){
+				if(parent[u] == u) return u;
+				return parent[u] = FindParent(parent, parent[u]);
+			}
+			void UnionSet(int u, int v, vector<int> &parent, vector<int> &rank){
+				// we are sent parent here so we can directly check their ranks. 
+				// no need to find the parent of u and v again
+				if(rank[u] < rank[v]) parent[u] = v;
+				else if(rank[u] > rank[v]) parent[v] = u;
+				else parent[u] = v, rank[v]++;              
+				// or 
+				// parent[v] = u, rank[u]++;
+			}
+			int kruskalsMST(int V, vector<vector<int>> &edges) {
+				sort(edges.begin(), edges.end(), [](vector<int> &a, vector<int> &b){
+					return a[2] < b[2];
+				});
+				int ans=0, e=edges.size();
+				vector<int> parent(V), rank(V, 0);
+				for(int i=0; i<V; i++) parent[i] = i;
+				for(int i=0; i<e; i++){
+					int u = edges[i][0], v = edges[i][1], wt = edges[i][2];
+					u = FindParent(parent, u);
+					v = FindParent(parent, v);
+					if(u != v){         // belongs to different component, Merge them
+						ans += wt;
+						UnionSet(u, v, parent, rank);
+					}
+				}
+				return ans;
+			}
+		};
+
+	1272) Minimum Spanning Tree: (Refer Lec-97)
+		Problem Statement:
+			Given a weighted, undirected, and connected graph with V vertices and E edges, your task is to find the sum of the weights of the edges in the Minimum Spanning Tree (MST) of the graph. The graph is represented by an adjacency list, where each element adj[i] is a vector containing vector of integers. Each vector represents an edge, with the first integer denoting the endpoint of the edge and the second integer denoting the weight of the edge.
+			Input:
+			3 3
+			0 1 5
+			1 2 3
+			0 2 1
+			Output: 4
+			Explanation:
+			The Spanning Tree resulting in a weight
+			of 4 is shown above.
+			Input: 
+			2 1
+			0 1 5
+			Output: 5 
+			Explanation: Only one Spanning Tree is possible which has a weight of 5.
+			Constraints:
+				2 ≤ V ≤ 1000
+				V-1 ≤ E ≤ (V*(V-1))/2
+				1 ≤ w ≤ 1000
+				The graph is connected and doesn't contain self-loops & multiple edges.
+		// Using Kruskal's algorithm: TC: O(n log V) & SC: O(E+V) 
+			class Solution {
+				public:  // Function to find sum of weights of edges of the Minimum Spanning Tree.
+				int FindParent(vector<int> &parent, int node){
+					return (parent[node] == node) ? node : parent[node] = FindParent(parent, parent[node]);
+				}
+				void UnionSet(int u, int v, vector<int> &parent, vector<int> &rank){
+					if(rank[u] < rank[v]) parent[u] = v;
+					else if(rank[u] > rank[v]) parent[v] = u;
+					else parent[u] = v, rank[v]++;
+				}
+				int spanningTree(int V, vector<vector<int>> adj[]) {
+					vector<vector<int>> edges;
+					vector<int> vis (V, 0), rank(V, 0), parent(V);
+					// Generated the edges array
+					for(int i=0; i<V; i++){
+						vis[i] = 1;
+						parent[i] = i;
+						for(auto nbr: adj[i]){
+							int v = nbr[0], wt = nbr[1];
+							if(vis[v]) continue;
+							edges.push_back({wt, i, v});
+						}
+					}
+					// sorted in ascending order
+					sort(edges.begin(), edges.end());
+					int ans=0, n = edges.size();
+					for(int i=0; i<n; i++){
+						int u = edges[i][1], v = edges[i][2], wt = edges[i][0];
+						u = FindParent(parent, u);
+						v = FindParent(parent, v);
+						if(u != v){
+							ans += wt;
+							UnionSet(u, v, parent, rank);
+						}
+					}
+					return ans;
+				}
+			};
+		// Using Prim's algorithm:
+			int spanningTree(int V, vector<vector<int>> adj[]) {
+				int ans=0, src=0;
+				vector<int> vis(V, 0), parent(V, -1), dist(V, INT_MAX);
+				dist[src] = 0;
+				// <wt, node>
+				priority_queue<pii, vector<pii>, greater<pii>> minHP;
+				minHP.push({0, src});
+				while(!minHP.empty()){
+					int u = minHP.top().second;
+					minHP.pop();
+					vis[u] = 1;
+					for(auto nbr: adj[u]){
+						int v = nbr[0], wt = nbr[1];
+						if(wt < dist[v] and !vis[v]){
+							dist[v] = wt;
+							parent[v] = u;
+							minHP.push({wt, v});
+						}
+					}
+				}
+				for(int i: dist) ans += i;
+				return ans;
+			}	
+
+1273)
+1274)
+1275)
+1276)
+1277)
+1278)
+1279)
+1280)
+1281)
+1282)
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
