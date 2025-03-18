@@ -13879,10 +13879,22 @@ Lecture-32: Understanding Recursion the easiest way || Day-2
 				Enter n: 12
 					12th num is : 89
 
-		#LeetCode Question:
-			1) Fibonacci:
-				https://leetcode.com/problems/fibonacci-number/description/
-				using Recursion:
+	#LeetCode Question:
+		1) Fibonacci:
+			https://leetcode.com/problems/fibonacci-number/description/
+			using Recursion:
+			class Solution {
+				public:
+				int fib(int n) {
+					if(n==0)
+						return 0;
+					else if(n==1)
+						return 1;
+					return (fib(n-1) + fib(n-2));
+				}
+			};
+
+			//using for loop:
 				class Solution {
 					public:
 					int fib(int n) {
@@ -13890,104 +13902,92 @@ Lecture-32: Understanding Recursion the easiest way || Day-2
 							return 0;
 						else if(n==1)
 							return 1;
-						return (fib(n-1) + fib(n-2));
+						int prev = 0, crnt = 1;
+						for(int i=2; i<=n; i++){
+							int temp = prev + crnt;
+							prev = crnt;
+							crnt = temp;
+						}
+						return crnt;
 					}
 				};
 
-				//using for loop:
-					class Solution {
-						public:
-						int fib(int n) {
-							if(n==0)
-								return 0;
-							else if(n==1)
-								return 1;
-							int prev = 0, crnt = 1;
-							for(int i=2; i<=n; i++){
-								int temp = prev + crnt;
-								prev = crnt;
-								crnt = temp;
-							}
-							return crnt;
-						}
-					};
-
-				//Optimized:
-					class Solution {
-						public:
-						int fib(int n) {
-							if(n == 0)
-								return 0;
-							else if(n == 1)
-								return 1;
-
-							int prev=0;
-							int cur = 1,sum;
-							for(int i=2; i<=n; i++){
-								sum = prev + cur;
-								prev = cur;
-								cur = sum;
-							}
-							return sum;
-						}
-					};
-
-				//on C++ Compiler (with Recursion):
-					#include <iostream>
-					using namespace std;
-
-					int fib(int a){
-						if(a == 0)
+			//Optimized:
+				class Solution {
+					public:
+					int fib(int n) {
+						if(n == 0)
 							return 0;
-						else if(a == 1)
+						else if(n == 1)
 							return 1;
-						return fib(a-1) + fib(a-2);
-					}
-					int main() {
-						int n;
-						cin>> n;
-						
-						std::cout << "nth num :: "<< fib(n) << std::endl;;
-						return 0;
-					}
 
-				//On C++ Compiler (without Recursion):
-					#include <iostream>
-					using namespace std;
-
-					int main() {
-					
-						int n;
-						cin>> n;
-						
 						int prev=0;
-						int cur =1;
+						int cur = 1,sum;
 						for(int i=2; i<=n; i++){
-							int sum = prev + cur;
+							sum = prev + cur;
 							prev = cur;
 							cur = sum;
 						}
-							
-						std::cout << "nth num :: "<< prev << std::endl;;
+						return sum;
 					}
+				};
 
-			2) Count Ways To Reach The N-th Stairs:
-				Problem statement
-					You have been given a number of stairs. Initially, you are at the Oth stair, and you
-					need to reach the Nth stair. Each time you can either climb one step or two
-					steps. You are supposed to return the number of distinct ways in which you can
-					climb from the Oth step to Nth step.
-					Example:
-					N=3
-					output =3
-					We can climb one step at a time i.e. {(0, 1) (1, 2),(2,3)) or we can climb the first
-					two-step and then one step i.e. {(0,2). (1, 3)} or we can climb first one step and
-					then two step i.e. {(0,1), (1,3)}.
-					Constraints:
-						1 <= 'T' <= 10
-						0 <= 'N' <= 1015
-						Where 'T' is the number of test cases, and 'N' is the number of stairs.
-					It is guaranteed that sum of 'N' over all test cases is <= 10^5.
+			//on C++ Compiler (with Recursion):
+				#include <iostream>
+				using namespace std;
+
+				int fib(int a){
+					if(a == 0)
+						return 0;
+					else if(a == 1)
+						return 1;
+					return fib(a-1) + fib(a-2);
+				}
+				int main() {
+					int n;
+					cin>> n;
+					
+					std::cout << "nth num :: "<< fib(n) << std::endl;;
+					return 0;
+				}
+
+			//On C++ Compiler (without Recursion):
+				#include <iostream>
+				using namespace std;
+
+				int main() {
+				
+					int n;
+					cin>> n;
+					
+					int prev=0;
+					int cur =1;
+					for(int i=2; i<=n; i++){
+						int sum = prev + cur;
+						prev = cur;
+						cur = sum;
+					}
+						
+					std::cout << "nth num :: "<< prev << std::endl;;
+				}
+
+		2) Count Ways To Reach The N-th Stairs:
+			Problem statement
+				You have been given a number of stairs. Initially, you are at the Oth stair, and you
+				need to reach the Nth stair. Each time you can either climb one step or two
+				steps. You are supposed to return the number of distinct ways in which you can
+				climb from the Oth step to Nth step.
+				Example:
+				N=3
+				output =3
+				We can climb one step at a time i.e. {(0, 1) (1, 2),(2,3)) or we can climb the first
+				two-step and then one step i.e. {(0,2). (1, 3)} or we can climb first one step and
+				then two step i.e. {(0,1), (1,3)}.
+				Constraints:
+					1 <= 'T' <= 10
+					0 <= 'N' <= 10^5
+					Where 'T' is the number of test cases, and 'N' is the number of stairs.
+				It is guaranteed that sum of 'N' over all test cases is <= 10^5.
 				Sample Input 1 :
 					2
 					2
@@ -14017,18 +14017,31 @@ Lecture-32: Understanding Recursion the easiest way || Day-2
 				-for nth stair you use the last stair or 2nd last stair.
 				-& for that last stair & 2nd last stair the process will be same, again for that last stair
 				-call goes last's last stair or last's 2nd last stair. & sum of all ways will be nth stair sum.
-				//Not optimized:
-					#include <bits/stdc++.h> 
-					int countDistinctWays(int nStairs) {
-						if(nStairs == 0)
-							return 1;
-						
-						if(nStairs<0)
-							return 0;
+			//Not optimized:
+				#include <bits/stdc++.h> 
+				int countDistinctWays(int nStairs) {
+					if(nStairs == 0)
+						return 1;
+					
+					if(nStairs<0)
+						return 0;
 
-						return countDistinctWays(nStairs-1) + countDistinctWays(nStairs-2);
+					return countDistinctWays(nStairs-1) + countDistinctWays(nStairs-2);
+				}
+			// Optimized:
+				#include <bits/stdc++.h> 
+				int countDistinctWays(int n) {
+					int prev, justPrev;
+					int MOD = 1e9+7;
+					prev = justPrev = 1;
+					for(int i=2; i<=n; i++){
+						int cur = prev + justPrev;
+						prev = justPrev;
+						justPrev = cur % MOD;
 					}
-
+					return justPrev;
+				}
+	
 		3) Say Digit:
 			//Recursion:
 				#include <iostream>
@@ -31518,6 +31531,39 @@ Lecture 95: Dijkstra's Algorithm:
 				}
 				return dist;
 			}
+		// Using Simple Queue: TC: O(V+E) & SC: O(V+E)
+			#include <bits/stdc++.h> 
+			#define pi pair<int, int>
+			vector<int> dijkstra(vector<vector<int>> &vec, int vertices, int edges, int source) {
+				// creating adjacency list
+				vector<vector<pair<int, int>>> adj (vertices);
+				for(int i=0; i<edges; i++){
+					adj[vec[i][0]].push_back(make_pair(vec[i][1], vec[i][2]));
+					adj[vec[i][1]].push_back(make_pair(vec[i][0], vec[i][2]));
+				}
+				vector<int> dist (vertices, INT_MAX);
+				// distance from source to source
+				dist[source] = 0;
+				// <distance, Node>
+				queue<pi> Q;
+				Q.push({0, source});
+				while(!Q.empty()){
+					// retrive the start node from set (smallest distance)
+					pair<int, int> top = Q.front();
+					int distance = top.first, VertexValue = top.second;
+					// removing the top vertex/node
+					Q.pop();
+
+					// traverse neighbours
+					for(pair<int, int> nbr: adj[VertexValue]){
+						if(distance+nbr.second < dist[nbr.first]){
+							dist[nbr.first] = distance+nbr.second;
+							Q.push({dist[nbr.first], nbr.first});
+						}
+					}
+				}
+				return dist;
+			}
 	// Practice:
 	Q. Longest Path In Directed Graph:
 		https://www.naukri.com/code360/problems/longest-path-in-directed-graph_1172157
@@ -32165,7 +32211,573 @@ Lecture 97: Kruskal's Algorithm || Disjoint Set || Union by Rank & Path Compress
 ---------------------------------------------------------------------------------------------------------
 	10/03/25
 Lecture 98: Bridges in a Graph || C++ Placement Series
+	- An edge in an undirected connected graph is a bridge if removing it disconnects the graph. 
+	- For a disconnected undirected graph, the definition is similar, a bridge is an edge removal that increases the number of disconnected components. 
+	- a. Bridge edge makes the graph disconnected
+	  b. if we remove the bridge edge it increases the no.of components in graph
+	  eg.
+	  	here in below graph the no.of components is 1, if we remove any edge it doesn't increase the no.of components, but if we 
+		remove the edge between C & E then the graph becomes disconnected, & no.of components are 2 now.
+		Component-1									component-1			component-2
+	  	A----- B									A---- B					E
+		|    / |									|   / |
+		|   /  |      ----------------->			|  /  |
+		|  /   |									| /   |
+		| /	   |									|/    |
+ 		C -----D									C-----D
+		|
+		|
+		E
+	Q. Bridges In A Graph:
+		-Using Tarjan's Algorithm.
+		Problem statement
+			Given an undirected graph of V vertices and E edges. Your task is to find all the bridges in the given undirected graph. A bridge in any graph is defined as an edge which, when removed, makes the graph disconnected (or more precisely, increases the number of connected components in the graph).
+			For Example :
+			If the given graph is :
+			Then the edge between 0 and 4 is the bridge because if the edge between 0 and 4 is removed, then there will be no path left to reach from 0 to 4.and makes the graph disconnected, and increases the number of connected components.
+			Note :
+			There are no self-loops(an edge connecting the vertex to itself) in the given graph.
+			There are no parallel edges i.e no two vertices are directly connected by more than 1 edge.
+			Constraints :
+				1 <= T <= 50
+				1 <= V <= 10 ^ 3
+				V-1 <= E <= 3 * 10^3
+				0 <= a, b < V
+				Time Limit: 1 sec
+			Sample Input 1 :
+			2
+			5 4
+			0 1
+			3 1
+			1 2
+			3 4
+			3 3
+			0 1
+			1 2
+			2 0
+			Sample Output 1 :
+			4
+			0 1
+			1 2    
+			1 3
+			3 4
+			0
+			Explanation for Sample Input 1 :
+			For the first test case, the graph will be represented as 
 
+			There are four bridges((0-1),(1-2),(1-3),(3-4)) in the above-given graph denoted by red lines.
+			For the second test case, there is no bridge present in the given graph.
+			Sample Input 2 :
+			1
+			6 7
+			1 2
+			1 0
+			0 2
+			0 4
+			5 4
+			5 3
+			3 4
+			Sample Output 2 :
+			1
+			0 4
+			Explanation for Sample Input 2 :
+			For the first test case, the graph will be represented as 
+			There is only one bridge((0-4)) in the above-given graph denoted by red lines
+		#include<unordered_map>
+		void dfs(int node, int parent, int &timer, 
+				vector<int> &discTime, vector<int> &low, vector<vector<int>> &res, 
+				unordered_map<int, vector<int>> &adjList, vector<int> &vis){
+
+			vis[node] = 1;
+			discTime[node] = low[node] = timer++;
+			for(int nbr: adjList[node]){
+				if(nbr == parent) continue;
+				else if(!vis[nbr]){
+					dfs(nbr, node, timer, discTime, low, res, adjList, vis);
+					low[node] = min(low[node], low[nbr]);
+					// this is bridge condition
+					if(low[nbr] > discTime[node]){
+						res.push_back({node, nbr});
+					}
+				} 
+				else{       // back-edge found another path
+					low[node] = min(low[node], discTime[nbr]);
+				}
+			}
+		}
+		vector<vector<int>> findBridges(vector<vector<int>> &edges, int v, int e) {
+			unordered_map<int, vector<int>> adjList;
+			for(int i=0; i<e; i++){
+				int u = edges[i][0], v = edges[i][1];
+				adjList[u].push_back(v);
+				adjList[v].push_back(u);
+			}
+
+			vector<int> discTime(v, -1), low(v, -1), vis(v, 0);
+			vector<vector<int>> res;
+			int parent = -1, timer=0;
+			for(int i=0; i<v; i++)
+				if(!vis[i])
+					dfs(i, parent, timer, discTime, low, res, adjList, vis);
+			return res;
+		}
+		// Practice:
+			#include<unordered_map>
+			void letsVisit(int node, vector<int> &vis, vector<int> &discTime, 
+							vector<int> &low, int parent, int &timer, 
+							unordered_map<int, vector<int>> &adjList, vector<vector<int>> &bridges){
+				vis[node] = 1;
+				discTime[node] = low[node] = timer++;
+
+				// visiting all adjacent of node
+				for(int nbr: adjList[node]){
+					if(nbr == parent) continue;
+					else if(!vis[nbr]){
+						letsVisit(nbr, vis, discTime, low, node, timer, adjList, bridges);
+						low[node] = min(low[node], low[nbr]);
+						if(low[nbr] > discTime[node]) bridges.push_back({node, nbr});
+					}else{
+						low[node] = min(low[nbr], low[node]);
+					}
+				}
+			}
+			vector<vector<int>> findBridges(vector<vector<int>> &edges, int v, int e) {
+				unordered_map<int, vector<int>> adjList;
+				for(int i=0; i<e; i++){
+					int u = edges[i][0], v = edges[i][1];
+					adjList[u].push_back(v);
+					adjList[v].push_back(u);
+				}
+
+				vector<int> vis(v, 0), discTime(v, -1), low(v, -1);
+				int parent = -1, timer=0;
+				vector<vector<int>> bridges;
+				for(int i=0; i<v; i++){
+					if(!vis[i]){
+						letsVisit(i, vis, discTime, low, parent, timer, adjList, bridges);
+					}
+				}
+				return bridges;
+			}
+---------------------------------------------------------------------------------------------------------
+	16/03/25
+Lecture 99: Articulation Points in Graphs || C++ Placement Series:
+	Articulation Points:
+		If removing a vertex and its related edges causes the graph to become disconnected, 
+		the vertex is considered to be an articulation point in the graph. 
+		Therefore, the number of related components in a graph grows as articulation points are removed. 
+		A connected component, or simply component, is a subgraph where every pair of nodes is connected to every other node by a path.
+		Sometimes articulation points are referred to as cut vertices.
+		Finding all of a graph's articulation points is the primary goal here which can be done by Tarjan’s Algorithm.
+	eg.
+		Given an undirected graph G, find all the articulation points in the graph.
+		For a connected undirected graph, an articulation point or a cut vertex is a vertex in the graph removing which disconnects the graph.
+		For a disconnected undirected graph, an articulation point or a cut vertex is a vertex removing which increases the number of connected components.	
+		Examples of Articulation Points:
+		1)
+			A 	  C														A		C
+			| \ /   \													|		 \
+			|  F	 D 		----After removing the F point-----> 		|		  D
+			| / \   /			  the disconnected graph				|		 /	
+			B	  E														B		E
+			- here F is a Articulation Point.
+		2)
+			A -------- B -------- C -------- D -------- E
+			- here B, C, D are the Articulation Points.
+	Q. Articulation Point - I: ❌Pending
+		Problem Statement:
+			Given an undirected connected graph with V vertices and adjacency list adj. You are required to find all the vertices removing which (and edges through it) disconnects the graph into 2 or more components and return it in sorted manner.
+			Note: Indexing is zero-based i.e nodes numbering from (0 to V-1). There might be loops present in the graph.
+			Example 1:
+				   0
+				 /		3
+				1      /|		
+				  \   /	|
+				  	4 --2
+			Input:
+			Output:{1,4}
+			Explanation: Removing the vertex 1 will
+			discconect the graph as-
+				   0
+				 		3
+				       /|		
+				      /	|
+				  	4 --2
+			Removing the vertex 4 will disconnect the
+			graph as-
+				   0
+				 /		3
+				1       |		
+				      	|
+				  	    2
+			Your Task:
+				You don't need to read or print anything. Your task is to complete the function articulationPoints() which takes V and adj as input parameters and returns a list containing all the vertices removing which turn the graph into two or more disconnected components in sorted order. If there are no such vertices then returns a list containing -1.
+			Expected Time Complexity: O(V + E)
+			Expected Auxiliary Space: O(V)
+			Constraints:
+				1 ≤ V ≤ 10^5
+		// Using Tarjan’s Algorithm:
+			class Solution {
+				public:
+				void letsVisit(vector<int> &AP, vector<int> &vis, vector<int> &discTime, 
+								vector<int> &low, int curVertex, vector<int> adj[], int p, int &t)
+				{
+					vis[curVertex] = 1;
+					low[curVertex] = discTime[curVertex] = t++;
+					
+					int child = 0;
+					//visit all nbr's of curVertex
+					for(int nbr: adj[curVertex]){
+						if(nbr == p) continue;
+						else if(!vis[nbr]){
+							letsVisit(AP, vis, discTime, low, nbr, adj, curVertex, t);
+							low[curVertex] = min(low[curVertex], low[nbr]);
+							if(low[nbr] >= discTime[curVertex] and p != -1) AP[curVertex] = 1;
+							child++;
+						}else{
+							low[curVertex] = min(low[curVertex], discTime[nbr]);
+						}
+					}
+					
+					// source as Articulation point
+					if(p == -1 and child > 1) AP[curVertex] = 1;
+				}
+				vector<int> articulationPoints(int V, vector<int> adj[]) {
+					vector<int> cutVertexs, vis(V, 0), discTime(V, -1), low(V, -1), AP(V, 0);
+					int parent = -1, timer=0;
+					for(int i=0; i<V; i++){
+						if(!vis[i]){
+							letsVisit(AP, vis, discTime, low, i, adj, -1, timer);
+						}
+					}
+					for(int i=0; i<V; i++)
+						if(AP[i]) cutVertexs.push_back(i);
+					return cutVertexs.empty() ? vector<int>{-1} : cutVertexs;
+				}
+			};
+---------------------------------------------------------------------------------------------------------
+	16/03/25
+Lecture 100: Kosaraju's Algorithm for Strongly Connected Components || C++ Placement Series:
+	Steps: i) Generate the topological sort order of given graph.
+		  ii) Generate the transpose of graph (reverse the edges of graph, ie. if u ----> v then make v ------> u).
+		 iii) Traverse the graph in topological sort order.
+	Q. Count Strongly Connected Components (Kosaraju’s Algorithm):
+		Problem statement:
+			You are given an unweighted directed graph having 'V' vertices and 'E' edges. Your task is to count the number of strongly connected components (SCCs) present in the graph.
+			A directed graph is said to be strongly connected if every vertex is reachable from every other vertex. The strongly connected components of a graph are the subgraphs which are themselves strongly connected.
+			Note :
+			Use zero-based indexing for the vertices.
+			The given graph doesn’t contain any self-loops.
+			Constraints :
+				1 <= T <= 10
+				1 <= V <= 10^4
+				0 <= E <= 10^4
+				0 <= a, b < V
+				Time Limit: 1 sec
+			Sample Input 1 :
+			1
+			5 6
+			0 1
+			1 2
+			1 4
+			2 3
+			3 2
+			4 0
+			Sample Output 1:
+			2
+			Explanation of sample input 1:
+			For the first test case, the graph is shown below. There are two SCCs in the graph, which are enclosed in the boxes as shown in the image below.
+			Sample Input 2:
+			2
+			1 0
+			4 4
+			0 1
+			1 2
+			2 3
+			3 1
+			Sample Output 2:
+			1
+			2
+		#include<stack>
+		void dfs(stack<int> &topo, int node,vector<int> &vis, vector<int> AdjList[]){
+			vis[node] = 1;
+			for(int nbr: AdjList[node]){
+				if(!vis[nbr]){
+					dfs(topo, nbr, vis, AdjList);
+				}
+			}
+			topo.push(node);
+		}
+		void DFS_StronglyConnectedComponent(int node, vector<int> &vis, vector<int> *TransG){		// passing TransG as reference.
+			vis[node] = 1;
+			for(int nbr: TransG[node]){
+				if(!vis[nbr]){
+					DFS_StronglyConnectedComponent(nbr, vis, TransG);
+				}
+			}
+		}
+		int stronglyConnectedComponents(int v, vector<vector<int>> &edges) {
+			// AdjList
+			int e = edges.size();
+			vector<int> AdjList[v];
+			// Directed graph
+			for(int i=0; i<e; i++){
+				int u = edges[i][0], v = edges[i][1];
+				AdjList[u].push_back(v);
+			}
+			
+			// Generating topo order
+			stack<int> topo;
+			vector<int> vis(v, 0);
+			for(int i=0; i<v; i++){
+				if(!vis[i]){
+					dfs(topo, i, vis, AdjList);
+				}
+			}
+
+			// transposing graph
+			vector<int> TransG[v];
+			for(int i=0; i<v; i++){
+				// making all nodes as un-visited so that it will be used to count strongly connected component
+				vis[i] = 0;
+				for(int nbr: AdjList[i])
+					TransG[nbr].push_back(i);
+			}
+
+			int StronglyConnectedCnt=0;
+			while(!topo.empty()){
+				int node = topo.top();
+				topo.pop();
+				if(!vis[node]){
+					DFS_StronglyConnectedComponent(node, vis, TransG);
+					StronglyConnectedCnt++;
+				}
+			}
+			return StronglyConnectedCnt;
+		}
+---------------------------------------------------------------------------------------------------------
+	17/03/25	
+Lecture 101: Bellman Ford Algorithm || C++ Placement Series:
+	// Using Dijkstra Algorithm: (Dijkstra will NOT work for -ve weights, don't refer below codes need testing)
+		Q. Bellman Ford: (1-based Indexing)
+			https://www.naukri.com/code360/problems/bellmon-ford_2041977
+			Problem statement
+				You have been given a directed weighted graph of ‘N’ vertices labeled from 1 to 'N' and ‘M’ edges. Each edge connecting two nodes 'u' and 'v' has a weight 'w' denoting the distance between them.
+				Your task is to calculate the shortest distance of all vertices from the source vertex 'src'.
+				Note:
+				If there is no path between 'src' and 'ith' vertex, the value at 'ith' index in the answer array will be 10^8.
+				Example :
+				3 3 1
+				1 2 2
+				1 3 2
+				2 3 -1
+				In the above graph: 
+				The length of the shortest path between vertex 1 and vertex 1 is 1->1 and the cost is 0.
+				The length of the shortest path between vertex 1 and vertex 2 is 1->2 and the cost is 2.
+				The length of the shortest path between vertex 1 and vertex 3 is 1->2->3 and the cost is 1.
+				Hence we return [0, 2, 1].
+				Note :
+				It's guaranteed that the graph doesn't contain self-loops and multiple edges. Also, the graph does not contain negative weight cycles.
+				Sample Input 1 :
+				4 4 1
+				1 2 4
+				1 3 3
+				2 4 7 
+				3 4 -2
+				Sample Output 1 :
+				0 4 3 1
+				Explanation For Sample Output 1 :
+				In the above graph: 
+				The length of the shortest path between vertex 1 and vertex 1 is 1->1 and the cost is 0.
+				The length of the shortest path between vertex 1 and vertex 2 is 1->2 and the cost is 4.
+				The length of the shortest path between vertex 1 and vertex 3 is 1->3 and the cost is 3.
+				The length of the shortest path between vertex 1 and vertex 4 is 1->3->4 and the cost is 1.
+				Hence we return [0, 4, 3, 1].
+				Sample Input 2 :
+				2 1 1
+				2 1 3
+				Sample Output 2 :
+				0 1000000000
+				Constraints :
+					1 <= N <= 50
+					1 <= M <= 300
+					1 <= src <= N
+					1 <= u,v <= N
+					-10^5 <= w <= 10^5
+					Time Limit: 1 sec
+			typedef pair<int, int> pii;
+			vector<int> bellmonFord(int n, int m, int src, vector<vector<int>> &edges) {
+				// creating Adjacency list of directed graph, 1-based indexing
+				vector<pii> AdjList[n+1];
+				for(int i=0; i<m; i++){
+					int u=edges[i][0], v=edges[i][1], w=edges[i][2];
+					AdjList[u].push_back({v, w});
+				}
+				vector<int> shortestPaths(n+1, 1e8);
+				// int src = 1;
+				shortestPaths[src] = 0;
+				// <distance, node>
+				queue<pii> q;
+				q.push({0, src});
+				while(!q.empty()){
+					int curNode = q.front().second, wt = q.front().first;
+					q.pop();
+					// visiting neighbours
+					for(auto nbr: AdjList[curNode]){
+						int v = nbr.first, addOnDistance = nbr.second;
+						if(shortestPaths[v] > wt+addOnDistance){
+							shortestPaths[v] = wt+addOnDistance;
+							q.push({shortestPaths[v], v});
+						}
+					}
+				}
+				return shortestPaths;
+			}
+		Q. Bellman-Ford: (0-based Indexing)
+			https://www.geeksforgeeks.org/problems/distance-from-the-source-bellman-ford-algorithm/1
+			Problem Statement:
+				Given a weighted and directed graph of v vertices and edges, Find the shortest distance of all the vertex's from the source vertex, src and return a list of integers where the ith integer denotes the distance of the ith node from the source node. If a vertices can't be reach from the s then mark the distance as 10^8.
+				Note: If there exist a path to a negative weighted cycle from the source node then return {-1}.
+				Examples:
+				Input: edges = [[0,1,9]], src = 0
+				Output: [0, 9]
+				Explanation: Shortest distance of all nodes from source is printed.
+				Input: edges = [[0,1,5], [1,0,3], [1,2,-1], [2,0,1]], src = 2
+				Output: [1, 6, 0]
+				Explanation: For nodes 2 to 0, we can follow the path: 2-0. This has a distance of 1. For nodes 2 to 1, we cam follow the path: 2-0-1, which has a distance of 1+5 = 6,
+				Constraints:
+					1 ≤ V ≤ 500
+					1 ≤ E ≤ V*(V-1)
+					-1000 ≤ data of nodes, weight ≤ 1000
+					0 ≤ S < V
+			// Not Optimized: TC: O(E+V) & SC: O(V+E)
+				#include<queue>
+				typedef pair<int, int> pii;
+				class Solution {
+					public:
+					/*  Function to implement Bellman Ford
+					*   edges: vector of vectors which represents the graph
+					*   src: source vertex
+					*   V: number of vertices
+					*/
+					vector<int> bellmanFord(int V, vector<vector<int>>& edges, int src) {
+						// creating Adjacency list of directed graph, 1-based indexing
+						vector<pii> AdjList[V];
+						int m = edges.size();
+						for(int i=0; i<m; i++){
+							int u=edges[i][0], v=edges[i][1], w=edges[i][2];
+							AdjList[u].push_back({v, w});
+						}
+					
+						vector<int> shortestPaths(V, 1e8);
+						// int src = 1;
+						shortestPaths[src] = 0;
+						// <distance, node>
+						queue<pii> q;
+						q.push({0, src});
+						while(!q.empty()){
+							int curNode = q.front().second, wt = q.front().first;
+							q.pop();
+							// visiting neighbours
+							for(auto nbr: AdjList[curNode]){
+								int v = nbr.first, addOnDistance = nbr.second;
+								if(shortestPaths[v] > wt+addOnDistance){
+									shortestPaths[v] = wt+addOnDistance;
+									q.push({shortestPaths[v], v});
+								}
+							}
+						}
+						return shortestPaths;
+					}
+				};
+
+	// Using Bellman Ford algorithm: TC: O(N*M)
+	Q. Bellman Ford:
+		https://www.naukri.com/code360/problems/bellmon-ford_2041977
+		vector<int> bellmonFord(int n, int m, int src, vector<vector<int>> &edges) {
+				// check for n-1 times according to algorithm, to find the source vertex we have to keep repeating this process
+				vector<int> shortestPaths(n+1, 1e8);
+				shortestPaths[src] = 0;
+				for(int i=1; i<n; i++){
+					for(int j=0; j<m; j++){
+						int u = edges[j][0], v = edges[j][1], wt = edges[j][2];
+						// if(shortestPaths[u] == 1e8) continue;
+						// assigning the min wt
+						if(shortestPaths[u]+wt < shortestPaths[v]) shortestPaths[v] = shortestPaths[u]+wt;
+					}
+				}
+
+				// Given:
+				/*
+					Note :
+					It's guaranteed that the graph doesn't contain self-loops and multiple edges. Also, the graph does not contain negative weight cycles.
+				*/
+				// checking for -ve cycle, if any of the value in shortestPaths array gets updated here, 
+				// then for sure there will be -ve cycle is present & we can't find the shortest distance in this case
+				// int isNegativeCycle = 0;
+
+				// for(int i=0; i<m; i++){
+				//     int u = edges[i][0], v = edges[i][1], wt = edges[i][2];
+				//     if(shortestPaths[u]+wt < shortestPaths[v]){
+				//         isNegativeCycle = 1;
+				//         break;
+				//     }
+				// }
+				// if(isNegativeCycle) return {};
+				return shortestPaths;
+			}
+	Q. Bellman-Ford:
+		https://www.geeksforgeeks.org/problems/distance-from-the-source-bellman-ford-algorithm/1
+		class Solution {
+			public:
+			/*  Function to implement Bellman Ford
+			*   edges: vector of vectors which represents the graph
+			*   src: source vertex
+			*   V: number of vertices
+			*/
+			vector<int> bellmanFord(int V, vector<vector<int>>& edges, int src) {
+				vector<int> dist(V, 1e8);
+				dist[src] = 0;
+				int e = edges.size();
+				for(int i=1; i<V; i++){
+					for(int j=0; j<e; j++){
+						int u = edges[j][0], v = edges[j][1], wt = edges[j][2];
+						if(dist[u] == 1e8) continue;
+						
+						int total = dist[u]+wt;
+						if(dist[v] > total) dist[v] = total;
+					}
+				}
+				
+				// checking for -ve cycle
+				// if any one of the distance gets updates in dist array then there will be -ve cycle in graph, 
+				// we can't find the shortest path here
+				int cycle = 0;
+				for(int j=0; j<e; j++){
+					int u = edges[j][0], v = edges[j][1], wt = edges[j][2];
+					if(dist[u] == 1e8) continue;
+					
+					int total = dist[u]+wt;
+					if(dist[v] > total){
+						cycle = 1;
+						break;
+					}
+				}
+				if(cycle) return {-1};
+				return dist;
+			}
+		};
+---------------------------------------------------------------------------------------------------------
+	18/03/25
+Lecture 102: Introduction to Dynamic Programming | Memoization | Tabulation | Space Optimisation:
+	- those who forget the past are condemned to repeat it
+	#Types:
+		1) Top-Down  (Recursion + Memoization)
+		2) Bottom-up (Tabulation)
+		- Space Optimization.
+	
+
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -128508,16 +129120,572 @@ POTD:-[Problem of the Day]
 				return ans;
 			}	
 
-1273)
-1274)
-1275)
-1276)
-1277)
-1278)
-1279)
-1280)
-1281)
-1282)
+	1273) Count of Substrings Containing Every Vowel and K Consonants I: (Refer POTD: 1274)
+		Problem Statement:
+			You are given a string word and a non-negative integer k.
+			Return the total number of substrings of word that contain every vowel ('a', 'e', 'i', 'o', and 'u') at least once and exactly k consonants.
+			Example 1:
+			Input: word = "aeioqq", k = 1
+			Output: 0
+			Explanation:
+			There is no substring with every vowel.
+			Example 2:
+			Input: word = "aeiou", k = 0
+			Output: 1
+			Explanation:
+			The only substring with every vowel and zero consonants is word[0..4], which is "aeiou".
+			Example 3:
+			Input: word = "ieaouqqieaouqq", k = 1
+			Output: 3
+			Explanation:
+			The substrings with every vowel and one consonant are:
+			word[0..5], which is "ieaouq".
+			word[6..11], which is "qieaou".
+			word[7..12], which is "ieaouq".
+			Constraints:
+				5 <= word.length <= 250
+				word consists only of lowercase English letters.
+				0 <= k <= word.length - 5
+		// TC: O(n³) & SC: (n)
+			class Solution {
+				public:
+				bool isValid(string &s, int k){
+					if(s.size() < (5+k)) return 0;
+					int A, E, I, O, U, conso;
+					A = E = I = O = U = conso = 0;
+					for(char ch: s)
+						if(ch == 'a') A = 1;
+						else if(ch == 'e') E = 1;
+						else if(ch == 'i') I = 1;
+						else if(ch == 'o') O = 1;
+						else if (ch == 'u') U = 1;
+						else conso++;
+					return A and E and I and O and U and conso == k;
+				}
+				int countOfSubstrings(string word, int k) {
+					int cnt=0, n = word.size();
+					for(int i=0; i<n; i++){
+						string cur;
+						for(int j=i; j<n; j++){
+							cur.push_back(word[j]);
+							if(isValid(cur, k)) cnt++;
+						}
+					}
+					return cnt;   
+				}  
+			};
+		
+	1274) Count of Substrings Containing Every Vowel and K Consonants II:
+		Problem Statement:
+			You are given a string word and a non-negative integer k.
+			Return the total number of substrings of word that contain every vowel ('a', 'e', 'i', 'o', and 'u') at least once and exactly k consonants.
+			Example 1:
+			Input: word = "aeioqq", k = 1
+			Output: 0
+			Explanation:
+			There is no substring with every vowel.
+			Example 2:
+			Input: word = "aeiou", k = 0
+			Output: 1
+			Explanation:
+			The only substring with every vowel and zero consonants is word[0..4], which is "aeiou".
+			Example 3:
+			Input: word = "ieaouqqieaouqq", k = 1
+			Output: 3
+			Explanation:
+			The substrings with every vowel and one consonant are:
+			word[0..5], which is "ieaouq".
+			word[6..11], which is "qieaou".
+			word[7..12], which is "ieaouq".
+			Constraints:
+				5 <= word.length <= 2 * 10^5
+				word consists only of lowercase English letters.
+				0 <= k <= word.length - 5
+		// Not Optimized:
+			bool isValid(string &s, int k){
+				if(s.size() < 5) return 0;
+				int A, E, I, O, U, conso;
+				A = E = I = O = U = conso = 0;
+				for(char ch: s)
+					if(ch == 'a') A = 1;
+					else if(ch == 'e') E = 1;
+					else if(ch == 'i') I = 1;
+					else if(ch == 'o') O = 1;
+					else if (ch == 'u') U = 1;
+					else conso++;
+				return A and E and I and O and U and conso == k;
+			}
+			long long countOfSubstrings(string word, int k) {
+				long long cnt=0, n = word.size();
+				for(int i=0; i<n; i++){
+					string cur;
+					for(int j=i; j<n; j++){
+						cur.push_back(word[j]);
+						if(isValid(cur, k)) cnt++;
+					}
+				}
+				return cnt;   
+			}
+		// Optimized: ❌Pending
+
+	1275) Ways to Reach the n'th Stair: (Refer Lect-32, 102)
+		Problem Statement:
+			There are n stairs, a person standing at the bottom wants to reach the top. The person can climb either 1 stair or 2 stairs at a time. Your task is to count the number of ways, the person can reach the top (order does matter).
+			Examples:
+			Input: n = 1
+			Output: 1
+			Explanation: There is only one way to climb 1 stair. 
+			Input: n = 2
+			Output: 2
+			Explanation: There are 2 ways to reach 2th stair: {1, 1} and {2}.  
+			Input: n = 4
+			Output: 5
+			Explanation: There are five ways to reach 4th stair: {1, 1, 1, 1}, {1, 1, 2}, {2, 1, 1}, {1, 2, 1} and {2, 2}.
+			Constraints:
+				1 ≤ n ≤ 44
+		
+		// Not Optimized: TC: O(2ⁿ) & SC: O(n)
+			int countWays(int n) {
+				if(n <= 1) return 1;
+				return countWays(n-1) + countWays(n-2);
+			}
+		// Optimized: Using DP: Recursion+Memoization: TC:O(n) & SC: O(n)
+			int solve(int n, vector<int> &dp){
+				if(n <= 1) return dp[1];
+				if(dp[n] != -1) return dp[n];
+				dp[n] = solve(n-1, dp) + solve(n-2, dp);        // recursion + memoization
+				return dp[n];
+			}
+			int countWays(int n) {
+				vector<int> dp(n+1,-1);
+				dp[1] = 1;
+				return solve(n, dp);
+			}
+		// DP: Tabulation: TC: O(n) & SC: O(n)
+			int countWays(int n) {
+				vector<int> dp(n+1, -1);
+				dp[0] = dp[1] = 1;
+				for(int i=2; i<=n; i++) dp[i] = dp[i-1] + dp[i-2];
+				return dp[n];
+			}
+		// Space Optimization: TC: O(n) & SC: O(1)
+			int countWays(int n) {
+				int prev, justPrev;
+				prev = justPrev = 1;
+				for(int i=2; i<=n; i++){
+					int cur = prev + justPrev;
+					prev = justPrev;
+					justPrev = cur;
+				}
+				return justPrev;
+			}
+
+	1276) Climbing Stairs: (Refer POTD: 1275)
+		Problem Statement:
+			You are climbing a staircase. It takes n steps to reach the top.
+			Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+			Example 1:
+			Input: n = 2
+			Output: 2
+			Explanation: There are two ways to climb to the top.
+			1. 1 step + 1 step
+			2. 2 steps
+			Example 2:
+			Input: n = 3
+			Output: 3
+			Explanation: There are three ways to climb to the top.
+			1. 1 step + 1 step + 1 step
+			2. 1 step + 2 steps
+			3. 2 steps + 1 step
+			Constraints:
+				1 <= n <= 45
+		class Solution {
+			public:
+			int climbStairs(int n) {
+				int prev, justPrev;
+				prev = justPrev = 1;
+				for(int i=2; i<=n; i++){
+					int cur = prev + justPrev;
+					prev = justPrev;
+					justPrev = cur;
+				}
+				return justPrev;
+			}
+		};
+
+	1277) Number of Substrings Containing All Three Characters:
+		Problem Statement:
+			Given a string s consisting only of characters a, b and c.
+			Return the number of substrings containing at least one occurrence of all these characters a, b and c.
+			Example 1:
+			Input: s = "abcabc"
+			Output: 10
+			Explanation: The substrings containing at least one occurrence of the characters a, b and c are "abc", "abca", "abcab", "abcabc", "bca", "bcab", "bcabc", "cab", "cabc" and "abc" (again). 
+			Example 2:
+			Input: s = "aaacb"
+			Output: 3
+			Explanation: The substrings containing at least one occurrence of the characters a, b and c are "aaacb", "aacb" and "acb". 
+			Example 3:
+			Input: s = "abc"
+			Output: 1
+			Constraints:
+				3 <= s.length <= 5 x 10^4
+				s only consists of a, b or c characters.
+		// Not Optimized: TC: O(n³) & SC: O(n)
+			bool isValid(string &cur){
+				if(cur.size() < 3) return 0;
+				int A,B,C;
+				A = B = C = 0;
+				for(char ch: cur)
+					if(ch == 'a') A = 1;
+					else if(ch == 'b') B = 1;
+					else if(ch == 'c') C = 1;
+					else continue;						// -------------> this line is not mandatory, if you comment as well its fine
+				return A and B and C;        
+			}
+			int numberOfSubstrings(string s) {
+				int cnt=0, n = s.size();
+				for(int i=0; i<n-2; i++){            // save last 3 char
+					string cur;
+					for(int j=i; j<n; j++){
+						cur.push_back(s[j]);
+						if(isValid(cur)) cnt++;
+					}
+				}
+				return cnt;
+			}
+		// Little Optimized: TC: O(n²) & SC: O(n)
+			bool isValid(string &cur){
+				if(cur.size() < 3) return 0;
+				int A,B,C;
+				A = B = C = 0;
+				for(char ch: cur)
+					if(ch == 'a') A = 1;
+					else if(ch == 'b') B = 1;
+					else if(ch == 'c') C = 1;
+					// else continue;
+				return A and B and C;        
+			}
+			int numberOfSubstrings(string s) {
+				int cnt=0, n = s.size();
+				for(int i=0; i<n-2; i++){            // save last 3 char
+					string cur;
+					for(int j=i; j<n; j++){
+						cur.push_back(s[j]);
+						if(isValid(cur)){
+							cnt++;
+							// rest all remaining char also satisfy this condition so add them as well
+							cnt += n - j - 1;
+							break;
+						}
+						// instead of above if()
+						/*
+						// if you don't want to use above -1 equation then use below one, for that we exclude the separate cnt++
+						if(isValid(cur)){
+							cnt += n - j;
+							break;
+						}				
+						*/
+					}
+				}
+				return cnt;
+			}
+		// Optimized: TC: O(n) & SC:O(1)
+			int numberOfSubstrings(string s) {
+				vector<int> char_count(26, 0);
+				int cnt, left, n = s.size(), i, j;
+				cnt = left = i = 0;
+				while(i<n){
+					char_count[s[i] - 'a']++;
+					while(char_count[0] and char_count[1] and char_count[2]){
+						cnt += n - i;
+						char_count[s[j++] - 'a']--;
+					}
+					i++;
+				}
+				return cnt;
+			}
+
+	1278) Jump Game II:
+		https://leetcode.com/problems/jump-game-ii/description/
+		Problem Statement:
+			You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
+			Each element nums[i] represents the maximum length of a forward jump from index i. In other words, if you are at nums[i], you can jump to any nums[i + j] where:
+			0 <= j <= nums[i] and
+			i + j < n
+			Return the minimum number of jumps to reach nums[n - 1]. The test cases are generated such that you can reach nums[n - 1].
+			Example 1:
+			Input: nums = [2,3,1,1,4]
+			Output: 2
+			Explanation: The minimum number of jumps to reach the last index is 2. Jump 1 step from index 0 to 1, then 3 steps to the last index.
+			Example 2:
+			Input: nums = [2,3,0,1,4]
+			Output: 2
+			Constraints:
+				1 <= nums.length <= 10^4
+				0 <= nums[i] <= 1000
+				It's guaranteed that you can reach nums[n - 1].
+		// Not Optimized: TC: O(n^n) & SC: O(n)
+			void solve(vector<int> &nums, int &cnt, int curCnt, int curIndex){
+				if(curIndex >= nums.size()-1){
+					cnt = min(cnt, curCnt);
+					return;
+				}
+				curCnt++;
+				for(int i=1; i<=nums[curIndex]; i++)
+					solve(nums, cnt, curCnt, curIndex+i);
+			}
+			int jump(vector<int>& nums) {
+				int cnt=INT_MAX, curCnt=0;
+				solve(nums, cnt, curCnt, 0);
+				return (cnt == INT_MAX) ? -1 : cnt;
+			}
+		// Optimized: ❌Pending
+
+	1279) Minimum Jumps: (Refer POTD: 1278)
+		https://www.geeksforgeeks.org/problems/minimum-number-of-jumps-1587115620/1
+		Problem Statement:
+			You are given an array arr[] of non-negative numbers. Each number tells you the maximum number of steps you can jump forward from that position.
+			For example:
+			If arr[i] = 3, you can jump to index i + 1, i + 2, or i + 3 from position i.
+			If arr[i] = 0, you cannot jump forward from that position.
+			Your task is to find the minimum number of jumps needed to move from the first position in the array to the last position.
+			Note:  Return -1 if you can't reach the end of the array.
+			Examples : 
+			Input: arr[] = [1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9]
+			Output: 3 
+			Explanation: First jump from 1st element to 2nd element with value 3. From here we jump to 5th element with value 9, and from here we will jump to the last. 
+			Input: arr = [1, 4, 3, 2, 6, 7]
+			Output: 2 
+			Explanation: First we jump from the 1st to 2nd element and then jump to the last element.
+			Input: arr = [0, 10, 20]
+			Output: -1
+			Explanation: We cannot go anywhere from the 1st element.
+			Constraints:
+				2 ≤ arr.size() ≤ 10^4
+				0 ≤ arr[i] ≤ 10^4
+		// Not Optimized:
+			void solve(vector<int> &arr, int  &cnt, int cur, int indx){
+				if(indx >= arr.size()-1){
+					cnt = min(cnt, cur);
+					return;
+				}
+				cur++;
+				for(int i=1; i<=arr[indx]; i++)
+					solve(arr, cnt, cur, indx+i);
+			}
+			int minJumps(vector<int>& arr) {
+				if(arr.empty()) return 0;
+				if(!arr[0]) return -1;
+				int cnt=INT_MAX, curCnt=0;
+				solve(arr, cnt, curCnt, 0);
+				return (cnt==INT_MAX) ? -1 : cnt;
+			}
+
+	1280) Jump Game:
+		Problem Statement:
+			You are given an integer array nums. You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position.
+			Return true if you can reach the last index, or false otherwise.
+			Example 1:
+			Input: nums = [2,3,1,1,4]
+			Output: true
+			Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.
+			Example 2:
+			Input: nums = [3,2,1,0,4]
+			Output: false
+			Explanation: You will always arrive at index 3 no matter what. Its maximum jump length is 0, which makes it impossible to reach the last index.
+			Constraints:
+				1 <= nums.length <= 10^4
+				0 <= nums[i] <= 10^5
+		// Not Optimized:
+			void solve(vector<int> &nums, int indx, int &reachable) {
+				if(indx >= nums.size()-1){
+					reachable = 1;
+					return;
+				}
+				for(int i=1; i<=nums[indx]; i++){
+					solve(nums, indx+i, reachable);
+					if(reachable) return;
+				}
+			}
+			bool canJump(vector<int>& nums) {
+				int reachable = 0;
+				solve(nums, 0, reachable);
+				return reachable;
+			}
+		// Optimized: ❌Pending
+
+	1281) Divide Array Into Equal Pairs:
+		Problem Statement:
+			You are given an integer array nums consisting of 2 * n integers.
+			You need to divide nums into n pairs such that:
+			Each element belongs to exactly one pair.
+			The elements present in a pair are equal.
+			Return true if nums can be divided into n pairs, otherwise return false.
+			Example 1:
+			Input: nums = [3,2,3,2,2,2]
+			Output: true
+			Explanation: 
+			There are 6 elements in nums, so they should be divided into 6 / 2 = 3 pairs.
+			If nums is divided into the pairs (2, 2), (3, 3), and (2, 2), it will satisfy all the conditions.
+			Example 2:
+			Input: nums = [1,2,3,4]
+			Output: false
+			Explanation: 
+			There is no way to divide nums into 4 / 2 = 2 pairs such that the pairs satisfy every condition.
+			Constraints:
+				nums.length == 2 * n
+				1 <= n <= 500
+				1 <= nums[i] <= 500
+		// TC: O(n) & SC: O(n)
+			bool divideArray(vector<int>& nums) {
+				unordered_map<int, int> Freq;
+				for(int i: nums) Freq[i]++;
+				for(pair<int, int> p: Freq) if(p.second&1) return 0;
+				return 1;
+			}
+		// TC: O(n log n) & SC: O(1)
+			bool divideArray(vector<int>& nums) {
+				sort(begin(nums), end(nums));
+				int n = nums.size();
+				for(int i=0; i<n-1; i+=2)
+					if(nums[i] != nums[i+1]) return 0;
+				return 1;        
+			}
+
+	1282) Subset Sum Problem:
+		Problem Statement:
+			Given an array of positive integers arr[] and a value sum, determine if there is a subset of arr[] with sum equal to given sum. 
+			Examples:
+			Input: arr[] = [3, 34, 4, 12, 5, 2], sum = 9
+			Output: true 
+			Explanation: Here there exists a subset with target sum = 9, 4+3+2 = 9.
+			Input: arr[] = [3, 34, 4, 12, 5, 2], sum = 30
+			Output: false
+			Explanation: There is no subset with target sum 30.
+			Input: arr[] = [1, 2, 3], sum = 6
+			Output: true
+			Explanation: The entire array can be taken as a subset, giving 1 + 2 + 3 = 6.
+			Constraints:
+				1 <= arr.size() <= 200
+				1<= arr[i] <= 200
+				1<= sum <= 10^4
+		// TC: O(2ⁿ) & SC(n):
+			bool solve(vector<int> &a, int cur, int &sum, int idx){
+				if(cur == sum) return 1;
+				// this condition makes code optimize, it will never go for iteration whose sum is never match with cur sum.
+				// if below condition is not there, then code gets TLE
+				if(cur > sum) return 0;
+				int n = a.size();
+				for(int i=idx; i<n; i++){
+					cur += a[i];
+					if(solve(a, cur, sum, i+1)) return 1;
+					cur -= a[i];
+				}
+				return 0;
+			}
+			bool isSubsetSum(vector<int>& arr, int sum) {
+				if(arr.empty()) return 0;
+				return solve(arr, 0, sum, 0);
+			}
+		// Brute Force:
+			void Generate(vector<int> &arr, vector<int> cur, vector<vector<int>> &allSubSet, int idx){
+				int n = arr.size();
+				if(idx >= n){
+					allSubSet.push_back(cur);
+					return;
+				}
+				// exclude call
+				Generate(arr, cur, allSubSet, idx+1);
+				
+				// include call
+				cur.push_back(arr[idx]);
+				Generate(arr, cur, allSubSet, idx+1);
+			}
+			bool isSubsetSum(vector<int>& arr, int sum) {
+				vector<vector<int>> allSubSet;
+				vector<int> cur;
+				// Generating all subsets
+				Generate(arr, cur, allSubSet, 0);
+				for(auto v: allSubSet){
+					int s = accumulate(v.begin(), v.end(), 0);
+					if(s == sum) return 1;
+				}
+				return 0;
+			}
+
+	1283) Partition Equal Subset Sum:
+		Problem Statement:
+			Given an array arr[], determine if it can be partitioned into two subsets such that the sum of elements in both parts is the same.
+			Note: Each element must be in exactly one subset.
+			Examples:
+			Input: arr = [1, 5, 11, 5]
+			Output: true
+			Explanation: The two parts are [1, 5, 5] and [11].
+			Input: arr = [1, 3, 5]
+			Output: false
+			Explanation: This array can never be partitioned into two such parts.
+			Constraints:
+			1 ≤ arr.size ≤ 100
+			1 ≤ arr[i] ≤ 200
+		// Not Optimized: TC: O(2ⁿ * n) & SC: O(2ⁿ):
+			void GenerateSubSet(vector<int> &arr, vector<vector<int>> &allSubSet, vector<int> t, int idx){
+				if(idx >= arr.size()){
+					if(!t.empty() and !(t.size() == arr.size())) allSubSet.push_back(t);
+					return;
+				}
+				// exclude
+				GenerateSubSet(arr, allSubSet, t, idx+1);
+				
+				t.push_back(idx);
+				GenerateSubSet(arr, allSubSet, t, idx+1);
+			}
+			bool equalPartition(vector<int>& arr) {
+				// Generating the Subset of arr
+				vector<int> t;
+				vector<vector<int>> allSubSet;
+				GenerateSubSet(arr, allSubSet, t, 0);
+				
+				int n = arr.size();
+				for(auto v: allSubSet){
+					// cout<<"first: ";
+					// for(int i: v)
+					//     cout<<i<<"\t";
+					// cout<<"\n";
+					
+					int s1 = 0;
+					for(int i: v) s1 += arr[i];
+					
+					vector<int> OtherPart;
+					vector<int> isPresent(n, 0);
+					for(int i=0; i<v.size(); i++) isPresent[v[i]] = 1;
+					
+					for(int i=0; i<n; i++)
+						if(!isPresent[i]) OtherPart.push_back(i);
+						
+					// cout<<"second: ";
+					// for(int i: OtherPart)
+					//     cout<<i<<"\t";
+					
+					int s2=0;
+					for(int i: OtherPart) s2 += arr[i];
+					// cout<<"s1"<<s1<<endl;
+					// cout<<"s2"<<s2;
+					// cout<<endl<<endl;
+					if(s1 == s2) return 1;
+				}
+				return 0;
+			}
+		// Optimized: ❌Pending
+
+1284)
+1285)
+1286)
+1287)
+1288)
+1289)
+1290)
+1290)
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
