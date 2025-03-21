@@ -31564,6 +31564,41 @@ Lecture 95: Dijkstra's Algorithm:
 				}
 				return dist;
 			}
+		// Using Bellman Ford: Not Optimized: TC: O(V*E)
+			#include <bits/stdc++.h> 
+			vector<int> dijkstra(vector<vector<int>> &vec, int vertices, int edges, int source) {
+				vector<int> dist(vertices, INT_MAX);
+				dist[source] = 0;
+				// Using Bellman Ford algorithm
+				// iterat vertices-1 times
+				for(int i=0; i<vertices; i++){
+					// cover all edges of list
+					for(int j=0; j<edges; j++){
+						int u = vec[j][0], v = vec[j][1], wt = vec[j][2];
+						// no need to check this condition coz graph doesn't contain -ve weights
+						// if(dist[u] == INT_MAX) continue;
+
+						/*
+						// Using size_t as datatype to hold large +ve values or unsigned int
+						size_t total;       // or
+						// unsigned int total;
+						total = dist[u] + wt;
+						if(total < dist[v]) dist[v] = total;
+						
+						total = dist[v] + wt;
+						if(total < dist[u]) dist[u] = total;
+						*/
+						// if we want to use the int as type here use this extra condition, distance will not go -ve
+						int total;
+						total = dist[u] + wt;
+						if(!(total < 0) and total < dist[v]) dist[v] = total;
+						
+						total = dist[v] + wt;
+						if(!(total < 0) and total < dist[u]) dist[u] = total;
+					}
+				}
+				return dist;
+			}	
 	// Practice:
 	Q. Longest Path In Directed Graph:
 		https://www.naukri.com/code360/problems/longest-path-in-directed-graph_1172157
@@ -32776,7 +32811,392 @@ Lecture 102: Introduction to Dynamic Programming | Memoization | Tabulation | Sp
 		2) Bottom-up (Tabulation)
 		- Space Optimization.
 	
+	Q.1. Nth Fibonacci Number:
+		Problem statement
+			The n-th term of Fibonacci series F(n), where F(n) is a function, is calculated using the following formula -
+				F(n) = F(n - 1) + F(n - 2), 
+				Where, F(1) = 1, F(2) = 1
+			Provided 'n' you have to find out the n-th Fibonacci Number. Handle edges cases like when 'n' = 1 or 'n' = 2 by using conditionals like if else and return what's expected.
+			"Indexing is start from 1"
+			Example :
+			Input: 6
+			Output: 8
+			Explanation: The number is ‘6’ so we have to find the “6th” Fibonacci number.
+			So by using the given formula of the Fibonacci series, we get the series:    
+			[ 1, 1, 2, 3, 5, 8, 13, 21]
+			So the “6th” element is “8” hence we get the output.
+			Sample Input 1:
+			6
+			Sample Output 1:
+			8
+			Explanation of sample input 1 :
+			The number is ‘6’ so we have to find the “6th” Fibonacci number.
+			So by using the given formula of the Fibonacci series, we get the series:    
+			[ 1, 1, 2, 3, 5, 8, 13, 21]
+			So the “6th” element is “8” hence we get the output.
+			Expected time complexity :
+			The expected time complexity is O(n).
+			Constraints:
+				1 <= 'n' <= 10000     
+				Where ‘n’ represents the number for which we have to find its equivalent Fibonacci number.
+				Time Limit: 1 second
+	// Simple Recursion: TC: O(2ⁿ) & SC: O(n)
+		#include<bits/stdc++.h>
+		using namespace std;
+		int Fib(int a){
+				if(a == 1 or a == 0) return a;
+				return Fib(a-1) + Fib(a-2);
+		}
+		int main() {
+				/*
+				*  Write your code here. 
+				*  Read input as specified in the question.
+				*  Print output as specified in the question.
+				*/
+				int n;
+				cin>>n;
+				cout<<Fib(n);
+				return 0;
+		}
+	// Using DP: Top-Down: TC: O(n) & SC: O(n) + O(n)
+		#include<bits/stdc++.h>
+		using namespace std;
+		int Fib(int n, vector<int> &memoize){
+				if(n == 1 or n == 0) return memoize[n] = n;
+				if(memoize[n] != -1) return memoize[n];
+				memoize[n] = Fib(n-1, memoize) + Fib(n-2, memoize);
+				return memoize[n];
+		}
+		int main() {
+				int n;
+				cin>>n;
+				vector<int> memoize(n+1, -1);
+				Fib(n, memoize);
+				cout<<memoize[n];
+				return 0;       
+		}
+	// Bottom-up: TC:O(n) & SC: O(n)
+		#include<bits/stdc++.h>
+		using namespace std;
+		int main() {
+			int n;
+			cin>>n;
+			if(n <= 1){
+				cout<<n;
+				return 0;
+			}
 
+			vector<int> dp(n+1, -1);
+			dp[0] = 0;
+			dp[1] = 1;
+			for(int i=2; i<=n; i++) 
+				dp[i] = dp[i-1] + dp[i-2];
+			cout<<dp[n];
+			return 0;
+		}
+	// Space Optimization: TC: O(n) & SC: O(1)
+		#include<bits/stdc++.h>
+		using namespace std;
+		int main() {
+			int n;
+			cin>>n;
+			if(n <= 1) {
+				cout<<n;
+				return 0;
+			}
+			int last = 1, last2nd= 0;
+			for(int i=2; i<=n; i++){
+				int cur = last + last2nd;
+				last2nd = last;
+				last = cur;
+			}
+			cout<<last;
+			return 0;
+		}
+---------------------------------------------------------------------------------------------------------
+	19/03/25
+Lecture 103: Minimum Cost Climbing Stairs || DP Series:
+	Q. Count Ways To Reach The N-th Stairs: (Refer Lect-32, POTD: 1275)
+		// Not Optimized: TC: O(2ⁿ) & SC: O(n)
+			#include <bits/stdc++.h> 
+			int countDistinctWays(int nStairs) {
+				if(nStairs <= 1) return 1;
+				return countDistinctWays(nStairs-1) + countDistinctWays(nStairs-2);
+			}
+		// Optimized: Using DP: Top-Down: TC: O(n) & SC: O(n) + O(n)
+			#include <bits/stdc++.h>
+			int MOD = 1e9+7;
+			int solve(int nStairs, vector<int> &dp){
+				if(dp[nStairs] != -1) return dp[nStairs];
+				dp[nStairs] = (solve(nStairs-1, dp) + solve(nStairs-2, dp)) % MOD;
+				return dp[nStairs];
+			}
+			int countDistinctWays(int nStairs) {
+				if(nStairs <= 1) return 1;
+				vector<int> dp(nStairs+1, -1);
+				dp[0] = dp[1] = 1;
+				solve(nStairs, dp);
+				return dp[nStairs];
+			}
+		// Bottom-up: TC: O(n) & SC: O(n)
+			#include <bits/stdc++.h> 
+			int MOD = 1e9+7;
+			int countDistinctWays(int nStairs) {
+				if(nStairs <= 1) return 1;
+				vector<int> dp(nStairs+1, -1);
+				dp[0] = dp[1] = 1;
+				for(int i=2; i<=nStairs; i++)
+					dp[i] = (dp[i-1] + dp[i-2]) % MOD;
+				return dp[nStairs];
+			}
+		// Space Optimized: TC: O(n) & SC:O(1)
+			#include <bits/stdc++.h> 
+			int mod = 1e9+7;
+			int countDistinctWays(int nStairs) {
+				if(nStairs <= 1) return 1;
+				int last, last2nd;
+				last=last2nd=1;
+				for(int i=2; i<=nStairs; i++){
+					int cur = (last + last2nd) % mod;
+					last2nd = last;
+					last = cur;
+				}
+				return last;
+			}
+	Q. Min Cost Climbing Stairs:
+		https://leetcode.com/problems/min-cost-climbing-stairs/description/
+		Problem Statement:
+			You are given an integer array cost where cost[i] is the cost of ith step on a staircase. Once you pay the cost, you can either climb one or two steps.
+			You can either start from the step with index 0, or the step with index 1.
+			Return the minimum cost to reach the top of the floor.
+			Example 1:
+			Input: cost = [10,15,20]
+			Output: 15
+			Explanation: You will start at index 1.
+			- Pay 15 and climb two steps to reach the top.
+			The total cost is 15.
+			Example 2:
+			Input: cost = [1,100,1,1,1,100,1,1,100,1]
+			Output: 6
+			Explanation: You will start at index 0.
+			- Pay 1 and climb two steps to reach index 2.
+			- Pay 1 and climb two steps to reach index 4.
+			- Pay 1 and climb two steps to reach index 6.
+			- Pay 1 and climb one step to reach index 7.
+			- Pay 1 and climb two steps to reach index 9.
+			- Pay 1 and climb one step to reach the top.
+			The total cost is 6.
+			Constraints:
+				2 <= cost.length <= 1000
+				0 <= cost[i] <= 999
+		// Not Optimized: TC: O(2ⁿ) & SC: O(n)
+			class Solution {
+				public:
+				int RetriveMinCost(vector<int> &cost, int idx){
+					if(idx < 0) return 0;
+					return cost[idx] + min(RetriveMinCost(cost, idx-1), RetriveMinCost(cost, idx-2));
+				}
+				int minCostClimbingStairs(vector<int>& cost) {
+					if(cost.empty()) return 0;
+					int n = cost.size();
+					return min(RetriveMinCost(cost, n-1), RetriveMinCost(cost, n-2));
+				}
+			};
+		// Optimized: Using DP: Top-Down: Recursion + Memoization:TC: O(n) & SC: O(n) + O(n)
+			int RetriveMinCost(vector<int> &cost, int idx, vector<int> &dp){
+				if(idx < 0) return 0;
+				if(dp[idx] != -1) return dp[idx];
+				return dp[idx] = cost[idx] + min(RetriveMinCost(cost, idx-1, dp), RetriveMinCost(cost, idx-2, dp));
+				// return dp[idx];
+			}
+			int minCostClimbingStairs(vector<int>& cost) {
+				int n = cost.size();
+				if(!n) return 0;
+				vector<int> dp(n+2, -1);
+				dp[0] = cost[0];
+				// n+2-1, it means the last element, or use back to consider the last element.
+				dp[n+2-1] = min(RetriveMinCost(cost, n-1, dp), RetriveMinCost(cost, n-2, dp));
+				// dp.back() = min(RetriveMinCost(cost, n-1, dp), RetriveMinCost(cost, n-2, dp));
+				// return dp.back();   
+				return dp[n+2-1];
+			}
+		// Bottom-up: Tabulation: TC: O(n) & SC: O(n)
+			int minCostClimbingStairs(vector<int>& cost) {
+				int n = cost.size();
+				// if(cost.empty()) return 0;
+				if(!n or n == 1) return 0;
+				vector<int> dp (n+1, -1);
+				dp[0] = cost[0];
+				dp[1] = cost[1];
+				for(int i=2; i<n; i++)
+					dp[i] = cost[i] + min(dp[i-1], dp[i-2]);
+				dp[n] = min(dp[n-1], dp[n-2]);
+				// return dp.back();
+				return dp[n];
+			}
+		// Space Optimization: TC: O(n) & SC: O(1)
+			int minCostClimbingStairs(vector<int>& cost) {
+				int n = cost.size();
+				// if(cost.empty()) return 0;
+				if(!n or n == 1) return 0;
+				int prev2 = cost[0], prev1 = cost[1];
+				for(int i=2; i<n; i++){
+					int cur = cost[i] + min(prev1, prev2);
+					prev2 = prev1;
+					prev1 = cur;
+				}
+				return min(prev1, prev2);
+			}
+	Q. Min Cost Climbing Stairs:
+		https://www.geeksforgeeks.org/problems/min-cost-climbing-stairs/1
+		Problem Statement:
+			Given an array of integers cost[] where cost[i] is the cost of the ith step on a staircase. Once the cost is paid, you can either climb one or two steps. Return the minimum cost to reach the top of the floor.
+			Assume 0-based Indexing. You can either start from the step with index 0, or the step with index 1.
+			Examples:
+			Input: cost[] = [10, 15, 20]
+			Output: 15
+			Explanation: Cheapest option is to start at cost[1], pay that cost, and go to the top.
+			Input: cost[] = [1, 100, 1, 1, 1, 100, 1, 1, 100, 1]
+			Output: 6
+			Explanation: Cheapest option is to start on cost[0], and only step on 1s, skipping cost[3].
+			Constraints:
+				2 ≤ cost.size() ≤ 10^5
+				0 ≤ cost[i] ≤ 999
+		// Not Optimized: TC: O(2ⁿ) & SC: O(n)
+			class Solution {
+				public:
+				int RetriveMinCost(vector<int> &cost, int idx){
+					if(idx < 0) return 0;
+					return cost[idx] + min(RetriveMinCost(cost, idx-1), RetriveMinCost(cost, idx-2));
+				}
+				int minCostClimbingStairs(vector<int>& cost) {
+					int n = cost.size();
+					if(!n) return 0;
+					return min(RetriveMinCost(cost, n-1), RetriveMinCost(cost, n-2));
+				}
+			};
+		// Optimized: (Refer just previous question)
+---------------------------------------------------------------------------------------------------------
+	20/03/25
+Lecture 104: Minimum Number of Coins || DP Series:
+	Q.1. Minimum Elements:
+		Problem statement
+			You are given an array of ‘N’ distinct integers and an integer ‘X’ representing the target sum. You have to tell the minimum number of elements you have to take to reach the target sum ‘X’.
+			Note:
+			You have an infinite number of elements of each type.
+			For example
+			If N=3 and X=7 and array elements are [1,2,3]. 
+			Way 1 - You can take 4 elements  [2, 2, 2, 1] as 2 + 2 + 2 + 1 = 7.
+			Way 2 - You can take 3 elements  [3, 3, 1] as 3 + 3 + 1 = 7.
+			Here, you can see in Way 2 we have used 3 coins to reach the target sum of 7.
+			Hence the output is 3.
+			Constraints:
+			1 <= T <= 10
+			1 <= N <= 15
+			1 <= nums[i] <= (2^31) - 1
+			1 <= X <= 10000
+			All the elements of the “nums” array will be unique.
+			Time limit: 1 sec
+			Sample Input 1 :
+			2
+			3 7
+			1 2 3
+			1 0
+			1
+			Sample output 1 :
+			3
+			0
+			Explanation For Sample Output 1:
+			For the first test case,
+			Way 1 - You can take 4 elements  [2, 2, 2, 1] as 2 + 2 + 2 + 1 = 7.
+			Way 2 - You can take 3 elements  [3, 3, 1] as 3 + 3 + 1 = 7.
+			Here, you can see in Way 2 we have used 3 coins to reach the target sum of 7.
+			Hence the output is 3.
+			For the second test case
+			To reach X = 0, you don’t need to take any elements from the array.
+			The sum is already 0, so the total number of elements used is 0.
+			Sample Input 2 :
+			2
+			3 4
+			12 1 3
+			2 11
+			2 1
+			Sample output 2 :
+			2
+			6 
+		// Not Optimized: TC: O(2ⁿ * n) & SC: O(2ⁿ * n)
+			#include <bits/stdc++.h> 
+			void solve(vector<int> &coins, vector<vector<int>> &store, vector<int> &t, int sum, int c){
+				if(c >= sum){
+					if(c == sum){
+						vector<int> sample = t;
+						sort(sample.begin(), sample.end());
+						if(find(store.begin(), store.end(), sample) == store.end()) store.push_back(sample);
+					} 
+					return ;
+				}
+				int n = coins.size();
+				for(int i=0; i<n; i++){
+					c += coins[i];
+					t.push_back(coins[i]);
+					solve(coins, store, t, sum, c);
+					t.pop_back();
+					c -= coins[i];
+				}
+			}
+			int minimumElements(vector<int> &num, int x) {
+				vector<vector<int>> store;
+				vector<int> t;
+				solve(num, store, t, x, 0);
+				int v = INT_MAX;
+				for(auto cur: store)
+					if(cur.size() < v)
+						v = cur.size();
+				return (v == INT_MAX)? -1 : v;
+			}
+			// or complex:
+				#include <bits/stdc++.h> 
+				int solve(vector<int> &n, int x){
+					if(x == 0) return 0;
+					if(x < 0) return INT_MAX;
+
+					int minCnt = INT_MAX;
+					for(int i=0; i<n.size(); i++){
+						int ans = solve(n, x - n[i]);
+						if(ans != INT_MAX)
+							minCnt = min(minCnt, 1 + ans);
+					}
+					return minCnt;
+				}
+				int minimumElements(vector<int> &num, int x) {
+					int val = solve(num, x);
+					return val == INT_MAX ? -1 : val;
+				}
+		// Optimized: TC: O(n) & SC: O(n)
+			#include <bits/stdc++.h>
+			int solve(vector<int> &num, int x, vector<int> &dp){
+				if(x == 0) return 0;
+				if(x < 0) return INT_MAX;
+				if(dp[x] != -1) return dp[x];
+				int n = num.size();
+				int minCnt = INT_MAX;
+				for(int i=0; i<n; i++){
+					int ans = solve(num, x-num[i], dp);
+					if(ans!=INT_MAX)
+						minCnt = min(minCnt, 1+ans);
+				}
+				dp[x] = minCnt;
+				return dp[x];
+			}
+			int minimumElements(vector<int> &num, int x) {
+				if(x == 0) return 0;
+				vector<int> dp(x+1, -1);
+				dp[0] = 0;
+				dp[x] = solve(num, x, dp);
+				return dp[x] == INT_MAX ? -1 : dp[x];
+			}
+	
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
@@ -129228,7 +129648,7 @@ POTD:-[Problem of the Day]
 			}
 		// Optimized: ❌Pending
 
-	1275) Ways to Reach the n'th Stair: (Refer Lect-32, 102)
+	1275) Ways to Reach the n'th Stair: (Refer Lect-32, 103)
 		Problem Statement:
 			There are n stairs, a person standing at the bottom wants to reach the top. The person can climb either 1 stair or 2 stairs at a time. Your task is to count the number of ways, the person can reach the top (order does matter).
 			Examples:
@@ -129678,11 +130098,239 @@ POTD:-[Problem of the Day]
 			}
 		// Optimized: ❌Pending
 
-1284)
-1285)
-1286)
-1287)
-1288)
+	1284) Coin Change II: (Refer Lect-104)
+		https://leetcode.com/problems/coin-change-ii/
+		Problem Statement:
+			You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+			Return the number of combinations that make up that amount. If that amount of money cannot be made up by any combination of the coins, return 0.
+			You may assume that you have an infinite number of each kind of coin.
+			The answer is guaranteed to fit into a signed 32-bit integer.
+			Example 1:
+			Input: amount = 5, coins = [1,2,5]
+			Output: 4
+			Explanation: there are four ways to make up the amount:
+			5=5
+			5=2+2+1
+			5=2+1+1+1
+			5=1+1+1+1+1
+			Example 2:
+			Input: amount = 3, coins = [2]
+			Output: 0
+			Explanation: the amount of 3 cannot be made up just with coins of 2.
+			Example 3:
+			Input: amount = 10, coins = [10]
+			Output: 1
+			Constraints:
+				1 <= coins.length <= 300
+				1 <= coins[i] <= 5000
+				All the values of coins are unique.
+				0 <= amount <= 5000
+		// Not Optimized: TC: O(2ⁿ * n) & SC: O(2ⁿ * n)
+			class Solution {
+				public:
+				void solve(vector<int> &coins, vector<vector<int>> &store, vector<int> &t, int sum, int c){
+					if(c >= sum){
+						if(c == sum){
+							vector<int> sample = t;
+							sort(sample.begin(), sample.end());
+							if(find(store.begin(), store.end(), sample) == store.end()) store.push_back(sample);
+						} 
+						return ;
+					}
+					int n = coins.size();
+					for(int i=0; i<n; i++){
+						c += coins[i];
+						t.push_back(coins[i]);
+						solve(coins, store, t, sum, c);
+						t.pop_back();
+						c -= coins[i];
+					}
+				}
+				int change(int amount, vector<int>& coins) {
+					vector<vector<int>> store;
+					vector<int> t;
+					solve(coins, store, t, amount, 0);
+					return store.size();
+				}
+			};
+		// Optimized: ❌Pending
+
+	1285) Coin Change (Count Ways):
+		https://www.geeksforgeeks.org/problems/coin-change2448/1
+		Problem Statement:
+			Given an integer array coins[ ] representing different denominations of currency and an integer sum, find the number of ways you can make sum by using different combinations from coins[ ]. 
+			Note: Assume that you have an infinite supply of each type of coin. Therefore, you can use any coin as many times as you want.
+			Answers are guaranteed to fit into a 32-bit integer. 
+			Examples:
+			Input: coins[] = [1, 2, 3], sum = 4
+			Output: 4
+			Explanation: Four Possible ways are: [1, 1, 1, 1], [1, 1, 2], [2, 2], [1, 3].
+			Input: coins[] = [2, 5, 3, 6], sum = 10
+			Output: 5
+			Explanation: Five Possible ways are: [2, 2, 2, 2, 2], [2, 2, 3, 3], [2, 2, 6], [2, 3, 5] and [5, 5].
+			Input: coins[] = [5, 10], sum = 3
+			Output: 0
+			Explanation: Since all coin denominations are greater than sum, no combination can make the target sum.
+			Constraints:
+				1 <= sum <= 10^3
+				1 <= coins[i] <= 10^4
+				1 <= coins.size() <= 10^3
+		// Not Optimized:
+			class Solution {
+				public:
+				void solve(vector<int> &coins, vector<vector<int>> &store, vector<int> &t, int sum, int c){
+					if(c >= sum){
+						if(c == sum){
+							vector<int> sample = t;
+							sort(sample.begin(), sample.end());
+							if(find(store.begin(), store.end(), sample) == store.end()) store.push_back(sample);
+						} 
+						return ;
+					}
+					int n = coins.size();
+					for(int i=0; i<n; i++){
+						c += coins[i];
+						t.push_back(coins[i]);
+						solve(coins, store, t, sum, c);
+						t.pop_back();
+						c -= coins[i];
+					}
+				}
+				int count(vector<int>& coins, int sum) {
+					vector<vector<int>> store;
+					vector<int> t;
+					solve(coins, store, t, sum, 0);
+					// for(auto i: store){
+					//     for(int j: i)
+					//         cout<<j<<"\t";
+					//     cout<<endl;
+					// }
+					return store.size();
+				}
+			};
+		// Optimized: (refer POTD: 1284)
+		
+	1286) Coin Change (Minimum Coins):
+		https://www.geeksforgeeks.org/problems/number-of-coins1824/1
+		Problem Statement:
+			You are given an array coins[], where each element represents a coin of a different denomination, and a target value sum. You have an unlimited supply of each coin type {coins1, coins2, ..., coinsm}.
+			Your task is to determine the minimum number of coins needed to obtain the target sum. If it is not possible to form the sum using the given coins, return -1.
+			Examples:
+			Input: coins[] = [25, 10, 5], sum = 30
+			Output: 2
+			Explanation: Minimum 2 coins needed, 25 and 5  
+			Input: coins[] = [9, 6, 5, 1], sum = 19
+			Output: 3
+			Explanation: 19 = 9 + 9 + 1
+			Input: coins[] = [5, 1], sum = 0
+			Output: 0
+			Explanation: For 0 sum, we do not need a coin
+			Input: coins[] = [4, 6, 2], sum = 5
+			Output: -1
+			Explanation: Not possible to make the given sum.
+			Constraints:
+				1 ≤ sum * coins.size() ≤ 10^6
+				0 <= sum <= 10^4
+				1 <= coins[i] <= 10^4
+				1 <= coins.size() <= 10^3
+		// Not Optimized:
+			void solve(vector<int> &coins, vector<vector<int>> &store, vector<int> &t, int sum, int c){
+				if(c >= sum){
+					if(c == sum){
+						vector<int> sample = t;
+						sort(sample.begin(), sample.end());
+						if(find(store.begin(), store.end(), sample) == store.end()) store.push_back(sample);
+					} 
+					return ;
+				}
+				int n = coins.size();
+				for(int i=0; i<n; i++){
+					c += coins[i];
+					t.push_back(coins[i]);
+					solve(coins, store, t, sum, c);
+					t.pop_back();
+					c -= coins[i];
+				}
+			}
+			int minCoins(vector<int> &coins, int sum) {
+				vector<vector<int>> store;
+				vector<int> t;
+				solve(coins, store, t, sum, 0);
+				int cnt = INT_MAX;
+				for(auto v: store)
+					cnt = min(cnt, (int) v.size());
+				return cnt == INT_MAX ? -1 : cnt;
+			}
+		// Optimized: (Refer POTD: 1285)
+
+	1287) Stickler Thief:
+		Problem Statement:
+			Stickler the thief wants to loot money from the houses arranged in a line. He cannot loot two consecutive houses and aims to maximize his total loot.
+			Given an array, arr[] where arr[i] represents the amount of money in the i-th house.
+			Determine the maximum amount he can loot.
+			Examples:
+			Input: arr[] = [6, 5, 5, 7, 4]
+			Output: 15
+			Explanation: Maximum amount he can get by looting 1st, 3rd and 5th house. Which is 6 + 5 + 4 = 15.
+			Input: arr[] = [1, 5, 3]
+			Output: 5
+			Explanation: Loot only 2nd house and get maximum amount of 5.
+			Input: arr[] = [4, 4, 4, 4]
+			Output: 8
+			Explanation: The optimal choice is to loot every alternate house. Looting the 1st and 3rd houses, or the 2nd and 4th, both give a maximum total of 4 + 4 = 8.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				1 ≤ arr[i] ≤ 10^4
+		// Not Optimized: TC: O(2ⁿ) & SC: O(n)
+			int solve(vector<int> &arr, int idx, int cs, int &mx){
+				int n = arr.size();
+				if(idx >= n) return cs;
+				for(int i=idx; i<n; i++)
+					mx = max(mx, solve(arr, i+2, cs+arr[i], mx));
+				return mx;
+			}
+			int findMaxSum(vector<int>& arr) {
+				int mx=0;
+				solve(arr, 0, 0, mx);
+				return mx;
+			}
+		// Optimized: ❌Pending
+
+	1288) House Robber: (Refer POTD: 1287)
+		Problem Statment:
+			You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
+			Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.
+			Example 1:
+			Input: nums = [1,2,3,1]
+			Output: 4
+			Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+			Total amount you can rob = 1 + 3 = 4.
+			Example 2:
+			Input: nums = [2,7,9,3,1]
+			Output: 12
+			Explanation: Rob house 1 (money = 2), rob house 3 (money = 9) and rob house 5 (money = 1).
+			Total amount you can rob = 2 + 9 + 1 = 12.
+			Constraints:
+				1 <= nums.length <= 100
+				0 <= nums[i] <= 400
+		// Not Optimized:
+			class Solution {
+				public:
+				// cs - current sum
+				int solve(vector<int> &nums, int idx, int cs){
+					int n = nums.size();
+					if(idx >= n) return cs;
+					int mx = 0;
+					for(int i=idx; i<n; i++)
+						mx = max(mx, solve(nums, i+2, cs+nums[i]));
+					return mx;
+				}
+				int rob(vector<int>& nums) {
+					return solve(nums, 0, 0);
+				}
+			};
+		// Optimized: (Refer)
+
 1289)
 1290)
 1290)
