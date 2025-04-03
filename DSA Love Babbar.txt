@@ -30610,6 +30610,25 @@ Lecture 86: BFS Traversal in Graph:
 				return ans;
 			}
 		};
+		// or
+		vector<int> bfs(vector<vector<int>> &adj) {
+			int n = adj.size();
+			vector<int> vis(n, 0), ans;
+			queue<int> q;
+			q.push(0);
+			while(!q.empty()){
+				int element = q.front();
+				if(!vis[element]){
+					vis[element] = 1;
+					ans.push_back(element);
+				}
+				q.pop();
+				for(int nbr: adj[element])
+					if(!vis[nbr]) 
+						q.push(nbr);
+			}
+			return ans;
+		}
 ---------------------------------------------------------------------------------------------------------
 	22/01/25
 Lecture 87: DFS Traversal in Graph:
@@ -33172,7 +33191,24 @@ Lecture 104: Minimum Number of Coins || DP Series:
 					int val = solve(num, x);
 					return val == INT_MAX ? -1 : val;
 				}
-		// Optimized: TC: O(n) & SC: O(n)
+			// Practice:
+				#include <bits/stdc++.h> 
+				void solve(vector<int> &num, int idx, int cSum, int x, int cnt, int &ans){
+					if(cSum >= x){
+						if(cSum == x) ans = min(cnt, ans);
+						return ;
+					}
+					int n = num.size();
+					for(int i=idx; i<n; i++)
+						solve(num, i, cSum+num[i], x, cnt+1, ans);
+				}
+				int minimumElements(vector<int> &num, int x) {
+					// num, indx, sum, target
+					int cnt=0, ans=INT_MAX;
+					solve(num, 0, 0, x, cnt, ans);
+					return ans == INT_MAX ? -1: ans;
+				}
+		// Optimized: TC: O(n) & SC: O(n)+O(n)
 			#include <bits/stdc++.h>
 			int solve(vector<int> &num, int x, vector<int> &dp){
 				if(x == 0) return 0;
@@ -33195,9 +33231,399 @@ Lecture 104: Minimum Number of Coins || DP Series:
 				dp[x] = solve(num, x, dp);
 				return dp[x] == INT_MAX ? -1 : dp[x];
 			}
-	
+		// Tabulation: TC: O(n*m) & SC: O(n)
+			#include <bits/stdc++.h> 
+			int minimumElements(vector<int> &num, int x) {
+				// if(!x) return 0;
+				vector<int> dp (x+1, INT_MAX);
+				dp[0]=0;
+				for(int i=1; i<=x; i++){
+					for(int coin: num){
+						if(coin <= i && dp[i-coin] != INT_MAX)
+							dp[i] = min(dp[i], 1+dp[i-coin]);
+					}
+				}
+				return dp[x] == INT_MAX ? -1 : dp[x];
+			}
+		// Recursion+Memoization: TC: O(n) & SC: O(n)+ O(n)
+			#include <bits/stdc++.h>
+			int solve(vector<int> &num, int x, vector<int> &dp){
+				if(x == 0) return dp[0];
+				if(x < 0) return -1;
+				if(dp[x] != -1) return dp[x];
+				
+				int mini = INT_MAX;
+				for(int i: num){
+					int ans = solve(num, x-i, dp);
+					if(ans == -1) continue;
+					mini = min(mini, 1+ans);
+				}
+				return dp[x] = mini == INT_MAX ? -1 : mini;
+			}
+			int minimumElements(vector<int> &num, int x){
+				vector<int> dp (x+1, -1);
+				dp[0] = 0;
+				dp[x] = solve(num, x, dp);
+				return dp[x];
+			}
 ---------------------------------------------------------------------------------------------------------
+	31/03/25
+Lecture 105: Maximum Sum of Non-Adjacent Elements || DP Series: ❌Pending
+	Q. Maximum sum of non-adjacent elements:
+		Problem statement:
+			You are given an array/list of ‘N’ integers. You are supposed to return the maximum sum of the subsequence with the constraint that no two elements are adjacent in the given array/list.
+			Note:
+			A subsequence of an array/list is obtained by deleting some number of elements (can be zero) from the array/list, leaving the remaining elements in their original order.
+			Constraints:
+				1 <= T <= 500
+				1 <= N <= 1000
+				0 <= ARR[i] <= 10^5
+			Where 'ARR[i]' denotes the 'i-th' element in the array/list.
+			Time Limit: 1 sec.
+			Sample Input 1:
+			2
+			3
+			1 2 4
+			4
+			2 1 4 9
+			Sample Output 1:
+			5
+			11
+			Explanation to Sample Output 1:
+			In test case 1, the sum of 'ARR[0]' & 'ARR[2]' is 5 which is greater than 'ARR[1]' which is 2 so the answer is 5.
+			In test case 2, the sum of 'ARR[0]' and 'ARR[2]' is 6, the sum of 'ARR[1]' and 'ARR[3]' is 10, and the sum of 'ARR[0]' and 'ARR[3]' is 11. So if we take the sum of 'ARR[0]' and 'ARR[3]', it will give the maximum sum of sequence in which no elements are adjacent in the given array/list.
+			Sample Input 2:
+			2
+			5
+			1 2 3 5 4
+			9
+			1 2 3 1 3 5 8 1 9
+			Sample Output 2:
+			8
+			24
+			Explanation to Sample Output 2:
+			In test case 1, out of all the possibilities, if we take the sum of 'ARR[0]', 'ARR[2]' and 'ARR[4]', i.e. 8, it will give the maximum sum of sequence in which no elements are adjacent in the given array/list.
+			In test case 2, out of all the possibilities, if we take the sum of 'ARR[0]', 'ARR[2]', 'ARR[4]', 'ARR[6]' and 'ARR[8]', i.e. 24 so, it will give the maximum sum of sequence in which no elements are adjacent in the given array/list.
+		// Not Optimized: TC: (2ⁿ) & SC: O(n)
+			#include <bits/stdc++.h> 
+			void solve(vector<int> &nums, int indx, int curSum, int &mxAns){
+				int n = nums.size();
+				if(indx >= n){
+					mxAns = max(mxAns, curSum);
+					return;
+				}
+				for(int i=indx; i<n; i++)
+					solve(nums, i+2, curSum+nums[i], mxAns);
+			}
+			int maximumNonAdjacentSum(vector<int> &nums){
+				int mxAns = 0;
+				// nums, index, curSum, ans
+				solve(nums, 0, 0, mxAns);
+				return mxAns;
+			}	
+		// Optimized: Recursion+Memoization : TC: O(n) & SC: O(n)
+			#include <bits/stdc++.h>
+			int solve(vector<int> &nums, int indx, vector<int> &dp){
+				if(indx >= nums.size()) return 0;
+				if(dp[indx] != -1) return dp[indx];
+				return dp[indx] = max(solve(nums, indx+2, dp)+nums[indx], solve(nums, indx+1, dp));
+			}
+			int maximumNonAdjacentSum(vector<int> &nums){
+				int n = nums.size();
+				if(!n) return 0;
+				if(n == 1) return nums[0];
+				vector<int> dp (n, -1);
+				return max(solve(nums, 0, dp), solve(nums, 1, dp));
+			}
+		// Tabulation:
+			#include <bits/stdc++.h> 
+			int maximumNonAdjacentSum(vector<int> &nums){
+				int n = nums.size();
+				if(!n) return 0;
+				if(n == 1) return nums[0];
+				vector<int> dp (n, 0);
+				dp[0] = nums[0];
+
+				for(int i=1; i<n; i++){
+					int include = nums[i];
+					if(i != 1) include += dp[i-2];
+					int exclude = dp[i-1];
+					dp[i] = max(include, exclude);
+				}
+				return dp[n-1];
+			}
+		// Space Optimization:
+			#include <bits/stdc++.h> 
+			int maximumNonAdjacentSum(vector<int> &nums){
+				int n = nums.size();
+				if(!n) return 0;
+				if(n == 1) return nums[0];
+				int prev1 = nums[0], prev2=0;
+				for(int i=1; i<n; i++){
+					int cur = max(nums[i] + prev2, prev1);
+					prev2 = prev1;
+					prev1 = cur;
+				}
+				return prev1;
+			}
 ---------------------------------------------------------------------------------------------------------
+	1/04/25
+Lecture 106: House Robbery Problem || DP Series: ❌Pending
+	Q. House Robber II:
+		Problem statement
+			Mr. X is a professional robber planning to rob houses along a street. Each house has a certain amount of money hidden.
+			All houses along this street are arranged in a circle. That means the first house is the neighbour of the last one. Meanwhile, adjacent houses have a security system connected, and it will automatically contact the police if two adjacent houses are broken into on the same night.
+			You are given an array/list of non-negative integers 'ARR' representing the amount of money of each house. Your task is to return the maximum amount of money Mr. X can rob tonight without alerting the police.
+			Note:
+			It is possible for Mr. X to rob the same amount of money by looting two different sets of houses. Just print the maximum possible robbed amount, irrespective of sets of houses robbed.
+			For example:
+			(i) Given the input array arr[] = {2, 3, 2} the output will be 3 because Mr X cannot rob house 1 (money = 2) and then rob house 3 (money = 2), because they are adjacent houses. So, he’ll rob only house 2 (money = 3)
+			(ii) Given the input array arr[] = {1, 2, 3, 1} the output will be 4 because Mr X rob house 1 (money = 1) and then rob house 3 (money = 3).
+			(iii) Given the input array arr[] = {0} the output will be 0 because Mr. X has got nothing to rob.
+			Constraints:
+			1 <= T <= 10
+			1 <= N <= 5 x 10 ^ 3
+			1 <= ARR[i] <= 10 ^ 9
+			Time limit: 1 sec.
+			Sample Input 1:
+			3
+			1
+			0
+			3
+			2 3 2
+			4
+			1 3 2 1
+			Sample Output 1:
+			0
+			3
+			4
+			Explanation of Input 1:
+			(i) Mr. X has only one house to rob, but with no money.
+
+			(ii) Mr. X cannot rob house 1 (money = 2) and then rob house 3 (money = 2), because they are adjacent houses (remember, it’s a circular street). So, he’ll rob only house 2 (money = 3) with a maximum value
+
+			(iii) Mr. X will get maximum value when he robs house 2 (money = 3) and then robs house 4 (money = 1) i.e. 4 units of money.
+			Sample Input 2:
+			3
+			5
+			1 5 1 2 6
+			3
+			2 3 5
+			4
+			1 3 2 0
+			Sample Output 2:
+			11
+			5
+			3
+		// Not Optimized:
+			#include <bits/stdc++.h> 
+			typedef long long int lli;
+			void solve(vector<int> &v, int idx, lli s, lli &ans){
+				int n = v.size();
+				if(idx >= n){
+					ans = max(ans, s);
+					return ;
+				}
+				for(int i=idx; i<n; i++)
+					solve(v, i+2, s+v[i], ans);
+			}
+			lli houseRobber(vector<int>& valueInHouse) {
+				int n = valueInHouse.size();
+				if(!n) return 0;
+				if(n == 1) return valueInHouse[0];
+				vector<int> v1, v2;
+				for(int i=0; i<n; i++){
+					if(i != 0) v2.push_back(valueInHouse[i]);
+					if(i != n-1) v1.push_back(valueInHouse[i]);
+				}
+				
+				lli ans=0;
+				for(int i=0; i<v1.size(); i++)
+					solve(v1, i+2, v1[i], ans);
+
+				for(int i=0; i<v2.size(); i++)
+					solve(v2, i+2, v2[i], ans);
+				return ans;
+			}
+		// Optimized: ❌Pending
+---------------------------------------------------------------------------------------------------------
+	02/04/25
+Lecture 107: Cut Rod into Segments of X, Y, Z || DP Series:
+	Q. Cut Into Segments:
+		Problem statement
+			You are given an integer ‘N’ denoting the length of the rod. You need to determine the maximum number of segments you can make of this rod provided that each segment should be of the length 'X', 'Y', or 'Z'.
+			Input Format:
+			The first line of input contains an integer ‘T’ denoting the number of test cases.
+			The next ‘T’ lines represent the ‘T’ test cases.
+			The only line of each test case contains 4 integers denoting ‘N’, ’X’, ’Y’, and ‘Z’,  where ‘N’ is the length of the rod and 'X', 'Y', 'Z' are the segments into which a given rod can be cut into. 
+			Output Format:
+			For each test case, return the maximum number of cut segments from the given rod.
+			Print the output of each test case in a separate line.
+			Note:
+			You do not need to print anything, it has already been taken care of. Just implement the given function.
+			Constraint:
+				1 <= T <= 50
+				1 <= N <= 10000
+				1 <= X, Y, Z <= N
+				Time Limit: 1 sec
+			Sample Input 1:
+			2
+			7 5 2 2
+			8 3 3 3
+			Sample Output 1:
+			2
+			0
+			Explanation For Sample Input 1:
+			In the first test case, cut it into 2 parts of 5 and 2.
+			In the second case, there is no way to cut into segments of 3 length only as the length of the rod is less than the given length. 
+			Sample Input 2:
+			2
+			7 3 2 2
+			8 1 4 4
+			Sample Output 2:
+			3
+			8
+			Explanation For Sample Input 2:
+			In the first test case, cut it into 3 parts of 3, 2 and 2.
+			In the second case, cut it into 8 parts of length 1.
+		// Not Optimized: TC: O(3ⁿ) & SC: O(n), here the size of vector is 3 so. if the size is p & rod length is q then it will be P^Q	
+			#include<climits>
+			void solve(int n, vector<int> &cuts, int &maxCuts, int currentCut, int total, int cnt){
+				if(total >= n) {
+					if(total == n) 
+						maxCuts = max(maxCuts, cnt);
+					return ;
+				}
+				for(int i=currentCut; i<cuts.size(); i++)
+					solve(n, cuts, maxCuts, i, total+cuts[i], cnt+1);
+			}
+			int cutSegments(int n, int x, int y, int z) {
+				if(!n) return 0;
+				if(!x or !y or !z) return INT_MAX; 		// incase where if x or y or z is zero then we can make infinite cuts to rods with 0 length
+				int maxCuts = 0;
+				vector<int> cuts {x, y, z};
+				for(int i=0; i<3; i++)
+					solve(n, cuts, maxCuts, i, 0, 0);
+				return maxCuts;
+			}
+		// Optimized: Recursion+Memoization: TC: O(n) & SC: O(n) + O(n)
+			#include<limits.h>
+			int solveMem(int n, int x, int y, int z, vector<int> &dp){
+				if(n < 0) return -1;
+				if(n == 0) return dp[0];
+				if(dp[n] != -1) return dp[n];
+
+				int v1 = solveMem(n-x, x, y, z, dp);
+				if(v1 >= 0) dp[n] = max(dp[n], v1+1);
+
+				int v2 = solveMem(n-y, x, y, z, dp);
+				if(v2 >= 0) dp[n] = max(dp[n], v2+1);
+				
+				int v3 = solveMem(n-z, x, y, z, dp);
+				if(v3 >= 0) dp[n] = max(dp[n], v3+1);
+				return dp[n];
+			}
+			int cutSegments(int n, int x, int y, int z) {
+				if(!n) return 0;
+				if(!x or !y or !z) return INT_MAX;
+				vector<int> dp(n+1, -1);
+				dp[0] = 0;
+				solveMem(n, x, y, z, dp);
+				return dp[n] == -1 ? 0 : dp[n];
+			}
+			// or
+				int	solve(int n,int x, int y, int z, vector<int> &dp){
+					if(n < 0) return -1;
+					if(n==0) return dp[0];
+					if(dp[n]!=-1) return dp[n];
+
+					int a = solve(n-x, x, y, z, dp);
+					if(a != -1) dp[n] = max(dp[n], a)+1;
+					int b = solve(n-y, x, y, z, dp);
+					if(b != -1) dp[n] = max(dp[n], b)+1;
+					int c = solve(n-z, x, y, z, dp);
+					if(c != -1) dp[n] = max(dp[n], c)+1;
+
+					return dp[n];
+				}
+				int cutSegments(int n, int x, int y, int z) {
+					vector<int> dp(n+1, -1);
+					dp[0] = 0;
+					solve(n, x, y, z, dp);
+					return dp[n] == -1 ? 0 : dp[n];
+				}
+		// Tabulation: TC: O(n) & SC: O(n)
+			int cutSegments(int n, int x, int y, int z) {
+				vector<int> dp(n+1, -1);
+				dp[0] = 0;
+				for(int i=1; i<=n; i++){
+					// verify is dp[i-x] or dp[i-y] or dp[i-z] were possible to make
+					if(i-x >= 0 and dp[i-x] > -1) dp[i] = max(dp[i], dp[i-x]+1);
+					if(i-y >= 0 and dp[i-y] > -1) dp[i] = max(dp[i], dp[i-y]+1);
+					if(i-z >= 0 and dp[i-z] > -1) dp[i] = max(dp[i], dp[i-z]+1);
+				}
+				return dp[n] == -1 ? 0 : dp[n];
+			}
+		// Space Optimization: Not Possible here, coz the current cut might depends on any previous value.
+---------------------------------------------------------------------------------------------------------
+	03/04/25
+Lecture 108: Count derangements || DP Series:
+	Q. Count derangements:
+		Problem statement
+			A Derangement is a permutation of ‘N’ elements, such that no element appears in its original position. For example, an instance of derangement of {0, 1, 2, 3} is {2, 3, 1, 0}, because 2 present at index 0 is not at its initial position which is 2 and similarly for other elements of the sequence.
+			Given a number ‘N’, find the total number of derangements possible of a set of 'N’ elements.
+			Note:
+			The answer could be very large, output answer %(10 ^ 9 + 7).
+			Constraints:
+				1 <= T <= 100
+				1 <= N <= 3000
+				Time limit: 1 sec
+			Sample Input 1:
+			2
+			2
+			3
+			Sample Output 1:
+			1
+			2
+			Explanation of Sample Output 1:
+			In test case 1, For two elements say {0, 1}, there is only one possible derangement {1, 0}. 1 is present at index 0 and not at its actual position, that is, 1. Similarly, 0 is present at index 1 and not at its actual position, that is, 0.
+			In test case 2, For three elements say {0, 1, 2}, there are two possible derangements {2, 0, 1} and {1, 2, 0}. In both the derangements, no element is present at its actual position.
+			Sample Input 2:
+			2
+			1
+			4
+			Sample Output 2:
+			0
+			9
+			Explanation of Sample Output 2:
+			In test case 1, For the array = {0}, there is no possible derrangements. Hence the answer is 0 (zero).
+			In test case 2, For the array elements = {0, 1, 2, 3}, total 9 derrangements are possible. One of them is: { 3, 2, 1, 0}.
+		// Not Optimized: TC: O(n!*n) & SC: (n!*n)
+			#include<vector>
+			#include<algorithm>
+			long long int countDerangements(int n) {
+				vector<int> hold;
+				int z=0;
+				while(z<n) hold.push_back(z++);
+				long long int ans=0;
+				vector<vector<int>> AllPermutations;
+				// saving all permutations
+				while(next_permutation(hold.begin(), hold.end())) AllPermutations.push_back(hold);
+
+				for(auto v: AllPermutations){
+					int flag=1;
+					for(int i=0; i<n; i++){
+						if(v[i] == hold[i]){
+							flag = 0;
+							break;
+						}
+					}
+					if(flag) ans++;
+				}
+				return ans;
+			}
+
+
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -34654,7 +35080,7 @@ Love Babbar Contests: ❌Pending
 				-A delete without [] frees the memory of only a single element.
 				-There is no built-in mechanism to resize C++ arrays.
 
-	//count the no.of digit in number:
+	//count the no.of digit in number: This works for +ve nums only
 		#include <iostream>
 		#include<cmath>
 		using namespace std;
@@ -68481,7 +68907,34 @@ POTD:-[Problem of the Day]
 				return BinarySearch(arr, 0, partIndex-1, k);
 			return BinarySearch(arr, partIndex, n-1, k);
 		}
-		
+
+		// or https://leetcode.com/problems/search-in-rotated-sorted-array/
+			There is an integer array nums sorted in ascending order (with distinct values).
+			Prior to being passed to your function, nums is possibly rotated at an unknown pivot index k (1 <= k < nums.length) such that the resulting array is [nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]] (0-indexed). For example, [0,1,2,4,5,6,7] might be rotated at pivot index 3 and become [4,5,6,7,0,1,2].
+			Given the array nums after the possible rotation and an integer target, return the index of target if it is in nums, or -1 if it is not in nums.
+			You must write an algorithm with O(log n) runtime complexity.
+			Example 1:
+			Input: nums = [4,5,6,7,0,1,2], target = 0
+			Output: 4
+			Example 2:
+			Input: nums = [4,5,6,7,0,1,2], target = 3
+			Output: -1
+			Example 3:
+			Input: nums = [1], target = 0
+			Output: -1
+			Constraints:
+				1 <= nums.length <= 5000
+				-10^4 <= nums[i] <= 10^4
+				All values of nums are unique.
+				nums is an ascending array that is possibly rotated.
+				-10^4 <= target <= 10^4
+			int search(vector<int>& nums, int target) {
+				int n = nums.size();
+				for(int i=0; i<n; i++)
+					if(nums[i] == target) return i;
+				return -1;
+			}
+
 	391) Find First Palindromic String in the Array:
 		Problem statement:
 			Given an array of strings words, 
@@ -116112,14 +116565,28 @@ POTD:-[Problem of the Day]
 				Input: arr[] = [3, 5, 1, 2], key = 6
 				Output: -1
 				Explanation: There is no element that has value 6.
-
 			Expected Time Complexity: O(log n)
 			Expected Auxiliary Space: O(1)
-
 			Constraints:
 				1 ≤ arr.size() ≤ 10^6
 				0 ≤ arr[i] ≤ 10^6
 				1 ≤ key ≤ 10^5
+
+			Given a sorted and rotated array arr[] of distinct elements, the task is to find the index of a target key. Return -1 if the key is not found.
+			Examples:
+			Input: arr[] = [5, 6, 7, 8, 9, 10, 1, 2, 3], key = 3
+			Output: 8
+			Explanation: 3 is found at index 8.
+			Input: arr[] = [3, 5, 1, 2], key = 6
+			Output: -1
+			Explanation: There is no element that has value 6.
+			Input: arr[] = [33, 42, 72, 99], key = 42
+			Output: 1
+			Explanation: 42 is found at index 1.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^6
+				0 ≤ arr[i] ≤ 10^6
+				1 ≤ key ≤ 10^6
 
 		class Solution {
 			public:
@@ -130153,6 +130620,29 @@ POTD:-[Problem of the Day]
 					return store.size();
 				}
 			};
+		// Little bit Optimized: (if you don't understand this solution please DRY RUN this with given sample I/O 5 times)
+			class Solution {
+				public:
+				void solve(vector<int> &coins, int amount, int indx, int &ways){
+					if(amount <= 0){
+						if(amount == 0) ways++;
+						return ;
+					}
+					int n = coins.size();
+					for(int i=indx; i<n; i++)
+						solve(coins, amount-coins[i], i, ways);
+				}
+				int change(int amount, vector<int>& coins) {
+					if(!amount) return 1;
+					int ways=0, n=coins.size();
+					// doing this so it should not take the repetitive combination
+					// like 2+1+1+1 or 1+2+1+1 or 1+1+2+1 or 1+1+1+2 are same combinations 
+					// so to ignore them will start from current index
+					for(int i=0; i<n; i++)
+						solve(coins, amount-coins[i], i, ways);
+					return ways;
+				}
+			};
 		// Optimized: ❌Pending
 
 	1285) Coin Change (Count Ways):
@@ -130261,7 +130751,7 @@ POTD:-[Problem of the Day]
 					cnt = min(cnt, (int) v.size());
 				return cnt == INT_MAX ? -1 : cnt;
 			}
-		// Optimized: (Refer POTD: 1285)
+		// Optimized: (Refer POTD: 1285, Lect-104)
 
 	1287) Stickler Thief:
 		Problem Statement:
@@ -130329,11 +130819,777 @@ POTD:-[Problem of the Day]
 					return solve(nums, 0, 0);
 				}
 			};
-		// Optimized: (Refer)
+		// Optimized: (Refer Lect-105)
 
-1289)
-1290)
-1290)
+	1289) Stickler Thief II: (Refer POTD: 1287)
+		Problem Statement:
+			You are given an array arr[] which represents houses arranged in a circle, where each house has a certain value. A thief aims to maximize the total stolen value without robbing two adjacent houses.
+			Determine the maximum amount the thief can steal.
+			Note: Since the houses are in a circle, the first and last houses are also considered adjacent.
+			Examples:
+				Input: arr[] = [2, 3, 2]
+				Output: 3
+				Explanation: arr[0] and arr[2] can't be robbed because they are adjacent houses. Thus, 3 is the maximum value thief can rob.
+				Input: arr[] = [1, 2, 3, 1]
+				Output: 4
+				Explanation: Maximum stolen value: arr[0] + arr[2] = 1 + 3 = 4
+				Input: arr[] = [2, 2, 3, 1, 2]
+				Output: 5
+				Explanation: Maximum stolen value: arr[0] + arr[2] = 2 + 3 = 5 or arr[2] + arr[4] = 3 + 2 = 5
+			Constraints:
+				2 ≤ arr.size() ≤ 10^5
+				0 ≤ arr[i] ≤ 10^4
+		// Not Optimized: TC: O(2ⁿ) & SC: O(n)
+			class Solution {
+				public:
+				void solve(vector<int> &v, int idx, int s, int &ans){
+					int n = v.size();
+					if(idx >= n){
+						ans = max(ans, s);
+						return ;
+					}
+					for(int i=idx; i<n; i++)
+						solve(v, i+2, s+v[i], ans);
+				}
+				int maxValue(vector<int>& arr) {
+					int n = arr.size();
+					if(!n) return 0;
+					if(n == 1) return arr[0];
+					vector<int> v1, v2;
+					for(int i=0; i<n-1; i++)
+						v1.push_back(arr[i]);
+					
+					for(int i=1; i<n; i++)
+						v2.push_back(arr[i]);
+					
+					int ans=0;
+					for(int i=0; i<v1.size(); i++) 
+						solve(v1, i+2, v1[i], ans);
+				
+					for(int i=0; i<v2.size(); i++) 
+						solve(v2, i+2, v2[i], ans);
+					
+					return ans;
+				}
+			};
+		// Optimized: (Refer Lect-106)
+
+	1290) Coin Change: (POTD: 1284)
+		Problem Statement:
+			You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+			Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+			You may assume that you have an infinite number of each kind of coin.
+			Example 1:
+			Input: coins = [1,2,5], amount = 11
+			Output: 3
+			Explanation: 11 = 5 + 5 + 1
+			Example 2:
+			Input: coins = [2], amount = 3
+			Output: -1
+			Example 3:
+			Input: coins = [1], amount = 0
+			Output: 0
+			Constraints:
+				1 <= coins.length <= 12
+				1 <= coins[i] <= 2^31 - 1
+				0 <= amount <= 10^4
+		// Not Optimized: TC: O(n^m) & SC: O(n), where, n is no.of coins & m is target amount to make
+			class Solution {
+				public:
+				void solve(vector<int> &coins, int amount, int cnt, int &ans){
+					if(amount <= 0){
+						if(amount == 0) ans = min(ans, cnt);
+						return;
+					}
+					for(int c: coins)
+						solve(coins, amount - c, cnt+1, ans);
+				}
+				int coinChange(vector<int>& coins, int amount) {
+					int ans = INT_MAX;
+					solve(coins, amount, 0, ans);
+					return ans == INT_MAX ? -1 : ans;
+				}
+			};
+		// Optimized: (Refer POTD: 1286)
+			class Solution {
+				public:
+				int coinChange(vector<int>& coins, int amount) {
+					vector<int> dp(amount+1, INT_MAX);
+					dp[0] = 0;
+					for(int i=1; i<=amount; i++){
+						for(int c: coins){
+							int prev = i-c;
+							if(prev >= 0 and dp[prev] != INT_MAX)
+								dp[i] = min(dp[i], 1+dp[prev]);
+						}
+					}
+					return dp[amount] == INT_MAX ? -1 : dp[amount];
+				}
+			};
+
+	1291) Minimum Platforms:
+		Problem Statement:
+			You are given the arrival times arr[] and departure times dep[] of all trains that arrive at a railway station on the same day. Your task is to determine the minimum number of platforms required at the station to ensure that no train is kept waiting.
+			At any given time, the same platform cannot be used for both the arrival of one train and the departure of another. Therefore, when two trains arrive at the same time, or when one arrives before another departs, additional platforms are required to accommodate both trains.
+			Examples:
+			Input: arr[] = [900, 940, 950, 1100, 1500, 1800], dep[] = [910, 1200, 1120, 1130, 1900, 2000]
+			Output: 3
+			Explanation: There are three trains during the time 9:40 to 12:00. So we need a minimum of 3 platforms.
+			Input: arr[] = [900, 1235, 1100], dep[] = [1000, 1240, 1200]
+			Output: 1
+			Explanation: All train times are mutually exclusive. So we need only one platform
+			Input: arr[] = [1000, 935, 1100], dep[] = [1200, 1240, 1130]
+			Output: 3
+			Explanation: All 3 trains have to be there from 11:00 to 11:30
+			Constraints:
+				1≤ number of trains ≤ 50000
+				0000 ≤ arr[i] ≤ dep[i] ≤ 2359
+				Note: Time intervals are in the 24-hour format(HHMM) , where the first two characters represent hour (between 00 to 23 ) and the last two characters represent minutes (this will be <= 59 and >= 0).
+		// Not Optimized: TC: O(n²) & SC: O(n)
+			typedef pair<int, int> pii;
+			class Solution {
+				public:
+				// Function to find the minimum number of platforms required at the
+				// railway station such that no train waits.
+				int findPlatform(vector<int>& arr, vector<int>& dep) {
+					int n = arr.size();
+					if(!n) return 0;
+					// pii<arrival, departure>
+					vector<pii> ArrivalSorted;
+					for(int i=0; i<n; i++)
+						ArrivalSorted.push_back({arr[i], dep[i]});
+
+					sort(ArrivalSorted.begin(), ArrivalSorted.end());
+					int minPlatformReq = 1;
+					for(int i=1; i<n; i++){
+						int j=i, needToBuyPlatform = 1;
+						while(j--){
+							if(ArrivalSorted[j].second == INT_MAX or ArrivalSorted[j].second >= ArrivalSorted[i].first) continue;
+							else {
+								// we can adjust with existing platform
+								needToBuyPlatform = 0;  // or use below one
+								// needToBuyPlatform = !needToBuyPlatform;
+								// this train is gone no longer exist
+								ArrivalSorted[j].first = ArrivalSorted[j].second = INT_MAX;
+								break;
+							}
+						}
+						if(needToBuyPlatform) minPlatformReq++;
+					}
+					return minPlatformReq;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1292) Activity Selection
+		Problem Statement:
+			You are given a set of activities, each with a start time and a finish time, represented by the arrays start[] and finish[], respectively. A single person can perform only one activity at a time, meaning no two activities can overlap. Your task is to determine the maximum number of activities that a person can complete in a day.
+			Examples:
+			Input: start[] = [1, 3, 0, 5, 8, 5], finish[] = [2, 4, 6, 7, 9, 9]
+			Output: 4
+			Explanation: A person can perform at most four activities. The maximum set of activities that can be executed is {0, 1, 3, 4}
+			Input: start[] = [10, 12, 20], finish[] = [20, 25, 30]
+			Output: 1
+			Explanation: A person can perform at most one activity.
+			Input: start[] = [1, 3, 2, 5], finish[] = [2, 4, 3, 6]
+			Output: 3
+			Explanation: A person can perform activities 0, 1 and 3.
+			Constraints:
+				1 ≤ start.size() = finish.size() ≤ 2*10^5
+				1 ≤ start[i] ≤ finish[i] ≤ 10^9
+		// Not Optimized: TC: O(n²) & SC: O(n)
+			#define pii pair<int, int>
+			class Solution {
+				public:
+				int activitySelection(vector<int> &start, vector<int> &finish) {
+					vector<pii> SortedStart;
+					int n = start.size();
+					for(int i=0; i<n; i++) SortedStart.push_back({start[i], finish[i]});
+					sort(SortedStart.begin(), SortedStart.end());
+					// for(auto i: SortedStart)
+					//     cout<<i.first<<"\t"<<i.second<<endl;
+						
+					int mxActivity = 0;
+					for(int i=0; i<n-1; i++){
+						int cnt = 1, currentConsideredActivityIndex = i;
+						for(int j=i+1; j<n; j++){
+							if(SortedStart[j].first > SortedStart[currentConsideredActivityIndex].second){
+								currentConsideredActivityIndex = j;
+								cnt++;
+							}
+						}
+						currentConsideredActivityIndex = i;
+						for(int j=i-1; j>=0; j--){
+							if(SortedStart[j].second < SortedStart[currentConsideredActivityIndex].first){
+								currentConsideredActivityIndex = j;
+								cnt++;
+							}
+						}
+						mxActivity = max(mxActivity, cnt);
+					}
+					return mxActivity;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1293) Gas Station: (Refer Lect-61)
+		Problem Statement:
+			There are some gas stations along a circular route. You are given two integer arrays gas[] denoted as the amount of gas present at each station and cost[] denoted as the cost of travelling to the next station. You have a car with an unlimited gas tank. You begin the journey with an empty tank from one of the gas stations. Return the index of the starting gas station if it's possible to travel around the circuit without running out of gas at any station in a clockwise direction. If there is no such starting station exists, return -1.
+			Note: If a solution exists, it is guaranteed to be unique.
+			Examples:
+			Input: gas[] = [4, 5, 7, 4], cost[]= [6, 6, 3, 5]
+			Output: 2
+			Explanation: It is possible to travel around the circuit from station at index 2. Amount of gas at station 2 is (0 + 7) = 7.
+			Travel to station 3. Available gas = (7 – 3 + 4) = 8.
+			Travel to station 0. Available gas = (8 – 5 + 4) = 7.
+			Travel to station 1. Available gas = (7 – 6 + 5) = 6.
+			Return to station 2. Available gas = (6 – 6) = 0.
+			Input: gas[] = [1, 2, 3, 4, 5], cost[] = [3, 4, 5, 1, 2]
+			Output: 3
+			Explanation: It is possible to travel around the circuit from station at index 3. Amount of gas at station 3 is (0 + 4) = 4.
+			Travel to station 4. Available gas = 4 – 1 + 5 = 8.
+			Travel to station 0. Available gas = 8 – 2 + 1 = 7.
+			Travel to station 1. Available gas= 7 – 3 + 2 = 6.
+			Travel to station 2. Available gas = 6 – 4 + 3 = 5.
+			Travel to station 3. The cost is 5. The gas is just enough to travel back to station 3.
+			Input: gas[] = [3, 9], cost[] = [7, 6]
+			Output: -1
+			Explanation: There is no gas station to start with such that you can complete the circuit.
+			Constraints:
+				1 ≤ gas.size(), cost.size() ≤ 10^6
+				1 ≤ gas[i], cost[i] ≤ 10^3
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			class Solution {
+				public:
+				int startStation(vector<int> &gas, vector<int> &cost) {
+					int i=0, n = cost.size();
+					while(i < n){
+						int remain = 0, possible = 1;
+						for(int j=i; j<n; j++){
+							remain += (gas[j] - cost[j]);
+							if(remain < 0) {
+								possible = 0;
+								break;
+							}
+						}
+						if(possible)
+						for(int j=0; j<i; j++){
+							remain += (gas[j] - cost[j]);
+							if(remain < 0) {
+								possible = 0;
+								break;
+							}
+						}
+						if(possible) return i;
+						i++;
+					}
+					return -1;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1294) Decode Ways:
+		Problem Statement:
+			You have intercepted a secret message encoded as a string of numbers. The message is decoded via the following mapping:
+			"1" -> 'A'
+			"2" -> 'B'
+			...
+			"25" -> 'Y'
+			"26" -> 'Z'
+			However, while decoding the message, you realize that there are many different ways you can decode the message because some codes are contained in other codes ("2" and "5" vs "25").
+			For example, "11106" can be decoded into:
+			"AAJF" with the grouping (1, 1, 10, 6)
+			"KJF" with the grouping (11, 10, 6)
+			The grouping (1, 11, 06) is invalid because "06" is not a valid code (only "6" is valid).
+			Note: there may be strings that are impossible to decode.
+			Given a string s containing only digits, return the number of ways to decode it. If the entire string cannot be decoded in any valid way, return 0.
+			The test cases are generated so that the answer fits in a 32-bit integer.
+			Example 1:
+			Input: s = "12"
+			Output: 2
+			Explanation:
+			"12" could be decoded as "AB" (1 2) or "L" (12).
+			Example 2:
+			Input: s = "226"
+			Output: 3
+			Explanation:
+			"226" could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
+			Example 3:
+			Input: s = "06"
+			Output: 0
+			Explanation:
+			"06" cannot be mapped to "F" because of the leading zero ("6" is different from "06"). In this case, the string is not a valid encoding, so return 0.
+			Constraints:
+				1 <= s.length <= 100
+				s contains only digits and may contain leading zero(s).
+		// Not Optimized: Memory Limit Exceeded (MLE)
+			class Solution {
+				public:
+				void solve(string s, vector<vector<string>> &hold, vector<string> t){
+					if(s[0] == '0') return;         // ignore this, coz in this case we can't decode 0 to any alphabet
+					if(s.size() <= 1){
+						hold.push_back(t);
+						return;    
+					} 
+					// with one char
+					string z = string(1, s[0]);
+					t.push_back(z);
+					solve(s.substr(1), hold, t);
+					t.pop_back();
+
+					// with two char
+					z = string(1, s[0]) + string(1, s[1]);
+					t.push_back(z);
+					solve(s.substr(2), hold, t);
+				}
+				int numDecodings(string s) {
+					int cnt=0;
+					vector<string> t;
+					vector<vector<string>> h;
+					solve(s, h, t);
+					for(auto cur: h){
+						int flag = 1;
+						// is current split valid
+						for(string i: cur)
+							if(stoi(i) > 26){
+								flag = 0;
+								break;
+							}
+						if(flag) cnt++;
+					}
+					return cnt;
+				}
+			};
+
+	1295) House Robber: (Refer POTD: 1288, Lect-106)
+		Problem statement
+			A thief wants to loot houses. He knows the amount of money in each house. He cannot loot two consecutive houses. Find the maximum amount of money he can loot.
+			Constraints :
+				0 <= 'N' <= 10^5
+				0 <= 'A[i]' <= 10^4
+				Where 'A[i]' represents the money present in the 'i-th' house.
+				Time limit: 1 sec
+			Sample Input 1:
+			4
+			10 2 3 11
+			Sample Output 1:
+			21
+			Explanation of Sample Input 1:
+			Since the thief cant loot two consecutive houses, the ways in which he may loot are:
+
+			1. [10, 3]: a total loot of 13
+			2. [10, 11]: a total loot of 21
+			3. [2, 11]: a total loot of 13
+			4. [10]: a total loot of 10
+			5. [2]: a total loot of 2
+			6. [3]: a total loot of 3
+			7. [11]: a total loot of 11
+
+			We can't neglect the option to loot just either of the houses if it yields the maximum loot.
+
+			From all the possible seven ways, the second option yields the maximum loot amount and hence the answer.
+			Sample Input 2:
+			6
+			5 5 10 100 10 5
+			Sample Output 2 :
+			110
+		// Not Optimized:
+			int solve(vector<int> &houses, int s, int idx){
+				int n = houses.size();
+				if(idx >= n) return s;
+				return max(solve(houses, s+houses[idx], idx+2), solve(houses, s, idx+1));
+			}
+			int maxMoneyLooted(vector<int> &houses, int n) {
+				if(!n) return 0;
+				if(n == 1) return houses[0];
+				return max(solve(houses, houses[0], 2), solve(houses, houses[1], 3));
+			}
+			// or
+			void solve(vector<int> &houses, int indx, int s, int &ans){
+				int n = houses.size();
+				if(indx >= n){
+					ans = max(ans, s);
+					return;
+				}
+				for(int i=indx; i<n; i++)
+					solve(houses, i+2, s+houses[i], ans);
+			}
+			int maxMoneyLooted(vector<int> &houses, int n) {
+				/*
+					Write your code here.
+					Don't write main().
+					Don't take input, it is passed as function argument.
+					Don't print output.
+					Taking input and printing output is handled automatically.
+				*/
+				int ans = 0;
+				for(int i=0; i<n; i++)
+					solve(houses, i+2, houses[i], ans);
+				return ans;
+			}
+		// Optimized: (Refer Lect-105)
+			int solve(vector<int> &houses, int idx, vector<int> &dp){
+				if(idx >= houses.size()) return 0;
+				if(dp[idx] != -1) return dp[idx];
+				return dp[idx] = max(solve(houses, idx+2, dp)+houses[idx], solve(houses, idx+1, dp));
+			}
+			int maxMoneyLooted(vector<int> &houses, int n) {
+				if(!n) return 0;
+				if(n == 1) return houses[0];
+				vector<int> dp (n, -1);
+				return max(solve(houses, 0, dp), solve(houses, 1, dp));
+			}
+
+	1296) Strongly Connected: (Refer Lect-100)
+		Problem Statement:
+			Given an adjacency list, adj of Directed Graph, Find the number of strongly connected components in the graph.
+			Examples :
+			Input: adj[][] = [[2, 3], [0], [1], [4], []]
+			Output: 3
+			Explanation: We can clearly see that there are 3 Strongly Connected Components in the Graph.
+			Input: adj[][] = [[1], [2], [0]]
+			Output: 1
+			Explanation: All of the nodes are connected to each other. So, there's only one SCC.
+			Input: adj[][] = [[1], []]
+			Output: 2
+			Constraints:
+				2<=adj.size()<=10^6
+				0<=edges<=adj.size()-1
+		class Solution {
+			public:
+			void DFS(vector<vector<int>> &adj, vector<int> &vis, int i, stack<int> &topo){
+				vis[i] = 1;
+				for(int z: adj[i]){
+					if(!vis[z])
+						DFS(adj, vis, z, topo);
+				}
+				topo.push(i);
+			}
+			void Components(stack<int> &topo, int cur, vector<int> &vis, vector<vector<int>> &transposeAdj){
+				vis[cur] = 1;
+				for(int i: transposeAdj[cur])
+					if(!vis[i])
+						Components(topo, i, vis, transposeAdj);
+			}
+			int kosaraju(vector<vector<int>> &adj) {
+				int SccCnt=0; // scc = strongly Connected Component
+				// toposort
+				int n = adj.size();
+				stack<int> topo;
+				vector<int> vis (n, 0);
+				for(int i=0; i<n; i++)
+					if(!vis[i])
+						DFS(adj, vis, i, topo);
+				
+				// transpose
+				vector<vector<int>> transposeAdj (n);
+				for(int i=0; i<adj.size(); i++)
+					for(int z: adj[i]) transposeAdj[z].push_back(i);
+				
+				vis.assign(n, 0);
+				while(!topo.empty()){
+					int cur = topo.top();
+					topo.pop();
+					if(!vis[cur]){
+						Components(topo, cur, vis, transposeAdj);
+						SccCnt++;
+					}
+				}
+				return SccCnt;
+			}
+		};
+
+	1297) DFS of Graph:
+		Problem Statement:
+			Given a connected undirected graph represented by a 2-d adjacency list adj[][], where each adj[i] represents the list of vertices connected to vertex i. Perform a Depth First Search (DFS) traversal starting from vertex 0, visiting vertices from left to right as per the given adjacency list, and return a list containing the DFS traversal of the graph.
+			Note: Do traverse in the same order as they are in the given adjacency list.
+			Examples:
+			Input: adj[][] = [[2, 3, 1], [0], [0, 4], [0], [2]]
+			Output: [0, 2, 4, 3, 1]
+			Explanation: Starting from 0, the DFS traversal proceeds as follows:
+			Visit 0 → Output: 0 
+			Visit 2 (the first neighbor of 0) → Output: 0, 2 
+			Visit 4 (the first neighbor of 2) → Output: 0, 2, 4 
+			Backtrack to 2, then backtrack to 0, and visit 3 → Output: 0, 2, 4, 3 
+			Finally, backtrack to 0 and visit 1 → Final Output: 0, 2, 4, 3, 1
+			Input: adj[][] = [[1, 2], [0, 2], [0, 1, 3, 4], [2], [2]]
+			Output: [0, 1, 2, 3, 4]
+			Explanation: Starting from 0, the DFS traversal proceeds as follows: 
+			Visit 0 → Output: 0 
+			Visit 1 (the first neighbor of 0) → Output: 0, 1 
+			Visit 2 (the first neighbor of 1) → Output: 0, 1, 2 
+			Visit 3 (the first neighbor of 2) → Output: 0, 1, 2, 3 
+			Backtrack to 2 and visit 4 → Final Output: 0, 1, 2, 3, 4
+			Constraints:
+				1 ≤ adj.size() ≤ 10^4
+				1 ≤ adj[i][j] ≤ 10^4
+		class Solution {
+			public:
+			void DFS(vector<vector<int>> &adj, int node, vector<int> &vis, vector<int> &ans){
+				vis[node] = 1;
+				for(int nbr: adj[node]){
+					if(!vis[nbr]){
+						ans.push_back(nbr);
+						DFS(adj, nbr, vis, ans);
+					}
+				}
+			}
+			vector<int> dfs(vector<vector<int>>& adj) {
+				int n = adj.size();
+				vector<int> ans, vis(n, 0);
+				for(int i=0; i<n; i++){
+					if(!vis[i]){
+						ans.push_back(i);
+						DFS(adj, i, vis, ans);
+					}
+				}
+				return ans;
+			}
+		};
+
+	1298) Minimum Window Substring:
+		Problem Statement:
+			Given two strings s and t of lengths m and n respectively, return the minimum window substring of s such that every character in t (including duplicates) is included in the window. If there is no such substring, return the empty string "".
+			The testcases will be generated such that the answer is unique.
+			Example 1:
+			Input: s = "ADOBECODEBANC", t = "ABC"
+			Output: "BANC"
+			Explanation: The minimum window substring "BANC" includes 'A', 'B', and 'C' from string t.
+			Example 2:
+			Input: s = "a", t = "a"
+			Output: "a"
+			Explanation: The entire string s is the minimum window.
+			Example 3:
+			Input: s = "a", t = "aa"
+			Output: ""
+			Explanation: Both 'a's from t must be included in the window.
+			Since the largest window of s only has one 'a', return empty string.
+			Constraints:
+				m == s.length
+				n == t.length
+				1 <= m, n <= 105
+				s and t consist of uppercase and lowercase English letters.
+			Follow up: Could you find an algorithm that runs in O(m + n) time?
+		// Not Optimized: TC: O(n² * m + x) & SC: O(52)
+			class Solution {
+				public:
+				string minWindow(string s, string t) {
+					map<int, int> FreqT;
+					for(char ch: t) FreqT[ch]++;
+					int size = INT_MAX, n =s.size();
+					vector<string> smallers;
+					for(int i=0; i<n; i++){
+						string cur;
+						map<int, int> FreqSub;
+						for(int j=i; j<n; j++){
+							FreqSub[s[j]]++;
+							cur.push_back(s[j]);
+							int flag =1;
+							for(char ch: t)
+								if(FreqT[ch] > FreqSub[ch]){
+									flag=0;
+									break;
+								}
+							if(flag) smallers.push_back(cur);
+						}
+					}
+					if(smallers.empty()) return "";
+					string ans = smallers[0];
+					for(string cur: smallers)
+						if(cur.size() < ans.size())
+							ans = cur;
+					return ans;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1299) More Green Grass Algorithm: (Human Resocia OA)
+		Problem Statement:
+			They say that the grass is always greener on the other side. This means that other people always seem to be doing better than you.
+			Since we are programmers, we can quantity the greenness of all the “other sides” by writing some code!
+			There are n gardens in a row. 
+			The gardens are numbered 1 to n and the iᵗʰ garden has a greenness of a[i], with higher numbers representing greener gardens.
+			Let us define the “greenness on the other side” for the owner of the iᵗʰ garden as the greenest garden beside the iᵗʰ garden. 
+			Create a program to enumerate all of the “greenness on the other side” for every garden in a row.
+			Given the greenness of n gardens, please calculate the “greenness on the other side” for each garden.
+			Example 1:
+				Input:
+				2
+				1 3
+				Output:
+				3
+				1
+				In this scenario, with only two gardens, the greenness of the other garden is the “greenness on the other side” for each garden.
+				Example 2:
+				Input:
+				3
+				-10 2 100000
+				Output:
+				100000
+				100000
+				2
+			Here, despite the third garden boasting an impressive greenness value of 100000, its owner perceives the adjacent garden’s greenness (2) as superior.
+		// Not Optimized: TC: O(n²) & SC: O(n)
+			#include <iostream>
+			#include <vector>
+			#include <algorithm>
+			using namespace std;
+			typedef long long ll;
+			int main() {
+				ll n;
+				cin >> n;
+				
+				vector<ll> garden(n);
+				for (ll i = 0; i < n; i++) cin >> garden[i];
+
+				if (n == 1) { // Edge case: only one plant
+					cout << 0 << endl;
+					return 0;
+				}
+				vector<ll> ans;
+				for (int i = 0; i < n; i++) {
+					ll mx = LLONG_MIN;
+					for (int j = 0; j<n; j++) {
+						if(i == j) continue;
+						mx = max(garden[j], mx);
+					}
+					ans.push_back(ans);
+				}
+				for (ll i: ans) cout << i << endl;
+				return 0;
+			}
+		// Optimized: TC: O(n) & SC: O(n)
+			#include <iostream>
+			#include <vector>
+			#include <algorithm>
+			using namespace std;
+			typedef long long ll;
+			int main() {
+				ll n;
+				cin >> n;
+				vector<ll> garden(n);
+				for (ll i = 0; i < n; i++) {
+					cin >> garden[i];
+				}
+
+				if (n == 1) { // Edge case: only one plant
+					cout << 0 << endl;
+					return 0;
+				}
+
+				vector<ll> left_max(n), right_max(n);
+				left_max[0] = 0;  // No left neighbor
+				for (ll i = 1; i < n; i++) {
+					left_max[i] = max(left_max[i - 1], garden[i - 1]);
+				}
+
+				right_max[n - 1] = 0;  // No right neighbor
+				for (ll i = n - 2; i >= 0; i--) {
+					right_max[i] = max(right_max[i + 1], garden[i + 1]);
+				}
+
+				for (ll i = 0; i < n; i++) {
+					cout << max(left_max[i], right_max[i]) << endl;
+				}
+				return 0;
+			}
+
+	1300) Rotten Oranges:
+		Problem Statement:
+			Given a matrix mat[][] of dimension n * m where each cell in the matrix can have values 0, 1 or 2 which has the following meaning:
+			0 : Empty cell
+			1 : Cell have fresh oranges
+			2 : Cell have rotten oranges
+			We have to determine what is the earliest time after which all the oranges are rotten. A rotten orange at index (i, j) can rot other fresh orange at indexes (i-1, j), (i+1, j), (i, j-1), (i, j+1) (up, down, left and right) in a unit time.
+			Note: Your task is to return the minimum time to rot all the fresh oranges. If not possible returns -1.
+			Examples:
+			Input: mat[][] = [[0, 1, 2], [0, 1, 2], [2, 1, 1]]
+			Output: 1
+			Explanation: Oranges at positions (0,2), (1,2), (2,0) will rot oranges at (0,1), (1,1), (2,2) and (2,1) in unit time.
+			Input: mat[][] = [[2, 2, 0, 1]]
+			Output: -1
+			Explanation: Oranges at (0,0) and (0,1) can't rot orange at (0,3).
+			Input: mat[][] = [[2, 2, 2], [0, 2, 0]]
+			Output: 0
+			Explanation: There is no fresh orange. 
+			Constraints:
+			1 ≤ mat.size() ≤ 500
+			1 ≤ mat[0].size() ≤ 500
+			mat[i][j] = {0, 1, 2} 
+		// TC: O(n*m) & SC: O(n*m)
+			// typedef pair<int, int> pii;
+			#define pii pair<int, int>
+			class Solution {
+				public:
+				int orangesRotting(vector<vector<int>>& mat) {
+					// BFS traversal of matrix
+					int row = mat.size();
+					if(!row) return 0;      // if not a single row exist
+					int col = mat[0].size();
+					
+					queue<pii> q;
+					for(int i=0; i<row; i++)
+						for(int j=0; j<col; j++)
+							if(mat[i][j] == 2)
+								q.push({i, j});
+
+					if(q.empty()){
+						for(int i=0; i<row; i++)
+							for(int j=0; j<col; j++)
+								if(mat[i][j] == 1) return -1;
+						return 0;
+					} 
+					q.push({-1,-1});            // any random num(which is our of range of rows and columns) so that we can identify that we completed a BFS LEVEL
+					int timer=0;
+					while(!q.empty()){
+						pii cur = q.front();
+						q.pop();
+						int r = cur.first, c = cur.second;
+						if(r == -1) {                                     //if(c == -1)
+							if(!q.empty()){
+								timer++;
+								q.push({r, c});
+							}
+							continue;
+						}   
+						// checking all four side to rot them
+						if(r-1 >= 0 and mat[r-1][c] == 1) {
+							mat[r-1][c] = 2;        // we have rot that fresh orange now
+							q.push({r-1, c});
+						}
+						if(r+1 < row and mat[r+1][c] == 1){
+							mat[r+1][c] = 2;
+							q.push({r+1, c});
+						} 
+						if(c-1 >= 0 and mat[r][c-1] == 1){
+							mat[r][c-1] = 2;
+							q.push({r, c-1});
+						}
+						if(c+1 < col and mat[r][c+1] == 1){
+							mat[r][c+1] = 2;
+							q.push({r, c+1});
+						} 
+					}
+					// after all processing if we find any orange (somewhere in corner)
+					// which is fresh it means we can't make all oranges rotten
+					for(int i=0; i<row; i++)
+						for(int j=0; j<col; j++)
+							if(mat[i][j] == 1)
+								return -1;
+					return timer;
+				}
+			};
+
+1301)
+1302)
+1303)
+1304)
+1305)
+1306)
+1307)
+1308)
+1309)
+1310)
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
