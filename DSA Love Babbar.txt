@@ -32470,7 +32470,37 @@ Lecture 99: Articulation Points in Graphs || C++ Placement Series:
 			Expected Auxiliary Space: O(V)
 			Constraints:
 				1 ≤ V ≤ 10^5
-		// Using Tarjan’s Algorithm:
+		// Not Optimized: TC: O(V*(V+E)) & SC: O(V+E)
+			void Visiting(int node, vector<int> &visTemp, vector<int> adj[], int cutVertex){
+				visTemp[node] = 1;
+				// visit the neighbour of current vertex j
+				for(int nbr: adj[node]){
+					if(nbr != cutVertex && !visTemp[nbr])
+						Visiting(nbr, visTemp, adj, cutVertex);
+				}
+			}
+			vector<int> articulationPoints(int V, vector<int>adj[]) {
+				vector<int> points;
+				int cnt = 1;        // as graph is connected, so there must be 1 component in graph
+				for(int i=0; i<V; i++){
+					// checking is current vertex is cut vertex (articulation point) or not?
+					vector<int> visTemp(V, 0);
+					int curCnt=0;
+					// compute the connected component after ignore i'th  vertex
+					
+					for(int j=0; j<V; j++){
+						if(i != j and !visTemp[j])
+							Visiting(j, visTemp, adj, i), curCnt++;
+						
+						if(curCnt > cnt) {
+							points.push_back(i);
+							break;
+						}
+					}
+				}
+				return points.empty() ? vector<int>{-1} : points;
+			}
+		// Optimized: TC: O(V+E) & SC: O(V) Using Tarjan’s Algorithm: TC: O(V+E) & SC: O(V)
 			class Solution {
 				public:
 				void letsVisit(vector<int> &AP, vector<int> &vis, vector<int> &discTime, 
@@ -32612,7 +32642,7 @@ Lecture 100: Kosaraju's Algorithm for Strongly Connected Components || C++ Place
 ---------------------------------------------------------------------------------------------------------
 	17/03/25	
 Lecture 101: Bellman Ford Algorithm || C++ Placement Series:
-	// Using Dijkstra Algorithm: (Dijkstra will NOT work for -ve weights, don't refer below codes need testing)
+	// Using Dijkstra Algorithm: (Dijkstra will NOT work for -ve weights, don't refer below codes)
 		Q. Bellman Ford: (1-based Indexing)
 			https://www.naukri.com/code360/problems/bellmon-ford_2041977
 			Problem statement
@@ -32821,6 +32851,25 @@ Lecture 101: Bellman Ford Algorithm || C++ Placement Series:
 				return dist;
 			}
 		};
+		// or
+			vector<int> bellmanFord(int V, vector<vector<int>>& edges, int src) {
+				vector<int> dist(V, 1e8);
+				dist[src] = 0;
+				for(int i=0; i<V; i++){
+					int cycleNotExist = 1;
+					for(auto e: edges){
+						int u = e[0], v = e[1], wt = e[2];
+						int val = dist[u]+wt;
+						if(dist[u] != 1e8 and val < dist[v]){
+							cycleNotExist = 0;
+							dist[v] = val;
+						}
+					}
+					if(cycleNotExist) return dist;
+				}
+				// cycle exist
+				return {-1};
+			}
 ---------------------------------------------------------------------------------------------------------
 	18/03/25
 Lecture 102: Introduction to Dynamic Programming | Memoization | Tabulation | Space Optimisation:
@@ -33567,7 +33616,7 @@ Lecture 107: Cut Rod into Segments of X, Y, Z || DP Series:
 		// Space Optimization: Not Possible here, coz the current cut might depends on any previous value.
 ---------------------------------------------------------------------------------------------------------
 	03/04/25
-Lecture 108: Count derangements || DP Series:
+Lecture 108: Count derangements || DP Series: ❌Pending
 	Q. Count derangements:
 		Problem statement
 			A Derangement is a permutation of ‘N’ elements, such that no element appears in its original position. For example, an instance of derangement of {0, 1, 2, 3} is {2, 3, 1, 0}, because 2 present at index 0 is not at its initial position which is 2 and similarly for other elements of the sequence.
@@ -33622,8 +33671,88 @@ Lecture 108: Count derangements || DP Series:
 				}
 				return ans;
 			}
+		// Optimized: ❌Pending
+---------------------------------------------------------------------------------------------------------
+	06/04/25
+Lecture 109: Painting Fence Algorithm || DP Series: ❌Pending
+	Q. Ninja And The Fence:
+		Problem statement
+			Ninja has given a fence, and he gave a task to paint this fence. The fence has 'N' posts, and Ninja has 'K' colors. Ninja wants to paint the fence so that not more than two adjacent posts have the same color.
+			Ninja wonders how many ways are there to do the above task, so he asked for your help.
+			Your task is to find the number of ways Ninja can paint the fence. Print the answer modulo 10^9 + 7.
+			Example:
+			Input: 'N' = 3, 'K' = 2
+			Output: 6
+			Say we have the colors with the numbers 1 and 0. We can paint the fence with 3 posts with the following different combinations.
+			110
+			001
+			101
+			100
+			010
+			011
+			Constraints :
+			1 <= ‘T’ <= 10
+			1 <= 'N' <= 10^5
+			1 <= 'K' <= 10^5
+			Time Limit: 1 sec
+			Sample Input 1 :
+			2
+			1 1
+			3 2
+			Sample Output 1 :
+			1
+			6
+			Explanation Of Sample Input 1 :
+			For the first test case, there is only one way to paint the fence.
+			For the second test case, We can paint the fence with 3 posts with the following different combinations.
+			110
+			001
+			101
+			100
+			010
+			011
+			Sample Input 2 :
+			2
+			2 4
+			4 2
+			Sample Output 2 :
+			16
+			10
+		// Not Optimized: TC: O(K^n) & SC: O(n)
+			#include <bits/stdc++.h>
+			void solve(int idx, vector<int> &Fence, int &ways, int &FenceSize, int &AvailableColors){
+				if(idx >= FenceSize){
+					ways++;
+					return ;
+				}
+				for(int i=0; i<AvailableColors; i++){
+					// here color choice has to be decided
+					int lastCnt=0, twice = 2;
+					for(int j=idx-1; j>=0 and twice-- ; j--)
+						if(Fence[j] == i) lastCnt++;
+					
+					if(lastCnt == 2) continue;          // going for next choice coz last 2 fence has current color
+					
+					Fence[idx] = i;
+					solve(idx+1, Fence, ways, FenceSize, AvailableColors);        
+				}
+			}
+			int numberOfWays(int n, int k) {
+				if(!n or !k) return 0;
+				int ways = 0;
+				vector<int> Fence(n, -1);
+				// color we have are 0 to k-1 (which is K colors), 
+				// default fence has no color which means -1
+				// (index, Fence, ways, FenceSize, colors)
+				solve(0, Fence, ways, n, k);
+				return ways;
+			}
+		// Optimized: ❌Pending
+---------------------------------------------------------------------------------------------------------
+	11/04/25
+Lecture 110: 0/1 KnapSack Problem || learn 2-D DP Concept || DP Series:
 
-
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 Lecture-138: Maximum Rectangle with all 1's || DP Series
 	Q.1. Maximal Rectangle:
@@ -126100,6 +126229,36 @@ POTD:-[Problem of the Day]
 					return 0;
 				}
 			};
+		// or DFS:
+			class Solution {
+				public:
+				bool DFS(int node, vector<int> &vis, int parent, vector<vector<int>> &adj){
+					vis[node] = 0;          // marked as visited so that do not visit again
+					// visiting it's neighbours
+					for(int nbr: adj[node]){
+						if(nbr == parent) continue;
+						if(!vis[nbr] or DFS(nbr, vis, node, adj)) return 1;
+					}
+					return 0;
+				}
+				bool isCycle(int V, vector<vector<int>>& edges) {
+					// creating adjacency list
+					vector<vector<int>> adj(V);
+					for(auto edge: edges){
+						int u = edge[0], v = edge[1];
+						adj[u].push_back(v);
+						adj[v].push_back(u);
+					}
+					
+					vector<int> vis(V, 1);   // here 1 means not visited, 0 means already visited. (by default 1 [not visited])
+					for(int i=0; i<V; i++){
+						if(vis[i] && DFS(i, vis, -1, adj)) 
+							return 1;            // cycle exsits
+					}
+					return 0;
+				}
+			};
+
 		// BFS:
 			class Solution {
 				public: // Function to detect cycle in an undirected graph.
@@ -131580,13 +131739,604 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1301)
-1302)
-1303)
-1304)
-1305)
-1306)
-1307)
+	1301) Find the number of islands:
+		Problem Statement:
+			Given a grid of size n*m (n is the number of rows and m is the number of columns in the grid) consisting of 'W's (Water) and 'L's (Land). Find the number of islands.
+			Note: An island is either surrounded by water or the boundary of a grid and is formed by connecting adjacent lands horizontally or vertically or diagonally i.e., in all 8 directions.
+			Examples:
+			Input: grid[][] = [['L', 'L', 'W', 'W', 'W'], ['W', 'L', 'W', 'W', 'L'], ['L', 'W', 'W', 'L', 'L'], ['W', 'W', 'W', 'W', 'W'], ['L', 'W', 'L', 'L', 'W']]
+				L L W W W
+				W L W W L
+				L W W L L
+				W W W W W
+				L W L L W
+			Output: 4
+			Explanation:
+			The image below shows all the 4 islands in the grid.
+			Input: grid[][] = [['W', 'L', 'L', 'L', 'W', 'W', 'W'], ['W', 'W', 'L', 'L', 'W', 'L', 'W']]
+			Output: 2
+			Expanation:
+			The image below shows 2 islands in the grid.
+			Constraints:
+				1 ≤ n, m ≤ 500
+				grid[i][j] = {'L', 'W'}
+		// TC: O(n*m) & SC: O(n*m)
+			class Solution {
+				public:
+				void DFS(vector<vector<char>> &grid, int r, int c, vector<vector<int>> &vis){
+					vis[r][c] = 1;         // marked as visited
+					int row = grid.size(), col = grid[0].size();
+					// cover all its adjacent connected lands
+					// going on right;
+					if(c+1 < col and !vis[r][c+1] and grid[r][c+1] == 'L') DFS(grid, r, c+1, vis);
+						
+					// going on top-right;
+					if(r-1 >=0 and c+1 < col and !vis[r-1][c+1] and grid[r-1][c+1] == 'L') DFS(grid, r-1, c+1, vis);
+					
+					// going on top;
+					if(r-1 >=0 and !vis[r-1][c] and grid[r-1][c] == 'L') DFS(grid, r-1, c, vis);
+					
+					// going on top-left;
+					if(r-1 >=0 and c-1 >=0 and !vis[r-1][c-1] and grid[r-1][c-1] == 'L') DFS(grid, r-1, c-1, vis);
+					
+					// going on left;
+					if(c-1 >=0 and !vis[r][c-1] and grid[r][c-1] == 'L') DFS(grid, r, c-1, vis);
+					
+					// going on bottom-left;
+					if(r+1 < row and c-1 >=0 and !vis[r+1][c-1] and grid[r+1][c-1] == 'L') DFS(grid, r+1, c-1, vis);
+					
+					// going on bottom;
+					if(r+1 < row and !vis[r+1][c] and grid[r+1][c] == 'L') DFS(grid, r+1, c, vis);
+					
+					// going on bottom-right;
+					if(r+1 < row and c+1 < col and !vis[r+1][c+1] and grid[r+1][c+1] == 'L') DFS(grid, r+1, c+1, vis);
+				}
+				int countIslands(vector<vector<char>>& grid) {
+					int r = grid.size(), isLands=0;
+					if(!r) return isLands;
+					int c = grid[0].size();
+					vector<vector<int>> vis(r, vector<int>(c, 0));
+					
+					for(int i=0; i<r; i++){
+						for(int j=0; j<c; j++){
+							if(!vis[i][j] and grid[i][j] == 'L'){
+								DFS(grid, i, j, vis);
+								isLands++;
+							}
+						}
+					}
+					return isLands;
+				}
+			};
+			// or
+			class Solution {
+				public:
+				// curR = Current row
+				// TR = total rows, TC = total columns
+				void DFS(vector<vector<char>> &grid, int curR, int curC, vector<vector<int>> &vis, int TR, int TC){
+					vis[curR][curC] = 1;
+					
+					if(curC+1 < TC and !vis[curR][curC+1] and grid[curR][curC+1] == 'L') DFS(grid, curR, curC+1, vis, TR, TC);
+					if(curR-1 >= 0 and !vis[curR-1][curC] and grid[curR-1][curC] == 'L') DFS(grid, curR-1, curC, vis, TR, TC);
+					if(curC-1 >= 0 and !vis[curR][curC-1] and grid[curR][curC-1] == 'L') DFS(grid, curR, curC-1, vis, TR, TC);
+					if(curR+1 < TR and !vis[curR+1][curC] and grid[curR+1][curC] == 'L') DFS(grid, curR+1, curC, vis, TR, TC);
+					
+					if(curR+1 < TR and curC+1 < TC and !vis[curR+1][curC+1] and grid[curR+1][curC+1] == 'L') DFS(grid, curR+1, curC+1, vis, TR, TC);
+					if(curR-1 >= 0 and curC-1 >= 0 and !vis[curR-1][curC-1] and grid[curR-1][curC-1] == 'L') DFS(grid, curR-1, curC-1, vis, TR, TC);
+					if(curR+1 < TR and curC-1 >= 0 and !vis[curR+1][curC-1] and grid[curR+1][curC-1] == 'L') DFS(grid, curR+1, curC-1, vis, TR, TC);
+					if(curR-1 >= 0 and curC+1 < TC and !vis[curR-1][curC+1] and grid[curR-1][curC+1] == 'L') DFS(grid, curR-1, curC+1, vis, TR, TC);
+				}
+				int countIslands(vector<vector<char>>& grid) {
+					int r = grid.size();
+					int isLands=0;
+					if(!r) return isLands;
+					int c = grid[0].size();
+					vector<vector<int>> vis(r, vector<int>(c, 0));
+					
+					for(int i=0; i<r; i++){
+						for(int j=0; j<c; j++){
+							if(!vis[i][j] and grid[i][j] == 'L'){
+								DFS(grid, i, j, vis, r, c);
+								isLands++;
+							}
+						}
+					}
+					return isLands;
+				}
+			};
+
+	1302) Topological sort: (Refer POTD: 1209)
+		Problem Statement:
+			Given a Directed Acyclic Graph (DAG) of V (0 to V-1) vertices and E edges represented as a 2D list of edges[][], where each entry edges[i] = [u, v] denotes an directed edge u -> v. Return topological sort for the given graph.
+			Topological sorting for Directed Acyclic Graph (DAG) is a linear ordering of vertices such that for every directed edge u -> v, vertex u comes before v in the ordering.
+			Note: As there are multiple Topological orders possible, you may return any of them. If your returned Topological sort is correct then the output will be true else false.
+			Examples:
+			Input: V = 4, E = 3, edges[][] = [[3, 0], [1, 0], [2, 0]]
+			Output: true
+			Explanation: The output true denotes that the order is valid. Few valid Topological orders for the given graph are:
+			[3, 2, 1, 0]
+			[1, 2, 3, 0]
+			[2, 3, 1, 0]
+			Input: V = 6, E = 6, edges[][] = [[1, 3], [2, 3], [4, 1], [4, 0], [5, 0], [5,2]]
+			Output: true
+			Explanation: The output true denotes that the order is valid. Few valid Topological orders for the graph are:
+			[4, 5, 0, 1, 2, 3]
+			[5, 2, 4, 0, 1, 3]
+			Constraints:
+				2  ≤  V  ≤  10^3
+				1  ≤  E = edges.size()  ≤  (V * (V - 1)) / 2
+		// Using DFS:
+			void DFS(int node, vector<int> &vis, vector<int> adj[], stack<int> &st){
+				vis[node]=1;
+				// visit node's neighbours
+				for(int nbr: adj[node]){
+					if(!vis[nbr])
+						DFS(nbr, vis, adj, st);
+				}
+				st.push(node);
+			}
+			vector<int> topoSort(int V, vector<vector<int>>& edges) {
+				vector<int> topo;
+				vector<int> adj[V];
+				// Adjacency list
+				for(auto edge: edges)
+					adj[edge[0]].push_back(edge[1]);
+					
+				vector<int> vis(V, 0);
+				stack<int> st;
+				for(int i=0; i<V; i++)
+					if(!vis[i])
+						DFS(i, vis, adj, st);
+						
+				while(!st.empty())
+					topo.push_back(st.top()), st.pop();
+				return topo;
+			}
+		// Using Kanh's Algorithm/ BFS:
+			class Solution {
+				public:
+				vector<int> topoSort(int V, vector<vector<int>>& edges) {
+					// Adj List
+					vector<int> adj[V];
+					for(auto edge: edges)
+						adj[edge[0]].push_back(edge[1]);
+					
+					vector<int> Entering(V, 0);
+					// storing all inbounds/ Indegree
+					for(int i=0; i<V; i++)
+						for(int node: adj[i])
+							Entering[node]++;
+					
+					// pushing all nodes whose inbounds are 0
+					vector<int> topo;
+					queue<int> q;
+					for(int i=0; i<V; i++)
+						if(Entering[i] == 0) 
+							q.push(i);
+					
+					while(!q.empty()){
+						int node = q.front();
+						q.pop();
+						topo.push_back(node);
+						// this current nodes has inDegree zero that's why its there in queue,
+						// now reducing the inDegress of their adjacent nodes
+						for(int nbr: adj[node]){
+							Entering[nbr]--;
+							if(Entering[nbr] == 0) q.push(nbr);
+						}
+						
+					}
+					return topo;
+				}
+			};
+
+	1303) Directed Graph Cycle:
+		Problem Statement:
+			Given a Directed Graph with V vertices (Numbered from 0 to V-1) and E edges, check whether it contains any cycle or not.
+			The graph is represented as a 2D vector edges[][], where each entry edges[i] = [u, v] denotes an edge from verticex u to v.
+			Examples:
+			Input: V = 4, edges[][] = [[0, 1], [1, 2], [2, 3], [3, 3]]
+			Output: true
+			Explanation: 3 -> 3 is a cycle
+			Input: V = 3, edges[][] = [[0, 1], [1, 2]]
+			Output: false
+			Explanation: no cycle in the graph
+			Constraints:
+				1 ≤ V, E ≤ 10^5
+		// Using DFS:
+			bool DFS(int node, vector<int> &vis, vector<int> adj[]){
+				vis[node] = 1;
+				for(int nbr: adj[node]){
+					if(!vis[nbr]){
+						if(DFS(nbr, vis, adj))
+							return 1;
+					}else{
+						return 1;
+					}
+				}
+				vis[node] = 0;
+				return 0;
+			}
+			bool isCyclic(int V, vector<vector<int>> &edges) {
+				// Adj list
+				vector<int> adj[V];
+				for(auto edge: edges) adj[edge[0]].push_back(edge[1]);
+				
+				vector<int> vis(V, 0);
+				for(int i=0; i<V; i++)
+					if(DFS(i, vis, adj)) return 1;
+				return 0;
+			}
+		// Using BFS: Topological Sort Technique
+			bool isCyclic(int V, vector<vector<int>> &edges) {
+				// BFS, Using Kahn's Algorithm
+				// Adj
+				vector<int> adj[V];
+				for(auto e: edges) adj[e[0]].push_back(e[1]);
+				
+				vector<int> Entering(V,0);
+				for(auto i: adj)
+					for(int node: i) Entering[node]++;
+				
+				int cnt=0;
+				queue<int> q;
+				for(int i=0; i<V; i++)
+					if(Entering[i] == 0)
+						q.push(i);
+				
+				while(!q.empty()){
+					int node = q.front();
+					q.pop();
+					cnt++;
+					for(int nbr: adj[node]){
+						Entering[nbr]--;
+						if(!Entering[nbr]) q.push(nbr);
+					}
+				}
+				return !(cnt == V);
+			}
+
+	1304) Bridge edge in a graph:
+		https://www.geeksforgeeks.org/problems/bridge-edge-in-graph/1
+		Problem Statement:
+			Given an undirected graph with V vertices numbered from 0 to V-1 and E edges, represented by 2d array edges[][], where edges[i]=[u,v] represents the edge between the vertices u and v. Determine whether a specific edge between two vertices (c, d) is a bridge.
+			Note:
+			An edge is called a bridge if removing it increases the number of connected components of the graph.
+			if there’s only one path between c and d (which is the edge itself), then that edge is a bridge.
+			Examples :			
+			Input:
+			edges = [[0,1], [1,2], [2,3]]
+				0 -------- 1 -------- 2 -------- 3
+			c = 1, d = 2
+			Output: true
+			Explanation: From the graph, we can clearly see that blocking the edge 1-2 will result in disconnection of the graph.
+			Hence, it is a Bridge.
+			Input:
+			edges=[[0,1], [1,2], [2,0], [0,3], [3,4]]
+				1 -- 0 -- 3
+				|   /     |
+				| /       |
+				2         4
+
+			c = 0, d = 2
+			Output: false
+			Explanation:
+			Blocking the edge between nodes 0 and 2 won't affect the connectivity of the graph.
+			So, it's not a Bridge Edge. All the Bridge Edges in the graph are marked with a blue line in the above image.
+			Input:
+			edges=[[0,1], [1,2], [2,0], [0,3], [3,4]]
+				1 -- 0 -- 3
+				|   /     |
+				| /       |
+				2         4
+			c = 1, d = 2
+			Output: false
+
+			Input:
+			edges=[[0,1], [1,2], [2,0], [0,3], [3,4]]
+				1 -- 0 -- 3
+				|   /     |
+				| /       |
+				2         4
+
+			c = 0, d = 3
+			Output: true
+
+			Input:
+			edges=[[0,1], [1,2], [2,0], [0,3], [3,4]]
+				1 -- 0 -- 3
+				|   /     |
+				| /       |
+				2         4
+			c = 4, d = 3
+			Output: true
+
+			Constraints:
+				1 ≤ V, E ≤ 10^5
+				0 ≤ c, d ≤ V-1
+		bool DFS(vector<int> adj[], vector<int> &vis, int c, int d){
+			vis[c] = 1;
+			// visit the neighbours we have not visited yet
+			for(int nbr: adj[c]){
+				if(nbr == d) return 1;          // we reached to distination
+				if(!vis[nbr] and DFS(adj, vis, nbr, d)) return 1;
+			}
+			return 0;
+		}
+		bool isBridge(int V, vector<vector<int>> &edges, int c, int d) {
+			// Adj list
+			vector<int> adj[V];
+			// as its undirected graph
+			for(auto edge: edges)
+				adj[edge[0]].push_back(edge[1]), adj[edge[1]].push_back(edge[0]);
+				
+			// from adjacency list of c we remove the d, coz to generate graph as there is no edge between c-d
+			// but we are just changing the adj list not actually removing the edge between c to d
+			for(int i=0; i<adj[c].size(); i++)
+				if(adj[c][i] == d)
+					adj[c].erase(adj[c].begin()+i);
+			
+			// or instead of above 
+			/*
+					remove(...):
+					This does not actually delete elements.
+					It moves all elements not equal to d to the front.
+					Returns an iterator to the new logical "end" of the container (after moving the valid elements).
+					Example:
+						vector<int> v = {1, 2, 3, 2};
+						auto it = remove(v.begin(), v.end(), 2);
+						// v becomes: [1, 3, ?, ?] and `it` points to v.begin() + 2
+				for(int i=0; i<adj[c].size(); i++)
+					adj[c].erase(remove(adj[c].begin(), adj[c].end(), d), adj[c].end());
+			*/
+			vector<int> vis(V, 0);
+			// will choose any one from given 2 points (c,d), suppose we choose c
+			// will make the DFS call from choosen point to all its adjacent ones except the d
+			// if we reach to d then edge c to d is not a bridge
+			return DFS(adj, vis, c, d) ? 0 : 1;
+		}
+		// or we will not push into adj list the edge c to d
+			void DFS(vector<int> adj[], vector<int> &vis, int node){
+				vis[node]=1;
+				// visit neighbours
+				for(int nbr: adj[node])
+					if(!vis[nbr]) DFS(adj, vis, nbr);
+			}
+			bool isBridge(int V, vector<vector<int>> &edges, int c, int d) {
+				// Adj list
+				vector<int> adj[V];
+				// as its undirected graph
+				for(auto edge: edges){
+					// skipping the edge c to d
+					if((edge[0] == c and edge[1] == d) or (edge[0] == c and edge[1] == d)) continue;
+					adj[edge[0]].push_back(edge[1]), adj[edge[1]].push_back(edge[0]);
+				}
+				vector<int> vis(V, 0);
+				DFS(adj, vis, c);
+				return !vis[d];                 // return vis[d] ? 0 : 1;          
+			}
+
+	1305) Articulation Point - II: (Refer Lect-99)
+		Problem Statement:
+			You are given an undirected graph with V vertices and E edges. The graph is represented as a 2D array edges[][], where each element edges[i] = [u, v] indicates an undirected edge between vertices u and v.
+			Your task is to return all the articulation points (or cut vertices) in the graph.
+			An articulation point is a vertex whose removal, along with all its connected edges, increases the number of connected components in the graph.
+			Note: The graph may be disconnected, i.e., it may consist of more than one connected component.
+			If no such point exists, return {-1}.
+			Examples :
+			Input: V = 5, edges[][] = [[0, 1], [1, 4], [4, 3], [4, 2], [2, 3]]
+				1 --- 4 - 3
+				|		\ |
+				0		  2
+			Output: [1, 4]
+			Explanation: Removing the vertex 1 or 4 will disconnects the graph as-
+			Input: V = 4, edges[][] = [[0, 1], [0, 2]]
+				0 --- 1
+				 \
+				  2
+			Output: [0]
+			Explanation: Removing the vertex 0 will increase the number of disconnected components to 3.  
+			Constraints:
+			1 ≤ V, E ≤ 10^4
+		// Not Optimized: TC: O(V*(V+E)) & SC: O(V+E)
+			void LetsVisit(int node, vector<int> &vis, vector<int> adj[]){
+				vis[node] = 1;
+				// visiting neighbours
+				for(int nbr: adj[node])
+					if(!vis[nbr]) LetsVisit(nbr, vis, adj);
+			}
+			void Visiting(int node, vector<int> &visTemp, vector<int> adj[], int cutVertex){
+				visTemp[node] = 1;
+				// visit the neighbour of current vertex j
+				for(int nbr: adj[node]){
+					if(nbr == cutVertex) continue;      // excluding vertex i
+					if(!visTemp[nbr])
+						Visiting(nbr, visTemp, adj, cutVertex);
+				}
+			}
+			vector<int> articulationPoints(int V, vector<vector<int>>& edges) {
+				// adj list
+				vector<int> adj[V];
+				for(auto e: edges)
+					adj[e[0]].push_back(e[1]), adj[e[1]].push_back(e[0]);
+					
+				// compute the no.of connected component in graph initially
+				int cnt=0;
+				vector<int> vis(V, 0);
+				for(int i=0; i<V; i++)
+					if(!vis[i]) LetsVisit(i, vis, adj), cnt++;
+					
+				// cout<<cnt<<"\n";
+				vector<int> points;
+				for(int i=0; i<V; i++){
+					// checking is current vertex is cut vertex (articulation point) or not?
+					vector<int> visTemp(V, 0);
+					int curCnt=0;
+					// compute the connected component after ignore i'th  vertex
+					
+					for(int j=0; j<V; j++){
+						if(i == j) continue;        // this means the current vertex we assumed it as cut/ articulated vertex
+						if(!visTemp[j])
+							Visiting(j, visTemp, adj, i), curCnt++;
+						
+						if(curCnt > cnt) {
+							points.push_back(i);
+							break;
+						}
+					}
+				}
+				return points.empty() ? vector<int>{-1} : points;
+			}
+		// or
+			void LetsVisit(int node, vector<int> &vis, vector<int> adj[]){
+				vis[node] = 1;
+				// visiting neighbours
+				for(int nbr: adj[node])
+					if(!vis[nbr]) LetsVisit(nbr, vis, adj);
+			}
+			void Visiting(int node, vector<int> &visTemp, vector<int> adj[], int cutVertex){
+				visTemp[node] = 1;
+				// visit the neighbour of current vertex j
+				for(int nbr: adj[node]){
+					if(nbr != cutVertex && !visTemp[nbr])									// change nbr != cutVertex from last approach
+						Visiting(nbr, visTemp, adj, cutVertex);
+				}
+			}
+			vector<int> articulationPoints(int V, vector<vector<int>>& edges) {
+				// adj list
+				vector<int> adj[V];
+				for(auto e: edges)
+					adj[e[0]].push_back(e[1]), adj[e[1]].push_back(e[0]);
+					
+				// compute the no.of connected component in graph initially
+				int cnt=0;
+				vector<int> vis(V, 0);
+				for(int i=0; i<V; i++)
+					if(!vis[i]) LetsVisit(i, vis, adj), cnt++;
+					
+				// cout<<cnt<<"\n";
+				
+				vector<int> points;
+				for(int i=0; i<V; i++){
+					// checking is current vertex is cut vertex (articulation point) or not?
+					vector<int> visTemp(V, 0);
+					int curCnt=0;
+					// compute the connected component after ignore i'th  vertex
+					
+					for(int j=0; j<V; j++){
+						if(i != j and !visTemp[j])					// change i!=j from last approach
+							Visiting(j, visTemp, adj, i), curCnt++;
+						
+						if(curCnt > cnt) {
+							points.push_back(i);
+							break;
+						}
+					}
+				}
+				return points.empty() ? vector<int>{-1} : points;
+			}
+		// Optimized: ❌Pending
+
+	1306) Count the Number of Powerful Integers:
+		Problem Statement:
+			You are given three integers start, finish, and limit. You are also given a 0-indexed string s representing a positive integer.
+			A positive integer x is called powerful if it ends with s (in other words, s is a suffix of x) and each digit in x is at most limit.
+			Return the total number of powerful integers in the range [start..finish].
+			A string x is a suffix of a string y if and only if x is a substring of y that starts from some index (including 0) in y and extends to the index y.length - 1. For example, 25 is a suffix of 5125 whereas 512 is not.
+			Example 1:
+			Input: start = 1, finish = 6000, limit = 4, s = "124"
+			Output: 5
+			Explanation: The powerful integers in the range [1..6000] are 124, 1124, 2124, 3124, and, 4124. All these integers have each digit <= 4, and "124" as a suffix. Note that 5124 is not a powerful integer because the first digit is 5 which is greater than 4.
+			It can be shown that there are only 5 powerful integers in this range.
+			Example 2:
+			Input: start = 15, finish = 215, limit = 6, s = "10"
+			Output: 2
+			Explanation: The powerful integers in the range [15..215] are 110 and 210. All these integers have each digit <= 6, and "10" as a suffix.
+			It can be shown that there are only 2 powerful integers in this range.
+			Example 3:
+			Input: start = 1000, finish = 2000, limit = 4, s = "3000"
+			Output: 0
+			Explanation: All integers in the range [1000..2000] are smaller than 3000, hence "3000" cannot be a suffix of any integer in this range.
+			Constraints:
+				1 <= start <= finish <= 10^15
+				1 <= limit <= 9
+				1 <= s.length <= floor(log10(finish)) + 1
+				s only consists of numeric digits which are at most limit.
+				s does not have leading zeros.
+		// Not Optimized: TC: O(N*M) & SC: O(1)
+			typedef long long ll;
+			class Solution {
+				public:
+				ll numberOfPowerfulInt(ll start, ll finish, int limit, string s) {
+					ll ans=0;
+					for(ll i=start; i<=finish; i++){
+						string cur = to_string(i);
+						if(cur.length() < s.size()) continue;
+						int z = s.size(), j = cur.size()-1;
+						int needFurtherCheck = 1;
+						while(z--){
+							if(cur[j--] != s[z]){
+								needFurtherCheck=0;
+								break;
+							}
+						}
+						if(needFurtherCheck){
+							// checking all digits should lie up to limi
+							int isRight=1;
+							for(char ch: cur){
+								if(ch-48 > limit){
+									isRight = 0;
+									break;
+								}
+							}
+							if(isRight) ans++;
+						}
+					}
+					return ans;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1307) Count Symmetric Integers:
+		Problem Statement:
+			You are given two positive integers low and high.
+			An integer x consisting of 2 * n digits is symmetric if the sum of the first n digits of x is equal to the sum of the last n digits of x. Numbers with an odd number of digits are never symmetric.
+			Return the number of symmetric integers in the range [low, high].
+			Example 1:
+			Input: low = 1, high = 100
+			Output: 9
+			Explanation: There are 9 symmetric integers between 1 and 100: 11, 22, 33, 44, 55, 66, 77, 88, and 99.
+			Example 2:
+			Input: low = 1200, high = 1230
+			Output: 4
+			Explanation: There are 4 symmetric integers between 1200 and 1230: 1203, 1212, 1221, and 1230.
+			Constraints:
+				1 <= low <= high <= 10^4
+		// TC: O(n) & SC: O(1)
+			class Solution {
+				public:
+				int countSymmetricIntegers(int low, int high) {
+					int cnt=0;
+					while(low <= high){
+						int len = log10(low)+1;
+						if(len&1){
+							low++;
+							continue;
+						}
+						string s = to_string(low);
+						int begin=0, end = s.size()-1, sSum, eSum;
+						sSum = eSum = 0;
+						while(begin < end)
+							sSum += s[begin++] - 48,
+							eSum += s[end--] - 48;
+
+						if(sSum == eSum) cnt++;
+						low++;
+					}
+					return cnt;
+				}
+			};
+
 1308)
 1309)
 1310)
