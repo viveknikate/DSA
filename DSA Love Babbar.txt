@@ -32870,6 +32870,34 @@ Lecture 101: Bellman Ford Algorithm || C++ Placement Series:
 				// cycle exist
 				return {-1};
 			}
+		// or
+			vector<int> bellmanFord(int V, vector<vector<int>>& edges, int src) {
+				vector<int> dist(V, 1e8);
+				dist[src]=0;
+				// relaxation by v-1 times
+				for(int i=1; i<V; i++){
+					for(auto e: edges){
+						int u = e[0], v=e[1], wt=e[2];
+						if(dist[u] == 1e8) continue;
+						int val = dist[u] + wt; 
+						if(val < dist[v]) dist[v] = val;
+					}
+				}
+				
+				// if any distance gets updated here then there will be -ve cycle
+				int cycle = 0;
+				for(auto e: edges){
+					int u = e[0], v=e[1], wt=e[2];
+					if(dist[u] == 1e8) continue;                // this to ensure if the components of graph are disconnected.
+					int val = dist[u] + wt;
+					if(val < dist[v]){
+						cycle = 1;
+						break;
+					}
+				}
+				if(cycle) return vector<int>{-1};
+				return dist;
+			}
 ---------------------------------------------------------------------------------------------------------
 	18/03/25
 Lecture 102: Introduction to Dynamic Programming | Memoization | Tabulation | Space Optimisation:
@@ -33748,6 +33776,123 @@ Lecture 109: Painting Fence Algorithm || DP Series: ❌Pending
 				return ways;
 			}
 		// Optimized: ❌Pending
+	// Practice:
+	Q. Painting Fences:
+		https://www.naukri.com/code360/problems/painting-fences_920549
+		Problem statement
+			You are given ‘N’ fences. Your task is to find the total number of ways to paint fences using 2 colors only such that at most 2 adjacent fences are painted with the same color.
+			As the answer can be too large, return the answer modulo 10^9 + 7.
+			For Example:
+			Consider If N = 2, then there can be 4 different ways to color fences such that at most 2 adjacent fences have the same color-:
+			[ [0, 1],
+			[1, 0],
+			[1, 1],
+			[0, 0] ]
+			Hence, the answer is 4.
+			Constraints:
+				1 <= T <= 10
+				1 <= N <= 10^6
+				Time Limit: 1 sec
+			Sample Input 1:
+			2
+			2
+			3
+			Sample Output 1 :
+			4
+			6
+			Explanation:
+			For test case 1: 
+			In this case, N = 2, so the total number of ways to color fences using 2 colors is 4
+			[ [0, 0],
+			[1, 1],
+			[0, 1],
+			[1, 0] ]
+			Hence, the answer is 4.
+
+			For test case 2: 
+			In this case, N = 3, so the total number of ways to color fences using 2 colors is 6.
+			[ [0, 1, 1],
+			[1, 0, 0],
+			[0, 1, 0],
+			[1, 0, 1],
+			[0, 0, 1],
+			[1, 1, 0] ]
+			Hence, the answer is 6.
+			Sample Input 2:
+			2
+			4
+			5
+			Sample Output 2 :
+			10
+			16
+		// Not Optimized:
+			#include <bits/stdc++.h>
+			int mod = 1e9+7;
+			void solve(vector<int> &F, int i, int &ways){
+				if(i >= F.size()){
+					ways = (ways+1) % mod;
+					return;
+				}
+
+				for(int z=0; z<2; z++){             // we have 2 color choices
+					int lastTwo=2, cnt=0;
+					for(int j=i-1; j>=0 and lastTwo--; j--)
+						if(F[j] == z) cnt++;
+					
+					if(cnt == 2) continue;
+					F[i] = z;
+					solve(F, i+1, ways);
+				}
+			}
+			int countWays(int n) {
+				vector<int> Fence(n, -1);       // uncolored fence
+				int ways=0;
+				solve(Fence, 0, ways);
+				return ways;
+			}
+		// Optimized: ❌Pending
+	Q. Painting the Fence:
+		https://www.geeksforgeeks.org/problems/painting-the-fence3727/1
+		Problem Statement:
+			Given a fence with n posts and k colours, find out the number of ways of painting the fence so that not more than two consecutive posts have the same colours.
+			Answers are guaranteed to be fit into a 32 bit integer.
+			Examples:
+			Input: n = 3, k = 2 
+			Output: 6
+			Explanation: Let the 2 colours be 'R' and 'B'. We have following possible combinations:
+			1. RRB
+			2. RBR
+			3. RBB
+			4. BRR
+			5. BRB
+			6. BBR
+			Input: n = 2, k = 4 
+			Output: 16
+			Explanation: After coloring first post with 4 possible combinations, you can still color next posts with all 4 colors. Total possible combinations will be 4x4=16
+			Constraints:
+				1 ≤ n ≤ 300
+				1 ≤ k ≤ 10^5
+		void solve(vector<int> &F, int i, int &k, int &ways){
+			if(i >= F.size()){
+				ways++;
+				return;
+			}
+			for(int z=0; z<k; z++){             // we have 2 color choices
+				int lastTwo=2, cnt=0;
+				for(int j=i-1; j>=0 and lastTwo--; j--)
+					if(F[j] == z) cnt++;
+				
+				if(cnt == 2) continue;
+				F[i] = z;
+				solve(F, i+1, k, ways);
+			}
+		}
+		int countWays(int n, int k) {
+			vector<int> Fence(n, -1);       // uncolored fence
+			int ways=0;
+			solve(Fence, 0, k, ways);
+			return ways;
+		}
 ---------------------------------------------------------------------------------------------------------
 	11/04/25
 Lecture 110: 0/1 KnapSack Problem || learn 2-D DP Concept || DP Series:
@@ -112121,6 +112266,17 @@ POTD:-[Problem of the Day]
 			
 			return cnt/2;
 		}
+		// or
+		#include <bits/stdc++.h> 
+		int getMinimumAnagramDifference(string &str1, string &str2) {
+			int cnt=0;
+			vector<int> V(26, 0);
+			for(char ch: str1) V[ch-'a']++;
+			for(char ch: str2) V[ch-'a']--;
+			for(int i: V)
+				if(i) cnt += abs(i);
+			return cnt/2;
+		}
 
 	987) Bit Set:
 		Problem statement
@@ -132337,9 +132493,733 @@ POTD:-[Problem of the Day]
 				}
 			};
 
-1308)
-1309)
-1310)
+	1308) Dijkstra Algorithm: (Refer Lect-95)
+		Problem Statement:
+			Given an undirected, weighted graph with V vertices numbered from 0 to V-1 and E edges, represented by 2d array edges[][], where edges[i]=[u, v, w] represents the edge between the nodes u and v having w edge weight.
+			You have to find the shortest distance of all the vertices from the source vertex src, and return an array of integers where the ith element denotes the shortest distance between ith node and source vertex src.
+			Note: The Graph is connected and doesn't contain any negative weight edge.
+			Examples:
+			Input: V = 3, edges[][] = [[0, 1, 1], [1, 2, 3], [0, 2, 6]], src = 2
+			Output: [4, 3, 0]
+			Explanation:
+			Shortest Paths:
+			For 2 to 0 minimum distance will be 4. By following path 2 -> 1 -> 0
+			For 2 to 1 minimum distance will be 3. By following path 2 -> 1
+			For 2 to 2 minimum distance will be 0. By following path 2 -> 2
+			Input: V = 5, edges[][] = [[0, 1, 4], [0, 2, 8], [1, 4, 6], [2, 3, 2], [3, 4, 10]], src = 0
+			Output: [0, 4, 8, 10, 10]
+			Explanation: 
+			Shortest Paths: 
+			For 0 to 1 minimum distance will be 4. By following path 0 -> 1
+			For 0 to 2 minimum distance will be 8. By following path 0 -> 2
+			For 0 to 3 minimum distance will be 10. By following path 0 -> 2 -> 3 
+			For 0 to 4 minimum distance will be 10. By following path 0 -> 1 -> 4
+			Constraints:
+				1 ≤ V ≤ 10^5
+				1 ≤ E = edges.size() ≤ 10^5
+				0 ≤ edges[i][j] ≤ 10^4
+				0 ≤ src < V
+		// Used Bellman Ford algorithm: Not Optimized: TC: O(V*E) & SC: O(n) 
+			vector<int> dijkstra(int V, vector<vector<int>> &edges, int src) {
+				vector<int> dist(V, 1e8);
+				dist[src]=0;
+				for(int i=0; i<V; i++){
+					for(auto e: edges){
+						int u = e[0], v = e[1], wt = e[2];
+						int val = dist[u]+wt;
+						if(val < dist[v])
+							dist[v] = val;
+					}
+				}
+				return dist;
+			}
+		// Optimized: Dijkstra: TC: O(V+E) & SC: O(V)
+			vector<int> dijkstra(int V, vector<vector<int>> &edges, int src) {
+				vector<pii> adj[V];
+				for(auto e: edges) adj[e[0]].push_back({e[1], e[2]}), adj[e[1]].push_back({e[0], e[2]});
+
+				vector<int> dist(V, 1e8);
+				dist[src]=0;
+				priority_queue<pii, vector<pii>, greater<>> minHP;
+				minHP.push({0, src});
+				while(!minHP.empty()){
+					auto p = minHP.top();
+					minHP.pop();
+					int d = p.first, u = p.second;
+					for(pii nbr: adj[p.second]){
+						int val = dist[u] + nbr.second;
+						if(val < dist[nbr.first]){
+							dist[nbr.first] = val;
+							minHP.push({val, nbr.first});
+						}
+					}
+				}
+				return dist;
+			}
+
+	1309) Flood fill Algorithm:
+		Problem Statement:
+			You are given a 2D grid image[][] of size n*m, where each image[i][j] represents the color of a pixel in the image. Also provided a coordinate(sr, sc) representing the starting pixel (row and column) and a new color value newColor.
+			Your task is to perform a flood fill starting from the pixel (sr, sc), changing its color to newColor and the color of all the connected pixels that have the same original color. Two pixels are considered connected if they are adjacent horizontally or vertically (not diagonally) and have the same original color.
+			Examples:
+			Input: image[][] = [[1, 1, 1, 0], [0, 1, 1, 1], [1, 0, 1, 1]], sr = 1, sc = 2, newColor = 2
+			Output: [[2, 2, 2, 0], [0, 2, 2, 2], [1, 0, 2, 2]]
+			Explanation: Starting from pixel (1, 2) with value 1, flood fill updates all connected pixels (up, down, left, right) with value 1 to 2, resulting in [[2, 2, 2, 0], [0, 2, 2, 2], [1, 0, 2, 2]].
+			Input: image[][] = [[1, 1, 1], [1, 1, 0], [1, 0, 1]], sr = 1, sc = 1, newColor = 2
+			Output: [[2, 2, 2], [2, 2, 0], [2, 0, 1]]
+			Explanation: From the center of the image (with position (sr, sc) = (1, 1)), all pixels connected by a path of the same color as the starting pixel are colored with the new color.Note the bottom corner is not colored 2, because it is not 4-directionally connected to the starting pixel.
+			Input: image[][] = [[0, 1, 0], [0, 1, 0]], sr = 0, sc = 1, newColor = 0
+			Output: [[0, 0, 0], [0, 0, 0]]
+			Explanation: Starting from pixel (0, 1) with value 1, flood fill changes all 4-directionally connected pixels with value 1 to 0, resulting in [[0, 0, 0], [0, 0, 0]]
+			Constraints:
+				1 ≤ n ≤ m ≤ 500
+				0 ≤ image[i][j] ≤ 10
+				0 ≤ newColor ≤ 10
+				0 ≤ sr ≤ (n-1)
+				0 ≤ sc ≤ (m-1)
+		// BFS: TC: O(n*m) &  SC: O(n*m)
+			typedef pair<int, int> pii;
+			vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+				int r = image.size();
+				if(!r) return image;
+				int c = image[0].size();
+				if(sr >= r or sr < 0 or sc < 0 or sc >= c) return image;
+				queue<pii> q;
+				vector<vector<int>> vis (r, vector<int>(c, 0));     // not visited
+				q.push({sr, sc});
+				while(!q.empty()){
+					int curR = q.front().first, curC = q.front().second;
+					q.pop();
+					int val = image[curR][curC];
+					// visiting their neighbours vertically & horizontally
+					if(curR-1 >=0 and image[curR-1][curC] == val and !vis[curR-1][curC]){
+						vis[curR-1][curC] = 1;
+						q.push({curR-1, curC});
+					} 
+					if(curC-1 >=0 and image[curR][curC-1] == val and !vis[curR][curC-1]){
+						vis[curR][curC-1] = 1;
+						q.push({curR, curC-1});
+					}
+					if(curR+1 < r and image[curR+1][curC] == val and !vis[curR+1][curC]){
+						vis[curR+1][curC] = 1;
+						q.push({curR+1, curC});
+					} 
+					if(curC+1 < c and image[curR][curC+1] == val and !vis[curR][curC+1]){
+						vis[curR][curC+1] = 1;
+						q.push({curR, curC+1});
+					}
+					image[curR][curC] = newColor;
+				}
+				return image;
+			}
+		// or without using vis array:
+			typedef pair<int, int> pii;
+			vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+				int r = image.size();
+				if(!r) return image;
+				int c = image[0].size();
+				if(sr >= r or sr < 0 or sc < 0 or sc >= c) return image;
+				int oldColor = image[sr][sc];
+				if(oldColor == newColor) return image;
+				
+				queue<pii> q;
+				q.push({sr, sc});
+				image[sr][sc] = newColor;
+				while(!q.empty()){
+					int curR = q.front().first, curC = q.front().second;
+					q.pop();
+					// visiting their neighbours vertically & horizontally
+					if(curR-1 >=0 and image[curR-1][curC] == oldColor)
+						image[curR-1][curC] = newColor, q.push({curR-1, curC});
+					
+					if(curC-1 >=0 and image[curR][curC-1] == oldColor)
+						image[curR][curC-1] = newColor, q.push({curR, curC-1});
+						
+					if(curR+1 < r and image[curR+1][curC] == oldColor)
+						image[curR+1][curC] = newColor, q.push({curR+1, curC});
+					
+					if(curC+1 < c and image[curR][curC+1] == oldColor)
+						image[curR][curC+1] = newColor, q.push({curR, curC+1});
+				}
+				return image;
+			}
+		// DFS: TC: O(n*m) &  SC: O(n*m):
+			void DFS(vector<vector<int>> &image, int sr, int sc, int &oldColor, int &newColor){
+				image[sr][sc] = newColor;
+				
+				// UP
+				if(sr-1 >= 0 and image[sr-1][sc] == oldColor)
+					DFS(image, sr-1, sc, oldColor, newColor);
+				
+				// Left
+				if(sc-1 >= 0 and image[sr][sc-1] == oldColor)
+					DFS(image, sr, sc-1, oldColor, newColor);
+				
+				// Down
+				if(sr+1 < image.size() and image[sr+1][sc] == oldColor)
+					DFS(image, sr+1, sc, oldColor, newColor);
+				
+				// Right
+				if(sc+1 < image[0].size() and image[sr][sc+1] == oldColor)
+					DFS(image, sr, sc+1, oldColor, newColor);
+			}
+			vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+				int r = image.size();
+				if(!r) return image;
+				int c = image[0].size();
+				if(sr < 0 or sr >= r or sc < 0 or sc >= c or image[sr][sc] == newColor) return image;
+				int oldColor = image[sr][sc];
+				DFS(image, sr, sc, oldColor, newColor);
+				return image;
+			}
+
+	1310) Count Good Numbers
+		Problem Statement:
+			A digit string is good if the digits (0-indexed) at even indices are even and the digits at odd indices are prime (2, 3, 5, or 7).
+			For example, "2582" is good because the digits (2 and 8) at even positions are even and the digits (5 and 2) at odd positions are prime. However, "3245" is not good because 3 is at an even index but is not even.
+			Given an integer n, return the total number of good digit strings of length n. Since the answer may be large, return it modulo 109 + 7.
+			A digit string is a string consisting of digits 0 through 9 that may contain leading zeros.
+			Example 1:
+			Input: n = 1
+			Output: 5
+			Explanation: The good numbers of length 1 are "0", "2", "4", "6", "8".
+			Example 2:
+			Input: n = 4
+			Output: 400
+			Example 3:
+			Input: n = 50
+			Output: 564908303
+			Constraints:
+				1 <= n <= 10^15
+		// Not Optimized: TC: O(5ⁿ) & SC: O(n)
+			class Solution {
+				public:
+				int mod = 1e9+7;
+				void solve(string &s, long long n, int &GoodNumbs){
+					if(s.size() >= n){
+						GoodNumbs++;
+						GoodNumbs %= mod;
+						return;
+					}
+
+					if(s.size()&1){
+						// use primes 2,3,5,7
+						s.push_back('2');
+						solve(s, n, GoodNumbs);
+						s.pop_back();
+						
+						s.push_back('3');
+						solve(s, n, GoodNumbs);
+						s.pop_back();
+						
+						s.push_back('5');
+						solve(s, n, GoodNumbs);
+						s.pop_back();
+						
+						s.push_back('7');
+						solve(s, n, GoodNumbs);
+						s.pop_back();
+					}else{
+						for(int i=0; i<10; i+=2){
+							s.push_back(48+i);
+							solve(s, n, GoodNumbs);
+							s.pop_back();
+						}
+					}
+				}
+				int countGoodNumbers(long long n) {
+					if(!n) return 0;
+					string s;
+					int GoodNumbs = 0;
+					// solve(s, n, GoodNumbs);
+					return 0;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1311) Shortest Path in a Weighted Tree:
+		Problem Statement:
+			You are given an integer n and an undirected, weighted tree rooted at node 1 with n nodes numbered from 1 to n. This is represented by a 2D array edges of length n - 1, where edges[i] = [ui, vi, wi] indicates an undirected edge from node ui to vi with weight wi.
+			You are also given a 2D integer array queries of length q, where each queries[i] is either:
+			[1, u, v, w'] – Update the weight of the edge between nodes u and v to w', where (u, v) is guaranteed to be an edge present in edges.
+			[2, x] – Compute the shortest path distance from the root node 1 to node x.
+			Return an integer array answer, where answer[i] is the shortest path distance from node 1 to x for the ith query of [2, x].
+			Example 1:
+			Input: n = 2, edges = [[1,2,7]], queries = [[2,2],[1,1,2,4],[2,2]]
+			Output: [7,4]
+			Explanation:
+			Query [2,2]: The shortest path from root node 1 to node 2 is 7.
+			Query [1,1,2,4]: The weight of edge (1,2) changes from 7 to 4.
+			Query [2,2]: The shortest path from root node 1 to node 2 is 4.
+			Example 2:
+			Input: n = 3, edges = [[1,2,2],[1,3,4]], queries = [[2,1],[2,3],[1,1,3,7],[2,2],[2,3]]
+			Output: [0,4,2,7]
+			Explanation:
+			Query [2,1]: The shortest path from root node 1 to node 1 is 0.
+			Query [2,3]: The shortest path from root node 1 to node 3 is 4.
+			Query [1,1,3,7]: The weight of edge (1,3) changes from 4 to 7.
+			Query [2,2]: The shortest path from root node 1 to node 2 is 2.
+			Query [2,3]: The shortest path from root node 1 to node 3 is 7.
+			Example 3:
+			Input: n = 4, edges = [[1,2,2],[2,3,1],[3,4,5]], queries = [[2,4],[2,3],[1,2,3,3],[2,2],[2,3]]
+			Output: [8,3,2,5]
+			Explanation:
+			Query [2,4]: The shortest path from root node 1 to node 4 consists of edges (1,2), (2,3), and (3,4) with weights 2 + 1 + 5 = 8.
+			Query [2,3]: The shortest path from root node 1 to node 3 consists of edges (1,2) and (2,3) with weights 2 + 1 = 3.
+			Query [1,2,3,3]: The weight of edge (2,3) changes from 1 to 3.
+			Query [2,2]: The shortest path from root node 1 to node 2 is 2.
+			Query [2,3]: The shortest path from root node 1 to node 3 consists of edges (1,2) and (2,3) with updated weights 2 + 3 = 5.
+			Constraints:
+				1 <= n <= 10^5
+				edges.length == n - 1
+				edges[i] == [ui, vi, wi]
+				1 <= ui, vi <= n
+				1 <= wi <= 10^4
+				The input is generated such that edges represents a valid tree.
+				1 <= queries.length == q <= 105
+				queries[i].length == 2 or 4
+				queries[i] == [1, u, v, w'] or,
+				queries[i] == [2, x]
+				1 <= u, v, x <= n
+				(u, v) is always an edge from edges.
+				1 <= w' <= 10^4
+		// Not Optimized: TC: O((V+E) log V) & SC: O(V+E)
+			typedef pair<int, int> pii;
+			class Solution {
+				public:
+				int Dijkstra(vector<pii> adj[], int x, int size){
+					vector<int> dist (size, INT_MAX);
+					dist[1] = 0;        // this is root node(src) need to reach at x.
+					priority_queue<pii, vector<pii>, greater<>> minHP;
+					// <distance, node>
+					minHP.push({0, 1});
+					while(!minHP.empty()){
+						auto p = minHP.top();
+						minHP.pop();
+						int u = p.second, wt = p.first;
+						// visit neighbours
+						for(auto nbr: adj[u]){
+							int v = nbr.first, curWt = nbr.second;
+							int val = wt + curWt;
+							if(val < dist[v]){
+								dist[v] = val;
+								minHP.push({val, v});
+							}
+						}
+					}
+					return dist[x];
+				}
+				vector<int> atreeQueries(int n, vector<vector<int>>& edges, vector<vector<int>>& queries) {
+					vector<pii> adj[n+1];           // skiping 0th index
+					for(auto e: edges){
+						int u=e[0], v=e[1], wt=e[2];
+						adj[u].push_back({v, wt});
+						adj[v].push_back({u, wt});
+					}
+
+					vector<int> ans;
+					for(auto q: queries){
+						int type = q[0];
+						if(type == 2){
+							// compute the shorted path from given node (x) to 1
+							int x = q[1];
+							ans.push_back(Dijkstra(adj, x, n+1));
+						}else{
+							// update the distance of given edge
+							int u=q[1], v=q[2], wt=q[3];
+							for(int i=0; i<adj[u].size(); i++)
+								if(adj[u][i].first == v){
+									adj[u][i].second = wt;
+									break;
+								}
+							for(int i=0; i<adj[v].size(); i++)
+								if(adj[v][i].first == u){
+									adj[v][i].second = wt;
+									break;
+								}
+						}
+					}
+					return ans;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1312) Count Good Triplets in an Array:
+		Problem Statement:
+			You are given two 0-indexed arrays nums1 and nums2 of length n, both of which are permutations of [0, 1, ..., n - 1].
+			A good triplet is a set of 3 distinct values which are present in increasing order by position both in nums1 and nums2. In other words, if we consider pos1v as the index of the value v in nums1 and pos2v as the index of the value v in nums2, then a good triplet will be a set (x, y, z) where 0 <= x, y, z <= n - 1, such that pos1x < pos1y < pos1z and pos2x < pos2y < pos2z.
+			Return the total number of good triplets.	
+			Example 1:
+			Input: nums1 = [2,0,1,3], nums2 = [0,1,2,3]
+			Output: 1
+			Explanation: 
+			There are 4 triplets (x,y,z) such that pos1x < pos1y < pos1z. They are (2,0,1), (2,0,3), (2,1,3), and (0,1,3). 
+			Out of those triplets, only the triplet (0,1,3) satisfies pos2x < pos2y < pos2z. Hence, there is only 1 good triplet.
+			Example 2:
+			Input: nums1 = [4,0,1,3,2], nums2 = [4,1,0,2,3]
+			Output: 4
+			Explanation: The 4 good triplets are (4,0,3), (4,0,2), (4,1,3), and (4,1,2).
+			Constraints:
+				n == nums1.length == nums2.length
+				3 <= n <= 10^5
+				0 <= nums1[i], nums2[i] <= n - 1
+				nums1 and nums2 are permutations of [0, 1, ..., n - 1].
+		// Not Optimized: TC: O(n³) SC: O(n)
+			long long goodTriplets(vector<int>& nums1, vector<int>& nums2) {
+				// firstly will store the position of nums in nums2
+				int n = nums1.size();           // nums2.size();
+				if(n < 3) return 0;
+				vector<int> position(n, -1);    // doesn't exist
+				for(int i=0; i<n; i++) position[nums2[i]] = i;  // computed the position of numbers of num1 in num2
+				long long ans=0;
+				for(int i=0; i<n-2; i++){
+					for(int j=i+1; j<n-1; j++){
+						for(int k=j+1; k<n; k++){
+							if(position[nums1[i]] < position[nums1[j]] && position[nums1[j]] < position[nums1[k]]) 
+								ans++;
+						}
+					}
+				}
+				return ans;
+			}
+		// Optimized: ❌Pending
+
+	1313) Count the Number of Good Subarrays:
+		Problem Statement:
+			Given an integer array nums and an integer k, return the number of good subarrays of nums.
+			A subarray arr is good if there are at least k pairs of indices (i, j) such that i < j and arr[i] == arr[j].
+			A subarray is a contiguous non-empty sequence of elements within an array.
+			Example 1:
+			Input: nums = [1,1,1,1,1], k = 10
+			Output: 1
+			Explanation: The only good subarray is the array nums itself.
+			Example 2:
+			Input: nums = [3,1,4,3,2,2,4], k = 2
+			Output: 4
+				Explanation: There are 4 different good subarrays:
+				- [3,1,4,3,2,2] that has 2 pairs.
+				- [3,1,4,3,2,2,4] that has 3 pairs.
+				- [1,4,3,2,2,4] that has 2 pairs.
+				- [4,3,2,2,4] that has 2 pairs.
+			Constraints:
+				1 <= nums.length <= 10^5
+				1 <= nums[i], k <= 10^9
+		// Not Optimized: TC: O(n⁴) & SC: O(1)
+			class Solution {
+				public:
+				long long countGood(vector<int>& nums, int k) {
+					long long cnt=0;
+					int n = nums.size();
+					for(int i=0; i<n; i++){
+						for(int j=i+1; j<n; j++){
+							int curCnt=0;
+							for(int x=i; x<=j; x++){
+								for(int y=x+1; y<=j; y++)
+									if(nums[x] == nums[y]) curCnt++;
+
+								if(curCnt >= k){
+									cnt++;
+									break;
+								} 
+							}
+						}
+					}
+					return cnt;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1314) Implement Trie: (Refer Lect-79)
+		Problem Statement:
+			Implement Trie class and complete insert(), search() and isPrefix() function for the following queries :
+			Type 1 : (1, word), calls insert(word) function and insert word in the Trie
+			Type 2 : (2, word), calls search(word) function and check whether word exists in Trie or not.
+			Type 3 : (3, word), calls isPrefix(word) function and check whether word exists as a prefix of any string in Trie or not.
+			Examples :
+			Input: query[][] = [[1, "abcd"], [1, "abc"], [1, "bcd"], [2, "bc"], [3, "bc"], [2, "abc"]]
+			Output: [false, true, true]
+			Explanation: string "bc" does not exist in the trie, "bc" exists as prefix of the word "bcd" in the trie, and "abc" also exists in the trie.
+			Input: query[][] = [[1, "gfg"], [1, "geeks"], [3, "fg"], [3, "geek"], [2, "for"]]
+			Output: [false, true, false]
+			Explanation: The string "for" is not present in the trie, "fg" is not a valid prefix, while "geek" is a valid prefix of the word "geeks" in the trie.
+			Constraints:
+				1 ≤ query.size() ≤ 10^4
+				1 ≤ word.size() ≤ 10^3
+		// Iterative approach:
+			class TrieNode{
+				public:
+				TrieNode *childs[26];
+				bool isEnd = false;
+				
+				TrieNode(): childs{NULL}{}
+			};
+			class Trie {
+				public:
+				TrieNode *root;
+				Trie() {
+					root = new TrieNode();
+				}
+				void insert(string &word) {
+					int size = word.size();
+					TrieNode *T = root;
+					for(int i=0; i<size; i++){
+						int index = word[i] - 'a';
+						if(T->childs[index]){
+							if(i==size-1) T -> isEnd = true;
+							T=T->childs[index];
+						}else{
+							T->childs[index] = new TrieNode();
+							if(i==size-1) T -> isEnd = true;
+							T = T->childs[index];
+						}
+					}
+				}
+				bool search(string &word) {
+					int size = word.size();
+					TrieNode * T = root;
+					for(int i=0; i<size; i++){
+						int index = word[i] - 'a';
+						if(!T->childs[index]) return 0;     // not exists
+						if(i==size-1) return T->isEnd;                // exists
+						T = T->childs[index];
+					}
+					return 0;           // not exists
+				}
+				bool isPrefix(string &word) {
+					int size = word.size();
+					TrieNode*t = root;
+					for(int i=0; i<size; i++){
+						int indx = word[i]-'a';
+						if(!t->childs[indx]) return 0;
+						t = t->childs[indx];
+					}
+					return 1;
+				}
+			};
+
+	1315) Ninja And The Rows:
+		Problem statement
+			Ninja has been provided a matrix 'MAT' of size 'N X M' where 'M' is the number of columns in the matrix, and 'N' is the number of rows.
+			The weight of the particular row is the sum of all elements in it. Ninja wants to find the maximum weight amongst all the rows.
+			Your task is to help the ninja find the maximum weight amongst all the rows.
+			EXAMPLE:
+			Input: 'N' = 2, 'M' = 3, 'MAT' = [[1, 2, 3], [2, 0, 0]]
+			Output: 6
+			The weight of first row is 1 + 2 + 3 = 6
+			The weight of the second row is 2 + 0 + 0 = 2; hence the answer will be a maximum of 2 and 6, which is 6.
+			Constraints :
+				1 <= 'T' <= 10
+				1 <= 'N' <= 10^2
+				1 <= 'M' <= 10^2
+				0 <= 'MAT[I][J]' <= 10^5
+				Time Limit: 1 sec
+			Sample Input 1 :
+			2
+			3 3
+			1 2 3
+			3 4 2
+			3 4 2
+			1 1
+			2
+			Sample Output 1 :
+			9
+			2
+			Explanation Of Sample Input 1 :
+			For the first test case, the answer will be 9. It will be formed by the 2nd row, and it will be the maximum amongst all.
+			For the first test case, as there is only one row, the answer will be its sum which is 2.
+			Sample Input 2 :
+			2
+			1 3
+			1 2 3
+			4 2
+			2 2
+			3 4 
+			2 4
+			4 5
+			Sample Output 2 :
+			6
+			9
+		#include <bits/stdc++.h> 
+		int maximumWeightRow(int n, int m, vector<vector<int>> &mat) {
+			int ans=0;
+			for(auto v: mat) ans = max(ans, accumulate(v.begin(), v.end(), 0));
+			return ans;
+		}
+		#include <bits/stdc++.h> 
+		int maximumWeightRow(int n, int m, vector<vector<int>> &mat) {
+			int ans=0;
+			for(auto v: mat){
+				int sum=0;
+				for(int i: v)
+					sum += i;
+				ans = max(ans, sum);
+			}
+			return ans;
+		}
+
+	1316) Minimum Weight Cycle:
+		https://www.geeksforgeeks.org/problems/minimum-weight-cycle/1
+		Problem Statement:
+			Given an undirected, weighted graph with V vertices numbered from 0 to V-1 and E edges, represented by a 2d array edges[][], where edges[i] = [u, v, w] represents the edge between the nodes u and v having w edge weight.
+			Your task is to find the minimum weight cycle in this graph.
+			Examples:
+			Input: V = 5, edges[][] = [[0, 1, 2], [1, 2, 2], [1, 3, 1], [1, 4, 1], [0, 4, 3], [2, 3, 4]]
+			Output: 6
+			Explanation: 
+			Minimum-weighted cycle is  0 → 1 → 4 → 0 with a total weight of 6(2 + 1 + 3)
+			Input: V = 5, edges[][] = [[0, 1, 3], [1, 2, 2], [0, 4, 1], [1, 4, 2], [1, 3, 1], [3, 4, 2], [2, 3, 3]]
+			Output: 5
+			Explanation: 
+			Minimum-weighted cycle is  1 → 3 → 4 → 1 with a total weight of 5(1 + 2 + 2)
+			Constraints:
+				1 ≤ V ≤ 100
+				1 ≤ E = edges.size() ≤ 10^3 
+				1 ≤ edges[i][j] ≤ 100
+		// Not Optimized: TC: O(V * (V+E)) & SC: O(V+E)
+			typedef pair<int, int> pii;
+			class Solution {
+				public:
+				void DFS(vector<pii> adj[], vector<int> &vis, int &startingNode, int curNode, int parent, int curWtcycle, int &minCycleValue){
+					vis[curNode] = 1;
+					// visit the Node's neighbours
+					for(auto nbr: adj[curNode]){
+						if(nbr.first == parent) continue;
+						if(!vis[nbr.first]) DFS(adj, vis, startingNode, nbr.first, curNode, curWtcycle+nbr.second, minCycleValue);
+						if(nbr.first == startingNode) minCycleValue = min(minCycleValue, curWtcycle+nbr.second);
+					}
+					vis[curNode] = 0;
+				}
+				int findMinCycle(int V, vector<vector<int>>& edges) {
+					int minCycleValue = INT_MAX, n=edges.size();
+					if(!n) return minCycleValue;
+					// adj list
+					vector<pii> adj[V];
+					for(auto e: edges){
+						int u=e[0], v=e[1], wt=e[2];
+						adj[u].push_back({v, wt});
+						adj[v].push_back({u, wt});
+					}
+					
+					// for(int i=0; i<V; i++){
+					//     cout<<i<<"\t";
+					//     for(auto c: adj[i])
+					//         cout<<c.first<<", "<<c.second<<"\t";
+					//     cout<<endl;
+					// }
+					for(int startingNode = 0; startingNode<V; startingNode++){
+						vector<int> vis(V, 0);
+						int curWtcycle=0;
+						// DFS(adj, vis, startingNode, curNode, parent, curWtcycle, minCycleValue);
+						DFS(adj, vis, startingNode, startingNode, -1, curWtcycle, minCycleValue);
+					}
+					return minCycleValue;
+				}
+			};
+		// Optimized: ❌Pending
+
+	1317) Floyd Warshall:
+		Problem Statement:
+			You are given an weighted directed graph, represented by an adjacency matrix, dist[][] of size n x n, where dist[i][j] represents the weight of the edge from node i to node j. If there is no direct edge, dist[i][j] is set to a large value (i.e., 108) to represent infinity.
+			The graph may contain negative edge weights, but it does not contain any negative weight cycles.
+			Your task is to find the shortest distance between every pair of nodes i and j in the graph.
+			Note: Modify the distances for every pair in place.
+			Examples :
+			Input: dist[][] = [[0, 4, 108, 5, 108], [108, 0, 1, 108, 6], [2, 108, 0, 3, 108], [108, 108, 1, 0, 2], [1, 108, 108, 4, 0]]
+			Output: [[0, 4, 5, 5, 7], [3, 0, 1, 4, 6], [2, 6, 0, 3, 5], [3, 7, 1, 0, 2], [1, 5, 5, 4, 0]]
+			Explanation: Each cell dist[i][j] in the output shows the shortest distance from node i to node j, computed by considering all possible intermediate nodes. 
+			Input: dist[][] = [[0, -1, 2], [1, 0, 108], [3, 1, 0]]
+			Output: [[0, -1, 2], [1, 0, 3], [2, 1, 0]]
+			Explanation: Each cell dist[i][j] in the output shows the shortest distance from node i to node j, computed by considering all possible intermediate nodes.
+			From 2 to 0 shortest distance should be 2 by following path 2 -> 1 -> 0
+			From 1 to 2 shortest distance should be 3 by following path 1 -> 0 -> 2
+			Constraints:
+				1 ≤ dist.size() ≤ 100
+				-1000 ≤ dist[i][j] ≤ 1000
+		// Using Bellman ford algorithm: TC:O(n³) & SC: O(E)
+			typedef pair<int, int> pii;
+			class Solution {
+				public:
+				void BellmanFord(vector<pair<pii, int>> &edges, vector<int> &D){
+					int size = D.size();
+					for(int i=0; i<size-1; i++){
+						for(auto e: edges){
+							int u = e.first.first, v = e.first.second, wt = e.second;
+							if(D[u] == 1e8) continue;
+							D[v] = min(D[v], D[u] + wt);
+						}
+					}
+				}
+				void floydWarshall(vector<vector<int>> &dist) {
+					int V = dist.size();
+					vector<pair<pii, int>> edges;
+					for(int i=0; i<V; i++){
+						for(int j=0; j<V; j++){
+							if(i == j or dist[i][j] == 1e8) continue;
+							edges.push_back({{i, j}, dist[i][j]});
+						}
+					}
+					vector<vector<int>> ans;
+					for(int i=0; i<V; i++){
+						vector<int> curDist (V, 1e8);
+						curDist[i] = 0;
+						BellmanFord(edges, curDist);
+						ans.push_back(curDist);
+					}
+					dist = ans;
+				}
+			};
+		// Using Floyd Warshall: ❌Pending
+
+	1318) Count and Say:
+		Problem Statement:
+			The count-and-say sequence is a sequence of digit strings defined by the recursive formula:
+			countAndSay(1) = "1"
+			countAndSay(n) is the run-length encoding of countAndSay(n - 1).
+			Run-length encoding (RLE) is a string compression method that works by replacing consecutive identical characters (repeated 2 or more times) with the concatenation of the character and the number marking the count of the characters (length of the run). For example, to compress the string "3322251" we replace "33" with "23", replace "222" with "32", replace "5" with "15" and replace "1" with "11". Thus the compressed string becomes "23321511".
+			Given a positive integer n, return the nth element of the count-and-say sequence.
+			Example 1:
+			Input: n = 4
+			Output: "1211"
+			Explanation:
+			countAndSay(1) = "1"
+			countAndSay(2) = RLE of "1" = "11"
+			countAndSay(3) = RLE of "11" = "21"
+			countAndSay(4) = RLE of "21" = "1211"
+			Example 2:
+			Input: n = 1
+			Output: "1"
+			Explanation:
+			This is the base case.
+			Constraints:
+				1 <= n <= 30
+			Follow up: Could you solve it iteratively?
+		// TC: O(2ⁿ) & SC: O(2ⁿ)
+		string countAndSay(int n) {
+			string s = "1";
+			if(n == 1) return s;
+			for(int i=2; i<=n; i++){
+				string t;
+				int j = 1, cnt=1;
+				while(j < s.size()){
+					if(s[j] == s[j-1]) cnt++;
+					else{
+						// t += to_string(cnt);
+						t.append(to_string(cnt));
+						t.push_back(s[j-1]);
+						cnt=1;
+					}
+					j++;
+				}
+				t += to_string(cnt);
+				t.push_back(s[j-1]);
+				s = t;
+			}
+			return s;
+		}
+		
+	1319)
+	1320)
+
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
