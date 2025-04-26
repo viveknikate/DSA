@@ -27841,7 +27841,22 @@ Lecture 75: Heaps in C++:
 			}
 		};
 
-	Q.2. Is Binary Tree Heap: (Refer POTD: 1155 - 1160)
+	Q.2. Is Binary Tree Heap: (Refer POTD: 1155 - 1160):
+		Problem Statement:
+			You are given a binary tree, and the task is to determine whether it satisfies the properties of a max-heap.
+			A binary tree is considered a max-heap if it satisfies the following conditions:
+				Completeness: Every level of the tree, except possibly the last, is completely filled, and all nodes are as far left as possible.
+				Max-Heap Property: The value of each node is greater than or equal to the values of its children.
+			Examples:
+			Input: root[] = [97, 46, 37, 12, 3, 7, 31, 6, 9]		
+			Output: true
+			Explanation: The tree is complete and satisfies the max-heap property.
+			Input: root[] = [97, 46, 37, 12, 3, 7, 31, N, 2, 4]
+			Output: false
+			Explanation: The tree is not complete and does not follow the Max-Heap Property, hence it is not a max-heap.
+			Constraints:
+				1 ≤ number of nodes ≤ 10^3
+				1 ≤ node->data ≤ 10^3
 		// Structure of node
 		/*struct Node {
 			int data;
@@ -27904,6 +27919,63 @@ Lecture 75: Heaps in C++:
 				return isCBT(tree, 0, TotalNodes) && isMaxHeap(tree);
 			}
 		};
+		// or:
+			bool isHeap(Node* tree) {
+				if(!tree) return 1;
+				queue<Node*> q;
+				q.push(tree);
+				int NullFound = 0;
+				while(!q.empty()){
+					Node* curNode = q.front();
+					q.pop();
+					
+					if(curNode == NULL){
+						NullFound = 1;
+						continue;
+					}
+					if(NullFound) return 0;          // as tree is not complete
+					
+					if(curNode -> left){
+						if(curNode -> left -> data > curNode -> data)  return 0;        // as its not max heap
+						q.push(curNode->left);
+					}else{
+						q.push(nullptr);
+					}
+					
+					if(curNode -> right){
+						if(curNode -> right -> data > curNode -> data)  return 0;        // as its not max heap
+						q.push(curNode->right);
+					}else{
+						q.push(nullptr);
+					}
+				}
+				return 1;
+			}
+		// Advance Conscise:
+			bool isHeap(Node* tree) {
+				if(!tree) return 1;
+				queue<Node*> q;
+				q.push(tree);
+				int NullFound = 0;
+				while(!q.empty()){
+					Node* curNode = q.front();
+					q.pop();
+					if(curNode -> left){
+						if(NullFound or curNode -> left -> data > curNode -> data)  return 0;        // as its not max heap
+						q.push(curNode->left);
+					}else{
+						NullFound = 1;
+					}
+					
+					if(curNode -> right){
+						if(NullFound or curNode -> right -> data > curNode -> data)  return 0;        // as its not max heap
+						q.push(curNode->right);
+					}else{
+						NullFound = 1;
+					}
+				}
+				return 1;
+			}
 
 	Q.3. Merge two binary Max heaps:
 		Problem Statement:
@@ -38207,7 +38279,6 @@ POTD:-[Problem of the Day]
 
 			return v;
 		}
-
 		//or
 		#include <bits/stdc++.h> 
 		vector<vector<int>> ninjaCity(vector<vector<int>> &mat){
@@ -38227,40 +38298,70 @@ POTD:-[Problem of the Day]
 			return v;
 		}
 
-	4) Missing number in array:
-		class Solution{
-			public:
-			int missingNumber(vector<int>& array, int n) {
-				//(TLE)
-				// for(int i=1;i<=n;i++){
-				//     int j;
-				//     for(j=0;j<n;j++){
-				//         if(array[j] == i)
-				//             break;
-				//     }
-				//         if(j == n)
-				//             return i;
-				// }
-				
-				/or (TLE)
-				// int counter = 1, i=0;
-				// while(i<n){
-				//     if(array[i++] == counter){
-				//         i=0;
-				//         counter++;
-				//     }
-				// }
-				// return counter; 
-				
-				//or (optimized)
-				sort(array.begin(), array.end());
-				for(int i=0;i<n;i++){
-					if(array[i] != i+1)
-						return i+1;
-				}
-			}
-		};
+	4) Missing number in array / Missing in Array:
+		Problem Statement:
+			You are given an array arr[] of size n - 1 that contains distinct integers in the range from 1 to n (inclusive). This array represents a permutation of the integers from 1 to n with one element missing. Your task is to identify and return the missing element.
+			Examples:
+			Input: arr[] = [1, 2, 3, 5]
+			Output: 4
+			Explanation: All the numbers from 1 to 5 are present except 4.
+			Input: arr[] = [8, 2, 4, 5, 3, 7, 1]
+			Output: 6
+			Explanation: All the numbers from 1 to 8 are present except 6.
+			Input: arr[] = [1]
+			Output: 2
+			Explanation: Only 1 is present so the missing element is 2.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^6
+				1 ≤ arr[i] ≤ arr.size() + 1
 
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			int missingNum(vector<int>& arr) {
+				int ans=1, n=arr.size();
+				for(int i=0; i<n; i++){
+					int found = 1;
+					for(int j=0; j<n; j++)
+						if(arr[j] == ans){
+							found = 0;
+							ans++;
+							break;
+						}
+					if(found) return ans;
+				}
+				return ans;
+			}
+			class Solution{
+				public:
+				int missingNumber(vector<int>& array, int n) {
+					//(TLE)
+					// for(int i=1;i<=n;i++){
+					//     int j;
+					//     for(j=0;j<n;j++){
+					//         if(array[j] == i)
+					//             break;
+					//     }
+					//         if(j == n)
+					//             return i;
+					// }
+					
+					/or (TLE)
+					// int counter = 1, i=0;
+					// while(i<n){
+					//     if(array[i++] == counter){
+					//         i=0;
+					//         counter++;
+					//     }
+					// }
+					// return counter; 
+					
+					//or (optimized)
+					sort(array.begin(), array.end());
+					for(int i=0;i<n;i++){
+						if(array[i] != i+1)
+							return i+1;
+					}
+				}
+			};
 		//more optimized:
 			class Solution{
 				public:
@@ -38278,6 +38379,23 @@ POTD:-[Problem of the Day]
 					return actSum - SumArr;
 				}
 			};
+		// TC: O(n log n) & SC: O(1)
+			int missingNum(vector<int>& arr) {
+				sort(arr.begin(), arr.end());
+				int ans=1;
+				for(int i: arr){
+					if(i == ans) ans++;
+					else break;
+				}
+				return ans;
+			}
+		// TC: O(n) & SC: O(1)
+			int missingNum(vector<int>& arr) {
+				long long n = arr.size();
+				// but array contains the 1 to n+1 elements
+				n = n+1;
+				return (n*(n+1)/2) - accumulate(arr.begin(), arr.end(), 0);
+			}
 
 	5) Count Odd Even
 		void countOddEven(int arr[], int sizeof_array)
@@ -94448,6 +94566,22 @@ POTD:-[Problem of the Day]
 			Constraints:
 				1 ≤ N ≤ 10^7
 				0 ≤ Ai ≤ 10^6
+		// or
+			Given an array arr[]. Find the majority element in the array. If no majority element exists, return -1.
+			Note: A majority element in an array is an element that appears strictly more than arr.size()/2 times in the array.
+			Examples:
+			Input: arr[] = [1, 1, 2, 1, 3, 5, 1]
+			Output: 1
+			Explanation: Since, 1 is present more than 7/2 times, so it is the majority element.
+			Input: arr[] = [7]
+			Output: 7
+			Explanation: Since, 7 is single element and present more than 1/2 times, so it is the majority element.
+			Input: arr[] = [2, 13]
+			Output: -1
+			Explanation: Since, no element is present more than 2/2 times, so there is no majority element.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				0 ≤ arr[i] ≤ 10^5
 
 		// Not Optimized 		/*TC: O(N²) & SC:O(1)*/
 			class Solution{
@@ -94466,6 +94600,21 @@ POTD:-[Problem of the Day]
 				}
 			};
 
+		// TC: O(n log n) & SC: O(1)
+			int majorityElement(vector<int>& a) {
+				sort(a.begin(), a.end());
+				int i=0, n = a.size();
+				while(i < n){
+					int cnt=1;
+					i++;
+					while(i < n and a[i] == a[i-1])
+						cnt++, i++;
+					
+					if(cnt > n/2) return a[i-1];
+				}
+				return -1;
+			}
+		
 		/*TC: O(N) & SC:O(N)*/
 			class Solution{
 				public:
@@ -94514,7 +94663,17 @@ POTD:-[Problem of the Day]
 					return -1;
 				}
 			};
-	
+		// or 
+		int majorityElement(vector<int>& arr) {
+			int n = arr.size();
+			unordered_map<int, int> Track;
+			for(int i: arr){
+				Track[i]++;
+				if(Track[i] > n/2) return i;
+			}
+			return -1;
+		}
+
 	749) Delete Node In A Linked List:
 		Problem statement
 			You are given a Singly Linked List of integers and a reference to the node to be deleted. Every node of the Linked List has a unique value written on it. Your task is to delete that node from the linked list.
@@ -133217,8 +133376,306 @@ POTD:-[Problem of the Day]
 			return s;
 		}
 		
-	1319)
-	1320)
+	1319) Find Only Repetitive Element from 1 to n-1:
+		Problem Statement:
+			Given an array arr[] of size n, filled with numbers from 1 to n-1 in random order. The array has only one repetitive element. Your task is to find the repetitive element.
+			Note: It is guaranteed that there is a repeating element present in the array.
+			Examples:
+			Input: arr[] = [1, 3, 2, 3, 4]
+			Output: 3 
+			Explanation: The number 3 is the only repeating element.
+			Input: arr[] = [1, 5, 1, 2, 3, 4]
+			Output: 1  
+			Explanation: The number 1 is the only repeating element.
+			Input: arr[] = [1, 1]  
+			Output: 1
+			Explanation: The array is of size 2 with both elements being 1, making 1 the repeating element.
+			Constraints:
+				2 ≤ arr.size() ≤ 10^5
+				1 ≤ arr[i] ≤ n-1 
+		// Not Optimized:
+			// TC: O(n²) & SC: O(1)
+				int findDuplicate(vector<int>& arr) {
+					int n = arr.size();
+					for(int i=0; i<n; i++)
+						for(int j=i+1; j<n; j++)
+							if(arr[i] == arr[j])
+								return arr[i];
+					return -1;      // as not found. but we never reach here.
+				}
+		// Optimized:
+			// TC: O(n log n) & SC: O(1)
+				int findDuplicate(vector<int>& arr) {
+					int n = arr.size();
+					sort(begin(arr), end(arr));
+					for(int i=0; i<n-1; i++)
+						if(arr[i] == arr[i+1])
+							return arr[i];
+					return -1;      // as not found. but we never reach here.
+				}
+			// TC: O(n) & SC: O(n)
+				int findDuplicate(vector<int>& arr) {
+					unordered_map<int, int> Freq;
+					for(int i: arr) Freq[i]++;
+					
+					for(auto i=Freq.begin(); i != Freq.end(); i++)
+						if(i -> second == 2)
+							return i->first;
+					return 0;
+				}
+			// TC: O(n) & SC: O(1)
+				int findDuplicate(vector<int>& arr) {
+					int n = arr.size()-1;
+					long long mustSum = 1ll * n * (n+1) / 2;
+					long long actualSum = accumulate(arr.begin(), arr.end(), 0LL);
+					return actualSum - mustSum;
+				}
+			// Using Elements as Indexes: TC: O(n) & SC: O(1)
+				int findDuplicate(vector<int>& arr) {
+					int n = arr.size();
+					for(int i=0; i<n; i++){
+						if(arr[abs(arr[i])] < 0) return abs(arr[i]);
+						arr[abs(arr[i])] = -arr[abs(arr[i])];
+					}
+					return -1;      // as not found. but we never reach here.
+				}
+
+	1320) Unique Number I:
+		Problem Statement:
+			Given a unsorted array arr[] of positive integers having all the numbers occurring exactly twice, except for one number which will occur only once. Find the number occurring only once.
+			Examples:
+			Input: arr[] = [1, 2, 1, 5, 5]
+			Output: 2
+			Explanation: Since 2 occurs once, while other numbers occur twice, 2 is the answer.
+			Input: arr[] = [2, 30, 2, 15, 20, 30, 15]
+			Output: 20
+			Explanation: Since 20 occurs once, while other numbers occur twice, 20 is the answer.
+			Constraints
+				1 ≤  arr.size()  ≤ 10^6
+				0 ≤ arr[i] ≤ 10^9
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			int findUnique(vector<int> &arr) {
+				int n = arr.size();
+				for(int i=0; i<n; i++){
+					if(arr[i] == -1) continue;
+					int found = 1;
+					for(int j=i+1; j<n; j++){
+						if(arr[j] == -1) continue;
+						if(arr[i] == arr[j]){
+							arr[j] = -1;
+							found = 0;
+							break;
+						}
+					}
+					if(found) return arr[i];
+				}
+				return -1;      // never reach here.
+			}
+			// or
+				int findUnique(vector<int> &arr) {
+					int n = arr.size();
+					for(int i=0; i<n; i++){
+						int cnt = 0;
+						for(int j=0; j<n; j++)
+							if(arr[i] == arr[j]) 
+								cnt++;
+							
+						if(cnt == 1)
+							return arr[i]; 
+					}
+					return -1;
+				}
+		// Optimized:
+			// TC: O(n) & SC: (n/2 + 1)
+				int findUnique(vector<int> &arr) {
+					unordered_map<int, int> Freq;
+					for(int i: arr)
+						Freq[i]++;
+					
+					for(auto itr: Freq)
+						if(itr.second == 1)
+							return itr.first;
+					return -1;
+				}
+			// XOR: TC: O(n) & SC: O(1)
+				int findUnique(vector<int> &arr) {
+					int ans=0;
+					for(int i: arr)
+						ans ^= i;
+					return ans;
+				}
+
+	1321) Unique Number II:
+		Problem Statement:
+			Given an array arr[] containing 2*n + 2 positive numbers, out of which 2*n numbers exist in pairs whereas the other two number occur exactly once and are distinct. Find the other two numbers. Return the answer in increasing order.
+			Examples:
+			Input: arr[] = [1, 2, 3, 2, 1, 4]
+			Output: [3, 4] 
+			Explanation: 3 and 4 occur exactly once.
+			Input: arr[] = [2, 1, 3, 2]
+			Output: [1, 3]
+			Explanation: 1 and 3 occur exactly once.
+			Input: arr[] = [2, 1, 3, 3]
+			Output: [1, 2]
+			Explanation: 1 and 2 occur exactly once.
+			Constraints:
+				2 ≤ arr.size() ≤ 10^6
+				1 ≤ arr[i] ≤ 5 * 10^6
+				arr.size() is even
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			vector<int> singleNum(vector<int>& arr) {
+				int first, second, n = arr.size();
+				first = second = -1;
+				for(int i=0; i<n; i++){
+					int cnt = 1;
+					for(int j=0; j<n; j++)
+						if(i != j and arr[i] == arr[j]) cnt++;
+
+					if(cnt == 1){
+						second = first;
+						first = arr[i];
+					}
+				}
+				return {min(first, second), max(first, second)};
+			}
+		// But Optimized: TC: O(n²) & SC: O(1)
+			vector<int> singleNum(vector<int>& arr) {
+				int first, second, n = arr.size();
+				first = second = -1;
+				for(int i=0; i<n; i++){
+					if(arr[i] == -1) continue;
+					int cnt = 1;
+					for(int j=i+1; j<n; j++){
+						if(arr[j] == -1) continue;
+						if(arr[i] == arr[j]){
+							arr[j] = -1;
+							cnt++;
+							// break;
+						}
+					}
+					if(cnt == 1){
+						second = first;
+						first = arr[i];
+					}
+				}
+				return {min(first, second), max(first, second)};
+			}
+		// Optimized:
+			// TC: O(n log n) & SC: O(1)
+				vector<int> singleNum(vector<int>& arr) {
+					sort(arr.begin(), arr.end());
+					int first, second, n = arr.size();
+					first = second = -1;
+					int i=0;
+					while(i<n){
+						if(i == n-1){
+							// this is last so consider this
+							second = first;
+							first = arr[i];
+							i++;
+						}else if(arr[i] != arr[i+1]){
+							second = first;
+							first = arr[i];
+							i++;
+						}else{
+							i += 2;
+						}
+					}
+					return {min(first, second), max(first, second)};
+				}
+			// TC: O(n) & SC: O(n)
+				vector<int> singleNum(vector<int>& arr) {
+					unordered_map<int, int> Fr;
+					for(int i: arr) Fr[i]++;
+					int first, second;
+					first = second = -1;
+					for(auto itr: Fr)
+						if(itr.second == 1){
+							second = first;             // doing this kind of steps to save both values.
+							first = itr.first;          // kind of technique as we practice more we understand more
+						}
+					return {min(first, second), max(first, second)};
+				}
+		// Using Bit manipulation: ❌Pending
+
+	1322) Unique Number III: (Refer POTD: 266)
+		Problem Statement:
+			Given an array of integers arr[] where, every element appears thrice except for one which occurs once.
+			Find that element which occurs once.
+
+			Examples:
+
+			Input: arr[] = [1, 10, 1, 1]
+			Output: 10
+			Explanation: 10 occurs once in the array while the other element 1 occurs thrice.
+			Input: arr[] = [3, 2, 1, 34, 34, 1, 2, 34, 2, 1]
+			Output: 3
+			Explanation: All elements except 3 occurs thrice in the array.
+			Constraints:
+			1 ≤ arr.size() ≤ 105
+			arr.size() % 3 = 1
+			-109 ≤ arr[i] ≤ 109
+		// TC: O(n²) & SC: O(1)
+			int getSingle(vector<int> &arr) {
+				int n = arr.size();
+				for(int i=0; i<n; i++){
+					int cnt = 0;
+					for(int j=0; j<n; j++)
+						if(arr[i] == arr[j]) cnt++;
+					if(cnt == 1)
+						return arr[i];
+				}
+				return -1;
+			}
+		// TC: O(n log n) & SC: O(1)
+			int getSingle(vector<int> &arr) {
+				sort(arr.begin(), arr.end());
+				int n = arr.size(), i=0;
+				while(i < n){
+					int cnt = 0, currElement = arr[i];
+					while(i < n and arr[i] == currElement)
+						cnt++, i++;
+					if(cnt == 1)
+						return currElement;
+				}
+				return -1;
+			}
+		// TC: O(n) & SC: O(n)
+			int getSingle(vector<int> &arr) {
+				unordered_map<int, int> Freq;
+				for(int i: arr)
+					Freq[i]++;
+
+				for(auto itr: Freq)
+					if(itr.second == 1)
+						return itr.first;
+				return -1;
+			}
+		// Using Math: TC: O(N) & SC: O(N)
+			int getSingle(vector<int> &arr) {
+				unordered_set<int> ust;
+				long long total = 0;
+				for(int i: arr){
+					total += i;
+					ust.insert(i);
+				}
+				
+				long long uniqSum =0;
+				for(int i: ust)
+					uniqSum += i;
+				return (3 * uniqSum - total) / 2;
+			}
+
+1323)
+1324)
+1325)
+1326)
+1327)
+1328)
+1329)
+1330)
+1331)
+1332)
 
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
