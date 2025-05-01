@@ -25398,6 +25398,27 @@ Lecture-65: Binary Tree FAANG Interview Questions || Part-3:
 			Constraints:
 				1 ≤ Number of nodes in the tree ≤ 10000
 				1 ≤ Value of each node ≤ 100000
+		// Using Brute Force: Not Optimized
+			int solve(Node *n){
+				if(!n) return 0;
+				
+				int include = n -> data;
+				if(n->left){
+					include += solve(n -> left -> left);
+					include += solve(n -> left -> right);
+				}
+				if(n->right){
+					include += solve(n -> right -> left);
+					include += solve(n -> right -> right);
+				}
+				int exclude = solve(n->left) + solve(n->right);
+				
+				return max(include, exclude);
+			}
+			// Function to return the maximum sum of non-adjacent nodes.
+			int getMaxSum(Node *root) {
+				return solve(root);
+			}
 
 		//Node Structure
 		/*
@@ -33469,7 +33490,19 @@ Lecture 105: Maximum Sum of Non-Adjacent Elements || DP Series: ❌Pending
 				// nums, index, curSum, ans
 				solve(nums, 0, 0, mxAns);
 				return mxAns;
-			}	
+			}
+			// Pick & non-pick
+				#include <bits/stdc++.h> 
+				int solve(vector<int> &nums, int i){
+					int n = nums.size();
+					if(i >= n) return 0;
+					int pick = nums[i] + solve(nums, i+2);
+					int non = solve(nums, i+1);
+					return max(pick, non);
+				}
+				int maximumNonAdjacentSum(vector<int> &nums){
+					return solve(nums, 0);
+				}
 		// Optimized: Recursion+Memoization : TC: O(n) & SC: O(n)
 			#include <bits/stdc++.h>
 			int solve(vector<int> &nums, int indx, vector<int> &dp){
@@ -118760,6 +118793,31 @@ POTD:-[Problem of the Day]
 			}
 		};
 	
+	// or:
+		Node* loopExist(Node* head){
+			if(!head) return NULL;
+			Node* fast = head->next, *slow = head;
+			while(fast and fast -> next and fast != slow){
+				fast = fast -> next -> next;
+				slow = slow -> next;
+			}
+			return (fast == slow) ? fast : NULL;        // cycle doesn't exist
+		}
+		int ComputeLength(Node* t){
+			Node* cur = t;
+			int cnt = 0;
+			do{
+				cnt++;
+				t = t -> next;
+			}while(t != cur);
+			return cnt;
+		}
+		// Function to find the length of a loop in the linked list.
+		int countNodesinLoop(Node *head) {
+			Node* t = loopExist(head);
+			return t ? ComputeLength(t) : 0;
+		}
+	
 	#LeetCode WeeklyContest-415:
 		1086) The Two Sneaky Numbers of Digitville:
 			Problem Statement:
@@ -133666,8 +133724,159 @@ POTD:-[Problem of the Day]
 				return (3 * uniqSum - total) / 2;
 			}
 
-1323)
-1324)
+	1323) Sort a linked list of 0s, 1s and 2s:
+		Problem Statement:
+			Given the head of a linked list where nodes can contain values 0s, 1s, and 2s only. Your task is to rearrange the list so that all 0s appear at the beginning, followed by all 1s, and all 2s are placed at the end.
+			Examples:
+			Input: head = 1 → 2 → 2 → 1 → 2 → 0 → 2 → 2
+			Output: 0 → 1 → 1 → 2 → 2 → 2 → 2 → 2
+			Explanation: All the 0s are segregated to the left end of the linked list, 2s to the right end of the list, and 1s in between.
+			Input: head = 2 → 2 → 0 → 1
+			Output: 0 → 1 → 2 → 2
+			Explanation: After arranging all the 0s, 1s and 2s in the given format, the output will be 0 → 1 → 2 → 2.
+			Constraints:
+				1 ≤ no. of nodes ≤ 10^6
+				0 ≤ node->data ≤ 2
+		// Using variables: TC: O(N) & SC: O(1)
+			Node* segregate(Node* head) {
+				int ones, twos, zeros;
+				ones = twos = zeros = 0;
+
+				Node* t = head;
+				while(t){
+					if(t -> data == 1) ones++;
+					else if(t -> data == 2) twos++;
+					else zeros++;
+					t = t->next;
+				}
+				t = head;
+				while(zeros--){
+					t -> data = 0;
+					t = t -> next;
+				}
+				while(ones--){
+					t -> data = 1;
+					t = t -> next;
+				}
+				while(twos--){
+					t -> data = 2;
+					t = t -> next;
+				}
+				return head;
+			}
+		// Using linked list: TC: O(N) & SC: O(1)
+			Node* segregate(Node* head) {
+				if(!head or !head->next) return head;
+
+				Node* zeros = new Node(-1);
+				Node* ones = new Node(-1);
+				Node* twos = new Node(-1);
+				// zt = zeros tail, ot = ones tail
+				Node* zt = zeros, *ot = ones, *tt = twos;
+
+				while(head){
+					if(head -> data == 0)
+						zt -> next = head, zt = head;
+					else if(head -> data == 1)
+						ot -> next = head, ot = head;
+					else
+						tt -> next = head, tt = head;
+					head = head -> next;
+						
+				}
+				// connecting them to one chain (list)
+				if(ot -> data == -1 and tt -> data == -1) return zeros->next;
+				if(zt -> data == -1 and ot -> data == -1) return twos->next;
+				if(zt -> data == -1 and tt -> data == -1) return ones->next;
+				if(zt -> data == -1){
+					ot -> next = twos->next;
+					tt -> next = NULL;
+					return ones->next;
+				}
+				if(ot -> data == -1){
+					zt -> next = twos->next;
+					tt -> next = NULL;
+					return zeros->next;
+				}
+				if(tt -> data == -1){
+					zt -> next = ones->next;
+					ot -> next = NULL;
+					return zeros->next;
+				}
+				zt -> next = ones->next;
+				ot -> next = twos->next;
+				tt -> next = NULL;
+				return zeros->next;
+			}
+		// or Conscise:
+			Node* segregate(Node* head) {
+				if(!head or !head->next) return head;
+				
+				Node* zeros = new Node(-1);
+				Node* ones = new Node(-1);
+				Node* twos = new Node(-1);
+				// zt = zeros tail, ot = ones tail
+				Node* zt = zeros, *ot = ones, *tt = twos;
+				
+				while(head){
+					if(head -> data == 0)
+						zt -> next = head, zt = head;
+					else if(head -> data == 1)
+						ot -> next = head, ot = head;
+					else
+						tt -> next = head, tt = head;
+					head = head -> next;
+						
+				}
+				// connecting them to one chain (list)
+				zt -> next = ones->next ? ones->next : twos->next;
+				ot -> next = twos -> next;
+				tt -> next = NULL;
+				return zeros->next;
+			}
+
+	1324) Pascal Triangle: (Refer POTD: 97)
+		Problem Statement:
+			Given a positive integer n, return the nth row of pascal's triangle.
+			Pascal's triangle is a triangular array of the binomial coefficients formed by summing up the elements of previous row.
+							1
+						1		1
+					1		2		1
+				1		3		3		1
+			1		4		6		4		1
+
+			Examples:
+			Input: n = 4
+			Output: [1, 3, 3, 1]
+			Explanation: 4th row of pascal's triangle is [1, 3, 3, 1].
+			Input: n = 5
+			Output: [1, 4, 6, 4, 1]
+			Explanation: 5th row of pascal's triangle is [1, 4, 6, 4, 1].
+			Input: n = 1
+			Output: [1]
+			Explanation: 1st row of pascal's triangle is [1].
+			Constraints:
+				1 ≤ n ≤ 20
+		vector<int> nthRowOfPascalTriangle(int n) {
+			if(n == 1) return {1};
+			vector<int> ans = {1,1};
+			if(n == 2) return ans;
+			for(int i=3; i<=n; i++){
+				vector<int> t(ans.size()+1);
+				int size = ans.size();
+				t[0] = t[ans.size()] = 1;           // first & last or
+				// t.front() = t.back() = 1;
+				int j = 1;
+				while(j < size){
+					t[j] = ans[j-1]+ans[j];
+					j++;
+				}
+				ans = t;
+			}
+			return ans;
+		}
+
+
 1325)
 1326)
 1327)
