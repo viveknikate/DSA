@@ -25005,6 +25005,37 @@ Lecture-64: Binary Tree FAANG Interview Questions || Part-2:
 				solve(root, ans, 0);
 				return ans;
 			}
+		
+		Problem Statement:
+			https://www.geeksforgeeks.org/problems/left-view-of-binary-tree/1
+			You are given the root of a binary tree. Your task is to return the left view of the binary tree. The left view of a binary tree is the set of nodes visible when the tree is viewed from the left side.
+			If the tree is empty, return an empty list.
+			Examples :
+			Input: root[] = [1, 2, 3, 4, 5, N, N]
+			Output: [1, 2, 4]
+			Explanation: From the left side of the tree, only the nodes 1, 2, and 4 are visible.
+			Input: root[] = [1, 2, 3, N, N, 4, N, N, 5, N, N]
+			Output: [1, 2, 4, 5]
+			Explanation: From the left side of the tree, the nodes 1, 2, 4, and 5 are visible.
+			Input: root[] = [N]
+			Output: []
+			Constraints:
+				0 <= number of nodes <= 10^6
+				0 <= node -> data <= 10^5
+		// Easy:
+			void inorder(Node *root, int cnt, vector<int> &L){
+				if(!root) return;
+				if(cnt > L.size()) L.push_back(root->data);
+				inorder(root->left, cnt+1, L);
+				inorder(root->right, cnt+1, L);
+			}
+			vector<int> leftView(Node *root) {
+				if(!root) return {};
+				vector<int> lefts;
+				int cnt=1;
+				inorder(root, cnt, lefts);
+				return lefts;
+			}
 ---------------------------------------------------------------------------------------------------------
 	13/10/24
 Lecture-65: Binary Tree FAANG Interview Questions || Part-3:
@@ -133876,12 +133907,233 @@ POTD:-[Problem of the Day]
 			return ans;
 		}
 
+	1325) Bitonic Point:
+		Problem Statement:
+			Given an array of integers arr[] that is first strictly increasing and then maybe strictly decreasing, find the bitonic point, that is the maximum element in the array.
+			Bitonic Point is a point before which elements are strictly increasing and after which elements are strictly decreasing.
+			Note: It is guaranteed that the array contains exactly one bitonic point.
+			Examples:
+			Input: arr[] = [1, 2, 4, 5, 7, 8, 3]
+			Output: 8
+			Explanation: Elements before 8 are strictly increasing [1, 2, 4, 5, 7] and elements after 8 are strictly decreasing [3].
+			Input: arr[] = [10, 20, 30, 40, 50]
+			Output: 50
+			Explanation: Elements before 50 are strictly increasing [10, 20, 30 40] and there are no elements after 50.
+			Input: arr[] = [120, 100, 80, 20, 0]
+			Output: 120
+			Explanation: There are no elements before 120 and elements after 120 are strictly decreasing [100, 80, 20, 0].
+			Constraints:
+				3 ≤ arr.size() ≤ 10^5
+				1 ≤ arr[i] ≤ 10^6
+		// TC: O(n) & SC: O(1)
+			int findMaximum(vector<int> &arr) {
+				int n = arr.size();
+				for(int i=1; i<n; i++)
+					if(arr[i-1] > arr[i])
+						return arr[i-1];
+				return arr.back();
+			}
+		// TC: O(log n) & SC:O(1)
+			int findMaximum(vector<int> &arr) {
+				int n = arr.size();
+				int s=0, e=n-1;
+				while(s < e){
+					int m = (s+e)/2;
+					if(arr[m] > arr[m+1]) e = m;
+					else s = m+1;
+				}
+				return arr[s];
+			}
 
-1325)
-1326)
-1327)
-1328)
-1329)
+	1326) Prime List:
+		Problem Statement:
+			You are given the head of a linked list. You have to replace all the values of the nodes with the nearest prime number. If more than one prime number exists at an equal distance, choose the smallest one. Return the head of the modified linked list.
+			Examples :
+			Input: head = 2 → 6 → 10
+			Output: 2 → 5 → 11
+			Explanation: The nearest prime of 2 is 2 itself. The nearest primes of 6 are 5 and 7, since 5 is smaller so, 5 will be chosen. The nearest prime of 10 is 11.
+			Input: head = 1 → 15 → 20
+			Output: 2 → 13 → 19
+			Explanation: The nearest prime of 1 is 2. The nearest primes of 15 are 13 and 17, since 13 is smaller so, 13 will be chosen. The nearest prime of 20 is 19.
+			Constraints:
+				1 <= no. of Nodes <= 10^4
+				1 <= node.val <= 10^4
+		// TC: O(n * m²) & SC: O(1)
+			bool isPrime(int num){
+				if(num == 1) return 0;
+				for(int i=2; i<= num/2; i++)
+					if(!(num%i)) return 0;         // its not prime
+				return 1;           // its Prime
+			}
+			int findNearestPrime(int val){
+				int small = val - 1, large = val + 1;
+				while(1){
+					if(small >= 2 and isPrime(small)) return small;
+					if(isPrime(large)) return large;
+					small--, large++;
+				}
+				return -1;      // we never reach here. couldn't find a single prime num
+			}
+			Node* primeList(Node *head) {
+				Node* t = head;    
+				while(t){
+					if(!isPrime(t -> val)) t->val = findNearestPrime(t->val);
+					t = t->next;
+				}
+				return head;
+			}
+		// TC: O(N + M*log(log(M))) & SC:O(10^5)
+			int findNearestPrime(int val, vector<int> &isPrime){
+				int i=1, n = isPrime.size();
+				while(i+1 < n){
+					if(val-i >= 2 and isPrime[val-i]) return val-i;
+					if(isPrime[val+i]) return val + i;
+					i++;
+				}
+				return -1;      // not possible;
+			}
+			Node *primeList(Node *head) {
+				vector<int> isPrime(1e5, 1);            // at start all are prime
+				isPrime[0] = isPrime[1] = 0;            // they are not prime
+				int n = isPrime.size();
+				for(int i=2; i<n; i++){
+					if(isPrime[i]){
+						int j = i+i;
+						while(j < n){
+							isPrime[j] = 0;
+							j += i;
+						}
+					}
+				}
+				Node* h = head;
+				while(h){
+					if(!isPrime[h->val]) h->val = findNearestPrime(h->val, isPrime);
+					h = h -> next;
+				}
+				return head;
+			}
+
+	1327) Search in an almost Sorted Array:
+		Problem Statement:
+			Given a sorted integer array arr[] consisting of distinct elements, where some elements of the array are moved to either of the adjacent positions, i.e. arr[i] may be present at arr[i-1] or arr[i+1].
+			Given an integer target.  You have to return the index ( 0-based ) of the target in the array. If target is not present return -1.
+			Examples:
+			Input: arr[] = [10, 3, 40, 20, 50, 80, 70], target = 40
+			Output: 2
+			Explanation: Index of 40 in the given array is 2.
+			Input: arr[] = [10, 3, 40, 20, 50, 80, 70], target = 90
+			Output: -1
+			Explanation: 90 is not present in the array.
+			Input: arr[] = [-20], target = -20
+			Output: 0
+			Explanation: -20 is the only element present in the array.
+			Constraints:
+				1 <= arr.size() <= 10^5
+				-10^9 <= arr[i] <= 10^9
+		// TC: O(n) & SC: O(1)
+			#include<algorithm>
+			int findTarget(vector<int>& arr, int target) {
+				auto pos = find(arr.begin(), arr.end(), target);
+				return pos != arr.end() ? pos-arr.begin() : -1;
+			}
+		// or
+			int findTarget(vector<int>& arr, int target) {
+				int n = arr.size();
+				for(int i=0; i<n; i++)
+					if(arr[i] == target)
+						return i;
+				return -1;
+			}
+		// TC: O(log n) & SC: (1) ❌Pending
+
+	1328) Smallest distinct window:
+		Problem Statement:
+			Given a string str, your task is to find the length of the smallest window that contains all the characters of the given string at least once.
+			Example:
+			Input: str = "aabcbcdbca"
+			Output: 4
+			Explanation: Sub-String "dbca" has the smallest length that contains all the characters of str.
+			Input: str = "aaab"
+			Output: 2
+			Explanation: Sub-String "ab" has the smallest length that contains all the characters of str.
+			Input: str = "geeksforgeeks"
+			Output: 7
+			Explanation: There are multiple substring with smallest length that contains all characters of str, "eksforg" and "ksforge". 
+			Constraints:
+				1 ≤ str.size() ≤ 10^5
+				str contains only lower-case english alphabets.
+		// TC: O(n³) & SC: O(26)
+			int findSubString(string& str) {
+				unordered_map<char, int> s;
+				for(char ch: str) s[ch]++;
+				int size = s.size();
+				int minSize = INT_MAX;
+				// cover all substrings
+				int n = str.size();
+				for(int i=0; i<n; i++){
+					for(int j=i; j<n; j++){
+						int t = i;
+						unordered_map<char, int> cur;
+						while(t <= j) cur[str[t++]]++;
+						// checking that every char is present at least once or not?
+						bool present = 1;
+						for(auto z: s)
+							if(!cur[z.first]){
+								present = 0;
+								break;
+							}
+						if(present){
+							int curSize = 0;
+							for(auto z: cur) curSize += z.second;
+							minSize = min(minSize, curSize);
+						} 
+					}
+				}
+				return minSize;
+			}
+		// TC: O(n²) & SC: O(1)
+			int findSubString(string& str) {
+				vector<int> vis(26, 0);
+				for(char c: str) vis[c - 'a'] = 1;
+				int n, ans;
+				ans = n = str.size();
+				for(int i=0; i<n; i++){
+					vector<int> curVis(26, 0);
+					for(int j=i; j<n; j++){
+						curVis[str[j]-'a'] = 1;
+						if(curVis == vis)
+							ans = min(ans, j-i+1);
+					}
+				}
+				return ans;
+			}
+		// TC: O(n) & SC: O(26)
+			int findSubString(string& str) {
+				unordered_map<char, int> s;
+				for(char ch: str) s[ch]++;
+				int size = s.size(), n = str.size();
+				int begin = 0, e = begin+size;  // this is window
+				int minSize = INT_MAX, i=begin;
+				unordered_map<char, int> cur;
+				while(i < e) cur[str[i++]]++;
+				while(e < n+1){
+					int allPresent = 1;
+					for(auto z: s)
+						if(!cur[z.first]){
+							allPresent=0;
+							break;
+						}
+					if(allPresent){
+						minSize = min(minSize, e-begin);
+						cur[str[begin++]]--;
+					}else{
+						cur[str[e++]]++;
+					}
+				}
+				return minSize;
+			}
+
+	1329)
 1330)
 1331)
 1332)
