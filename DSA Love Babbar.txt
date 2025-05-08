@@ -845,11 +845,11 @@ Lecture-3: Conditionals, Loops, Patterns
 			/* statements */
 		}
 		else if (cond_B) {
-			//second condtional expression
+			//second conditional expression
 			/* other statements*/
 		}
 		else if (cond_C) {
-			//third condtional expression
+			//third conditional expression
 			/* other statements*/
 		}
 		else {
@@ -134133,9 +134133,118 @@ POTD:-[Problem of the Day]
 				return minSize;
 			}
 
-	1329)
-1330)
-1331)
+	1329) Root to Leaf Paths:
+		https://www.geeksforgeeks.org/problems/root-to-leaf-paths/1
+		Problem Statement:
+			Given a Binary Tree, you need to find all the possible paths from the root node to all the leaf nodes of the binary tree.
+			Note: The paths should be returned such that paths from the left subtree of any node are listed first, followed by paths from the right subtree.
+			Examples:
+			Input: root[] = [1, 2, 3, 4, 5, N, N]
+			ex-3
+			Output: [[1, 2, 4], [1, 2, 5], [1, 3]]
+			Explanation: All the possible paths from root node to leaf nodes are: 1 -> 2 -> 4, 1 -> 2 -> 5 and 1 -> 3
+			Input: root[] = [1, 2, 3]
+			Output: [[1, 2], [1, 3]] 
+			Explanation: All the possible paths from root node to leaf nodes are: 1 -> 2 and 1 -> 3
+			Input: root[] = [10, 20, 30, 40, 60, N, N]
+			Output: [[10, 20, 40], [10, 20, 60], [10, 30]]
+			Explanation: All the possible paths from root node to leaf nodes are: 10 -> 20 -> 40, 10 -> 20 -> 60 and 10 -> 30
+			Constraints:
+				1 <= number of nodes <= 10^4
+				1 <= node->data <= 10^4
+		// Recursion: TC: O(n) & SC: O(h)
+			void inorder(Node *root, vector<vector<int>> &ans, vector<int> t){
+				if(root and !root->left and !root->right) {
+					// its leaf node
+					t.push_back(root->data);
+					ans.push_back(t);
+					return;
+				}
+				if(!root) return;
+				/* // or instead of above condition
+					if(!root) return;
+					if(!root->left and !root->right) {
+						// its leaf node
+						t.push_back(root->data);
+						ans.push_back(t);
+						return;
+					}
+				*/
+				t.push_back(root->data);
+				inorder(root -> left, ans, t);
+				inorder(root -> right, ans, t);
+			}
+			vector<vector<int>> Paths(Node* root) {
+				vector<vector<int>> ans;
+				if(!root) return ans;
+				// (root, ans, emptyTempVector)
+				inorder(root, ans, {});
+				return ans;
+			}
+		// Recursion + Backtracking: TC: O(n) & SC: O(h) (uses less memory)
+			void inorder(Node *root, vector<vector<int>> &ans, vector<int> &t){
+				if(!root) return;
+				t.push_back(root->data);
+				if(!root->left and !root->right) {             // its leaf node
+					ans.push_back(t);
+				}else{
+					inorder(root -> left, ans, t);
+					inorder(root -> right, ans, t);
+				}
+				t.pop_back();                       // Recursion + Backtracking
+			}
+			vector<vector<int>> Paths(Node* root) {
+				vector<vector<int>> ans;
+				vector<int> t;
+				if(!root) return ans;
+				// (root, ans, emptyTempVector)
+				inorder(root, ans, t);
+				return ans;
+			}
+
+	1330) Missing element of AP:
+		Problem Statement:
+			Given a sorted array arr[] that represents an Arithmetic Progression (AP) with exactly one missing element, find the missing number.
+			Note: An element will always exist that, upon inserting into a sequence forms Arithmetic progression. If the given sequence already forms a valid complete AP, return the (n+1)-th element that would come next in the sequence.
+			Examples:
+			Input: arr[] = [2, 4, 8, 10, 12, 14]
+			Output: 6
+			Explanation: Actual AP should be 2, 4, 6, 8, 10, 12, 14.
+			Input: arr[] = [1, 6, 11, 16, 21, 31]
+			Output: 26
+			Explanation: Actual AP should be 1, 6, 11, 16, 21, 26, 31.
+			Input: arr[] = [4, 7, 10, 13, 16]
+			Output: 19
+			Explanation: Since the sequence already forms a valid AP, the next element after 16 in the sequence would be 19. Therefore, the output is 19.
+			Constraints:
+				2 <= arr.size() <= 10^5
+				0 <= arr[i] <= 2*10^7
+		// TC: O(n) & SC: O(2)
+			int findMissing(vector<int> &arr) {
+				// calculate the diff first
+				unordered_map<int, int> diff_Freq;
+				int n = arr.size();
+				for(int i=1; i<n; i++){
+					int cur = arr[i] - arr[i-1];
+					// cout<<cur<<"\n";
+					diff_Freq[cur]++;
+				}
+				int ActualDiff = 0, cnt=0;
+				for(auto itr: diff_Freq){
+					// cout<<itr.first << " "<< itr.second<<endl;
+					if(itr.second > cnt){
+						cnt = itr.second;
+						ActualDiff = itr.first;
+					}
+				}
+				for(int i=1; i<n; i++)
+					if(arr[i]-arr[i-1] != ActualDiff)
+						return arr[i-1]+ActualDiff;
+				return arr.back()+ActualDiff;
+			}
+		// TC: O(log n) & SC: O(1): ❌Pending
+
+	1331)
 1332)
 
 ---------------------------------------------------------------------------------------------------------
