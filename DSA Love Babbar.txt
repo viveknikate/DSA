@@ -25684,9 +25684,7 @@ Lecture-67: Minimum Time to BURN the Entire Binary Tree:
 		/*
 			struct Node {
 				int data;
-				Node *left;
-				Node *right;
-
+				Node *left, *right;
 				Node(int val) {
 					data = val;
 					left = right = NULL;
@@ -134461,11 +134459,282 @@ POTD:-[Problem of the Day]
 				return cnt;
 			}
 
-1336)
-1337)
-1338)
-1339)
-1340)
+	1336) Sort the given array after applying the given equation:
+		Problem Statement:
+			Given an integer array arr[] sorted in ascending order, along with three integers: A, B, and C. The task is to transform each element x in the array using the quadratic function A*(x^2) + B*x + C. After applying this transformation to every element, return the modified array in sorted order.
+			Examples:
+			Input: arr[] = [-4, -2, 0, 2, 4], A = 1, B = 3, C = 5
+			Output: [3, 5, 9, 15, 33]
+			Explanation: After applying f(x) = 1*(x^2)+ 3*x + 5 to each x, we get [9, 3, 5, 15, 33]. After sorting this array, the array becomes [3, 5, 9, 15, 33].
+			Input: arr[] = [-3, -1, 2, 4], A = -1, B = 0, C = 0
+			Output: [-16, -9, -4, -1]
+			Explanation: After applying f(x) = -1*(x2) + 0*x + 0 to each x, we get [ -9, -1, -4, -16 ]. After sorting this array, the array becomes  [-16, -9, -4, -1].
+			Constraints:
+				1 ≤ arr.size() ≤ 10^6
+				-10^3 ≤ arr[i], A, B, C ≤ 10^3
+		// TC: O(n log n) & SC: O(1)
+			vector<int> sortArray(vector<int> &arr, int A, int B, int C) {
+				int n = arr.size();
+				for(int i=0; i<n; i++){
+					int val = A*arr[i]*arr[i] + B*arr[i] + C;
+					arr[i] = val;
+				}
+				sort(arr.begin(), arr.end());
+				return arr;
+			}
+		// Optimized: ❌Pending
+		
+	1337) Level Order in spiral form:
+		https://www.geeksforgeeks.org/problems/level-order-traversal-in-spiral-form/1
+		Problem Statement:
+			Given a binary tree and the task is to find the spiral order traversal of the tree and return the list containing the elements.
+			Spiral order Traversal mean: Starting from level 0 for root node, for all the even levels we print the node's value from right to left and for all the odd levels we print the node's value from left to right.
+			For below tree, function should return [1, 2, 3, 4, 5, 6, 7]
+			Examples:
+			Input: root = [1, 3, 2]
+			Output: [1, 3, 2]
+			Explanation: Start with root (1), print level 0 (right to left), then level 1 (left to right).
+			Input: root = [10, 20, 30, 40, 60]
+			Output: [10, 20, 30, 60, 40]
+			Explanation: Start with root (10), print level 0 (right to left), level 1 (left to right), and continue alternating.
+			Input: root = [1, 2, N, 4]
+			Output: [1, 2, 4]
+			Explanation: Start with root (1), then level 1 (left to right), then level 2 (right to left).
+			Constraints:
+				1 <= number of nodes <= 10^5
+				0 <= node->data <= 10^5
+		/* A binary tree node has data, pointer to left child and a pointer to right child
+			class Node {
+				int data;
+				Node *left, *right;
+				Node(int x){
+					data = x;
+					left = right = NULL;
+				}
+			};*/
+		// TC: O(n) & SC: (n)
+			class Solution {
+				public:
+				void LOT(Node *root, vector<vector<int>> &v){
+					if(!root) return;
+					queue<Node*> q;
+					q.push(root);
+					q.push(NULL);
+					vector<int> t;
+					while(!q.empty()){
+						Node* cur = q.front();
+						q.pop();
+						if(cur){
+							t.push_back(cur->data);
+							if(cur->left)
+								q.push(cur->left);
+							if(cur->right)
+								q.push(cur->right);
+						}else{
+							if(!q.empty()) q.push(NULL);
+							v.push_back(t);
+							t.clear();
+						}
+					}
+				}
+				vector<int> findSpiral(Node* root) {
+					vector<vector<int>> v;
+					LOT(root, v);
+					int n = v.size();
+					vector<int> ans;
+					for(int i=0; i<n; i++){
+						if(i&1){
+							ans.insert(ans.end(), v[i].begin(), v[i].end());
+						}else{
+							reverse(v[i].begin(), v[i].end());
+							ans.insert(ans.end(), v[i].begin(), v[i].end());
+						}
+					}
+					return ans;
+				}
+			};
+
+	1338) Predecessor and Successor (Refer POTD: 1133)
+		Problem Statement:
+			You are given root node of the BST and an integer key. You need to find the in-order successor and predecessor of the given key. If either predecessor or successor is not found, then set it to NULL.
+			Note:- In an inorder traversal the number just smaller than the target is the predecessor and the number just greater than the target is the successor. 
+			Examples:
+			Input: root[] = [8, 1, 9, N, 4, N, 10, 3, N, N, N], key = 8
+			Output: 4 9
+			Explanation: In the given BST the inorder predecessor of 8 is 4 and inorder successor of 8 is 9.
+			Input: root[] = [10, 2, 11, 1, 5, N, N, N, N, 3, 6, N, 4, N, N], key = 11
+			Output: 10 -1
+			Explanation: In given BST, the inorder predecessor of 11 is 10 whereas it does not have any inorder successor.
+			Input: root[] = [2, 1, 3], key = 3
+			Output: 2 -1
+			Explanation: In given BST, the inorder predecessor of 3 is 2 whereas it does not have any inorder successor.
+			Constraints: 
+				1 <= no. of nodes <= 10^5
+				1 <= node->data <= 10^6
+				1 <= key <= 10^6
+		// TC: O(n) & SC: O(n)
+			/* BST Node
+			class Node {
+				public:
+				int data;
+				Node *left, *right;
+				Node(int x){
+					data = x;
+					left = right = NULL;
+				}
+			}; */
+			class Solution {
+				public:
+				void inorder(Node* root, vector<Node*> &store){
+					if(!root) return;
+					inorder(root->left, store);
+					store.push_back(root);
+					inorder(root->right, store);
+				}
+				vector<Node*> findPreSuc(Node* root, int key) {
+					vector<Node*> store;
+					inorder(root, store);
+					Node *pred, *succ;
+					pred = succ = NULL;
+					int n = store.size();
+					for(int i=0; i<n; i++){
+						// cout<<store[i]->data<<" ";
+						if(store[i]->data < key) pred = store[i];
+						if(store[i]->data > key){
+							succ = store[i];
+							break;
+						} 
+					}
+					return {pred, succ};
+				}
+			};
+
+	1339) Zero Array Transformation I:
+		Problem Statement:
+			You are given an integer array nums of length n and a 2D array queries, where queries[i] = [li, ri].
+			For each queries[i]:
+			Select a subset of indices within the range [li, ri] in nums.
+			Decrement the values at the selected indices by 1.
+			A Zero Array is an array where all elements are equal to 0.
+			Return true if it is possible to transform nums into a Zero Array after processing all the queries sequentially, otherwise return false.
+			Note: if current value is 0, no need to decrement.	
+			Example 1:
+			Input: nums = [1,0,1], queries = [[0,2]]
+			Output: true
+			Explanation:
+			For i = 0:
+			Select the subset of indices as [0, 2] and decrement the values at these indices by 1.
+			The array will become [0, 0, 0], which is a Zero Array.
+			Example 2:
+			Input: nums = [4,3,2,1], queries = [[1,3],[0,2]]
+			Output: false
+			Explanation:
+			For i = 0:
+			Select the subset of indices as [1, 2, 3] and decrement the values at these indices by 1.
+			The array will become [4, 2, 1, 0].
+			For i = 1:
+			Select the subset of indices as [0, 1, 2] and decrement the values at these indices by 1.
+			The array will become [3, 1, 0, 0], which is not a Zero Array.
+			Constraints:
+				1 <= nums.length <= 10^5
+				0 <= nums[i] <= 10^5
+				1 <= queries.length <= 10^5
+				queries[i].length == 2
+				0 <= li <= ri < nums.length
+		bool isZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
+			for(auto range: queries){
+				int s=range[0], e = range[1];
+				for(int i=s; i<=e; i++)
+					if(nums[i]) nums[i]--;
+			}
+			for(int i: nums)
+				if(i) return 0;
+			return 1;
+		}
+
+	1340) Burning Tree: (Refer Lect-67)
+		Problem Statement:
+			Given a binary tree and a target node, determine the minimum time required to burn the entire tree if the target node is set on fire. In one second, the fire spreads from a node to its left child, right child, and parent.
+			Note: The tree contains unique values.
+			Examples:
+			Input: root[] = [1, 2, 3, 4, 5, 6, 7], target = 2
+			Output: 3
+			Explanation: Initially 2 is set to fire at 0 sec 
+			At 1 sec: Nodes 4, 5, 1 catches fire.
+			At 2 sec: Node 3 catches fire.
+			At 3 sec: Nodes 6, 7 catches fire.
+			It takes 3s to burn the complete tree.
+			Input: root[] = [1, 2, 3, 4, 5, N, 7, 8, N, N, 10], target = 10
+			Output: 5
+			Explanation: Initially 2 is set to fire at 0 sec 
+			At 1 sec: Node 5 catches fire.
+			At 2 sec: Node 2 catches fire.
+			At 3 sec: Nodes 1 and 4 catches fire.
+			At 4 sec: Node 3 and 8 catches fire.
+			At 5 sec: Node 7 catches fire.
+			It takes 5s to burn the complete tree.
+			Constraints:
+				1 ≤ number of nodes ≤ 10^5
+				1 ≤ node->data ≤ 10^5
+		// TC: O(N) & SC: O(N)
+			void ParentAllocation(Node* root, unordered_map<Node*, Node*> &parent){
+				if(!root) return;
+				if(root->left) parent[root->left] = root;
+				if(root->right) parent[root->right] = root;
+				ParentAllocation(root->left, parent);
+				ParentAllocation(root->right, parent);
+			}
+			Node* RetriveTargetNode(Node *root, int target){
+				queue<Node*> q;
+				q.push(root);
+				while(!q.empty()){
+					Node *cur = q.front();
+					q.pop();
+					if(cur->data == target) return cur;
+					if(cur->left) q.push(cur->left);
+					if(cur->right) q.push(cur->right);
+				}
+				return NULL;        // not found;
+			}
+			int minTime(Node* root, int target) {
+				if(!root) return 0;
+				unordered_map<Node*, Node*> parent;
+				parent[root] = NULL;        // roots parent doesn't exist
+				ParentAllocation(root, parent);
+				Node* targetNode = RetriveTargetNode(root, target);
+				queue<Node*> q;
+				int counter=0;
+				unordered_map<int, int> vis;     // not visited
+				if(targetNode){
+					q.push(targetNode);
+					q.push(NULL);
+				}
+				while(!q.empty()){
+					Node* cur = q.front();
+					q.pop();
+					if(cur){
+						vis[cur->data] = 1;                    // visited
+						if(cur->left and !vis[cur->left->data]) q.push(cur->left);
+						if(cur->right and  !vis[cur->right->data]) q.push(cur->right);
+						if(parent[cur] and !vis[parent[cur]->data]) q.push(parent[cur]);
+					}else{
+						if(!q.empty()) q.push(NULL);
+						counter++;
+					}
+				}
+				return counter-1;
+			}
+
+1341)
+1342)
+1343)
+1344)
+1345)
+1346)
+1347)
+1348)
+1349)
+1350)
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
