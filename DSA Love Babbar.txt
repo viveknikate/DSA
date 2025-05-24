@@ -11037,7 +11037,7 @@ Lecture-23: Introduction to 2D Arrays in C++ LeetCode Questions
 				m == matrix.length
 				n == matrix[0].length
 				1 <= m, n <= 200
-				-231 <= matrix[i][j] <= 231 - 1
+				-2^31 <= matrix[i][j] <= 2^31 - 1
 			Follow up:
 				A straightforward solution using O(mn) space is probably a bad idea.
 				A simple improvement uses O(m + n) space, but still not the best solution.
@@ -11107,6 +11107,28 @@ Lecture-23: Introduction to 2D Arrays in C++ LeetCode Questions
 						matrix = TEMP;
 					}
 				};
+				
+			// TC: O(n*m) & SC: O(n+m)
+				void setZeroes(vector<vector<int>>& matrix) {
+					int n=matrix.size();
+					if(!n) return;
+					int m=matrix[0].size();
+
+					vector<int> rows (n, 0), cols(m, 0);
+					for(int i=0; i<n; i++){
+						for(int j=0; j<m; j++){
+							if(!matrix[i][j]) rows[i] = cols[j] = 1;
+						}
+					}
+					for(int i=0; i<n; i++)
+						if(rows[i])
+							for(int j=0; j<m; j++)
+								matrix[i][j] = 0;
+					for(int i=0; i<m; i++)
+						if(cols[i])
+							for(int j=0; j<n; j++)
+								matrix[j][i] = 0;
+				}
 
 		3)
 			
@@ -70955,10 +70977,10 @@ POTD:-[Problem of the Day]
 						for(int j=0; j<m; j++){
 							if(matrix[i][j] == 0){
 								for(int k=0; k<m; k++){
-								visited[i][k] = 0;
+									visited[i][k] = 0;
 								}
 								for(int k=0; k<n; k++){
-								visited[k][j] = 0;
+									visited[k][j] = 0;
 								}
 							}
 						}
@@ -134725,12 +134747,240 @@ POTD:-[Problem of the Day]
 				return counter-1;
 			}
 
-1341)
-1342)
-1343)
-1344)
-1345)
+	1341) Kth Smallest Number in Multiplication Table:
+		Problem Statement:
+			Given three integers m, n and k. Consider a grid of m * n, where mat[i][j] = i * j (1 based index). The task is to return the kth smallest element in the m * n multiplication table.
+			Examples :
+			Input: m = 3, n = 3, k = 5
+			Output: 3
+			Explanation: 
+			The 5th smallest element is 3. 
+			Input: m = 2, n = 3, k = 6
+			Output: 6 
+			Explanation: [1, 2, 3][2, 4, 6]. The 6th smallest element is 6.
+			Constraints:
+				1 <= m, n <= 3 * 10^4
+				1 <= k <= m * n
+		// Not Optimized: TC: O(n*m * log(n*m)) & SC: O(n*m)
+			int kthSmallest(int m, int n, int k) {
+				if(!m or !n) return 0;
+				vector<vector<int>> mat (m, vector<int>(n));
+				mat[0][0] = 1;
+				for(int i=1; i<m; i++) mat[i][0] = mat[i-1][0] + 1;
+				for(int i=1; i<n; i++) mat[0][i] = mat[0][i-1] + 1;
+				
+				for(int i=1; i<m; i++){
+					int val = mat[i][0];
+					for(int j=1; j<n; j++){
+						mat[i][j] = mat[i][j-1] + val;
+					}
+				}
+				// for(int i=0; i<m; i++){
+				//     for(int j=0; j<n; j++)
+				//         cout<<mat[i][j]<<" ";
+				//     cout<<endl;
+				// }
+				vector<int> store;
+				for(int i=0; i<m; i++)
+					for(int j=0; j<n; j++)
+						store.push_back(mat[i][j]);
+				sort(store.begin(), store.end());
+				return store[k-1];
+			}
+		// Conscise:
+			int kthSmallest(int m, int n, int k) {
+				vector<vector<int>> mat (m, vector<int>(n, 0));
+				vector<int> store;
+				for(int i=1; i<=m; i++)
+					for(int j=1; j<=n; j++){
+						mat[i-1][j-1] = i*j;
+						store.push_back(mat[i-1][j-1]);
+					}
+				sort(store.begin(), store.end());
+				return store[k-1];
+			}
+		// Little Bit Optimized: TC: O(n*m * log k) & SC: O(k)
+			int kthSmallest(int m, int n, int k) {
+				priority_queue<int> pq;
+				for(int i=1; i<=m; i++)
+					for(int j=1; j<=n; j++){
+						int val = i*j;
+						if(pq.size() < k) pq.push(val);
+						else{
+							if(pq.top() > val){
+								pq.pop();
+								pq.push(val);
+							}
+						}    
+					}
+				return pq.top();
+			}
+		// Optimized: ❌Pending
+
+	1342) Minimum Deletions:
+		Problem Statement:
+			Given a string s, write a program to delete the minimum number of characters from the string so that the resultant string is a palindrome, while maintaining the order of characters.
+			Examples:
+			Input: s = "aebcbda"
+			Output: 2
+			Explanation: Remove characters 'e' and 'd'.
+			Input: s = "geeksforgeeks"
+			Output: 8
+			Explanation: To make "geeksforgeeks" a palindrome, the longest palindromic subsequence is "eefee" (length 5). The minimum deletions are:
+			13 (length of s) - 5 = 8.
+			Constraints:
+				1 ≤ s.size() ≤ 10^3
+		// Not Optimized: TC: O(2ⁿ * n) & SC: O(n)
+			bool isPalin(string &s){
+				int i=0, n=s.size();
+				while(i < n/2){
+					if(s[i] != s[n-i-1]) return 0;
+					i++;
+				}
+				return 1;
+			}
+			void GenerateSubSequence(string &main, int idx, string cur, int &size){
+				if(idx >= main.size()){
+					if(isPalin(cur)){
+						size = min(size, (int) (main.size() - cur.size()));   
+					}
+					return ;
+				}
+				// exclude call
+				GenerateSubSequence(main, idx+1, cur, size);
+				
+				// include call
+				cur.push_back(main[idx]);
+				GenerateSubSequence(main, idx+1, cur, size);
+			}
+			int minDeletions(string s) {
+				int size=s.size();
+				string cur;
+				GenerateSubSequence(s, 0, cur, size);
+				return size;
+			}
+		// Optimized: ❌Pending
+
+	1343) Dice throw:
+		Problem Statement:
+			Given n dice each with m faces. Find the number of ways to get sum x which is the summation of values on each face when all the dice are thrown.
+			Example:
+			Input: m = 6, n = 3, x = 12
+			Output: 25
+			Explanation: There are 25 total ways to get the Sum 12 using 3 dices with faces from 1 to 6.
+			Input: m = 2, n = 3, x = 6
+			Output: 1
+			Explanation: There is only 1 way to get the Sum 6 using 3 dices with faces from 1 to 2. All the dices will have to land on 2.
+			Constraints:
+				1 <= m,n,x <= 50
+		// Not Optimized: TC: O(m^n) & SC: O(n)
+			void solve(int n, int curIn, int m, int x, int s, int &cnt){
+				if(curIn == n){
+					if(s == x) cnt++;
+					return;
+				}
+				for(int i=0; i<m; i++)
+					solve(n, curIn+1, m, x, s+i+1, cnt);
+			}
+			int noOfWays(int m, int n, int x) {
+				int cnt=0;
+				solve(n, 0, m, x, 0, cnt);
+				return cnt;
+			}
+		// Optimized: ❌Pending
+
+	1344) Find Words Containing Character
+		Problem Statement:
+			You are given a 0-indexed array of strings words and a character x.
+			Return an array of indices representing the words that contain the character x.
+			Note that the returned array may be in any order.
+			Example 1:
+			Input: words = ["leet","code"], x = "e"
+			Output: [0,1]
+			Explanation: "e" occurs in both words: "leet", and "code". Hence, we return indices 0 and 1.
+			Example 2:
+			Input: words = ["abc","bcd","aaaa","cbc"], x = "a"
+			Output: [0,2]
+			Explanation: "a" occurs in "abc", and "aaaa". Hence, we return indices 0 and 2.
+			Example 3:
+			Input: words = ["abc","bcd","aaaa","cbc"], x = "z"
+			Output: []
+			Explanation: "z" does not occur in any of the words. Hence, we return an empty array.
+			Constraints:
+				1 <= words.length <= 50
+				1 <= words[i].length <= 50
+				x is a lowercase English letter.
+				words[i] consists only of lowercase English letters.
+		// TC: (n*m) & SC: O(1)
+			vector<int> findWordsContaining(vector<string>& words, char x) {
+				vector<int> ans;
+				for(int s=0; s<words.size(); s++){
+					for(char ch: words[s])
+						if(ch == x){
+							ans.push_back(s);
+							break;
+						}
+				}
+				return ans;
+			}
+		// Using Contains method:
+			vector<int> findWordsContaining(vector<string>& words, char x) {
+				vector<int> ans;
+				for(int s=0; s<words.size(); s++){
+					if(words[s].contains(x))
+						ans.push_back(s);
+				}
+				return ans;
+			}
+		// using Find method:
+			vector<int> findWordsContaining(vector<string>& words, char x) {
+				vector<int> ans;
+				for(int s=0; s<words.size(); s++){
+					if(words[s].find(x) != string::npos) ans.push_back(s);
+				}
+				return ans;
+			}
+		// Using Count method: return the no.of occurences of element x
+			vector<int> findWordsContaining(vector<string>& words, char x) {
+				vector<int> ans;
+				for(int s=0; s<words.size(); s++){
+					if(count(words[s].begin(), words[s].end(), x))
+						ans.push_back(s);
+				}
+				return ans;
+			}
+
+	1345) Sum of all substrings of a number:
+		Problem Statement:
+			Given an integer s represented as a string, the task is to get the sum of all possible sub-strings of this string.
+			Note: The number may have leading zeros.
+			It is guaranteed that the total sum will fit within a 32-bit signed integer.
+			Examples:
+			Input: s = "6759"
+			Output: 8421
+			Explanation:
+			Sum = 6 + 7 + 5 + 9 + 67 + 75 + 59 + 675 + 759 + 6759 = 8421
+			Input: s = "421"
+			Output: 491
+			Explanation: 
+			Sum = 4 + 2 + 1 + 42 + 21 + 421 = 491
+			Constraints:
+				1 <= |s| <= 9
+		// TC: O(n³) & SC: O(n)
+			int sumSubstrings(string &s) {
+				int t=0, n=s.size();
+				for(int i=0; i<n; i++){
+					string cur;
+					for(int j=i; j<n; j++){
+						cur.push_back(s[j]);
+						t += stoi(cur);
+					}
+				}
+				return t;
+			}
+
 1346)
+
 1347)
 1348)
 1349)
