@@ -80082,7 +80082,7 @@ POTD:-[Problem of the Day]
 			}
 		};
 
-	539) Count pairs Sum in matrices:
+	539) Count pairs Sum in matrices: (Refer POTD: 1353)
 		Problem statement:
 			Given two sorted matrices mat1 and mat2 of size n x n of elements. Each matrix contains numbers arranged in strictly ascending order, with each row sorted from left to right, and the last element of a row being smaller than the first element of the next row. You're given a target value, x, your task is to find and count all pairs {a, b} such that a is from mat1 and b is from mat2 where sum of a and b is equal to x.
 
@@ -134979,12 +134979,413 @@ POTD:-[Problem of the Day]
 				return t;
 			}
 
-1346)
+	1346) Pythagorean Triplet:
+		Problem Statement:
+			Given an array arr[], return true if there is a triplet (a, b, c) from the array (where a, b, and c are on different indexes) that satisfies a2 + b2 = c2, otherwise return false.
+			Examples:
+			Input: arr[] = [3, 2, 4, 6, 5]
+			Output: true
+			Explanation: a=3, b=4, and c=5 forms a pythagorean triplet.
+			Input: arr[] = [3, 8, 5]
+			Output: false
+			Explanation: No such triplet possible.
+			Input: arr[] = [1, 1, 1]
+			Output: false
+			Constraints:
+				1 <= arr.size() <= 10^5
+				1 <= arr[i] <= 10^3
+		// Not Optimized: TC: O(n³) & SC: (1)
+			bool pythagoreanTriplet(vector<int>& arr) {
+				int n = arr.size();
+				sort(arr.begin(), arr.end());
+				for(int i=0; i<n-2; i++)
+					for(int j=i+1; j<n-1; j++)
+						for(int k=j+1; k<n; k++)
+							if(pow(arr[i],2) + pow(arr[j],2) == pow(arr[k], 2)) return 1;
+				return 0;
+			}
+		// Without sorting:
+			bool pythagoreanTriplet(vector<int>& arr) {
+				int n = arr.size();
+				for(int i=0; i<n; i++)
+					for(int j=0; j<n; j++)
+						for(int k=0; k<n; k++)
+							if(arr[i]*arr[i] + arr[j]*arr[j] == arr[k]*arr[k]) return 1;
+				return 0;
+			}
+		// Optimized: ❌Pending
 
-1347)
-1348)
-1349)
-1350)
+	1347) Longest Palindrome by Concatenating Two Letter Words:
+		Problem Statement:
+			You are given an array of strings words. Each element of words consists of two lowercase English letters.
+			Create the longest possible palindrome by selecting some elements from words and concatenating them in any order. Each element can be selected at most once.
+			Return the length of the longest palindrome that you can create. If it is impossible to create any palindrome, return 0.
+			A palindrome is a string that reads the same forward and backward.
+			Example 1:
+			Input: words = ["lc","cl","gg"]
+			Output: 6
+			Explanation: One longest palindrome is "lc" + "gg" + "cl" = "lcggcl", of length 6.
+			Note that "clgglc" is another longest palindrome that can be created.
+			Example 2:
+			Input: words = ["ab","ty","yt","lc","cl","ab"]
+			Output: 8
+			Explanation: One longest palindrome is "ty" + "lc" + "cl" + "yt" = "tylcclyt", of length 8.
+			Note that "lcyttycl" is another longest palindrome that can be created.
+			Example 3:
+			Input: words = ["cc","ll","xx"]
+			Output: 2
+			Explanation: One longest palindrome is "cc", of length 2.
+			Note that "ll" is another longest palindrome that can be created, and so is "xx".
+			Constraints:
+				1 <= words.length <= 10^5
+				words[i].length == 2
+				words[i] consists of lowercase English letters.
+		// TC: O(n²) & SC: (n)
+			int longestPalindrome(vector<string>& words) {
+				int cnt=0, n=words.size();
+				vector<int> vis(n, 1);
+				int extra=0;
+				for(int i=0; i<n; i++){
+					if(vis[i]){
+						vis[i]=0;
+						string cur = string(1,words[i][1]) + string(1,words[i][0]);
+						int matchNotFound = 1;
+						for(int j=i+1; j<n; j++){
+							if(cur == words[j] and vis[j]){
+								vis[j] = 0;
+								cnt++;
+								matchNotFound=0;
+								break;
+							}
+						}
+						if(cur == words[i] and matchNotFound)         // both char are same
+							extra++;
+					}
+				}
+				return cnt*2*2 + (extra ? 2 : 0);
+			}
+		// Optimized: ❌Pending
+
+	1348) Insert in Sorted Circular Linked List:
+		Problem Statement:
+			Given a sorted circular linked list, the task is to insert a new node in this circular linked list so that it remains a sorted circular linked list.
+			Examples:
+			Input: head = 1->2->4, data = 2
+			Output: 1->2->2->4
+			Explanation: We can add 2 after the second node.
+			Input: head = 1->4->7->9, data = 5
+			Output: 1->4->5->7->9
+			Explanation: We can add 5 after the second node.
+			Constraints:
+				2 <= number of nodes <= 10^6
+				0 <= node->data <= 10^6
+				0 <= data <= 10^6
+		// TC: O(n) & SC: O(1)
+			Node* sortedInsert(Node* head, int data) {
+				if(!head){
+					Node* n = new Node(data);
+					n -> next = n;
+					return n;
+				} 
+				if(head->data > data){
+					Node* n = new Node(data);
+					n -> next = head;
+					// retriving tail
+					Node *t = head;
+					while(t->next != head) t = t -> next;
+					t -> next = n;
+					return n;
+				}
+				Node *cur, *prev;
+				cur = prev = head;
+				while(cur){
+					if(cur -> data < data){
+						prev = cur;
+						cur = cur -> next;
+						if(cur == head){
+							// we come back to same node, so the data should be inserted at the end of list
+							goto INSERT_AT_END;
+						}
+					} else {
+						INSERT_AT_END:
+						Node* n = new Node(data);
+						prev -> next = n;
+						n -> next = cur;
+						break;
+					}
+				}
+				return head;
+			}
+
+	1349) Divisible and Non-divisible Sums Difference:
+		Problem Statement:
+			You are given positive integers n and m.
+			Define two integers as follows:
+			num1: The sum of all integers in the range [1, n] (both inclusive) that are not divisible by m.
+			num2: The sum of all integers in the range [1, n] (both inclusive) that are divisible by m.
+			Return the integer num1 - num2.
+			Example 1:
+			Input: n = 10, m = 3
+			Output: 19
+			Explanation: In the given example:
+			- Integers in the range [1, 10] that are not divisible by 3 are [1,2,4,5,7,8,10], num1 is the sum of those integers = 37.
+			- Integers in the range [1, 10] that are divisible by 3 are [3,6,9], num2 is the sum of those integers = 18.
+			We return 37 - 18 = 19 as the answer.
+			Example 2:
+			Input: n = 5, m = 6
+			Output: 15
+			Explanation: In the given example:
+			- Integers in the range [1, 5] that are not divisible by 6 are [1,2,3,4,5], num1 is the sum of those integers = 15.
+			- Integers in the range [1, 5] that are divisible by 6 are [], num2 is the sum of those integers = 0.
+			We return 15 - 0 = 15 as the answer.
+			Example 3:
+			Input: n = 5, m = 1
+			Output: -15
+			Explanation: In the given example:
+			- Integers in the range [1, 5] that are not divisible by 1 are [], num1 is the sum of those integers = 0.
+			- Integers in the range [1, 5] that are divisible by 1 are [1,2,3,4,5], num2 is the sum of those integers = 15.
+			We return 0 - 15 = -15 as the answer.
+			Constraints:
+				1 <= n, m <= 1000
+		// TC: O(n) & SC: (1)
+			int differenceOfSums(int n, int m) {
+				int n1, n2;
+				n1 = n2 = 0;
+				for(int i=1; i<=n; i++) 
+					(i % m) ? n1 += i : n2 += i;
+				return n1-n2;
+			}
+
+	1350) Print leaf nodes from preorder traversal of BST:
+		https://www.geeksforgeeks.org/problems/print-leaf-nodes-from-preorder-traversal-of-bst2657/1
+		Problem Statement:
+			Given a preorder traversal of a BST, find the leaf nodes of the tree without building the tree.
+			Examples:
+			Input: preorder[] = [5, 2, 10]
+			Output: [2, 10]
+			Explaination: 
+			2 and 10 are the leaf nodes as shown in the figure.
+			Input: preorder[] = [4, 2, 1, 3, 6, 5]
+			Output: [1, 3, 5]
+			Explaination: 
+			1, 3 and 5 are the leaf nodes as shown in the figure.
+			Input: preorder[] = [8, 2, 5, 10, 12]
+			Output: [5, 12]
+			Explaination: 
+			5 and 12 are the leaf nodes as shown in the figure.
+			Constraints:
+				1 ≤ preorder.size() ≤ 10^3
+				1 ≤ preorder[i] ≤ 10^3
+		// TC: O(n²) & SC: O(n)
+			struct Node{
+				int data;
+				Node *left, *right;
+				Node(int x):data(x), left(NULL), right(NULL) {};
+			};
+			Node* insertIntoTree(Node* r, int val){
+				if(!r){
+					Node* n = new Node(val);
+					return n;
+				}
+				(val > r->data) ?
+					r-> right = insertIntoTree(r->right, val) : r -> left = insertIntoTree(r->left, val);  
+				return r;
+			}
+			void inorder(Node *root, vector<int> &ans){
+				if(!root) return;
+				inorder(root->left, ans);
+				inorder(root->right, ans);
+				if(!root->left and !root->right)
+					ans.push_back(root->data);
+			}
+			vector<int> leafNodes(vector<int>& preorder) {
+				// Generate tree
+				if(preorder.empty()) return {};
+				Node *root = new Node(preorder[0]);
+				int n = preorder.size();
+				for(int i=1; i<n; i++){
+					(preorder[i] > root->data) ?
+						root-> right = insertIntoTree(root->right, preorder[i]) : root -> left = insertIntoTree(root->left, preorder[i]);
+				}
+				// retrive the leaf nodes from generated tree
+				vector<int> ans;
+				inorder(root, ans);
+				return ans;
+			}
+		// Using Inorder: TC: O(n log n) & SC: O(n): ❌Pending
+
+	1351) Frequency Array:
+		Problem Statement:
+			Given 2 numbers N, M and an array A of N numbers. For every number from 1 to M, print how many times this number appears in this array.
+			Input Format
+			The first line contains T, the number of test cases.
+			For each test case:
+			The first line contains two space separated integers N and M.
+			The second line contains N space separated integers each denoting an element of the array A.
+			Output Format
+			Print M lines, the ith line should contain number of times that the number i appears in A.
+			Constraints
+			1 ≤ T ≤ 10
+			1 ≤ N, M ≤ 10^5
+			1 ≤ A[i] ≤ M
+			Sample Input
+			1
+			10 5
+			1 2 3 4 5 3 2 1 5 3
+			Sample Output
+			2
+			2
+			3
+			1
+			2
+			Sample Input 1
+			1
+			10 5
+			1 2 3 4 5 3 2 1 5 3
+			Sample Output 1
+			2
+			2
+			3
+			1
+			2
+			Note
+			Numbers from 
+			1 to 5 appear in the array as follows:
+			1 appears 2 times in the array.
+			2 appears 2 times in the array.
+			3 appears 3 times in the array.
+			4 appears once in the array.
+			5 appears 2 times in the array.
+		// TC: O(n) & SC: O(n)
+			#include<bits/stdc++.h>
+			using namespace std;
+			int main(){
+				int t;
+				cin>>t;
+				while(t--){
+					int n, m;
+					cin>>n>>m;
+					vector<int> Freq(m+1, 0), a(n);
+					for(int i=0; i<n; i++){
+						cin>>a[i];
+						Freq[a[i]]++;
+					}
+					for(int i=1; i<=m; i++) cout<<Freq[i]<<endl;
+				}
+				return 0;
+			}
+
+	1352) Kth element in Matrix:
+		Problem Statement:
+			Given a matrix mat[][] of size n*n, where each row and column is sorted in non-decreasing order. Find the kth smallest element in the matrix.
+			Examples:
+			Input: n = 4, mat[][] = [[16, 28, 60, 64], [22, 41, 63, 91], [27, 50, 87, 93], [36, 78, 87, 94]], k = 3
+			Output: 27
+			Explanation: 27 is the 3rd smallest element.
+			Input: n = 4, mat[][] = [[10, 20, 30, 40], [15, 25, 35, 45], [24, 29, 37, 48], [32, 33, 39, 50]], k = 7
+			Output: 30
+			Explanation: 30 is the 7th smallest element.
+			Constraints:
+				1 <= n <= 500
+				1 <= mat[i][j] <= 10000
+				1 <= k <= n*n
+		// TC: O(n² * log(n²)) & SC: O(n):
+			int kthSmallest(vector<vector<int>> &matrix, int k) {
+				vector<int> v;
+				for(auto i: matrix)
+					for(int j: i)
+						v.push_back(j);
+				sort(v.begin(), v.end());
+				return v[k-1];
+			}
+		// TC: O(n² * log(k)) & SC: O(k):
+			int kthSmallest(vector<vector<int>> &matrix, int k) {
+				priority_queue<int> q;      // max heap
+				for(auto itr: matrix)
+					for(int i: itr)
+						if(q.size() < k) q.push(i);
+						else{
+							if(q.top() > i){
+								q.pop();
+								q.push(i);
+							}
+						}
+				return q.top();
+			}
+			// or
+			int kthSmallest(vector<vector<int>> &matrix, int k) {
+				priority_queue<int> q;      // max heap
+				for(auto itr: matrix)
+					for(int i: itr){
+						q.push(i);
+						if(q.size() > k) q.pop();
+					}
+				return q.top();
+			}
+
+	1353) Count pairs Sum in matrices: (Refer POTD: 539)
+		Problem Statement:
+			Given two matrices mat1[][] and mat2[][] of size n x n, where the elements in each matrix are arranged in strictly ascending order. Specifically, each row is sorted from left to right, and the last element of a row is smaller than the first element of the next row.
+			You're given a target value x, your task is to find and count all pairs {a, b} such that a is from mat1 and b is from mat2 where the sum of a + b is equal to x.
+			Examples:
+			Input: n = 3, x = 21,
+			mat1[][] = [[1, 5, 6], [8, 10, 11], [15, 16, 18]],
+			mat2[][] = [[2, 4, 7], [9, 10, 12], [13, 16, 20]]
+			OUTPUT: 4
+			Explanation: The pairs whose sum is found to be 21 are (1, 20), (5, 16), (8, 13) and (11, 10).
+			Input: n = 2, x = 10,
+			mat1[][] = [[1, 2], [3, 4]]
+			mat2[][] = [[4, 5], [6, 7]]
+			Output: 2
+			Explanation: The pairs whose sum found to be 10 are (4, 6) and (3, 7).
+			Constraints:
+				1 ≤ n ≤ 100
+				1 ≤ x ≤ 10^5
+				1 ≤ mat1[i][j] , mat2[i][j] ≤ 10^5
+		// Not Optimized: TC: O(n² * n²) & SC: (n²):
+			int countPairs(vector<vector<int>> &mat1, vector<vector<int>> &mat2, int x) {
+				vector<int> v1, v2;
+				for(auto itr: mat1)
+					for(int i: itr)
+						v1.push_back(i);
+				
+				for(auto itr: mat2)
+					for(int i: itr)
+						v2.push_back(i);
+				int cnt=0, n = v1.size();
+				for(int i=0; i<n; i++)
+					for(int j=0; j<n; j++)
+						if(v1[i] + v2[j] == x) cnt++;
+				return cnt;
+			}
+		// Optimized: TC: O(n²) & SC: O(n²)
+			int countPairs(vector<vector<int>> &mat1, vector<vector<int>> &mat2, int x) {
+				unordered_map<int, int> mp;
+				for(auto itr: mat1)
+					for(int i: itr)
+						mp[i]++;
+				int cnt=0;
+				for(auto itr: mat2)
+					for(int i: itr)
+						if(mp[x - i])
+							cnt++;
+				return cnt;
+			}
+
+
+1354)
+
+1355)
+
+1356)
+
+1357)
+
+1358)
+
+1359)
+
+1360)
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
