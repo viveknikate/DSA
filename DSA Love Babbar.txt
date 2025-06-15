@@ -135702,11 +135702,302 @@ POTD:-[Problem of the Day]
 				return 0;
 			}
 
-1361)
-1362)
-1363)
-1364)
-1365)
+	1361) Remove the balls:
+		Problem Statement:
+			You are given two arrays, color and radius, representing a sequence of balls:
+			color[i] is the color of the i-th ball.
+			radius[i] is the radius of the i-th ball.
+			If two consecutive balls have the same color and radius, remove them both. Repeat this process until no more such pairs exist.
+			Return the number of balls remaining after all possible removals.
+			Examples:
+			Input: color[] = [2, 3, 5], radius[] = [3, 3, 5]
+			Output: 3
+			Explanation: All the 3 balls have different colors and radius.
+			Input: color[] = [2, 2, 5], radius[] = [3, 3, 5]
+			Output: 1
+			Explanation: First ball and second ball have same color 2 and same radius 3. So, after removing only one ball is left. It cannot be removed from the array. Hence, the final array has length 1.
+			Constraints:
+				1 ≤ color.size() = radius.size() ≤ 10^5
+				1 ≤ color[i] ≤ 10^9
+				1 ≤ radius[i] ≤ 10^9
+		// Using stack TC: O(n) & SC: O(n):
+			int findLength(vector<int> &color, vector<int> &radius) {
+				stack<int> c, r;
+				int n = color.size();
+				for(int i=0; i<n; i++){
+					if(c.empty()){
+						c.push(color[i]);
+						r.push(radius[i]);
+					}else{
+						if(c.top() == color[i] and r.top() == radius[i]){
+							c.pop();
+							r.pop();
+						}else{
+							c.push(color[i]);
+							r.push(radius[i]);
+						}
+					}
+				}
+				return c.size();
+			}
+		// Not Optimized: Using Erase TC: O(n²) & SC: O(1):
+			int findLength(vector<int> &color, vector<int> &radius) {
+				for(int i=0; i<color.size()-1;){
+					if(color[i] == color[i+1] and radius[i] == radius[i+1]){
+						color.erase(color.begin()+i, color.begin()+i+2);
+						radius.erase(radius.begin()+i, radius.begin()+i+2);
+						if(i>0) i--;
+					}else{
+						i++;
+					}
+					if(color.empty()) break;
+				}
+				return color.size();
+			}
+
+	1362) K closest elements:
+		Problem Statement:
+			You are given a sorted array arr[] of unique integers, an integer k, and a target value x. Return exactly k elements from the array closest to x, excluding x if it exists.
+			An element a is closer to x than b if:
+			|a - x| < |b - x|, or
+			|a - x| == |b - x| and a > b (i.e., prefer the larger element if tied)
+			Return the k closest elements in order of closeness.
+			Examples:
+			Input: arr[] = [1, 3, 4, 10, 12], k = 2, x = 4
+			Output: 3 1
+			Explanation: 4 is excluded, Closest elements to 4 are: 3 (1), 1 (3). So, the 2 closest elements are: 3 1
+			Input: arr[] = [12, 16, 22, 30, 35, 39, 42, 45, 48, 50, 53, 55, 56], k = 4, x = 35
+			Output: 39 30 42 45
+			Explanation: First closest element to 35 is 39.
+			Second closest element to 35 is 30.
+			Third closest element to 35 is 42.
+			And fourth closest element to 35 is 45.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				1 ≤ k ≤ arr.size()
+				1 ≤ x ≤ 10^6
+				1 ≤ arr[i] ≤ 10^6
+		// TC: O(n + k log k) & SC: O(k) 
+			vector<int> printKClosest(vector<int> arr, int k, int x) {
+				queue<int> q;
+				for(int i: arr){
+					if(i == x) continue;
+					else if(q.size() < k) q.push(i);
+					else if(abs(x-q.front()) >= abs(x-i)){
+						q.push(i);
+						q.pop();
+					}
+				}
+				
+				vector<int> ans;
+				// <difference, actualValue>
+				vector<pair<int, int>> ordering;
+				while(!q.empty())
+					ordering.push_back({abs(q.front()-x), q.front()}), q.pop();
+				sort(ordering.begin(), ordering.end(), [](auto &a, auto &b){
+					if(a.first == b.first) return a.second > b.second;
+					return a.first < b.first;
+				});
+				for(auto i: ordering)
+					ans.push_back(i.second);
+				return ans;
+			}
+		// TC: O(n log n) & SC: O(k)
+			vector<int> printKClosest(vector<int> arr, int k, int x) {
+				sort(arr.begin(), arr.end(), [x](int &a, int &b){
+					int diffA = abs(a-x);
+					int diffB = abs(b-x);
+					if(diffA == diffB) return a > b;
+					return diffA < diffB;
+				});
+				int cnt = 0;
+				vector<int> ans;
+				for(auto i: arr){
+					if(i == x) continue;
+					cnt++;
+					ans.push_back(i);
+					if(cnt == k) break;
+				}
+				return ans;
+			}
+
+	1363) Koko Eating Bananas:
+		Problem Statement:
+			Koko is given an array arr[], where each element represents a pile of bananas. She has exactly k hours to eat all the bananas.
+			Each hour, Koko can choose one pile and eat up to s bananas from it.
+			If the pile has at least s bananas, she eats exactly s bananas.
+			If the pile has fewer than s bananas, she eats the entire pile in that hour.
+			Koko can only eat from one pile per hour.
+			Your task is to find the minimum value of s (bananas per hour) such that Koko can finish all the piles within k hours.
+			Examples:
+			Input: arr[] = [3, 6, 7, 11] , k = 8
+			Output: 4
+			Explanation: Koko eats at least 4 bananas per hour to finish all piles within 8 hours, as she can consume each pile in 1 + 2 + 2 + 3 = 8 hours.
+			Input: arr[] = [30, 11, 23, 4, 20], k = 5
+			Output: 30
+			Explanation: With 30 bananas per hour, Koko completes each pile in 1 hour, totaling 5 hours, which matches k = 5.
+			Input: arr[] = [5, 10, 15, 20], k = 7
+			Output: 10
+			Explanation: At 10 bananas per hour, Koko finishes in 7 hours, just within the k = 7 limit.
+			Constraint:
+				1 <= arr.size() <= 10^5
+				1 <= arr[i] <= 10^6
+				arr.size() <= k <= 10^6
+		// Not Optimized: TC: O(max(arr) * n) & SC: O(1)
+			int kokoEat(vector<int>& arr, int k) {
+				int ans=1;
+				while(1){
+					int cnt=0;
+					for(int i: arr){
+						if(i % ans){
+							cnt += i/ans + 1;
+						}else{
+							cnt += i / ans;
+						}
+						if(cnt > k) break;
+					}
+					if(cnt <= k) break;
+					ans++;
+				}
+				return ans;
+			}
+		// Optimized: Using Binary Search: TC: O(n * log(max(arr))) & SC: O(1)
+			bool isPossible(vector<int> &arr, int hr, int minV){
+				int cnt = 0;
+				for(int i: arr){
+					if(i % minV){
+						cnt += i/minV + 1;
+					}else{
+						cnt += i / minV;
+					}
+					if(cnt > hr) return 0;
+				}
+				return 1;
+			}
+			int kokoEat(vector<int>& arr, int k) {
+				int s=1, e = INT_MAX;    // 10^6
+				while(s < e){
+					int mid = s + (e-s)/2;          // should not happen integer overflow
+					if(isPossible(arr, k, mid)) e = mid;
+					else s = mid+1;
+				}
+				return s;            // return e;
+			}
+
+	1364) Symmetric Tree:
+		https://www.geeksforgeeks.org/problems/symmetric-tree/1
+		Problem Statement:
+			Given the root of a binary tree, check whether it is symmetric, i.e., whether the tree is a mirror image of itself.
+			A binary tree is symmetric if the left subtree is a mirror reflection of the right subtree.
+			Examples:
+			Input: root[] = [1, 2, 2, 3, 4, 4, 3]
+			ex-1_1
+			Output: True
+			Explanation: As the left and right half of the above tree is mirror image, tree is symmetric.
+			Input: root[] = [1, 2, 2, N, 3, N, 3]
+			ex-2_1
+			Output: False
+			Explanation:  As the left and right half of the above tree is not the mirror image, tree is not symmetric. 
+			Constraints:
+				1  ≤ number of nodes ≤ 2000
+		// TC: O(n) & SC: O(n)
+			bool isPalindrom(vector<int> &cur){
+				int n = cur.size(), i=0, j=n-1;
+				if(n&1) return 0;           // to be a mirror image it should have the even count of nodes
+				while(i < j)
+					if(cur[i++] != cur[j--]) return 0;
+				return 1;
+			}
+			void LOT(Node* root, vector<vector<int>> &v){
+				queue<Node*> q;
+				q.push(root);
+				q.push(NULL);
+				vector<int> t;
+				while(!q.empty()){
+					Node* cur = q.front();
+					q.pop();
+					if(cur){
+						t.push_back(cur->data);
+						if(cur->left) q.push(cur->left);
+						if(cur->right) q.push(cur->right);
+					}else{
+						if(!q.empty()) q.push(NULL);
+						v.push_back(t);
+						t.clear();
+					}
+				}
+			}
+			bool isSymmetric(Node* root) {
+				if(!root) return 1;
+				// save the level order traversal
+				vector<vector<int>> hold;
+				LOT(root, hold);
+				// Check is it palindrome or not?
+				// dpn't check with root element coz its size is odd
+				for(int i=1; i<hold.size(); i++)
+					if(!isPalindrom(hold[i])) return 0;
+				return 1;
+			}
+		// TC: O(n) & SC: O(h)
+			bool isMirror(Node* left, Node* right){
+				if(!left and !right) return 1;
+				if(!left or !right or left->data != right->data) return 0;
+				return isMirror(left->left, right->right) && isMirror(left->right, right->left);
+			}
+			bool isSymmetric(Node* root) {
+				if(!root) return 1;
+				return isMirror(root->left, root->right);
+			}
+
+	1365) Smallest Divisor: (Refer POTD: 1363, Similar)
+		Problem Statement:
+			Given an integer array arr[] and an integer k (where k ≥ arr.length), find the smallest positive integer divisor such that the sum of the ceiling values of each element in arr[] divided by this divisor is less than or equal to k.
+			Examples:
+			Input: arr[] = [1, 2, 5, 9], k = 6
+			Output: 5
+			Explanation: 5 is the smallest divisor having sum of quotients (1 + 1 + 1 + 2 = 5) less than or equal to 6.
+			Input: arr[] = [1, 1, 1, 1], k = 4
+			Output: 1
+			Explanation: 1 is the smallest divisor having sum of quotients (1 + 1 + 1 + 1 = 4) less than or equal to 4.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				1 ≤ arr[i] ≤ 10^6
+				arr.size() ≤ k ≤ 10^6
+		// Not Optimized: TC: O(n * max(arr)) & SC: O(1):
+			int smallestDivisor(vector<int>& arr, int k) {
+				int smallerAns=1;
+				while(1){
+					int currentVal = 0;
+					for(int i: arr){
+						if(i%smallerAns) currentVal += i/smallerAns + 1;
+						else currentVal += i/smallerAns;
+						if(currentVal > k) break;
+					}
+					if(currentVal <= k) break;
+					smallerAns++;
+				}
+				return smallerAns;
+			}
+		// Optimized: TC: O(n log(max(arr))) & SC: O(1):
+			bool isPossible(vector<int> &arr, int &k, int mid){
+				int currentVal = 0;
+				for(int i: arr){
+					if(i%mid) currentVal += i/mid + 1;
+					else currentVal += i/mid;
+					if(currentVal > k) return 0;
+				}
+				return 1;
+			}
+			int smallestDivisor(vector<int>& arr, int k) {
+				int s=1, e=INT_MAX;
+				while(s < e){
+					int mid = s + (e-s)/2;
+					if(isPossible(arr, k, mid)) e=mid;
+					else s = mid + 1;
+				}
+				return e;               // or // return s;
+			}
+
 1366)
 1367)
 1368)
