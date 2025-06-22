@@ -135998,10 +135998,187 @@ POTD:-[Problem of the Day]
 				return e;               // or // return s;
 			}
 
-1366)
-1367)
-1368)
+	1366) Equalize the Towers:
+		Problem Statement:
+			You are given an array heights[] representing the heights of towers and another array cost[] where each element represents the cost of modifying the height of respective tower.
+			The goal is to make all towers of same height by either adding or removing blocks from each tower.
+			Modifying the height of tower (add or remove) 'i' by 1 unit costs cost[i].
+			Return the minimum cost to equalize the heights of all towers.
+			Examples:
+			Input: heights[] = [1, 2, 3], cost[] = [10, 100, 1000]
+			Output: 120
+			Explanation: The heights can be equalized by either "Removing one block from 3 and adding one in 1" or "Adding two blocks in 1 and adding one in 2". Since the cost of operation in tower 3 is 1000, the first process would yield 1010 while the second one yields 120.
+			Input: heights[] = [7, 1, 5], cost[] = [1, 1, 1]
+			Output: 6
+			Explanation: The minimum cost to equalize the towers is 6, achieved by setting all towers to height 5.
+			Constraints:
+				1 ≤ heights.size() = cost.size() ≤ 10^5
+				1 ≤ heights[i] ≤ 10^4
+				1 ≤ cost[i] ≤ 10^3
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			int minCost(vector<int>& heights, vector<int>& cost) {
+				// will try to equilize to every other towers in array, 
+				// the cost which will be low will give that as answer
+				int n=cost.size();
+				long minCost = LLONG_MAX;
+				for(int i=0; i<n; i++){
+					long curCost=0;
+					for(int j=0; j<n; j++){
+						// skip the current tower coz we are matching heights of other towers to this tower
+						if(i == j) continue;
+						curCost += abs(heights[j] - heights[i]) * cost[j];
+					}
+					minCost = min(minCost, curCost);
+				}
+				return minCost;
+			}
+		// Optimized: ❌Pending
+
+	1367) Police and Thieves:
+		Problem Statement:
+			Given an array arr[], where each element contains either a 'P' for policeman or a 'T' for thief. Find the maximum number of thieves that can be caught by the police. 
+			Keep in mind the following conditions :
+				Each policeman can catch only one thief.
+				A policeman cannot catch a thief who is more than k units away from him.
+			Examples:
+			Input: arr[] = ['P', 'T', 'T', 'P', 'T'], k = 1
+			Output: 2
+			Explanation: Maximum 2 thieves can be caught. First policeman catches first thief and second police man can catch either second or third thief.
+			Input: arr[] = ['T', 'T', 'P', 'P', 'T', 'P'], k = 2
+			Output: 3
+			Explanation: Maximum 3 thieves can be caught.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				1 ≤ k ≤ 1000
+				arr[i] = 'P' or 'T'
+		// Not Optimized: TC: O(n*k) & SC: O(n)
+			int catchThieves(vector<char> &arr, int k) {
+				int cnt=0, n = arr.size();
+				vector<bool> vis (n, 0);
+				for(int i=0; i<n; i++){
+					if(arr[i] == 'P'){
+						// first check behind him & at max k units far
+						int t = k, currentPlace=-1;
+						for(int j=i-1; j>=0 and t>0; j--, t--){
+							if(arr[j] == 'T' and !vis[j]){
+								currentPlace = j;
+							}
+						}
+						// if didn't found behind go check in front
+						if(currentPlace == -1){
+							t = k;
+							for(int j=i+1; j<n and t>0; j++, t--){
+								if(arr[j] == 'T' and !vis[j]){
+									currentPlace = j;
+									break;
+								}
+							}   
+						}
+						if(currentPlace != -1){
+							vis[currentPlace] = 1;
+							cnt++;
+						} 
+					}
+				}
+				return cnt;
+			}
+		// Optimized: ❌Pending
+			// Using Two Pointers: TC: O(n) & SC: O(1)
+				int catchThieves(vector<char> &arr, int k) {
+					int n = arr.size(), i, j, cnt;
+					i = j = cnt = 0;
+					
+					while(i < n and j < n){
+						// finding next police
+						while(i < n and arr[i] != 'P') i++;
+						
+						// finding next thief
+						while(j < n and arr[j] != 'T') j++;
+						
+						// if(i == n or j == n) break;     // didn't found police or thief
+						
+						if(i<n and j<n and abs(i-j) <= k){
+							cnt++;
+							i++;
+							j++;
+						}else if(j < i){
+							j++;
+						}else{
+							i++;
+						}
+					}
+					return cnt;
+				}
+			// Using Queue: (similar to Two pointers Technique): TC: O(n) & SC: O(n)
+				int catchThieves(vector<char> &arr, int k) {
+					int cnt=0, n = arr.size();
+					queue<int> police, thief;
+					for(int i=0; i<n; i++)
+						if(arr[i] == 'P') police.push(i);
+						else thief.push(i);
+					
+					while(!police.empty() and !thief.empty()){
+						int p = police.front();
+						int t = thief.front();
+						if(abs(p-t) <= k){
+							cnt++;
+							police.pop();
+							thief.pop();
+						}else if(p < t){
+							police.pop();
+						}else{
+							thief.pop();
+						}
+					} 
+					return cnt;
+				}
+
+	1368) Largest Divisible Subset:
+		Problem Statement:
+			Given an array arr[] of distinct positive integers. Your task is to find the largest subset such that for every pair of elements (x, y) in the subset, either x divides y or y divides x.
+			Note : If multiple subsets of the same maximum length exist, return the one that is lexicographically greatest, after sorting the subset in ascending order.
+			Examples:
+			Input: arr[] = [1, 16, 7, 8, 4]
+			Output: [1, 4, 8, 16]
+			Explanation: The largest divisible subset is [1, 4, 8, 16], where each element divides the next one. This subset is already the lexicographically greatest one.
+			Input: arr[] = [2, 4, 3, 8]
+			Output: [2, 4, 8]
+			Explanation: The largest divisible subset is [2, 4, 8], where each element divides the next one. This subset is already the lexicographically greatest one.
+			Constraint:
+				1 ≤ arr.size() ≤ 10^3
+				1  ≤ arr[i] ≤ 10^9
+		// Not Optimized: TC: O(2ⁿ) & SC: O(n)
+			void solve(vector<int> &arr, vector<int> &t, int i, vector<int> &ans){
+				if(i >= arr.size()) return;
+				
+				for(int j=i; j<arr.size(); j++){
+					if(t.empty()){
+						t.push_back(arr[j]);
+						solve(arr, t, j+1, ans);
+						if(t.size() >= ans.size()) ans = t;
+						t.pop_back();
+					}else{
+						int back = t.back();
+						if(arr[j] % back == 0){
+							t.push_back(arr[j]);
+							solve(arr, t, j+1, ans);
+							if(t.size() >= ans.size()) ans = t;
+							t.pop_back();
+						}
+					}
+				}
+			}
+			vector<int> largestSubset(vector<int>& arr) {
+				if(!arr.size()) return {};
+				sort(arr.begin(), arr.end());
+				vector<int> ans, t;
+				solve(arr, t, 0, ans);
+				return ans;
+			}
+		// Optimized: ❌Pending
+
 1369)
+
 1370)
 
 ---------------------------------------------------------------------------------------------------------
