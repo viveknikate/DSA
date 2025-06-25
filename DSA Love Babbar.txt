@@ -136177,10 +136177,99 @@ POTD:-[Problem of the Day]
 			}
 		// Optimized: ❌Pending
 
-1369)
+	1369) Minimum sum:
+		Problem Statement:
+			Given an array arr[ ] consisting of digits, your task is to form two numbers using all the digits such that their sum is minimized. Return the minimum possible sum as a string with no leading zeroes.
+			Examples :
+			Input: arr[] = [6, 8, 4, 5, 2, 3]
+			Output: "604"
+			Explanation: The minimum sum is formed by numbers 358 and 246.
+			Input: arr[] = [5, 3, 0, 7, 4]
+			Output: "82"
+			Explanation: The minimum sum is formed by numbers 35 and 047.
+			Input: arr[] = [9, 4]
+			Output: "13"
+			Explanation: The minimum sum is formed by numbers 9 and 4.
+			Constraints:
+			2 ≤ arr.size() ≤ 10^6
+			0 ≤ arr[i] ≤ 9
+		class Solution {
+			public:
+			string add(string s1, string s2){
+				string ans;
+				reverse(s1.begin(), s1.end());
+				reverse(s2.begin(), s2.end());
+				int i, j, n1=s1.size(), n2 = s2.size(), carry;
+				i = j = carry = 0;
+				while(i < n1 or j < n2 or carry){
+					int num1, num2;
+					num1 =  (i < n1) ? s1[i++] - '0' : 0;
+					num2 =  (j < n2) ? s2[j++] - '0' : 0;
+					int sum = num1 + num2 + carry;
+					ans.push_back((sum % 10) + '0');
+					carry = sum / 10;
+				}
+				reverse(ans.begin(), ans.end());
+				return ans;
+			}
+			string minSum(vector<int> &arr) {
+				sort(arr.begin(), arr.end());
+				int n = arr.size();
+				string s1, s2;
+				for(int i=0; i<n; i++){
+					if(arr[i] == 0) continue;
+					if(i&1) s1.push_back(arr[i] + '0');
+					else s2.push_back('0' + arr[i]);
+				}
+				// cout<<s1<<" "<<s2;
+				return add(s1, s2);
+			}
+		};
 
-1370)
-
+	1370) Check if frequencies can be equal:
+		Problem Statement:
+			Given a string s consisting only lowercase alphabetic characters, check whether it is possible to remove at most one character such that the  frequency of each distinct character in the string becomes same. Return true if it is possible; otherwise, return false.
+			Examples:
+			Input: s = "xyyz"
+			Output: true 
+			Explanation: Removing one 'y' will make frequency of each distinct character to be 1.
+			Input: s = "xyyzz"
+			Output: true
+			Explanation: Removing one 'x' will make frequency of each distinct character to be 2.
+			Input: s = "xxxxyyzz"
+			Output: false
+			Explanation: Frequency can not be made same by removing at most one character.
+			Constraints:
+				1 ≤ s.size() ≤ 10^5
+		// TC: O(n) & SC: O(1)
+			bool sameFreq(string& s) {
+				unordered_map<char, int> Freq;
+				for(char ch: s) Freq[ch]++;
+				unordered_map<int, int> FreqCounter;
+				for(auto itr: Freq)
+					FreqCounter[itr.second]++;
+				if(FreqCounter.size() > 2) return 0;
+				int minn, maxx;
+				minn = INT_MAX, maxx = INT_MIN;
+				for(auto itr: FreqCounter){
+					minn = min(minn, itr.first);
+					maxx = max(maxx, itr.first);
+				}
+				if((minn == maxx) or (maxx-minn <= 1 and FreqCounter[maxx] == 1) or 
+					(maxx-minn <= 1 and FreqCounter[minn] > FreqCounter[maxx]) or minn == 1) return 1;
+				return 0;
+			}
+		
+1371)
+1372)
+1373)
+1374)
+1375)
+1376)
+1377)
+1378)
+1379)
+1380)
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
