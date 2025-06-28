@@ -19601,6 +19601,15 @@ Lecture-45: Linked List Questions: Reverse LL and find Middle of LL
 					}
 				};
 
+	// Print kth node from end in Linked list.
+		void print(Node* n, int &k){
+			if(!n) return;
+			print(n->nxt, k);
+			k--;
+			if(!k)
+				cout<<n->data<<" ";
+		}
+
 	Middle of LL:
 		Refer Q.695 in POTD section
 ---------------------------------------------------------------------------------------------------------
@@ -136260,9 +136269,117 @@ POTD:-[Problem of the Day]
 				return 0;
 			}
 		
-1371)
-1372)
-1373)
+	1371) Game with String:
+		Problem Statement:
+			Given a string s consisting of lowercase alphabets and an integer k, your task is to find the minimum possible value of the string after removing exactly k characters.
+			The value of the string is defined as the sum of the squares of the frequencies of each distinct character present in the string.
+			Examples :
+			Input: s = "abbccc", k = 2
+			Output: 6
+			Explaination: We remove two 'c' to get the value as 12 + 22 + 12 = 6 or We remove one 'b' and one 'c' to get the value 12 + 12 + 22 = 6.
+			Input: s = "aaab", k = 2
+			Output: 2
+			Explaination: We remove two 'a'. Now we get the value as 12 + 12 = 2.
+			Constraints:
+				0 ≤ k ≤ s.length() ≤ 10^5 
+		// Optimized: TC: O(n+k) & SC: O(1)
+			int minValue(string &s, int k) {
+				int n = s.size();
+				if(k >= n) return 0;
+				vector<int> Freq(26, 0);
+				for(char c: s) Freq[c - 'a']++;
+				priority_queue<int> pq;
+				for(int i: Freq)
+					if(i != 0) pq.push(i);
+				while(k-- and !pq.empty()){
+					int cur = pq.top();
+					pq.pop();
+					cur--;
+					if(cur > 0) pq.push(cur);
+				}
+				int v=0;
+				while(!pq.empty()){
+					int cur = pq.top();
+					pq.pop();
+					v += (cur * cur);
+				}
+				return v;
+			}
+		// Less Optimized: TC: O(n + (k* m log m)) & SC: O(1), where m is 26 no.of characters
+			int minValue(string &s, int k) {
+				int n = s.size();
+				if(k >= n) return 0;
+				vector<int> Freq(26, 0);
+				for(char c: s) Freq[c-'a']++;
+				while(k--){
+					sort(Freq.rbegin(), Freq.rend());   // sorting in desceding order
+					if(Freq[0] == 0) break;
+					Freq[0]--;
+				}
+				int v=0;
+				for(int i: Freq)
+					v += pow(i,2);
+				return v;
+			}
+
+	1372) Counting elements in two arrays:
+		Problem Statement:
+			You are given two unsorted arrays a[] and b[]. Both arrays may contain duplicate elements. For each element in a[], your task is to count how many elements in b[] are less than or equal to that element.
+			Examples:
+			Input: a[] = [4, 8, 7, 5, 1], b[] = [4, 48, 3, 0, 1, 1, 5]
+			Output: [5, 6, 6, 6, 3]
+			Explanation: 
+			For a[0] = 4, there are 5 elements in b (4, 3, 0, 1, 1) that are ≤ 4.
+			For a[1] = 8 and a[2] = 7, there are 6 elements in b that are ≤ 8 and ≤ 7.
+			For a[3] = 5, there are 6 elements in b that are ≤ 5.
+			For a[4] = 1, there are 3 elements in b (0, 1, 1) that are ≤ 1.
+			Input: a[] = [10, 20], b[] = [30, 40, 50]
+			Output: [0, 0]
+			Explanation: 
+				For a[0] = 10 and a[1] = 20, there are no elements in b that are less than or equal to 10 or 20. Hence, the output is [0, 0].
+			Constraints:
+				1 ≤ a.size(), b.size() ≤ 10^5
+				0 ≤ a[i], b[j] ≤ 10^5
+		// Not Optimized: TC: O(n*m) & SC: O(1)
+			vector<int> countLessEq(vector<int>& a, vector<int>& b) {
+				vector<int> ans;
+				for(int i: a){
+					int cnt=0;
+					for(int j: b)
+						if(j <= i)
+							cnt++;
+					ans.push_back(cnt);
+				}
+				return ans;
+			}
+		// Optimized: Using upper_bound: TC: O(m * log m + n * log m) & SC: O(1)
+			vector<int> countLessEq(vector<int>& a, vector<int>& b) {
+				vector<int> ans;
+				sort(b.begin(), b.end());
+				for(int i: a) 
+					ans.push_back(upper_bound(b.begin(), b.end(), i) - b.begin());
+				return ans;
+			}
+			// or using Binary search: TC: O(m * log m + n * log m) & SC: O(1)
+				vector<int> countLessEq(vector<int>& a, vector<int>& b) {
+					vector<int> ans;
+					sort(b.begin(), b.end());
+					for(int i: a){
+						// search for the first element's index 
+						// which is just greater than current element i
+						int s=0, e=b.size();
+						while(s < e){
+							int mid = (s+e)/2;
+							if(b[mid] <= i) s = mid + 1;
+							else e = mid;
+						}
+						// ans.push_back(e);
+						ans.push_back(s);
+					}
+					return ans;
+				}
+
+1373) 
 1374)
 1375)
 1376)
