@@ -136379,11 +136379,311 @@ POTD:-[Problem of the Day]
 					return ans;
 				}
 
-1373) 
-1374)
-1375)
-1376)
-1377)
+	1373) Split Array Largest Sum:
+		Problem Statement:
+			Given an array arr[] and an integer k, divide the array into k contiguous subarrays such that the maximum sum among these subarrays is minimized. Find this minimum possible maximum sum.
+			Examples:
+			Input: arr[] = [1, 2, 3, 4], k = 3
+			Output: 4
+			Exaplanation: Optimal Split is [1, 2], [3], [4]. Maximum sum of all subarrays is 4, which is minimum possible for 3 splits.
+			Input: arr[] = [1, 1, 2], k = 2
+			Output: 2
+			Exaplanation: Splitting the array as [1, 1] and [2] is optimal. This results in a maximum sum subarray of 2.
+			Constraints:
+				1 ≤ k ≤ arr.size() ≤ 10^5
+				1 ≤ arr[i] ≤ 10^4
+		// Not Optimized: TC: ((n-1) C (k-1)), Exploring all combinations. SC: O(k), Depth of recursion till K.
+			void solve(vector<int> &arr, int k, int idx, int maxSum, int &ans){
+				int n = arr.size(), s = 0;
+				if(k == 1){
+					for(int i=idx; i<n; i++) 
+						s += arr[i];
+					
+					maxSum = max(maxSum, s);
+					ans = min(ans, maxSum);
+					return;
+				}
+				
+				for(int i=idx; i<n; i++){
+					s += arr[i];
+					maxSum = max(maxSum, s);
+					solve(arr, k-1, i+1, maxSum, ans);
+				}
+			}
+			int splitArray(vector<int>& arr, int k) {
+				int n = arr.size();
+				if(k > n) return 0;
+				int ans = INT_MAX;
+				solve(arr, k, 0, 0, ans);
+				return ans;
+			}
+		// Optimized: Using Binary search: TC O(n * log(sumOfArray)) & SC:O(1):
+			int splitArray(vector<int>& arr, int k) {
+				int n = arr.size();
+				if(k > n) return -1;        // not possible.
+				// Helper function
+				auto isPossible = [&](int consideringMaxSum) -> bool {
+					int currentSum = 0, parts=1; 
+					// for current consideringMaxSum can we split the array into k parts
+					// lets check
+					for(int num: arr){
+						if(currentSum + num > consideringMaxSum){
+							currentSum = num;
+							parts++;
+							if(parts > k) return 0;
+						}else{
+							currentSum += num;
+						}
+					}
+					return 1;       // able to split array into <= k parts
+				};
+				
+				// minimal possible answer, when k == n is larget element in array
+				// int s = *max_element(arr.begin(), arr.end());
+				// // maximal possible ansewr is sum of array, where k == 1, only one part.
+				// int e = accumulate(arr.begin(), arr.end(), 0);
+				
+				// we can cover s & e in one instead of caculating separately
+				int s = INT_MIN, e=0;
+				for(int i: arr){
+					s = max(s, i);
+					e += i;
+				}
+				
+				// Binary Search for minimal possible maximum sum
+				while(s < e){
+					int mid = (s+e)/2;              // s + (e-s)/2, to avoid overflow
+					
+					// if we can split max sum = mid, try smaller.
+					if(isPossible(mid)) e = mid;
+					else s = mid + 1;
+				}
+				return s;
+				// return e;           // or
+			}
+
+	1374) Max min Height:
+		Problem Statement:
+			Given a garden with n flowers planted in a row, that is represented by an array arr[], where arr[i] denotes the height of the ith flower.You will water them for k days. In one day you can water w continuous flowers. Whenever you water a flower its height increases by 1 unit. You have to maximize the minimum height of all flowers after  k days of watering.
+			Examples:
+			Input: arr[] = [2, 3, 4, 5, 1], k = 2, w = 2
+			Output: 2
+			Explanation: The minimum height after watering is 2.
+			Day 1: Water the last two flowers -> arr becomes [2, 3, 4, 6, 2]
+			Day 2: Water the last two flowers -> arr becomes [2, 3, 4, 7, 3]
+			Input: arr[] = [5, 8], k = 5, w = 1
+			Output: 9
+			Explanation: The minimum height after watering is 9.
+			Day 1 - Day 4: Water the first flower -> arr becomes [9, 8]
+			Day 5: Water the second flower -> arr becomes [9, 9]
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				1 ≤ w ≤ arr.size()
+				1 ≤ k ≤ 10^5
+				1 ≤ arr[i] ≤ 10^9
+		// Not Optimized: TC: O(k * (n + w)) & SC: O(1)
+			int maxMinHeight(vector<int> &arr, int k, int w) {
+				int n = arr.size();
+				// if(w == n) return *min_element(arr.begin(), arr.end()) + k;				// deep observation
+				while(k--){
+					// finding the min element index here.
+					int idx = min_element(arr.begin(), arr.end()) - arr.begin();
+					
+					// increase values by + 1
+					int t = w;
+					
+					// adjust the index, we go forward with increasing
+					int value = idx + w;
+					int adjustedIndex = idx;
+					if(value > n) adjustedIndex = idx - (value - n);
+					while(t--) arr[adjustedIndex++]++;
+				}
+				return *min_element(arr.begin(), arr.end());
+			}
+		// Optimized: ❌Pending
+
+	1375) Substrings of length k with k-1 distinct elements:
+		Problem Statement:
+			Given a string s consisting only lowercase alphabets and an integer k. Find the count of all substrings of length k which have exactly k-1 distinct characters.
+			Examples:
+			Input: s = "abcc", k = 2
+			Output: 1
+			Explaination: Possible substring of length k = 2 are,
+			ab : 2 distinct characters
+			bc : 2 distinct characters
+			cc : 1 distinct characters
+			Only one valid substring so, count is equal to 1.
+			Input: "aabab", k = 3
+			Output: 3
+			Explaination: Possible substring of length k = 3 are, 
+			aab : 2 distinct charcters
+			aba : 2 distinct characters
+			bab : 2 distinct characters
+			All these substring are valid so, the total count is equal to 3.
+			Constrains:
+				1 ≤ s.size() ≤ 10^5
+				2 ≤ k ≤ 27
+		// Not Optimized: TC: O(n*k) & SC: O(k)
+			int substrCount(string &s, int k) {
+				int cnt=0, n=s.size();
+				for(int i=0; i<=n-k; i++){
+					unordered_map<char, int> Freq;
+					int idx=i, t = k;
+					while(t--) Freq[s[idx+t]]++;
+					if(Freq.size() == k-1) cnt++;
+				}
+				return cnt;
+			}
+		// Optimized:
+			// Using Queue: TC: O(n) & SC: O(k)
+				int substrCount(string &s, int k) {
+					int n = s.size();
+					if(k > n) return 0;
+					unordered_map<char, int> Freq;
+					queue<char> q;
+					int t = 0;
+					while(t < k){
+						Freq[s[t]]++;
+						q.push(s[t++]);
+					}
+					int cnt=0;
+					if(Freq.size() == k-1) cnt++;
+					for(int i=k; i<n; i++){
+						char ch = q.front();
+						q.pop();
+						Freq[ch]--;
+						Freq[s[i]]++;
+						q.push(s[i]);
+						if(Freq[ch] == 0) Freq.erase(ch);
+						if(Freq.size() == k-1) cnt++;
+					}
+					return cnt;
+				}
+			// Without Queue: TC: O(n) & SC: O(k)
+				int substrCount(string &s, int k) {
+					int n = s.size(), t=k;
+					if(k > n) return 0;
+					unordered_map<char, int> Freq;
+					while(t--)
+						Freq[s[t]]++;
+					int cnt=0; t=0;
+					if(Freq.size() == k-1) cnt++;
+					for(int i=k; i<n; i++){
+						Freq[s[i]]++;
+						Freq[s[t]]--;
+						if(Freq[s[t]] == 0)
+							Freq.erase(s[t]);
+						t++;
+						if(Freq.size() == k-1) cnt++;
+					}
+					return cnt;    
+				}
+
+	1376) Longest subarray with Atmost two distinct integers:
+		Problem Statement:
+			Given an array arr[] consisting of positive integers, your task is to find the length of the longest subarray that contains at most two distinct integers.
+			Examples:
+			Input: arr[] = [2, 1, 2]
+			Output: 3
+			Explanation: The entire array [2, 1, 2] contains at most two distinct integers (2 and 1). Hence, the length of the longest subarray is 3.
+			Input: arr[] = [3, 1, 2, 2, 2, 2]
+			Output: 5
+			Explanation: The longest subarray containing at most two distinct integers is [1, 2, 2, 2, 2], which has a length of 5.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				1 ≤ arr[i] ≤ 10^5
+		// Not Optimized: TC: O(n²) & SC: O(1), just storing the freq of numbers from 0 to 9.
+			int totalElements(vector<int> &arr) {
+				int mxLength=0, n = arr.size();
+				for(int i=0; i<n; i++){
+					unordered_map<int, int> Freq;
+					for(int j=i; j<n; j++){
+						Freq[arr[j]]++;
+						if(Freq.size() <= 2)
+							mxLength = max(mxLength, j - i + 1);
+					}
+				}
+				return mxLength;
+			}
+		// Little bit Optimized: TC: O(n²) & SC: O(1)
+			int totalElements(vector<int> &arr) {
+				int mxLength=0, n = arr.size();
+				for(int i=0; i<n; i++){
+					unordered_map<int, int> Freq;
+					for(int j=i; j<n; j++){
+						Freq[arr[j]]++;
+						if(Freq.size() > 2) break;
+						mxLength = max(mxLength, j - i + 1);
+					}
+				}
+				return mxLength;
+			}
+		// Optimized: Using Sliding Window approach: TC: O(n) & SC: (1), just storing the freq of numbers from 0 to 9.
+			int totalElements(vector<int> &arr) {
+				int i, j, n=arr.size(), maxLen=0;
+				i = j = 0;
+				unordered_map<int, int> Freq;
+				while(j < n){
+					Freq[arr[j++]]++;
+					while(Freq.size() > 2){
+						Freq[arr[i]]--;
+						if(!Freq[arr[i]])
+							Freq.erase(arr[i]);
+						i++;
+					}
+					maxLen = max(maxLen, j - i);
+				}
+				return maxLen;
+			}
+
+	1377) Longest Substring with K Uniques:
+		Problem Statement:
+			You are given a string s consisting only lowercase alphabets and an integer k. Your task is to find the length of the longest substring that contains exactly k distinct characters.
+			Note : If no such substring exists, return -1.
+			Examples:
+			Input: s = "aabacbebebe", k = 3
+			Output: 7
+			Explanation: The longest substring with exactly 3 distinct characters is "cbebebe", which includes 'c', 'b', and 'e'.
+			Input: s = "aaaa", k = 2
+			Output: -1
+			Explanation: There's no substring with 2 distinct characters.
+			Input: s = "aabaaab", k = 2
+			Output: 7
+			Explanation: The entire string "aabaaab" has exactly 2 unique characters 'a' and 'b', making it the longest valid substring.
+			Constraints:
+				1 ≤ s.size() ≤ 10^5
+				1 ≤ k ≤ 26
+		// Not Optimized: TC: O(n²) & SC: O(1):
+			int longestKSubstr(string &s, int k) {
+				int cnt = 0, n=s.size();
+				for(int i=0; i<n; i++){
+					unordered_map<char, int> Freq;
+					for(int j=i; j<n; j++){
+						Freq[s[j]]++;
+						if(Freq.size() > k) break;
+						if(Freq.size() == k) cnt = max(cnt, j - i + 1);
+					}
+				}
+				return cnt ? cnt : -1;
+			}
+		// Optimized: Using Sliding Window: TC: O(n) & SC: O(1)
+			int longestKSubstr(string &s, int k) {
+				int n = s.size();
+				unordered_map<char, int> Freq;
+				int i, j, mxLen;
+				i = j = mxLen = 0;
+				while(j < n){
+					Freq[s[j++]]++;
+					while(Freq.size() > k){
+						Freq[s[i]]--;
+						if(!Freq[s[i]]) Freq.erase(s[i]);
+						i++;
+					}
+					if(Freq.size() == k) mxLen = max(mxLen, j - i);
+				}
+				return mxLen ? mxLen : -1;
+			}
+
 1378)
 1379)
 1380)
