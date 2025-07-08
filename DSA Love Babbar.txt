@@ -38332,6 +38332,22 @@ Love Babbar Contests: ❌Pending
 		typedef priority_queue<int, vector<int>, greater<int>> MinHeap;
 
 		MinHeap pq;  // Simpler syntax for min-heap
+
+	// String array sorting based on length:
+		#include <bits/stdc++.h>
+		using namespace std;
+		int main() {
+			vector<string> v = {"abcdef", "abc", "def", "xyz", "pqrs", "ijkl"};
+			for(string s: v)
+				cout<<s<<" ";
+			cout<<endl;
+			sort(v.begin(), v.end(), [](string &a, string &b){
+				return a.size() == b.size() ? a < b : a.size() > b.size();
+			});
+			for(string s: v)
+				cout<<s<<" ";
+			return 0;
+		}
 ---------------------------------------------------------------------------------------------------------
 POTD:-[Problem of the Day]
 	1) Minimum Difference in an Array
@@ -136896,10 +136912,216 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 
-1381)
-1382)
-1383)
-1384)
+	1381) Is Subsequence:
+		Problem Statement:
+			Given two strings s and t, return true if s is a subsequence of t, or false otherwise.
+			A subsequence of a string is a new string that is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (i.e., "ace" is a subsequence of "abcde" while "aec" is not).
+			Example 1:
+			Input: s = "abc", t = "ahbgdc"
+			Output: true
+			Example 2:
+			Input: s = "axc", t = "ahbgdc"
+			Output: false
+			Constraints:
+				0 <= s.length <= 100
+				0 <= t.length <= 10^4
+				s and t consist only of lowercase English letters.
+			Follow up: Suppose there are lots of incoming s, say s1, s2, ..., sk where k >= 109, and you want to check one by one to see if t has its subsequence. In this scenario, how would you change your code?
+		// Not Optimized: TC: O(2ⁿ * n) & SC: O(2ⁿ * n):
+			void allSubSequence(string &t, int i, string cur, vector<string> &store){
+				if(i >= t.size()){
+					store.push_back(cur);
+					return;
+				}
+				allSubSequence(t, i+1, cur+t[i], store);
+				allSubSequence(t, i+1, cur, store);
+			}
+			bool isSubsequence(string s, string t) {
+				if(t.size() < s.size()) return 0;
+				// Generate all subsequence of t then check is s exist in it or not
+				vector<string> store;
+				allSubSequence(t, 0, "", store);
+				for(string cur: store)
+					if(cur == s) return 1;
+				return 0;
+			}
+		// Optimized: TC: O(n) & SC: O(1)
+			bool isSubsequence(string s, string t) {
+				if(t.size() < s.size()) return 0;
+				int i, j, n=s.size(), m=t.size();
+				i = j = 0;
+				while(j < m and i<n){
+					if(s[i] == t[j]) i++;
+					j++;
+				}
+				return i == n;
+			}
+	
+	1382) Check for subsequence: (Refer POTD: 1381)
+		Problem Statement:
+			Given two strings A and B, find if A is a subsequence of B.
+			Example 1:
+			Input:
+			A = AXY 
+			B = YADXCP
+			Output: 0 
+			Explanation: A is not a subsequence of B
+			as 'Y' appears before 'A'.
+			Example 2:
+			Input:
+			A = gksrek
+			B = geeksforgeeks
+			Output: 1
+			Explanation: A is a subsequence of B.
+			Your Task:  
+				You dont need to read input or print anything. Complete the function isSubSequence() which takes A and B as input parameters and returns a boolean value denoting if A is a subsequence of B or not. 
+			Expected Time Complexity: O(N) where N is length of string B.
+			Expected Auxiliary Space: O(1)
+			Constraints:
+				1<= |A|,|B| <=10^4
+		// TC: O(n) & SC: O(1)
+			bool isSubSequence(string A, string B) {
+				if(A.size() > B.size()) return 0;
+				int i, j, n=A.size(), m = B.size();
+				i = j = 0;
+				while(i < n and j < m){
+					if(A[i] == B[j]) i++;
+					j++;
+				}
+				return i == n;
+			}
+
+	1383) Next Greater Element in Circular Array:
+		Problem Statement:
+			Given a circular integer array arr[], the task is to determine the next greater element (NGE) for each element in the array.
+			The next greater element of an element arr[i] is the first element that is greater than arr[i] when traversing circularly. If no such element exists, return -1 for that position.
+			Circular Property:
+			Since the array is circular, after reaching the last element, the search continues from the beginning until we have looked at all elements once.
+			Examples: 
+			Input: arr[] = [1, 3, 2, 4]
+			Output: [3, 4, 4, -1]
+			Explanation:
+			The next greater element for 1 is 3.
+			The next greater element for 3 is 4.
+			The next greater element for 2 is 4.
+			The next greater element for 4 does not exist, so return -1.
+			Input: arr[] = [0, 2, 3, 1, 1]
+			Output: [2, 3, -1, 2, 2]
+			Explanation:
+			The next greater element for 0 is 2.
+			The next greater element for 2 is 3.
+			The next greater element for 3 does not exist, so return -1.
+			The next greater element for 1 is 2 (from circular traversal).
+			The next greater element for 1 is 2 (from circular traversal).
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				0 ≤ arr[i] ≤ 10^6
+		// Not Optimized: TC: O(n²) & SC: O(n):
+			vector<int> nextLargerElement(vector<int> &arr) {
+				int n = arr.size();
+				vector<int> ans (n, -1);
+				for(int i=0; i<n; i++){
+					int j;
+					for(j=i+1; j<n; j++){
+						if(arr[i] < arr[j]){
+							ans[i] = arr[j];
+							break;
+						}
+					}
+					
+					if(j == n){
+						for(j=0; j<i; j++)
+							if(arr[i] < arr[j]){
+								ans[i] = arr[j];
+								break;
+							}
+					}
+				}
+				return ans;
+			}
+		// or Conscise:
+			vector<int> nextLargerElement(vector<int> &arr) {
+				int n = arr.size();
+				vector<int> ans (n, -1);
+				for(int i=0; i<n; i++){
+					for(int j=1; j<n; j++)
+						if(arr[i] < arr[(i+j)%n]){
+							ans[i] = arr[(i+j)%n];
+							break;
+						}
+				}
+				return ans;
+			}
+		// Optimized: TC: O(n) & SC: O(n)
+			vector<int> nextLargerElement(vector<int> &arr) {
+				int n = arr.size();
+				vector<int> ans (n, -1);
+				stack<int> st;
+				for(int i=0; i<n+(n-1); i++){           // its circular so extra n-1 times.
+					while(!st.empty() and arr[i%n] > arr[st.top()%n]){
+						ans[st.top()%n] = arr[i%n];
+						st.pop();
+					}
+					st.push(i%n);
+				}
+				return ans;
+			}
+
+	1384) Next element with greater frequency:
+		Problem Statement:
+			Given an array arr[] of integers, for each element, find the closest (distance wise) to its right that has a higher frequency than the current element.
+			If no such element exists, return -1 for that position.
+			Examples:
+			Input: arr[] = [2, 1, 1, 3, 2, 1]
+			Output: [1, -1, -1, 2, 1, -1]
+			Explanation: Frequencies: 1 → 3 times, 2 → 2 times, 3 → 1 time.
+			For arr[0] = 2, the next element 1 has a higher frequency → 1.
+			For arr[1] and arr[2], no element to the right has a higher frequency → -1.
+			For arr[3] = 3, the next element 2 has a higher frequency → 2.
+			For arr[4] = 2, the next element 1 has a higher frequency → 1.
+			For arr[5] = 1, no elements to the right → -1.
+			Input: arr[] = [5, 1, 5, 6, 6]
+			Output: [-1, 5, -1, -1, -1]
+			Explanation: Frequencies: 1 → 1 time, 5 → 2 times, 6 → 2 times.
+			For arr[0] and arr[2], no element to the right has a higher frequency → -1.
+			For arr[1] = 1, the next element 5 has a higher frequency → 5.
+			For arr[3] and arr[4], no element to the right has a higher frequency → -1.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^5
+				1 ≤ arr[i] ≤ 10^5
+		// Not Optimized: TC: O(n²) & SC: O(n)
+			vector<int> findGreater(vector<int>& arr) {
+				int n = arr.size();
+				vector<int> ans (n, -1);
+				unordered_map<int, int> Freq;
+				for(int i: arr) Freq[i]++;
+				for(int i=0; i<n; i++){
+					for(int j=i+1; j<n; j++){
+						if(Freq[arr[i]] < Freq[arr[j]]){
+							ans[i] = arr[j];
+							break;
+						}
+					}
+				}
+				return ans;
+			}
+		// Optimized: TC: O(n) & SC: O(n)
+			vector<int> findGreater(vector<int>& arr) {
+				int n = arr.size();
+				vector<int> ans (n, -1);
+				unordered_map<int, int> Freq;
+				for(int i: arr) Freq[i]++;
+				stack<int> st;
+				for(int i=0; i<n; i++){
+					while(!st.empty() and Freq[arr[i]] > Freq[arr[st.top()]]){
+						ans[st.top()] = arr[i];
+						st.pop();
+					}
+					st.push(i);
+				}
+				return ans;
+			}
+		
 1385)
 1386)
 1387)
