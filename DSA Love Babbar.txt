@@ -137122,9 +137122,100 @@ POTD:-[Problem of the Day]
 				return ans;
 			}
 		
-1385)
-1386)
-1387)
+	1385) Sum of subarray minimum:
+		Problem Statement:
+			Given an array arr[] of positive integers, find the total sum of the minimum elements of every possible subarrays.
+			Note: It is guaranteed that the total sum will fit within a 32-bit unsigned integer.
+			Examples:
+			Input: arr[] = [3, 1, 2, 4]
+			Output: 17
+			Explanation: Subarrays are [3], [1], [2], [4], [3, 1], [1, 2], [2, 4], [3, 1, 2], [1, 2, 4], [3, 1, 2, 4]. Minimums are 3, 1, 2, 4, 1, 1, 2, 1, 1, 1. Sum of all these is 17.
+			Input: arr[] = [71, 55, 82, 55]
+			Output: 593
+			Explanation: The sum of the minimum of all the subarrays is 593.
+			Constraints:
+				1 ≤ arr.size() ≤ 3*10^4
+				1 ≤ arr[i] ≤ 10^3
+		// Not Optimized: TC: O(n²) & SC: O(1)
+			int sumSubMins(vector<int> &arr) {
+				int total=0, n = arr.size();
+				for(int i=0; i<n; i++){
+					int minm=INT_MAX;
+					for(int j=i; j<n; j++){
+						minm = min(minm, arr[j]);
+						total += minm;
+					}
+				}
+				return total;
+			}
+		// Optimized: ❌Pending
+
+	1386) Find the longest string:
+		Problem Statement:
+			Given an array of strings arr[]. Find the longest string in arr[] such that every prefix of it is also present in the array arr[]. 
+			Note: If multiple strings have the same maximum length, return the lexicographically smallest one.
+			Examples:
+			Input: arr[] = ["p", "pr", "pro", "probl", "problem", "pros", "process", "processor"]
+			Output: pros
+			Explanation: "pros" is the longest word with all prefixes ("p", "pr", "pro", "pros") present in the array arr[].
+			Input: arr[] = ["ab", "a", "abc", "abd"]
+			Output: abc
+			Explanation: Both "abc" and "abd" has all the prefixes in arr[]. Since, "abc" is lexicographically smaller than "abd", so the output is "abc".
+			Constraints:
+				1 ≤ arr.length() ≤ 10^3
+				1 ≤ arr[i].length ≤ 10^3
+		// Not Optimized: TC: O(n log n + n * m * n) & SC: (n*m)
+			string longestString(vector<string> &arr) {
+				string ans;
+				sort(arr.begin(), arr.end(), [](string &s, string &t){
+					return (s.length() == t.length()) ? s < t : s.length() < t.length();
+				});
+				int n = arr.size();
+				unordered_map<string, int> subs;
+				for(int i=n-1; i>=0; i--){
+					// if(arr[i].size() < ans.size()) break;				// adding this line here creates the optimized version of code.
+					string sub;
+					int flag = 1;
+					for(int j=0; j<arr[i].size()-1; j++){
+						sub.push_back(arr[i][j]);
+						if(!(subs.count(sub))){
+							if(find(arr.begin(), arr.end(), sub) == arr.end()){
+								flag = 0;
+								break;
+							}else{
+								subs[sub] = 1;
+							}
+						}
+					}
+					if(flag and ans.size() <= arr[i].size())
+						ans = arr[i];
+				}
+				return ans;
+			}
+		// Optimized: TC: O(n log n + n * m) & SC: O(n*m) 
+			string longestString(vector<string> &arr) {
+				unordered_map<string, int> subs;
+				sort(arr.begin(), arr.end(), [&](string &s, string &t){             // [&] this sign is to access all local member by reference, eg. map subs.
+					subs[t] = subs[s] = 1;      // storing all strings in map
+					return (s.length() == t.length()) ? s > t : s.length() < t.length();
+				});
+				int n = arr.size();
+				for(int i=n-1; i>=0; i--){
+					string sub;
+					int m = arr[i].size(), flag =1;
+					for(int j=0; j<m; j++){
+						sub.push_back(arr[i][j]);
+						if(!subs.count(sub)){
+							flag = 0;
+							break;
+						}
+					}
+					if(flag) return arr[i];
+				}
+				return "";          // didn't found any string
+			}
+
+1387) 
 1388)
 1389)
 1390)
