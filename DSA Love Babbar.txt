@@ -137306,8 +137306,251 @@ POTD:-[Problem of the Day]
 			}
 		// Optimized: ❌Pending
 
-1389)
-1390)
+	1389) Maximum sum of elements not part of LIS:
+			Problem Statement:
+				Given an array arr[] of positive integers, your task is to find the maximum possible sum of all elements that are not part of the Longest Increasing Subsequence (LIS).
+				Examples:
+				Input: arr[] = [4, 6, 1, 2, 3, 8]
+				Output: 10
+				Explanation: The elements which are not in LIS is 4 and 6.
+				Input: arr[] = [5, 4, 3, 2, 1]
+				Output: 14
+				Explanation: The elements which are not in LIS is 5, 4, 3 and 2.
+				Constraints:
+					1 ≤ arr.size() ≤ 10^3
+					1 ≤ arr[i] ≤ 10^5
+			// Not Optimized: TC: O(n * 2^n) & SC: (n)
+				void solve(int indx, vector<int> &arr, vector<pair<int, int>> &ourMainLongestIncreasing, vector<pair<int, int>> &t){
+					int n = arr.size();
+					if(indx >= n){
+						if(t.size() >= ourMainLongestIncreasing.size()){
+							if(t.size() > ourMainLongestIncreasing.size()){
+								ourMainLongestIncreasing = t;
+							} else {
+								int ts, os;
+								ts = os = 0;
+								for(int i=0; i<t.size(); i++) ts += t[i].first;
+								for(int i=0; i<ourMainLongestIncreasing.size(); i++) os += ourMainLongestIncreasing[i].first;
+								if(os > ts) ourMainLongestIncreasing = t;
+							}
+						}
+						return;
+					}
+					t.push_back({arr[indx], indx});
+					for(int i=indx+1; i<=n; i++){
+						if(i==n or arr[i] > arr[indx])
+							solve(i, arr, ourMainLongestIncreasing, t);
+					}
+					t.pop_back();
+				}
+				int nonLisMaxSum(vector<int>& arr) {
+					int n = arr.size();
+					vector<pair<int, int>> ourMainLongestIncreasing;
+					for(int i=0; i<n; i++){
+						vector<pair<int, int>> t;
+						solve(i, arr, ourMainLongestIncreasing, t);
+					}
+					int m = ourMainLongestIncreasing.size(), s=0, j=0;
+					// for(auto i: ourMainLongestIncreasing)
+					//     cout<<i.first<<" "<<i.second<<endl;
+						
+					if(n == m) return s;
+					for(int i=0; i<n; i++)
+						if(i == ourMainLongestIncreasing[j].second){
+							j++;
+							continue;
+						}else{
+							s += arr[i];
+						}
+					return s;
+				}
+			// Optimized: ❌Pending
+
+	1390) Longest Increasing Subsequence:
+		https://www.geeksforgeeks.org/problems/longest-increasing-subsequence-1587115620/1
+		Problem Statement:
+			Given an array arr[] of non-negative integers, the task is to find the length of the Longest Strictly Increasing Subsequence (LIS).
+			A subsequence is strictly increasing if each element in the subsequence is strictly less than the next element.
+			Examples:
+			Input: arr[] = [5, 8, 3, 7, 9, 1]
+			Output: 3
+			Explanation: The longest strictly increasing subsequence could be [5, 7, 9], which has a length of 3.
+			Input: arr[] = [0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15]
+			Output: 6
+			Explanation: One of the possible longest strictly increasing subsequences is [0, 2, 6, 9, 13, 15], which has a length of 6.
+			Input: arr[] = [3, 10, 2, 1, 20]
+			Output: 3
+			Explanation: The longest strictly increasing subsequence could be [3, 10, 20], which has a length of 3.
+			Constraints:
+				1 ≤ arr.size() ≤ 10^3
+				0 ≤ arr[i] ≤ 10^6
+		// Not Optimized: TC: O(n*2ⁿ) & SC: O(n)
+			void solve(int indx, vector<int> &arr, int &cnt, int &t){
+				int n = arr.size();
+				if(indx >= n){
+					cnt = max(cnt, t);
+					return;
+				}
+				t++;
+				for(int i=indx+1; i<=n; i++){
+					if(i == n or arr[i] > arr[indx])
+						solve(i, arr, cnt, t);
+				}
+				t--;            // backtrack
+			}
+			int lis(vector<int>& arr) {
+				int cnt=0, n=arr.size(), t=0;
+				for(int i=0; i<n; i++)
+					solve(i, arr, cnt, t);
+				return cnt;
+			}
+		// Optimized: ❌Pending
+
+	1391) Longest Increasing Subsequence:
+		https://leetcode.com/problems/longest-increasing-subsequence/description/
+		Problem Statement:
+			Given an integer array nums, return the length of the longest strictly increasing subsequence.
+			Example 1:
+			Input: nums = [10,9,2,5,3,7,101,18]
+			Output: 4
+			Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4.
+			Example 2:
+			Input: nums = [0,1,0,3,2,3]
+			Output: 4
+			Example 3:
+			Input: nums = [7,7,7,7,7,7,7]
+			Output: 1
+		// Not Optimized: TC: O(n * 2ⁿ) & SC: O(n)
+			void solve(int indx, int &cnt, vector<int> &nums, int &t){
+				int n = nums.size();
+				if(indx >= n){
+					cnt = max(cnt, t);
+					return;
+				}
+				t++;
+				for(int i=indx; i<=n; i++){
+					if(i == n or nums[i] > nums[indx])
+						solve(i, cnt, nums, t);
+				}
+				t--;
+			}
+			int lengthOfLIS(vector<int>& nums) {
+				int cnt=0, n=nums.size(), t=0;
+				for(int i=0; i<n; i++)
+					solve(i, cnt, nums, t);
+				return cnt;
+			}
+		// Optimized: ❌Pending
+
+	1392) Divisible by 7:
+		Problem Statement:
+			Given an n-digit large number n in form of string, check whether it is divisible by 7 or not. Return 1 if divisible by 7, otherwise 0.
+			Examples :
+			Input: n = "49"
+			Output: 1
+			Explanation: 49 is divisible by 7.
+			Input: n = "1000"
+			Output: 0
+			Explanation: 1000 is not divisible by 7.
+			Constraints:
+				1 ≤ num.size() ≤ 10^5
+		// TC: O(n) & SC: O(1)
+			int isdivisible7(string num) {
+				int n=0;
+				for(char ch: num){
+					n = n * 10 + ch - '0';
+					if(n >= 7) n %= 7;
+				}
+				return n == 0;
+			}
+
+	1393) Divisible by 13:
+		Problem Statement:
+			Given a number represented as a string s (which may be very large), check whether it is divisible by 13 or not.
+			Examples:
+			Input : s = "2911285"
+			Output : true
+			Explanation: 2911285 ÷ 13 = 223945, which is a whole number with no remainder.
+			Input : s = "27"
+			Output : false
+			Explanation: 27 / 13 ≈ 2.0769..., which is not a whole number (there is a remainder).
+			Constraints:
+				1 ≤  s.size()  ≤ 10^5
+		// TC: O(n) & SC: O(1):
+			bool divby13(string &s) {
+				int num=0;
+				for(char ch : s){
+					num = num * 10 + ch - '0';
+					// if(num >= 13) 
+					num %= 13;
+				}
+				return num == 0;
+			}
+
+	1394) Check if divisible by 4:
+		Problem Statement:
+			Given a number N. Check whether it is divisble by 4.
+			Example 1:
+			Input:
+			N = 1124
+			Output: 1
+			Explanation: The number is divisible by 4 as 1124 % 4 = 0.
+			Example 2:
+			Input: 
+			N = 7
+			Output: 0
+			Explanation: The number is not divisibly by 4 as 7 % 4 = 3.
+			Your Task:
+			You don't need to read input or print anything. Your task is to complete the function divisibleBy4() which takes the number in the form of a string N as input and returns 1 if the number is divisible by 4. Else, it returns 0.
+			Expected Time Complexity: O(1).
+			Expected Auxiliary Space: O(1).
+			Constraints:
+				1 <= N <= (10^1000)+5
+		// TC: O(n) & SC: O(1)
+			int divisibleBy4(string N) {
+				int num = 0;
+				for(char ch: N){
+					num = num * 10 + ch -'0';
+					num %= 4;
+				}
+				return num == 0;
+			}
+		// More Optimized: TC: O(1) & SC: O(1)
+			// divisibility rule of 4 is, if last 2 digit are divisible by 4 then 
+			// complete number N is divisible by 4
+			int divisibleBy4(string N) {
+				return (N.size() < 2) ? (N.back() - '0') % 4 == 0 :
+				((N[N.size()-2]-'0') * 10 + (N.back() - '0')) % 4 == 0;
+			}
+
+	1395) Remainder with 7:
+		Problem Statement:
+			Given a number as string(n) , find the remainder of the number when it is divided by 7
+			Example 1:
+			Input: 5
+			Output: 5
+			Example 2:
+			Input: 8
+			Output: 1
+			Your Task:
+			You only need to complete the function remainderwith7() that takes string n as parameter and returns an integer which denotes the remainder of the number when its divided by 7
+			Constraints:
+				1 <= length of n <= 105
+		// TC: O(n) & SC: O(1)
+			int remainderWith7(string n) {
+				int num=0;
+				for(char ch: n){
+					num = num * 10 + ch - '0';
+					num %= 7;
+				}
+				return num;
+			}
+
+1396) 
+1397) 
+1398) 
+1399) 
+1400)
 ---------------------------------------------------------------------------------------------------------
 # 450 DSA Sheet Following: ❌Pending
 ---------------------------------------------------------------------------------------------------------
