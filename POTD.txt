@@ -1,0 +1,123 @@
+POTDs:
+    1399) Make Matrix Beautiful:
+        Problem Statement:
+            A beautiful matrix is defined as a square matrix in which the sum of elements in every row and every column is equal. Given a square matrix mat[][], your task is to determine the minimum number of operations required to make the matrix beautiful.
+            In one operation, you are allowed to increment the value of any single cell by 1.
+            Examples:
+            Input: mat[][] = [[1, 2], 
+                            [3, 4]]
+            Output: 4
+            Explanation:
+            Increment value of cell(0, 0) by 3, 
+            Increment value of cell(0, 1) by 1. 
+            Matrix after the operations: [[4, 3], 
+                                        [3, 4]]
+            Here, sum of each row and column is 7.
+            Hence total 4 operation are required.
+            Input: mat[][] = [[1, 2, 3],
+                            [4, 2, 3],
+                            [3, 2, 1]]
+            Output: 6
+            Explanation: 
+            Increment value of cell(0, 0) by 1, 
+            Increment value of cell(0, 1) by 2, 
+            Increment value of cell(2, 1) by 1, 
+            Increment value of cell(2, 2) by 2. 
+            Matrix after the operations: [[2, 4, 3], 
+                                        [4, 2, 3],
+                                        [3, 3, 3]] 
+            Here, sum of each row and column is 9.
+            Hence total 6 operation are required.
+            Constraints:
+                1 ≤ mat.size() ≤ 900
+                0 ≤ mat[i][j] ≤ 10^6
+        // TC: O(n*m) & SC: O(1)
+            int balanceSums(vector<vector<int>>& mat) {
+                int n = mat.size();
+                if(!n) return 0;
+                int mxValue = 0, m = mat[0].size();
+                for(int i=0; i<n; i++){
+                    int cur=0;
+                    for(int j=0; j<m; j++)  cur += mat[i][j];
+                    mxValue = max(mxValue, cur);
+                }
+                
+                for(int i=0; i<m; i++){
+                    int cur=0;
+                    for(int j=0; j<n; j++)  cur += mat[j][i];
+                    mxValue = max(mxValue, cur);
+                }
+                int ans=0;
+                for(vector<int> cur: mat)
+                    ans += mxValue - accumulate(cur.begin(), cur.end(), 0);   
+                return ans;
+            }
+
+    1400) ASCII Range Sum:
+        Problem Statement:
+            Given a string s consisting of lowercase English letters, for every character whose first and last occurrences are at different positions, calculate the sum of ASCII values of characters strictly between its first and last occurrence.
+            Return all such non-zero sums (order does not matter).
+            Examples:
+            Input: s = "abacab"
+            Output: [293, 294]
+            Explanation: characters 'a' and 'b' appear more than once:
+            'a' : between positions 1 and 5 → characters are b, a, c and ascii sum is 98 + 97 + 99 = 294.
+            'b' : between positions 2 and 6 → characters are a, c, a and ascii sum is 97 + 99 + 97 = 293.
+            Input: s = "acdac"
+            Output: [197, 199]
+            Explanation: characters 'a' and 'c' appear more than once:
+            'a' : between positions 1 and 4 → characters are c, d and ascii sum is 99 + 100 = 199.
+            'c' : between positions 2 and 5 → characters are d, a and ascii sum is 100 + 97 = 197.
+            Constraints:
+                1 ≤ s.size() ≤ 10^5
+        // TC: O(n) & SC: O(n)
+            vector<int> asciirange(string& s) {
+                // <character, its indexes>
+                vector<vector<int>> mapping (26);
+                vector<int> vis(26, 0);
+                
+                int n = s.size();
+                for(int i=0; i<n; i++)
+                    mapping[s[i] - 'a'].push_back(i);
+                vector<int> ans;
+                for(char ch: s){
+                    int start = mapping[ch - 'a'].front(), end = mapping[ch-'a'].back();
+                    // Skip the iteration if,
+                    // character is already visited
+                    // or its start & end is same index or just difference is 1
+                    if(vis[ch - 'a'] or start == end or start == end - 1) continue;
+                    vis[ch - 'a'] = 1;
+                    int sum=0;
+                    for(int i = start+1; i<end; i++)
+                        sum += s[i];
+                    ans.push_back(sum);
+                }
+                /*
+                for(char ch: s){
+                    int start = mapping[ch - 'a'].front(), end = mapping[ch-'a'].back();
+                    if(vis[ch - 'a'] or start == end) continue;
+                    vis[ch - 'a'] = 1;
+                    int sum=0;
+                    for(int i = start+1; i<end; i++)
+                        sum += s[i];
+                    if(sum) ans.push_back(sum);
+                }
+                */
+                return ans;
+            }
+
+1401)
+1402)
+1403)
+1404)
+1405)
+1406)
+1407)
+1408)
+1409)
+1410)
+1411)
+1412)
+1413)
+1414)
+    
