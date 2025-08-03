@@ -1,3 +1,20 @@
+Old:
+    Refer from DSA Love Babbar txt file:
+    1331)
+        int longestSubarray(vector<int> &arr, int k) {
+            int mxLen=0, n = arr.size();
+            for(int i=0; i<n; i++){
+                int GreaterK, LessEqualK;
+                GreaterK = LessEqualK = 0;
+                for(int j=i; j<n; j++){
+                    (arr[j] > k) ? GreaterK++ : LessEqualK++;
+                    if(GreaterK > LessEqualK)
+                        mxLen = max(mxLen, j-i+1);
+                }
+            }
+            return mxLen;
+        }
+
 POTDs:
     1399) Make Matrix Beautiful:
         Problem Statement:
@@ -139,7 +156,7 @@ POTDs:
                         ans = i.first;          // no need to check is max or not, coz map store all things in sorted order
                 return ans;
             }
-        // Optimized: ❌pending
+        // Optimized: ❌Pending
 
     1402) Balancing Consonants and Vowels Ratio:
         Problem Statement:
@@ -186,9 +203,42 @@ POTDs:
                 }
                 return cnt;
             }
-        // Optimized: ❌pending
+        // Optimized: ❌Pending
 
-1403)
+    1403) 2D Difference Array:
+        Problem Statement:
+            You are given a 2D integer matrix mat[][] of size n × m and a list of q operations opr[][]. 
+            Each operation is represented as an array [v, r1, c1, r2, c2], where:
+                v is the value to be added
+                (r1, c1) is the top-left cell of a submatrix
+                (r2, c2) is the bottom-right cell of the submatrix (inclusive)
+            For each of the q operations, add v to every element in the submatrix from (r1, c1) to (r2, c2). 
+            Return the final matrix after applying all operations.
+            Examples:
+            Input: mat[][] = [[1, 2, 3],  opr[][] = [[2, 0, 0, 1, 1], [-1, 1, 0, 2, 2]]
+                            [1, 1, 0],
+                            [4,-2, 2]]
+            Output: [[3, 4, 3],
+                    [2, 2, -1],
+                    [3, -3, 1]] 
+            Explanation:
+            Constraint:
+                1 ≤ n×m, q ≤ 10^5
+                0 ≤ r1 ≤ r2 ≤ n - 1
+                0 ≤ c1 ≤ c2 ≤ m - 1
+                -10^4 ≤ mat[i][j], v ≤ 10^4
+        // Not Optimized: TC: O(n * R * C) & SC: O(1):
+            vector<vector<int>> applyDiff2D(vector<vector<int>>& mat, vector<vector<int>>& opr) {
+                for(auto q: opr){
+                    for(int r=q[1]; r<=q[3]; r++){
+                        for(int c=q[2]; c<=q[4]; c++){
+                            mat[r][c] += q[0];
+                        }
+                    }
+                }
+                return mat;
+            }
+        // Optimized: ❌Pending
 
 1404)
 
