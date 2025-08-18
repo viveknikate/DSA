@@ -393,8 +393,75 @@ POTDs:
                 return s;
             }
 
-1408)
-1409)
+    1408) Sort by Absolute Difference:
+        Problem Statement:
+            You are given a number x and array arr[]. Your task is to rearrange the elements of the array according to the absolute difference with x, i.e., an element having minimum difference comes first, and so on.
+            Note: If two or more elements are at equal distances arrange them in the same sequence as in the given array.
+            Examples:
+            Input: x = 7, arr[] = [10, 5, 3, 9, 2]
+            Output: [5, 9, 10, 3, 2]
+            Explanation: Sorting the numbers according to the absolute difference with 7, we have array elements as 5, 9, 10, 3, 2.
+            Input: x = 6, arr[] = [1, 2, 3, 4, 5]
+            Output: [5, 4, 3, 2, 1]
+            Explanation: Sorting the numbers according to the absolute difference with 6, we have array elements as 5, 4, 3, 2, 1.
+            Constraints:
+                1 ≤ x ≤ 10^5
+                1 ≤ arr.size() ≤ 10^5
+                1 ≤ arr[i] ≤ 10^5
+        // Strange: TC: O(n log n)
+            void rearrange(vector<int> &arr, int x) {
+                // <value after - x, actual arr value>
+                vector<pair<int, int>> hold;
+                for(int i: arr)
+                    hold.push_back({abs(x-i), i});
+                
+                sort(hold.begin(), hold.end(), [](pair<int, int> &a, pair<int, int> &b){
+                    return a.first < b.first;
+                });
+                int n = arr.size();
+                for(int i=0; i<n; i++)
+                    arr[i] = hold[i].second;
+            }
+        // Using Stable sort TC: O(n log n) & SC: O(1): it will preserve the order of element if they are same
+            void rearrange(vector<int> &arr, int x) {
+                stable_sort(arr.begin(), arr.end(), [x](int a, int b){
+                    return abs(a - x) < abs(b - x);
+                });
+            }
+
+    1409) Farthest Smaller Right:
+        Problem Statement:
+            You are given an array arr[]. For each element at index i (0-based indexing), find the farthest index j to the right (i.e., j > i) such that arr[j] < arr[i]. If no such index exists for a given position, return -1 for that index. Return the resulting array of answers.
+            Examples:
+            Input: arr[] = [2, 5, 1, 3, 2]
+            Output: [2, 4, -1, 4, -1]
+            Explanation: arr[0] = 2: Farthest smaller element to the right is arr[2] = 1.
+            arr[1] = 5: Farthest smaller element to the right is arr[4] = 2.
+            arr[2] = 1: No smaller element to the right → -1.
+            arr[3] = 3: Farthest smaller element to the right is arr[4] = 2.
+            arr[4] = 2: No elements to the right → -1.
+            Input: arr[] = [2, 3, 5, 4, 1] 
+            Output: [4, 4, 4, 4, -1]
+            Explanation: arr[4] is the farthest smallest element to the right for arr[0], arr[1], arr[2] and arr[3].
+            Constraints:
+                1 ≤ arr.size() ≤ 10^6
+                1 ≤ arr[i] ≤ 10^6
+        // Not Optimized: TC: O(n²) & SC: O(1)
+            vector<int> farMin(vector<int>& arr) {
+                int n = arr.size();
+                if(!n) return {};
+                vector<int> ans (n, -1);
+                for(int i=0; i<n; i++){
+                    int index = -1;
+                    for(int j=i+1; j<n; j++){
+                        if(arr[i] > arr[j]) index = j;
+                    }
+                    ans[i] = index;
+                }
+                return ans;
+            }
+        // Optimized: ❌Pending
+
 1410)
 1411)
 1412)
