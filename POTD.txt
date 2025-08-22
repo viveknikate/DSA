@@ -460,11 +460,170 @@ POTDs:
                 }
                 return ans;
             }
+        // Optimized: TC: O(n log n) & SC: O(n):
+            vector<int> farMin(vector<int>& arr) {
+                int n = arr.size();
+                if(!n) return {};
+                vector<int> ans (n, -1);
+                for(int i=0; i<n; i++){
+                    for(int j=n-1; j>i; j--){
+                        if(arr[i] > arr[j]){
+                            ans[i] = j;
+                            break;
+                        }
+                    }
+                }
+                return ans;
+            }
+
+    1410) Search in fully rotated sorted 2D matrix:
+        Problem Statement:
+            You are given a 2D matrix mat[][] of size n x m that was initially filled in the following manner:
+            Each row is sorted in increasing order from left to right.
+            The first element of every row is greater than the last element of the previous row.
+            This implies that if the matrix is flattened row-wise, it forms a strictly sorted 1D array.
+            Later, this sorted 1D array was rotated at some unknown pivot. The rotated array was then written back into the matrix row-wise to form the current matrix.
+            Given such a matrix mat[][] and an integer x, determine whether x exists in the matrix.
+            Examples:
+            Input: x = 3,
+            mat[][] = [[7, 8, 9, 10],
+                    [11, 12, 13, 1],
+                    [2, 3, 4, 5]] 
+            Output: true
+            Explanation: 3 is located at the 3rd row and 2nd column.
+            Input: x = 10,
+            mat[][] = [[6, 7, 8],
+                    [9, 1, 2],
+                    [3, 4, 5]]
+            Output: false
+            Explanation: The value 10 does not exist in the matrix.
+            Constraint:
+                1 ≤ n × m ≤ 105
+                1 ≤ mat[i][j], x ≤ 106
+        // Not Optimized: TC: O(n * m) & SC: O(1)
+            bool searchMatrix(vector<vector<int>> &mat, int x) {
+                int n = mat.size();
+                if(!n) return 0;
+                int m = mat[0].size();
+                for(int i=0; i<n; i++){
+                    for(int j=0; j<m; j++){
+                        if(mat[i][j] == x) return 1;
+                    }
+                }
+                return 0;
+            }
+        // Using priority_queue: TC: (n*m*log(n)) & SC: O(n)
+            int median(vector<vector<int>> &mat) {
+                // <current element of mat, rowIndex, colIndex>
+                priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> minHP;
+                int n=mat.size(), m = mat[0].size();
+                for(int i=0; i<n; i++)
+                    minHP.push({mat[i][0], i, 0});
+                
+                int mid = (n * m) / 2;
+                int cnt = 0, res=0;
+                
+                while(cnt <= mid){
+                    vector<int> v = minHP.top();
+                    minHP.pop();
+                    
+                    int val = v[0], row = v[1], col = v[2];
+                    res = val;
+                    cnt++;
+                    
+                    if(col + 1 < m)
+                        minHP.push({mat[row][col+1], row, col+1});
+                }
+                return res;
+            }
         // Optimized: ❌Pending
 
-1410)
-1411)
-1412)
-1413)
+    1411) Median in a row-wise sorted Matrix:
+        Problem Statement:
+            Given a row-wise sorted matrix mat[][] of size n*m, where the number of rows and columns is always odd. Return the median of the matrix.
+            Examples:
+            Input: mat[][] = [[1, 3, 5], 
+                            [2, 6, 9], 
+                            [3, 6, 9]]
+            Output: 5
+            Explanation: Sorting matrix elements gives us [1, 2, 3, 3, 5, 6, 6, 9, 9]. Hence, 5 is median.
+            Input: mat[][] = [[2, 4, 9],
+                            [3, 6, 7],
+                            [4, 7, 10]]
+            Output: 6
+            Explanation: Sorting matrix elements gives us [2, 3, 4, 4, 6, 7, 7, 9, 10]. Hence, 6 is median.
+            Input: mat = [[3], [4], [8]]
+            Output: 4
+            Explanation: Sorting matrix elements gives us [3, 4, 8]. Hence, 4 is median.
+            Constraints:
+                1 ≤ n, m ≤ 400
+                1 ≤ mat[i][j] ≤ 2000
+        // Not Optimized: TC: O(x + x log x), SC: O(x), where x = n*m
+            int median(vector<vector<int>> &mat) {
+                vector<int> v;
+                for(auto itr: mat)
+                    for(int i: itr)
+                        v.push_back(i);
+                sort(v.begin(), v.end());
+                return v[v.size()/2];
+            }
+        // Optimized: ❌Pending
+
+    1412) Maximize the minimum difference between k elements:
+        Problem Statement:
+            Given an array arr[] of integers and an integer k, select k elements from the array such that the minimum absolute difference between any two of the selected elements is maximized. Return this maximum possible minimum difference.
+            Examples:
+            Input: arr[] = [2, 6, 2, 5], k = 3
+            Output: 1
+            Explanation: 3 elements out of 4 elements are to be selected with a minimum difference as large as possible. Selecting 2, 2, 5 will result in minimum difference as 0. Selecting 2, 5, 6 will result in minimum difference as 6 - 5 = 1.
+            Input: arr[] = [1, 4, 9, 0, 2, 13, 3], k = 4
+            Output: 4
+            Explanation: Selecting 0, 4, 9, 13 will result in minimum difference of 4, which is the largest minimum difference possible.
+            Constraints:
+                1 ≤ arr.size() ≤ 10^5
+                0 ≤ arr[i] ≤ 10^6
+                2 ≤ k ≤ arr.size() 
+        // Not Optimized: TC: O(n * n^k * k²), SC: O()
+            void RetriveAns(vector<int>& arr, int &ans, int k, vector<int>& temp, int i){
+                int n = arr.size();
+                if(k == 0){
+                    int v = INT_MAX, t2 = temp.size();
+                    for(int j=0; j<t2-1; j++){
+                        for(int z=j+1; z<t2; z++){
+                            v = min(v, abs(temp[j] - temp[z]));
+                        }
+                    }
+                    ans = max(ans, v);
+                    return ;
+                }
+                
+                for(int z=i; z<n; z++){
+                    temp.push_back(arr[z]);
+                    RetriveAns(arr, ans, k-1, temp, z);
+                    temp.pop_back();
+                }
+            }
+            int maxMinDiff(vector<int>& arr, int k) {
+                int ans=0, n = arr.size();
+                vector<int> temp;
+                for(int i=0; i<=n-k; i++){
+                    if(i == n-k){
+                        int v = INT_MAX;
+                        for(int j=i; j<n-1; j++){
+                            for(int z=j+1; z<n; z++){
+                                v = min(v, abs(arr[j] - arr[z]));
+                            }
+                        }
+                        ans = max(ans, v);
+                    } else {
+                        RetriveAns(arr, ans, k, temp, i);
+                    }
+                }
+                return ans;
+            }
+        // Optimized: ❌Pending
+
+1413) 
+
 1414)
     
