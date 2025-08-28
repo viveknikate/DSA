@@ -1,5 +1,20 @@
 Old:
     Refer from DSA Love Babbar txt file:
+    453) Maximize Number of 1's:
+        // TC: O(n) & SC: (1)
+            int maxOnes(vector<int>& arr, int k) {
+                int i, j, n = arr.size(), mxLen=0;
+                i = j = 0;
+                while(i < n){
+                    if(!arr[i++]) k--;
+                    while(k < 0){
+                        if(!arr[j++]) k++;
+                    }
+                    mxLen = max(mxLen, i-j);
+                }
+                return mxLen;
+            }
+
     1331)
         int longestSubarray(vector<int> &arr, int k) {
             int mxLen=0, n = arr.size();
@@ -319,7 +334,7 @@ POTDs:
                 }
                 return 1;
             }
-        
+
     1406) Shop in Candy Store:
         Problem Statement:
             In a candy store, there are different types of candies available and prices[i] represent the price of  ith types of candies. You are now provided with an attractive offer.
@@ -512,30 +527,6 @@ POTDs:
                 }
                 return 0;
             }
-        // Using priority_queue: TC: (n*m*log(n)) & SC: O(n)
-            int median(vector<vector<int>> &mat) {
-                // <current element of mat, rowIndex, colIndex>
-                priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> minHP;
-                int n=mat.size(), m = mat[0].size();
-                for(int i=0; i<n; i++)
-                    minHP.push({mat[i][0], i, 0});
-                
-                int mid = (n * m) / 2;
-                int cnt = 0, res=0;
-                
-                while(cnt <= mid){
-                    vector<int> v = minHP.top();
-                    minHP.pop();
-                    
-                    int val = v[0], row = v[1], col = v[2];
-                    res = val;
-                    cnt++;
-                    
-                    if(col + 1 < m)
-                        minHP.push({mat[row][col+1], row, col+1});
-                }
-                return res;
-            }
         // Optimized: ❌Pending
 
     1411) Median in a row-wise sorted Matrix:
@@ -566,6 +557,29 @@ POTDs:
                         v.push_back(i);
                 sort(v.begin(), v.end());
                 return v[v.size()/2];
+            }
+        // Optimized: Using priority_queue: TC: (n*m*log(n)) & SC: O(n)
+            int median(vector<vector<int>> &mat) {
+                // <current element of mat, rowIndex, colIndex>
+                priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> minHP;
+                int n=mat.size(), m = mat[0].size();
+                for(int i=0; i<n; i++)
+                    minHP.push({mat[i][0], i, 0});
+                
+                int mid = (n * m) / 2;
+                int cnt = 0, res=0;
+                while(cnt <= mid){
+                    vector<int> v = minHP.top();
+                    minHP.pop();
+                    
+                    int val = v[0], row = v[1], col = v[2];
+                    res = val;
+                    cnt++;
+                    
+                    if(col + 1 < m)
+                        minHP.push({mat[row][col+1], row, col+1});
+                }
+                return res;
             }
         // Optimized: ❌Pending
 
@@ -623,7 +637,263 @@ POTDs:
             }
         // Optimized: ❌Pending
 
-1413) 
+    1413) Check if a String is Subsequence of Other:
+        Problem Statement:
+            Given two strings s1 and s2. You have to check that s1 is a subsequence of s2 or not.
+            Note: A subsequence is a sequence that can be derived from another sequence by deleting some elements without changing the order of the remaining elements.
+            Examples:
+            Input: s1 = "AXY", s2 = "YADXCP"
+            Output: false
+            Explanation: s1 is not a subsequence of s2 as 'Y' appears before 'A'.
+            Input: s1 = "gksrek", s2 = "geeksforgeeks"
+            Output: true
+            Explanation: If we combine the bold character of "geeksforgeeks", it equals to s1. So s1 is a subsequence of s2. 
+            Constraints:
+            1 ≤ s1.size(), s2.size() ≤ 10^6
+        // Not Optimized: TC: O(2ⁿ * n) & SC: O(2ⁿ * n)
+            void SubSeqGen(string &s, int i, vector<string> &allSubSeq, string temp){
+                if(i >= s.size()){
+                    allSubSeq.push_back(temp);
+                    return;
+                }
+                SubSeqGen(s, i+1, allSubSeq, temp);
+                temp.push_back(s[i]);
+                SubSeqGen(s, i+1, allSubSeq, temp);
+            }
+            bool isSubSeq(string& s1, string& s2) {
+                vector<string> allSubSeq;
+                int n = s1.size(), m = s2.size();
+                if(m < n) return 0;
+                SubSeqGen(s2, 0, allSubSeq, "");
+                
+                for(string s: allSubSeq){
+                    // cout<<s<<" ";
+                    if(s1 == s) return 1;
+                }
+                return 0;
+            }
+        // Optimized: TC: O(max(n, m)) or O(n+m) & SC: O(1)
+            bool isSubSeq(string& s1, string& s2) {
+                int i, j, n = s1.size(), m = s2.size();
+                i = j = 0;
+                while(i < n and j < m){
+                    if(s1[i] == s2[j]) i++, j++;
+                    else j++;
+                }
+                return (i == n) ? 1 : 0;
+            }
 
-1414)
+    1414) Maximize median after doing k addition operation:
+        Problem Statement:
+            Given an array arr[] consisting of positive integers and an integer k. You are allowed to perform at most k operations, where in each operation, you can increment any one element of the array by 1. Determine the maximum possible median of the array that can be achieved after performing at most k such operations.
+            Note: The median of an array is defined as the middle element when the array (after sorting) has an odd size, or the average of the two middle elements when the array (after sorting) has an even size.
+            Examples:
+            Input: arr[] = [1, 3, 4, 5], k = 3
+            Output: 5
+            Explanation: We can add +2 to the second element and +1 to the third element to get the array [1, 5, 5, 5]. After sorting, the array remains [1, 5, 5, 5]. Since the length is even, the median is (5 + 5) / 2 = 5.
+            Input: arr[] = [1, 3, 6, 4, 2], k = 10
+            Output: 7
+            Explanation: After applying operations optimally, we can transform the array to [1, 3, 7, 7, 7] (one possible way). Sorted array becomes [1, 3, 7, 7, 7]. Since the length is odd, the median is the middle element 7.
+            Constraints:
+                1 ≤ arr.size() ≤ 10^5
+                0 ≤ arr[i], k ≤ 10^9
+        // Not Optimized: TC: (k * n log n) & SC: O(1)
+            int maximizeMedian(vector<int>& arr, int k) {
+                int n = arr.size()-1;
+                sort(arr.begin(), arr.end());
+                while(k--){
+                    arr[n/2] = ++arr[n/2];
+                    sort(arr.begin(), arr.end());
+                }
+                return n&1 ? (arr[n/2] + arr[n/2+1])/2 : arr[n/2];
+            }
+        // Optimized: TC: O(n log n + m log m + k * log m) & SC: O(m), where m = n/2
+            int maximizeMedian(vector<int>& arr, int k) {
+                int n = arr.size();
+                if(!n) return 0;
+                priority_queue<int, vector<int>, greater<int>> minHP;
+                sort(arr.rbegin(), arr.rend());         // in Descending order
+                
+                for(int i=0; i<=(n/2); i++)
+                    minHP.push(arr[i]);
+                
+                while(k--){
+                    int val = minHP.top();
+                    minHP.pop();
+                    val++;
+                    minHP.push(val);
+                }
+                
+                if(!(n&1)){             // if n is even
+                    int v1 = minHP.top();
+                    minHP.pop();
+                    int v2 = minHP.top();
+                    return (v1+v2)/2;
+                }
+                return minHP.top();     // if n is odd;
+            }
+
+    1415) Minimum days to make M bouquets:
+        Problem Statement:
+            You have a row of flowers, where each flower blooms after a specific day. The array arr[] represents the blooming schedule: arr[i] is the day the flower at position i will bloom. To create a bouquet, you need to collect k adjacent bloomed flowers. Each flower can only be used in one bouquet.
+            Your goal is to find the minimum number of days required to make exactly m bouquets. If it is not possible to make m bouquets with the given arrangement, return -1.
+            Examples:
+            Input: m = 3, k = 2, arr[] = [3, 4, 2, 7, 13, 8, 5]
+            Output: 8
+            Explanation: We need 3 bouquets and each bouquet should have 2 flowers. After day 8: [x, x, x, x, _, x, x], we can make first bouquet from the first 2 flowers, second bouquet from the next 2 flowers and the third bouquet from the last 2 flowers.
+            Input: m = 2, k = 3, arr[] = [5, 5, 5, 5, 10, 5, 5]
+            Output: 10
+            Explanation: We need 2 bouquets and each bouquet should have 3 flowers, After day 5: [x, x, x, x, _, x, x], we can make one bouquet of the first three flowers that bloomed, but cannot make another bouquet. After day 10: [x, x, x, x, x, x, x], Now we can make two bouquets, taking 3 adjacent flowers in one bouquet.
+            Input: m = 3, k = 2, arr[] = [1, 10, 3, 10, 2]
+            Output: -1
+            Explanation: As 3 bouquets each having 2 flowers are needed, that means we need 6 flowers. But there are only 5 flowers so it is impossible to get the needed bouquets therefore -1 will be returned.
+            Constraints:
+                1 ≤ k ≤ arr.size() ≤ 10^5
+                1 ≤ m ≤ 10^5
+                1 ≤ arr[i] ≤ 10^9
+        // Not Optimized: TC= O(n + n * (max(arr) - min(arr)))
+                            = O(n * (max(arr) - min(arr))       // ignore n+ as its so less compared to second value (n * (max(arr) - min(arr))).
+                        SC= O (1)
+            int minDaysBloom(vctor<int>& arr, int k, int m) {
+                int minDayCnt = -1, n = arr.size();
+                if(k*m > n) return minDayCnt;
+                int minDayStartValue = *min_element(arr.begin(), arr.end());
+                while(1){
+                    int bouquetCnt=0, adjacent=0;
+                    for(int i=0; i<n; i++){
+                        if(arr[i] <= minDayStartValue){
+                            adjacent++;
+                            if(adjacent == k){
+                                bouquetCnt++;
+                                adjacent=0;
+                                if(bouquetCnt == m) return minDayStartValue;
+                            }
+                        } else {
+                            adjacent=0;
+                        }
+                    }
+                    bouquetCnt=0;
+                    minDayStartValue++;
+                }
+                return -1;
+            }
+        // Optimized: Using Binary Search:  TC = O (n + n + n * log (max-min)), where min & max are smallest & largest values in array
+                                            = O (n * log (max-min))
+                                            SC: O (1)
+            bool CanCover(vector<int> &a, int day, int expectedBouquetCnt, int minAdjacentBloomedFlower){
+                int currentBouquetCnt, currentBloomedFlower;
+                currentBloomedFlower = currentBouquetCnt = 0;
+                for(int i: a){
+                    if(i <= day) {
+                        currentBloomedFlower++;
+                        if(currentBloomedFlower == minAdjacentBloomedFlower){
+                            currentBouquetCnt++;
+                            currentBloomedFlower=0;
+                        } 
+                        if(currentBouquetCnt == expectedBouquetCnt) break;
+                    } else {
+                        currentBloomedFlower = 0;
+                    }
+                }
+                return (expectedBouquetCnt == currentBouquetCnt);
+            }
+            int minDaysBloom(vector<int>& arr, int k, int m) {
+                int minDayCnt = -1, n = arr.size();
+                if(k*m > n) return minDayCnt;
+                int low = *min_element(arr.begin(), arr.end());
+                int high = *max_element(arr.begin(), arr.end());
+                while(low <= high){
+                    int mid = (low + high) / 2;
+                    if(CanCover(arr, mid, m, k)){
+                        high = mid - 1;
+                    } else {
+                        low = mid + 1;
+                    }
+                }
+                return low;
+            }
+
+    1416) Allocate Minimum Pages:
+        Problem Statement:
+            Given an array arr[] of integers, where each element arr[i] represents the number of pages in the i-th book. You also have an integer k representing the number of students. The task is to allocate books to each student such that:
+            Each student receives atleast one book.
+            Each student is assigned a contiguous sequence of books.
+            No book is assigned to more than one student.
+            The objective is to minimize the maximum number of pages assigned to any student. In other words, out of all possible allocations, find the arrangement where the student who receives the most pages still has the smallest possible maximum.
+            Note: If it is not possible to allocate books to all students, return -1.
+            Examples:
+            Input: arr[] = [12, 34, 67, 90], k = 2
+            Output: 113
+            Explanation: Allocation can be done in following ways:
+            => [12] and [34, 67, 90] Maximum Pages = 191
+            => [12, 34] and [67, 90] Maximum Pages = 157
+            => [12, 34, 67] and [90] Maximum Pages = 113.
+            The third combination has the minimum pages assigned to a student which is 113.
+            Input: arr[] = [15, 17, 20], k = 5
+            Output: -1
+            Explanation: Since there are more students than total books, it's impossible to allocate a book to each student.
+            Constraints:
+                1 ≤ arr.size() ≤ 10^6
+                1 ≤ arr[i], k ≤ 10^3
+        // Not Optimized TC: O(n * (sum(arr) - max(arr))) & SC: O(1)
+            bool CanWeAllocate(vector<int> &a, int &v, int &k){
+                int sum=0;
+                int PersonCnt=1;
+                
+                for(int i: a){
+                    if(sum + i > v){
+                        sum=i;
+                        PersonCnt++;
+                    } else {
+                        sum += i;
+                    }
+                }
+                return (PersonCnt <= k) ? 1 : 0;
+            }
+            int findPages(vector<int> &arr, int k) {
+                if(k > arr.size()) return -1;
+                int low = *max_element(arr.begin(), arr.end());
+                int high = accumulate(arr.begin(), arr.end(), 0);
+                
+                for(int i=low; i<=high; i++)
+                    if(CanWeAllocate(arr, i, k)) return i;
+                return 0;       // will never reach here.
+            }
+        // Optimized:  Using Binary Search: TC: O(n * log(sum(arr) - max(arr))) & SC: O()
+            bool CanWeAllocate(vector<int> &a, int &v, int &k){
+                int sum=0;
+                int PersonCnt=1;
+                
+                for(int i: a){
+                    if(sum + i > v){
+                        sum=i;
+                        PersonCnt++;
+                        if(PersonCnt > k) return 0;
+                    } else {
+                        sum += i;
+                    }
+                }
+                return 1;
+            }
+            int findPages(vector<int> &arr, int k) {
+                if(k > arr.size()) return -1;
+                int low = *max_element(arr.begin(), arr.end());
+                int high = accumulate(arr.begin(), arr.end(), 0);
+                
+                while(low <= high){
+                    int mid = (low + high) / 2;
+                    if(CanWeAllocate(arr, mid, k)){
+                        high = mid - 1;
+                    } else {
+                        low = mid + 1;
+                    }
+                }
+                return low;
+            }
+
+1417)
+1418)
+1419)
+1420)
+
     
