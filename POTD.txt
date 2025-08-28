@@ -891,9 +891,179 @@ POTDs:
                 return low;
             }
 
-1417)
-1418)
-1419)
+    1417) Sort Matrix by Diagonals:
+        Problem Statement:
+            You are given an n x n square matrix of integers grid. Return the matrix such that:
+            The diagonals in the bottom-left triangle (including the middle diagonal) are sorted in non-increasing order.
+            The diagonals in the top-right triangle are sorted in non-decreasing order.
+            Example 1:
+            Input: grid = [[1,7,3],[9,8,2],[4,5,6]]
+            Output: [[8,2,3],[9,6,7],[4,5,1]]
+            Explanation:
+            The diagonals with a black arrow (bottom-left triangle) should be sorted in non-increasing order:
+            [1, 8, 6] becomes [8, 6, 1].
+            [9, 5] and [4] remain unchanged.
+            The diagonals with a blue arrow (top-right triangle) should be sorted in non-decreasing order:
+            [7, 2] becomes [2, 7].
+            [3] remains unchanged.
+            Example 2:
+            Input: grid = [[0,1],[1,2]]
+            Output: [[2,1],[1,0]]
+            Explanation:
+            The diagonals with a black arrow must be non-increasing, so [0, 2] is changed to [2, 0]. The other diagonals are already in the correct order.
+            Example 3:
+            Input: grid = [[1]]
+            Output: [[1]]
+            Explanation:
+            Diagonals with exactly one element are already in order, so no changes are needed.    
+            Constraints:
+                grid.length == grid[i].length == n
+                1 <= n <= 10
+                -10^5 <= grid[i][j] <= 10^5
+        // TC: O(n² * log n) & SC: O(n²)
+            vector<vector<int>> sortMatrix(vector<vector<int>>& grid) {
+                int n = grid.size();
+                if(!n) return {{}};
+
+                vector<vector<int>> v;
+                // row
+                for(int i=0; i<n; i++){
+                    int curR = i, curC = 0;
+                    vector<int> t;
+                    while(curR < n and curC < n)
+                        t.push_back(grid[curR++][curC++]);
+                    sort(t.rbegin(), t.rend());
+                    v.push_back(t);
+                }
+
+                // col
+                for(int i=1; i<n; i++){
+                    int curR = 0, curC = i;
+                    vector<int> t;
+                    while(curR < n and curC < n)
+                        t.push_back(grid[curR++][curC++]);
+                    sort(t.begin(), t.end());
+                    v.push_back(t);
+                }
+
+                // re-adjusting to form ans
+                int idx = 0, size = v.size();
+                vector<vector<int>> ans (n, vector<int>(n, 0));
+                for(int i=0; i<n; i++){
+                    auto cur = v[idx++];
+                    int curR = i, curC = 0, z = 0;
+                    vector<int> t;
+                    while(curR < n and curC < n)
+                        ans[curR++][curC++] = cur[z++];
+                    
+                }
+                for(int i=1; i<n; i++){
+                    auto cur = v[idx++];
+                    int curR = 0, curC = i, z = 0;
+                    vector<int> t;
+                    while(curR < n and curC < n)
+                        ans[curR++][curC++] = cur[z++];
+                    
+                }
+                return ans;
+            }
+
+    1418) Diagonal Traverse:
+        Problem Statement:
+            Given an m x n matrix mat, return an array of all the elements of the array in a diagonal order.
+            Example 1:
+            Input: mat = [[1,2,3],[4,5,6],[7,8,9]]
+            Output: [1,2,4,7,5,3,6,8,9]
+            Example 2:
+            Input: mat = [[1,2],[3,4]]
+            Output: [1,2,3,4]
+            Constraints:
+                m == mat.length
+                n == mat[i].length
+                1 <= m, n <= 10^4
+                1 <= m * n <= 10^4
+                -10^5 <= mat[i][j] <= 10^
+        // TC: O(n * m) & SC: O(1)
+            vector<int> findDiagonalOrder(vector<vector<int>>& mat) {
+                vector<int> ans;
+                int n = mat.size();
+                if(!n) return ans;
+                int m = mat[0].size();
+                int i, j, isDirectionToUp = 1;
+                i = j = 0;
+                while(i != n-1 or j != m-1){
+                    ans.push_back(mat[i][j]);
+                    if(isDirectionToUp){
+                        if(i-1 >= 0 and j+1 < m){
+                            i--, j++;
+                        } else {
+                            isDirectionToUp = !isDirectionToUp;
+                            if(i-1 < 0 and j+1 >= m) {
+                                i++;
+                            } else if(i-1 < 0) {
+                                j++;
+                            } else {
+                                i++;
+                            }
+                        }
+                    } else {
+                        if(i+1 < n and j-1 >= 0){
+                            i++, j--;
+                        } else {
+                            isDirectionToUp = !isDirectionToUp;
+                            if(i+1 >= n and j-1 < 0) {
+                                j++;
+                            } else if(i+1 >= n) {
+                                j++;
+                            } else {
+                                i++;
+                            }
+                        }
+                    }
+                }
+                // inserting last element
+                ans.push_back(mat[i][j]);
+                return ans;
+            }
+
+    1419) Maximum Area of Longest Diagonal Rectangle:
+        Problem Statement:
+            You are given a 2D 0-indexed integer array dimensions.
+            For all indices i, 0 <= i < dimensions.length, dimensions[i][0] represents the length and dimensions[i][1] represents the width of the rectangle i.
+            Return the area of the rectangle having the longest diagonal. If there are multiple rectangles with the longest diagonal, return the area of the rectangle having the maximum area.       
+            Example 1:
+            Input: dimensions = [[9,3],[8,6]]
+            Output: 48
+            Explanation: 
+            For index = 0, length = 9 and width = 3. Diagonal length = sqrt(9 * 9 + 3 * 3) = sqrt(90) ≈ 9.487.
+            For index = 1, length = 8 and width = 6. Diagonal length = sqrt(8 * 8 + 6 * 6) = sqrt(100) = 10.
+            So, the rectangle at index 1 has a greater diagonal length therefore we return area = 8 * 6 = 48.
+            Example 2:
+            Input: dimensions = [[3,4],[4,3]]
+            Output: 12
+            Explanation: Length of diagonal is the same for both which is 5, so maximum area = 12.
+            Constraints:
+                1 <= dimensions.length <= 100
+                dimensions[i].length == 2
+                1 <= dimensions[i][0], dimensions[i][1] <= 100
+        // TC: O(n) & SC: O(1)
+            int areaOfMaxDiagonal(vector<vector<int>>& dimensions) {
+                int ans = 0, n = dimensions.size(), val = 0;
+                for(int i=0; i<n; i++){
+                    int curDiagonalLen = dimensions[i][0]*dimensions[i][0] + dimensions[i][1]*dimensions[i][1];
+                    // cout<<curDiagonalLen<<" ";
+                    if(val <= curDiagonalLen){
+                        if(val < curDiagonalLen){
+                            val = curDiagonalLen;
+                            ans = dimensions[i][0] * dimensions[i][1];
+                        } else {
+                            ans = max(ans, dimensions[i][0]*dimensions[i][1]);
+                        }
+                    }
+                }        
+                return ans;
+            }
+
 1420)
 
     
