@@ -2477,15 +2477,594 @@ POTDs:
             }
         // Optimized: ❌Pending
 
-    1454)
+    1454) Ways To Tile A Floor:
+        Problem Statement:
+            Given a floor of dimensions 2 x n and tiles of dimensions 2 x 1, the task is to find the number of ways the floor can be tiled. A tile can either be placed horizontally i.e as a 1 x 2 tile or vertically i.e as 2 x 1 tile. 
+            Note: Two tiling arrangements are considered different if the placement of at least one tile differs.
+            Examples :
+            Input: n = 3
+            Output: 3
+            Explanation: We need 3 tiles to tile the board of size 2 x 3.
+            We can tile in following ways:
+            1) Place all 3 tiles vertically.
+            2) Place first tile vertically and remaining 2 tiles horizontally.
+            3) Place first 2 tiles horizontally and remaining tiles vertically.
+            Input: n = 4
+            Output: 5
+            Explanation: We need 4 tiles to tile the board of size 2 x 4.
+            We can tile in following ways:
+            1) All 4 vertical
+            2) All 4 horizontal
+            3) First 2 vertical, remaining 2 horizontal.
+            4) First 2 horizontal, remaining 2 vertical.
+            5) Corner 2 vertical, middle 2 horizontal.
+            Constraints:
+                1 ≤ n ≤ 45
+        // Not Optimized: TC: O(2ⁿ) & SC: O(n)
+            int numberOfWays(int n) {
+                if(n == 1) return 1;
+                if(n == 2) return 2;
+                return numberOfWays(n-1)+numberOfWays(n-2);
+            }
+        // Using Memoization: TC: O(n) & SC: O(n)
+            int solve(vector<int> &dp, int cur){
+                if(dp[cur] != -1) return dp[cur];
+                return dp[cur] = solve(dp, cur-1) + solve(dp, cur-2);
+            }
+            int numberOfWays(int n) {
+                if(n == 1) return 1;
+                vector<int> dp(n+1, -1);
+                dp[0] = 1, dp[1] = 1;
+                solve(dp, n);
+                return dp[n];
+            }
+        // Using Tabulation: TC: O(n) & SC: O(1)
+            int numberOfWays(int n) {
+                int prev = 0, cur = 1;
+                for(int i=1; i<=n; i++){
+                    int next = cur + prev;
+                    prev = cur;
+                    cur = next;
+                }
+                return cur;
+            }
+
+    1455) Weighted Job Scheduling:
+        Problem Statement:
+            Given a 2D array jobs[][] of size n × 3, where each row represents a single job with the following details:
+            jobs[i][0] : Start time of the job
+            jobs[i][1] : End time of the job
+            jobs[i][2] : Profit earned by completing the job
+            Find the maximum profit you can earn by scheduling non-overlapping jobs.
+            Note: Two jobs are said to be non-overlapping if the end time of one job is less than or equal to the start time of the next job. If a job ends at time X, another job can start exactly at time X.
+            Examples:
+            Input: jobs[][] =  [[1, 2, 50], 
+                            [3, 5, 20],
+                            [6, 19, 100],
+                            [2, 100, 200]] 
+            Output: 250
+            Explanation: The first and fourth jobs with the time range [1, 2] and [2, 100] can be chosen to give maximum profit of 50 + 200 = 250.
+            Input: jobs[][] =  [[1, 3, 60], 
+                            [2, 5, 50],
+                            [4, 6, 70],
+                            [5, 7, 30]] 
+            Output: 130
+            Explanation: The first and third jobs with the time range [1, 3] and [4, 6] can be chosen to give maximum profit of 60 + 70 = 130.
+            Constraints:
+                1 ≤ jobs.size() ≤ 10^5
+                1 ≤ jobs[i][0] < jobs[i][1] ≤ 10^9
+                1 ≤ jobs[i][2] ≤ 10^4
+        // Not Optimized: TC: O(2ⁿ) & SC: O(n)
+            void solve(vector<vector<int>> &jobs, int cur, int idx, int includedIdx, int &ans, int &n){
+                if(idx >= n){
+                    ans = max(ans, cur);
+                    return;
+                }
+                
+                for(int i=idx; i<n; i++){
+                    if(jobs[i][0] < jobs[includedIdx][1]) continue;
+                    solve(jobs, cur + jobs[i][2], i+1, i, ans, n);
+                }
+                ans = max(ans, cur);
+            }
+            int maxProfit(vector<vector<int>> &jobs) {
+                sort(jobs.begin(), jobs.end());
+                int ans = 0, n = jobs.size();
+                for(int i=0; i<n; i++)
+                    solve(jobs, jobs[i][2], i+1, i, ans, n);
+                return ans;
+            }
+        // Optimized: ❌Pending
+
+    1456) Number of paths in a matrix with k coins:
+        Problem Statement:
+            You are given a matrix mat[][] of size n x m, where each of its cells contains some coins. Count the number of ways to collect exactly k coins while moving from the top left cell of the matrix to the bottom right cell.
+            From a cell (i, j), you can only move to cell (i+1, j) or (i, j+1).
+            Note: It is guaranteed that the answer will not exceed 32-bit integer limits.
+            Examples:
+            Input: k = 12, mat[] = [[1, 2, 3],
+                                [4, 6, 5],
+                                [3, 2, 1]]
+            Output: 2
+            Explanation: There are 2 possible paths with exactly 12 coins, (1 + 2 + 6 + 2 + 1) and (1 + 2 + 3 + 5 + 1).
+            Input: k = 16, mat[] = [[1, 2, 3], 
+                                [4, 6, 5], 
+                                [9, 8, 7]]
+            Output: 0 
+            Explanation: There are no possible paths that lead to sum = 16.
+            Constraints:
+                1 ≤ k ≤ 100
+                1 ≤ n, m ≤ 100
+                0 ≤ mat[i][j] ≤ 200
+        // Not Optimized: TC: O(2 ^ (n+m)) & SC: O(n+m)
+            void solve(int r, int c, vector<vector<int>> &mat, int k, int &ways, int &n, int &m){
+                if(r >= n or c >= m) return;
+                
+                int val = k-mat[r][c];
+                if(r == n-1 and c == m-1 and !val){
+                    ways++;
+                    return;
+                }
+                
+                // going (same column) in next row
+                solve(r+1, c, mat, val, ways, n, m);
+                
+                // going (same row) in next column
+                solve(r, c+1, mat, val, ways, n, m);
+            }
+            int numberOfPath(vector<vector<int>>& mat, int k) {
+                int ways=0, n = mat.size();
+                if(!n) return 0;
+                
+                int m = mat[0].size();
+                // starting points, matrix, expected sum, ways
+                solve(0, 0, mat, k, ways, n, m);
+                return ways;
+            }
+        // Optimized: ❌Pending
+
+    1457) Chocolate Pickup II:
+        Problem Statement:
+            You are given a square matrix mat[][] of size n × n, where each cell represents either a blocked cell or a cell containing some chocolates. If mat[i][j] equals -1, then the cell is blocked and cannot be visited. Otherwise, mat[i][j] represents the number of chocolates present in that cell.
+            The task is to determine the maximum number of chocolates a robot can collected by starting from the top-left cell (0, 0), moving to the bottom-right cell (n-1, n-1), and then returning back to (0, 0).
+            While moving from (0, 0) to (n-1, n-1), the robot can move only in the right (i, j+1) or downward (i+1, j) directions. On the return journey from (n-1, n-1) to (0, 0), it can move only in the left (i, j-1) or upward (i-1, j) directions.
+            Note: After collecting chocolates from a cell (i, j), that cell becomes empty, meaning mat[i][j] becomes 0 for next visit. If there is no valid path from (0, 0) to (n-1, n-1) or for the return trip, the result should be 0.
+            Example:
+            Input: mat[][] = [[0, 1, -1], 
+                            [1, 1, -1], 
+                            [1, 1, 2]]
+            Output: 7
+            Explanation:
+            One of the optimal paths is to move from (0,0) -> (1,0) -> (2,0) -> (2,1) -> (2,2) while going forward, and then from (2,2) -> (2,1) -> (1,1) -> (0,1) -> (0,0) while coming back. The total number of chocolates collected is 7.
+            Input: mat[][] = [[1, 1, 0], 
+                        [1, 1, 1], 
+                        [0, 1, 1]]
+            Output: 7
+            Explanation:
+            One of the optimal paths is to move from (0,0) -> (1,0) -> (2,0) -> (2,1) -> (2,2) while going forward, and then from (2,2) -> (1,2) -> (1,1) -> (0,1) -> (0,0) while coming back. The total number of chocolates collected is 7.
+            Input: mat[][] = [[1, 0, -1],
+                            [2, -1, -1],
+                            [1, -1, 3]]
+            Output: 0
+            Explanation:            
+            It is impossible to reach the bottom-right cell (2,2) from (0,0) because every route is blocked. Since the destination cannot be reached, the total chocolates collected is 0.
+            Constraint:
+                1 ≤ n ≤ 50
+                -1 ≤ mat[i][j] ≤ 100
+        // Not Optimized: TC: O(2^(2n²)) & SC: O(n²)
+            // solve Top Left (TL)
+            void solveTL(vector<vector<int>> &mat, int &n, int r, int c, int cur, int &ans){
+                if(r < 0 or c < 0 or mat[r][c] == -1) return;
+                cur += mat[r][c];
+                if(r == 0 and c == 0){
+                    // traversing to top-left corner of grid
+                    ans = max(ans, cur);
+                    return;
+                }
+                
+                // going upward
+                solveTL(mat, n, r-1, c, cur, ans);
+                
+                // going backward
+                solveTL(mat, n, r, c-1, cur, ans);
+            }
+            // solve Bottom Right (BR)
+            void solveBR(vector<vector<int>> &mat, int &n, int r, int c, int cur, int &ans){
+                if(r >= n or c >= n or mat[r][c] == -1) return;
+                int val = mat[r][c];
+                cur += val;
+                mat[r][c] = 0;
+                if(r == n-1 and c == n-1){
+                    // traversing to top-left corner of grid
+                    solveTL(mat, n, r, c, cur, ans);
+                    mat[r][c] = val;
+                    return;
+                }
+                
+                // going downward
+                solveBR(mat, n, r+1, c, cur, ans);
+                
+                // going forward
+                solveBR(mat, n, r, c+1, cur, ans);
+                mat[r][c] = val;
+            }
+            int chocolatePickup(vector<vector<int>> &mat) {
+                int mxChoco = 0, n = mat.size();
+                if(!n) return mxChoco;
+                
+                // traversing to bottom-right corner of grid
+                solveBR(mat, n, 0, 0, 0, mxChoco);
+                return mxChoco;
+            }
+        // Optimized: ❌Pending
+
+    1458) Longest Common Increasing Subsequence:
+        Problem Statement:
+            Given two arrays, a[] and b[], find the length of the longest common increasing subsequence(LCIS).
+            Note:  LCIS refers to a subsequence that is present in both arrays and strictly increases.
+            Examples:
+            Input: a[] = [3, 4, 9, 1], b[] = [5, 3, 8, 9, 10, 2, 1]
+            Output: 2
+            Explanation: The longest increasing subsequence that is common is [3, 9] and its length is 2.
+            Input: a[] = [1, 1, 4, 3], b[] = [1, 1, 3, 4]
+            Output: 2
+            Explanation: There are two common subsequences [1, 4] and [1, 3] both of length 2.
+            Constraints:
+                1 ≤ a.size(), b.size() ≤ 10^3
+                1 ≤ a[i], b[i] ≤ 10^4
+        // Not Optimized: TC: O(2ⁿ₁ + 2ⁿ₂ + (2ⁿ₁ · 2ⁿ₂)) & SC: O(2ⁿ₁ + 2ⁿ₂)
+            void IncreasingSubsequence(vector<int> &a, int idx, int &size, vector<pair<int, vector<int>>> &sub, vector<int> &temp){
+                if(idx >= size) return;
+                
+                for(int i=idx; i<size; i++){
+                    if(temp.empty() or temp.back() < a[i]){
+                        temp.push_back(a[i]);
+                        sub.push_back({temp.size(), temp});
+                        IncreasingSubsequence(a, i+1, size, sub, temp);
+                        temp.pop_back();
+                    }
+                }
+            }
+            int LCIS(vector<int> &a, vector<int> &b) {
+                // <size, actualVectorContent>
+                vector<pair<int, vector<int>>> sub1, sub2;
+                vector<int> temp;
+                int n1 = a.size(), n2 = b.size();
+                // (curArr, index, size, holdSubsequence, temp)
+                IncreasingSubsequence(a, 0, n1, sub1, temp);
+                
+                temp.clear();
+                IncreasingSubsequence(b, 0, n2, sub2, temp);
+                
+                // sorting based on size in descending order
+                sort(sub1.rbegin(), sub1.rend());
+                int len = 0;
+                for(auto cur: sub1){
+                    if(find(sub2.begin(), sub2.end(), cur) != sub2.end()){
+                        len = cur.first;
+                        break;
+                    }
+                }
+                return len;
+            }
+        // Optimized: ❌Pending
+
+    1459) Max Sum Increasing Subsequence:
+        Problem Statement:
+            Given an array of positive integers arr[], find the maximum sum of a subsequence such that the elements of the subsequence form a strictly increasing sequence.
+            In other words, among all strictly increasing subsequences of the array, return the one with the largest possible sum.
+            Examples:
+            Input: arr[] = [1, 101, 2, 3, 100]
+            Output: 106
+            Explanation: The maximum sum of an increasing sequence is obtained from [1, 2, 3, 100].
+            Input: arr[] = [4, 1, 2, 3]
+            Output: 6
+            Explanation: The maximum sum of an increasing sequence is obtained from [1, 2, 3].
+            Input: arr[] = [4, 1, 2, 4]
+            Output: 7
+            Explanation: The maximum sum of an increasing sequence is obtained from [1, 2, 4].
+            Constraints:
+                1 ≤ arr.size() ≤ 10^3
+                1 ≤ arr[i] ≤ 10^5
+        // Not Optimized: TC: O(2ⁿ) & SC: O(n)
+            void IncreasingSubSequence(vector<int> &arr, int idx, int curSum, vector<int> &temp, int &ans, int &n){
+                ans = max(ans, curSum);
+                if(idx >= n) return;
+                
+                for(int i=idx; i<n; i++){
+                    if(temp.empty() or temp.back() < arr[i]){
+                        temp.push_back(arr[i]);
+                        IncreasingSubSequence(arr, i+1, curSum+arr[i], temp, ans, n);
+                        temp.pop_back();
+                    }
+                }
+            }
+            int maxSumIS(vector<int>& arr) {
+                int ans = 0, n = arr.size();
+                vector<int> temp;
+                // (arr, indx, curSum, tempHold, ans)
+                IncreasingSubSequence(arr, 0, 0, temp, ans, n);
+                return ans;
+            }
+        // Optimized: ❌Pending
+
+    1460) Number of Ways to Arrive at Destination:
+        Problem Statement:
+            You are given an undirected weighted graph with V vertices numbered from 0 to V-1 and E edges, represented as a 2D array edges[][], where edges[i] = [ui, vi, timei] means that there is an undirected edge between nodes ui and vi that takes timei minutes to reach.
+            Your task is to return in how many ways you can travel from node 0 to node V - 1 in the shortest amount of time.
+            Examples:
+            Input: V = 4, edges[][] = [[0, 1, 2], [1, 2, 3], [0, 3, 5], [1, 3, 3], [2, 3, 4]]
+            Output: 2
+            Explanation: The shortest path from 0 to 3 is 5.
+            Two ways to reach 3 in 5 minutes are:
+            0 -> 3
+            0 -> 1 -> 3
+            Input: V = 6, edges[][] = [[0, 2, 3], [0, 4, 2], [0, 5, 7], [2, 3, 1], [2, 5, 5], [5, 3, 3], [5, 1, 4], [1, 4, 1], [4, 5, 5]]
+            Output: 4
+            Explanation: The shortest path from 0 to 5 is 7.
+            Four ways to reach 5 in 7 minutes are:
+            0 -> 5
+            0 -> 4 -> 5
+            0 -> 4 -> 1 -> 5
+            0 -> 2 -> 3 -> 5
+            Constraints:
+                1 ≤ V ≤ 200
+                V - 1 ≤ edges.size() ≤ V * (V - 1) / 2
+                0 ≤ ui, vi ≤ V - 1
+                1 ≤ timei ≤ 10^5
+                ui != vi
+        // Not Optimized: TC: O(V!) & SC: O(V)
+            void DFS(vector<vector<pair<int, int>>> &adj, int node, int cost, vector<int> &price, vector<int> &vis, int &dest){
+                if(node == dest){
+                    price.push_back(cost);
+                    return;
+                }
+                
+                if(vis[node]) return;
+                
+                vis[node] = 1;
+                for(auto nbr: adj[node]){
+                    int curNode = nbr.first;
+                    DFS(adj, curNode, cost+nbr.second, price, vis, dest);
+                }
+                vis[node] = 0;
+            }
+            int countPaths(int V, vector<vector<int>>& edges) {
+                // (node, distance)
+                vector<vector<pair<int, int>>> adj(V);
+                for(auto cur: edges){
+                    adj[cur[0]].push_back({cur[1], cur[2]});
+                    adj[cur[1]].push_back({cur[0], cur[2]});
+                }
+                vector<int> priceToReach;
+                vector<int> vis (V, 0);
+                // (adjacency list, standing Node, cost, timeRequired, isVisited, destination)
+                int dest = V-1;
+                DFS(adj, 0, 0, priceToReach, vis, dest);
+                int ways=0, _time = INT_MAX;
+                for(int i: priceToReach){
+                    if(i == _time) ways++;
+                    if(i < _time){
+                        _time = i;
+                        ways = 1;
+                    }
+                }
+                return ways;
+            }
+        // Optimized: ❌Pending
+
+    1461) AND In Range:
+        Problem Statement:
+            You are given two integers l and r. Find the result after applying the series of Bitwise AND ( & ) operation on every natural number between the range l to r (including both).
+            Examples:
+            Input: l = 8, r = 13
+            Output: 8
+            Explanation: 
+            8 AND 9 AND 10 AND 11 AND 12 AND 13 = 8.
+            Input: l = 2, r = 3
+            Output: 2
+            Explanation: 2 AND 3 = 2.
+            Constraints:
+                1 ≤ l ≤ r ≤ 10^9
+        // Not Optimized: TC: O(n) & SC: O(1)
+            int andInRange(int l, int r) {
+                int res = l;
+                for(int i=l+1; i<=r; i++)
+                    res &= i;
+                return res;
+            }
+        // Optimized: ❌Pending
+
+    1462) All Subsets Xor Sum:
+        Problem Statement:
+            Given an array arr[], return the sum of the XOR of all elements for every possible subset of the array. Subsets with the same elements should be counted multiple times.
+            An array a is a subset of an array b if a can be obtained from b by deleting some (possibly zero) elements of b.
+            Note: The answer is guaranteed to fit within a 32-bit integer.
+            Examples:
+            Input: arr[] = [7, 2]
+            Output: 14
+            Explanation: Subsets are: [[], [7], [2], [7, 2]]
+            Sum of all XOR's = 7 + 2 + (7 ^ 2) = 14.
+            Input: arr[] = [1, 2, 3]
+            Output: 12
+            Explanation: Subsets are: [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]]
+            Sum of all XOR's = 1 + 2 + 3 + (1 ^ 2)  + (1 ^ 3) + (2 ^ 3) + (1 ^ 2 ^ 3) = 12.
+            Constraints:
+                1 ≤ arr.size() ≤ 30
+                1 ≤ arr[i] ≤ 10^3
+        // Not Optimized: TC: O(2ⁿ) & SC: O(n)
+            void subSet(vector<int> &arr, int indx, int val, int &sum, int &n){
+                if(indx >= n){
+                    sum += val;
+                    return;
+                }
+                
+                subSet(arr, indx+1, val ^ arr[indx], sum, n);
+                subSet(arr, indx+1, val, sum, n);
+            }
+            int subsetXORSum(vector<int>& arr) {
+                int sum =0, n = arr.size();
+                // arr, index, xor value, sum
+                subSet(arr, 0, 0, sum, n);
+                return sum;
+            }
+        // Optimized: ❌Pending
+
+    1463) Count set bits:
+        Problem Statement:
+            You are given a number n. Find the total count of set bits for all numbers from 1 to n (both inclusive).
+            Examples :
+            Input: n = 4
+            Output: 5
+            Explanation: For numbers from 1 to 4. for 1: 0 0 1 => 1 set bit, for 2: 0 1 0 => 1 set bit, for 3: 0 1 1 => 2 set bits, for 4: 1 0 0 => 1 set bit. Therefore, the total set bits are 5.
+            Input: n = 17
+            Output: 35
+            Explanation: From numbers 1 to 17(both inclusive), the total number of set bits are 35.
+            Constraints:
+                1 ≤ n ≤ 10^8
+        // Not Optimized: TC: O(n log n) & SC: O(1)
+            int countSetBits(int n) {
+                int cnt = 0;
+                for(int i=1; i<=n; i++){
+                    int sets = __builtin_popcount(i);
+                    cnt += sets;
+                }
+                return cnt;
+            }
+        // Optimized: ❌Pending
+
+    1464) Count of distinct substrings:
+        Problem Statement:
+            Given a string s consisting of lowercase English characters, determine the total number of distinct non-empty substrings present in the string. A substring is defined as a contiguous block of characters within the string.
+            Two substrings are considered distinct if their contents differ, even if they originate from different positions in the string.
+            Note: The empty substring is not counted.
+            Examples :
+            Input: s = "ababa"
+            Output: 9
+            Explanation: All distinct substrings of "ababa" are: "a", "b", "ab", "ba", "aba", "bab", "abab", "baba", "ababa".
+            Input: s = "aaa"
+            Output: 3
+            Explanation: The distinct substrings of "aaa" are: "a", "aa", "aaa".
+            Constraints:
+                1 ≤ s.size() ≤ 3000
+        // Not Optimized: TC: O(n² log m) & SC: O(m), where m is size of set
+            int countSubs(string& s) {
+                set<string> st;
+                int n = s.size();
+                for(int i=0; i<n; i++){
+                    string temp;
+                    for(int j=i; j<n; j++){
+                        temp.push_back(s[j]);
+                        st.insert(temp);
+                    }
+                }
+                return st.size();
+            }
+        // Optimized: ❌Pending
+
+    1465) XOR Pairs less than K:
+        Problem Statement:
+            Given an array arr[] and an integer k, we need to count the number of pairs from the given array such that the Bitwise XOR of each pair is less than k.
+            Examples:
+            Input: arr = [1, 2, 3, 5], k = 5 
+            Output: 4
+            Explanation: Bitwise XOR of all possible pairs that satisfy the given conditions are:
+            arr[0] ^ arr[1] = 1 ^ 2 = 3 
+            arr[0] ^ arr[2] = 1 ^ 3 = 2 
+            arr[0] ^ arr[3] = 1 ^ 5 = 4 
+            arr[1] ^ arr[2] = 2 ^ 3 = 1 
+            Therefore, the required output is 4.
+            Input: arr[] = [3, 5, 6, 8], k = 7 
+            Output: 3
+            Explnation: Bitwise XOR of all possible pairs that satisfy the given conditions are:
+            arr[0] ^ arr[1] = 6
+            arr[0] ^ arr[2] = 5
+            arr[1] ^ arr[2] = 3
+            Therefore, the required output is 3. 
+            Constraints:
+                1 ≤ arr.size(), k ≤ 5*10^4
+                1 ≤ arr[i] ≤ 5*10^4
+        // Not Optimized: TC: O(n²) & SC: O(1)
+            int cntPairs(vector<int>& arr, int k) {
+                int cnt=0, n = arr.size();
+                for(int i=0; i<n; i++)
+                    for(int j=i+1; j<n; j++){
+                        if((arr[i] ^ arr[j]) < k) cnt++;
+                        // cout<<arr[i]<<" "<<arr[j]<<" "<<(arr[i] ^arr[j])<<endl;
+                    }
+                return cnt;
+            }
+        // Optimized: ❌Pending
+
+    1466) Maximise String Score:
+        Problem Statement:
+            You are given a string s, and a list of jumps[][] of size n, where each jumps[i] = [s1, s2] denotes that you are allowed to jump from character s1 to s2 in the forward direction.
+            Additionally, you are allowed to jump forward from a character to any other occurrence of the same character within the string.
+            You start at index 0 of the string. After every valid jump from index i to index j, where s[i] = s1 and s[j] = s2, you earn a score equal to the sum of ASCII values of all characters between the jump except for the characters equals s2, i.e.
+            score(i, j) = sum(ascii(s[k]) for i ≤ k < j and s[k] != s[j]).
+            Determine the maximum score that can be achieved by performing a sequence of valid jumps starting from index 0.
+            Examples:
+            Input: s = "forgfg", jumps[][] = [['f', 'r'], ['r', 'g']]
+            Output: 429
+            Explanation: We can jump from 'f' to 'r' at index 2, this will gives a score equals to sum of ASCII value of 'f', 'o' i.e. 213.
+            Now we can jump from 'r' to 'g' at index 5, this will gives a score equals to sum of ASCII value of 'r', 'f' i.e. 216.
+            Hence maximum total score obtain will be 429. 
+            Input: s = "abcda", jumps[][] = [[b, d]]
+            Output: 297
+            Explanation: We can jump from 'a' to 'a'(as both are same character) at index 4, this will gives a score equals to sum of ASCII value of 'b', 'c', 'd' i.e. 297.
+            Hence maximum total score obtain will be 297. 
+            Constraints:
+                1 ≤ |s| ≤ 2 * 10^5
+                1 ≤ jumps.size() ≤ 676
+                There are atleast two distinct characters in s.
+        // Not Optimized:  TC: O(n² · 2ⁿ) & SC: O(n)
+            void solve(string &s, int indx, vector<vector<char>> &jumps, int cur, int &ans, int &n){
+                // 1. check next occurrence of current char
+                int last = n-1;
+                while(last > indx){
+                    if(s[last] == s[indx]){
+                        int t = 0;
+                        for(int i=indx+1; i<last; i++) 
+                            if(s[i] != s[last]) t += s[i];
+                            
+                        solve(s, last, jumps, cur+t, ans, n);
+                    }
+                    last--;
+                }
+                
+                // 2. check in jump array
+                for(vector<char> jump: jumps){
+                    if(jump[0] == s[indx]){
+                        // search for corresponding char
+                        int end = n-1;
+                        while(end > indx){
+                            if(jump[1] == s[end]){
+                                int t = 0;
+                                for(int i=indx; i<end; i++)
+                                    if(s[i] != s[end]) t += s[i];
+                                
+                                solve(s, end, jumps, t+cur, ans, n);
+                            }
+                            end--;
+                        }
+                    }
+                }
+                // cout<<cur<<'\t';
+                ans = max(ans, cur);
+            }
+            int maxScore(string &s, vector<vector<char>> &jumps) {
+                int mx=0, n=s.size();
+                // input, indx, input, curAns, ActualAns, string size
+                solve(s, 0, jumps, 0, mx, n);
+                return mx;
+            }
+        // Optimized: ❌Pending
+
+    1467)
     
-    1455)
-    1456)
-    1457)
-    1458)
-    1459)
-    1460)
-            
+    1468)
+    1469)
+    1470)
 
 
 
