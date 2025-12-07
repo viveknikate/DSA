@@ -1064,6 +1064,1429 @@ POTDs:
                 return ans;
             }
 
-1420)
+    1420) Sum of Mode:
+        Problem Statement:
+            Given an array arr[] of positive integers and an integer k. You have to find the sum of the modes of all the subarrays of size k.
+            Note: The mode of a subarray is the element that occurs with the highest frequency. If multiple elements have the same highest frequency, the smallest such element is considered the mode.
+
+            Examples:
+
+            Input: arr[] = [1, 2, 3, 2, 5, 2, 4, 4], k = 3
+            Output: 13
+            Explanation: The mode of each k size subarray is [1, 2, 2, 2, 2, 4] and sum of all modes is 13.
+            Input: arr[] = [1, 2, 1, 3, 5], k = 2
+            Output: 6
+            Explanation: The mode of each k size subarray is [1, 1, 1, 3] and sum of all modes is 6.
+            Constraints:
+                1 ≤ k ≤ arr.size() ≤ 10^5
+                1 ≤ arr[i] ≤ 10^5
+        // Not Optimized:
+            int sumOfModes(vector<int>& arr, int k) {
+                int n = arr.size();
+                if(!n) return 0;
+                
+                int sum = 0;
+                for(int i=0; i<=n-k; i++){
+                    unordered_map<int, int> ump;
+                    for(int j=i; j<i+k; j++)
+                        ump[arr[j]]++;
+
+                    int val = 0;
+                    for(auto itr: ump)
+                        if(itr.second > ump[val])
+                            val = itr.first;
+                        else if(itr.second == ump[val] and val > itr.first)
+                            val = itr.first;
+                    
+                    sum += val;
+                }
+                return sum;
+            }
+
+    1421) Swap Kth nodes from ends:
+        Problem Statement:
+            Given the head of a singly linked list and an integer k. Swap the kth node (1-based index) from the beginning and the kth node from the end of the linked list. Return the head of the final formed list and if it's not possible to swap the nodes return the original list.
+            Examples:
+            Input: k = 1,
+            Output: 5 -> 2 -> 3 -> 4 -> 1
+            Explanation: Here k = 1, hence after swapping the 1st node from the beginning and end the new list will be 5 -> 2 -> 3 -> 4 -> 1.
+            Input: k = 2,
+            Output: 5 -> 9 -> 8 -> 5 -> 10 -> 3
+            Explanation: Here k = 2, hence after swapping the 2nd node from the beginning and end the new list will be 5 -> 9 -> 8 -> 5 -> 10 -> 3.
+            Constraints:
+                1 ≤ list size ≤ 10^4
+                1 ≤ node->data ≤ 10^6
+                1 ≤ k ≤ 10^4
+        Node* swapKth(Node* head, int k) {
+            Node *a, *b, *H = head;
+            a = b = NULL;
+            while(H){
+                if(--k == 0){
+                    a = H;
+                    b = head;
+                }
+                H = H -> next;
+                if(b && H)
+                    b = b -> next;
+            }
+            if(a) {
+                int t = b -> data;
+                b -> data = a -> data;
+                a -> data = t;
+            };
+            return head;
+        }
+
+    1422) Reverse a Doubly Linked List: (Refer: Lect-45)
+            class Solution {
+                public:
+                Node *reverse(Node *head) {
+                    Node *T=NULL, *cur = head;
+                    while(cur){
+                        Node *temp = cur -> next;
+                        cur -> next = T;
+                        if(T) T -> prev = cur;
+                        T = cur;
+                        cur = temp;
+                    }
+                    return T;
+                }
+            };
+
+    1423) Largest number in one swap:
+        Problem Statement:
+            Given a string s, return the lexicographically largest string that can be obtained by swapping at most one pair of characters in s.
+            Examples:
+            Input: s = "768"
+            Output: "867"
+            Explanation: Swapping the 1st and 3rd characters(7 and 8 respectively), gives the lexicographically largest string.
+            Input: s = "333"
+            Output: "333"
+            Explanation: Performing any swaps gives the same result i.e "333".
+            Constraints:
+                1 ≤ |s| ≤ 10^5
+                '0' ≤ s[i] ≤ '9'
+        string largestSwap(string &s) {
+            string ans = s;
+            int n = s.size();
+            for(int i=0; i<n; i++){
+                for(int j=i+1; j<n; j++){
+                    swap(s[i], s[j]);
+                    if(ans < s) ans = s;
+                    swap(s[i], s[j]);
+                }
+            }
+            return ans;
+        }
+
+    1424) Merge Sort for Linked List:
+        Problem Statement:
+            You are given the head of a linked list. You have to sort the given linked list using Merge Sort.
+            Examples:
+            Input:
+                40 -> 20 -> 60 -> 10 -> 50 -> 30 -> NULL
+            Output: 10 -> 20 -> 30 -> 40 -> 50 -> 60
+            Explanation: After sorting the given linked list, the resultant list will be:
+                
+            Input:
+                9 -> 5 -> 2 -> 8 -> NULL
+                
+            Output: 2 -> 5 -> 8 -> 9
+            Explanation: After sorting the given linked list, the resultant list will be:
+            Constraints:
+                1 ≤ number of nodes ≤ 10^5
+                0 ≤ node->data ≤ 10^6
+        // TC: O(n) & SC: O(n)
+            Node* mergeSort(Node* head) {
+                vector<int> v;
+                Node* t = head;
+                while(t)
+                    v.push_back(t->data), t=t->next;
+                
+                sort(v.begin(), v.end());
+                t = head;
+                for(int i: v)
+                    t->data=i, t = t->next;
+                return head;
+            }
+
+    1425) Assign Mice Holes:
+        Problem Statement:
+            You are given two arrays mices[] and holes[] of the same size. The array mices[] represents the positions of the mice on a straight line, while the array holes[] represents the positions of the holes on the same line. Each hole can accommodate exactly one mouse. A mouse can either stay in its current position, move one step to the right, or move one step to the left, and each move takes one minute. The task is to assign each mouse to a distinct hole in such a way that the time taken by the last mouse to reach its hole is minimized.
+            Examples:
+            Input: mices[] = [4, -4, 2], holes[] = [4, 0, 5] 
+            Output: 4
+            Explanation: Assign the mouse at position 4 to the hole at position 4, so the time taken is 0 minutes. Assign the mouse at position −4 to the hole at position 0, so the time taken is 4 minutes. Assign the mouse at position 2 to the hole at position 5, so the time taken is 3 minutes. Hence, the maximum time required by any mouse is 4 minutes.
+            Input: mices[] = [1, 2], holes[] = [20, 10] 
+            Output: 18 
+            Explanation: Assign the mouse at position 1 to the hole at position 10, so the time taken is 9 minutes. Assign the mouse at position 2 to the hole at position 20, so the time taken is 18 minutes. Hence, the maximum time required by any mouse is 18 minutes.
+            Constraints:
+                1 ≤ mices.size() = holes.size() ≤ 10^5
+                -10^5 ≤ mices[i] , holes[i] ≤ 10^5
+        // TC: O(n log n) & SC: O(1)
+            int assignHole(vector<int>& mices, vector<int>& holes) {
+                int ans = 0, n = mices.size();
+                sort(mices.begin(), mices.end());
+                sort(holes.begin(), holes.end());
+                for(int i=0; i<n; i++)
+                    ans = max(ans, abs(mices[i] - holes[i]));
+                return ans;
+            }
+        
+    1426) Tywin's War Strategy:
+        Problem Statement:
+            You are given an array arr[] of size n, where arr[i] represents the number of soldiers in the i-th troop. You are also given an integer k. A troop is considered "lucky" if its number of soldiers is a multiple of k. Find the minimum total number of soldiers to add across all troops so that at least ⌈n / 2⌉ troops become lucky.
+            Examples:
+            Input: arr = [5, 6, 3, 2, 1], k = 2
+            Output: 1
+            Explanation: By adding 1 soldier for the troop with 1 soldier, we get [5, 6, 3, 2, 2]. Now 3 out of 5 troops (6, 2, and 2) are multiples of 2 that satisfy the requirement.
+            Input: arr = [3, 5, 6, 7, 9, 10], k = 4
+            Output: 4
+            Explanation: We need at least 3 lucky troops since ⌈6 / 2⌉ = 3. Currently, no troop is divisible by 4.
+            Add 1 soldier for troop 3 → 4,
+            Add 2 for troop 6 → 8,
+            Add 1 for troop 7 → 8.
+            New array: [4, 5, 8, 8, 9, 10] with 3 lucky troops (4, 8, 8).
+            Total soldiers added = 4.
+            Constraints:
+                1 ≤ arr.size() ≤ 10^5
+                1 ≤ k ≤ 10^9
+                1 ≤ arr[i] ≤ 10^9
+        int minSoldiers(vector<int>& arr, int k) {
+            int n = arr.size(), cnt=0;
+            if(!n) return 0;
+
+            vector<int> requiredStore;
+            for(int i=0; i<n; i++){
+                int v = arr[i] % k; 
+                if(!v){
+                    cnt++;
+                }else{
+                    requiredStore.push_back(k - v);
+                }
+            }
+            sort(requiredStore.begin(), requiredStore.end());
+            int s=0;
+            int value = (n+1)/2 - cnt;
+            while(value > 0)
+                s += requiredStore[--value];
+            return s;
+        }
+
+    1427) Smallest window containing all characters:
+        Problem Statement:
+            Given two strings s and p. Find the smallest substring in s consisting of all the characters (including duplicates) of the string p. Return empty string in case no such substring is present.
+            If there are multiple such substring of the same length found, return the one with the least starting index.
+            Examples:
+            Input: s = "timetopractice", p = "toc"
+            Output: "toprac"
+            Explanation: "toprac" is the smallest substring in which "toc" can be found.
+            Input: s = "zoomlazapzo", p = "oza"
+            Output: "apzo"
+            Explanation: "apzo" is the smallest substring in which "oza" can be found.
+            Input: s = "zoom", p = "zooe"
+            Output: ""
+            Explanation: No substring is present containing all characters of p.
+            Constraints: 
+                1 ≤ s.length(), p.length() ≤ 10^6
+                s, p consists of lowercase english letters
+        // Not Optimized:
+            string smallestWindow(string &s, string &p) {
+                // Generating all substring of string s of length at least p
+                int n = s.size(), m = p.size();
+                vector<string> v;
+                for(int i=0; i<n; i++){
+                    string t;
+                    for(int j=i; j<n; j++){
+                        t.push_back(s[j]);
+                        if(t.size() >= m) v.push_back(t);
+                    }
+                }
+                
+                // generating mapping for string p
+                unordered_map<char, int> Pmap;
+                for(char ch: p)
+                    Pmap[ch]++;
+                    
+                string ans;
+                for(string cur: v){
+                    // generating mapping for cur string
+                    unordered_map<char, int> curMap;
+                    for(char ch: cur)
+                        curMap[ch]++;
+                    
+                    int flag = 1;
+                    for(auto itr: Pmap){
+                        if(curMap[itr.first] < itr.second){
+                            flag = 0;
+                            break;
+                        }
+                    }
+                    if(flag and (ans.empty() or ans.size() > cur.size()))
+                        ans = cur;
+                }
+                return ans;
+            }
+        
+    1428) Count Reverse Pairs:
+        Problem Statement:
+            You are given an array arr[] of positive integers, find the count of reverse pairs. A pair of indices (i, j) is said to be a reverse pair if both the following conditions are met:
+                0 ≤ i < j < arr.size()
+                arr[i] > 2 * arr[j]
+            Examples:
+            Input: arr[] = [3, 2, 4, 5, 1, 20]
+            Output: 3
+            Explanation:
+            The Reverse pairs are 
+            (0, 4), arr[0] = 3, arr[4] = 1, 3 > 2*1 
+            (2, 4), arr[2] = 4, arr[4] = 1, 4 > 2*1 
+            (3, 4), arr[3] = 5, arr[4] = 1, 5 > 2*1 
+            Input: arr[] = [5, 4, 3, 2, 2]
+            Output: 2
+            Explanation:
+            The Reverse pairs are
+            (0, 3), arr[0] = 5, arr[3] = 2, 5 > 2*2
+            (0, 4), arr[0] = 5, arr[4] = 2, 5 > 2*2
+            Constraints:
+                1 ≤ arr.size() ≤ 5*10^4
+                1 ≤ arr[i] ≤ 10^9
+        // Not Optimized: TC: O(n²) & SC: (1)
+            int countRevPairs(vector<int> &arr) {
+                int cnt=0, n = arr.size();
+                for(int i=0; i<n-1; i++)
+                    for(int j=i+1; j<n; j++)
+                        if(arr[i] > arr[j]*2) cnt++;
+                return cnt;
+            }
+        
+    1429) Minimize the Heights II:
+        Problem Statement:
+            Given an array arr[] denoting heights of n towers and a positive integer k.
+            For each tower, you must perform exactly one of the following operations exactly once.
+            Increase the height of the tower by k
+            Decrease the height of the tower by k
+            Find out the minimum possible difference between the height of the shortest and tallest towers after you have modified each tower.
+            You can find a slight modification of the problem here.
+            Note: It is compulsory to increase or decrease the height by k for each tower. After the operation, the resultant array should not contain any negative integers.
+            Examples :
+            Input: k = 2, arr[] = [1, 5, 8, 10]
+            Output: 5
+            Explanation: The array can be modified as [1+k, 5-k, 8-k, 10-k] = [3, 3, 6, 8]. The difference between the largest and the smallest is 8-3 = 5.
+            Input: k = 3, arr[] = [3, 9, 12, 16, 20]
+            Output: 11
+            Explanation: The array can be modified as [3+k, 9+k, 12-k, 16-k, 20-k] = [6, 12, 9, 13, 17]. The difference between the largest and the smallest is 17-6 = 11. 
+            Constraints
+                1 ≤ k ≤ 10^7
+                1 ≤ n ≤ 10^5
+                1 ≤ arr[i] ≤ 10^7
+        // Not Optimized:
+            void solve(vector<int> &arr, int idx, int &k, int &ans){
+                if(idx >= arr.size()){
+                    int mxe = *max_element(arr.begin(), arr.end()); 
+                    int mine = *min_element(arr.begin(), arr.end()); 
+                    ans = min(ans, mxe - mine);
+                    return;
+                }
+                if(arr[idx]-k >= 0){
+                    arr[idx] -= k;
+                    solve(arr, idx+1, k, ans);
+                    arr[idx] += k;
+                }
+                arr[idx] += k;
+                solve(arr, idx+1, k, ans);
+                arr[idx] -= k;
+            }
+            int getMinDiff(vector<int> &arr, int k) {
+                int ans=INT_MAX;
+                if(arr.size() <= 1) return 0;
+                solve(arr, 0, k, ans);
+                return ans;
+            }
+
+    1430) Postfix Evaluation:
+        Problem Statement:
+            You are given an array of strings arr[] that represents a valid arithmetic expression written in Reverse Polish Notation (Postfix Notation). Your task is to evaluate the expression and return an integer representing its value.
+            Note: A postfix expression is of the form operand1 operand2 operator (e.g., "a b +"). 
+            And the division operation between two integers always computes the floor value, i.e floor(5 / 3) = 1 and floor(-5 / 3) = -2.
+            It is guaranteed that the result of the expression and all intermediate calculations will fit in a 32-bit signed integer.
+            Examples:
+            Input: arr[] = ["2", "3", "1", "*", "+", "9", "-"]
+            Output: -4
+            Explanation: If the expression is converted into an infix expression, it will be 2 + (3 * 1) – 9 = 5 – 9 = -4.
+            Input: arr[] = ["2", "3", "^", "1", "+"]
+            Output: 9
+            Explanation: If the expression is converted into an infix expression, it will be 2 ^ 3 + 1 = 8 + 1 = 9.
+            Constraints:
+                3 ≤ arr.size() ≤ 10^3
+                arr[i] is either an operator: "+", "-", "*", "/" or "^", or an integer in the range [-10^4, 10^4]
+        // TC: O(n) & SC: O(1)
+            int evaluatePostfix(vector<string>& arr) {
+                stack<double> st;
+                for(string s: arr){
+                    if(s == "+" or s == "-" or s == "/" or s == "*" or s == "^"){
+                        double first = st.top();
+                        st.pop();
+                        double second = st.top();
+                        // cout<<first<<"\t"<< second;
+                        st.pop();
+                        if(s == "+")
+                            st.push(second + first);
+                        else if(s == "-")
+                            st.push(second - first);
+                        else if(s == "/")
+                            st.push(floor(second / first));
+                        else if(s == "*")
+                            st.push(second * first);
+                        else // if(s == "^")
+                            st.push(pow(second, first));
+                    }else{
+                        st.push(stoi(s));
+                    }
+                }
+                return st.top();
+            }
+
+    1431) Longest Subarray Length:
+        Problem Statement:
+            You are given an array of integers arr[]. Your task is to find the length of the longest subarray such that all the elements of the subarray are smaller than or equal to the length of the subarray.
+            Examples:
+            Input: arr[] = [1, 2, 3]
+            Output: 3
+            Explanation: The longest subarray is the entire array itself, which has a length of 3. All elements in the subarray are less than or equal to 3.
+            Input: arr[] = [6, 4, 2, 5]
+            Output: 0
+            Explanation: There is no subarray where all elements are less than or equal to the length of the subarray. The longest subarray is empty, which has a length of 0.
+            Constraints:
+                1 ≤ arr.size() ≤ 10^5
+                1 ≤ arr[i] ≤ 10^9
+        // Not Optimized: TC: O(n³) & SC: O(n²)
+            int longestSubarray(vector<int>& arr) {
+                vector<vector<int>> allSubArray;
+                int n = arr.size();
+                for(int i=0; i<n; i++){
+                    vector<int> temp;
+                    for(int j=i; j<n; j++){
+                        temp.push_back(arr[j]);
+                        allSubArray.push_back(temp);
+                    }
+                }
+                
+                int l = 0;
+                for(auto cur: allSubArray){
+                    int size = cur.size(), z=0;
+                    for(z=0; z<size; z++)
+                        if(cur[z] > size) break;
+                        
+                    if(z == size) l = max(l, size);
+                }
+                return l;
+            }
+
+    1432) Min Add to Make Parentheses Valid:
+        Problem Statement:
+            You are given a string s consisting only of the characters '(' and ')'. Your task is to determine the minimum number of parentheses (either '(' or ')') that must be inserted at any positions to make the string s a valid parentheses string.
+            A parentheses string is considered valid if:
+                Every opening parenthesis '(' has a corresponding closing parenthesis ')'.
+                Every closing parenthesis ')' has a corresponding opening parenthesis '('.
+                Parentheses are properly nested.
+            Examples:
+            Input: s = "(()("
+            Output: 2
+            Explanation: There are two unmatched '(' at the end, so we need to add two ')' to make the string valid.
+            Input: s = ")))"
+            Output: 3
+            Explanation: Three '(' need to be added at the start to make the string valid.
+            Input: s = ")()()"
+            Output: 1 
+            Explanation: The very first ')' is unmatched, so we need to add one '(' at the beginning.
+            Constraints:
+                1 ≤ s.size() ≤ 10^5
+                s[i] ∈ { '(' , ')' }
+        // TC: O(n) & SC: (n)
+            int minParentheses(string& s) {
+                stack<char> st;
+                int cnt=0;
+                for(char ch: s){
+                    if(ch == '(')
+                        st.push(ch);
+                    else{
+                        if(st.empty()) cnt++;
+                        else if(st.top() == '(') st.pop();
+                    }
+                }
+                return cnt + st.size();
+            }
+
+    1433) Max of min for every window size:
+        Problem Statement:
+            You are given an integer array arr[], the task is to find the maximum of minimum values for every window size k where 1≤ k ≤ arr.size().
+            For each window size k, consider all contiguous subarrays of length k, determine the minimum element in each subarray, and then take the maximum among all these minimums.
+            Return the results as an array, where the element at index i represents the answer for window size i+1.
+            Examples :
+            Input: arr[] = [10, 20, 30, 50, 10, 70, 30]
+            Output: [70, 30, 20, 10, 10, 10, 10] 
+            Explanation: 
+            Window size 1: minimums are [10, 20, 30, 50, 10, 70, 30], maximum of minimums is 70.
+            Window size 2: minimums are [10, 20, 30, 10, 10, 30], maximum of minimums is 30.
+            Window size 3: minimums are [10, 20, 10, 10, 10], maximum of minimums is 20.
+            Window size 4–7: minimums are [10, 10, 10, 10], maximum of minimums is 10.
+            Input: arr[] = [10, 20, 30]
+            Output: [30, 20, 10]
+            Explanation: 
+            Window size 1: minimums of  [10], [20], [30], maximum of minimums is 30.
+            Window size 2: minimums of [10, 20], [20,30], maximum of minimums is 20.
+            Window size 3: minimums of [10,20,30], maximum of minimums is 10.
+            Constraints:
+                1 ≤ arr.size() ≤ 10^5
+                1 ≤ arr[i] ≤ 10^6
+        // Not Optimized: TC: O(n³) & SC: O(n)
+            vector<int> maxOfMins(vector<int>& arr) {
+                vector<int> ans;
+                int n = arr.size();
+                for(int i=0; i<n; i++){
+                    int val = INT_MIN;
+                    for(int j=0; j<n-i; j++){
+                        int last = j+i, z = j, minValue = INT_MAX;
+                        while(z <= last){
+                            minValue = min(minValue, arr[z]);
+                            z++;
+                        }
+                        val = max(val, minValue);
+                    }
+                    ans.push_back(val);
+                }
+                return ans;
+            }
+
+    1434) Design MinMax Queue:
+        Problem Statement:
+            Design a SpecialQueue data structure that functions like a normal queue but with additional support for retrieving the minimum and maximum element efficiently.
+            The SpecialQueue must support the following operations:
+
+            enqueue(x): Insert an element x at the rear of the queue.
+            dequeue(): Remove the element from the front of the queue.
+            getFront(): Return the front element without removing.
+            getMin(): Return the minimum element in the queue in O(1) time.
+            getMax(): Return the maximum element in the queue in O(1) time.
+            There will be a sequence of queries queries[][]. The queries are represented in numeric form:
+            1 x : Call enqueue(x)
+            2:  Call dequeue()
+            3: Call getFront()
+            4: Call getMin()
+            5: Call getMax()
+            The driver code will process the queries, call the corresponding functions, and print the outputs of getFront(), getMin(), getMax() operations.
+            You only need to implement the above five functions.
+            Note: It is guaranteed that all the queries are valid.
+            Examples:
+            Input: q = 6, queries[][] = [[1, 4], [1, 2], [3], [4], [2], [5]]
+            Output: [4, 2, 2]
+            Explanation: Queries on queue are as follows:
+            enqueue(4): Insert 4 at the rear of the queue.
+            enqueue(2): Insert 2 at the rear of the queue.
+            return the front element i.e 4
+            return minimum element from the queue i.e 2
+            dequeue(): Remove the front element 4 from the queue
+            return maximum element from the queue i.e 2
+            Input: q = 4, queries[][] = [[1, 3], [4], [1, 5], [5]]
+            Output: [3, 5]
+            Explanation: Queries on queue are as follows:
+            enqueue(3): Insert 3 at the rear of the queue.
+            return minimum element from the queue i.e 3
+            enqueue(5): Insert 5 at the rear of the queue.
+            return maximum element from the queue i.e 5
+            Constraints:
+                1 ≤ queries.size() ≤ 10^5
+                0 ≤ values in the queue ≤ 10^9
+        class SpecialQueue {
+            public:
+            int s = 0,  e = 0;
+            vector<int> store;
+            void enqueue(int x) {
+                // Insert element into the queue
+                store.push_back(x);
+                e++;
+            }
+
+            void dequeue() {
+                // Remove element from the queue
+                if(s == e) return;
+                s++;
+            }
+
+            int getFront() {
+                // Get front element
+                if(s == e) return -1;       // as queue is empty
+                return store[s];
+            }
+
+            int getMin() {
+                // Get minimum element
+                if(s == e) return -1;
+                int minE = INT_MAX;
+                for(int i=s; i<e; i++)
+                    minE = min(minE, store[i]);
+                return minE;
+            }
+
+            int getMax() {
+                // Get maximum element
+                if(s == e) return -1;
+                int maxE = INT_MIN;
+                for(int i=s; i<e; i++)
+                    maxE = max(maxE, store[i]);
+                return maxE;
+            }
+        };
+
+    1435) Generate Binary Numbers: (Refer POTD: 216)
+        Problem Statement:
+            Given a number n. The task is to generate all binary numbers with decimal values from 1 to n.
+            Examples:
+            Input: n = 4
+            Output: ["1", "10", "11", "100"]
+            Explanation: Binary numbers from 1 to 4 are 1, 10, 11 and 100.
+            Input: n = 6
+            Output: ["1", "10", "11", "100", "101", "110"]
+            Explanation: Binary numbers from 1 to 6 are 1, 10, 11, 100, 101 and 110.
+            Constraints:
+                1 ≤ n ≤ 10^6
+
+        string binaryNum(int n){
+            if(n == 0) return "";
+            string s = to_string(n%2);
+            return binaryNum(n/2) + s;
+        }
+        vector<string> generateBinary(int n) {
+            vector<string> ans;
+            for(int i=0; i<n; i++){
+                string binary = binaryNum(i+1);
+                ans.push_back(binary);
+            }
+            return ans;
+        }
+    
+    1436) Rotate Deque By K:
+        Problem Statement:
+            You are given a deque dq (double-ended queue) containing non-negative integers, along with two positive integer type and k. The task is to rotate the deque circularly by k positions.
+            There are two types of rotation operations:
+
+            Right Rotation (Clockwise): If type = 1, rotate the deque to the right. This means moving the last element to the front, and repeating the process k times.
+            Left Rotation (Anti-Clockwise): If type = 2, rotate the deque to the left. This means moving the first element to the back, and repeating the process k times.
+            Examples:
+            Input: dq = [1, 2, 3, 4, 5, 6], type = 1, k = 2
+            Output: [5, 6, 1, 2, 3, 4] 
+            Explanation: The type is 1 and k is 2. So, we need to right rotate dequeue by 2 times.
+            In first right rotation we get [6, 1, 2, 3, 4, 5].
+            In second right rotation we get [5, 6, 1, 2, 3, 4].
+            Input: dq = [10, 20, 30, 40, 50], type = 2, k = 3 
+            Output: [40, 50, 10, 20, 30] 
+            Explanation: The type is 2 and k is 3. So, we need to left rotate dequeue by 3 times.
+            In first left rotation we get [20, 30, 40, 50, 10]. 
+            In second left rotation we get [30, 40, 50, 10, 20].
+            In third left rotation we get [40, 50, 10, 20, 30].
+            Constraints:
+                1 ≤ dq.size() ≤ 10^5 
+                1 ≤ k ≤ 10^5 
+                1 ≤ type ≤ 2
+        void rotateDeque(deque<int>& dq, int type, int k) {
+            deque<int> q;
+            for(int i: dq)
+                q.push_back(i);
+            
+            int n = dq.size();
+            k %= n;
+            if(type==2){
+                while(k--){
+                    int val = q.front();
+                    q.pop_front();
+                    q.push_back(val);
+                }
+            } else {
+                while(k--){
+                    int val = q.back();
+                    q.pop_back();
+                    q.push_front(val);
+                }
+            }
+            for(int i=0; i<n; i++){
+                dq[i] = q.front();
+                q.pop_front();
+            }
+        }
+    
+    1437) Minimum K Consecutive Bit Flips:
+        Problem Statement:
+            You are given a binary array arr[] (containing only 0's and 1's) and an integer k. In one operation, you can select a contiguous subarray of length k and flip all its bits (i.e., change every 0 to 1 and every 1 to 0).
+            Your task is to find the minimum number of such operations required to make the entire array consist of only 1's. If it is not possible, return -1.
+            Examples:
+            Input: arr = [1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1], k = 2
+            Output: 4 
+            Explanation: 4 operations are required to convert all 0's to 1's.
+            Select subarray [2, 3] and flip all bits resulting array will be [1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1]
+            Select subarray [4, 5] and flip all bits resulting array will be [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1]
+            Select subarray [5, 6] and flip all bits resulting array will be [1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1]
+            Select subarray [6, 7] and flip all bits resulting array will be [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            Input: arr = [0, 0, 1, 1, 1, 0, 0], k = 3
+            Output: -1
+            Explanation: It is not possible to convert all elements to 1's by performing any number of operations.
+            Constraints:
+                1 ≤ arr.size() ≤ 10^6
+                1 ≤ k ≤ arr.size()
+        // Not Optimized: TC: O(n*k) & SC: O(1)
+            int kBitFlips(vector<int>& arr, int k) {
+                int cnt=0, n = arr.size(), i;
+                for(i=0; i<=n-k; i++){
+                    if(arr[i] == 0){
+                        cnt++;
+                        int j = k, temp = i;
+                        while(j--){
+                            arr[temp] = !arr[temp];
+                            temp++;
+                        } 
+                    }
+                }
+                // for(int i: arr)
+                //     cout<<i<<"\t";
+                // cout<<endl;
+                while(i < n)
+                    if(!arr[i++]) return -1;              // not possible
+                return cnt;
+            }
+       
+    1438) Maximum subarray sum 2:
+        Problem Statement:
+            You are given an array arr[] of integers and two integers a and b, You have to find the maximum possible sum of a contiguous subarray whose length is at least a and at most b.
+            Examples:
+            Input: arr[] = [4, 5, -1, -2, 6], a = 2, b = 4
+            Output: 9
+            Explanation: The subarray [4, 5] has length 2 and sum 9, which is the maximum among all subarrays of length between 2 and 4.
+            Input: arr[] = [-1, 3, -1, -2, 5, 3, -5, 2, 2], a = 3, b = 5
+            Output: 8
+            Explanation: The subarray [3, -1, -2, 5, 3] has length 5 and sum 8, which is the maximum among all subarrays of length between 3 and 5.
+            Constraints:
+                1 ≤ arr.size() ≤ 10^5
+                -10^5 ≤ arr[i] ≤ 10^5
+                1 ≤ a ≤ b ≤ arr.size()
+        // Not Optimized: TC: O(n * b) & SC: O(1)
+            int maxSubarrSum(vector<int>& arr, int a, int b) {
+                int mxSum = INT_MIN, n = arr.size();
+                for(int i=0; i<=n-a; i++){
+                    int s = 0;
+                    // adjusting least length of 'a' window
+                    int j;
+                    for(j=i; j<i+a; j++) s += arr[j];
+                    mxSum = max(mxSum, s);
+                    
+                    // extending window till length is 'b'
+                    for(;j < n and j<i+b; j++){
+                        s += arr[j];
+                        mxSum = max(mxSum, s);
+                    }
+                }
+                return mxSum;
+            }
+    
+    1439) Generate all binary strings:
+        Problem Statement:
+            Given an integer n. You need to generate all the binary strings of n characters representing bits.
+            Note: Return the strings in  ascending order.
+            Examples:
+            Input: n = 2
+            Output: [00, 01, 10, 11]
+            Explanation: As each position can be either 0 or 1, the total possible combinations are 4.
+            Input: n = 3
+            Output: [000, 001, 010, 011, 100, 101, 110, 111]
+            Explanation: As each position can be either 0 or 1, the total possible combinations are 8.
+            Constraints:
+                1 ≤ n ≤ 20 
+        string binary(int val, int mxSize){
+            string s;
+            while(val){
+                s.push_back(val%2 + 48);
+                val /= 2;
+            }
+            reverse(s.begin(), s.end());
+            if(s.size() < mxSize) s = string(mxSize - s.size(), '0') + s;
+            
+            return s;
+        }
+        vector<string> binstr(int n) {
+            vector<string> ans;
+            int val=0;
+            string str;
+            while(1){
+                str = binary(val, n);
+                if(str.length() > n) break;
+                ans.push_back(str);
+                val++;
+            }
+            return ans;
+        }
+    
+    1440) All Unique Permutations of an array:
+        Problem Statement:
+            Given an array arr[] that may contain duplicates. Find all possible distinct permutations of the array in sorted order.
+            Note: A sequence A is greater than sequence B if there is an index i for which Aj = Bj for all j<i and Ai > Bi.
+
+            Examples:
+            Input: arr[] = [1, 3, 3]
+            Output: [[1, 3, 3], [3, 1, 3], [3, 3, 1]]
+            Explanation: These are the only possible distinct permutations for the given array.
+            Input: arr[] = [2, 3]
+            Output: [[2, 3], [3, 2]]
+            Explanation: These are the only possible distinct permutations for the given array.
+            Constraints:
+                1 ≤ arr.size() ≤ 9
+        // Not Optimized: TC: O(n * n!) & SC: O(n * n!)
+            vector<vector<int>> uniquePerms(vector<int>& arr) {
+                sort(arr.begin(), arr.end());
+                vector<vector<int>> ans;
+                ans.push_back(arr);
+                
+                while(next_permutation(arr.begin(), arr.end()))
+                    ans.push_back(arr);
+                return ans;
+            }
+
+    1441) Unique K-Number Sum:
+        Problem Statement:
+            Given two integers n and k, the task is to find all valid combinations of k numbers that adds up to n based on the following conditions:
+            Only numbers from the range [1, 9] used.
+            Each number can only be used at most once.
+            Note: You can return the combinations in any order, the driver code will print them in sorted order.
+            Examples:
+            Input: n = 9, k = 3
+            Output: [[1, 2, 6], [1, 3, 5], [2, 3, 4]]
+            Explanation: There are three valid combinations of 3 numbers that sum to 9: [1 ,2, 6], [1, 3, 5] and [2, 3, 4].
+            Input: n = 3, k = 3
+            Output: []
+            Explanation: It is not possible to pick 3 distinct numbers from 1 to 9 that sum to 3, so no valid combinations exist.
+            Constraints:
+                1 ≤ n ≤ 50
+                1 ≤ k ≤ 9
+        // TC: O(C(9, k)) & SC: O(k) 
+            void Generate(vector<vector<int>> &ans, int &n, int k, vector<int> &t, int curVal, int &sum){
+                if(!k or curVal > n or sum > n){
+                    if(sum == n and !k) ans.push_back(t);
+                    return;
+                }
+                for(int i=curVal; i<10; i++){
+                    t.push_back(i);
+                    sum += i;
+                    Generate(ans, n, k-1, t, i+1, sum);
+                    sum -= i;
+                    t.pop_back();
+                }
+            }
+            vector<vector<int>> combinationSum(int n, int k) {
+                vector<vector<int>> ans;
+                vector<int> t;
+                int sum = 0;
+                Generate(ans, n, k, t, 1, sum);
+                return ans;
+            }
+
+    1442) Postorder Traversal: (Refer POTD: 1084)
+        Problem Statement:
+            Given the root of a Binary Tree, your task is to return its Postorder Traversal.
+            Note: A postorder traversal first visits the left child (including its entire subtree), then visits the right child (including its entire subtree), and finally visits the node itself.
+            Examples:
+            Input: root = [19, 10, 8, 11, 13]
+            Output: [11, 13, 10, 8, 19]
+            Explanation: The postorder traversal of the given binary tree is [11, 13, 10, 8, 19].
+            Input: root = [11, 15, N, 7]
+            Output: [7, 15, 11]
+            Explanation: The postorder traversal of the given binary tree is [7, 15, 11].
+            Constraints:
+                1 ≤ number of nodes ≤ 3*10^4
+                0 ≤ node->data ≤ 10^5
+        // TC: O(n) & SC: O(n)
+            void solve(Node* root, vector<int> &post){
+                if(!root) return;
+                solve(root->left, post);
+                solve(root->right, post);
+                post.push_back(root->data);
+            }
+            vector<int> postOrder(Node* root) {
+                vector<int> post;
+                solve(root, post);
+                return post;
+            }
+
+    1443) Maximum Non-Adjacent Nodes Sum:
+        Problem Statement:
+            Given the root of a binary tree with integer values. Your task is to select a subset of nodes such that the sum of their values is maximized, with the condition that no two selected nodes are directly connected that is, if a node is included in the subset, neither its parent nor its children can be included.
+            Examples:
+            Input: root = [11, 1, 2]
+            Output: 11
+            Explanation: The maximum sum is obtained by selecting the node 11.
+            Input: root = [1, 2, 3, 4, N, 5, 6]
+            Output: 16
+            Explanation: The maximum sum is obtained by selecting the nodes 1, 4, 5 and 6, which are not directly connected to each other. Their total sum is 16.  
+            Constraints:
+                1 ≤ number of nodes ≤ 10^4
+                1 ≤ node.data ≤ 10^5
+        // Not Optimized: TC: O(2ⁿ) & SC: O(n)
+            int getMaxSum(Node *root) {
+                if(!root) return 0;
+                
+                int cur = root->data;
+                if(root -> left){
+                    cur += getMaxSum(root -> left -> left);
+                    cur += getMaxSum(root -> left -> right);
+                }
+                if(root -> right){
+                    cur += getMaxSum(root -> right -> left);
+                    cur += getMaxSum(root -> right -> right);
+                }
+                int next = getMaxSum(root->left) + getMaxSum(root->right);
+                
+                return max(cur, next);
+            }
+        // Optimized: TC: O(n) & SC: O(n)
+            pair<int, int> solve(Node* root){
+                if(!root) return {0, 0};
+                
+                int cur = root -> data;
+                auto left = solve(root -> left);
+                auto right = solve(root -> right);
+                
+                int first = cur + left.second + right.second; 
+                int second = max(left.first, left.second) + max(right.first, right.second);
+                return {first, second};
+            }
+            int getMaxSum(Node *root) {
+                // curNodeValue, nextNodeValueSum
+                auto ans = solve(root);
+                return max(ans.first, ans.second);
+            }
+
+    1444) Sum of Nodes in BST Range:
+        Problem Statement:
+            Given the root of a Binary Search Tree and two integers l and r, the task is to find the sum of all nodes that lie between l and r, including both l and r.
+            Examples
+            Input: root = [22, 12, 30, 8, 20], l = 10, r = 22
+            Output: 54
+            Explanation: The nodes in the given Tree that lies in the range [10, 22] are {12, 20, 22}. Therefore, the sum of nodes is 12 + 20 + 22 = 54.
+            Input: root = [8, 5, 11, 3, 6, N, 20], l = 11, r = 15  
+            Output: 11
+            Explanation: The nodes in the given Tree that lies in the range [11, 15] is {11}. Therefore, the sum of node is 11.
+            Constraints:
+                0 ≤ number of nodes ≤ 10^4
+                0 ≤ node->data ≤ 10^4
+                0 ≤ l ≤ r ≤ 10^4
+        // TC: O(n) & SC: O(n)
+            int nodeSum(Node* root, int l, int r) {
+                int s=0;
+                if(!root) return s;
+                
+                queue<Node*> q;
+                q.push(root);
+                while(!q.empty()){
+                    Node* front = q.front();
+                    q.pop();
+                    int val = front -> data; 
+                    if(val >= l and val <= r)
+                        s += val;
+                    
+                    if(front->left) q.push(front -> left);
+                    if(front->right) q.push(front -> right);
+                }
+                return s;
+            }
+
+    1445) Remove BST keys outside given range:
+        Problem Statement:
+            Given the root of a Binary Search Tree (BST) and two integers l and r, remove all the nodes whose values lie outside the range [l, r].
+            Note: The modified tree should also be BST and the sequence of the remaining nodes should not be changed.
+            Examples:
+            Input: root = [6, -13, 14, N, -8, 13, 15, N, N, 7], l = -10, r = 13
+            Output: [6, -8, 13, N, N, 7]
+            Explanation: All the nodes outside the range [-10, 13] are removed and the modified tree is a valid BST.
+            Input: root = [14, 4, 16, 2, 8, 15, N, -8, 3, 7, 10], l = 2, r = 6         
+            Output: [4, 2, N, N, 3]
+            Explanation: All the nodes outside the range [2, 6] are removed and the modified tree is a valid BST.            
+            Constraints:
+                1 ≤ number of nodes ≤ 10^4
+                1 ≤ node->data ≤ 10^4
+                1 ≤ l ≤ r ≤ 10^4
+        // TC: O(n) & SC: O(n)
+            Node* removekeys(Node* root, int l, int r) {
+                if(!root) return NULL;
+                if(root->data >= l and root->data <= r){
+                    root -> left = removekeys(root -> left, l, r);
+                    root -> right = removekeys(root -> right, l, r);
+                } else if (root -> data < l){
+                    root = removekeys(root -> right, l, r);
+                } else {
+                    root = removekeys(root -> left, l, r);
+                }
+                return root;
+            }
+        // or TC: O(n²) & SC: O(n)
+            void solve(Node* root, int l, int r, vector<int> &v){
+                if(!root) return;
+                if(root->data >= l and root->data <= r) v.push_back(root->data);
+                solve(root->left, l, r, v);
+                solve(root->right, l, r, v);
+            }
+            Node* removekeys(Node* root, int l, int r) {
+                vector<int> store;
+                solve(root, l, r, store);
+                
+                Node* tree = NULL;
+                if(store.empty()) return tree;
+                
+                tree = new Node(store[0]);
+                for(int i=1; i<store.size(); i++){
+                    Node *cur = new Node(store[i]);
+                    Node* last = tree;
+                    Node* temp = tree;
+                    while(temp){
+                        last = temp;
+                        if(temp ->data > store[i]) temp = temp -> left;
+                        else temp = temp -> right;
+                    }
+                    if(last -> data > store[i]) last -> left = cur;
+                    else last -> right = cur;
+                }
+                return tree;
+            }
+
+    1446) BST to greater sum tree:
+        Problem Statement:
+            Given the root of a  BST with unique node values, transform it into greater sum tree where each node contains sum of all nodes greater than that node.
+            Examples:
+            Input: root = [11, 2, 29, 1, 7, 15, 40, N, N, N, N, N, N, 35, N]
+            Output: [119, 137, 75, 139, 130, 104, 0, N, N, N, N, N, N, 40, N]
+            Explanation: Every node is replaced with the sum of nodes greater than itself. 
+            Input: root = [2, 1, 6, N, N, 3, 7]
+            Output: [16, 18, 7, N, N, 13, 0]
+            Explanation: Every node is replaced with the sum of nodes greater than itself. 
+            Constraints :
+                1 ≤ node->data ≤ 3*10^4
+                1 ≤ number of nodes ≤ 3*10^4
+        // TC: O(n²) & SC: O(n)
+            void inorder(Node* root, vector<int> &allValues){
+                if(!root) return;
+                
+                inorder(root -> left, allValues);
+                allValues.push_back(root->data);
+                inorder(root -> right, allValues);
+            }
+            void transformTree(Node *root) {
+                // we have stored the values in sorted order & tree contains all the unique values
+                vector<int> allValues;
+                inorder(root, allValues);
+                queue<Node*> q;
+                q.push(root);
+                
+                int n = allValues.size();
+                while(!q.empty()){
+                    Node *front = q.front();
+                    q.pop();
+                    int s = 0;
+                    for(int i=n-1; i>=0; i--){
+                        if(allValues[i] == front -> data) break;
+                        s += allValues[i];
+                    }
+                    front -> data = s;
+                    if(front-> left) q.push(front -> left);
+                    if(front -> right) q.push(front -> right);
+                }
+            }
+    
+    1447) Median of BST:
+        Problem Statement:
+            You are given the root of a Binary Search Tree, find the median of it. 
+            Let the nodes of the BST, when written in ascending order (inorder traversal), be represented as V1, V2, V3, …, Vn, where n is the total number of nodes in the BST.
+            If number of nodes are even: return V(n/2)
+            If number of nodes are odd: return V((n+1)/2)
+            Examples:
+            Input: root = [20, 8, 22, 4, 12, N, N, N, N, 10, 14]
+            2
+            Output: 12
+            Explanation: The inorder of given BST is 4, 8, 10, 12, 14, 20, 22. Here, n = 7, so, here median will be ((7+1)/2)th value, i.e., 4th value, i.e, 12.
+            Input: root = [5, 4, 8, 1]
+            1 
+            Output: 4
+            Explanation: The inorder of given BST is 1, 4, 5, 8. Here, n = 4(even), so, here median will be (4/2)th value, i.e., 2nd value, i.e, 4.
+            Constraints:
+                1 ≤ number of nodes ≤ 10^5
+                1 ≤ node.data ≤  10^5
+        // TC: O(n) & SC: O(n)
+            void inorder(Node* root, vector<int> &v){
+                if(!root) return;
+                
+                inorder(root -> left, v);
+                v.push_back(root->data);
+                inorder(root -> right, v);
+            }
+            int findMedian(Node* root) {
+                if(!root) return -1;
+                vector<int> v;
+                inorder(root, v);
+                
+                int n = v.size();
+                return n&1 ? v[n/2] : v[n/2 - 1];
+            }
+
+    1448) K closest Values:
+        Problem Statement:
+            Given the root of a Binary Search Tree, a target value, and an integer k. Your task is to find the k values in the BST that are closest to the target.
+            The closest value is taken by choosing the one that gives minimum absolute difference from target.
+            Note: In case two values have same absolute difference from target, choose the smaller one. The target may or may not be present in BST.
+            You can return the values in any order the driver code will print them in sorted order only.
+            Examples:
+            Input: root = [20, 8, 22, 4, 12, N, N, N, N, 10, 14], target = 17, k = 3               
+            Output: [14, 20, 12]
+            Explanation: Absolute difference of 17 wrt 14 and 20 is 3 and 3, but we choose the smaller value in case of same absolute difference. So, 14 coes first and then 20. Then, 12 and 22 have same absolute difference, i.e., 5 from 17. But we choose the smaller value, i.e., 12.
+            Input: root = [5, 4, 8, 1], target = 5, k = 2
+            Output: [5, 4]
+            Explanation: The absolute difference of 5 wrt 5 is 0, and for 4, the absolute difference is 1.
+            Constraints:
+                1 ≤ number of nodes, k ≤ 10^4
+                1 ≤ node->data, target ≤ 10^4
+        // TC: O(n*k) & SC: O(k+h)
+            void solve(Node *root, int &target, int &k, queue<int> &q){
+                if(!root) return;
+                
+                solve(root -> left, target, k, q);
+                if(q.size() < k) q.push(root->data);
+                else {
+                    int a = abs(root->data - target);
+                    int b = abs(q.front() - target);
+                    if(b > a){
+                        q.pop();
+                        q.push(root->data);
+                    }
+                }
+                solve(root -> right, target, k, q);
+            }
+            vector<int> getKClosest(Node* root, int target, int k) {
+                vector<int> ans;
+                if(!root) return ans;
+                queue<int> q;
+                solve(root, target, k, q);
+                
+                while(!q.empty()){
+                    ans.push_back(q.front());
+                    q.pop();
+                }
+                return ans;
+            }
+        // TC: O(n log n) & SC: O(n)
+            void solve(Node* root, int &target, vector<pair<int, int>> &store){
+                if(!root) return;
+                
+                solve(root -> left, target, store);
+                store.push_back({abs(root->data - target), root -> data});
+                solve(root -> right, target, store);
+            }
+            vector<int> getKClosest(Node* root, int target, int k) {
+                vector<int> ans;
+                if(!root) return ans;
+                // diff, actualNodeValue
+                vector<pair<int, int>> store;
+                solve(root, target, store);
+                stable_sort(store.begin(), store.end());
+                
+                int n =store.size();
+                for(int i=0; i<k and i<n; i++)
+                    ans.push_back(store[i].second);
+                
+                return ans;
+            }
+    
+    1449) Top K Frequent in Array:
+        Problem Statement:
+            Given a non-empty integer array arr[]. Your task is to find and return the top k elements which have the highest frequency in the array.
+            Note: If two numbers have the same frequency, the larger number should be given the higher priority.
+            Examples:
+            Input: arr[] = [3, 1, 4, 4, 5, 2, 6, 1], k = 2
+            Output: [4, 1]
+            Explanation: Frequency of 4 is 2 and frequency of 1 is 2, these two have the maximum frequency and 4 is larger than 1.
+            Input: arr[] = [7, 10, 11, 5, 2, 5, 5, 7, 11, 8, 9], k = 4
+            Output: [5, 11, 7, 10]
+            Explanation: Frequency of 5 is 3, frequency of 11 is 2, frequency of 7 is 2, frequency of 10 is 1.
+            Constraints:
+                1 ≤ arr.size() ≤ 10^5
+                1 ≤ arr[i] ≤ 10^5
+                1 ≤ k ≤ no. of distinct elements
+        // TC: O(n log u) & SC: O(x), where x is no.of unique elements
+            static bool comp(pair<int, int> a, pair<int, int> b){
+                if(a.second == b.second)
+                    return a.first > b.first;
+                return a.second > b.second; 
+            }
+
+            vector<int> topK(vector<int>& nums, int k) {
+                unordered_map<int, int> FreqStorer;
+                for(int i=0; i<nums.size(); i++){
+                    FreqStorer[nums[i]]++;
+                }
+                
+                vector<pair<int,int>> ans;
+                for(auto i: FreqStorer){
+                    pair<int, int> temp = {i.first, i.second};
+                    ans.push_back(temp);
+                }
+                
+                vector<int> topKelements;
+                // sort(ans.begin(), ans.end(), comp);       // or
+                sort(ans.begin(), ans.end(), [](pair<int, int> a, pair<int, int> b){
+                    if(a.second == b.second)
+                        return a.first > b.first;
+                    return a.second > b.second;
+                });
+                
+                int cnt=0;
+                for(int i=0; i<ans.size() && cnt<k; i++){
+                    topKelements.push_back(ans[i].first);
+                    cnt++;
+                }
+                
+                return topKelements;
+            }
+        // or
+            vector<int> topKFreq(vector<int> &arr, int k) {
+                unordered_map<int, int> mp;
+                for(int i: arr) mp[i]++;
+                vector<pair<int, int>> v (mp.begin(), mp.end());
+                sort(v.begin(), v.end(), [](const auto &a, const auto&b){
+                    return (a.second == b.second) ? a.first > b.first : a.second > b.second;
+                });
+                
+                // for(auto i: v)
+                //     cout<<i.first<<" "<< i.second <<"\t";
+                
+                int i=0, n = v.size();
+                vector<int> ans;
+                while(k-- and i<n)
+                    ans.push_back(v[i++].first);
+                return ans;
+            }
+
+    1450) Minimum Steps to Halve Sum:
+        Problem Statement:
+            Given an array arr[], find the minimum number of operations required to make the sum of its elements less than or equal to half of the original sum. In one operation, you may replace any element with half of its value (with floating-point precision).
+            Examples:
+            Input: arr[] = [8, 6, 2]
+            Output: 3
+            Explanation: Initial sum = (8 + 6 + 2) = 16, half = 8
+            Halve 8 → arr[] = [4, 6, 2], sum = 12 (still 12 > 8)
+            Halve 6 → arr[] = [4, 3, 2], sum = 9 (still 9 > 8)
+            Halve 2 → arr[] = [4, 3, 1], sum = 8. 
+            Input: arr[] = [9, 1, 2]
+            Output: 2
+            Explanation: Initial sum = 12, half = 6
+            Halve 9 → arr[] = [4.5, 1, 2], sum = 7.5 (still > 6)
+            Halve 4.5 → arr[] = [2.25, 1, 2], sum = 5.25 ≤ 6
+            Constraints:
+                1 ≤ arr.size() ≤ 10^5
+                0 ≤ arr[i] ≤ 10^4
+        // Not Optimized: TC: O(n * log n * m) & SC: O(n)
+            int minOperations(vector<int>& arr) {
+                float s = 0;
+                vector<float> f;
+                for(int i: arr){
+                    s += i;
+                    f.push_back(i);
+                } 
+
+                sort(f.begin(), f.end(), greater<int>());
+                int opsCnt = 0;
+                float half = s/2;
+                while(s > half){
+                    s = (s-f.front()) + f.front()/2;
+                    f.front() = f.front()/2;
+                    sort(f.rbegin(), f.rend());
+                    opsCnt++;
+                }
+                return opsCnt;
+            }
+        // Optimized: ❌Pending
+
+    1451) Find K Smallest Sum Pairs:
+        Problem Statement:
+            Given two integer arrays arr1[] and arr2[] sorted in ascending order and an integer k, your task is to find k pairs with the smallest sums, such that one element of each pair belongs to arr1[] and the other belongs to arr2[].
+            Return the list of these k pairs, where each pair is represented as [arr1[i], arr2[j]].
+            Note: You can return any possible k pairs with the smallest sums, the driver code will print true if it is correct else it will print false.
+            Examples:
+            Input: arr1[] = [1, 7, 11], arr2[] = [2, 4, 6], k = 3
+            Output: true
+            Explanation: All possible combinations of elements from the two arrays are:
+            [1, 2], [1, 4], [1, 6], [7, 2], [7, 4], [7, 6], [11, 2], [11, 4], [11, 6]. 
+            Among these, the three pairs with the minimum sums are [1, 2], [1, 4], [1, 6].
+            Input: arr1[] = [1, 3], arr2[] = [2, 4] k = 2
+            Output: true
+            Explanation: All possible combinations are [1, 2], [1, 4], [3, 2], [3, 4]. 
+            Among these, the two pairs with the minimum sums are [1, 2], [3, 2].
+            Constraints:
+                1 ≤ arr1.size(), arr2.size() ≤ 5*10^4
+                1 ≤ arr1[i], arr2[j] ≤ 10^9
+                1 ≤ k ≤ 10^3
+        // Not Optimized: TC: O(n*m + n*m * log n*m ) & SC: O(n*m)
+            vector<vector<int>> kSmallestPair(vector<int> &arr1, vector<int> &arr2, int k) {
+                int n1 = arr1.size(), n2 = arr2.size();
+                // <sum, <ele_arr1, ele_arr2>>
+                vector<pair<int, pair<int, int>>> hold;
+                for(int i: arr1)
+                    for(int j: arr2)
+                        hold.push_back({i+j, {i, j}});
+                
+                sort(hold.begin(), hold.end());
+                vector<vector<int>> ans;
+                int n= hold.size(), i=0;
+                while(k-- and i < n)
+                    ans.push_back({hold[i].second.first, hold[i++].second.second});
+                
+                return ans;
+            }
+        // Litt bit Optimized:
+            vector<vector<int>> kSmallestPair(vector<int> &arr1, vector<int> &arr2, int k) {
+                int n1 = arr1.size(), n2 = arr2.size();
+                // <sum, <ele_arr1, ele_arr2>>
+                priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> minHP;
+                for(int i: arr1)
+                    for(int j: arr2)
+                        minHP.push({i+j, {i, j}});
+                        
+                vector<vector<int>> ans;
+                while(k-- and !minHP.empty()){
+                    ans.push_back({minHP.top().second.first, minHP.top().second.second});
+                    minHP.pop();
+                }
+                return ans;
+            }
+
+    1452) Distance of nearest cell having 1:
+        Problem Statement:
+            Given a binary grid[][], where each cell contains either 0 or 1, find the distance of the nearest 1 for every cell in the grid.
+            The distance between two cells (i1, j1)  and (i2, j2) is calculated as |i1 - i2| + |j1 - j2|. 
+            You need to return a matrix of the same size, where each cell (i, j) contains the minimum distance from grid[i][j] to the nearest cell having value 1.
+            Note: It is guaranteed that there is at least one cell with value 1 in the grid.
+            Examples
+            Input: grid[][] = [[0, 1, 1, 0], 
+                            [1, 1, 0, 0], 
+                            [0, 0, 1, 1]]
+            Output: [[1, 0, 0, 1], 
+                    [0, 0, 1, 1], 
+                    [1, 1, 0, 0]]
+            Explanation: The grid is -
+            - 0's at (0,0), (0,3), (1,2), (1,3), (2,0) and (2,1) are at a distance of 1 from 1's at (0,1), (0,2), (0,2), (2,3), (1,0) and (1,1) respectively.
+            Input: grid[][] = [[1, 0, 1], 
+                            [1, 1, 0], 
+                            [1, 0, 0]]
+            Output: [[0, 1, 0], 
+                    [0, 0, 1], 
+                    [0, 1, 2]]
+            Explanation: The grid is -
+            - 0's at (0,1), (1,2), (2,1) and (2,2) are at a  distance of 1, 1, 1 and 2 from 1's at (0,0), (0,2), (2,0) and (1,1) respectively.
+            Constraints:
+                1 ≤ grid.size() ≤ 200
+                1 ≤ grid[0].size() ≤ 200
+        // Not Optimized:TC: O((n*m) * 4^(n*m)) & SC: O(n*m)
+            int solve(vector<vector<int>> &grid, int i, int j, int cnt, int &r, int &c, vector<vector<int>> &vis){
+                // checking the index are they within matrix
+                if(i >= r or i < 0 or j >= c or j < 0) return INT_MAX;
+                if(vis[i][j]) return INT_MAX;
+                
+                vis[i][j] = 1;          // marked as visited
+                if(grid[i][j]){
+                    vis[i][j] = 0;
+                    return cnt;
+                } 
+                
+                // go up
+                int up = solve(grid, i-1, j, cnt+1, r, c, vis); 
+                
+                // go right
+                int right = solve(grid, i, j+1, cnt+1, r, c, vis); 
+                
+                // go down
+                int down = solve(grid, i+1, j, cnt+1, r, c, vis); 
+                
+                // go left
+                int left = solve(grid, i, j-1, cnt+1, r, c, vis);
+                vis[i][j] = 0;
+                
+                return min({up, right, left, down});
+            }
+            vector<vector<int>> nearest(vector<vector<int>>& grid) {
+                int n = grid.size(), m = grid[0].size();
+                vector<vector<int>> ans (n, vector<int>(m, INT_MAX));
+                
+                for(int i=0; i<n; i++){
+                    for(int j=0; j<m; j++){
+                        if(grid[i][j]) ans[i][j] = 0;
+                        else {
+                            vector<vector<int>> vis (n, vector<int>(m, 0));         // un-visited all nodes at start
+                            ans[i][j] = solve(grid, i, j, 0, n, m, vis);
+                        }
+                    }
+                }
+                return ans;
+            }
+        // Optimized: ❌Pending
+
+    1453) Graph Diameter:
+        Problem Statement:
+            You are given an undirected connected graph with V vertices numbered from 0 to V-1 and E edges, represented as a 2D array edges[][], where each element edges[i] = [u, v] represents an undirected edge between vertex u and vertex v.
+            Find the diameter of the graph.
+            The diameter of a graph (sometimes called the width) is the number of edges on the longest path between two vertices in the graph.
+            Note: Graph do not contains any cycle.
+            Examples :
+            Input: V = 6, E = 5, edges[][] = [[0, 1], [0, 4], [1, 3], [1, 2], [2, 5]]
+            Output: 4
+            Explanation: The longest path in the graph is from vertices 4 to vertices 5 (4 -> 0 -> 1 -> 2 -> 5).
+            Input: V = 7, E = 6, edges[][] = [[0, 2], [0, 4], [0, 3], [3, 1], [3, 5], [1, 6]]
+                
+            Output: 4
+            Explanation: The longest path in the graph is from vertices 2 to vertices 6 (2 -> 0 -> 3 -> 1 -> 6).
+            Constraints:
+                2 ≤ V ≤  10^5
+                1 ≤ E ≤  V - 1
+                0 ≤ edges[i][0], edges[i][1] < V
+        // Not Optimized: TC: O(V*V!) & SC: O(V)
+            void solve(vector<vector<int>> &adj, int curNode, int path, int &dia, vector<int> &vis){
+                if(vis[curNode]) return;
+                vis[curNode] = 1;
+                dia = max(dia, path);
+                for(int node: adj[curNode]){
+                    solve(adj, node, path+1, dia, vis);   
+                }
+                vis[curNode] = 0;
+            }
+            int diameter(int V, vector<vector<int>>& edges) {
+                int dia = 0;
+                vector<vector<int>> adjacency (V);
+                // create adjacency list.
+                for(auto itr: edges){
+                    adjacency[itr[0]].push_back(itr[1]);
+                    adjacency[itr[1]].push_back(itr[0]);
+                }
+                
+                // traverse all nodes one by one.
+                for(int i=0; i<V; i++){
+                    // path_list, cur_Node, cur_long_path, actual_longest_path, isVisitedNode
+                    vector<int> vis (V, 0);
+                    solve(adjacency, i, 0, dia, vis);
+                }
+                return dia;
+            }
+        // Optimized: ❌Pending
+
+    1454)
+    
+    1455)
+    1456)
+    1457)
+    1458)
+    1459)
+    1460)
+            
+
+
 
     
